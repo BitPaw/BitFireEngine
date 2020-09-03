@@ -1,7 +1,7 @@
 #pragma once
 
-#include "RefreshRateMode.h"
-#include "CameraMode.h"
+#include "../RefreshRateMode.h"
+#include "../CameraMode.h"
 
 class CameraSettings
 {

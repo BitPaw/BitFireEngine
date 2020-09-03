@@ -3,7 +3,7 @@
 CameraSettings::CameraSettings(const float height, const float width)
 {
 	RefreshRate = VSync;
-	Mode = Orthographic;
+	Mode = CameraMode::Orthographic;
 
 	FieldOfView = 60;
 	Height = height;

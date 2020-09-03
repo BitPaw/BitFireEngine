@@ -3,8 +3,10 @@
 class Texture
 {
 public:
-	void* Data;
-
+	unsigned int ColorValues;
 	unsigned int Width;
 	unsigned int Height;
+	unsigned char* Data;
+
+	Texture();
 };

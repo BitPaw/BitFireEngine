@@ -1,8 +1,53 @@
 #include "Mesh.h"
 #include "../Interpolate.h"
 
-bool rising = true;
-float wFactor;
+
+void Mesh::GenerateVertexData()
+{
+	unsigned int dynamicIndex = 0;
+	unsigned int colorValues = 4;
+	unsigned int size = AmountOfVertexes * ((Dimension + colorValues) /*+ 4 + 2*/);
+	Dimension = 4;
+
+	_vertexData = new float[size];
+
+	for (unsigned int i = 0; i < AmountOfVertexes; i++)
+	{
+		Vertex* vertex = &VertexList[i];
+
+		// positions
+		_vertexData[dynamicIndex++] = vertex->CurrentPosition->X;
+		_vertexData[dynamicIndex++] = vertex->CurrentPosition->Y;
+		_vertexData[dynamicIndex++] = vertex->CurrentPosition->Z;
+		_vertexData[dynamicIndex++] = 1; // W
+	
+		// Normals
+		//_vertexData[dynamicIndex++] = vertex->NormalizedPosition->X;
+		//_vertexData[dynamicIndex++] = vertex->NormalizedPosition->Y;
+		//_vertexData[dynamicIndex++] = vertex->NormalizedPosition->Z;
+		//_vertexData[dynamicIndex++] = 1; // W
+
+		// Color
+		if (vertex->Color == nullptr)
+		{
+			_vertexData[dynamicIndex++] = 1; // Red
+			_vertexData[dynamicIndex++] = 1; // Green
+			_vertexData[dynamicIndex++] = 1; // Blue
+			_vertexData[dynamicIndex++] = 1; // Alpha
+		}
+		else
+		{			
+			_vertexData[dynamicIndex++] = vertex->Color->X; // Red
+			_vertexData[dynamicIndex++] = vertex->Color->Y; // Green
+			_vertexData[dynamicIndex++] = vertex->Color->Z; // Blue
+			_vertexData[dynamicIndex++] = 1; // Alpha
+		}
+
+		// Texture
+		//_vertexData[dynamicIndex++] = 0;
+		//_vertexData[dynamicIndex++] = 0;
+	}
+}
 
 Mesh::Mesh() : Mesh(nullptr, 0, nullptr, 0, 0)
 {
@@ -17,10 +62,14 @@ Mesh::Mesh(Vertex* vertexList, unsigned int nrVertexes, unsigned int* indices, u
 	AmountOfVertexes = nrVertexes;
 	Indices = indices;
 	IndiceListSize = nrIndices;
+
+	GenerateVertexData();
 }
 
 Mesh::~Mesh()
 {
+	delete[] _vertexData;
+
 	for (unsigned int i = 0; i < VertexListSize; i++)
 	{
 		delete &VertexList[i];
@@ -34,90 +83,7 @@ Mesh::~Mesh()
 
 float* Mesh::GetVertexData()
 {
-	unsigned int dynamicIndex = 0;
-	unsigned int colorValues = 4;
-	Dimension = 4;
-
-	float* data = new float[AmountOfVertexes * (Dimension + colorValues)];
-	
-	for (unsigned int i = 0; i < AmountOfVertexes; i++)
-	{
-		Vertex* vertex = &VertexList[i];
-
-		data[dynamicIndex++] = vertex->CurrentPosition->X;
-		data[dynamicIndex++] = vertex->CurrentPosition->Y;
-
-		if (Dimension >= 3)
-		{
-			data[dynamicIndex++] = 0;// vertex->CurrentPosition->Z;
-		}	
-
-		if (Dimension >= 4)
-		{
-			data[dynamicIndex++] = 1; // W
-		}
-
-		if (vertex->Color != nullptr)
-		{
-			data[dynamicIndex++] = vertex->Color->X; // Red
-			data[dynamicIndex++] = vertex->Color->Y; // Green
-			data[dynamicIndex++] = vertex->Color->Z; // Blue
-			data[dynamicIndex++] = 1; // Alpha
-		}
-		else
-		{
-			data[dynamicIndex++] = 1; // Red
-			data[dynamicIndex++] = 1; // Green
-			data[dynamicIndex++] = 1; // Blue
-			data[dynamicIndex++] = 1; // Alpha
-		}
-
-	
-
-
-		/*
-
-		switch (i)
-		{
-		case 0:
-			data[dynamicIndex++] = 1; // Red
-			data[dynamicIndex++] = 0; // Green
-			data[dynamicIndex++] = 0; // Blue
-			data[dynamicIndex++] = 1; // Alpha
-			break;
-
-		case 1:
-			data[dynamicIndex++] = 0; // Red
-			data[dynamicIndex++] = 1; // Green
-			data[dynamicIndex++] = 0; // Blue
-			data[dynamicIndex++] = 1; // Alpha
-			break;
-
-		case 2:
-			data[dynamicIndex++] = 0; // Red
-			data[dynamicIndex++] = 0; // Green
-			data[dynamicIndex++] = 1; // Blue
-			data[dynamicIndex++] = 1; // Alpha
-			break;
-
-		case 3:
-			data[dynamicIndex++] = 1; // Red
-			data[dynamicIndex++] = 1; // Green
-			data[dynamicIndex++] = 0; // Blue
-			data[dynamicIndex++] = 1; // Alpha
-			break;
-
-		}
-		*/
-
-		//data[dynamicIndex++] = 1; // Red
-		//data[dynamicIndex++] = 0; // Green
-		//data[dynamicIndex++] = 0; // Blue
-		//data[dynamicIndex++] = 1; // Alpha
-	}
-	
-
-	return data;
+	return _vertexData;
 }
 
 unsigned int* Mesh::GetIndices()

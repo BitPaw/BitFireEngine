@@ -55,9 +55,9 @@ void WaveFont::ParseIndicesAndMerge(std::string line, TrippelIndex* indexList, u
 
 RenderObject* WaveFont::LoadFromFile(std::string filePath)
 {
-
-    enum LineCommand
+    enum class LineCommand
     {
+        None,
         Invalid,
         Comment,
         ObjectName,
@@ -65,18 +65,14 @@ RenderObject* WaveFont::LoadFromFile(std::string filePath)
         VertexTexture,
         VertexNormal,
         VertexParameter,
-        StartIndice,
+        SmoothShading,
         Face,
     };
 
-
-    unsigned int numberOfLines = 0;
-    std::string* lines = FileLoader::ReadFileByLines(filePath, &numberOfLines);
-
-    printf("WaveFont (OBJ) sucessfully loaded from <%s> with <%u> lines detexted\n", filePath.c_str(), numberOfLines);
-
     RenderObject* renderObject;
-    enum LineCommand* commandList = new LineCommand[numberOfLines];
+    unsigned int numberOfLines = 0;
+    std::string* lines = FileLoader::ReadFileByLines(filePath, &numberOfLines);   
+    LineCommand* commandList = new LineCommand[numberOfLines];
 
     unsigned int vertexCounter = 0;
     Position* positionList;
@@ -90,97 +86,84 @@ RenderObject* WaveFont::LoadFromFile(std::string filePath)
     unsigned int faceCounter = 0;
     TrippelIndex* indexList;   
 
-
     unsigned int indiceListLengh;
     unsigned int* indiceList;
 
-
     unsigned int startIndice = 0;
+
+
+    const char characterComment = '#';
+    const char characterObjectName = 'o';
+    const char characterSmoothShading = 's';
+    const char characterFace = 'f';
+
+    const char characterNone = ' ';
+    const char characterVertex = 'v';
+    const char characterVertexTexture = 't';
+    const char characterVertexNormal = 'n';
+    const char characterParameter = 'p';
 
     // Loose Parese
     for (unsigned int i = 0; i < numberOfLines; i++)
     {
         enum LineCommand currentCommand;
         std::string line = lines[i];
-        char functionChar = line.length() <= 0 ? ' ' : line.at(0);
+        char functionChar = line.length() <= 0 ? characterNone : line.at(0);
 
         // Parse Command
         switch (functionChar)
         {
-        case '#':
-            currentCommand = Comment;
+        case characterComment:
+            currentCommand = LineCommand::Comment;
             break;
 
-        case 'o':
-            currentCommand = ObjectName;
+        case characterObjectName:
+            currentCommand = LineCommand::ObjectName;
             break;
 
-        case 's':
-            currentCommand = StartIndice;
+        case characterSmoothShading:
+            currentCommand = LineCommand::SmoothShading;
             break;
 
-        case 'f':
-            currentCommand = Face;
+        case characterFace:
+            currentCommand = LineCommand::Face;
+            faceCounter++;
             break;
 
-        case 'v':
+        case characterVertex:
             functionChar = lines[i].at(1);
 
             switch (functionChar)
             {
-            case ' ':
-                currentCommand = VertexGeometric;
+            case characterNone:
+                currentCommand = LineCommand::VertexGeometric;
+                vertexCounter++;
                 break;
 
-            case 't':
-                currentCommand = VertexTexture;
+            case characterVertexTexture:
+                currentCommand = LineCommand::VertexTexture;
+                vertexTexture++;
                 break;
 
-            case 'n':
-                currentCommand = VertexNormal;
+            case characterVertexNormal:
+                currentCommand = LineCommand::VertexNormal;
+                vertexNormal++;
                 break;
 
-            case 'p':
-                currentCommand = VertexParameter;
+            case characterParameter:
+                currentCommand = LineCommand::VertexParameter;
+                //VertexParameter++;
                 break;
 
             default:
-                currentCommand = Invalid;
+                currentCommand = LineCommand::Invalid;
                 break;
             }
 
             break;
 
         default:
-            currentCommand = Invalid;
-            break;
-        }
-
-        // Count Command
-        switch (currentCommand)
-        {
-        case VertexGeometric:
-            vertexCounter++;
-            break;
-
-        case VertexTexture:
-            vertexTexture++;
-            break;
-
-        case VertexNormal:
-            vertexNormal++;
-            break;
-
-        case VertexParameter:
-            //VertexParameter++;
-            break;
-
-        case Face:
-            faceCounter++;
-            break;
-
-        default:
-            // Do nothing
+            currentCommand = LineCommand::None;
             break;
         }
 
@@ -188,12 +171,12 @@ RenderObject* WaveFont::LoadFromFile(std::string filePath)
         commandList[i] = currentCommand;
     }
 
-    printf("Analysis complete!\n");
-
+    printf("[Analysis: complete!]\n");
     printf(" V  : %u\n", vertexCounter);
     printf(" VT : %u\n", vertexTexture);
     printf(" VN : %u\n", vertexNormal);
     printf(" F  : %u\n", faceCounter);
+    printf("[===================]\n");
 
     // Create Space
     indiceListLengh = faceCounter * 3;
@@ -219,27 +202,27 @@ RenderObject* WaveFont::LoadFromFile(std::string filePath)
     {
         switch (commandList[i])
         {
-        case VertexGeometric:
+        case LineCommand::VertexGeometric:
             positionList[vertexCounter++] = ParsePositionLine(lines[i]);
             break;
 
-        case VertexTexture:
+        case LineCommand::VertexTexture:
             textureCoordinates[vertexTexture++] = ParsePointLine(lines[i]);
             break;
 
-        case VertexNormal:      
+        case LineCommand::VertexNormal:
             vertexNormalList[vertexNormal++] = ParsePositionLine(lines[i]);
             break;
 
-        case VertexParameter:
+        case LineCommand::VertexParameter:
             // To do
             break;
 
-        case Face:
+        case LineCommand::Face:
             ParseIndicesAndMerge(lines[i], indexList, &faceCounter);
             break;
 
-        case ObjectName:
+        case LineCommand::ObjectName:
             name = lines[i].substr(2);
             break;
 
@@ -278,7 +261,7 @@ RenderObject* WaveFont::LoadFromFile(std::string filePath)
             //indiceList[i] = positionList[positionID].X;
 
             vertex->CurrentPosition = &positionList[i];
-            vertex->NormalizedPosition = &vertexNormalList[i];
+            vertex->NormalizedPosition = &vertexNormalList[(indexList[i].C - 1)];
             vertex->TexturePoint = &textureCoordinates[(indexList[i].B - 1)];
         }
     }

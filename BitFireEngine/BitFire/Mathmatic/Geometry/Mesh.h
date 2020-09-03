@@ -4,6 +4,11 @@
 
 class Mesh
 {
+private:
+	float* _vertexData;
+
+	void GenerateVertexData();
+
 public:
 	unsigned char Dimension;
 

@@ -13,9 +13,12 @@ private:
 
 public:
 
+	VertexBuffer();
 	VertexBuffer(Mesh* mesh);
 	~VertexBuffer();
 
 	void BindBuffer();
 	void UnBindBuffer();
+
+	void ChangeMesh(Mesh* mesh);
 };

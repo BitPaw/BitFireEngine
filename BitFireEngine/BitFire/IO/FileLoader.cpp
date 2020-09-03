@@ -2,17 +2,51 @@
 
 std::string FileLoader::ReadCompleteFile(std::string filePath)
 {
-    std::ifstream file;
-    std::string fileContent;
-    file.open(filePath);
+    std::ifstream file(filePath);
+    std::string fileContent; 
 
-    file.seekg(0, std::ios::end);
-    fileContent.reserve(file.tellg());
-    file.seekg(0, std::ios::beg);
+    bool isOpen = file.good();
 
-    fileContent.assign((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    if (isOpen)
+    {
+        //char* fileContentBuffer;
+        std::stringstream buffer;
+        buffer << file.rdbuf();
 
-    file.close();
+        /*
+        file.seekg(0, std::ios::end);
+        int size = file.tellg();
+
+        printf("Size of File : %i\n", size);
+
+        file.seekg(0, std::ios::beg);
+
+        fileContent = new char[size];
+
+        file.read(fileContent, size);    
+
+        */
+       
+
+        fileContent = buffer.str();
+        file.close();
+
+        printf("-----------------------------------------\n");
+        printf("%s\n", fileContent.c_str());
+        printf("-----------------------------------------\n");
+
+
+
+        //std::string news(fileContent);
+
+        //delete[] fileContent;
+    }
+    else
+    {
+        throw std::exception("File could not be loaded");
+    }
+
+ 
 
     return fileContent;
 }

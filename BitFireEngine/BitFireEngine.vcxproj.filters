@@ -18,16 +18,31 @@
     <ClInclude Include="BitFire\SplittedString.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Graphics\Camera.h">
+    <ClInclude Include="BitFire\Color\RGBA.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Graphics\Camera\Camera.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Graphics\Camera\CameraSettings.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Graphics\Camera\FirstPersonCamera.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Graphics\CameraMode.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Graphics\CameraSettings.h">
+    <ClInclude Include="BitFire\Graphics\RefreshRateMode.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Graphics\RefreshRateMode.h">
+    <ClInclude Include="BitFire\IO\DataType\Font\BitMapFont.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\IO\DataType\Font\BitMapFontCharacter.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\IO\DataType\Font\BitMapFontLoader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\IO\DataType\Texture.h">
@@ -36,10 +51,22 @@
     <ClInclude Include="BitFire\IO\DataType\WaveFont.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\IO\FileLoader.h">
+    <ClInclude Include="BitFire\IO\Devies\KeyBoard\Alphabet.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\IO\KeyBoard.h">
+    <ClInclude Include="BitFire\IO\Devies\KeyBoard\FunctionKeys.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\IO\Devies\KeyBoard\KeyBoard.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\IO\Devies\KeyBoard\Numbers.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\IO\Devies\Mouse\Mouse.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\IO\FileLoader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\IO\StringManipulator.h">
@@ -54,6 +81,9 @@
     <ClInclude Include="BitFire\Mathmatic\Geometry\Shapes\Triangle.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="BitFire\Mathmatic\Geometry\Direction.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
     <ClInclude Include="BitFire\Mathmatic\Geometry\Mesh.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -64,6 +94,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Mathmatic\Geometry\RenderObject.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathmatic\Geometry\Rotation.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Mathmatic\Geometry\TrippelIndex.h">
@@ -87,15 +120,27 @@
     <ClInclude Include="BitFire\Window\Window.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Color\RGBA.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BitFire\Graphics\Camera.cpp">
+    <ClCompile Include="BitFire\Color\RGBA.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Graphics\CameraSettings.cpp">
+    <ClCompile Include="BitFire\Graphics\Camera\Camera.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Graphics\Camera\CameraSettings.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Graphics\Camera\FirstPersonCamera.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\IO\DataType\Font\BitMapFont.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\IO\DataType\Font\BitMapFontCharacter.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\IO\DataType\Font\BitMapFontLoader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\IO\DataType\Texture.cpp">
@@ -104,10 +149,22 @@
     <ClCompile Include="BitFire\IO\DataType\WaveFont.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\IO\FileLoader.cpp">
+    <ClCompile Include="BitFire\IO\Devies\KeyBoard\Alphabet.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\IO\KeyBoard.cpp">
+    <ClCompile Include="BitFire\IO\Devies\KeyBoard\FunctionKeys.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\IO\Devies\KeyBoard\KeyBoard.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\IO\Devies\KeyBoard\Numbers.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\IO\Devies\Mouse\Mouse.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\IO\FileLoader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\IO\StringManipulator.cpp">
@@ -132,6 +189,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Mathmatic\Geometry\RenderObject.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Mathmatic\Geometry\Rotation.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Mathmatic\Geometry\TrippelIndex.cpp">
@@ -159,9 +219,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\SplittedString.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Color\RGBA.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

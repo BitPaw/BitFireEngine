@@ -20,20 +20,30 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitFire\Color\RGBA.h" />
-    <ClInclude Include="BitFire\Graphics\Camera.h" />
     <ClInclude Include="BitFire\Graphics\CameraMode.h" />
-    <ClInclude Include="BitFire\Graphics\CameraSettings.h" />
+    <ClInclude Include="BitFire\Graphics\Camera\Camera.h" />
+    <ClInclude Include="BitFire\Graphics\Camera\CameraSettings.h" />
+    <ClInclude Include="BitFire\Graphics\Camera\FirstPersonCamera.h" />
     <ClInclude Include="BitFire\Graphics\RefreshRateMode.h" />
+    <ClInclude Include="BitFire\IO\DataType\Font\BitMapFont.h" />
+    <ClInclude Include="BitFire\IO\DataType\Font\BitMapFontCharacter.h" />
+    <ClInclude Include="BitFire\IO\DataType\Font\BitMapFontLoader.h" />
     <ClInclude Include="BitFire\IO\DataType\Texture.h" />
     <ClInclude Include="BitFire\IO\DataType\WaveFont.h" />
+    <ClInclude Include="BitFire\IO\Devies\KeyBoard\Alphabet.h" />
+    <ClInclude Include="BitFire\IO\Devies\KeyBoard\FunctionKeys.h" />
+    <ClInclude Include="BitFire\IO\Devies\KeyBoard\KeyBoard.h" />
+    <ClInclude Include="BitFire\IO\Devies\KeyBoard\Numbers.h" />
+    <ClInclude Include="BitFire\IO\Devies\Mouse\Mouse.h" />
     <ClInclude Include="BitFire\IO\FileLoader.h" />
-    <ClInclude Include="BitFire\IO\KeyBoard.h" />
     <ClInclude Include="BitFire\IO\StringManipulator.h" />
     <ClInclude Include="BitFire\IO\TextureLoader.h" />
+    <ClInclude Include="BitFire\Mathmatic\Geometry\Direction.h" />
     <ClInclude Include="BitFire\Mathmatic\Geometry\Mesh.h" />
     <ClInclude Include="BitFire\Mathmatic\Geometry\Point.h" />
     <ClInclude Include="BitFire\Mathmatic\Geometry\Position.h" />
     <ClInclude Include="BitFire\Mathmatic\Geometry\RenderObject.h" />
+    <ClInclude Include="BitFire\Mathmatic\Geometry\Rotation.h" />
     <ClInclude Include="BitFire\Mathmatic\Geometry\Shapes\Rectangle.h" />
     <ClInclude Include="BitFire\Mathmatic\Geometry\Shapes\Triangle.h" />
     <ClInclude Include="BitFire\Mathmatic\Geometry\TrippelIndex.h" />
@@ -47,12 +57,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BitFire\Color\RGBA.cpp" />
-    <ClCompile Include="BitFire\Graphics\Camera.cpp" />
-    <ClCompile Include="BitFire\Graphics\CameraSettings.cpp" />
+    <ClCompile Include="BitFire\Graphics\Camera\Camera.cpp" />
+    <ClCompile Include="BitFire\Graphics\Camera\CameraSettings.cpp" />
+    <ClCompile Include="BitFire\Graphics\Camera\FirstPersonCamera.cpp" />
+    <ClCompile Include="BitFire\IO\DataType\Font\BitMapFont.cpp" />
+    <ClCompile Include="BitFire\IO\DataType\Font\BitMapFontCharacter.cpp" />
+    <ClCompile Include="BitFire\IO\DataType\Font\BitMapFontLoader.cpp" />
     <ClCompile Include="BitFire\IO\DataType\Texture.cpp" />
     <ClCompile Include="BitFire\IO\DataType\WaveFont.cpp" />
+    <ClCompile Include="BitFire\IO\Devies\KeyBoard\Alphabet.cpp" />
+    <ClCompile Include="BitFire\IO\Devies\KeyBoard\FunctionKeys.cpp" />
+    <ClCompile Include="BitFire\IO\Devies\KeyBoard\KeyBoard.cpp" />
+    <ClCompile Include="BitFire\IO\Devies\KeyBoard\Numbers.cpp" />
+    <ClCompile Include="BitFire\IO\Devies\Mouse\Mouse.cpp" />
     <ClCompile Include="BitFire\IO\FileLoader.cpp" />
-    <ClCompile Include="BitFire\IO\KeyBoard.cpp" />
     <ClCompile Include="BitFire\IO\StringManipulator.cpp" />
     <ClCompile Include="BitFire\IO\TextureLoader.cpp" />
     <ClCompile Include="BitFire\Main.cpp" />
@@ -60,6 +78,7 @@
     <ClCompile Include="BitFire\Mathmatic\Geometry\Point.cpp" />
     <ClCompile Include="BitFire\Mathmatic\Geometry\Position.cpp" />
     <ClCompile Include="BitFire\Mathmatic\Geometry\RenderObject.cpp" />
+    <ClCompile Include="BitFire\Mathmatic\Geometry\Rotation.cpp" />
     <ClCompile Include="BitFire\Mathmatic\Geometry\Shapes\Rectangle.cpp" />
     <ClCompile Include="BitFire\Mathmatic\Geometry\Shapes\Triangle.cpp" />
     <ClCompile Include="BitFire\Mathmatic\Geometry\TrippelIndex.cpp" />
@@ -151,7 +170,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);GLEW_STATIC</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);GLEW_STATIC;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -167,7 +186,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);GLEW_STATIC</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);GLEW_STATIC;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -183,7 +202,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);GLEW_STATIC</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);GLEW_STATIC;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -199,7 +218,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);GLEW_STATIC</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);GLEW_STATIC;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>

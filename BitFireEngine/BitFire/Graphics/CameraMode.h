@@ -1,6 +1,6 @@
 #pragma once
 
-enum CameraMode
+enum class CameraMode
 {
 	Orthographic,
 	Perspectdive
