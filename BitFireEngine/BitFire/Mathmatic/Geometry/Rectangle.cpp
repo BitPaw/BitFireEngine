@@ -15,7 +15,7 @@ Rectangle::Rectangle(Vertex a, Vertex b, Vertex c, Vertex d) : Rectangle(new Ver
 
 }
 
-Rectangle::Rectangle(Vertex* vertex, unsigned int nr) : RenderObject(new Mesh(vertex, nr, new unsigned int[6] { 0, 1, 2, 2, 3, 0 }, 6))
+Rectangle::Rectangle(Vertex* vertex, unsigned int nr) : RenderObject("Rectangle", new Mesh(vertex, nr, new unsigned int[6] { 0, 1, 2, 2, 3, 0 }, 6))
 {
 
 }

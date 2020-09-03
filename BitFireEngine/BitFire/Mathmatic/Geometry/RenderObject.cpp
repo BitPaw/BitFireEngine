@@ -1,15 +1,18 @@
 #include "RenderObject.h"
 
-RenderObject::RenderObject() : RenderObject(nullptr)
+
+RenderObject::RenderObject() : RenderObject("[N/A]",nullptr)
 {
 
 }
 
-RenderObject::RenderObject(Mesh* mesh)
+RenderObject::RenderObject(const char* name, Mesh* mesh)
 {
+    Name = name;
+
     if (mesh == nullptr)
     {
-        mesh = new Mesh();
+        _mesh = new Mesh();
     }
     else
     {
@@ -21,10 +24,8 @@ RenderObject::~RenderObject()
 {
     delete _mesh;
 }
-/*
-Mesh RenderObject::GetRenderMesh()
-{
-   // Mesh mesh(this);
 
-    return mesh;
-}*/
+void RenderObject::SetName(const char* name)
+{
+    Name = name;
+}

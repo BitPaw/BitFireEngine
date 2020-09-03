@@ -15,7 +15,7 @@ Triangle::Triangle(Vertex a, Vertex b, Vertex c) : Triangle(new Vertex[3]{ a, b,
 
 }
 
-Triangle::Triangle(Vertex* vertexList) : RenderObject(new Mesh(vertexList, 3, new unsigned int[3] {0,1,2}, 3))
+Triangle::Triangle(Vertex* vertexList) : RenderObject("Triangle", new Mesh(vertexList, 3, new unsigned int[3] {0,1,2}, 3))
 {
 
 }

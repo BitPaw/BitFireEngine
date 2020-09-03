@@ -36,6 +36,8 @@ bool Window::Create(const int width, const int height, const char* title)
     {
         return false;
     }
+
+    glfwSwapInterval(1);
 }
 
 void Window::Update()
@@ -57,7 +59,7 @@ void Window::Update()
     
     //glDrawElements(GL_TRIANGLES, 1, NULL); Draw Spacific 
 
-   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+   glDrawElements(GL_TRIANGLES, 8631, GL_UNSIGNED_INT, nullptr);
 
     /* Swap front and back buffers */
     glfwSwapBuffers(_window);
