@@ -1,13 +1,55 @@
 #include "Window.h"
 
+KeyBoard* Window::KeyBoardInput;
+
 Window::Window()
 {
     Exit = false;
+
+    KeyBoardInput = new KeyBoard();
 }
 
 Window::~Window()
 {
     glfwTerminate();
+
+    delete KeyBoardInput;
+}
+
+void OnKeyPressed(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    KeyBoard* keyBoard = Window::KeyBoardInput;
+
+    //keyBoard->Reset();
+
+    if (action == GLFW_PRESS)
+    {
+        if (key == GLFW_KEY_W)   keyBoard->W = true;
+        if (key == GLFW_KEY_A)   keyBoard->A = true;
+        if (key == GLFW_KEY_S)   keyBoard->S = true;
+        if (key == GLFW_KEY_D)   keyBoard->D = true;
+        if (key == GLFW_KEY_F)   keyBoard->F = true;
+        if (key == GLFW_KEY_G)   keyBoard->G = true;
+
+        if (key == GLFW_KEY_E)   keyBoard->E = true;
+        if (key == GLFW_KEY_R)   keyBoard->R = true;
+    }
+
+    if (action == GLFW_RELEASE)
+    {
+        if (key == GLFW_KEY_W)   keyBoard->W = false;
+        if (key == GLFW_KEY_A)   keyBoard->A = false;
+        if (key == GLFW_KEY_S)   keyBoard->S = false;
+        if (key == GLFW_KEY_D)   keyBoard->D = false;
+        if (key == GLFW_KEY_F)   keyBoard->F = false;
+        if (key == GLFW_KEY_G)   keyBoard->G = false;
+
+        if (key == GLFW_KEY_E)   keyBoard->E = false;
+        if (key == GLFW_KEY_R)   keyBoard->R = false;
+    }
+  
+
+
 }
 
 bool Window::Create(const int width, const int height, const char* title)
@@ -37,12 +79,19 @@ bool Window::Create(const int width, const int height, const char* title)
         return false;
     }
 
+    glfwSetKeyCallback(_window, OnKeyPressed);
+
     glfwSwapInterval(1);
 }
+
+
+
 
 void Window::Update()
 {
     Exit = glfwWindowShouldClose(_window);
+
+    //Window::KeyBoardInput->Reset();
 
     /* Render here */
     //glClear(GL_COLOR_BUFFER_BIT);

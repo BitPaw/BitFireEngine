@@ -1,22 +1,21 @@
 #include "Vertex.h"
 
-Vertex::Vertex()
-{
-	CurrentPosition = nullptr;
-	NormalizedPosition = nullptr;
-	Color = nullptr;
-}
-
-Vertex::Vertex(Position* currentPosition) : Vertex(currentPosition, nullptr, nullptr)
+Vertex::Vertex() : Vertex(nullptr, nullptr, nullptr, nullptr)
 {
 
 }
 
-Vertex::Vertex(Position* currentPosition, Position* normalizedPosition, Point* color)
+Vertex::Vertex(Position* currentPosition) : Vertex(currentPosition, nullptr, nullptr, nullptr)
+{
+
+}
+
+Vertex::Vertex(Position* currentPosition, Position* normalizedPosition, Position* color, Point* texturePoint)
 {
 	CurrentPosition = currentPosition;
 	NormalizedPosition = normalizedPosition;
 	Color = color;
+	TexturePoint = texturePoint;
 }
 
 Vertex::~Vertex()

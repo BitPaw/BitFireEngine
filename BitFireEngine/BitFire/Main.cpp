@@ -13,39 +13,90 @@
 
 #include <GLM/glm.hpp>
 
+#include <chrono>
+#include <thread>
+
 int main()
 {
     Window* window = new Window();
     window->Create(500, 500, "SteelStorm");  
 
+    if (false)
+    {
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+    }
+
+    if (true)
+    {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+
 
     Camera* camera = new Camera();
     RenderObject* renderObject;   
 
-    //renderObject = wf->LoadFromFile("B:/Daten/Objects/cabinet/FilingCabinetOBJ.obj");
-    //renderObject = wf->LoadFromFile("B:/Daten/Objects/arwing/arwing_SNES.obj");
-    //renderObject = WaveFont::LoadFromFile("C:/_WorkSpace/C++/sphere.obj");
-    //renderObject = wf->LoadFromFile("C:/_WorkSpace/C++/A.obj");
-    //renderObject = new Rectangle();
-   
+    // Object Creation
+    {
 
-   if (true)
-   {
-       renderObject = new Triangle();
+        //renderObject = WaveFont::LoadFromFile("B:/Daten/Objects/cabinet/FilingCabinetOBJ.obj"); // ???
+        //renderObject = WaveFont::LoadFromFile("B:/Daten/Objects/arwing/arwing_SNES.obj");  // ERRROR
 
-       renderObject->_mesh->VertexList[0].Color = new Point(1, 0);
-       renderObject->_mesh->VertexList[1].Color = new Point(1, 1);
-       renderObject->_mesh->VertexList[2].Color = new Point(0, 1);
+        const float lowcolor = 0.2f;
+        const float hicolor = 0.8f;
+
+        if (false)
+        {
+            renderObject = WaveFont::LoadFromFile("C:/_WorkSpace/C++/sphere.obj");
+
+            for (size_t i = 0; i < renderObject->_mesh->AmountOfVertexes; i++)
+            {
+                Vertex* vertex = &renderObject->_mesh->VertexList[i];
+
+                vertex->Color = new Position(vertex->TexturePoint->X, vertex->TexturePoint->Y, 0);
+            }
+        }
+
+        if (false)
+        {
+            renderObject = WaveFont::LoadFromFile("C:/_WorkSpace/C++/A.obj");
+
+            renderObject->_mesh->VertexList[0].Color = new Position(hicolor, lowcolor, lowcolor);
+            renderObject->_mesh->VertexList[1].Color = new Position(lowcolor, hicolor, lowcolor);
+            renderObject->_mesh->VertexList[2].Color = new Position(lowcolor, lowcolor, hicolor);
+            renderObject->_mesh->VertexList[3].Color = new Position(hicolor, hicolor, lowcolor);
+            renderObject->_mesh->VertexList[4].Color = new Position(lowcolor, hicolor, hicolor);
+        }
+
+        if (false)
+        {
+            renderObject = new Rectangle();
+
+            renderObject->_mesh->VertexList[0].Color = new Position(hicolor, lowcolor, lowcolor);
+            renderObject->_mesh->VertexList[1].Color = new Position(lowcolor, hicolor, lowcolor);
+            renderObject->_mesh->VertexList[2].Color = new Position(lowcolor, lowcolor, hicolor);
+            renderObject->_mesh->VertexList[3].Color = new Position(hicolor, hicolor, lowcolor);
+        }
+
+
+        if (true)
+        {
+            renderObject = new Triangle();
+
+            renderObject->_mesh->VertexList[0].Color = new Position(hicolor, lowcolor, lowcolor);
+            renderObject->_mesh->VertexList[1].Color = new Position(lowcolor, hicolor, lowcolor);
+            renderObject->_mesh->VertexList[2].Color = new Position(lowcolor, lowcolor, hicolor);
+        }
+
     }
-
 
     float* positions = renderObject->_mesh->GetVertexData();
     unsigned int* ind = renderObject->_mesh->GetIndices();
     const unsigned int vertexSize = renderObject->_mesh->AmountOfVertexes;
     const unsigned int indicesSize = renderObject->_mesh->IndiceListSize;
 
-     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);    
+
    
     VertexBuffer vertexBuffer(renderObject->_mesh);
    
@@ -77,20 +128,12 @@ int main()
 
 
     glm::mat4 model = glm::mat4(1.0f);
-    //model = glm::scale(model, glm::vec3(1.2f));    
     glm::mat4 completematrix;
-
-   // camera->Move(glm::vec3(0,0,-5));
-   // model = glm::translate(model, glm::vec3(0,0,-1.1f));
-
     int modelViewMapos = glGetUniformLocation(shader, "ModelViewProjection");
-
-    //camera->Move(glm::vec3(0,0,-5));
-    //model = glm::translate(model, glm::vec3(0,0,-8));
 
     while (!window->Exit)
     {      
-        glUniform4f(location, color.Red, color.Green, color.Blue, color.Alpha);
+       // glUniform4f(location, color.Red, color.Green, color.Blue, color.Alpha);
 
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -98,9 +141,71 @@ int main()
         //float y = (rand() % 200) / 200.0f;
         //float z = (rand() % 200) / 200.0f;
 
-       model = glm::rotate(model, 0.02f,glm::vec3(.2f,0.8,0.5f));
+        // Input
+        {
+            const float movementspeed = 0.01f;
 
-       completematrix = model; //* camera->GetUpdatedViewProjection();
+            if (window->KeyBoardInput->W == true)
+            {
+                camera->Move(glm::vec3(0, movementspeed, 0));  
+            }
+
+            if (window->KeyBoardInput->A == true)
+            {             
+                camera->Move(glm::vec3(-movementspeed, 0, 0));         
+            }
+
+            if (window->KeyBoardInput->S == true)
+            {
+                camera->Move(glm::vec3(0, -movementspeed, 0));          
+            }
+
+            if (window->KeyBoardInput->D == true)
+            {
+                camera->Move(glm::vec3(movementspeed, 0, 0));                  
+            }
+
+            if (window->KeyBoardInput->F == true)
+            {
+                camera->Settings->Mode = camera->Settings->Mode == Perspectdive ? Orthographic : Perspectdive;
+
+              //  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+                
+            }
+
+            if (window->KeyBoardInput->E == true)
+            {
+                camera->Move(glm::vec3(0, 0, -movementspeed));
+            }
+            if (window->KeyBoardInput->R == true)
+            {
+                camera->Move(glm::vec3(0, 0, movementspeed));
+            }
+
+            if (window->KeyBoardInput->G == true)
+            {
+                model = glm::rotate(model, 0.02f, glm::vec3(0, 1, 0));
+            }
+
+            model = glm::rotate(model, 0.02f, glm::vec3(0, 1, 0));
+        }
+        
+        if (true)
+        {
+            glm::vec3 trans = glm::vec3((camera->GetUpdatedViewProjection())[3]);
+            printf("Camera [%f | %f | %f] %s\n", trans.x, trans.y, trans.z, (camera->Settings->Mode == Perspectdive ? "Perspectdive" : "Orthographic"));
+        }
+
+
+        completematrix = camera->_projection * camera->_view * model;
+
+        /*
+        glm::mat4 w = glm::perspective(60.f, 1.0f, 0.01f, 14000.0f);
+        w = glm::translate(w, glm::vec3(0,0,-1));
+
+        completematrix = model * w;
+        */
 
         //glUniform4f(location, color.Red, color.Green, color.Blue, color.Alpha);
 

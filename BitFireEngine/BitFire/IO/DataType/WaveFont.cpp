@@ -279,7 +279,7 @@ RenderObject* WaveFont::LoadFromFile(std::string filePath)
 
             vertex->CurrentPosition = &positionList[i];
             vertex->NormalizedPosition = &vertexNormalList[i];
-            vertex->Color = &textureCoordinates[(indexList[i].B - 1)];
+            vertex->TexturePoint = &textureCoordinates[(indexList[i].B - 1)];
         }
     }
    

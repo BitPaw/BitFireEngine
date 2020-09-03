@@ -49,7 +49,7 @@ float* Mesh::GetVertexData()
 
 		if (Dimension >= 3)
 		{
-			data[dynamicIndex++] = vertex->CurrentPosition->Z;
+			data[dynamicIndex++] = 0;// vertex->CurrentPosition->Z;
 		}	
 
 		if (Dimension >= 4)
@@ -61,7 +61,7 @@ float* Mesh::GetVertexData()
 		{
 			data[dynamicIndex++] = vertex->Color->X; // Red
 			data[dynamicIndex++] = vertex->Color->Y; // Green
-			data[dynamicIndex++] = 0; // Blue
+			data[dynamicIndex++] = vertex->Color->Z; // Blue
 			data[dynamicIndex++] = 1; // Alpha
 		}
 		else

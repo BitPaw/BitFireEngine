@@ -11,11 +11,13 @@
 class Camera
 {
 private:
+
+
+public:
 	glm::mat4 _projection;
 	glm::mat4 _view;
 	glm::mat4 _viewProjection;
 
-public:
 	CameraSettings* Settings;
 	Position* CurrentPosition;
 

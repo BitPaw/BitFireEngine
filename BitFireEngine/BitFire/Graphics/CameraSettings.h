@@ -1,11 +1,13 @@
 #pragma once
 
 #include "RefreshRateMode.h"
+#include "CameraMode.h"
 
 class CameraSettings
 {
 public:
 	enum RefreshRateMode RefreshRate;
+	enum CameraMode Mode;
 
 	float FieldOfView;
 	float Height;

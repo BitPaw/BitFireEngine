@@ -7,10 +7,11 @@ class Vertex
 public:
 	Position* CurrentPosition;
 	Position* NormalizedPosition;
-	Point* Color;
+	Position* Color;
+	Point* TexturePoint;
 
 	Vertex();
 	Vertex(Position* currentPosition);
-	Vertex(Position* currentPosition, Position* normalizedPosition, Point* color);
+	Vertex(Position* currentPosition, Position* normalizedPosition, Position* color ,Point* texturePoint);
 	~Vertex();
 };

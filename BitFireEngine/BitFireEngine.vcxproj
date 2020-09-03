@@ -19,12 +19,40 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BitFire\Color\RGBA.h" />
+    <ClInclude Include="BitFire\Graphics\Camera.h" />
+    <ClInclude Include="BitFire\Graphics\CameraMode.h" />
+    <ClInclude Include="BitFire\Graphics\CameraSettings.h" />
+    <ClInclude Include="BitFire\Graphics\RefreshRateMode.h" />
+    <ClInclude Include="BitFire\IO\DataType\Texture.h" />
+    <ClInclude Include="BitFire\IO\DataType\WaveFont.h" />
+    <ClInclude Include="BitFire\IO\FileLoader.h" />
+    <ClInclude Include="BitFire\IO\KeyBoard.h" />
+    <ClInclude Include="BitFire\IO\StringManipulator.h" />
+    <ClInclude Include="BitFire\IO\TextureLoader.h" />
+    <ClInclude Include="BitFire\Mathmatic\Geometry\Mesh.h" />
+    <ClInclude Include="BitFire\Mathmatic\Geometry\Point.h" />
+    <ClInclude Include="BitFire\Mathmatic\Geometry\Position.h" />
+    <ClInclude Include="BitFire\Mathmatic\Geometry\RenderObject.h" />
+    <ClInclude Include="BitFire\Mathmatic\Geometry\Shapes\Rectangle.h" />
+    <ClInclude Include="BitFire\Mathmatic\Geometry\Shapes\Triangle.h" />
+    <ClInclude Include="BitFire\Mathmatic\Geometry\TrippelIndex.h" />
+    <ClInclude Include="BitFire\Mathmatic\Geometry\Vertex.h" />
+    <ClInclude Include="BitFire\Mathmatic\Interpolate.h" />
+    <ClInclude Include="BitFire\Shader\ShaderFile.h" />
+    <ClInclude Include="BitFire\Shader\ShaderLoader.h" />
+    <ClInclude Include="BitFire\SplittedString.h" />
+    <ClInclude Include="BitFire\Window\VertexBuffer.h" />
+    <ClInclude Include="BitFire\Window\Window.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="BitFire\Color\RGBA.cpp" />
     <ClCompile Include="BitFire\Graphics\Camera.cpp" />
     <ClCompile Include="BitFire\Graphics\CameraSettings.cpp" />
     <ClCompile Include="BitFire\IO\DataType\Texture.cpp" />
     <ClCompile Include="BitFire\IO\DataType\WaveFont.cpp" />
     <ClCompile Include="BitFire\IO\FileLoader.cpp" />
+    <ClCompile Include="BitFire\IO\KeyBoard.cpp" />
     <ClCompile Include="BitFire\IO\StringManipulator.cpp" />
     <ClCompile Include="BitFire\IO\TextureLoader.cpp" />
     <ClCompile Include="BitFire\Main.cpp" />
@@ -44,29 +72,8 @@
     <ClCompile Include="BitFire\Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BitFire\Color\RGBA.h" />
-    <ClInclude Include="BitFire\Graphics\Camera.h" />
-    <ClInclude Include="BitFire\Graphics\CameraSettings.h" />
-    <ClInclude Include="BitFire\Graphics\RefreshRateMode.h" />
-    <ClInclude Include="BitFire\IO\DataType\Texture.h" />
-    <ClInclude Include="BitFire\IO\DataType\WaveFont.h" />
-    <ClInclude Include="BitFire\IO\FileLoader.h" />
-    <ClInclude Include="BitFire\IO\StringManipulator.h" />
-    <ClInclude Include="BitFire\IO\TextureLoader.h" />
-    <ClInclude Include="BitFire\Mathmatic\Geometry\Mesh.h" />
-    <ClInclude Include="BitFire\Mathmatic\Geometry\Point.h" />
-    <ClInclude Include="BitFire\Mathmatic\Geometry\Position.h" />
-    <ClInclude Include="BitFire\Mathmatic\Geometry\RenderObject.h" />
-    <ClInclude Include="BitFire\Mathmatic\Geometry\Shapes\Rectangle.h" />
-    <ClInclude Include="BitFire\Mathmatic\Geometry\Shapes\Triangle.h" />
-    <ClInclude Include="BitFire\Mathmatic\Geometry\TrippelIndex.h" />
-    <ClInclude Include="BitFire\Mathmatic\Geometry\Vertex.h" />
-    <ClInclude Include="BitFire\Mathmatic\Interpolate.h" />
-    <ClInclude Include="BitFire\Shader\ShaderFile.h" />
-    <ClInclude Include="BitFire\Shader\ShaderLoader.h" />
-    <ClInclude Include="BitFire\SplittedString.h" />
-    <ClInclude Include="BitFire\Window\VertexBuffer.h" />
-    <ClInclude Include="BitFire\Window\Window.h" />
+    <None Include="BitFire\Shader\FragmentShader.fms" />
+    <None Include="BitFire\Shader\VertexShader.vts" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
