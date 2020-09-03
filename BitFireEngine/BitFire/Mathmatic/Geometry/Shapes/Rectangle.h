@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Vertex.h"
-#include "RenderObject.h"
+#include "../Vertex.h"
+#include "../RenderObject.h"
 
 class Rectangle : public RenderObject
 {

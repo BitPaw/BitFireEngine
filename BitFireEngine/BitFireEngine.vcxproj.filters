@@ -18,13 +18,31 @@
     <ClCompile Include="BitFire\Color\RGBA.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="BitFire\Graphics\Camera.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Graphics\CameraSettings.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\IO\DataType\Texture.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\IO\DataType\WaveFont.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
     <ClCompile Include="BitFire\IO\FileLoader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\IO\StringManipulator.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\IO\WaveFont.cpp">
+    <ClCompile Include="BitFire\IO\TextureLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Mathmatic\Geometry\Shapes\Rectangle.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Mathmatic\Geometry\Shapes\Triangle.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Mathmatic\Geometry\Mesh.cpp">
@@ -36,16 +54,19 @@
     <ClCompile Include="BitFire\Mathmatic\Geometry\Position.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Mathmatic\Geometry\Rectangle.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="BitFire\Mathmatic\Geometry\RenderObject.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Mathmatic\Geometry\Triangle.cpp">
+    <ClCompile Include="BitFire\Mathmatic\Geometry\TrippelIndex.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Mathmatic\Geometry\Vertex.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Mathmatic\Interpolate.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Shader\ShaderFile.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Shader\ShaderLoader.cpp">
@@ -68,13 +89,34 @@
     <ClInclude Include="BitFire\Color\RGBA.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="BitFire\Graphics\Camera.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Graphics\CameraSettings.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Graphics\RefreshRateMode.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\IO\DataType\Texture.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\IO\DataType\WaveFont.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
     <ClInclude Include="BitFire\IO\FileLoader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\IO\StringManipulator.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\IO\WaveFont.h">
+    <ClInclude Include="BitFire\IO\TextureLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathmatic\Geometry\Shapes\Rectangle.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathmatic\Geometry\Shapes\Triangle.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Mathmatic\Geometry\Mesh.h">
@@ -86,16 +128,19 @@
     <ClInclude Include="BitFire\Mathmatic\Geometry\Position.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Mathmatic\Geometry\Rectangle.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="BitFire\Mathmatic\Geometry\RenderObject.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Mathmatic\Geometry\Triangle.h">
+    <ClInclude Include="BitFire\Mathmatic\Geometry\TrippelIndex.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Mathmatic\Geometry\Vertex.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathmatic\Interpolate.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Shader\ShaderFile.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Shader\ShaderLoader.h">

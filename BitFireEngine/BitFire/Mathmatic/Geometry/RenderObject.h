@@ -5,12 +5,10 @@
 #include "Point.h"
 #include "../../IO/FileLoader.h"
 
-
 class RenderObject
 {
 protected:
 	//Mesh* _mesh;
-
 
 public:	
 	RenderObject();

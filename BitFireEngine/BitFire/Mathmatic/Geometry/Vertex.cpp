@@ -23,16 +23,16 @@ Vertex::~Vertex()
 {
 	if (CurrentPosition != nullptr)
 	{
-		delete CurrentPosition;
+		//delete CurrentPosition;
 	}
 
 	if (NormalizedPosition != nullptr)
 	{
-		delete NormalizedPosition;
+		//delete NormalizedPosition;
 	}
 
 	if (Color != nullptr)
 	{
-		delete Color;
+		//delete Color;
 	}
 }

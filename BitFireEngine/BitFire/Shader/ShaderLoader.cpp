@@ -55,3 +55,23 @@ unsigned int ShaderLoader::CreateShader(const std::string& vertexShader, const s
 
     return programm;
 }
+
+void ShaderLoader::CheckShader(const unsigned int programmID, const unsigned int shaderID)
+{
+    /*
+    char* message;
+    GLint lengh;
+    GLint maxLengh = 255;
+
+    glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &lengh);
+    glGetShaderInfoLog(shaderID, maxLengh, &lengh, message);
+
+    printf("Shader with ID <%u> has folloing message : %s", shaderID, message);
+
+    glGetProgramiv(programmID, GL_INFO_LOG_LENGTH, &lengh);
+    glGetProgramInfoLog(shaderID, maxLengh, &lengh, message);
+
+    printf("Program with ID <%u> has folloing message : %s", programmID, message);
+    */
+  
+}

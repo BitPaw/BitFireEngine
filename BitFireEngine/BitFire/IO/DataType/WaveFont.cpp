@@ -25,7 +25,7 @@ Point WaveFont::ParsePointLine(std::string line)
     return point;
 }
 
-void WaveFont::ParseIndicesAndMerge(std::string line, Position* list, unsigned int* index)
+void WaveFont::ParseIndicesAndMerge(std::string line, TrippelIndex* indexList, unsigned int* index)
 {
     SplittedString ss = SplittedString::Split(line, ' ');
 
@@ -45,11 +45,11 @@ void WaveFont::ParseIndicesAndMerge(std::string line, Position* list, unsigned i
         float y = std::stof(yValue);
         float z = std::stof(zValue);
                 
-        Position* position = &list[(*index)++];
+        TrippelIndex* indexObject = &indexList[(*index)++];
 
-        position->X = x;
-        position->Y = y;
-        position->Z = z;
+        indexObject->A = x;
+        indexObject->B = y;
+        indexObject->C = z;
     }
 }
 
@@ -73,6 +73,8 @@ RenderObject* WaveFont::LoadFromFile(std::string filePath)
     unsigned int numberOfLines = 0;
     std::string* lines = FileLoader::ReadFileByLines(filePath, &numberOfLines);
 
+    printf("WaveFont (OBJ) sucessfully loaded from <%s> with <%u> lines detexted\n", filePath.c_str(), numberOfLines);
+
     RenderObject* renderObject;
     enum LineCommand* commandList = new LineCommand[numberOfLines];
 
@@ -86,7 +88,7 @@ RenderObject* WaveFont::LoadFromFile(std::string filePath)
     Position* vertexNormalList;
 
     unsigned int faceCounter = 0;
-    Position* indexList;   
+    TrippelIndex* indexList;   
 
 
     unsigned int indiceListLengh;
@@ -186,6 +188,13 @@ RenderObject* WaveFont::LoadFromFile(std::string filePath)
         commandList[i] = currentCommand;
     }
 
+    printf("Analysis complete!\n");
+
+    printf(" V  : %u\n", vertexCounter);
+    printf(" VT : %u\n", vertexTexture);
+    printf(" VN : %u\n", vertexNormal);
+    printf(" F  : %u\n", faceCounter);
+
     // Create Space
     indiceListLengh = faceCounter * 3;
 
@@ -193,7 +202,7 @@ RenderObject* WaveFont::LoadFromFile(std::string filePath)
     textureCoordinates = new Point[vertexTexture];
     vertexNormalList = new Position[vertexNormal];
     indiceList = new unsigned int[indiceListLengh];
-    indexList = new Position[indiceListLengh];
+    indexList = new TrippelIndex[indiceListLengh];
 
     Vertex* vertexes = new Vertex[vertexCounter];
 
@@ -245,10 +254,10 @@ RenderObject* WaveFont::LoadFromFile(std::string filePath)
 
     for (size_t i = 0; i < indiceListLengh; i++)
     {
-        indiceList[i] = indexList[i].X;
+        indiceList[i] = (indexList[i].A) -1;
+
+        //printf("ID %u : %u\n",i,  indiceList[i]);
     }
-
-
 
     // Set Data
     {
@@ -270,7 +279,7 @@ RenderObject* WaveFont::LoadFromFile(std::string filePath)
 
             vertex->CurrentPosition = &positionList[i];
             vertex->NormalizedPosition = &vertexNormalList[i];
-            vertex->Color = &textureCoordinates[i];
+            vertex->Color = &textureCoordinates[(indexList[i].B - 1)];
         }
     }
    

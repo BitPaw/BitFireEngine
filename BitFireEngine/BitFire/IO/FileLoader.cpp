@@ -33,8 +33,7 @@ std::string* FileLoader::ReadFileByLines(std::string filePath, unsigned int* num
     infile.seekg(0, std::ios_base::beg);
 
     lines = new std::string[*numberOfLines];
-    (*numberOfLines)--; 
-
+    
     while (std::getline(infile, currentLine))
     {
         lines[lineIndex++] = currentLine;
