@@ -8,6 +8,6 @@ public:
 	float Y;
 
 	Point();
-	Point(float x, float y);
+	Point(const float x, const float y);
 };
 

@@ -45,7 +45,7 @@ void Window::Update()
     Exit = glfwWindowShouldClose(_window);
 
     /* Render here */
-    glClear(GL_COLOR_BUFFER_BIT);
+    //glClear(GL_COLOR_BUFFER_BIT);
 
     /*
     glBegin(GL_TRIANGLES);
@@ -55,11 +55,11 @@ void Window::Update()
     glEnd();
     */
 
-    //glDrawArrays(GL_TRIANGLES, 0, 3); // Draw all
+   // glDrawArrays(GL_TRIANGLES, 0, 3); // Draw all
     
     //glDrawElements(GL_TRIANGLES, 1, NULL); Draw Spacific 
 
-   glDrawElements(GL_TRIANGLES, 8631, GL_UNSIGNED_INT, nullptr);
+   //glDrawElements(GL_TRIANGLES, 8631, GL_UNSIGNED_INT, nullptr);
 
     /* Swap front and back buffers */
     glfwSwapBuffers(_window);

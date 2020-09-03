@@ -1,6 +1,6 @@
 #include "WaveFont.h"
 
-Vertex WaveFont::ParseVertexLine(std::string line)
+Position WaveFont::ParsePositionLine(std::string line)
 {
     SplittedString ss = SplittedString::Split(line,' ');
 
@@ -8,9 +8,9 @@ Vertex WaveFont::ParseVertexLine(std::string line)
     float y = std::stof(ss.Lines[2]);
     float z = std::stof(ss.Lines[3]);
 
-    Vertex vertex(x, y, z);
+    Position position(x, y, z);
 
-    return vertex;
+    return position;
 }
 
 Point WaveFont::ParsePointLine(std::string line)
@@ -25,21 +25,31 @@ Point WaveFont::ParsePointLine(std::string line)
     return point;
 }
 
-void WaveFont::ParseIndicesAndMerge(std::string line, unsigned int* arrayIndex, unsigned int* index)
+void WaveFont::ParseIndicesAndMerge(std::string line, Position* list, unsigned int* index)
 {
     SplittedString ss = SplittedString::Split(line, ' ');
+
+    std::string xValue, yValue, zValue;
 
     for (size_t i = 1; i < 4; i++)
     {
         SplittedString aa = SplittedString::Split(ss.Lines[i], '/');
 
-        float x = std::stof(aa.Lines[0]);
-        float y = std::stof(aa.Lines[1]);
-        float z = std::stof(aa.Lines[2]);
+        // Possiple error if char is /
 
-        arrayIndex[(*index)++] = x;
-        arrayIndex[(*index)++] = y;
-        arrayIndex[(*index)++] = z;
+        xValue = aa.Lines[0];
+        yValue = aa.Lines[1];
+        zValue = aa.Lines[2];
+
+        float x = std::stof(xValue);
+        float y = std::stof(yValue);
+        float z = std::stof(zValue);
+                
+        Position* position = &list[(*index)++];
+
+        position->X = x;
+        position->Y = y;
+        position->Z = z;
     }
 }
 
@@ -67,16 +77,21 @@ RenderObject* WaveFont::LoadFromFile(std::string filePath)
     enum LineCommand* commandList = new LineCommand[numberOfLines];
 
     unsigned int vertexCounter = 0;
-    Vertex* vertexList;
+    Position* positionList;
 
     unsigned int vertexTexture = 0;
     Point* textureCoordinates;
 
     unsigned int vertexNormal = 0;
-    Vertex* vertexNormalList;
+    Position* vertexNormalList;
 
+    unsigned int faceCounter = 0;
+    Position* indexList;   
+
+
+    unsigned int indiceListLengh;
     unsigned int* indiceList;
-    unsigned int indiceCounter = 0;
+
 
     unsigned int startIndice = 0;
 
@@ -84,7 +99,8 @@ RenderObject* WaveFont::LoadFromFile(std::string filePath)
     for (unsigned int i = 0; i < numberOfLines; i++)
     {
         enum LineCommand currentCommand;
-        char functionChar = lines[i].at(0);
+        std::string line = lines[i];
+        char functionChar = line.length() <= 0 ? ' ' : line.at(0);
 
         // Parse Command
         switch (functionChar)
@@ -158,7 +174,7 @@ RenderObject* WaveFont::LoadFromFile(std::string filePath)
             break;
 
         case Face:
-            indiceCounter++;
+            faceCounter++;
             break;
 
         default:
@@ -171,16 +187,21 @@ RenderObject* WaveFont::LoadFromFile(std::string filePath)
     }
 
     // Create Space
-    vertexList = new Vertex[vertexCounter];
+    indiceListLengh = faceCounter * 3;
+
+    positionList = new Position[vertexCounter];
     textureCoordinates = new Point[vertexTexture];
-    vertexNormalList = new Vertex[vertexNormal];
-    indiceList = new unsigned int[indiceCounter * 3 * 3];
+    vertexNormalList = new Position[vertexNormal];
+    indiceList = new unsigned int[indiceListLengh];
+    indexList = new Position[indiceListLengh];
+
+    Vertex* vertexes = new Vertex[vertexCounter];
 
     // Reset
     vertexCounter = 0;
     vertexTexture = 0;
     vertexNormal = 0;
-    indiceCounter = 0;
+    faceCounter = 0;
 
     std::string name = "[N/A]";
 
@@ -190,15 +211,15 @@ RenderObject* WaveFont::LoadFromFile(std::string filePath)
         switch (commandList[i])
         {
         case VertexGeometric:
-            vertexList[vertexCounter++] = ParseVertexLine(lines[i]);
+            positionList[vertexCounter++] = ParsePositionLine(lines[i]);
             break;
 
         case VertexTexture:
             textureCoordinates[vertexTexture++] = ParsePointLine(lines[i]);
             break;
 
-        case VertexNormal:
-            vertexNormalList[vertexNormal++] = ParseVertexLine(lines[i]);
+        case VertexNormal:      
+            vertexNormalList[vertexNormal++] = ParsePositionLine(lines[i]);
             break;
 
         case VertexParameter:
@@ -206,10 +227,11 @@ RenderObject* WaveFont::LoadFromFile(std::string filePath)
             break;
 
         case Face:
-            ParseIndicesAndMerge(lines[i], indiceList, &indiceCounter);
+            ParseIndicesAndMerge(lines[i], indexList, &faceCounter);
             break;
 
         case ObjectName:
+            name = lines[i].substr(2);
             break;
 
         default:
@@ -218,10 +240,43 @@ RenderObject* WaveFont::LoadFromFile(std::string filePath)
         }
     }
 
+ 
     const char* objname = name.c_str();
-    Mesh* mesh = new Mesh(vertexList, vertexCounter, indiceList, indiceCounter);
 
-   renderObject = new RenderObject(objname, mesh);
+    for (size_t i = 0; i < indiceListLengh; i++)
+    {
+        indiceList[i] = indexList[i].X;
+    }
+
+
+
+    // Set Data
+    {
+        Vertex* vertex;
+        Position* indexPosition;
+        unsigned int positionID;
+        unsigned int normalID;
+        unsigned int colorID;
+
+        for (size_t i = 0; i < vertexCounter; i++)
+        {
+            vertex = &vertexes[i];
+            //indexPosition = &indexList[i];
+            //positionID = indexPosition->X;
+            //normalID = indexPosition->Y;
+            //colorID = indexPosition->Z;
+
+            //indiceList[i] = positionList[positionID].X;
+
+            vertex->CurrentPosition = &positionList[i];
+            vertex->NormalizedPosition = &vertexNormalList[i];
+            vertex->Color = &textureCoordinates[i];
+        }
+    }
+   
+    Mesh* mesh = new Mesh(vertexes, vertexCounter, indiceList, faceCounter, 3);
+
+    renderObject = new RenderObject(objname, mesh);
 
     //renderObject = nullptr;
     

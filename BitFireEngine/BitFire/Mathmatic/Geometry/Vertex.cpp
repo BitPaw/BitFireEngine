@@ -1,18 +1,38 @@
 #include "Vertex.h"
 
-Vertex::Vertex() : Vertex(0, 0, 0)
+Vertex::Vertex()
+{
+	CurrentPosition = nullptr;
+	NormalizedPosition = nullptr;
+	Color = nullptr;
+}
+
+Vertex::Vertex(Position* currentPosition) : Vertex(currentPosition, nullptr, nullptr)
 {
 
 }
 
-Vertex::Vertex(float x, float y) : Vertex(x, y, 0)
+Vertex::Vertex(Position* currentPosition, Position* normalizedPosition, Point* color)
 {
-
+	CurrentPosition = currentPosition;
+	NormalizedPosition = normalizedPosition;
+	Color = color;
 }
 
-Vertex::Vertex(float x, float y, float z)
+Vertex::~Vertex()
 {
-	X = x;
-	Y = y;
-	Z = z;
+	if (CurrentPosition != nullptr)
+	{
+		delete CurrentPosition;
+	}
+
+	if (NormalizedPosition != nullptr)
+	{
+		delete NormalizedPosition;
+	}
+
+	if (Color != nullptr)
+	{
+		delete Color;
+	}
 }

@@ -18,6 +18,41 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BitFire\Color\RGBA.cpp" />
+    <ClCompile Include="BitFire\IO\FileLoader.cpp" />
+    <ClCompile Include="BitFire\IO\StringManipulator.cpp" />
+    <ClCompile Include="BitFire\IO\WaveFont.cpp" />
+    <ClCompile Include="BitFire\Main.cpp" />
+    <ClCompile Include="BitFire\Mathmatic\Geometry\Mesh.cpp" />
+    <ClCompile Include="BitFire\Mathmatic\Geometry\Point.cpp" />
+    <ClCompile Include="BitFire\Mathmatic\Geometry\Position.cpp" />
+    <ClCompile Include="BitFire\Mathmatic\Geometry\Rectangle.cpp" />
+    <ClCompile Include="BitFire\Mathmatic\Geometry\RenderObject.cpp" />
+    <ClCompile Include="BitFire\Mathmatic\Geometry\Triangle.cpp" />
+    <ClCompile Include="BitFire\Mathmatic\Geometry\Vertex.cpp" />
+    <ClCompile Include="BitFire\Shader\ShaderLoader.cpp" />
+    <ClCompile Include="BitFire\SplittedString.cpp" />
+    <ClCompile Include="BitFire\Window\VertexBuffer.cpp" />
+    <ClCompile Include="BitFire\Window\Window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BitFire\Color\RGBA.h" />
+    <ClInclude Include="BitFire\IO\FileLoader.h" />
+    <ClInclude Include="BitFire\IO\StringManipulator.h" />
+    <ClInclude Include="BitFire\IO\WaveFont.h" />
+    <ClInclude Include="BitFire\Mathmatic\Geometry\Mesh.h" />
+    <ClInclude Include="BitFire\Mathmatic\Geometry\Point.h" />
+    <ClInclude Include="BitFire\Mathmatic\Geometry\Position.h" />
+    <ClInclude Include="BitFire\Mathmatic\Geometry\Rectangle.h" />
+    <ClInclude Include="BitFire\Mathmatic\Geometry\RenderObject.h" />
+    <ClInclude Include="BitFire\Mathmatic\Geometry\Triangle.h" />
+    <ClInclude Include="BitFire\Mathmatic\Geometry\Vertex.h" />
+    <ClInclude Include="BitFire\Shader\ShaderLoader.h" />
+    <ClInclude Include="BitFire\SplittedString.h" />
+    <ClInclude Include="BitFire\Window\VertexBuffer.h" />
+    <ClInclude Include="BitFire\Window\Window.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -154,41 +189,6 @@
       <AdditionalDependencies>OpenAL32.lib;glfw3.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="BitFire\Color\RGBA.cpp" />
-    <ClCompile Include="BitFire\IO\FileLoader.cpp" />
-    <ClCompile Include="BitFire\IO\StringManipulator.cpp" />
-    <ClCompile Include="BitFire\IO\WaveFont.cpp" />
-    <ClCompile Include="BitFire\Main.cpp" />
-    <ClCompile Include="BitFire\Mathmatic\Geometry\Mesh.cpp" />
-    <ClCompile Include="BitFire\Mathmatic\Geometry\Point.cpp" />
-    <ClCompile Include="BitFire\Mathmatic\Geometry\Rectangle.cpp" />
-    <ClCompile Include="BitFire\Mathmatic\Geometry\RenderObject.cpp" />
-    <ClCompile Include="BitFire\Mathmatic\Geometry\Triangle.cpp" />
-    <ClCompile Include="BitFire\Mathmatic\Geometry\Vertex.cpp" />
-    <ClCompile Include="BitFire\Shader\ShaderLoader.cpp" />
-    <ClCompile Include="BitFire\SplittedString.cpp" />
-    <ClCompile Include="BitFire\Window\Window.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="BitFire\Color\RGBA.h" />
-    <ClInclude Include="BitFire\IO\FileLoader.h" />
-    <ClInclude Include="BitFire\IO\StringManipulator.h" />
-    <ClInclude Include="BitFire\IO\WaveFont.h" />
-    <ClInclude Include="BitFire\Mathmatic\Geometry\Mesh.h" />
-    <ClInclude Include="BitFire\Mathmatic\Geometry\Point.h" />
-    <ClInclude Include="BitFire\Mathmatic\Geometry\Rectangle.h" />
-    <ClInclude Include="BitFire\Mathmatic\Geometry\RenderObject.h" />
-    <ClInclude Include="BitFire\Mathmatic\Geometry\Triangle.h" />
-    <ClInclude Include="BitFire\Mathmatic\Geometry\Vertex.h" />
-    <ClInclude Include="BitFire\Shader\ShaderLoader.h" />
-    <ClInclude Include="BitFire\SplittedString.h" />
-    <ClInclude Include="BitFire\Window\Window.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="BitFire\Shader\FragmentShader.fms" />
-    <None Include="BitFire\Shader\VertexShader.vts" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

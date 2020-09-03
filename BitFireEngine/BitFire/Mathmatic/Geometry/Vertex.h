@@ -1,15 +1,16 @@
 #pragma once
 
+#include "Position.h"
 
 class Vertex
 {
 public:
-	float X;
-	float Y;
-	float Z;
+	Position* CurrentPosition;
+	Position* NormalizedPosition;
+	Point* Color;
 
 	Vertex();
-	Vertex(float x, float y);
-	Vertex(float x, float y, float z);
+	Vertex(Position* currentPosition);
+	Vertex(Position* currentPosition, Position* normalizedPosition, Point* color);
+	~Vertex();
 };
-
