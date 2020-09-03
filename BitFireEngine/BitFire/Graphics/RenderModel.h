@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <vector>
 
 #include "Mesh.h"
 #include "../Resources/Model/WaveFront/WaveFront.h"
@@ -24,7 +23,9 @@ public:
 	~RenderModel();
 
 	std::string ModelName;
-	std::vector<Mesh> VertexMeshList;
+
+	Mesh* MeshList;
+	unsigned int MeshListLengh;
 
 	void LoadFromWaveFront(WaveFront& waveFront);
 	void MoveWholeObject(Position position);

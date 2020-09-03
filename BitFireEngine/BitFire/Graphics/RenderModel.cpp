@@ -28,12 +28,16 @@ RenderModel::RenderModel(std::string name, Mesh mesh)
     RenderID = -1;
 
     ModelName = name; 
-     
+    
+    MeshListLengh = 0;
+
     ShouldBeRendered = validMesh;
 
     if (validMesh)
     {
-        VertexMeshList.push_back(mesh);
+        MeshListLengh++;
+        MeshList = new Mesh[1]{ mesh };
+        //VertexMeshList.push_back(mesh);
 
         UpdateRenderSystemLink();
     }
@@ -41,66 +45,83 @@ RenderModel::RenderModel(std::string name, Mesh mesh)
 
 RenderModel::~RenderModel()
 {
+    /*
     for (unsigned int i = 0; i < VertexMeshList.size(); i++)
     {
         //delete &VertexMeshList.at(i);
     }
+    */
 }
 
 void RenderModel::LoadFromWaveFront(WaveFront& waveFront)
 {
-    unsigned int IdecieListSize = waveFront.FaceElements.size() * 3;
-    ModelName = waveFront.Name;
-    Mesh mesh = Mesh();
-    RGBA color = RGBA();
+    MeshListLengh = waveFront.ElementListSize;
+    MeshList = new Mesh[MeshListLengh];
 
-    mesh.Vertices.reserve(IdecieListSize);
-    mesh.Indices.reserve(IdecieListSize);
-
-    unsigned int idiceIndex = 0;
-
-    for (unsigned int i = 0; i < waveFront.FaceElements.size(); i++)
+    for (unsigned int elementIndex = 0; elementIndex < 1; elementIndex++)
     {
-        IndexPosition* indexPosition = &waveFront.FaceElements.at(i);
-        unsigned int indice = idiceIndex++;
-        unsigned int vertexIndex = indexPosition->X -1;
-        unsigned int pointIndex = indexPosition->Y -1;
-        unsigned int vertexNormalIndex = indexPosition->Z -1;
-        
-        Position position = waveFront.VectorPositions.at(vertexIndex);
-        Position normal = waveFront.VectorNormalPositions.at(vertexNormalIndex);
-        Point point;
+        const WaveFrontElement* element = &waveFront.ElementList[elementIndex];
+        const unsigned int faceElementListSize = element->FaceElementListSize;
 
-        if (pointIndex < waveFront.TextureCoordinates.size())
-        {
-            point = waveFront.TextureCoordinates.at(pointIndex);
-        }
-        else
-        {
-            point = Point(0,0);
-        }
+        Mesh* mesh = &MeshList[elementIndex];
+        mesh->VertexListSize = faceElementListSize;
+        mesh->IndexListSize = faceElementListSize;               
       
-        Vertex vertex = Vertex(position, normal, color, point);
+        mesh->VertexList = new Vertex[faceElementListSize];
+        mesh->IndexList = new unsigned int[faceElementListSize];
 
-        mesh.Vertices.push_back(vertex);
-        mesh.Indices.push_back(indice);
-    }
+        for (unsigned int faceIndex = 0; faceIndex < faceElementListSize; faceIndex++)
+        {
+            IndexPosition* indexPosition = &element->FaceElementList[faceIndex];      
 
-    mesh.GenerateArrayData();
-    VertexMeshList.push_back(mesh);
+            unsigned int vertexIndex = (indexPosition->X - 1);
+            unsigned int pointIndex = indexPosition->Y - 1;
+            unsigned int vertexNormalIndex = indexPosition->Z - 1;
+
+            Vertex* vertex = &mesh->VertexList[faceIndex];
+            vertex->CurrentPosition = *waveFront.GetVertexPositionFromGlobalID(vertexIndex);
+            vertex->NormalizedPosition = *waveFront.GetVertexNormalFromGlobalID(vertexNormalIndex);
+
+            if (pointIndex < element->TextureCoordinateListSize)
+            {
+                vertex->TexturePoint = *waveFront.GetVertexTextureCoordinatesFromGlobalID(pointIndex);
+            }
+            
+            mesh->IndexList[faceIndex] = faceIndex;
+          
+                /*
+                Position* position = &element->VertexPositionList[vertexIndex];
+                Position* normal = &element->VertexNormalPositionList[vertexNormalIndex];
+                Point point = Point(0, 0);
+
+                if (pointIndex < element->TextureCoordinateListSize)
+                {
+                    point = element->TextureCoordinateList[pointIndex];
+                }
+
+                Vertex vertex = Vertex(*position, *normal, color, point);
+
+                mesh->VertexList[faceIndex] = vertex;
+                mesh->IndexList[faceIndex] = idiceIndex++;
+                */
+            
+        }
+
+        mesh->GenerateArrayData();
+    }  
 
     UpdateRenderSystemLink();
 }
 
 void RenderModel::MoveWholeObject(Position position)
 {
-    for (unsigned int i = 0; i < VertexMeshList.size(); i++)
+    for (unsigned int i = 0; i < MeshListLengh; i++)
     {
-        Mesh* mesh = &VertexMeshList.at(i);
+        Mesh* mesh = &MeshList[i];
 
-        for (unsigned int  i = 0; i < mesh->Vertices.size(); i++)
+        for (unsigned int  i = 0; i < mesh->VertexListSize; i++)
         {
-            Vertex* vertex = &mesh->Vertices.at(i);
+            Vertex* vertex = &mesh->VertexList[i];
             Position* currentPosition = &vertex->CurrentPosition;
 
             currentPosition->X += position.X;

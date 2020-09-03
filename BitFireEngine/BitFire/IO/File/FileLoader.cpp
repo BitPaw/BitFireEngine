@@ -120,3 +120,14 @@ std::vector<unsigned char> FileLoader::ReadFileAsBytes(std::string filePath)
     }   
     */
 }
+
+void FileLoader::WriteFileAsBytes(std::string filePath, unsigned int size, unsigned char* data)
+{
+    unsigned int byteLengh =  size;
+    std::ofstream fout;  
+
+    fout.open(filePath, std::ios::binary | std::ios::out);
+    fout.write((char*)data, byteLengh);
+
+    fout.close();
+}

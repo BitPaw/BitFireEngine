@@ -1,5 +1,6 @@
 #include "Window.h"
 #include "../../Mathematic/Interpolate.h"
+#include "../../Resources/Image/PixelArray/PixelArrayLoader.h"
 
 Window* Window::_instance;
 
@@ -51,6 +52,12 @@ void Window::UpdateInput()
         {
             SetCursorMode(CursorMode::Locked);        
         }
+    }
+
+    if (keyboard->Letter.K)
+    {
+       // PixelArray px = TakeScreenShot();
+      //  PixelArrayLoader::SaveToFile("C:/_WorkSpace/C++/image.hex",px);
     }
 
     /*
@@ -335,6 +342,23 @@ void Window::SetWindowPositionToCenter()
     y -= videoConfig->ScreenResolution.Height / 2;
 
     SetWindowPosition(x, y);
+}
+
+PixelArray Window::TakeScreenShot()
+{
+    VideoConfig* videoConfig = &CurrentPlayer->Config.Video;   
+    int width = videoConfig->ScreenResolution.Width;
+    int height = videoConfig->ScreenResolution.Height;
+    PixelArray pixelArray;
+
+    pixelArray.Size = width * height * 3;
+    pixelArray.PixelData = new unsigned char[pixelArray.Size];
+
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    glReadBuffer(GL_FRONT);
+    glReadPixels(0, 0, width, height, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixelArray.PixelData);
+
+    return pixelArray;
 }
 
 bool Window::ShouldExit()

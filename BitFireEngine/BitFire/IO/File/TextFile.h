@@ -7,7 +7,7 @@ class TextFile
 {
 public:
 	unsigned int AmountOfLines;
-	std::vector<std::string> Lines;
+	std::string* Lines;
 
 	std::string Path;
 	std::string Content;

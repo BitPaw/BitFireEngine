@@ -16,7 +16,8 @@ TriangleModel::TriangleModel()
 	Mesh mesh = Mesh(vertexList, *drawOrder, 2);
 	mesh.CalculateNormals();
 
-	VertexMeshList.push_back(mesh);
+	MeshListLengh++;
+	MeshList = new Mesh[1]{ mesh };
 
 	UpdateRenderSystemLink();
 }

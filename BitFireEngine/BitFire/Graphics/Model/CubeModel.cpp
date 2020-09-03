@@ -132,9 +132,10 @@ CubeModel::CubeModel()
 
 	mesh.CalculateNormals();
 
-	VertexMeshList.push_back(mesh);
+	MeshListLengh++;
+	MeshList = new Mesh[1]{ mesh };
+
 
 	UpdateRenderSystemLink();
 
 }
-

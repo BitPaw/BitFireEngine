@@ -15,15 +15,19 @@ private:
 	ListUInt _indiceData;
 
 
-
 public:
 	unsigned int StartIndex;
-	unsigned int Lengh;
 
 	unsigned char Dimension;
 
-	std::vector<Vertex> Vertices;
-	std::vector<unsigned int> Indices;
+
+	// Raw - Data-----------------------------
+	Vertex* VertexList;
+	unsigned int VertexListSize;
+
+	unsigned int* IndexList;
+	unsigned int IndexListSize;
+	//------------------------------------------
 
 	Mesh();
 	Mesh(std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, unsigned char dimension);
@@ -35,4 +39,3 @@ public:
 	ListFloat* GetVertexData();
 	ListUInt* GetIndiceData();
 };
-

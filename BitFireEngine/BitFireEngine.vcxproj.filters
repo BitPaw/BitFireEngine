@@ -15,6 +15,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BitFire\Main.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
     <ClCompile Include="BitFire\Color\RGB.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -258,7 +261,19 @@
     <ClCompile Include="BitFire\Resources\Image\PortableNetworkGraphic\PortableNetworkGraphicLoader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\Material.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\MaterialLibrary.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\MaterialLibraryLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
     <ClCompile Include="BitFire\Resources\Model\WaveFront\WaveFront.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\WaveFront\WaveFrontElement.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Resources\Model\WaveFront\WaveFrontLoader.cpp">
@@ -271,9 +286,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Utility\StringSplitter.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Main.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -554,7 +566,22 @@
     <ClInclude Include="BitFire\Resources\Image\PortableNetworkGraphic\PortableNetworkGraphicLoader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\IlluminationMode.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\Material.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\MaterialLibrary.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\MaterialLibraryLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
     <ClInclude Include="BitFire\Resources\Model\WaveFront\WaveFront.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\WaveFront\WaveFrontElement.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Resources\Model\WaveFront\WaveFrontLineCommand.h">

@@ -5,7 +5,7 @@ void Mesh::GenerateArrayData()
 {
 	// Indice Data List - Creation
 	{
-		unsigned int indiceListSize = Indices.size();
+		unsigned int indiceListSize = IndexListSize;
 
 		_indiceData.Data = new unsigned int[indiceListSize];
 		_indiceData.Lengh = indiceListSize;
@@ -13,17 +13,16 @@ void Mesh::GenerateArrayData()
 
 		for (unsigned int i = 0; i < indiceListSize; i++)
 		{
-			_indiceData.Data[i] = Indices.at(i);
+			_indiceData.Data[i] = IndexList[i];
 		}
 	}
 
 	// Vertex
 	{
 		unsigned int dynamicIndex = 0;
-		unsigned int vertexListSize = Vertices.size();
 		unsigned int blockSize = (4 + 4 + 4 + 2);
 
-		_vertexData.Lengh = vertexListSize * blockSize;
+		_vertexData.Lengh = VertexListSize * blockSize;
 		_vertexData.Data = new float[_vertexData.Lengh];
 		_vertexData.SizeInBytesSingleBlock = sizeof(float) * blockSize;
 		_vertexData.SizeInBytesDataBlock = sizeof(float) * _vertexData.Lengh;
@@ -32,9 +31,9 @@ void Mesh::GenerateArrayData()
 
 		//printf("Creating Data Array. Length=%u\n", _vertexData.Lengh);
 
-		for (unsigned int i = 0; i < vertexListSize; i++)
+		for (unsigned int i = 0; i < VertexListSize; i++)
 		{
-			Vertex* vertex = &Vertices.at(i);
+			Vertex* vertex = &VertexList[i];
 			Position* position = &vertex->CurrentPosition;
 			Position* normal = &vertex->NormalizedPosition;
 			Point* point = &vertex->TexturePoint;
@@ -69,63 +68,82 @@ void Mesh::GenerateArrayData()
 			vList[dynamicIndex++] = point->Y;
 		}
 	}
-
+	/*
 	for (size_t i = 0; i < _vertexData.Lengh; i++)
 	{
 		//printf("[ID=%u/%u] %f\n", i, _vertexData.Lengh ,_vertexData.Data[i]);
 	}
+	*/
 }
 
 Mesh::Mesh()
 {
 	Dimension = 0;
+	VertexListSize = 0;
+	IndexListSize = 0;
+
+	VertexList = nullptr;
+	IndexList = nullptr;
 }
 
 Mesh::Mesh(std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, unsigned char dimension)
 {
-	Vertices.swap(vertices);
-	Indices.swap(indices);
 	Dimension = dimension;
+	VertexListSize = vertices.size();
+	IndexListSize = indices.size();
 
-	GenerateArrayData();
+	VertexList = new Vertex[VertexListSize];
+	IndexList = new unsigned int[IndexListSize];
+
+	for (unsigned int i = 0; i < VertexListSize; i++)
+	{
+		VertexList[i] = vertices.at(i);
+	}
+
+	for (unsigned int i = 0; i < IndexListSize; i++)
+	{
+		IndexList[i] = indices.at(i);
+	}
 }
 
 Mesh::~Mesh()
 {
+	/*
 	size_t size;
 
 	//delete[] _vertexData.Data;
 	//delete[] _indiceData.Data;
 
 	// Delete vertices
-	size = Vertices.size();
+	//size = Vertices.size();
 
 	for (size_t i = 0; i < size; i++)
 	{
 		//delete &Vertices[i];
 	}
 
-	size = Indices.size();
+	//size = Indices.size();
 
 	for (size_t i = 0; i < size; i++)
 	{
 		//delete &Indices[i];
 	}
+	*/
 }
 
 void Mesh::CalculateNormals()
 {
-	unsigned int size = Indices.size();
+	unsigned int size = IndexListSize;
 
 	for (unsigned int i = 0; i < size; i += 3)
 	{
-		unsigned int indexA = Indices.at(i);
-		unsigned int indexB = Indices.at(i+1);
-		unsigned int indexC = Indices.at(i+2);
+		unsigned int indexA = IndexList[i];
+		unsigned int indexB = IndexList[i + 1];
+		unsigned int indexC = IndexList[i + 2];
 
-		Vertex* vertexA = &Vertices[indexA];
-		Vertex* vertexB = &Vertices[indexB];
-		Vertex* vertexC = &Vertices[indexC];
+		Vertex* vertexA = &VertexList[indexA];
+		Vertex* vertexB = &VertexList[indexB];
+		Vertex* vertexC = &VertexList[indexC];
 
 		Position* aPos = &vertexA->CurrentPosition;
 		Position* bPos = &vertexB->CurrentPosition;

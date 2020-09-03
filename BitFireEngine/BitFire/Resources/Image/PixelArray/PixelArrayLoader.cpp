@@ -16,6 +16,11 @@ PixelArray PixelArrayLoader::LoadFromFile(std::string filePath)
     return pixels;
 }
 
+void PixelArrayLoader::SaveToFile(std::string filePath, PixelArray& pixelArray)
+{
+    FileLoader::WriteFileAsBytes(filePath, pixelArray.Size, pixelArray.PixelData);
+}
+
 void PixelArrayLoader::PrintPixelArray(PixelArray& pixelArray)
 {
     printf("[PixelArray] size=%u", pixelArray.Size);

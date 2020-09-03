@@ -41,27 +41,32 @@ StringSplitter StringSplitter::Split(std::string content, char splitToken)
 	tokenCounter++;
 
 	ss.NumberOfLines = 0;
-	ss.Lines.reserve(tokenCounter);
+	ss.Lines = new std::string[tokenCounter];
 
 
-
-	for (unsigned int i = 0; i < tokenCounter; i++)
+	// do stuff
 	{
-		unsigned int cutStart = offset;
-		unsigned int cutPoint = content.find(splitToken, offset);
+		unsigned int cutStart;
+		unsigned int cutPoint;
+		std::string segment;
 
-		offset = cutPoint + 1;
-
-		std::string segment = content.substr(cutStart, cutPoint - cutStart);
-
-		if (segment.empty())
+		for (unsigned int i = 0; i < tokenCounter; i++)
 		{
-			i--;
-		}	
-		else
-		{
-			ss.NumberOfLines++;
-			ss.Lines.push_back(segment);
+			cutStart = offset;
+			cutPoint = content.find(splitToken, offset);
+
+			offset = cutPoint + 1;
+
+			segment = content.substr(cutStart, cutPoint - cutStart);
+
+			if (segment.empty())
+			{
+				i--;
+			}
+			else
+			{
+				ss.Lines[ss.NumberOfLines++] = segment;
+			}
 		}
 	}
 
@@ -70,11 +75,15 @@ StringSplitter StringSplitter::Split(std::string content, char splitToken)
 
 StringSplitter StringSplitter::Split(std::string content, std::string splitTokens)
 {	
+	StringSplitter ss;
+
+	return ss;
+
 	const unsigned char removerKey = '\xFF';
 	unsigned int tokenCounter = 0;
 	const unsigned int length = content.length();
 	unsigned int offset = 0;
-	StringSplitter ss;
+
 
 	unsigned int startIndex = 0;
 	unsigned int stopIndex = startIndex + 1;
@@ -103,7 +112,7 @@ StringSplitter StringSplitter::Split(std::string content, std::string splitToken
 	tokenCounter++;
 
 	ss.NumberOfLines = tokenCounter;
-	ss.Lines.reserve(tokenCounter);
+//	ss.Lines.reserve(tokenCounter);
 
 	for (unsigned int i = 0; i < tokenCounter; i++)
 	{
@@ -114,7 +123,7 @@ StringSplitter StringSplitter::Split(std::string content, std::string splitToken
 
 		std::string segment = content.substr(cutStart, cutPoint - cutStart);
 
-		ss.Lines.push_back(segment);
+	//	ss.Lines.push_back(segment);
 	}
 
 	return ss;

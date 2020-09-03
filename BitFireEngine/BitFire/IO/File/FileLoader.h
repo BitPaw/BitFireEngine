@@ -15,5 +15,7 @@ private:
 
 public:
 	static TextFile ReadTextFile(std::string filePath);
+
 	static std::vector<unsigned char> ReadFileAsBytes(std::string filePath);
+	static void WriteFileAsBytes(std::string filePath, unsigned int size, unsigned char* data);
 };

@@ -101,7 +101,11 @@
     <ClCompile Include="BitFire\Resources\Image\PortableNetworkGraphic\Chunk\Type\PortableNetworkGraphicImageData.cpp" />
     <ClCompile Include="BitFire\Resources\Image\PortableNetworkGraphic\PortableNetworkGraphic.cpp" />
     <ClCompile Include="BitFire\Resources\Image\PortableNetworkGraphic\PortableNetworkGraphicLoader.cpp" />
+    <ClCompile Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\Material.cpp" />
+    <ClCompile Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\MaterialLibrary.cpp" />
+    <ClCompile Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\MaterialLibraryLoader.cpp" />
     <ClCompile Include="BitFire\Resources\Model\WaveFront\WaveFront.cpp" />
+    <ClCompile Include="BitFire\Resources\Model\WaveFront\WaveFrontElement.cpp" />
     <ClCompile Include="BitFire\Resources\Model\WaveFront\WaveFrontLoader.cpp" />
     <ClCompile Include="BitFire\Time\TimeCollection.cpp" />
     <ClCompile Include="BitFire\UI\Padding.cpp" />
@@ -200,7 +204,12 @@
     <ClInclude Include="BitFire\Resources\Image\PortableNetworkGraphic\Chunk\Type\PortableNetworkGraphicImageData.h" />
     <ClInclude Include="BitFire\Resources\Image\PortableNetworkGraphic\PortableNetworkGraphic.h" />
     <ClInclude Include="BitFire\Resources\Image\PortableNetworkGraphic\PortableNetworkGraphicLoader.h" />
+    <ClInclude Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\IlluminationMode.h" />
+    <ClInclude Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\Material.h" />
+    <ClInclude Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\MaterialLibrary.h" />
+    <ClInclude Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\MaterialLibraryLoader.h" />
     <ClInclude Include="BitFire\Resources\Model\WaveFront\WaveFront.h" />
+    <ClInclude Include="BitFire\Resources\Model\WaveFront\WaveFrontElement.h" />
     <ClInclude Include="BitFire\Resources\Model\WaveFront\WaveFrontLineCommand.h" />
     <ClInclude Include="BitFire\Resources\Model\WaveFront\WaveFrontLoader.h" />
     <ClInclude Include="BitFire\Time\TimeCollection.h" />

@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 #include <GLM/glm.hpp>
 
+#include "../../Resources/Image/PixelArray/PixelArray.h"
 #include "../../IO/InputContainer.h"
 #include "../../Graphics/Camera/FirstPersonCamera.h"
 #include "../../Time/TimeCollection.h"
@@ -40,6 +41,8 @@ public:
 	void SetVideoRefreshRate(RefreshRateMode mode);
 	void SetWindowPosition(unsigned int x, unsigned int y);
 	void SetWindowPositionToCenter();
+
+	PixelArray TakeScreenShot();
 
 	bool ShouldExit();
 

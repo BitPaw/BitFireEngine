@@ -19,7 +19,7 @@ void main()
     vec3 color = vec3(vertexColor);
     vec3 reflection = reflect(-light, normal);
    
-    vec3 ambient = color * 0.5;
+    vec3 ambient = color * 0.2;
     vec3 diffuse = max(dot(normal, light), 0.0) * color;
     vec3 specular = pow(max(dot(reflection, view), 0.0), 4.0) * color;
 

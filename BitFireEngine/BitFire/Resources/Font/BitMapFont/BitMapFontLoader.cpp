@@ -6,17 +6,17 @@ BitMapFontInfo BitMapFontLoader::ParseInfoLine(std::string line)
 	StringSplitter ss = StringSplitter::Split(line, ' ');
 	const char token = '=';
 
-	std::string face = ss.Lines.at(1);
-	std::string size = ss.Lines.at(2);
-	std::string bold = ss.Lines.at(3);
-	std::string italic = ss.Lines.at(4);
-	std::string charset = ss.Lines.at(5);
-	std::string unicode = ss.Lines.at(6);
-	std::string stretchH = ss.Lines.at(7);
-	std::string smooth = ss.Lines.at(8);
-	std::string aa = ss.Lines.at(9);
-	std::string padding = ss.Lines.at(10);
-	std::string spacing = ss.Lines.at(11);
+	std::string face = ss.Lines[1];
+	std::string size = ss.Lines[2];
+	std::string bold = ss.Lines[3];
+	std::string italic = ss.Lines[4];
+	std::string charset = ss.Lines[5];
+	std::string unicode = ss.Lines[6];
+	std::string stretchH = ss.Lines[7];
+	std::string smooth = ss.Lines[8];
+	std::string aa = ss.Lines[9];
+	std::string padding = ss.Lines[10];
+	std::string spacing = ss.Lines[11];
 	
 	face = StringSplitter::CutInHalfAndTakeRightValue(face, token);
 	size = StringSplitter::CutInHalfAndTakeRightValue(size, token);
@@ -51,12 +51,12 @@ BitMapFontCommonData BitMapFontLoader::ParseCommonDataLine(std::string line)
 	StringSplitter ss = StringSplitter::Split(line, ' ');
 	const char token = '=';
 
-	std::string lineHeight = ss.Lines.at(1);
-	std::string base = ss.Lines.at(2);
-	std::string scaleW = ss.Lines.at(3);
-	std::string scaleH = ss.Lines.at(4);
-	std::string pages = ss.Lines.at(5);
-	std::string packed = ss.Lines.at(6);
+	std::string lineHeight = ss.Lines[1];
+	std::string base = ss.Lines[2];
+	std::string scaleW = ss.Lines[3];
+	std::string scaleH = ss.Lines[4];
+	std::string pages = ss.Lines[5];
+	std::string packed = ss.Lines[6];
 
 	lineHeight = StringSplitter::CutInHalfAndTakeRightValue(lineHeight, token);
 	base = StringSplitter::CutInHalfAndTakeRightValue(base, token);
@@ -84,8 +84,8 @@ BitMapFontPage BitMapFontLoader::ParsePageLine(std::string line)
 	unsigned int stop = 0;
 	unsigned int cutlengh = 0;
 
-	std::string pageIDText = ss.Lines.at(1);
-	std::string pageFileNameText = ss.Lines.at(2);
+	std::string pageIDText = ss.Lines[1];
+	std::string pageFileNameText = ss.Lines[2];
 
 	token = '=';
 	pageIDText = StringSplitter::CutInHalfAndTakeRightValue(pageIDText, token);
@@ -120,16 +120,16 @@ BitMapFontCharacter BitMapFontLoader::ParseCharacterLine(std::string line)
 	unsigned int stop = 0;
 	unsigned int cutlengh = 0;
 
-	std::string charIDText = ss.Lines.at(1);
-	std::string charXText = ss.Lines.at(2);
-	std::string charYText = ss.Lines.at(3);
-	std::string charWidthText = ss.Lines.at(4);
-	std::string charHeightText = ss.Lines.at(5);
-	std::string charXOffsetText = ss.Lines.at(6);
-	std::string charYOffsetText = ss.Lines.at(7);
-	std::string charXAdvanceText = ss.Lines.at(8);
-	std::string charPageText = ss.Lines.at(9);
-	std::string charChanelText = ss.Lines.at(10);
+	std::string charIDText = ss.Lines[1];
+	std::string charXText = ss.Lines[2];
+	std::string charYText = ss.Lines[3];
+	std::string charWidthText = ss.Lines[4];
+	std::string charHeightText = ss.Lines[5];
+	std::string charXOffsetText = ss.Lines[6];
+	std::string charYOffsetText = ss.Lines[7];
+	std::string charXAdvanceText = ss.Lines[8];
+	std::string charPageText = ss.Lines[9];
+	std::string charChanelText = ss.Lines[10];
 
 	charIDText = StringSplitter::CutInHalfAndTakeRightValue(charIDText, token);
 	charXText = StringSplitter::CutInHalfAndTakeRightValue(charXText, token);
@@ -177,7 +177,7 @@ BitMapFont BitMapFontLoader::LoadBitMapFont(std::string path)
 
 		for (unsigned int i = 0; i < textFile.AmountOfLines; i++)
 		{
-			std::string line = textFile.Lines.at(i);
+			std::string line = textFile.Lines[i];
 			BitMapFontCommand currentCommand;
 			char firstCharacter = line.size() <= 0 ? ' ' : line.at(0);
 
@@ -240,7 +240,7 @@ BitMapFont BitMapFontLoader::LoadBitMapFont(std::string path)
 	// Parse
 	for (unsigned int i = 0; i < textFile.AmountOfLines; i++)
 	{
-		std::string line = textFile.Lines.at(i);
+		std::string line = textFile.Lines[i];
 		BitMapFontCommand currentCommand = commandList.at(i);
 
 		switch (currentCommand)

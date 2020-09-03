@@ -126,9 +126,6 @@ void RenderSystem::AddMesh(Mesh* mesh)
         _dataCache->VertexData.Data[_dataCache->VertexData.Size.Current++] = vertexData->Data[i];
     }  
 
-    mesh->Lengh = _dataCache->VertexData.Size.Current - mesh->StartIndex;
-
-
     length = indiceData->Lengh;
 
     if (false)
@@ -225,7 +222,6 @@ void RenderSystem::AddShader(ShaderFile shaderFile)
     _modelViewID = glGetUniformLocation(_shaderID, "InverseModelView");
     _textureID = glGetUniformLocation(_shaderID, "texture");
 
-    // Do not try to load bitmap font
     if (false)// Texture
     {
         unsigned int texture;
@@ -234,11 +230,11 @@ void RenderSystem::AddShader(ShaderFile shaderFile)
         unsigned int width;
         unsigned int height;
 
-        _front = BitMapFontLoader::LoadBitMapFont("C:/_WorkSpace/C++/Data/arial.fnt");
-        _texture = BitMapLoader::LoadFromFile("C:/_WorkSpace/C++/Data/F/A.bmp");
+        //_front = BitMapFontLoader::LoadBitMapFont("C:/_WorkSpace/C++/Data/arial.fnt");
+        //_texture = BitMapLoader::LoadFromFile("C:/_WorkSpace/C++/Data/F/A.bmp");
 
-        width = _texture.InformationHeader->Width;
-        height = _texture.InformationHeader->Height;
+       // width = _texture.InformationHeader->Width;
+      //  height = _texture.InformationHeader->Height;
 
         //BitMapLoader::PrintBitMapInformation(boxTexture);
         _pixelArray = BitMapLoader::GeneratePixelArray(_texture);
@@ -268,13 +264,13 @@ int RenderSystem::RegisterRenderModel(RenderModel* renderModel)
     int renderID = renderModel->RenderID;
     
     // ???? renderModel->ShouldBeRendered
-    unsigned int numberOfMeshes = renderModel->VertexMeshList.size();
+    unsigned int numberOfMeshes = renderModel->MeshListLengh;
 
     printf("[MODEL]\n");
 
     for (unsigned int i = 0; i < numberOfMeshes; i++)
     {
-        Mesh* mesh = &renderModel->VertexMeshList.at(i);
+        Mesh* mesh = &renderModel->MeshList[i];
 
         mesh->GenerateArrayData();
 

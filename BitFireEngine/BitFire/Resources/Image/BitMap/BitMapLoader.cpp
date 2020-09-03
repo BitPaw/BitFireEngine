@@ -223,9 +223,7 @@ BitMap BitMapLoader::LoadFromFile(std::string path)
             bitMap.InformationHeader = bitMapInfoHeader;
 
             width = bitMapInfoHeader->Width;
-            size = bitMapInfoHeader->Width * bitMapInfoHeader->Height;
-
-         
+            size = bitMapInfoHeader->Width * bitMapInfoHeader->Height;         
         }
 
             break;
@@ -234,20 +232,14 @@ BitMap BitMapLoader::LoadFromFile(std::string path)
 
     // Pixel
     {
-        printf("[PixelData]\n");
-
         RGBEightBit color;     
 
         bitMap.Pixel.reserve(size);
-        printf("Size: %u\n", size);
 
         unsigned int leftbits = bytes.size();
-
         unsigned int neededRows = CalculateNeddedRowSize(24, width);
         unsigned int paddingCOunter = 0;
         unsigned int paddingSize = neededRows % 3;
-
-        printf("Width=%i Rows size=%u padding=%u\n", width,neededRows, paddingSize);
 
         while (dynamicIndex < (leftbits))
         {       
@@ -285,24 +277,15 @@ BitMap BitMapLoader::LoadFromFile(std::string path)
                 Width=2 would have  6 bytes of data and 2 bytes of padding.
                 Width=3 would have  9 bytes of data and 3 bytes of padding.
                 Width=4 would have 12 bytes of data and no padding.                 
-         */}
-         
-
-           // color.Red = bytes.at(dynamicIndex++); // Index = 
-           // color.Green = bytes.at(dynamicIndex++); // Index = 
-           // color.Blue = bytes.at(dynamicIndex++); // Index = 
-
-          //  bitMap.Pixel.push_back(color);
-
-           // printf("[Pixel][%05u] %03u %03u %03u\n", dynamicIndex, color.Red, color.Green, color.Blue);
-
-            //dynamicIndex += 2;
-
-
-        
+         */}        
     }
 
     return bitMap;
+}
+
+void BitMapLoader::SaveToFile(std::string path, BitMap& bitMap)
+{
+    
 }
 
 PixelArray BitMapLoader::GeneratePixelArray(BitMap& bitmap)

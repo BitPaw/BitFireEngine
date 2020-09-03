@@ -23,6 +23,8 @@ private:
 
 public:
 	static BitMap LoadFromFile(std::string path);
+	static void SaveToFile(std::string path, BitMap& bitMap);
+
 	static PixelArray GeneratePixelArray(BitMap& bitmap);
 	static void PrintBitMapInformation(BitMap& bitMap);
 };
