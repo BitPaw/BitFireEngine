@@ -1,14 +1,14 @@
 #include "Camera.h"
-#include "../../Window/Window.h"
+
 
 float Camera::GetViewSpeed()
 {
-	return ViewSpeed * Window::GetDeltaTime() * 10000;
+	return ViewSpeed * TimeCollection::DeltaTime * 10000;
 }
 
 float Camera::GetWalkSpeed()
 {
-	return WalkSpeed * Window::GetDeltaTime() * 500;
+	return WalkSpeed * TimeCollection::DeltaTime * 500;
 }
 
 Camera::Camera() : Camera(new CameraSettings(1, 1))
@@ -19,17 +19,10 @@ Camera::Camera() : Camera(new CameraSettings(1, 1))
 Camera::Camera(CameraSettings* settings)
 {
 	_position = glm::vec3(0.0f);
+	_view = glm::mat4(1.0f);
 
 	Settings = settings;
 	CurrentPosition = new Position();
-	
-	_view = glm::mat4(1.0f);
-
-	/*
-	glm::vec3 camPosition(0.0f, 0.0f, 2.0f);
-	glm::vec3 wprldUp(0.0f, 1.0f, 0.0f);
-	glm::vec3 camFront(0.0f, 0.0f, -1.0f);
-	_view = glm::lookAt(camPosition, camPosition + camFront, wprldUp);*/
 
 	WalkSpeed = 0.01f;
 	ViewSpeed = 0.03f;
@@ -94,4 +87,9 @@ void Camera::Update()
 	}
 
 	_viewProjection = _projection * _view;
+}
+
+void Camera::SetDeltaTime(float delteTime)
+{
+	_deltaTime = delteTime;
 }

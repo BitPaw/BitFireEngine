@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../RefreshRateMode.h"
-#include "../CameraMode.h"
+#include "../../OpenGL/Window/RefreshRateMode.h"
+#include "CameraMode.h"
 
 class CameraSettings
 {
 public:
-	enum RefreshRateMode RefreshRate;
-	enum CameraMode Mode;
+	RefreshRateMode RefreshRate;
+	CameraMode Mode;
 
 	float FieldOfView;
 	float Height;

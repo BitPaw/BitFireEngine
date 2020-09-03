@@ -1,21 +1,26 @@
 #pragma once
 
+#ifndef BF_Camera
+#define BF_Camera
+
+#pragma message("\nBF_Camera included\n")
+
 #include <GLEW/glew.h>
 #include <GLM/glm.hpp>
 #include <GLM/ext/matrix_transform.hpp>
 #include <GLM/gtc/matrix_transform.hpp>
 
 #include "CameraSettings.h"
-#include "../CameraMode.h"
-#include "../../Mathmatic/Geometry/Position.h"
-#include "../../Mathmatic/Geometry/Direction.h"
-#include "../../Mathmatic/Geometry/Rotation.h"
+#include "../../Time/TimeCollection.h"
+#include "../../Mathematic/Geometry/Position.h"
+#include "../../Mathematic/Geometry/Direction.h"
 
 class Camera
 {
 protected:
 	float GetViewSpeed();
 	float GetWalkSpeed();
+	float _deltaTime;
 
 public:
 	glm::mat4 _projection;
@@ -34,6 +39,7 @@ public:
 
 	virtual void Move(Direcion direction);
 	virtual void Update();
+	void SetDeltaTime(float delteTime);
 
 	glm::mat4 GetUpdatedViewProjection()
 	{
@@ -42,3 +48,5 @@ public:
 		return _viewProjection;
 	}
 };
+
+#endif 

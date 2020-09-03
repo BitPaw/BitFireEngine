@@ -1,10 +1,13 @@
 #pragma once
 
-#include <GLM/glm.hpp>
-#include <GLM/ext.hpp>
-#include <GLM/gtx/string_cast.hpp>
+#ifndef BF_FirstPersonCamera
+#define BF_FirstPersonCamera
 
+#pragma message("\nBF_FirstPersonCamera included\n")
+
+#include <GLM/gtx/string_cast.hpp>
 #include "Camera.h"
+#include "../../Mathematic/Geometry/Rotation.h"
 
 class FirstPersonCamera : public Camera
 {
@@ -20,5 +23,5 @@ public:
 	void Move(Direcion direction) override;
 
 	FirstPersonCamera();
-
 };
+#endif 

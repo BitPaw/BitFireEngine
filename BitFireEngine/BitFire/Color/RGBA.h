@@ -1,20 +1,16 @@
 #pragma once
 
+#include "RGB.h"
 
-class RGBA
+class RGBA : public RGB
 {
 public:
-	float Red;
-	float Green;
-	float Blue;
 	float Alpha;
 
 	RGBA();
-	RGBA(float red, float green, float blue);
-	RGBA(float red, float green, float blue, float alpha);
+	RGBA(const float red, const float green, const float blue);
+	RGBA(const float red, const float green, const float blue, const float alpha);
 
-	//unsigned char GetRedAsByte();
-	//unsigned char GetGreenAsByte();
-	//unsigned char GetBlueAsByte();
-	//unsigned char GetAlphaAsByte();
+	void SetColor(const float red, const float green, const float blue) override;
+	void SetColor(const float red, const float green, const float blue, const float alpha);
 };
