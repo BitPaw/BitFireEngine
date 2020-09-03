@@ -215,6 +215,9 @@ WaveFront WaveFrontLoader::LoadFromFile(std::string filePath)
         }
     }
 
+
+    PrintObjectDataToConsole(waveFront);
+
     return waveFront;
 }
 
@@ -225,11 +228,61 @@ void WaveFrontLoader::SaveToFile(std::string filePath, WaveFront& waveFont)
 
 void WaveFrontLoader::PrintObjectDataToConsole(WaveFront& waveFont)
 {
-    printf("[Analysis: complete!]\n");
-    printf(" V  : %u\n", waveFont.VectorPositions.size());
-    printf(" VN : %u\n", waveFont.VectorNormalPositions.size());
-    printf(" VT : %u\n", waveFont.TextureCoordinates.size());
-    printf(" VP : %u\n", waveFont.VectorParameter.size());
-    printf(" F  : %u\n", waveFont.FaceElements.size());
-    printf("[===================]\n");
+    unsigned int sizePos = waveFont.VectorPositions.size();
+    unsigned int sizeNormal = waveFont.VectorNormalPositions.size();
+    unsigned int sizeText = waveFont.TextureCoordinates.size();
+    unsigned int sizePara = waveFont.VectorParameter.size();
+    unsigned int sizeFace = waveFont.FaceElements.size();
+
+
+    printf("[ Analysis: complete! ]\n");
+
+    printf(" Name: %s\n", waveFont.Name.c_str());
+
+    if(sizePos == 0)
+    {
+        printf(" V   : %s\n", "---");
+    }
+    else
+    {
+        printf(" V   : %u\n", sizePos);
+    }
+
+    if (sizeNormal == 0)
+    {
+        printf(" VN  : %s\n", "---");
+    }
+    else
+    {
+        printf(" VN  : %u\n", sizeNormal);
+    }
+
+    if (sizeText == 0)
+    {
+        printf(" VT  : %s\n", "---");
+    }
+    else
+    {
+        printf(" VT  : %u\n", sizeText);
+    }
+
+    if (sizePara == 0)
+    {
+        printf(" VP  : %s\n", "---");
+    }
+    else
+    {
+        printf(" VP : %u\n", sizePara);
+    }
+
+    if (sizeFace == 0)
+    {
+        printf(" F   : %s\n", "---");
+    }
+    else
+    {
+        printf(" F   : %u\n", sizeFace);
+    }
+ 
+    printf("[=====================]\n");
 }

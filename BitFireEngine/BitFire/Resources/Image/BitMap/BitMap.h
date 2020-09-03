@@ -21,4 +21,7 @@ public:
 
 	BitMap();
 	~BitMap();
+
+	// Raw Pixel, Image is already fliped!
+	RGBEightBit* GetPixel(unsigned int x, unsigned int y);
 };

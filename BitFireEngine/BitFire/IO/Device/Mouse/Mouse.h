@@ -1,13 +1,14 @@
 #pragma once
 
 #include "../../../Mathematic/Geometry/Point.h"
+#include "CursorMode.h"
 
 class Mouse
 {
 public:
 	Point Position;
 	Point InputAxis;
-	bool EnableInputAxis;
+	CursorMode Mode;
 
 	bool LeftButton;
 	bool ScrollButton;
@@ -24,4 +25,6 @@ public:
 
 	void ResetInput();
 	void ResetAxis();
+
+	bool ShoudRegisterInput();
 };

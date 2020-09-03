@@ -168,9 +168,6 @@
     <ClCompile Include="BitFire\Mathematic\Interpolate.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\OpenGL\Buffer\VertexBuffer.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="BitFire\OpenGL\Render\DataSize.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -452,9 +449,6 @@
     <ClInclude Include="BitFire\Mathematic\Interpolate.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\OpenGL\Buffer\VertexBuffer.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="BitFire\OpenGL\Render\DataSize.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -474,9 +468,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\OpenGL\Shader\System\ShaderLoader.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\OpenGL\Window\RefreshRateMode.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\OpenGL\Window\Window.h">

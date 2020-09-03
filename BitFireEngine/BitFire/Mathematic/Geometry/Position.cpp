@@ -18,3 +18,10 @@ Position::Position(const float x, const float y, const float z) : Point(x, y)
 {
 	Z = z;
 }
+
+void Position::ChangeSize(Position point)
+{
+	//X = abs(X - point.X);
+	//Y = abs(Y - point.Y);
+	//Z = abs(Z - point.Z);
+}

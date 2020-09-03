@@ -17,6 +17,9 @@ private:
 
 
 public:
+	unsigned int StartIndex;
+	unsigned int Lengh;
+
 	unsigned char Dimension;
 
 	std::vector<Vertex> Vertices;

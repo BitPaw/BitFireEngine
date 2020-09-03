@@ -5,15 +5,25 @@
 #include "Shader/System/ShaderLoader.h"
 
 #include "../IO/Message/MessagerSystem.h"
+#include "../Player/Player.h"
+#include "Render/RenderSystem.h"
 
 class OpenGLAPI
 {
 private:
-	Window* _window;
-	ShaderFile _shaderFile;	
+	static OpenGLAPI* _instance;
+
+	Player* _currentPlayer;
+
+	OpenGLAPI();
 
 public:
-	bool IsRunning;
-	OpenGLAPI();
+	static OpenGLAPI* Instance();
+
+	Window* MainWindow;
+	RenderSystem* Render;
+
+	void Initialize(Player* player);
 	void Update();
+	bool ShouldExit();
 };

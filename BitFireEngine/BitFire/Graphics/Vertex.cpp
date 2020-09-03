@@ -27,3 +27,10 @@ Vertex::Vertex(Position currentPosition, Position normalizedPosition, RGBA color
 	Color = color;
 	TexturePoint = texturePoint;
 }
+
+void Vertex::PrintVertex(Vertex& vertex)
+{
+	printf("[Vertex] Data\n");
+	printf("  Position: <%3.2f | %3.2f | %3.2f>\n", vertex.CurrentPosition.X, vertex.CurrentPosition.Y, vertex.CurrentPosition.Z);
+	printf("  Texture : <%3.2f | %3.2f>\n", vertex.TexturePoint.X, vertex.TexturePoint.Y);
+}

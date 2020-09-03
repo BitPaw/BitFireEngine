@@ -17,7 +17,6 @@
 #include "../../Resources/Image/BitMap/BitMapLoader.h"
 #include "../../Resources/Model/WaveFront/WaveFrontLoader.h"
 #include "../../Graphics/Model/TriangleModel.h"
-#include "../../Player/Player.h"
 
 
 class RenderSystem

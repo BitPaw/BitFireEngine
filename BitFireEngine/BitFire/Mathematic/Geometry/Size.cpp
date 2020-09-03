@@ -1,11 +1,12 @@
 #include "Size.h"
 
-Size::Size(unsigned int xA, unsigned int yA, unsigned int xB, unsigned int yB) : Size(IndexPoint(xA, yA), IndexPoint(xB, yB))
+Size::Size() : Size(0,0)
 {
+	
 }
 
-Size::Size(IndexPoint a, IndexPoint b)
+Size::Size(unsigned int width, unsigned int height)
 {
-	A = a;
-	B = b;
+	Width = width;
+	Height = height;
 }

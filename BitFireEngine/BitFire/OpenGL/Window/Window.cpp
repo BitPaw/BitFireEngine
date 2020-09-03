@@ -1,60 +1,56 @@
 #include "Window.h"
-#include "../../Resources/Image/PixelArray/PixelArray.h"
-#include "../../Resources/Image/PixelArray/PixelArrayLoader.h"
-#include "../../Resources/Font/BitMapFont/BitMapFontLoader.h"
-
+#include "../../Mathematic/Interpolate.h"
 
 Window* Window::_instance;
 
 void Window::UpdateInput()
 {
-    KeyBoard* keyboard = &Input.KeyBoardInput;
-    Mouse* mouse = &Input.MouseInput;
+    KeyBoard* keyboard = &CurrentPlayer->Input.KeyBoardInput;
+    Mouse* mouse = &CurrentPlayer->Input.MouseInput;
+    FirstPersonCamera* camera = &CurrentPlayer->Camera;
 
     if (keyboard->Letter.W)
     {
-        _camera.Move(Direcion::Forward);
+        camera->Move(Direcion::Forward);
     }
 
     if (keyboard->Letter.A)
     {
-        _camera.Move(Direcion::Left);
+        camera->Move(Direcion::Left);
     }
 
     if (keyboard->Letter.S)
     {
-        _camera.Move(Direcion::Backward);
+        camera->Move(Direcion::Backward);
     }
 
     if (keyboard->Letter.D)
     {
-        _camera.Move(Direcion::Right);
+        camera->Move(Direcion::Right);
     }
 
     if (keyboard->SpaceBar)
     {
-        _camera.Move(Direcion::Up);
+        camera->Move(Direcion::Up);
     }
 
     if (keyboard->FunktionKey.ShitftLeft)
     {
-        _camera.Move(Direcion::Down);
+        camera->Move(Direcion::Down);
     }
 
     if (keyboard->Letter.R)
     {
-        bool axisEnabled = mouse->EnableInputAxis;
-
+        bool axisEnabled = mouse->ShoudRegisterInput();
+            
         if (axisEnabled)
         {
-            glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            SetCursorMode(CursorMode::Ignore);
         }
         else
         {
-            glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            SetCursorMode(CursorMode::Locked);        
         }
-
-        mouse->EnableInputAxis = !axisEnabled;
     }
 
     /*
@@ -63,7 +59,9 @@ void Window::UpdateInput()
         camera->Settings->Mode = camera->Settings->Mode == CameraMode::Perspectdive ? CameraMode::Orthographic : CameraMode::Perspectdive;
     }*/
 
-    _camera.Rotate(mouse->InputAxis.X, mouse->InputAxis.Y);
+    camera->Rotate(mouse->InputAxis.X, mouse->InputAxis.Y);
+
+    camera->Update();
 
     mouse->ResetAxis();
 }
@@ -73,30 +71,19 @@ Window* Window::GetInstance()
     return _instance;
 }
 
-Window::Window()
+Window::Window(Player* player)
 {
-    _instance = this;
-    Exit = false;
+    CurrentPlayer = player;
 
-    if (!Create(400, 500, "[N/A]"))
+    bool successful = Create();
+
+    _instance = this;
+    _exitWindow = false;
+
+    if (!successful)
     {
         printf("Error loading window\n");
     }
-
-    glfwSetTime(0);
-}
-
-Window::Window(const int width, const int height, const char* title)
-{
-    _instance = this;
-    Exit = false;
-
-    if (!Create(width, height, title))
-    {
-        printf("Error loading window\n");
-    }
-
-    glfwSetTime(0);
 }
 
 Window::~Window()
@@ -118,7 +105,7 @@ Window::~Window()
 void OnKeyPressed(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     Window* currentWindow = Window::GetInstance();
-    KeyBoard* keyBoard = &currentWindow->Input.KeyBoardInput;
+    KeyBoard* keyBoard = &currentWindow->CurrentPlayer->Input.KeyBoardInput;
 
     /* [key]
         The key will be GLFW_KEY_UNKNOWN
@@ -175,7 +162,7 @@ void OnKeyPressed(GLFWwindow* window, int key, int scancode, int action, int mod
 void OnMouseButton(GLFWwindow* window, int button, int action, int mods)
 {
     Window* currentWindow = Window::GetInstance();
-    Mouse* mouse = &currentWindow->Input.MouseInput;
+    Mouse* mouse = &currentWindow->CurrentPlayer->Input.MouseInput;
 
     /*
     0 = GLFW_MOUSE_BUTTON_1 | GLFW_MOUSE_BUTTON_LEFT
@@ -227,9 +214,9 @@ void OnMouseButton(GLFWwindow* window, int button, int action, int mods)
 void OnMousePosition(GLFWwindow* window, double xpos, double ypos)
 {
     Window* currentWindow = Window::GetInstance();
-    Mouse* mouse = &currentWindow->Input.MouseInput;
+    Mouse* mouse = &currentWindow->CurrentPlayer->Input.MouseInput;
 
-    if (mouse->EnableInputAxis)
+    if (mouse->ShoudRegisterInput())
     {
         mouse->InputAxis.X = mouse->Position.X - xpos;
         mouse->InputAxis.Y = mouse->Position.Y - ypos;
@@ -252,12 +239,15 @@ void OnWindowSizeChanged(GLFWwindow* window, int _width, int _height)
 
 void Window::ResizeWindow(const int width, const int height)
 {
-    bool hasChanged = _camera.Settings->Width != width || _camera.Settings->Height != height;
+    float* cwidth = &CurrentPlayer->Camera.Settings->Width;
+    float* cheight = &CurrentPlayer->Camera.Settings->Height;
+
+    bool hasChanged = *cwidth != width || *cheight != height;
 
     if (hasChanged)
     {
-        _camera.Settings->Width = width;
-        _camera.Settings->Height = height;
+        *cwidth = width;
+        *cheight = height;
 
         glViewport(0, 0, width, height);
 
@@ -265,8 +255,97 @@ void Window::ResizeWindow(const int width, const int height)
     }
 }
 
-bool Window::Create(const int width, const int height, const char* title)
+void Window::SetCursorTexture(std::string filePath)
 {
+    /*
+    BitMap bitMap = BitMapLoader::LoadFromFile(filePath);
+    PixelArray pixelArray = BitMapLoader::GeneratePixelArray(bitMap);
+
+    GLFWimage image;
+    image.width = bitMap.InformationHeader->Width;
+    image.height = bitMap.InformationHeader->Height;
+    image.pixels = pixelArray.PixelData;
+
+    _cursor = glfwCreateCursor(&image, 0, 0);
+
+    // GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR);
+    glfwSetCursor(_window, _cursor);*/
+}
+
+void Window::SetCursorMode(CursorMode mode)
+{
+    /*
+    GLFW_CURSOR_NORMAL
+    GLFW_CURSOR_HIDDEN
+    GLFW_CURSOR_DISABLED
+    */
+    Mouse* mouse = &Window::CurrentPlayer->Input.MouseInput;
+
+    mouse->Mode = mode;
+
+    switch (mode)
+    {
+    case CursorMode::Show:
+    case CursorMode::Ignore:
+        glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);   
+        break;
+
+    case CursorMode::Invisible:
+        glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        break;
+
+    case CursorMode::Locked:
+        glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        break;
+    }  
+}
+
+void Window::SetVideoRefreshRate(RefreshRateMode mode)
+{
+    switch (mode)
+    {
+    case RefreshRateMode::Unlimited:
+        glfwSwapInterval(0);
+        break;
+
+    case RefreshRateMode::VSync:
+        glfwSwapInterval(1);
+        break;
+
+    case RefreshRateMode::CustomSync:
+        glfwSwapInterval(2);
+        break;
+
+    }
+}
+
+void Window::SetWindowPosition(unsigned int x, unsigned int y)
+{
+    glfwSetWindowPos(_window, x, y);
+}
+
+void Window::SetWindowPositionToCenter()
+{
+    VideoConfig* videoConfig = &CurrentPlayer->Config.Video;
+    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());  
+    int x = mode->width / 2;
+    int y = mode->height / 2;
+
+    x -= videoConfig->ScreenResolution.Width / 2;
+    y -= videoConfig->ScreenResolution.Height / 2;
+
+    SetWindowPosition(x, y);
+}
+
+bool Window::ShouldExit()
+{
+    return _exitWindow;
+}
+
+bool Window::Create()
+{
+    VideoConfig* videoConfig = &CurrentPlayer->Config.Video;
+
     /* Initialize the library */
     if (!glfwInit())
     {
@@ -275,16 +354,19 @@ bool Window::Create(const int width, const int height, const char* title)
 
     /* Create a windowed mode window and its OpenGL context */
     {
-        _window = glfwCreateWindow(width, height, title, NULL, NULL);
+        const char* title = "[BFE] <BitFireEngine>";
+        int width = videoConfig->ScreenResolution.Width;
+        int height = videoConfig->ScreenResolution.Height;
+
+        _window = glfwCreateWindow(width, height, title, _montor, NULL);
+
+        if (!_window)
+        {
+            glfwTerminate();
+            return false;
+        }
     }
 
-    if (!_window)
-    {
-        glfwTerminate();
-        return false;
-    }
-
-    /* Make the window's context current */
     glfwMakeContextCurrent(_window);
 
     if (glewInit() != GLEW_OK)
@@ -297,49 +379,14 @@ bool Window::Create(const int width, const int height, const char* title)
         glfwSetKeyCallback(_window, OnKeyPressed);
         glfwSetMouseButtonCallback(_window, OnMouseButton);
         glfwSetCursorPosCallback(_window, OnMousePosition);
-        glfwSetWindowSizeCallback(_window, OnWindowSizeChanged);
-        
+        glfwSetWindowSizeCallback(_window, OnWindowSizeChanged);    
 
+       // SetCursorTexture("C:/_WorkSpace/C++/Data/Cursor.bmp");
+        SetCursorMode(CursorMode::Locked);
     }
 
-    /*
-    GLFW_CURSOR_NORMAL
-    GLFW_CURSOR_HIDDEN
-    GLFW_CURSOR_DISABLED
-    */
-
-    // glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-
-    {
-        // Texture* text = TextureLoader::LoadTexture("C:/_WorkSpace/C++/Cursor.hex");
-
-        PixelArray pixel = PixelArrayLoader::LoadFromFile("C:/_WorkSpace/C++/Data/O.hex");
-
-        unsigned char height = 286;
-        unsigned char width = 214;
-        unsigned char* icon = new  unsigned char[height * width * 4]
-        {
-            0xFF, 0x00, 0x00, 0xFF,
-                0x00, 0x00, 0xFF, 0xFF,
-                0x00, 0x00, 0xFF, 0xFF,
-                0xFF, 0x00, 0x00, 0xFF
-
-        };
-
-        GLFWimage image;
-        image.width = width;
-        image.height = height;
-        image.pixels = pixel.PixelData;
-
-        glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-        GLFWcursor* cursor = glfwCreateCursor(&image, 0, 0);
-
-
-        // GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR);
-        glfwSetCursor(_window, cursor);
-    }
-
+    SetWindowPositionToCenter();
+    SetVideoRefreshRate(RefreshRateMode::VSync);
 
     if (false)
     {
@@ -358,76 +405,31 @@ bool Window::Create(const int width, const int height, const char* title)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
-
-    glfwSwapInterval(1);
-    _models = 2;
-    _renderModel;
-    //_renderB;
-
-    //TriangleModel* tria = new TriangleModel();
-    //RectangleModel* rect = new RectangleModel();
-
-    //_renderModel[0] = *tria; 
-    //_renderModel[1] = *rect;
-
-   // WaveFront waveFront = WaveFrontLoader::LoadFromFile("C:/_WorkSpace/C++/Data/QF.obj");
-
-   // _renderModel.LoadFromWaveFront(waveFront);
-     _renderModel = RectangleModel();
-
-
-
-
-    Mesh* mesh = &_renderModel.VertexMeshList.at(0);
-
-
-
-    mesh->GenerateArrayData();
-
-    buffer.ChangeMesh(mesh);
-    buffer.BindBuffer();
-
-
-
-
-
-    //_renderB = WaveFrontLoader::LoadFromFile("C:/_WorkSpace/C++/Data/S.obj");
-    //_renderB->VertexMesh->GenerateArrayData();
-
- // _renderModel[0] = WaveFrontLoader::LoadFromFile("C:/_WorkSpace/C++/Data/TigefffR.obj");
-  //mod = WaveFrontLoader::LoadFromFile("C:/_WorkSpace/C++/Data/Q.obj");
-//  mod->VertexMesh->GenerateArrayData();
-
-// _renderModel = mod;
-
-
-
-
+    glfwSetTime(0);
 
     return true;
 }
 
-float x;
-
 void Window::Update()
 {
-    Exit = glfwWindowShouldClose(_window);
+    _exitWindow = glfwWindowShouldClose(_window);
 
-    if (Exit)
+    if (_exitWindow)
     {
         return;
     }
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     UpdateInput();
 
-    _camera.Update();
+    glfwSwapBuffers(_window);
+    glfwPollEvents();
+
+    TimeCollection::SetDeltaTimeStamp();
+    TimeCollection::ActiveTime = glfwGetTime();
+}
 
 
-     glClearColor(0.2f, 0.2f, 0.2f, 1);
-
-
+     /*
      //model = glm::rotate(model, 0.002f, glm::vec3(0, 1, 0));      
 
     glm::mat4 model = glm::mat4(1.0f);
@@ -437,127 +439,65 @@ void Window::Update()
     modelView = _camera._view * model;
     invModelView = glm::transpose(glm::inverse(modelView));
 
-    std::string text = "Who is sample text?";
+    std::string text = "Who_is_sample_text?";
 
     for (size_t i = 0; i < text.size(); i++)
     {
         Mesh* mesh = &_renderModel.VertexMeshList.at(0);        
-        BitMapFontCharacter bitMapFontCharacter = font.GetCharacterPosition( text.at(text.size() - 1 -i));
+        BitMapFontCharacter bitMapFontCharacter = font.GetCharacterPosition(text.at(i));
+                
+        float p00 = bitMapFontCharacter.StartPosition.X;
+        float p10 = bitMapFontCharacter.StartPosition.X + bitMapFontCharacter.Size.X;
+        float p01 = bitMapFontCharacter.StartPosition.Y;
+        float p11 = bitMapFontCharacter.StartPosition.Y + bitMapFontCharacter.Size.Y;
 
-        float xoffset = Interpolate::Liniar(0, 1, 0, 512, bitMapFontCharacter.StartPosition.X);
-        float yoffset = Interpolate::Liniar(0, 1, 0, 512, bitMapFontCharacter.StartPosition.Y);
+        if (true)
+        {
+            p00 = Interpolate::Liniar(0, 1, 0, 512, p00);
+            p10 = Interpolate::Liniar(0, 1, 0, 512, p10);
+            p01 = Interpolate::Liniar(0, 1, 0, 512, p01);
+            p11 = Interpolate::Liniar(0, 1, 0, 512, p11);
+        }
 
-        float xoffsetW = Interpolate::Liniar(0, 1, 0, 512, bitMapFontCharacter.StartPosition.X + bitMapFontCharacter.Size.X);
-        float yoffsetW = Interpolate::Liniar(0, 1, 0, 512, bitMapFontCharacter.StartPosition.Y + bitMapFontCharacter.Size.Y);
+        Rectangle rectangle = Rectangle(Point(p00, p10), Point(), Point(), Point());
 
-        mesh->Vertices.at(0).TexturePoint = Point(1-xoffsetW, yoffset); // 0 0
-        mesh->Vertices.at(1).TexturePoint = Point(1-xoffset, yoffset); // 1 0
-        mesh->Vertices.at(2).TexturePoint =  Point(1-xoffset, yoffsetW); // 1 1
-        mesh->Vertices.at(3).TexturePoint = Point(1-xoffsetW, yoffsetW); // 0 1
+       // printf("\n\n%c => %.2f | %.2f | %.2f | %.2f \n", bitMapFontCharacter.ID, p00, p10, p01, p11);
+                
+       // mesh->Vertices.at(0).CurrentPosition = Position(p00,0, 0);
+       // mesh->Vertices.at(1).CurrentPosition = Position(p10,0,0);
+       // mesh->Vertices.at(2).CurrentPosition = Position(p10,0,0);
+        //mesh->Vertices.at(3).CurrentPosition = Position(p00,0, 0);
+
+       // mesh->Vertices.at(1).Color = RGBA(1,0,0);
+        mesh->Vertices.at(0).TexturePoint = Point(p00, p01); // RightUpper 00
+        mesh->Vertices.at(1).TexturePoint = Point(p10, p01); // Left upper 10
+
+       // mesh->Vertices.at(3).Color = RGBA(0, 1, 0);
+        mesh->Vertices.at(2).TexturePoint = Point(p10, p11); // Left Under 11 
+        mesh->Vertices.at(3).TexturePoint = Point(p00, p11); //Right under 01
            
         mesh->GenerateArrayData();
-
+        
         buffer.ChangeMesh(mesh);
         buffer.BindBuffer();
+        
 
         unsigned int indsize = mesh->GetIndiceData()->Lengh;
 
         //buffer.ChangeMesh(mesh);
 
         int off = 6;
-        int xOFF;
-        int yOFF;
+        int xOFF = 0;
+        int yOFF = 0;
 
 
-        glfwGetWindowPos(_window, &xOFF, &yOFF);
+       // glfwGetWindowPos(_window, &xOFF, &yOFF);
 
         x += 0.01f;
 
         xOFF += sin(x) * 100 * TimeCollection::DeltaTime;
         //yOFF += cos(i) * TimeCollection::DeltaTime;
 
-        glfwSetWindowPos(_window, xOFF, yOFF);
+       // glfwSetWindowPos(_window, xOFF, yOFF);
 
-        glm::mat4 diff = glm::translate(_camera._view, glm::vec3(i*1.0f, 0, 0));
-
-        completematrix = _camera._projection * diff * model;
-
-        glUniformMatrix4fv(_modelViewID, 1, GL_FALSE, &modelView[0][0]);
-        glUniformMatrix4fv(_modelViewProjectionID, 1, GL_FALSE, &completematrix[0][0]);
-        glUniformMatrix4fv(_inverseModelViewID, 1, GL_FALSE, &invModelView[0][0]);
-
-
-        glDrawElements(GL_TRIANGLES, indsize, GL_UNSIGNED_INT, nullptr);
-        //glDrawElements(GL_LINE_LOOP, indsize, GL_UNSIGNED_INT, nullptr);
-
-         //buffer.UnBindBuffer();
-    }
-
-    glfwSwapBuffers(_window); /* Swap front and back buffers */
-    glfwPollEvents();   /* Poll for and process events */
-
-    TimeCollection::SetDeltaTimeStamp();
-    TimeCollection::ActiveTime = glfwGetTime();
-}
-
-void Window::SetShader(ShaderFile shaderFile)
-{
-    shader = ShaderLoader::CreateShader(shaderFile.VertexShader.Content, shaderFile.FragmentShader.Content);
-
-    glUseProgram(shader);
-
-    _modelViewProjectionID = glGetUniformLocation(shader, "ModelViewProjection");
-    _inverseModelViewID = glGetUniformLocation(shader, "ModelView");
-    _modelViewID = glGetUniformLocation(shader, "InverseModelView");
-
-
-    int is = glGetUniformLocation(shader, "texture");
-
-    if (true)// Texture
-    {
-        unsigned int texture;
-        glGenTextures(1, &texture);
-
-        unsigned int width;
-        unsigned int height;
-
-        pixelarray = PixelArray();
-
-        if (false)
-        {
-            pixelarray = PixelArrayLoader::LoadFromFile("C:/_WorkSpace/C++/Data/O.hex");
-            width = 214;//774;
-            height = 286;//  674;
-        }
-        else
-        {
-            font = BitMapFontLoader::LoadBitMapFont("C:/_WorkSpace/C++/Data/arial.fnt");
-            boxTexture = BitMapLoader::LoadFromFile("C:/_WorkSpace/C++/Data/F/A.bmp");
-
-            width = boxTexture.InformationHeader->Width;
-            height = boxTexture.InformationHeader->Height;
-
-            //BitMapLoader::PrintBitMapInformation(boxTexture);
-            pixelarray = BitMapLoader::GeneratePixelArray(boxTexture);
-        }
-
-        //PixelArrayLoader::PrintPixelArray(pixelarray);
-
-        glBindTexture(GL_TEXTURE_2D, texture);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelarray.PixelData);
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-    }
-
-    _camera.Settings->Mode = CameraMode::Perspectdive;
-
-    printf("SHADER ID %i | %i | %i | %i\n", shader, _modelViewProjectionID, _inverseModelViewID, _modelViewID);
-    //printf("ModelViewProjection ID %i\n", modelViewMapos);    
-}
+        */

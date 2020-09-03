@@ -311,18 +311,23 @@ PixelArray BitMapLoader::GeneratePixelArray(BitMap& bitmap)
 
     unsigned int dynIndex = 0;
     unsigned int dataSize = bitmap.Pixel.size();
+    unsigned int height = bitmap.InformationHeader->Height;
+    unsigned int width = bitmap.InformationHeader->Width;
 
     pixelArray.Size = dataSize * 4;
     pixelArray.PixelData = new unsigned char[pixelArray.Size];
 
-    for (unsigned int i = 0; i < dataSize; i++)
+    for (unsigned int x = 0; x < width; x++)
     {
-        RGBEightBit* rgb = &bitmap.Pixel.at(i);
+        for (unsigned int y = 0; y < height; y++)
+        {
+            RGBEightBit* rgb = bitmap.GetPixel(x, y);
 
-        pixelArray.PixelData[dynIndex++] = rgb->Red;
-        pixelArray.PixelData[dynIndex++] = rgb->Green;
-        pixelArray.PixelData[dynIndex++] = rgb->Blue;
-        pixelArray.PixelData[dynIndex++] = '\xFF';
+            pixelArray.PixelData[dynIndex++] = rgb->Red;
+            pixelArray.PixelData[dynIndex++] = rgb->Green;
+            pixelArray.PixelData[dynIndex++] = rgb->Blue;
+            pixelArray.PixelData[dynIndex++] = '\xFF';
+        }
     }
 
     return pixelArray;

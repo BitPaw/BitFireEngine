@@ -11,6 +11,8 @@ protected:
 	unsigned int DrawOrderSteps;
 	std::vector<unsigned int> DrawOrder;
 
+	void CalculateDrawOrder();
+
 public:
 	unsigned int GetCornerPointsAmout();
 	unsigned int GetDrawOrderStepsAmout();

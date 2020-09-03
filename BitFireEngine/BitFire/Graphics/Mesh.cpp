@@ -30,7 +30,7 @@ void Mesh::GenerateArrayData()
 
 		float* vList = _vertexData.Data;
 
-		printf("Creating Data Array. Length=%u\n", _vertexData.Lengh);
+		//printf("Creating Data Array. Length=%u\n", _vertexData.Lengh);
 
 		for (unsigned int i = 0; i < vertexListSize; i++)
 		{
@@ -115,13 +115,17 @@ Mesh::~Mesh()
 
 void Mesh::CalculateNormals()
 {
-	size_t size = Vertices.size();
+	unsigned int size = Indices.size();
 
-	for (size_t i = 0; i < size; i += 3)
+	for (unsigned int i = 0; i < size; i += 3)
 	{
-		Vertex* vertexA = &Vertices[i];
-		Vertex* vertexB = &Vertices[i+1];
-		Vertex* vertexC = &Vertices[i+2];
+		unsigned int indexA = Indices.at(i);
+		unsigned int indexB = Indices.at(i+1);
+		unsigned int indexC = Indices.at(i+2);
+
+		Vertex* vertexA = &Vertices[indexA];
+		Vertex* vertexB = &Vertices[indexB];
+		Vertex* vertexC = &Vertices[indexC];
 
 		Position* aPos = &vertexA->CurrentPosition;
 		Position* bPos = &vertexB->CurrentPosition;

@@ -225,7 +225,8 @@ void RenderSystem::AddShader(ShaderFile shaderFile)
     _modelViewID = glGetUniformLocation(_shaderID, "InverseModelView");
     _textureID = glGetUniformLocation(_shaderID, "texture");
 
-    if (true)// Texture
+    // Do not try to load bitmap font
+    if (false)// Texture
     {
         unsigned int texture;
         glGenTextures(1, &texture);

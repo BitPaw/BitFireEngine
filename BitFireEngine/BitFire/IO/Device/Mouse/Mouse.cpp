@@ -14,7 +14,7 @@ void Mouse::ResetInput()
 {
 	Position = Point();
 	ResetAxis();
-	EnableInputAxis = true;
+	Mode = CursorMode::Ignore;
 
 	LeftButton = false;
 	ScrollButton = false;
@@ -31,4 +31,19 @@ void Mouse::ResetAxis()
 {
 	InputAxis.X = 0;
 	InputAxis.Y = 0;
+}
+
+bool Mouse::ShoudRegisterInput()
+{
+	switch (Mode)
+	{
+	case CursorMode::Ignore:
+		return false;
+
+	case CursorMode::Show:
+	case CursorMode::Invisible:
+	case CursorMode::Locked:
+	default:
+		return true;
+	}
 }

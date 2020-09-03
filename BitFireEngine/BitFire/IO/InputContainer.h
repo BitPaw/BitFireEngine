@@ -6,8 +6,8 @@
 class InputContainer
 {
 public:
-	KeyBoard KeyBoardInput;
-	Mouse MouseInput;
+	static KeyBoard KeyBoardInput;
+	static Mouse MouseInput;
 
 	InputContainer();
 };

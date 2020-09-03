@@ -22,8 +22,11 @@ Rectangle::Rectangle(Point a, Point b, Point c, Point d) : Shape(4, 6)
 
 void Rectangle::Reset()
 {
-	A = Point(-0.5f, 0.25f);
-	B = Point(0.5f, 0.25f);
-	C = Point(0.5f, -0.25f);
-	D = Point(-0.5f, -0.25f);
+	const float x = 0.5f;
+	const float y = 0.25f;
+
+	A = Point(-x, -y);
+	B = Point(x, -y);
+	C = Point(x, y);
+	D = Point(-x, y);
 }

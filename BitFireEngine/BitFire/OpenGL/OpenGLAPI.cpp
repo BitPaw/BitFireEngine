@@ -1,22 +1,32 @@
 #include "OpenGLAPI.h"
 
+OpenGLAPI* OpenGLAPI::_instance = nullptr;
+
 OpenGLAPI::OpenGLAPI()
 {
-    IsRunning = true;
+    _instance = this;
+}
 
-    _window = new Window(700, 500, "BitFireEngine");
-   
-    _shaderFile = ShaderFile("BitFire/OpenGL/Shader/Files/VertexShader.vert", "BitFire/OpenGL/Shader/Files/FragmentShader.frag");
+OpenGLAPI* OpenGLAPI::Instance()
+{
+    return _instance == nullptr ? new OpenGLAPI() : _instance;
+}
 
-    _window->SetShader(_shaderFile);
+void OpenGLAPI::Initialize(Player* player)
+{
+    MainWindow = new Window(player);
+    Render = new RenderSystem(player);
+
+    Render->AddShader(ShaderFile("BitFire/OpenGL/Shader/Files/VertexShader.vert", "BitFire/OpenGL/Shader/Files/FragmentShader.frag"));
 }
 
 void OpenGLAPI::Update()
 {
-    _window->Update();
+    MainWindow->Update();
+    Render->RenderScene();
+}
 
-    if (_window->Exit)
-    {
-        IsRunning = false;
-    }
+bool OpenGLAPI::ShouldExit()
+{
+    return MainWindow->ShouldExit();
 }

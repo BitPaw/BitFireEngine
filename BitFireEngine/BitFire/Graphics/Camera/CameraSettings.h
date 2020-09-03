@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../../OpenGL/Window/RefreshRateMode.h"
 #include "CameraMode.h"
+
+#include "../../Configuration/RefreshRateMode.h"
 
 class CameraSettings
 {

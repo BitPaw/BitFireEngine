@@ -32,8 +32,8 @@ Camera::Camera(CameraSettings* settings)
 
 Camera::~Camera()
 {
-	delete Settings;
-	delete CurrentPosition;
+//	delete Settings;
+//	delete CurrentPosition;
 }
 
 void Camera::Move(Direcion direction)

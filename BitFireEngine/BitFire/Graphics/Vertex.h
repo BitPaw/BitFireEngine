@@ -19,4 +19,6 @@ public:
 	Vertex(Position currentPosition, RGBA color);
 	Vertex(Position currentPosition, RGBA color, Point texturePoint);
 	Vertex(Position currentPosition, Position normalizedPosition, RGBA color, Point texturePoint);
+
+	static void PrintVertex(Vertex& vertex);
 };

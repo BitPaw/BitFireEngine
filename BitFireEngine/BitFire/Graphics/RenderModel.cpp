@@ -1,14 +1,42 @@
 #include "RenderModel.h"
+#include "../OpenGL/OpenGLAPI.h"
 
-RenderModel::RenderModel()
+void RenderModel::UpdateRenderSystemLink()
 {
-    ModelName = "[N/A]";
+    OpenGLAPI* openGLAPI = OpenGLAPI::Instance();
+
+    if (openGLAPI == nullptr)
+    {
+        ShouldBeRendered = false;
+        RenderID = -1;    
+    }
+    else
+    {
+        ShouldBeRendered = true;
+        RenderID = openGLAPI->Render->RegisterRenderModel(this);
+    }
 }
 
-RenderModel::RenderModel(std::string name, Mesh mesh)
+RenderModel::RenderModel() : RenderModel("[N/A]", Mesh())
 {
-    ModelName = name;
-    VertexMeshList.push_back(mesh);
+  
+}
+
+RenderModel::RenderModel(std::string name, Mesh mesh) 
+{
+    bool validMesh = mesh.Dimension > 0;
+    RenderID = -1;
+
+    ModelName = name; 
+     
+    ShouldBeRendered = validMesh;
+
+    if (validMesh)
+    {
+        VertexMeshList.push_back(mesh);
+
+        UpdateRenderSystemLink();
+    }
 }
 
 RenderModel::~RenderModel()
@@ -41,12 +69,45 @@ void RenderModel::LoadFromWaveFront(WaveFront& waveFront)
         
         Position position = waveFront.VectorPositions.at(vertexIndex);
         Position normal = waveFront.VectorNormalPositions.at(vertexNormalIndex);
-        Point point = waveFront.TextureCoordinates.at(pointIndex);
+        Point point;
+
+        if (pointIndex < waveFront.TextureCoordinates.size())
+        {
+            point = waveFront.TextureCoordinates.at(pointIndex);
+        }
+        else
+        {
+            point = Point(0,0);
+        }
+      
         Vertex vertex = Vertex(position, normal, color, point);
 
         mesh.Vertices.push_back(vertex);
         mesh.Indices.push_back(indice);
     }
 
+    mesh.GenerateArrayData();
     VertexMeshList.push_back(mesh);
+
+    UpdateRenderSystemLink();
+}
+
+void RenderModel::MoveWholeObject(Position position)
+{
+    for (unsigned int i = 0; i < VertexMeshList.size(); i++)
+    {
+        Mesh* mesh = &VertexMeshList.at(i);
+
+        for (unsigned int  i = 0; i < mesh->Vertices.size(); i++)
+        {
+            Vertex* vertex = &mesh->Vertices.at(i);
+            Position* currentPosition = &vertex->CurrentPosition;
+
+            currentPosition->X += position.X;
+            currentPosition->Y += position.Y;
+            currentPosition->Z += position.Z;
+        }
+    }
+
+    UpdateRenderSystemLink();
 }
