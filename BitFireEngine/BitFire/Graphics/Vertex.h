@@ -10,15 +10,9 @@ class Vertex
 {
 public:
 	Position CurrentPosition;
-	Position NormalizedPosition;
-	RGBA Color;
-	Point TexturePoint;
+	unsigned int ColorID;
 
 	Vertex();
 	Vertex(Position currentPosition);
-	Vertex(Position currentPosition, RGBA color);
-	Vertex(Position currentPosition, RGBA color, Point texturePoint);
-	Vertex(Position currentPosition, Position normalizedPosition, RGBA color, Point texturePoint);
-
-	static void PrintVertex(Vertex& vertex);
+	Vertex(Position currentPosition, const unsigned int colorID);
 };

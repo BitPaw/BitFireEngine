@@ -1,7 +1,7 @@
 #pragma once
 
 // [X | Y] Position in 2D-WorldSpace.
-class Point
+struct Point
 {
 public:
 	float X;

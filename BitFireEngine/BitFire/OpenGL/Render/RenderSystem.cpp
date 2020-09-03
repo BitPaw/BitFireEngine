@@ -1,9 +1,9 @@
 #include "RenderSystem.h"
 
-void RenderSystem::UpdateGPUCache()
+void BF::RenderSystem::UpdateGPUCache()
 {
     _dataCache->VertexData.CalculateByteSize();
-    
+
     _dataCache->IndexData.SizeInBytes.Current = _dataCache->IndexData.Size.Current * _dataCache->IndexData.DataBlockSizeInBytes;
 
     /*
@@ -31,7 +31,7 @@ void RenderSystem::UpdateGPUCache()
     }
     */
 
-     GLsizeiptr vArraySize = _dataCache->VertexData.SizeInBytes.Current;
+    GLsizeiptr vArraySize = _dataCache->VertexData.SizeInBytes.Current;
     GLsizeiptr iArraySize = _dataCache->IndexData.SizeInBytes.Current;
 
     try
@@ -40,7 +40,7 @@ void RenderSystem::UpdateGPUCache()
         glBufferSubData(GL_ARRAY_BUFFER, 0, iArraySize, _dataCache->IndexData.Data);
 
         glBindBuffer(GL_ARRAY_BUFFER, _bufferID);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vArraySize/4, _dataCache->VertexData.Data);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vArraySize / 4, _dataCache->VertexData.Data);
 
     }
     catch (const std::exception& e)
@@ -49,12 +49,12 @@ void RenderSystem::UpdateGPUCache()
     }
 }
 
-void RenderSystem::AllocateGPUCache()
+void BF::RenderSystem::AllocateGPUCache()
 {
     unsigned int blockSize = _dataCache->VertexData.DataBlockSizeInBytes;
 
     unsigned int vertexDataSize = _dataCache->VertexData.SizeInBytes.Maximal;
-    
+
     unsigned int indexDataSize = _dataCache->IndexData.SizeInBytes.Maximal;
     unsigned int* indexData = _dataCache->IndexData.Data;
 
@@ -62,7 +62,7 @@ void RenderSystem::AllocateGPUCache()
     {
         unsigned int offset = 0;
 
-        for (unsigned int i = 0; i < _dataCache->IndexData.Size.Maximal +6; i += 6)
+        for (unsigned int i = 0; i < _dataCache->IndexData.Size.Maximal + 6; i += 6)
         {
             indexData[i + 0] = 0 + offset;
             indexData[i + 1] = 1 + offset;
@@ -84,7 +84,7 @@ void RenderSystem::AllocateGPUCache()
     glGenBuffers(1, &_bufferID); // Get BufferID
     glBindBuffer(GL_ARRAY_BUFFER, _bufferID); // Select Buffer
     glBufferData(GL_ARRAY_BUFFER, vertexDataSize, nullptr, GL_DYNAMIC_DRAW);
-   
+
     // Position
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, blockSize, 0);
@@ -111,89 +111,133 @@ void RenderSystem::AllocateGPUCache()
     //UnBindBuffer();
 }
 
-void RenderSystem::AddMesh(Mesh* mesh)
+void BF::RenderSystem::AddRenderModel(RenderModel* renderModel)
 {
-    ListFloat* vertexData = mesh->GetVertexData();
-    ListUInt* indiceData = mesh->GetIndiceData();
-    unsigned int length;
+    RGBA defaultColor;
+    Point defaultTexturepoint;
 
-    length = vertexData->Lengh;
+    Vertex* vertex;
+    RGBA* color;
+    Position* position;
+    Position* normal;
+    Point* texture;
 
-    mesh->StartIndex = _dataCache->VertexData.Size.Current;
 
-    for (unsigned int i = 0; i < length; i++)
+    LinkedMesh* mesh = &renderModel->GlobalMesh;
+    List<MeshIndexData*>* indiceData = &mesh->IndexList;
+
+    //mesh->ObjectBufferIndex = _dataCache->VertexData.Size.Current;
+
+    for (unsigned int i = 0; i < indiceData->Size.Value; i++)
     {
-        _dataCache->VertexData.Data[_dataCache->VertexData.Size.Current++] = vertexData->Data[i];
-    }  
+        _dataCache->IndexData.Data[_dataCache->IndexData.Size.Current++] = i + _faceModelOffset;
 
-    length = indiceData->Lengh;
+        MeshIndexData* indexData = (*indiceData)[i];
 
-    if (false)
-    {     
-        for (unsigned int i = 0; i < length; i++)
+        unsigned int vertexIndex = indexData->VertexPositionID;
+        unsigned int textureIndex = indexData->TexturePointID;
+        unsigned int normalIndex = indexData->NormalVectorID;
+
+
+        vertex = renderModel->GlobalMesh.VertexList[vertexIndex];
+        position = &vertex->CurrentPosition;
+
+        if (mesh->ColorList.Size.Value > 0)
         {
-            _dataCache->IndexData.Size.Current++;
+            color = renderModel->GlobalMesh.ColorList[vertex->ColorID];
+        }
+        else
+        {
+            color = &defaultColor;
+        }
+
+        // has normals
+        normal = renderModel->GlobalMesh.NormalPointList[normalIndex];
+
+
+        if (mesh->TexturePointList.Size.Value > 0)
+        {
+            texture = renderModel->GlobalMesh.TexturePointList[textureIndex];
+        }
+        else
+        {
+            texture = &defaultTexturepoint;
+        }
+
+        _dataCache->VertexData.Data[_dataCache->VertexData.Size.Current++] = position->X;
+        _dataCache->VertexData.Data[_dataCache->VertexData.Size.Current++] = position->Y;
+        _dataCache->VertexData.Data[_dataCache->VertexData.Size.Current++] = position->Z;
+        _dataCache->VertexData.Data[_dataCache->VertexData.Size.Current++] = 1;
+
+        _dataCache->VertexData.Data[_dataCache->VertexData.Size.Current++] = normal->X;
+        _dataCache->VertexData.Data[_dataCache->VertexData.Size.Current++] = normal->Y;
+        _dataCache->VertexData.Data[_dataCache->VertexData.Size.Current++] = normal->Z;
+        _dataCache->VertexData.Data[_dataCache->VertexData.Size.Current++] = 1;
+
+        _dataCache->VertexData.Data[_dataCache->VertexData.Size.Current++] = color->Red;
+        _dataCache->VertexData.Data[_dataCache->VertexData.Size.Current++] = color->Green;
+        _dataCache->VertexData.Data[_dataCache->VertexData.Size.Current++] = color->Blue;
+        _dataCache->VertexData.Data[_dataCache->VertexData.Size.Current++] = color->Alpha;
+
+        _dataCache->VertexData.Data[_dataCache->VertexData.Size.Current++] = texture->X;
+        _dataCache->VertexData.Data[_dataCache->VertexData.Size.Current++] = texture->Y;
+    }
+
+
+
+    for (unsigned int i = 0; i < _dataCache->IndexData.Size.Current; i++)
+    {
+        unsigned int index = _dataCache->IndexData.Data[i];
+
+        if (index > _faceModelOffset)
+        {
+            _faceModelOffset = index;
         }
     }
-    else
-    {
-        for (unsigned int i = 0; i < length; i++)
-        {
-            _dataCache->IndexData.Data[_dataCache->IndexData.Size.Current++] = indiceData->Data[i] + _dataCache->IndexData.HighestValue;
-        }
 
-        length = _dataCache->IndexData.Size.Current;
-        unsigned int* index;
+    _faceModelOffset++;
 
-        for (unsigned int i = 0; i < length; i++)
-        {
-            index = &_dataCache->IndexData.Data[i];
-
-            if (*index > _dataCache->IndexData.HighestValue)
-            {
-                _dataCache->IndexData.HighestValue = *index;
-            }
-        }
-
-        _dataCache->IndexData.HighestValue++;
-    }    
 }
 
-void RenderSystem::UpdateMesh(Mesh* mesh)
+
+
+void BF::RenderSystem::UpdateMesh(Mesh* mesh)
 {
-    ListFloat* vertexData = mesh->GetVertexData();
-    ListUInt* indiceData = mesh->GetIndiceData();
+    //ListFloat* vertexData = mesh->GetVertexData();
+    //ListUInt* indiceData = mesh->GetIndiceData();
     unsigned int length;
-    unsigned int startIndex = mesh->StartIndex;
+    unsigned int startIndex = mesh->ObjectBufferIndex;
 
-    length = vertexData->Lengh;    
+    //length = vertexData->Lengh;    
 
+    /*
     for (unsigned int i = 0; i < length; i++)
     {
-        _dataCache->VertexData.Data[startIndex++] = vertexData->Data[i];
+      //  _dataCache->VertexData.Data[startIndex++] = vertexData->Data[i];
     }
+    */
 }
 
-RenderSystem::RenderSystem(Player* player)
+BF::RenderSystem::RenderSystem(Player* player)
 {
     _currentPlayer = player;
-    _dataCache = new RenderDataCache(80000000);
+    _dataCache = new RenderDataCache(100000000);
 
     AllocateGPUCache();
 }
 
-void RenderSystem::RenderScene()
+void BF::RenderSystem::RenderScene()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//glClearColor(0.2f, 0.2f, 0.2f, 1);        
-        
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClearColor(0.2f, 0.2f, 0.2f, 1);        
+
     glm::mat4 modelMatr = glm::mat4(1.0f);
 
     //modelMatr = glm::scale(modelMatr, glm::vec3(1, 1, 1));
 
     _modelView = _currentPlayer->Camera._view * modelMatr;
-   _invModelView = glm::transpose(glm::inverse(_modelView));
-    
+    _invModelView = glm::transpose(glm::inverse(_modelView));
+
     glm::vec3 offset = glm::vec3(0, 0, 0);
     glm::mat4 diff = glm::translate(_currentPlayer->Camera._view, offset);
 
@@ -203,15 +247,15 @@ void RenderSystem::RenderScene()
     glUniformMatrix4fv(_modelViewProjectionID, 1, GL_FALSE, &_completematrix[0][0]);
     glUniformMatrix4fv(_inverseModelViewID, 1, GL_FALSE, &_invModelView[0][0]);
 
-   // UpdateGPUCache();
+    // UpdateGPUCache();
 
-    glDrawElements(GL_TRIANGLES, _dataCache->IndexData.Size.Current , GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, _dataCache->IndexData.Size.Current, GL_UNSIGNED_INT, nullptr);
     //glDrawElements(GL_LINE_LOOP, _dataCache->IndexData.Size.Current, GL_UNSIGNED_INT, nullptr);
     //glDrawElements(GL_POINTS, _dataCache->IndexData.Size.Current, GL_UNSIGNED_INT, nullptr);
      //buffer.UnBindBuffer();
 }
 
-void RenderSystem::AddShader(ShaderFile shaderFile)
+void BF::RenderSystem::AddShader(ShaderFile shaderFile)
 {
     _shaderID = ShaderLoader::CreateShader(shaderFile.VertexShader.Content, shaderFile.FragmentShader.Content);
 
@@ -256,47 +300,51 @@ void RenderSystem::AddShader(ShaderFile shaderFile)
 
     //_camera.Settings->Mode = CameraMode::Perspectdive;
 
-    printf("SHADER ID %i | %i | %i | %i\n", _shaderID, _modelViewProjectionID, _inverseModelViewID, _modelViewID); 
+    printf("SHADER ID %i | %i | %i | %i\n", _shaderID, _modelViewProjectionID, _inverseModelViewID, _modelViewID);
 }
 
-int RenderSystem::RegisterRenderModel(RenderModel* renderModel)
+int BF::RenderSystem::RegisterRenderModel(RenderModel* renderModel)
 {
     int renderID = renderModel->RenderID;
-    
+
     // ???? renderModel->ShouldBeRendered
-    unsigned int numberOfMeshes = renderModel->MeshListLengh;
+    unsigned int numberOfMeshes = renderModel->MeshList.Size.Value;
 
-    printf("[MODEL]\n");
+    printf("[MODEL] %s\n", renderModel->ModelName.c_str());
 
+
+    if (renderID == -1)
+    {
+        printf("Mesh Added:\n");
+
+        AddRenderModel(renderModel);
+
+        renderID = _dataCache->LoadedObjects++;
+    }
+    else
+    {
+        // Update
+        printf("MODEL Updated: \n");
+
+        // UpdateMesh(renderModel);
+    }
+    /*
     for (unsigned int i = 0; i < numberOfMeshes; i++)
     {
         Mesh* mesh = &renderModel->MeshList[i];
 
-        mesh->GenerateArrayData();
+        //mesh->GenerateArrayData();
 
-        if (renderID == -1)
-        {
-            printf("MODEL Added: %s\n", renderModel->ModelName.c_str());
 
-            AddMesh(mesh);
+    }    */
 
-            renderID = _dataCache->LoadedObjects++;        
-        }
-        else
-        {
-            // Update
-            printf("MODEL Updated: %s\n", renderModel->ModelName.c_str());
 
-            UpdateMesh(mesh);
-        }
-    }       
-    
     UpdateGPUCache();
 
     return renderID;
 }
 
-int RenderSystem::UnRegisterRenderModel(RenderModel* renderModel)
+int BF::RenderSystem::UnRegisterRenderModel(RenderModel* renderModel)
 {
     return -1;
 }

@@ -2,7 +2,7 @@
 
 SquarePyramidModel::SquarePyramidModel()
 {
-	ModelName = "SquarePyramid";
+	//ModelName = "SquarePyramid";
 	/*
 	std::vector<Vertex> vertexList;
 	//std::vector<unsigned int>* drawOrder = Form.GetDrawOrderSteps();

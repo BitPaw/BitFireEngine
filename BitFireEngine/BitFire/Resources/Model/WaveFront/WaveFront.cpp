@@ -1,32 +1,74 @@
 #include "WaveFront.h"
 #include <stdio.h>
 
-Position* WaveFront::GetVertexPositionFromGlobalID(unsigned int globalIndex)
+Position* BF::WaveFront::GetVertexPositionFromGlobalID(unsigned int globalIndex)
 {
-	unsigned int indexCounter = 0;
+	unsigned int prevMaxIndex = 0;
+	unsigned int currentMaximumIndex = 0;
+	unsigned int currentIndex = 0;
 
-	for (unsigned int i = 0; i < ElementListSize; i++)
+	for (unsigned int i = 0; i < ElementList.Size.Value; i++)
 	{
 		WaveFrontElement* element = &ElementList[i];
-		const unsigned int listSize = element->VertexPositonListSize;
+		const unsigned int listSize = element->VertexPositionList.Size.Value;
 
-		indexCounter += listSize;
+		prevMaxIndex = currentMaximumIndex;
+		currentMaximumIndex += listSize;
 
-		if (globalIndex <= indexCounter)
+		if (currentMaximumIndex > globalIndex)
 		{
-			indexCounter -= listSize;
-			indexCounter = (globalIndex - indexCounter);
+			unsigned int index = globalIndex - prevMaxIndex;
 
-			return &element->VertexPositionList[indexCounter];
+			if (index >= listSize)
+			{
+				printf(" S T O P \n");
+			}
+
+			return &element->VertexPositionList[index];
 		}
 	}
+
+	printf("NULL REFERENCE!!\n");
 
 	return nullptr;
 }
 
-Point* WaveFront::GetVertexTextureCoordinatesFromGlobalID(unsigned int globalIndex)
+Point* BF::WaveFront::GetVertexTextureCoordinatesFromGlobalID(unsigned int globalIndex)
 {
 	
+	unsigned int prevMaxIndex = 0;
+	unsigned int currentMaximumIndex = 0;
+	unsigned int currentIndex = 0;
+
+	for (unsigned int i = 0; i < ElementList.Size.Value; i++)
+	{
+		WaveFrontElement* element = &ElementList[i];
+		const unsigned int listSize = element->TextureCoordinateList.Size.Value;
+
+		prevMaxIndex = currentMaximumIndex;
+		currentMaximumIndex += listSize;
+
+		if (currentMaximumIndex > globalIndex)
+		{
+			unsigned int index = globalIndex - prevMaxIndex;
+
+			if (index >= listSize)
+			{
+				printf(" S T O P \n");
+			}
+
+			return &element->TextureCoordinateList[index];
+		}
+	}
+
+	printf("NULL REFERENCE!!\n");
+
+
+
+
+	/*
+
+
 	unsigned int indexCounter = 0;
 
 	for (unsigned int i = 0; i < ElementListSize; i++)
@@ -44,12 +86,49 @@ Point* WaveFront::GetVertexTextureCoordinatesFromGlobalID(unsigned int globalInd
 			return &element->TextureCoordinateList[indexCounter];
 		}
 	}
+	*/
 
 	return nullptr;
 }
 
-Position* WaveFront::GetVertexNormalFromGlobalID(unsigned int globalIndex)
+Position* BF::WaveFront::GetVertexNormalFromGlobalID(unsigned int globalIndex)
 {
+
+	unsigned int prevMaxIndex = 0;
+	unsigned int currentMaximumIndex = 0;
+	unsigned int currentIndex = 0;
+
+	for (unsigned int i = 0; i < ElementList.Size.Value; i++)
+	{
+		WaveFrontElement* element = &ElementList[i];
+		const unsigned int listSize = element->VertexNormalPositionList.Size.Value;
+
+		prevMaxIndex = currentMaximumIndex;
+		currentMaximumIndex += listSize;
+
+		if (currentMaximumIndex > globalIndex)
+		{
+			unsigned int index = globalIndex - prevMaxIndex;
+
+			if (index >= listSize)
+			{
+				printf(" S T O P \n");
+			}
+
+			return &element->VertexNormalPositionList[index];
+		}
+	}
+
+	printf("NULL REFERENCE!!\n");
+
+
+
+
+	/*
+
+
+
+
 	unsigned int indexCounter = 0;
 
 	for (unsigned int i = 0; i < ElementListSize; i++)
@@ -67,6 +146,6 @@ Position* WaveFront::GetVertexNormalFromGlobalID(unsigned int globalIndex)
 			return &element->VertexNormalPositionList[indexCounter];
 		}
 	}
-
+	*/
 	return nullptr;
 }

@@ -1,6 +1,7 @@
 ﻿#include "WaveFrontLoader.h"
+#include "../../../IO/Message/MessagerSystem.h"
 
-Position WaveFrontLoader::ParsePositionLine(std::string& line)
+Position BF::WaveFrontLoader::ParsePositionLine(std::string& line)
 {
     StringSplitter ss = StringSplitter::Split(line, ' ');
 
@@ -15,7 +16,7 @@ Position WaveFrontLoader::ParsePositionLine(std::string& line)
     return position;
 }
 
-Point WaveFrontLoader::ParsePointLine(std::string& line)
+Point BF::WaveFrontLoader::ParsePointLine(std::string& line)
 {
     StringSplitter ss = StringSplitter::Split(line, ' ');
 
@@ -29,7 +30,7 @@ Point WaveFrontLoader::ParsePointLine(std::string& line)
     return point;
 }
 
-std::vector<IndexPosition> WaveFrontLoader::ParseFaceLine(std::string& line)
+std::vector<IndexPosition> BF::WaveFrontLoader::ParseFaceLine(std::string& line)
 {
     StringSplitter ss = StringSplitter::Split(line, ' ');
     std::vector<IndexPosition> indexPositions;
@@ -63,14 +64,28 @@ std::vector<IndexPosition> WaveFrontLoader::ParseFaceLine(std::string& line)
     return indexPositions;
 }
 
-WaveFront WaveFrontLoader::LoadFromFile(std::string filePath)
+BF::WaveFront BF::WaveFrontLoader::LoadFromFile(std::string filePath)
 {
+    StopWatch stopWatch;
     WaveFront waveFront = WaveFront();
+
+    stopWatch.Start();
+
+
     TextFile textFIle = FileLoader::ReadTextFile(filePath);
+        
+    printf("  Loading File   : %lf\n", stopWatch.Reset());
+
     textFIle.SplitContentIntoLines();
     
     unsigned int numberOfLines = textFIle.AmountOfLines;
     bool isFirstVertex = true;
+
+    waveFront.Name = textFIle.FileName;
+       
+
+    printf("  Splitting File : %lf\n", stopWatch.Reset());
+    
 
     WaveFrontLineCommand* commandList = new WaveFrontLineCommand[numberOfLines]{ WaveFrontLineCommand::Invalid };
     WaveFrontLineCommand* currentCommand;
@@ -126,7 +141,7 @@ WaveFront WaveFrontLoader::LoadFromFile(std::string filePath)
                 {
                     isFirstVertex = false;
 
-                    waveFront.ElementListSize++;
+                    waveFront.ElementList.Size.Value++;
 
                     *currentCommand = WaveFrontLineCommand::VertexGeometricFirst;
                 }
@@ -175,22 +190,22 @@ WaveFront WaveFrontLoader::LoadFromFile(std::string filePath)
             break;
         }
 
-        }    
-
-
+        }          
     }
 
-    // II
-    {
+    waveFront.ElementList.ReSize();
 
-    unsigned int elementIndex = 0;    
-    waveFront.ElementList = new WaveFrontElement[waveFront.ElementListSize];
+    printf("  command lookup: %lf\n", stopWatch.Reset());
+
+
+    // II
+    {       
+    unsigned int elementIndex = 0;     
     WaveFrontElement* elemtent = nullptr;
 
     // How many data do i need?
     for (unsigned int i = 0; i < numberOfLines; i++)
     {
-
         switch (commandList[i])
         {
         case WaveFrontLineCommand::Invalid:
@@ -215,41 +230,56 @@ WaveFront WaveFrontLoader::LoadFromFile(std::string filePath)
 
             if (elementIndex > 0)
             {
-                elemtent->FaceElementListSize *= 3;
-                elemtent->Allocate();
+                // Register Memory
+                elemtent->FaceElementList.Size.Value *= 3;
+
+                elemtent->VertexPositionList.ReSize();
+                elemtent->TextureCoordinateList.ReSize();
+                elemtent->VertexNormalPositionList.ReSize();
+                elemtent->VertexParameterList.ReSize();
+                elemtent->FaceElementList.ReSize();
             }
 
             elemtent = &waveFront.ElementList[elementIndex++];
 
         case WaveFrontLineCommand::VertexGeometric:
-            elemtent->VertexPositonListSize++;
+            elemtent->VertexPositionList.Size.Value++;
             break;
 
         case WaveFrontLineCommand::VertexTexture:
-            elemtent->TextureCoordinateListSize++;
+            elemtent->TextureCoordinateList.Size.Value++;
             break;
 
         case WaveFrontLineCommand::VertexNormal:
-            elemtent->VertexNormalPositionListSize++;
+            elemtent->VertexNormalPositionList.Size.Value++;
             break;
 
         case WaveFrontLineCommand::VertexParameter:
-            elemtent->VertexParameterListSize++;
+            elemtent->VertexParameterList.Size.Value++;
             break;
 
         case WaveFrontLineCommand::SmoothShading:
             break;
 
         case WaveFrontLineCommand::FaceElement:
-            elemtent->FaceElementListSize++;
+            elemtent->FaceElementList.Size.Value++;
             break;
         }       
     }
 
-    elemtent->FaceElementListSize *= 3;
-    elemtent->Allocate();
+
+    // Register Memory
+    elemtent->FaceElementList.Size.Value *= 3;
+
+    elemtent->VertexPositionList.ReSize();
+    elemtent->TextureCoordinateList.ReSize();
+    elemtent->VertexNormalPositionList.ReSize();
+    elemtent->VertexParameterList.ReSize();
+    elemtent->FaceElementList.ReSize();
 
     }
+
+    printf("  Raw Parse     : %lf\n", stopWatch.Reset());
 
     // III
     {      
@@ -285,17 +315,7 @@ WaveFront WaveFrontLoader::LoadFromFile(std::string filePath)
 
             case WaveFrontLineCommand::ObjectName:
             {
-                std::string name = (*line).substr(2);                             
-                unsigned int lengh = name.length();
-
-                elemtent->Name = new char[lengh + 1];
-
-                for (unsigned int i = 0; i < lengh; i++)
-                {
-                    elemtent->Name[i] = name[i];
-                }
-
-                elemtent->Name[lengh] = '\0';
+                elemtent->Name = (*line).substr(2);
 
                 break;
             }               
@@ -303,12 +323,13 @@ WaveFront WaveFrontLoader::LoadFromFile(std::string filePath)
             case  WaveFrontLineCommand::VertexGeometricFirst:
                 elemtent = &waveFront.ElementList[elementIndex++];
 
+                
                 currentPositionElement = 0;
                 currentTextureElement = 0;
                 currentNormalElement = 0;
                 currentParameterElement = 0;
                 currentFaceElement = 0;
-
+                
                 // No breake, jump below!
 
             case WaveFrontLineCommand::VertexGeometric:
@@ -342,6 +363,9 @@ WaveFront WaveFrontLoader::LoadFromFile(std::string filePath)
         }
     }
 
+
+    printf("  Exact Parse   : %lf\n", stopWatch.Reset());
+
     delete[] commandList;
 
     PrintObjectDataToConsole(waveFront);
@@ -349,30 +373,30 @@ WaveFront WaveFrontLoader::LoadFromFile(std::string filePath)
     return waveFront;
 }
 
-void WaveFrontLoader::SaveToFile(std::string filePath, WaveFront& waveFont)
+void BF::WaveFrontLoader::SaveToFile(std::string filePath, WaveFront& waveFont)
 {
 
 }
 
-void WaveFrontLoader::PrintObjectDataToConsole(WaveFront& waveFont)
+void BF::WaveFrontLoader::PrintObjectDataToConsole(WaveFront& waveFont)
 {
     printf("\n[=====================]\n");
-    printf("  [Object: %s]\n", waveFont.Name);
+    printf("  [Object: %s]\n", waveFont.Name.c_str());
 
-    for (unsigned int i = 0; i < waveFont.ElementListSize; i++)
+    for (unsigned int i = 0; i < waveFont.ElementList.Size.Value; i++)
     {
         WaveFrontElement* waveFrontElement = &waveFont.ElementList[i];
 
-        unsigned int sizePos = waveFrontElement->VertexPositonListSize;
-        unsigned int sizeNormal = waveFrontElement->VertexNormalPositionListSize;
-        unsigned int sizeText = waveFrontElement->TextureCoordinateListSize;
-        unsigned int sizePara = waveFrontElement->VertexParameterListSize;
-        unsigned int sizeFace = waveFrontElement->FaceElementListSize;
+        unsigned int sizePos = waveFrontElement->VertexPositionList.Size.Value;
+        unsigned int sizeNormal = waveFrontElement->VertexNormalPositionList.Size.Value;
+        unsigned int sizeText = waveFrontElement->TextureCoordinateList.Size.Value;
+        unsigned int sizePara = waveFrontElement->VertexParameterList.Size.Value;
+        unsigned int sizeFace = waveFrontElement->FaceElementList.Size.Value;
 
 
-        if (i+1 >= waveFont.ElementListSize)
+        if (i+1 >= waveFont.ElementList.Size.Value)
         {
-            printf("  |-<Element %u : %4s>\n", i, waveFrontElement->Name);
+            printf("  |-<Element %u : %4s>\n", i, waveFrontElement->Name.c_str());
             if (sizePos == 0)
             {
                 printf("    |-<V   : %4s>\n", "---");
@@ -421,7 +445,7 @@ void WaveFrontLoader::PrintObjectDataToConsole(WaveFront& waveFont)
         }
         else
         {
-            printf("  |-<Element %u : %4s>\n", i, waveFrontElement->Name);
+            printf("  |-<Element %u : %4s>\n", i, waveFrontElement->Name.c_str());
             if (sizePos == 0)
             {
                 printf("  | |-<V   : %4s>\n", "---");

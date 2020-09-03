@@ -4,8 +4,10 @@
 #include "../RenderModel.h"
 #include "../../Mathematic/Geometry/Form/Cube.h"
 
-class CubeModel : public RenderModel
+namespace BF
 {
+	class CubeModel : public RenderModel
+	{
 	public:
 		Cube Form;
 
@@ -20,4 +22,5 @@ class CubeModel : public RenderModel
 		Vertex H;
 
 		CubeModel();
-};
+	};
+}

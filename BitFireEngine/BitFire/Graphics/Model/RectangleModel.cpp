@@ -1,24 +1,30 @@
 #include "RectangleModel.h"
 
-RectangleModel::RectangleModel()
+BF::RectangleModel::RectangleModel()
 {
 	ModelName = "Rectangle";
+	MeshList.ReSize(1);
 
-	std::vector<Vertex> vertexList;
+	Mesh* mesh = &MeshList[0];
+	/*
+	mesh->VertexList.ReSize(4);
+	mesh->VertexList[0] = Vertex(Position(Shape.A), RGBA(1, 0, 0), Point(0, 0));
+	mesh->VertexList[1] = Vertex(Position(Shape.B), RGBA(0, 0, 1), Point(1, 0));
+	mesh->VertexList[2] = Vertex(Position(Shape.C), RGBA(0, 1, 0), Point(1, 1));
+	mesh->VertexList[3] = Vertex(Position(Shape.D), RGBA(1, 1, 0), Point(0, 1));
+
 	std::vector<unsigned int>* drawOrder = Shape.GetDrawOrderSteps();
 
-	vertexList.reserve(Shape.GetCornerPointsAmout());
+	mesh->IndexList.ReSize(drawOrder->size());
 
-	vertexList.push_back(Vertex(Position(Shape.A), RGBA(1,0,0), Point(0, 0)));
-	vertexList.push_back(Vertex(Position(Shape.B), RGBA(0,0,1), Point(1, 0)));
-	vertexList.push_back(Vertex(Position(Shape.C), RGBA(0,1,0), Point(1, 1)));
-	vertexList.push_back(Vertex(Position(Shape.D), RGBA(1,1,0), Point(0, 1)));
+	for (size_t i = 0; i < drawOrder->size(); i++)
+	{
+		mesh->IndexList[i] = (*drawOrder).at(i);
+	}
 
-	Mesh mesh = Mesh(vertexList, *drawOrder, 2);
-	mesh.CalculateNormals();
+	ShouldBeRendered = true;
 
-	MeshListLengh++;
-	MeshList = new Mesh[1]{ mesh };
+	*/
 
 	UpdateRenderSystemLink();
 }

@@ -3,7 +3,7 @@
 #include "../RenderModel.h"
 #include "../../Mathematic/Geometry/Shape/Triangle.h"
 
-class TriangleModel : public RenderModel
+class TriangleModel : public BF::RenderModel
 {
 public:
 	Triangle Shape;

@@ -10,7 +10,7 @@ public:
 	DataSize Size;
 	unsigned int* Data;
 
-	 unsigned int HighestValue;
+	// unsigned int HighestValue;
 
 	IndexDataCache();
 	~IndexDataCache();

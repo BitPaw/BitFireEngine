@@ -28,7 +28,9 @@
     <ClCompile Include="BitFire\Graphics\Camera\Camera.cpp" />
     <ClCompile Include="BitFire\Graphics\Camera\CameraSettings.cpp" />
     <ClCompile Include="BitFire\Graphics\Camera\FirstPersonCamera.cpp" />
+    <ClCompile Include="BitFire\Graphics\LinkedMesh.cpp" />
     <ClCompile Include="BitFire\Graphics\Mesh.cpp" />
+    <ClCompile Include="BitFire\Graphics\MeshIndexData.cpp" />
     <ClCompile Include="BitFire\Graphics\Model\CubeModel.cpp" />
     <ClCompile Include="BitFire\Graphics\Model\RectangleModel.cpp" />
     <ClCompile Include="BitFire\Graphics\Model\SquarePyramidModel.cpp" />
@@ -107,8 +109,11 @@
     <ClCompile Include="BitFire\Resources\Model\WaveFront\WaveFront.cpp" />
     <ClCompile Include="BitFire\Resources\Model\WaveFront\WaveFrontElement.cpp" />
     <ClCompile Include="BitFire\Resources\Model\WaveFront\WaveFrontLoader.cpp" />
+    <ClCompile Include="BitFire\Time\StopWatch.cpp" />
     <ClCompile Include="BitFire\Time\TimeCollection.cpp" />
     <ClCompile Include="BitFire\UI\Padding.cpp" />
+    <ClCompile Include="BitFire\Utility\List.cpp" />
+    <ClCompile Include="BitFire\Utility\ListSize.cpp" />
     <ClCompile Include="BitFire\Utility\StringSplitter.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -123,7 +128,9 @@
     <ClInclude Include="BitFire\Graphics\Camera\CameraMode.h" />
     <ClInclude Include="BitFire\Graphics\Camera\CameraSettings.h" />
     <ClInclude Include="BitFire\Graphics\Camera\FirstPersonCamera.h" />
+    <ClInclude Include="BitFire\Graphics\LinkedMesh.h" />
     <ClInclude Include="BitFire\Graphics\Mesh.h" />
+    <ClInclude Include="BitFire\Graphics\MeshIndexData.h" />
     <ClInclude Include="BitFire\Graphics\Model\CubeModel.h" />
     <ClInclude Include="BitFire\Graphics\Model\RectangleModel.h" />
     <ClInclude Include="BitFire\Graphics\Model\SquarePyramidModel.h" />
@@ -212,10 +219,11 @@
     <ClInclude Include="BitFire\Resources\Model\WaveFront\WaveFrontElement.h" />
     <ClInclude Include="BitFire\Resources\Model\WaveFront\WaveFrontLineCommand.h" />
     <ClInclude Include="BitFire\Resources\Model\WaveFront\WaveFrontLoader.h" />
+    <ClInclude Include="BitFire\Time\StopWatch.h" />
     <ClInclude Include="BitFire\Time\TimeCollection.h" />
     <ClInclude Include="BitFire\UI\Padding.h" />
-    <ClInclude Include="BitFire\Utility\ListFloat.h" />
-    <ClInclude Include="BitFire\Utility\ListUInt.h" />
+    <ClInclude Include="BitFire\Utility\List.h" />
+    <ClInclude Include="BitFire\Utility\ListSize.h" />
     <ClInclude Include="BitFire\Utility\StringSplitter.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

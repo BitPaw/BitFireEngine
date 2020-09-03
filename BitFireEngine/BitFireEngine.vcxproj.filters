@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BitFire\Main.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="BitFire\Color\RGB.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -57,7 +54,13 @@
     <ClCompile Include="BitFire\Graphics\Model\TriangleModel.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="BitFire\Graphics\LinkedMesh.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
     <ClCompile Include="BitFire\Graphics\Mesh.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Graphics\MeshIndexData.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Graphics\RenderModel.cpp">
@@ -279,13 +282,25 @@
     <ClCompile Include="BitFire\Resources\Model\WaveFront\WaveFrontLoader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="BitFire\Time\StopWatch.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
     <ClCompile Include="BitFire\Time\TimeCollection.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\UI\Padding.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="BitFire\Utility\List.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Utility\ListSize.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
     <ClCompile Include="BitFire\Utility\StringSplitter.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Main.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -335,7 +350,13 @@
     <ClInclude Include="BitFire\Graphics\Model\TriangleModel.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="BitFire\Graphics\LinkedMesh.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
     <ClInclude Include="BitFire\Graphics\Mesh.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Graphics\MeshIndexData.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Graphics\RenderModel.h">
@@ -590,16 +611,19 @@
     <ClInclude Include="BitFire\Resources\Model\WaveFront\WaveFrontLoader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="BitFire\Time\StopWatch.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
     <ClInclude Include="BitFire\Time\TimeCollection.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\UI\Padding.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Utility\ListFloat.h">
+    <ClInclude Include="BitFire\Utility\List.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Utility\ListUInt.h">
+    <ClInclude Include="BitFire\Utility\ListSize.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Utility\StringSplitter.h">

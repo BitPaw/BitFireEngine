@@ -21,7 +21,7 @@ public:
 	static OpenGLAPI* Instance();
 
 	Window* MainWindow;
-	RenderSystem* Render;
+	BF::RenderSystem* Render;
 
 	void Initialize(Player* player);
 	void Update();

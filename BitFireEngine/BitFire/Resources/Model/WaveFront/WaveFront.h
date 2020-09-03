@@ -1,22 +1,25 @@
 #pragma once
 
+#include <string>
+
 #include "WaveFrontElement.h"
 #include "MaterialLibrary/MaterialLibrary.h"
 
 /// <summary>
 /// [.OBJ] Wavefront - 3D model format
 /// </summary>
-class WaveFront
+
+namespace BF
 {
-public:
-	char* Name;
+	struct WaveFront
+	{
+	public:
+		std::string Name = "[N/A]";
+		MaterialLibrary Materials;
+		List<WaveFrontElement> ElementList;
 
-	MaterialLibrary Materials;
-
-	WaveFrontElement* ElementList;
-	unsigned int ElementListSize;
-
-	Position* GetVertexPositionFromGlobalID(unsigned int globalIndex);
-	Point* GetVertexTextureCoordinatesFromGlobalID(unsigned int globalIndex);
-	Position* GetVertexNormalFromGlobalID(unsigned int globalIndex);
-};
+		Position* GetVertexPositionFromGlobalID(unsigned int globalIndex);
+		Point* GetVertexTextureCoordinatesFromGlobalID(unsigned int globalIndex);
+		Position* GetVertexNormalFromGlobalID(unsigned int globalIndex);
+	};
+}

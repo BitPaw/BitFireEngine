@@ -4,7 +4,7 @@
 #include <math.h>
 
 // [X|Y|Z] Position in 3D-WorldSpace. 
-class Position : public Point
+struct Position : public Point
 {
 public:
 	float Z;

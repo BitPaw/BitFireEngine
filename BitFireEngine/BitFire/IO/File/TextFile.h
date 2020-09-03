@@ -12,6 +12,8 @@ public:
 	std::string Path;
 	std::string Content;
 
+	std::string FileName;
+
 	TextFile();
 	TextFile(std::string path, std::string content);
 

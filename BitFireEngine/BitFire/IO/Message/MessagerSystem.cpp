@@ -29,3 +29,8 @@ void MessagerSystem::PushMessage(Message message)
 
 	std::cout << priorityTag << message.Content << std::endl;
 }
+
+void MessagerSystem::PushMessage(MessagePriorityType Priority, std::string Content)
+{
+	PushMessage(Message(Priority, Content));
+}

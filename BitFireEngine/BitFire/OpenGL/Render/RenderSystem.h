@@ -18,49 +18,52 @@
 #include "../../Resources/Model/WaveFront/WaveFrontLoader.h"
 #include "../../Graphics/Model/TriangleModel.h"
 
-
-class RenderSystem
+namespace BF
 {
-private:
-	Camera* _targetCamera;
+	class RenderSystem
+	{
+	private:
+		Camera* _targetCamera;
 
-	glm::mat4 _model = glm::mat4(1.0f);
-	glm::mat4 _modelView;
-	glm::mat4 _invModelView;
-	glm::mat4 _completematrix;
+		glm::mat4 _model = glm::mat4(1.0f);
+		glm::mat4 _modelView;
+		glm::mat4 _invModelView;
+		glm::mat4 _completematrix;
 
-	int _shaderID;
-	int _modelViewProjectionID;
-	int _inverseModelViewID;
-	int _modelViewID;
-	int _textureID;
+		int _shaderID;
+		int _modelViewProjectionID;
+		int _inverseModelViewID;
+		int _modelViewID;
+		int _textureID;
 
-	BitMapFont _front;
-	BitMap _texture;
-	PixelArray _pixelArray;
-	RenderModel model;
+		unsigned int _faceModelOffset = 0;
 
+		BitMapFont _front;
+		BitMap _texture;
+		PixelArray _pixelArray;
+		RenderModel model;
 
-	//--------------------------------
-	RenderDataCache* _dataCache;
-	unsigned int _bufferID;
-	unsigned int _indiceBuffer;
-	unsigned int _vertexArrayObjectID;
-	//--------------------------------
+		//--------------------------------
+		RenderDataCache* _dataCache;
+		unsigned int _bufferID;
+		unsigned int _indiceBuffer;
+		unsigned int _vertexArrayObjectID;
+		//--------------------------------
 
-	Player* _currentPlayer;
+		Player* _currentPlayer;
 
-	void UpdateGPUCache();
-	void AllocateGPUCache();
-	void AddMesh(Mesh* mesh);
-	void UpdateMesh(Mesh* mesh);
+		void UpdateGPUCache();
+		void AllocateGPUCache();
+		void AddRenderModel(RenderModel* renderModel);
+		void UpdateMesh(Mesh* mesh);
 
-public:
-	RenderSystem(Player* player);
+	public:
+		RenderSystem(Player* player);
 
-	void RenderScene();
-	void AddShader(ShaderFile shaderFile);
-	
-	int RegisterRenderModel(RenderModel* renderModel);
-	int UnRegisterRenderModel(RenderModel* renderModel);
-};
+		void RenderScene();
+		void AddShader(ShaderFile shaderFile);
+
+		int RegisterRenderModel(RenderModel* renderModel);
+		int UnRegisterRenderModel(RenderModel* renderModel);
+	};
+}

@@ -22,5 +22,9 @@ void TextFile::SplitContentIntoLines()
 
 		Lines = splittedString.Lines;
 		AmountOfLines = splittedString.NumberOfLines;
+
+		splittedString = StringSplitter::Split(Path, '/');		
+
+		FileName = splittedString.Lines[splittedString.NumberOfLines - 1];
 	}
 }

@@ -1,41 +1,33 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include <iostream>
 
 #include "Vertex.h"
 
-#include "../Utility/ListFloat.h"
-#include "../Utility/ListUInt.h"
+#include "../Utility/List.h"
+#include "MeshIndexData.h"
 
-class Mesh
+namespace BF
 {
-private:
-	ListFloat _vertexData;
-	ListUInt _indiceData;
+	class Mesh
+	{
+	public:
+		std::string Name;
 
+		int ObjectBufferIndex;
 
-public:
-	unsigned int StartIndex;
+		List<Vertex> VertexList;
+		List<Position> NormalPointList;
+		List<Point> TexturePointList;
+		List<RGBA> ColorList;
+		List<MeshIndexData> IndexList;
 
-	unsigned char Dimension;
+		Mesh();
 
-
-	// Raw - Data-----------------------------
-	Vertex* VertexList;
-	unsigned int VertexListSize;
-
-	unsigned int* IndexList;
-	unsigned int IndexListSize;
-	//------------------------------------------
-
-	Mesh();
-	Mesh(std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, unsigned char dimension);
-	~Mesh();
-
-	void CalculateNormals();
-	void GenerateArrayData();
-
-	ListFloat* GetVertexData();
-	ListUInt* GetIndiceData();
-};
+		bool HasNormalVectors() { return NormalPointList.Size.Value > 0; }
+		bool HasTexturePoints() { return TexturePointList.Size.Value > 0; }
+		bool HasColorPoints() { return ColorList.Size.Value > 0; }
+	};
+}

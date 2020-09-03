@@ -2,22 +2,19 @@
 
 #include <chrono>
 
+#include "StopWatch.h"
+
 class TimeCollection
 {
 private:
-    static std::chrono::steady_clock::time_point _lastTimeStamp;
+    static StopWatch _stopWatch;
 
 public:
 	static double ActiveTime;
 	static float DeltaTime;
 
     static void SetDeltaTimeStamp()
-    {
-        std::chrono::steady_clock::time_point currentTimeStamp = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> elapsed = currentTimeStamp - _lastTimeStamp;
-       
-        DeltaTime = elapsed.count();
-
-        _lastTimeStamp = currentTimeStamp;
+    {             
+        DeltaTime = _stopWatch.Reset();
     }
 };
