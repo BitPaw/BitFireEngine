@@ -155,15 +155,16 @@ BitMapFontCharacter BitMapFontLoader::ParseCharacterLine(std::string line)
 
 BitMapFont BitMapFontLoader::LoadBitMapFont(std::string path)
 {
-	TextFile textFile = FileLoader::ReadTextFile(path);
-	textFile.SplitContentIntoLines();
-	BitMapFont bitMapFont;
-	std::vector<BitMapFontCommand> commandList;
+	TextFile textFile = FileLoader::ReadTextFile(path, true);
+	BF::List<BitMapFontCommand> commandList;
+	BitMapFont bitMapFont;	
+	unsigned int amountOfLines = textFile.Lines.Size.Value;
 
-	commandList.reserve(textFile.AmountOfLines);
+	commandList.ReSize(amountOfLines);
 
 	// Raw-Parse (Counting)
 	{
+		unsigned int currentCommandIndex = 0;
 		unsigned int characterCounter = 0;
 
 		const unsigned char commandInfo = 'i';
@@ -175,7 +176,7 @@ BitMapFont BitMapFontLoader::LoadBitMapFont(std::string path)
 		const unsigned char commandH = 'h';
 		const unsigned char commandS = 's';
 
-		for (unsigned int i = 0; i < textFile.AmountOfLines; i++)
+		for (unsigned int i = 0; i < amountOfLines; i++)
 		{
 			std::string line = textFile.Lines[i];
 			BitMapFontCommand currentCommand;
@@ -231,17 +232,17 @@ BitMapFont BitMapFontLoader::LoadBitMapFont(std::string path)
 				break;
 			}
 
-			commandList.push_back(currentCommand);
+			commandList[currentCommandIndex++] = currentCommand;
 		}
 
 		//bitMapFont.Characters.reserve(characterCounter);
 	}
 
 	// Parse
-	for (unsigned int i = 0; i < textFile.AmountOfLines; i++)
+	for (unsigned int i = 0; i < amountOfLines; i++)
 	{
 		std::string line = textFile.Lines[i];
-		BitMapFontCommand currentCommand = commandList.at(i);
+		BitMapFontCommand currentCommand = commandList[i];
 
 		switch (currentCommand)
 		{
@@ -269,8 +270,7 @@ BitMapFont BitMapFontLoader::LoadBitMapFont(std::string path)
 
 			page->Characters.push_back(character);
 			break;
-		}
-		
+		}		
 
 		case BitMapFontCommand::Invalid:
 		default:

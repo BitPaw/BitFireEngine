@@ -43,14 +43,23 @@ std::vector<IndexPosition> BF::WaveFrontLoader::ParseFaceLine(std::string& line)
     {
         StringSplitter aa = StringSplitter::Split(ss.Lines[i], '/');
 
+        unsigned int x = -1;
+        unsigned int y = -1;
+        unsigned int z = -1;
+
         // Possiple error if char is '/'
         xValue = aa.Lines[0];
         yValue = aa.Lines[1];
-        zValue = aa.Lines[2];
+      
 
-        unsigned int x = std::stoi(xValue);
-        unsigned int y = std::stoi(yValue);
-        unsigned int z = std::stoi(zValue);
+        x = std::stoi(xValue);
+        y = std::stoi(yValue);
+
+        if (aa.NumberOfLines >= 3)
+        {
+            zValue = aa.Lines[2];
+            z = std::stoi(zValue);
+        }  
 
         IndexPosition indexPosition(x, y, z);
 
@@ -71,14 +80,11 @@ BF::WaveFront BF::WaveFrontLoader::LoadFromFile(std::string filePath)
 
     stopWatch.Start();
 
-
-    TextFile textFIle = FileLoader::ReadTextFile(filePath);
+    TextFile textFIle = FileLoader::ReadTextFile(filePath, true);
         
     printf("  Loading File   : %lf\n", stopWatch.Reset());
-
-    textFIle.SplitContentIntoLines();
     
-    unsigned int numberOfLines = textFIle.AmountOfLines;
+    unsigned int numberOfLines = textFIle.Lines.Size.Value;
     bool isFirstVertex = true;
 
     waveFront.Name = textFIle.FileName;
@@ -87,7 +93,7 @@ BF::WaveFront BF::WaveFrontLoader::LoadFromFile(std::string filePath)
     printf("  Splitting File : %lf\n", stopWatch.Reset());
     
 
-    WaveFrontLineCommand* commandList = new WaveFrontLineCommand[numberOfLines]{ WaveFrontLineCommand::Invalid };
+    List<WaveFrontLineCommand> commandList(numberOfLines);
     WaveFrontLineCommand* currentCommand;
     std::string* line;
     unsigned int functionChar;
@@ -366,8 +372,6 @@ BF::WaveFront BF::WaveFrontLoader::LoadFromFile(std::string filePath)
 
     printf("  Exact Parse   : %lf\n", stopWatch.Reset());
 
-    delete[] commandList;
-
     PrintObjectDataToConsole(waveFront);
 
     return waveFront;
@@ -392,7 +396,6 @@ void BF::WaveFrontLoader::PrintObjectDataToConsole(WaveFront& waveFont)
         unsigned int sizeText = waveFrontElement->TextureCoordinateList.Size.Value;
         unsigned int sizePara = waveFrontElement->VertexParameterList.Size.Value;
         unsigned int sizeFace = waveFrontElement->FaceElementList.Size.Value;
-
 
         if (i+1 >= waveFont.ElementList.Size.Value)
         {

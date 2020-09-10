@@ -36,12 +36,12 @@ namespace BF
 		int _modelViewID;
 		int _textureID;
 
-		unsigned int _faceModelOffset = 0;
+	
 
 		BitMapFont _front;
 		BitMap _texture;
 		PixelArray _pixelArray;
-		RenderModel model;
+
 
 		//--------------------------------
 		RenderDataCache* _dataCache;
@@ -54,8 +54,7 @@ namespace BF
 
 		void UpdateGPUCache();
 		void AllocateGPUCache();
-		void AddRenderModel(RenderModel* renderModel);
-		void UpdateMesh(Mesh* mesh);
+		void UpdateModel(RenderModel* renderModel);
 
 	public:
 		RenderSystem(Player* player);
@@ -63,7 +62,8 @@ namespace BF
 		void RenderScene();
 		void AddShader(ShaderFile shaderFile);
 
-		int RegisterRenderModel(RenderModel* renderModel);
+
+		void RegisterRenderModel(RenderModel* renderModel);
 		int UnRegisterRenderModel(RenderModel* renderModel);
 	};
 }

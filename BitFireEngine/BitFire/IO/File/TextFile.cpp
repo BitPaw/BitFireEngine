@@ -1,19 +1,19 @@
 #include "TextFile.h"
 
-#include "../../Utility/StringSplitter.h"
-
-TextFile::TextFile() : TextFile("", "")
+TextFile::TextFile()
 {
 
 }
 
-TextFile::TextFile(std::string path, std::string content)
+TextFile::TextFile(std::string path)
 {
-	AmountOfLines = 0;
+	StringSplitter splittedString = StringSplitter::Split(path, '/');
+
+	FileName = splittedString.Lines[splittedString.NumberOfLines - 1];
+
 	Path = path;
-	Content = content;
 }
-
+/*
 void TextFile::SplitContentIntoLines()
 {
 	if (AmountOfLines == 0)
@@ -22,9 +22,5 @@ void TextFile::SplitContentIntoLines()
 
 		Lines = splittedString.Lines;
 		AmountOfLines = splittedString.NumberOfLines;
-
-		splittedString = StringSplitter::Split(Path, '/');		
-
-		FileName = splittedString.Lines[splittedString.NumberOfLines - 1];
 	}
-}
+}*/

@@ -303,6 +303,30 @@
     <ClCompile Include="BitFire\Main.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="BitFire\IO\File\FileNotFound.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\IO\File\EmptyFileName.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Mathematic\Geometry\Vector\Vector2.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Mathematic\Geometry\Vector\Vector3.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Mathematic\Geometry\Vector\Vector4.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Mathematic\Geometry\Matrix\Matrix3x3.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Mathematic\Geometry\Matrix\Matrix4x4.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\OpenGL\Render\RenderInformation.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitFire\Color\RGB.h">
@@ -629,5 +653,36 @@
     <ClInclude Include="BitFire\Utility\StringSplitter.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="BitFire\IO\File\FileNotFound.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\IO\File\EmptyFileName.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Geometry\Vector\Vector4.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Geometry\Vector\Vector2.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Geometry\Vector\Vector3.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Geometry\Matrix\Matrix3x3.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Geometry\Matrix\Matrix4x4.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\OpenGL\Render\RenderInformation.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="BitFire\OpenGL\Shader\Files\FragmentShader.frag" />
+    <None Include="BitFire\OpenGL\Shader\Files\VertexShader.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="BitFire\ToDo.txt" />
   </ItemGroup>
 </Project>

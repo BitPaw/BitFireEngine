@@ -1,4 +1,5 @@
 #include "RenderModel.h"
+
 #include "../OpenGL/OpenGLAPI.h"
 
 void BF::RenderModel::UpdateRenderSystemLink()
@@ -7,13 +8,11 @@ void BF::RenderModel::UpdateRenderSystemLink()
 
     if (openGLAPI == nullptr)
     {
-        ShouldBeRendered = false;
-        RenderID = -1;    
+        // Error  
     }
     else
     {
-        ShouldBeRendered = true;
-        RenderID = openGLAPI->Render->RegisterRenderModel(this);
+        openGLAPI->Render->RegisterRenderModel(this);
     }
 }
 
@@ -24,8 +23,6 @@ BF::RenderModel::RenderModel() : RenderModel("[N/A]")
 
 BF::RenderModel::RenderModel(std::string name)
 {   
-    RenderID = -1;
-    ShouldBeRendered = false;
     ModelName = name; 
 }
 
@@ -107,20 +104,15 @@ void BF::RenderModel::LoadFromWaveFront(WaveFront& waveFront)
     UpdateRenderSystemLink();
 }
 
-void BF::RenderModel::MoveWholeObject(Position position)
+void BF::RenderModel::MoveInDirection(BF::Vector3 vector)
 {
-    for (unsigned int i = 0; i < MeshList.Size.Value; i++)
+    for (unsigned int i = 0; i < GlobalMesh.VertexList.Size.Value; i++)
     {
-        Mesh* mesh = &MeshList[i];
-
-        for (unsigned int  i = 0; i < mesh->VertexList.Size.Value; i++)
-        {
-            Vertex* vertex = &mesh->VertexList[i];
-            Position* currentPosition = &vertex->CurrentPosition;
-            currentPosition->X += position.X;
-            currentPosition->Y += position.Y;
-            currentPosition->Z += position.Z;
-        }
+        Vertex* vertex = GlobalMesh.VertexList[i];
+        Position* currentPosition = &vertex->CurrentPosition;
+        currentPosition->X += vector.X;
+        currentPosition->Y += vector.Y;
+        currentPosition->Z += vector.Z;
     }
 
     UpdateRenderSystemLink();
@@ -247,162 +239,3 @@ void BF::RenderModel::UpdateGlobalMesh()
         }
     }
 }
-/*
-
-Vertex* BF::RenderModel::GetVertexInGlobalMesh(const unsigned int vertexID)
-{
-    unsigned int length = MeshList.Size.Value;
-    unsigned int dynamicIndex = 0;
-
-    for (unsigned int i = 0; i < length; i++)
-    {
-        Mesh* mesh = &MeshList[i];
-        unsigned int size = mesh->VertexList.Size.Value;
-
-        if (dynamicIndex + size < vertexID)
-        {
-            dynamicIndex += size;          
-        }     
-        else
-        {
-            for (unsigned int i = 0; i < size; i++)
-            {
-                if (vertexID == dynamicIndex++)
-                {
-                    return &mesh->VertexList[i];
-                }
-            }
-        }
-    }
-
-   throw std::runtime_error("Not Found");
-
-   return nullptr;
-}
-
-Point* BF::RenderModel::GetTexturePointInGlobalMesh(const unsigned int vertexID)
-{
-    unsigned int length = MeshList.Size.Value;
-    unsigned int dynamicIndex = 0;
-
-    for (unsigned int i = 0; i < length; i++)
-    {
-        Mesh* mesh = &MeshList[i];
-        unsigned int size = mesh->TexturePointList.Size.Value;
-
-        if (dynamicIndex + size < vertexID)
-        {
-            dynamicIndex += size;
-        }
-        else
-        {
-
-            for (unsigned int i = 0; i < size; i++)
-            {
-                if (vertexID == dynamicIndex++)
-                {
-                    return &mesh->TexturePointList[i];
-                }
-            }
-        }
-    }
-
-    throw std::runtime_error("Not Found");
-
-    return nullptr;
-}
-
-Position* BF::RenderModel::GetNormalInGlobalMesh(const unsigned int vertexID)
-{
-    unsigned int length = MeshList.Size.Value;
-    unsigned int dynamicIndex = 0;
-
-    for (unsigned int i = 0; i < length; i++)
-    {
-        Mesh* mesh = &MeshList[i];
-        unsigned int size = mesh->NormalPointList.Size.Value;
-
-        if (dynamicIndex + size < vertexID)
-        {
-            dynamicIndex += size;
-        }
-        else
-        {
-            for (unsigned int i = 0; i < size; i++)
-            {
-                if (vertexID == dynamicIndex++)
-                {
-                    return &mesh->NormalPointList[i];
-                }
-            }
-        }
-    }
-    throw std::runtime_error("Not Found");
-
-    return nullptr;
-}
-
-
-
-void BF::Mesh::GenerateArrayData()
-{
-    // Vertex
-    {
-        unsigned int dynamicIndex = 0;
-        unsigned int blockSize = (4 + 4 + 4 + 2);
-
-        _vertexData.Lengh = VertexListSize * blockSize;
-        _vertexData.Data = new float[_vertexData.Lengh];
-        _vertexData.SizeInBytesSingleBlock = sizeof(float) * blockSize;
-        _vertexData.SizeInBytesDataBlock = sizeof(float) * _vertexData.Lengh;
-
-        float* vList = _vertexData.Data;
-
-        //printf("Creating Data Array. Length=%u\n", _vertexData.Lengh);
-
-        for (unsigned int i = 0; i < VertexListSize; i++)
-        {
-            Vertex* vertex = &VertexList[i];
-            Position* position = &vertex->CurrentPosition;
-            Position* normal = &vertex->NormalizedPosition;
-            Point* point = &vertex->TexturePoint;
-            RGBA* color = &vertex->Color;
-
-            //printf("[ID=%u]\n", i);
-            //printf("Position: <%.2f | %.2f | %.2f>\n", position->X, position->Y, position->Z);
-            //printf("Normal  : <%.2f | %.2f | %.2f>\n", normal->X, normal->Y, normal->Z);
-            //printf("Point   : <%.2f | %.2f>\n", point->X, point->Y);
-            //printf("Color   : <%.2f | %.2f | %.2f | %.2f>\n\n", color->Red, color->Green, color->Blue, color->Alpha);
-
-            // positions
-            vList[dynamicIndex++] = position->X;
-            vList[dynamicIndex++] = position->Y;
-            vList[dynamicIndex++] = position->Z;
-            vList[dynamicIndex++] = 1; // W
-
-            // Normals
-            vList[dynamicIndex++] = normal->X;
-            vList[dynamicIndex++] = normal->Y;
-            vList[dynamicIndex++] = normal->Z;
-            vList[dynamicIndex++] = 1; // W
-
-            // Color
-            vList[dynamicIndex++] = color->Red;
-            vList[dynamicIndex++] = color->Green;
-            vList[dynamicIndex++] = color->Blue;
-            vList[dynamicIndex++] = color->Alpha;
-
-            // Texture
-            vList[dynamicIndex++] = point->X;
-            vList[dynamicIndex++] = point->Y;
-        }
-    }
-    /*
-    for (size_t i = 0; i < _vertexData.Lengh; i++)
-    {
-        //printf("[ID=%u/%u] %f\n", i, _vertexData.Lengh ,_vertexData.Data[i]);
-    }
-    
-}
-
-*/

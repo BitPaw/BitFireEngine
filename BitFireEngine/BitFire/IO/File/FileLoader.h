@@ -6,16 +6,21 @@
 #include <sstream>
 
 #include "TextFile.h"
+#include "FileNotFound.h"
+
+#include "../../Utility/List.h"
 
 class FileLoader
 {
-private:
-	static std::string ReadCompleteFile(std::string filePath);
-	static std::string* ReadFileByLines(std::string filePath, unsigned int* amount);
-
 public:
-	static TextFile ReadTextFile(std::string filePath);
+	static bool DoesFileExist(const std::string filePath);
 
-	static std::vector<unsigned char> ReadFileAsBytes(std::string filePath);
-	static void WriteFileAsBytes(std::string filePath, unsigned int size, unsigned char* data);
+	static BF::List<unsigned char> ReadFileAsBytes(const std::string filePath);
+	static void WriteFileAsBytes(const std::string filePath, const unsigned int size, const unsigned char* data);
+
+	static std::string ReadCompleteFile(const std::string filePath);
+	static BF::List<std::string> ReadFileByLines(const std::string filePath);
+
+	static TextFile ReadTextFile(const std::string filePath);
+	static TextFile ReadTextFile(const std::string filePath, const bool splittLines);
 };

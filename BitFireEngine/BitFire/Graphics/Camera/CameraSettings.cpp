@@ -9,7 +9,8 @@ CameraSettings::CameraSettings(const float height, const float width)
 	Height = height;
 	Width = width;
 	Near = 0.01F;
-	Far = 1000;
+	//Far = 1000;
+	Far = -1;
 }
 
 CameraSettings::~CameraSettings()

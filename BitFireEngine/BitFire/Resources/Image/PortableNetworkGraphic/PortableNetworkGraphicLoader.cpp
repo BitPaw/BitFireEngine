@@ -4,14 +4,14 @@
 PortableNetworkGraphic PortableNetworkGraphicLoader::LoadFromFile(std::string filePath)
 {
     PortableNetworkGraphic portableNetworkGraphic;
-    std::vector<unsigned char> bytes = FileLoader::ReadFileAsBytes(filePath);
+    BF::List<unsigned char> bytes = FileLoader::ReadFileAsBytes(filePath);
     
     unsigned char dynamicIndex = 0;
 
     // Check Header
     while (dynamicIndex < PortableNetworkGraphicFileHeader::FileHeaderSize)
     {
-        unsigned char target = bytes.at(dynamicIndex);
+        unsigned char target = bytes[dynamicIndex];
         unsigned char source = PortableNetworkGraphicFileHeader::FileHeader[dynamicIndex];
         bool sameValue = target == source;
 
@@ -47,21 +47,21 @@ PortableNetworkGraphic PortableNetworkGraphicLoader::LoadFromFile(std::string fi
         Filter method:      1 byte
         Interlace method:   1 byte
         */
-        byteA = bytes.at(dynamicIndex++);
-        byteB = bytes.at(dynamicIndex++);
+        byteA = bytes[dynamicIndex++];
+        byteB = bytes[dynamicIndex++];
 
         portableNetworkGraphic.ImageHeader.Width = Converter::ConvertTwoBytesToNumber(EndianType::Little,byteA, byteB);
 
-        byteA = bytes.at(dynamicIndex++);
-        byteB = bytes.at(dynamicIndex++);
+        byteA = bytes[dynamicIndex++];
+        byteB = bytes[dynamicIndex++];
 
         portableNetworkGraphic.ImageHeader.Height = Converter::ConvertTwoBytesToNumber(EndianType::Little, byteA, byteB);
 
-        portableNetworkGraphic.ImageHeader.BitDepth = bytes.at(dynamicIndex++);
-        portableNetworkGraphic.ImageHeader.ColorType = bytes.at(dynamicIndex++);
-        portableNetworkGraphic.ImageHeader.CompressionMethod = bytes.at(dynamicIndex++);
-        portableNetworkGraphic.ImageHeader.FilterMethod = bytes.at(dynamicIndex++);
-        portableNetworkGraphic.ImageHeader.InterlaceMethod = bytes.at(dynamicIndex++);
+        portableNetworkGraphic.ImageHeader.BitDepth = bytes[dynamicIndex++];
+        portableNetworkGraphic.ImageHeader.ColorType = bytes[dynamicIndex++];
+        portableNetworkGraphic.ImageHeader.CompressionMethod = bytes[dynamicIndex++];
+        portableNetworkGraphic.ImageHeader.FilterMethod = bytes[dynamicIndex++];
+        portableNetworkGraphic.ImageHeader.InterlaceMethod = bytes[dynamicIndex++];
     }
 
     return portableNetworkGraphic;

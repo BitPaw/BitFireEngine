@@ -1,7 +1,7 @@
 #version 330 core
 
-layout(location = 0) in vec4 position;
-layout(location = 1) in vec4 normal;
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec3 normal;
 layout(location = 2) in vec4 color;
 layout(location = 3) in vec2 texturePosition;
 
@@ -16,10 +16,10 @@ uniform mat4 ModelViewProjection;
 
 void main() 
 {
-    gl_Position = ModelViewProjection * position;
+    gl_Position = ModelViewProjection * vec4(position,1);
     vertexColor = color;
-    vertexNormal = mat3(InverseModelView) * vec3(normal);
-    vertexPosition = vec3(ModelView) * vec3(position);
+    vertexNormal = mat3(InverseModelView) * normal;
+    vertexPosition = vec3(ModelView) * position;
 
     vertexTexturePosition = texturePosition;
 };

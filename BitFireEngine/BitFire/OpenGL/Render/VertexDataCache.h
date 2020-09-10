@@ -5,7 +5,7 @@
 class VertexDataCache
 {
 public:
-	const unsigned int DataBlockSizeInBytes = sizeof(float) * (4 + 4 + 4 + 2);
+	const unsigned int DataBlockSizeInBytes = sizeof(float) * (3 + 3 + 4 + 2);
 	DataSize SizeInBytes;
 	DataSize Size;
 	float* Data;

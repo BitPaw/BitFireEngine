@@ -43,6 +43,7 @@
     <ClCompile Include="BitFire\IO\Device\KeyBoard\Numbers.cpp" />
     <ClCompile Include="BitFire\IO\Device\Mouse\Mouse.cpp" />
     <ClCompile Include="BitFire\IO\File\FileLoader.cpp" />
+    <ClCompile Include="BitFire\IO\File\FileNotFound.cpp" />
     <ClCompile Include="BitFire\IO\File\TextFile.cpp" />
     <ClCompile Include="BitFire\IO\InputContainer.cpp" />
     <ClCompile Include="BitFire\IO\Message\Message.cpp" />
@@ -72,11 +73,15 @@
     <ClCompile Include="BitFire\Mathematic\Geometry\Shape\Star.cpp" />
     <ClCompile Include="BitFire\Mathematic\Geometry\Shape\Triangle.cpp" />
     <ClCompile Include="BitFire\Mathematic\Geometry\Size.cpp" />
+    <ClCompile Include="BitFire\Mathematic\Geometry\Vector\Vector2.cpp" />
+    <ClCompile Include="BitFire\Mathematic\Geometry\Vector\Vector3.cpp" />
+    <ClCompile Include="BitFire\Mathematic\Geometry\Vector\Vector4.cpp" />
     <ClCompile Include="BitFire\Mathematic\Interpolate.cpp" />
     <ClCompile Include="BitFire\OpenGL\OpenGLAPI.cpp" />
     <ClCompile Include="BitFire\OpenGL\Render\DataSize.cpp" />
     <ClCompile Include="BitFire\OpenGL\Render\IndexDataCache.cpp" />
     <ClCompile Include="BitFire\OpenGL\Render\RenderDataCache.cpp" />
+    <ClCompile Include="BitFire\OpenGL\Render\RenderInformation.cpp" />
     <ClCompile Include="BitFire\OpenGL\Render\RenderSystem.cpp" />
     <ClCompile Include="BitFire\OpenGL\Render\VertexDataCache.cpp" />
     <ClCompile Include="BitFire\OpenGL\Shader\System\ShaderFile.cpp" />
@@ -115,6 +120,9 @@
     <ClCompile Include="BitFire\Utility\List.cpp" />
     <ClCompile Include="BitFire\Utility\ListSize.cpp" />
     <ClCompile Include="BitFire\Utility\StringSplitter.cpp" />
+    <ClCompile Include="BitFire\IO\File\EmptyFileName.cpp" />
+    <ClCompile Include="BitFire\Mathematic\Geometry\Matrix\Matrix3x3.cpp" />
+    <ClCompile Include="BitFire\Mathematic\Geometry\Matrix\Matrix4x4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitFire\Color\RGB.h" />
@@ -145,6 +153,7 @@
     <ClInclude Include="BitFire\IO\Device\Mouse\Mouse.h" />
     <ClInclude Include="BitFire\IO\EndianType.h" />
     <ClInclude Include="BitFire\IO\File\FileLoader.h" />
+    <ClInclude Include="BitFire\IO\File\FileNotFound.h" />
     <ClInclude Include="BitFire\IO\File\TextFile.h" />
     <ClInclude Include="BitFire\IO\InputContainer.h" />
     <ClInclude Include="BitFire\IO\Message\Message.h" />
@@ -175,11 +184,15 @@
     <ClInclude Include="BitFire\Mathematic\Geometry\Shape\Star.h" />
     <ClInclude Include="BitFire\Mathematic\Geometry\Shape\Triangle.h" />
     <ClInclude Include="BitFire\Mathematic\Geometry\Size.h" />
+    <ClInclude Include="BitFire\Mathematic\Geometry\Vector\Vector2.h" />
+    <ClInclude Include="BitFire\Mathematic\Geometry\Vector\Vector3.h" />
+    <ClInclude Include="BitFire\Mathematic\Geometry\Vector\Vector4.h" />
     <ClInclude Include="BitFire\Mathematic\Interpolate.h" />
     <ClInclude Include="BitFire\OpenGL\OpenGLAPI.h" />
     <ClInclude Include="BitFire\OpenGL\Render\DataSize.h" />
     <ClInclude Include="BitFire\OpenGL\Render\IndexDataCache.h" />
     <ClInclude Include="BitFire\OpenGL\Render\RenderDataCache.h" />
+    <ClInclude Include="BitFire\OpenGL\Render\RenderInformation.h" />
     <ClInclude Include="BitFire\OpenGL\Render\RenderSystem.h" />
     <ClInclude Include="BitFire\OpenGL\Render\VertexDataCache.h" />
     <ClInclude Include="BitFire\OpenGL\Shader\System\ShaderFile.h" />
@@ -225,6 +238,16 @@
     <ClInclude Include="BitFire\Utility\List.h" />
     <ClInclude Include="BitFire\Utility\ListSize.h" />
     <ClInclude Include="BitFire\Utility\StringSplitter.h" />
+    <ClInclude Include="BitFire\IO\File\EmptyFileName.h" />
+    <ClInclude Include="BitFire\Mathematic\Geometry\Matrix\Matrix3x3.h" />
+    <ClInclude Include="BitFire\Mathematic\Geometry\Matrix\Matrix4x4.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="BitFire\OpenGL\Shader\Files\FragmentShader.frag" />
+    <None Include="BitFire\OpenGL\Shader\Files\VertexShader.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="BitFire\ToDo.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

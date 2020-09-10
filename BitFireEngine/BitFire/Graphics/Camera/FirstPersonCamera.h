@@ -1,5 +1,10 @@
 #pragma once
 
+#ifdef BF_FirstPersonCamera
+#pragma message("\nBF_FirstPersonCamera already included!\n")
+#endif
+
+
 #ifndef BF_FirstPersonCamera
 #define BF_FirstPersonCamera
 

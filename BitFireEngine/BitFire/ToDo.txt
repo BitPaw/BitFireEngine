@@ -1,0 +1,17 @@
+Wenn ein Objekt sehr oft bewegt wird -> Lag. konstanter FPS drop.
+CPU -> GPU overload?
+
+Mehr Quick-maths
+
+Stringsplitter überarbeiten.
+
+Wireframe renderer?
+
+Material loder, Texture
+
+
+
+
+mehr bildformate
+
+shader loader

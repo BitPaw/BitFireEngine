@@ -3,6 +3,6 @@
 VideoConfig::VideoConfig()
 {
 	WindowRefreshRateMode = RefreshRateMode::VSync;
-	ScreenResolution = Size(800, 600);
+	ScreenResolution = Size(1920-150, 1080-250);
 	FullScreen = false;
 }

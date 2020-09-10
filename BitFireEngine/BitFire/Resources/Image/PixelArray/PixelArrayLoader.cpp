@@ -2,15 +2,15 @@
 
 PixelArray PixelArrayLoader::LoadFromFile(std::string filePath)
 {
-    std::vector<unsigned char> bytes = FileLoader::ReadFileAsBytes(filePath);
+    BF::List<unsigned char> bytes = FileLoader::ReadFileAsBytes(filePath);
     PixelArray pixels;
 
-    pixels.Size = bytes.size();
+    pixels.Size = bytes.Size.Value;
     pixels.PixelData = new unsigned char[pixels.Size] {0};
 
     for (unsigned int i = 0; i < pixels.Size; i++)
     {
-        pixels.PixelData[i] = bytes.at(i);;
+        pixels.PixelData[i] = bytes[i];
     }
 
     return pixels;

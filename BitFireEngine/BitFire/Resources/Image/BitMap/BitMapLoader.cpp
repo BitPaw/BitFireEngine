@@ -111,12 +111,12 @@ unsigned int CalculateNeddedRowSize(unsigned int bitsPerPixel, unsigned int imag
 BitMap BitMapLoader::LoadFromFile(std::string path)
 {
     BitMap bitMap;
-    std::vector<unsigned char> bytes = FileLoader::ReadFileAsBytes(path);
+    BF::List<unsigned char> bytes = FileLoader::ReadFileAsBytes(path);
 
     int width = 0;
     unsigned int dynamicIndex = 0;
-    unsigned char byteA = bytes.at(dynamicIndex++); // Index = 0
-    unsigned char byteB = bytes.at(dynamicIndex++); // Index = 1
+    unsigned char byteA = bytes[dynamicIndex++]; // Index = 0
+    unsigned char byteB = bytes[dynamicIndex++]; // Index = 1
     unsigned char byteC = 0;
     unsigned char byteD = 0;
 
@@ -126,32 +126,32 @@ BitMap BitMapLoader::LoadFromFile(std::string path)
     {
         bitMap.Header.Type = ParseType(byteA, byteB);
 
-        byteA = bytes.at(dynamicIndex++); // Index = 2
-        byteB = bytes.at(dynamicIndex++); // Index = 3
-        byteC = bytes.at(dynamicIndex++); // Index = 4
-        byteD = bytes.at(dynamicIndex++); // Index = 5
+        byteA = bytes[dynamicIndex++];// Index = 2
+        byteB = bytes[dynamicIndex++];// Index = 3
+        byteC = bytes[dynamicIndex++]; // Index = 4
+        byteD = bytes[dynamicIndex++];// Index = 5
         bitMap.Header.SizeOfFile = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
 
-        byteA = bytes.at(dynamicIndex++); // Index = 6
-        byteB = bytes.at(dynamicIndex++); // Index = 7
-        byteC = bytes.at(dynamicIndex++); // Index = 8
-        byteD = bytes.at(dynamicIndex++); // Index = 9
+        byteA = bytes[dynamicIndex++];// Index = 6
+        byteB = bytes[dynamicIndex++]; // Index = 7
+        byteC = bytes[dynamicIndex++]; // Index = 8
+        byteD = bytes[dynamicIndex++];// Index = 9
         bitMap.Header.ActualSizeOfFile = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
 
-        byteA = bytes.at(dynamicIndex++); // Index = 10
-        byteB = bytes.at(dynamicIndex++); // Index = 11
-        byteC = bytes.at(dynamicIndex++); // Index = 12
-        byteD = bytes.at(dynamicIndex++); // Index = 13
+        byteA = bytes[dynamicIndex++]; // Index = 10
+        byteB = bytes[dynamicIndex++]; // Index = 11
+        byteC = bytes[dynamicIndex++]; // Index = 12
+        byteD = bytes[dynamicIndex++]; // Index = 13
         bitMap.Header.DataOffset = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
     }
 
     // DIP
     {
         // Get Header Version
-        byteA = bytes.at(dynamicIndex++); // Index = 14
-        byteB = bytes.at(dynamicIndex++); // Index = 15
-        byteC = bytes.at(dynamicIndex++); // Index = 16
-        byteD = bytes.at(dynamicIndex++); // Index = 17
+        byteA = bytes[dynamicIndex++]; // Index = 14
+        byteB = bytes[dynamicIndex++];// Index = 15
+        byteC = bytes[dynamicIndex++];// Index = 16
+        byteD = bytes[dynamicIndex++]; // Index = 17
         unsigned char result = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
         bitMap.InformationHeaderType = GetType(result);
 
@@ -164,60 +164,60 @@ BitMap BitMapLoader::LoadFromFile(std::string path)
 
             bitMapInfoHeader->HeaderSize = byteA;
 
-            byteA = bytes.at(dynamicIndex++); // Index = 18
-            byteB = bytes.at(dynamicIndex++); // Index = 19
-            byteC = bytes.at(dynamicIndex++); // Index = 20
-            byteD = bytes.at(dynamicIndex++); // Index = 21
+            byteA = bytes[dynamicIndex++]; // Index = 18
+            byteB = bytes[dynamicIndex++]; // Index = 19
+            byteC = bytes[dynamicIndex++]; // Index = 20
+            byteD = bytes[dynamicIndex++]; // Index = 21
             bitMapInfoHeader->Width = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
 
-            byteA = bytes.at(dynamicIndex++); // Index = 22
-            byteB = bytes.at(dynamicIndex++); // Index = 23
-            byteC = bytes.at(dynamicIndex++); // Index = 24
-            byteD = bytes.at(dynamicIndex++); // Index = 25
+            byteA = bytes[dynamicIndex++];// Index = 22
+            byteB = bytes[dynamicIndex++]; // Index = 23
+            byteC = bytes[dynamicIndex++]; // Index = 24
+            byteD = bytes[dynamicIndex++];// Index = 25
             bitMapInfoHeader->Height = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
            
-            byteA = bytes.at(dynamicIndex++); // Index = 
-            byteB = bytes.at(dynamicIndex++); // Index = 
+            byteA = bytes[dynamicIndex++]; // Index = 
+            byteB = bytes[dynamicIndex++]; // Index = 
             bitMapInfoHeader->NumberOfColorPlanes = Converter::ConvertTwoBytesToNumber(EndianType::Little, byteA, byteB);
 
-            byteA = bytes.at(dynamicIndex++); // Index = 
-            byteB = bytes.at(dynamicIndex++); // Index = 
+            byteA = bytes[dynamicIndex++]; // Index = 
+            byteB = bytes[dynamicIndex++]; // Index = 
             bitMapInfoHeader->NumberOfBitsPerPixel = Converter::ConvertTwoBytesToNumber(EndianType::Little, byteA, byteB);
 
-            byteA = bytes.at(dynamicIndex++); // Index = 
-            byteB = bytes.at(dynamicIndex++); // Index = 
-            byteC = bytes.at(dynamicIndex++); // Index = 
-            byteD = bytes.at(dynamicIndex++); // Index = 
+            byteA = bytes[dynamicIndex++]; // Index = 
+            byteB = bytes[dynamicIndex++]; // Index = 
+            byteC = bytes[dynamicIndex++]; // Index = 
+            byteD = bytes[dynamicIndex++]; // Index = 
             bitMapInfoHeader->CompressionMethod = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
 
-            byteA = bytes.at(dynamicIndex++); // Index = 
-            byteB = bytes.at(dynamicIndex++); // Index = 
-            byteC = bytes.at(dynamicIndex++); // Index = 
-            byteD = bytes.at(dynamicIndex++); // Index = 
+            byteA = bytes[dynamicIndex++]; // Index = 
+            byteB = bytes[dynamicIndex++]; // Index = 
+            byteC = bytes[dynamicIndex++];// Index = 
+            byteD = bytes[dynamicIndex++]; // Index = 
             bitMapInfoHeader->ImageSize = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
 
-            byteA = bytes.at(dynamicIndex++); // Index = 
-            byteB = bytes.at(dynamicIndex++); // Index = 
-            byteC = bytes.at(dynamicIndex++); // Index = 
-            byteD = bytes.at(dynamicIndex++); // Index = 
+            byteA = bytes[dynamicIndex++]; // Index = 
+            byteB = bytes[dynamicIndex++]; // Index = 
+            byteC = bytes[dynamicIndex++]; // Index = 
+            byteD = bytes[dynamicIndex++]; // Index = 
             bitMapInfoHeader->HorizontalResolution = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
 
-            byteA = bytes.at(dynamicIndex++); // Index = 
-            byteB = bytes.at(dynamicIndex++); // Index = 
-            byteC = bytes.at(dynamicIndex++); // Index = 
-            byteD = bytes.at(dynamicIndex++); // Index = 
+            byteA = bytes[dynamicIndex++]; // Index = 
+            byteB = bytes[dynamicIndex++]; // Index = 
+            byteC = bytes[dynamicIndex++]; // Index = 
+            byteD = bytes[dynamicIndex++]; // Index = 
             bitMapInfoHeader->VerticalResolution = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
 
-            byteA = bytes.at(dynamicIndex++); // Index = 
-            byteB = bytes.at(dynamicIndex++); // Index = 
-            byteC = bytes.at(dynamicIndex++); // Index = 
-            byteD = bytes.at(dynamicIndex++); // Index = 
+            byteA = bytes[dynamicIndex++];// Index = 
+            byteB = bytes[dynamicIndex++]; // Index = 
+            byteC = bytes[dynamicIndex++]; // Index = 
+            byteD = bytes[dynamicIndex++];// Index = 
             bitMapInfoHeader->NumberOfColorsInTheColorPalette = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
 
-            byteA = bytes.at(dynamicIndex++); // Index = 
-            byteB = bytes.at(dynamicIndex++); // Index = 
-            byteC = bytes.at(dynamicIndex++); // Index = 
-            byteD = bytes.at(dynamicIndex++); // Index = 
+            byteA = bytes[dynamicIndex++]; // Index = 
+            byteB = bytes[dynamicIndex++]; // Index = 
+            byteC = bytes[dynamicIndex++];// Index = 
+            byteD = bytes[dynamicIndex++]; // Index = 
             bitMapInfoHeader->NumberOfImportantColorsUsed = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
 
             bitMap.InformationHeader = bitMapInfoHeader;
@@ -236,7 +236,7 @@ BitMap BitMapLoader::LoadFromFile(std::string path)
 
         bitMap.Pixel.reserve(size);
 
-        unsigned int leftbits = bytes.size();
+        unsigned int leftbits = bytes.Size.Value;
         unsigned int neededRows = CalculateNeddedRowSize(24, width);
         unsigned int paddingCOunter = 0;
         unsigned int paddingSize = neededRows % 3;
@@ -259,9 +259,9 @@ BitMap BitMapLoader::LoadFromFile(std::string path)
             {
                 paddingCOunter += 3;
 
-                color.Blue = bytes.at(dynamicIndex++); // Index = 
-                color.Green = bytes.at(dynamicIndex++); // Index = 
-                color.Red = bytes.at(dynamicIndex++); // Index = 
+                color.Blue = bytes[dynamicIndex++];// Index = 
+                color.Green = bytes[dynamicIndex++];// Index = 
+                color.Red = bytes[dynamicIndex++]; // Index = 
 
                 bitMap.Pixel.push_back(color);
 

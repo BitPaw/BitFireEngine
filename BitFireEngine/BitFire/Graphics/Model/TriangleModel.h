@@ -3,10 +3,13 @@
 #include "../RenderModel.h"
 #include "../../Mathematic/Geometry/Shape/Triangle.h"
 
-class TriangleModel : public BF::RenderModel
+namespace BF
 {
-public:
-	Triangle Shape;
+	class TriangleModel : public RenderModel
+	{
+	public:
+		Triangle Shape;
 
-	TriangleModel();
-};
+		TriangleModel();
+	};
+}

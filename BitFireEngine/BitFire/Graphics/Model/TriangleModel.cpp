@@ -1,6 +1,6 @@
 #include "TriangleModel.h"
 
-TriangleModel::TriangleModel()
+BF::TriangleModel::TriangleModel()
 {
 	ModelName = "Triangle";
 	/*

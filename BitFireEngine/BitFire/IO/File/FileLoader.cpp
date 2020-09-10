@@ -1,49 +1,60 @@
 #include "FileLoader.h"
+#include "EmptyFileName.h"
 
-std::string FileLoader::ReadCompleteFile(std::string filePath)
+std::string FileLoader::ReadCompleteFile(const std::string filePath)
 {
+    if (filePath.empty())
+    {
+        throw EmptyFileName();
+    }
+
+    if (!DoesFileExist(filePath))
+    {
+        throw FileNotFound(filePath);
+    }
+
     std::ifstream file(filePath);
     std::string fileContent;
 
-    bool isOpen = file.good();
+    std::stringstream buffer;
+    buffer << file.rdbuf();
 
-    if (isOpen)
-    {
-        std::stringstream buffer;
-        buffer << file.rdbuf();
+    fileContent = buffer.str();
 
-        fileContent = buffer.str();    
-
-        file.close();
-    }
-    else
-    {
-        throw std::exception("File could not be loaded");
-    }
+    file.close();
 
     return fileContent;
 }
 
-std::string* FileLoader::ReadFileByLines(std::string filePath, unsigned int* numberOfLines)
+BF::List<std::string> FileLoader::ReadFileByLines(const std::string filePath)
 {
+    if (filePath.empty())
+    {
+        throw EmptyFileName();
+    }
+
+    if (!DoesFileExist(filePath))
+    {
+        throw FileNotFound(filePath);
+    }
+  
+    BF::List<std::string> lines;
     std::ifstream infile(filePath);
-    std::string currentLine;
-    std::string* lines;
-    unsigned int lineIndex = 0;
+    std::string currentLine; 
 
     while (std::getline(infile, currentLine))
     {
-        (*numberOfLines)++;
+        lines.Size.Value++;
     }
+
+    lines.ReSize();
 
     infile.clear();
     infile.seekg(0, std::ios_base::beg);
 
-    lines = new std::string[*numberOfLines];
-
     while (std::getline(infile, currentLine))
     {
-        lines[lineIndex++] = currentLine;
+        lines[lines.CurrentIndex++] = currentLine;
     }
 
     infile.close();
@@ -51,80 +62,69 @@ std::string* FileLoader::ReadFileByLines(std::string filePath, unsigned int* num
     return lines;
 }
 
-TextFile FileLoader::ReadTextFile(std::string filePath)
+TextFile FileLoader::ReadTextFile(const std::string filePath)
 {
-    std::string content = ReadCompleteFile(filePath);
+    return ReadTextFile(filePath, false);
+}
 
-    TextFile textFile(filePath, content);
+TextFile FileLoader::ReadTextFile(const std::string filePath, const bool splittLines)
+{
+    bool isEmpty = filePath.empty();
+
+    if (isEmpty)
+    {
+        throw EmptyFileName();
+    }
+
+    if (!DoesFileExist(filePath))
+    {
+        throw FileNotFound(filePath);        
+    }
+
+    TextFile textFile(filePath);    
+
+    if (splittLines)
+    {
+        BF::List<std::string> lines = ReadFileByLines(filePath);
+        textFile.Lines = lines;
+    }
+    else
+    {
+        textFile.Lines.ReSize(1);
+        textFile.Lines[0] = ReadCompleteFile(filePath);
+    }
 
     return textFile;
 }
 
-std::vector<unsigned char> FileLoader::ReadFileAsBytes(std::string filePath)
+BF::List<unsigned char> FileLoader::ReadFileAsBytes(const std::string filePath)
 {
-    char* rawDataSigned;
-    unsigned char* rawData;
-    std::vector<unsigned char> finalData;
-
-    std::ifstream ifs(filePath, std::ios::binary | std::ios::ate);
-    std::ifstream::pos_type size = ifs.tellg();
-
-    rawDataSigned = new char[size];
-    rawData = new unsigned char[size];
-    finalData.reserve(size);
-
-    ifs.seekg(0, std::ios::beg);
-    ifs.read(rawDataSigned, size);
-    
-    rawData = reinterpret_cast<unsigned char*>(rawDataSigned);
-
-    for (unsigned int i = 0; i < size; i++)
+    if (!DoesFileExist(filePath))
     {
-        finalData.push_back(rawData[i]);
+        throw FileNotFound(filePath);
     }
 
-    //delete[] rawDataSigned;
-    delete[] rawData;
+    BF::List<unsigned char> byteList;
+    std::ifstream inputFileStream(filePath, std::ios::binary | std::ios::ate);
 
-    return finalData;
+    byteList.ReSize(inputFileStream.tellg());
+    inputFileStream.seekg(0, inputFileStream.beg);
 
+    inputFileStream.read((char*)(&byteList[0]), byteList.Size.Value);
 
-
-    /*
-    std::vector<unsigned char> bytes;
-    std::ifstream infile(filePath);
-
-    //get length of file
-    infile.seekg(0, infile.end);
-    unsigned int length = infile.tellg();
-    infile.seekg(0, infile.beg);
-
-    //read file
-    if (length > 0) 
-    {
-        char* message = new char[length];
-
-        bytes.reserve(length);
-        infile.read(message, length);
-
-        for (unsigned int i = 0; i < length; i++)
-        {
-            unsigned char x = reinterpret_cast<unsigned char>(message[i]);
-
-            bytes.push_back(x);
-
-           // printf("%x ", x);
-        }
-
-        delete[] message;
-    }   
-    */
+    return byteList;
 }
 
-void FileLoader::WriteFileAsBytes(std::string filePath, unsigned int size, unsigned char* data)
+bool FileLoader::DoesFileExist(std::string filePath)
 {
-    unsigned int byteLengh =  size;
-    std::ofstream fout;  
+    struct stat buffer;
+    return (stat(filePath.c_str(), &buffer) == 0);
+}
+
+void FileLoader::WriteFileAsBytes(const std::string filePath, const unsigned int size, const unsigned char* data)
+{
+    unsigned int byteLengh = size;
+    std::ofstream fout;
 
     fout.open(filePath, std::ios::binary | std::ios::out);
     fout.write((char*)data, byteLengh);

@@ -2,14 +2,28 @@
 
 #include "VertexDataCache.h"
 #include "IndexDataCache.h"
+#include "RenderInformation.h"
 
-class RenderDataCache
+namespace BF
 {
-public:
-	unsigned int LoadedObjects;
+	class RenderDataCache
+	{
+	private:		
+		List<RenderInformation> _renderInformationCache;
+		unsigned int _faceModelOffset = 0;
+		unsigned int _renderObjectCounter = 0;
 
-	VertexDataCache VertexData;
-	IndexDataCache IndexData;
+		RenderInformation* GetRenderInformation(RenderModel* renderModel);
 
-	RenderDataCache(unsigned int bufferSize);
-};
+		void Update(RenderInformation* renderInformation);
+
+	public:		
+
+		VertexDataCache VertexData;
+		IndexDataCache IndexData;
+
+		RenderDataCache(unsigned int bufferSize);
+	
+		void UpdateDataLink(RenderModel* renderModel);
+	};
+}
