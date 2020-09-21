@@ -50,10 +50,9 @@ BF::Vector2& BF::Vector2::operator-=(const Vector2& vector)
 	return *this;
 }
 
-void BF::Vector2::operator*(float scalar)
+BF::Vector2 BF::Vector2::operator*(float scalar)
 {
-	X *= scalar;
-	Y *= scalar;
+	return Vector2(X * scalar, Y * scalar);
 }
 
 BF::Vector2& BF::Vector2::operator*=(float scalar)
@@ -64,16 +63,14 @@ BF::Vector2& BF::Vector2::operator*=(float scalar)
 	return *this;
 }
 
-void BF::Vector2::operator+(Vector2 vector)
+BF::Vector2 BF::Vector2::operator+(Vector2 vector)
 {
-	X += vector.X;
-	Y += vector.Y;
+	return Vector2(X + vector.X, Y + vector.Y);
 }
 
-void BF::Vector2::operator-(Vector2 vector)
+BF::Vector2 BF::Vector2::operator-(Vector2 vector)
 {
-	X -= vector.X;
-	Y -= vector.Y;
+	return Vector2(X - vector.X, Y - vector.Y);
 }
 
 float BF::Vector2::DotProduct(Vector2 vector)

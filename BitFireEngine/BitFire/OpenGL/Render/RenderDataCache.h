@@ -13,14 +13,19 @@ namespace BF
 		unsigned int _faceModelOffset = 0;
 		unsigned int _renderObjectCounter = 0;
 
-		RenderInformation* GetRenderInformation(RenderModel* renderModel);
+		
 
 		void Update(RenderInformation* renderInformation);
 
 	public:		
+		unsigned int IndexBufferID;
+		unsigned int VertexBufferID;
+
 
 		VertexDataCache VertexData;
 		IndexDataCache IndexData;
+
+		RenderInformation* GetRenderInformation(RenderModel* renderModel);
 
 		RenderDataCache(unsigned int bufferSize);
 	

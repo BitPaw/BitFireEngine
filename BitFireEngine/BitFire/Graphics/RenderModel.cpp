@@ -18,12 +18,14 @@ void BF::RenderModel::UpdateRenderSystemLink()
 
 BF::RenderModel::RenderModel() : RenderModel("[N/A]")
 {
-  
+
 }
 
 BF::RenderModel::RenderModel(std::string name)
 {   
     ModelName = name; 
+    _currentPosition = Vector3(0,0,0);
+    ModelID = -1;
 }
 
 void BF::RenderModel::LoadFromWaveFront(WaveFront& waveFront)
@@ -33,8 +35,6 @@ void BF::RenderModel::LoadFromWaveFront(WaveFront& waveFront)
     unsigned int offset = 0;
     unsigned int size = MeshList.Size.Value;
 
-    //size = 1;
-
     for (unsigned int elementIndex = 0; elementIndex < size; elementIndex++)
     {
         WaveFrontElement* element = &waveFront.ElementList[elementIndex]; // Get current source Mesh
@@ -42,10 +42,7 @@ void BF::RenderModel::LoadFromWaveFront(WaveFront& waveFront)
 
         Mesh* mesh = &MeshList[elementIndex]; // Get current target Mesh
         mesh->Name = element->Name; 
-      
-    
-        //  mesh->VertexList.ReSize(faceElementListSize);
-        
+             
         // Vertex Data
         mesh->VertexList.ReSize(element->VertexPositionList.Size.Value);
         for (unsigned int i = 0; i < element->VertexPositionList.Size.Value; i++)
@@ -78,41 +75,101 @@ void BF::RenderModel::LoadFromWaveFront(WaveFront& waveFront)
 
             mesh->IndexList[i].VertexPositionID = vertexIndex;
             mesh->IndexList[i].TexturePointID = pointIndex;
-            mesh->IndexList[i].NormalVectorID = vertexNormalIndex;
-
-           // mesh->IndexList[i] = vertexIndex; // OK
-
-            // CANT RENDER MORE THEN ONE MESH AT ONCE WHY?????!!?!?!
-           /*
-            Vertex* vertex = &mesh->VertexList[vertexIndex];
-            vertex->CurrentPosition = *waveFront.GetVertexPositionFromGlobalID(vertexIndex);
-            vertex->NormalizedPosition = *waveFront.GetVertexNormalFromGlobalID(vertexNormalIndex);
-
-            if (pointIndex < element->TextureCoordinateListSize)
-            {
-                vertex->TexturePoint = *waveFront.GetVertexTextureCoordinatesFromGlobalID(pointIndex);
-                vertex->Color = RGBA(vertex->TexturePoint.X, vertex->TexturePoint.Y, 1);
-            }*/
-
-          
+            mesh->IndexList[i].NormalVectorID = vertexNormalIndex;          
         }
     }  
     
     UpdateGlobalMesh();
-
-    // Generate Array Data?
     UpdateRenderSystemLink();
 }
 
-void BF::RenderModel::MoveInDirection(BF::Vector3 vector)
+void BF::RenderModel::Move(BF::Vector3 vector)
+{  
+    _currentPosition += vector;
+
+    for (unsigned int i = 0; i < GlobalMesh.VertexList.Size.Value; i++)
+    {
+        Vertex* vertex = GlobalMesh.VertexList[i];
+        Position* currentPosition = &vertex->CurrentPosition;
+
+        currentPosition->X += vector.X;
+        currentPosition->Y += vector.Y;
+        currentPosition->Z += vector.Z;  
+    }
+
+    UpdateRenderSystemLink();
+}
+
+void BF::RenderModel::MoveTo(Vector3 vector)
 {
     for (unsigned int i = 0; i < GlobalMesh.VertexList.Size.Value; i++)
     {
         Vertex* vertex = GlobalMesh.VertexList[i];
         Position* currentPosition = &vertex->CurrentPosition;
-        currentPosition->X += vector.X;
-        currentPosition->Y += vector.Y;
-        currentPosition->Z += vector.Z;
+
+        currentPosition->X += -_currentPosition.X + vector.X;
+        currentPosition->Y += -_currentPosition.Y + vector.Y;
+        currentPosition->Z += -_currentPosition.Z + vector.Z;
+    }
+
+    _currentPosition = vector;
+
+    UpdateRenderSystemLink();
+}
+
+BF::Vector3 BF::RenderModel::CurrentPosition()
+{
+    return _currentPosition;
+}
+
+void BF::RenderModel::Orbit(Vector3 vector)
+{
+    for (unsigned int i = 0; i < GlobalMesh.VertexList.Size.Value; i++)
+    {
+        Vertex* vertex = GlobalMesh.VertexList[i];
+        Position* currentPosition = &vertex->CurrentPosition;
+        Vector3 current = Vector3(currentPosition->X, currentPosition->Y, currentPosition->Z);
+
+        current.Rotate(vector);
+
+        currentPosition->X = current.X;
+        currentPosition->Y = current.Y;
+        currentPosition->Z = current.Z;
+    }
+
+    UpdateRenderSystemLink();
+}
+
+void BF::RenderModel::Rotate(Vector3 vector)
+{
+    for (unsigned int i = 0; i < GlobalMesh.VertexList.Size.Value; i++)
+    {
+        Vertex* vertex = GlobalMesh.VertexList[i];
+        Position* currentPosition = &vertex->CurrentPosition;
+        Vector3 current = Vector3(currentPosition->X, currentPosition->Y, currentPosition->Z);  
+    
+        current -= _currentPosition;
+        current.Rotate(vector);
+        current += _currentPosition;
+
+        currentPosition->X = current.X;
+        currentPosition->Y = current.Y;
+        currentPosition->Z = current.Z;
+    }
+
+    UpdateRenderSystemLink();
+}
+
+void BF::RenderModel::ReSize(Vector3 vector)
+{
+    for (unsigned int i = 0; i < GlobalMesh.VertexList.Size.Value; i++)
+    {
+        Vertex* vertex = GlobalMesh.VertexList[i];
+        Position* currentPosition = &vertex->CurrentPosition;
+
+        currentPosition->X *= vector.X;
+        currentPosition->Y *= vector.Y;
+        currentPosition->Z *= vector.Z;
     }
 
     UpdateRenderSystemLink();
@@ -164,11 +221,39 @@ void BF::RenderModel::CalculateNormalVectors()
     }   
 }
 
+void BF::RenderModel::UseTexturePointAsColor()
+{
+    const unsigned int indexListLength = GlobalMesh.IndexList.Size.Value;
+
+    GlobalMesh.ColorList.ReSize(indexListLength);
+    MeshList[0].ColorList.ReSize(indexListLength);
+
+    // Link
+    for (unsigned int i = 0; i < indexListLength; i++)
+    {
+        GlobalMesh.ColorList[i] = &MeshList[0].ColorList[i];
+    }
+
+    // Color
+    for (unsigned int i = 0; i < indexListLength; i++)
+    {
+        MeshIndexData* meshIndexData = GlobalMesh.IndexList[i];
+        
+        Vertex* vertex = GlobalMesh.VertexList[meshIndexData->VertexPositionID];
+        Point* texturepoint = GlobalMesh.TexturePointList[meshIndexData->TexturePointID];
+
+        vertex->ColorID = i;
+        GlobalMesh.ColorList[i]->SetColor(texturepoint->X, texturepoint->Y, 0);
+    }
+
+    UpdateRenderSystemLink();
+}
+
 void BF::RenderModel::PrintModelData()
 {
     printf("Meshes %u\n", MeshList.Size.Value);
 
-    for (size_t i = 0; i < MeshList.Size.Value; i++)
+    for (unsigned int i = 0; i < MeshList.Size.Value; i++)
     {
         Mesh* mesh = &MeshList[i];
 

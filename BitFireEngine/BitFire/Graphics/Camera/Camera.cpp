@@ -24,7 +24,7 @@ Camera::Camera(CameraSettings* settings)
 	Settings = settings;
 	CurrentPosition = new Position();
 
-	WalkSpeed = 0.01f + 5;
+	WalkSpeed = 0.01f;
 	ViewSpeed = 0.03f;
 
 	Update();

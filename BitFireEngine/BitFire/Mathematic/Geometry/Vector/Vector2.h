@@ -24,18 +24,19 @@ namespace BF
 		float X;
 		float Y;
 
-
-
-		void operator*(float scalar);
-		Vector2& operator*=(float scalar);
-
-		void operator+(Vector2 vector);
+		//---------------------------------------------------------------------
+		// Addition //
+		Vector2 operator+(Vector2 vector);
 		Vector2& operator+=(const Vector2& vector);
 
-		void operator-(Vector2 vector);
+		// Substraction //
+		Vector2 operator-(Vector2 vector);
 		Vector2& operator-=(const Vector2& vector);
 
-
+		// Multiplication //
+		Vector2 operator*(float scalar);
+		Vector2& operator*=(float scalar);	
+		//---------------------------------------------------------------------
 
 		Vector2();
 		Vector2(const float x, const float y);

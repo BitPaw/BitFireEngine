@@ -239,7 +239,7 @@ void OnMousePosition(GLFWwindow* window, double xpos, double ypos)
 
 void OnWindowSizeChanged(GLFWwindow* window, int _width, int _height)
 {
-    Window* currentWindow = Window::GetInstance();
+    Window* currentWindow = Window::GetInstance();    
 
     currentWindow->ResizeWindow(_width, _height);
 }

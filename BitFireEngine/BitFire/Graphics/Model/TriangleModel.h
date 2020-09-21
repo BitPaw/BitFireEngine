@@ -10,6 +10,10 @@ namespace BF
 	public:
 		Triangle Shape;
 
+		Vertex A;
+		Vertex B;
+		Vertex C;
+
 		TriangleModel();
 	};
 }

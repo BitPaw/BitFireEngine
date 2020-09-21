@@ -52,9 +52,15 @@ namespace BF
 
 		Player* _currentPlayer;
 
-		void UpdateGPUCache();
 		void AllocateGPUCache();
+
+
+
+		// Update Object
 		void UpdateModel(RenderModel* renderModel);
+
+		void UpdatePosition(RenderModel* renderModel);
+		void UpdateNormals(RenderModel* renderModel);
 
 	public:
 		RenderSystem(Player* player);

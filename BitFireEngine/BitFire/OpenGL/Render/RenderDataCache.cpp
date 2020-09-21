@@ -1,4 +1,5 @@
 #include "RenderDataCache.h"
+#include <GLEW\glew.h>
 
 RenderInformation* BF::RenderDataCache::GetRenderInformation(RenderModel* renderModel)
 {
@@ -7,7 +8,7 @@ RenderInformation* BF::RenderDataCache::GetRenderInformation(RenderModel* render
     for (unsigned int i = 0; i < _renderObjectCounter; i++)
     {
         RenderInformation* targetRenderInformation = &_renderInformationCache[i];
-        bool isSameObject = targetRenderInformation->Model == renderModel;
+        bool isSameObject = targetRenderInformation->Model->ModelID == renderModel->ModelID;
 
         if (isSameObject)
         {
@@ -45,11 +46,11 @@ void BF::RenderDataCache::Update(RenderInformation* renderInformation)
     List<MeshIndexData*>* indiceData = &mesh->IndexList;
    
     unsigned int dataIndex = renderInformation->VertexDataPosition;
+    unsigned int indiceIndex = renderInformation->IndiceIndex;
 
     for (unsigned int i = 0; i < indiceData->Size.Value; i++)
-    {
-        IndexData.Data[IndexData.Size.Current++] = i + _faceModelOffset;
-
+    {      
+        IndexData.Data[indiceIndex++] = i + renderInformation->IndexOffset;
         MeshIndexData* indexData = (*indiceData)[i];
 
         unsigned int vertexIndex = indexData->VertexPositionID;
@@ -68,9 +69,6 @@ void BF::RenderDataCache::Update(RenderInformation* renderInformation)
             color = &defaultColor;
         }
 
-        // has normals
-
-
         if (mesh->NormalPointList.Size.Value > 0)
         {
             normal = renderModel->GlobalMesh.NormalPointList[normalIndex];
@@ -78,8 +76,7 @@ void BF::RenderDataCache::Update(RenderInformation* renderInformation)
         else
         {
             normal = &normalPosition;
-        }
-      
+        }      
 
         if (mesh->TexturePointList.Size.Value > 0)
         {
@@ -88,9 +85,7 @@ void BF::RenderDataCache::Update(RenderInformation* renderInformation)
         else
         {
             texture = &defaultTexturepoint;
-        }
-
-        VertexData.Size.Current += (3 + 3 + 4 + 2);
+        }        
 
         VertexData.Data[dataIndex++] = position->X;
         VertexData.Data[dataIndex++] = position->Y;
@@ -109,39 +104,101 @@ void BF::RenderDataCache::Update(RenderInformation* renderInformation)
         VertexData.Data[dataIndex++] = texture->Y;       
     }
 
-    for (unsigned int i = 0; i < IndexData.Size.Current; i++)
-    {
-        unsigned int index = IndexData.Data[i];
-
-        if (index > _faceModelOffset)
-        {
-            _faceModelOffset = index;
-        }
-    }
-
-    _faceModelOffset++;
+    renderInformation->VertexDataLength = dataIndex - renderInformation->VertexDataPosition -1;
+    renderInformation->IndiceIndexLength = indiceIndex - renderInformation->IndiceIndex-1;
 }
 
 void BF::RenderDataCache::UpdateDataLink(RenderModel* renderModel)
 {
+    if (renderModel == nullptr)
+    {
+        printf("\n\nInvalid Call\n\n");
+        return;
+    }
+
     RenderInformation* renderInformation = GetRenderInformation(renderModel);
     bool isAlreadyLinked = renderInformation != nullptr;
     
     if (isAlreadyLinked)
-    {
+    {        
         Update(renderInformation);
+        
+        RenderInformation* renderInformation = GetRenderInformation(renderModel);
+        unsigned int startPosition = renderInformation->VertexDataPosition;
+        unsigned int dataSize = renderInformation->VertexDataLength;
+        float* vertexDataPos = &VertexData.Data[startPosition];
+
+        startPosition *= sizeof(float);
+        dataSize *= sizeof(float);
+
+        glBindBuffer(GL_ARRAY_BUFFER, VertexBufferID);
+        glBufferSubData(GL_ARRAY_BUFFER, startPosition, dataSize, vertexDataPos);    
     }
     else
     {      
-        renderInformation = &_renderInformationCache[_renderObjectCounter];
-
+        renderInformation = &_renderInformationCache[_renderObjectCounter];       
         renderInformation->RenderID = _renderObjectCounter++;
         renderInformation->ShouldItBeRendered = true;
         renderInformation->Model = renderModel;
         renderInformation->VertexDataPosition = VertexData.Size.Current;
+        renderInformation->IndiceIndex = IndexData.Size.Current;
 
-        Update(renderInformation);
+        renderModel->ModelID = renderInformation->RenderID;
+
+        // Reserve Space
+        {
+            unsigned int size = renderModel->GlobalMesh.IndexList.Size.Value;
+
+            IndexData.Size.Current += size;
+            VertexData.Size.Current += (3 + 3 + 4 + 2) * size;          
+        }
+
+        for (unsigned int i = 0; i < IndexData.Size.Current; i++)
+        {
+
+        }
+
+        renderInformation->IndexOffset = _faceModelOffset;
+
+        Update(renderInformation);     
+
+        for (unsigned int i = 0; i < IndexData.Size.Current; i++)
+        {
+            unsigned int index = IndexData.Data[i];
+
+            if (index > _faceModelOffset)
+            {
+                _faceModelOffset = index;
+            }
+        }
+
+        _faceModelOffset++;     
+
+
+        VertexData.CalculateByteSize();
+        IndexData.SizeInBytes.Current = IndexData.Size.Current * IndexData.DataBlockSizeInBytes;
+
+        GLsizeiptr vArraySize = VertexData.SizeInBytes.Current;
+        glBindBuffer(GL_ARRAY_BUFFER, VertexBufferID);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vArraySize, VertexData.Data);
+       
+        GLsizeiptr iArraySize = IndexData.SizeInBytes.Current;
+        glBindBuffer(GL_ARRAY_BUFFER, IndexBufferID);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, iArraySize, IndexData.Data);
     }
+    /*
+    printf
+    (
+        "[MODEL][%.2x] <%p> I<%.4u->%.4u> V<%.4u->%.4u>: <%s> %s\n",
 
-  //  printf("[%.2x][MODEL] <%s> : %s\n", renderInformation->RenderID, renderModel->ModelName.c_str(), (isAlreadyLinked ? "Update" : "Registered"));
+        renderInformation->RenderID,
+        renderModel,      
+        renderInformation->IndiceIndex,
+        renderInformation->IndiceIndexLength,
+        renderInformation->VertexDataPosition,
+        renderInformation->VertexDataLength,
+        renderModel->ModelName.c_str(),
+        (isAlreadyLinked ? "Update" : "Registered")    
+    );
+    */
 }

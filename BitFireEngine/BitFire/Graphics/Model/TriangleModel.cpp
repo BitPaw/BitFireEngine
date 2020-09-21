@@ -3,22 +3,47 @@
 BF::TriangleModel::TriangleModel()
 {
 	ModelName = "Triangle";
-	/*
-	std::vector<Vertex> vertexList;
-	std::vector<unsigned int>* drawOrder = Shape.GetDrawOrderSteps();
+	MeshList.ReSize(1);
 
-	vertexList.reserve(Shape.GetCornerPointsAmout());
+	Mesh* mesh = &MeshList[0];
+	
+	// Vertex
+	{
+		mesh->VertexList.ReSize(Shape.CornerPoints);
+		List<Vertex>* vertexList = &mesh->VertexList;
 
-	vertexList.push_back(Vertex(Position(Shape.A), RGBA(1, 0, 0), Point(0, 0)));
-	vertexList.push_back(Vertex(Position(Shape.B), RGBA(0, 0, 1), Point(1, 0)));
-	vertexList.push_back(Vertex(Position(Shape.C), RGBA(0, 1, 0), Point(0.5f, 1)));
+		A = Vertex(Shape.A, 0);
+		B = Vertex(Shape.B, 1);
+		C = Vertex(Shape.C, 2);
 
-	//Mesh mesh = Mesh(vertexList, *drawOrder, 2);
-	//mesh.CalculateNormals();
+		(*vertexList)[0] = A;
+		(*vertexList)[1] = B;
+		(*vertexList)[2] = C;
+	}
 
-	//MeshListLengh++;
-	//MeshList = new Mesh[1]{ mesh };
-	*/
+
+	mesh->ColorList.ReSize(Shape.CornerPoints);
+	mesh->ColorList[0] = RGBA(1, 0, 0);
+	mesh->ColorList[1] = RGBA(0, 0, 1);
+	mesh->ColorList[2] = RGBA(0, 1, 0);
+
+	// Positions
+	{
+		//Point(0, 0));
+		//Point(1, 0));
+		//Point(1, 1));
+		//Point(0, 1));
+	}
+
+	List<MeshIndexData>* indexList = &mesh->IndexList;
+	(*indexList).ReSize(Shape.CornerPoints);
+
+	(*indexList)[0] = MeshIndexData(0, 0, 0);
+	(*indexList)[1] = MeshIndexData(1, 0, 0);
+	(*indexList)[2] = MeshIndexData(2, 0, 0);
+
+	CalculateNormalVectors();
+	UpdateGlobalMesh();
 
 	UpdateRenderSystemLink();
 }

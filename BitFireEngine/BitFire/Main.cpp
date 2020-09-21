@@ -3,8 +3,6 @@
 #include "OpenGL/OpenGLAPI.h"
 #include "Player/Player.h"
 
-#include <GLM/glm.hpp>
-
 #include "Graphics/Model/CubeModel.h"
 #include "Mathematic/Geometry/Vector/Vector3.h"
 //-----------------------------------------------------------------------------
@@ -17,37 +15,45 @@ int main()
 
     openGL->Initialize(&player);
 
-
     try
     {
-        //BF::RenderModel triangle = TriangleModel();
-        // triangle.MoveWholeObject(Position(1.5f, 0, 0));
+        BF::RenderModel triangle = BF::TriangleModel();
+        triangle.Move(BF::Vector3(1.5f, 1, 0));
 
-        //BF::RenderModel triangle = BF::TriangleModel();
+        BF::RenderModel rectangle = BF::RectangleModel();
+        rectangle.Move(BF::Vector3(-1.5f, 0, 0));
 
         BF::RenderModel cube = BF::CubeModel();
-        BF::RenderModel rectangle = BF::CubeModel();
-        rectangle.MoveInDirection(BF::Vector3(1.5f, 2, 0));
-        
-        
-       // BF::RenderModel sphere;
-        //BF::WaveFront sphereObject = BF::WaveFrontLoader::LoadFromFile("A:/D.obj");
-       // sphere.LoadFromWaveFront(sphereObject);
-     
+        //cube.MoveInDirection(BF::Vector3(1.5f, 0, 0));
 
-        float vv = 0;
+        /*
+        BF::RenderModel sphere;
+        BF::WaveFront sphereObject = BF::WaveFrontLoader::LoadFromFile("A:/QF.obj");// <- OBJ needed
+        sphere.LoadFromWaveFront(sphereObject);
+      
+        sphere.Move(BF::Vector3(-1.5f, -1, 0));
+        //        sphere.UseTexturePointAsColor();
 
+        BF::RenderModel dust;
+        BF::WaveFront dustObject = BF::WaveFrontLoader::LoadFromFile("A:/D.obj"); // <- OBJ needed
+        dust.LoadFromWaveFront(dustObject);
+        dust.ReSize(BF::Vector3(0.005f,0.005f,0.005f));
+        dust.Move(BF::Vector3(0,0,2));
+        */
         while (!openGL->ShouldExit())
-        {
-            /*
-            vv += 0.1;
+        {           
+            BF::Vector3 currpos = triangle.CurrentPosition();
 
-            float x = cosf(vv);
-            float y = sinf(vv);
+            if (currpos.X >= 10.0f)
+            {
+                triangle.MoveTo(BF::Vector3(0, 0, 0));
+            }
+            else
+            {
+                triangle.Move(BF::Vector3(0.05f, 0, 0));
+            }
 
-
-            rectangle.MoveInDirection(BF::Vector3(x*0.01, 0, y*0.01));
-            */
+            cube.Rotate(BF::Vector3(0, 0.01f,0));
 
             openGL->Update();
         }
@@ -65,7 +71,6 @@ int main()
 
     MessagerSystem::PushMessage(MessagePriorityType::Notfication, "BitFire Engine : Closing");
      
-
     return 0;
 }
 //-----------------------------------------------------------------------------

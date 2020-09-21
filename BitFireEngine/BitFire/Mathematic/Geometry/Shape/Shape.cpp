@@ -1,16 +1,13 @@
 #include "Shape.h"
 
-Shape::Shape(const unsigned int cornerPoints, const unsigned int drawOrderSteps)
+Shape::Shape(const unsigned int cornerPoints)
 {
 	CornerPoints = cornerPoints;
-	DrawOrderSteps = drawOrderSteps;
 }
 
-void Shape::CalculateDrawOrder()
-{
-	return;
 
-	unsigned int counter = CornerPoints;
+/*
+unsigned int counter = CornerPoints;
 	unsigned int vertexOffset = 0;
 
 	DrawOrder.push_back(0);
@@ -19,7 +16,7 @@ void Shape::CalculateDrawOrder()
 
 	if (CornerPoints > 3)
 	{
-		do 
+		do
 		{
 			DrawOrder.push_back(0 + vertexOffset);
 			DrawOrder.push_back(1 + vertexOffset);
@@ -29,22 +26,7 @@ void Shape::CalculateDrawOrder()
 			DrawOrder.push_back(0 + vertexOffset);
 
 			counter -= 1;
-		} 
+		}
 		while (counter > 0);
 	}
-}
-
-unsigned int Shape::GetCornerPointsAmout()
-{ 
-	return CornerPoints; 
-}
-
-unsigned int Shape::GetDrawOrderStepsAmout()
-{ 
-	return DrawOrderSteps; 
-}
-
-std::vector<unsigned int>* Shape::GetDrawOrderSteps()
-{
-	return &DrawOrder;
-}
+*/

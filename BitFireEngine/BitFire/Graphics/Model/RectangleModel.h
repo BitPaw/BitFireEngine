@@ -10,6 +10,11 @@ namespace BF
 	public:
 		Rectangle Shape;
 
+		Vertex A;
+		Vertex B;
+		Vertex C;
+		Vertex D;
+
 		RectangleModel();
 	};
 }

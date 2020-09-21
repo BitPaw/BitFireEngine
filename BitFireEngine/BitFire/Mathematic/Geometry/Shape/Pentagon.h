@@ -14,6 +14,4 @@ public:
 
 	Pentagon();
 	Pentagon(Point a, Point b, Point c, Point d, Point e);
-
-	void Reset() override;
 };

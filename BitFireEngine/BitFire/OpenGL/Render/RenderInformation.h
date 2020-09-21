@@ -10,6 +10,12 @@ public:
 	bool ShouldItBeRendered;
 
 	unsigned int VertexDataPosition;
+	unsigned int VertexDataLength;
+
+	unsigned int IndiceIndex;
+	unsigned int IndiceIndexLength;
+
+	unsigned int IndexOffset;
 
 	RenderInformation();
 };

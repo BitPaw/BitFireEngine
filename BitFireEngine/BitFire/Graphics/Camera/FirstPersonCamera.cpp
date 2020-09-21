@@ -77,13 +77,11 @@ void FirstPersonCamera::Move(Direcion direction)
 		break;
 
 	case Direcion::Forward:
-		movement = glm::vec3(0, 0, movementSpeed) *_lookAt;
-		//printf("lookat %s\n", glm::to_string(movement).c_str());
+		movement = glm::normalize(_lookAt) * glm::vec3(movementSpeed,0, movementSpeed);
 		break;
 
 	case Direcion::Backward:
-		movement = glm::vec3(0, 0, -movementSpeed) *_lookAt;
-		//printf("lookat %s\n", glm::to_string(movement).c_str());
+		movement = glm::normalize(_lookAt) * glm::vec3(-movementSpeed, 0, -movementSpeed);
 		break;
 	}
 

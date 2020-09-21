@@ -1,11 +1,14 @@
-Wenn ein Objekt sehr oft bewegt wird -> Lag. konstanter FPS drop.
-CPU -> GPU overload?
+Fixed:
+	Wenn ein Objekt sehr oft bewegt wird -> Lag. konstanter FPS drop.
+	CPU -> GPU overload?
 
-Mehr Quick-maths
+Daueraufgabe:
+	Mehr Quick-maths
 
-Stringsplitter überarbeiten.
+Kommt noch:
+[ ]	Stringsplitter überarbeiten.
 
-Wireframe renderer?
+	Wireframe renderer?
 
 Material loder, Texture
 

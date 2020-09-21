@@ -1,18 +1,14 @@
 #include "RenderSystem.h"
 
-void BF::RenderSystem::UpdateGPUCache()
-{
+
+    /*
     _dataCache->VertexData.CalculateByteSize();
 
-    _dataCache->IndexData.SizeInBytes.Current = _dataCache->IndexData.Size.Current * _dataCache->IndexData.DataBlockSizeInBytes;
-
     GLsizeiptr vArraySize = _dataCache->VertexData.SizeInBytes.Current;
-    GLsizeiptr iArraySize = _dataCache->IndexData.SizeInBytes.Current;
+
 
     try
-    {
-        glBindBuffer(GL_ARRAY_BUFFER, _indiceBuffer);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, iArraySize, _dataCache->IndexData.Data);               
+    {       
 
         glBindBuffer(GL_ARRAY_BUFFER, _bufferID);
         glBufferSubData(GL_ARRAY_BUFFER, 0, vArraySize / 4, _dataCache->VertexData.Data);
@@ -22,7 +18,8 @@ void BF::RenderSystem::UpdateGPUCache()
     {
         printf("OpenGL Error: %c", e.what());
     }
-}
+    */
+
 
 void BF::RenderSystem::AllocateGPUCache()
 {
@@ -79,19 +76,62 @@ void BF::RenderSystem::AllocateGPUCache()
     glEnableVertexAttribArray(3);
     glVertexAttribPointer(3, textureSize, GL_FLOAT, GL_FALSE, blockSize, (void*)(sizeof(float) * (vertexSize + normalSize + colorSize)));
 
+
+
     glGenBuffers(1, &_indiceBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indiceBuffer); // Select
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexDataSize, indexData, GL_DYNAMIC_DRAW);
 
-    glLineWidth(3);
+
+    _dataCache->VertexBufferID = _bufferID;
+    _dataCache->IndexBufferID = _indiceBuffer;
+
+    glLineWidth(10);
     glPointSize(5);
 
     //UnBindBuffer();
 }
 
+
 void BF::RenderSystem::UpdateModel(RenderModel* renderModel)
 {
-    _dataCache->UpdateDataLink(renderModel);
+    
+}
+
+void BF::RenderSystem::UpdatePosition(RenderModel* renderModel)
+{
+    /*
+    float* vertexDataPos = _dataCache->VertexData.Data;
+    RenderInformation* renderInformation = _dataCache->GetRenderInformation(renderModel);
+
+    unsigned int startPosition = renderInformation->VertexDataPosition;
+    unsigned int objectLength = renderModel->GlobalMesh.VertexList.Size.Value;
+    const unsigned int vertexDataLengh = 3;
+    const unsigned int otherDataLengh = (3 + 4 + 2);
+
+    unsigned int bCounter = 0;
+
+    glBindBuffer(GL_ARRAY_BUFFER, _bufferID);
+
+    for (unsigned int i = 0; i < objectLength; i++)
+    {
+        if (bCounter++ >= vertexDataLengh)
+        {
+            vertexDataPos += otherDataLengh;
+        }
+        
+       
+
+        vertexDataPos += i;
+    }   
+
+    glBufferSubData(GL_ARRAY_BUFFER, 0, vArraySize / 4, );
+    */
+}
+
+void BF::RenderSystem::UpdateNormals(RenderModel* renderModel)
+{
+
 }
 
 BF::RenderSystem::RenderSystem(Player* player)
@@ -105,7 +145,7 @@ BF::RenderSystem::RenderSystem(Player* player)
 void BF::RenderSystem::RenderScene()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //glClearColor(0.2f, 0.2f, 0.2f, 1);        
+    glClearColor(0.2f, 0.2f, 0.2f, 1);        
 
     glm::mat4 modelMatr = glm::mat4(1.0f);
 
@@ -126,7 +166,7 @@ void BF::RenderSystem::RenderScene()
     // UpdateGPUCache();
 
     glDrawElements(GL_TRIANGLES, _dataCache->IndexData.Size.Current, GL_UNSIGNED_INT, nullptr);
-    //glDrawElements(GL_LINE_LOOP, _dataCache->IndexData.Size.Current, GL_UNSIGNED_INT, nullptr);
+   // glDrawElements(GL_LINE_LOOP, _dataCache->IndexData.Size.Current, GL_UNSIGNED_INT, nullptr);
     //glDrawElements(GL_POINTS, _dataCache->IndexData.Size.Current, GL_UNSIGNED_INT, nullptr);
      //buffer.UnBindBuffer();
 }
@@ -151,10 +191,10 @@ void BF::RenderSystem::AddShader(ShaderFile shaderFile)
         unsigned int height;
 
         //_front = BitMapFontLoader::LoadBitMapFont("C:/_WorkSpace/C++/Data/arial.fnt");
-        //_texture = BitMapLoader::LoadFromFile("C:/_WorkSpace/C++/Data/F/A.bmp");
+        _texture = BitMapLoader::LoadFromFile("C:/_WorkSpace/C++/old/Data/F/A.bmp");
 
-       // width = _texture.InformationHeader->Width;
-      //  height = _texture.InformationHeader->Height;
+        width = _texture.InformationHeader->Width;
+        height = _texture.InformationHeader->Height;
 
         //BitMapLoader::PrintBitMapInformation(boxTexture);
         _pixelArray = BitMapLoader::GeneratePixelArray(_texture);
@@ -181,8 +221,7 @@ void BF::RenderSystem::AddShader(ShaderFile shaderFile)
 
 void BF::RenderSystem::RegisterRenderModel(RenderModel* renderModel)
 {
-    UpdateModel(renderModel);
-    UpdateGPUCache();
+    _dataCache->UpdateDataLink(renderModel);
 }
 
 int BF::RenderSystem::UnRegisterRenderModel(RenderModel* renderModel)
