@@ -1,14 +1,9 @@
 #pragma once
 
-#ifndef BF_Camera
-#define BF_Camera
-
-#pragma message("\nBF_Camera included\n")
-
-#include <GLEW/glew.h>
-#include <GLM/glm.hpp>
-#include <GLM/ext/matrix_transform.hpp>
-#include <GLM/gtc/matrix_transform.hpp>
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/ext/matrix_clip_space.hpp>
 
 #include "CameraSettings.h"
 #include "../../Time/TimeCollection.h"
@@ -48,5 +43,3 @@ public:
 		return _viewProjection;
 	}
 };
-
-#endif 

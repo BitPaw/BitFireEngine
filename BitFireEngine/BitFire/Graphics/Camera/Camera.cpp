@@ -1,6 +1,5 @@
 #include "Camera.h"
 
-
 float Camera::GetViewSpeed()
 {
 	return ViewSpeed * TimeCollection::DeltaTime * 10000;

@@ -382,7 +382,7 @@ bool Window::Create()
         int width = videoConfig->ScreenResolution.Width;
         int height = videoConfig->ScreenResolution.Height;
 
-        _window = glfwCreateWindow(width, height, title, _montor, NULL);
+        _window = glfwCreateWindow(width, height, title, NULL, NULL);
 
         if (!_window)
         {

@@ -27,7 +27,7 @@ StopWatch::~StopWatch()
 
 double StopWatch::CalulateDeltaTimeTime()
 {
-	const std::chrono::steady_clock::time_point current = std::chrono::high_resolution_clock::now();
+	const TimeSpampType current = std::chrono::high_resolution_clock::now();
 	const std::chrono::duration<double> elapsed = current - _lastTimeStamp;
 
 	return elapsed.count();

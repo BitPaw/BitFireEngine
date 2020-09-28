@@ -1,11 +1,10 @@
 #pragma once
 
-#ifndef BF_Window
-#define BF_Window
-
-#include <GLEW/glew.h>
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <GLM/glm.hpp>
+#include <glm/glm.hpp>
+
+#include <string>
 
 #include "../../Resources/Image/PixelArray/PixelArray.h"
 #include "../../IO/InputContainer.h"
@@ -48,4 +47,3 @@ public:
 
 	void Update();
 };
-#endif 

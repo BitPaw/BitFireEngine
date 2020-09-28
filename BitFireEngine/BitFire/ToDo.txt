@@ -1,20 +1,22 @@
-Fixed:
-	Wenn ein Objekt sehr oft bewegt wird -> Lag. konstanter FPS drop.
-	CPU -> GPU overload?
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	Bugs:
+		Some Graphicscards can not render the whole Scene.
+		IF it has little VRAM the pipline gets overloaded.
+		Game currently needs ~1 GB VRAM.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	High:
+		Prob. alot.
 
-Daueraufgabe:
-	Mehr Quick-maths
+	Med:
+		rework "StringSplitter.h"
+		Add Materials & Load them
+		Add Texture Cache (GPU API)
 
-Kommt noch:
-[ ]	Stringsplitter überarbeiten.
+		Add ability to load PNG Files
+		Add ability to load JPG Files
 
-	Wireframe renderer?
+		rework Shader Loader/System
 
-Material loder, Texture
-
-
-
-
-mehr bildformate
-
-shader loader
+	Low:
+		more Quick-Maths
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

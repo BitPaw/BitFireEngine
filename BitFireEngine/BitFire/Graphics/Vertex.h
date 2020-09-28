@@ -1,7 +1,7 @@
 #pragma once
 
-#include <GLM/glm.hpp>
-#include <GLM/geometric.hpp>
+#include <glm/glm.hpp>
+#include <glm/geometric.hpp>
 
 #include "../Mathematic/Geometry/Position.h"
 #include "../Color/RGBA.h"

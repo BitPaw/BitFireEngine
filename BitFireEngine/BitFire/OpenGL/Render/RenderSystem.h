@@ -1,7 +1,10 @@
 #pragma once
 
-#include <GLM/glm.hpp>
-#include <GLM\ext\matrix_transform.hpp>
+#include <glm/glm.hpp>
+
+#if defined(_WIN32)
+#include <glm\ext\matrix_transform.hpp>
+#endif
 
 #include "RenderDataCache.h"
 

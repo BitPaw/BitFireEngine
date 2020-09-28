@@ -137,7 +137,7 @@ void BF::RenderSystem::UpdateNormals(RenderModel* renderModel)
 BF::RenderSystem::RenderSystem(Player* player)
 {
     _currentPlayer = player;
-    _dataCache = new RenderDataCache(100000000);
+    _dataCache = new RenderDataCache(5000000); // 5 MB, Hardcoded garbage = Video Cache
 
     AllocateGPUCache();
 }
