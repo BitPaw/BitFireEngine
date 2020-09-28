@@ -1,6 +1,4 @@
 #include "Vector3.h"
-#include <GLM\ext\matrix_float4x4.hpp>
-#include <GLM\ext\matrix_transform.hpp>
 
 BF::Vector3::Vector3()
 {

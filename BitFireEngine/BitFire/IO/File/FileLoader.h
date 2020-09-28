@@ -7,6 +7,7 @@
 
 #include "TextFile.h"
 #include "FileNotFound.h"
+#include "EmptyFileName.h"
 
 #include "../../Utility/List.h"
 

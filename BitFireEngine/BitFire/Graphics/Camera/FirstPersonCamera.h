@@ -1,16 +1,7 @@
 #pragma once
 
-#ifdef BF_FirstPersonCamera
-#pragma message("\nBF_FirstPersonCamera already included!\n")
-#endif
+#include <glm/gtx/string_cast.hpp>
 
-
-#ifndef BF_FirstPersonCamera
-#define BF_FirstPersonCamera
-
-#pragma message("\nBF_FirstPersonCamera included\n")
-
-#include <GLM/gtx/string_cast.hpp>
 #include "Camera.h"
 #include "../../Mathematic/Geometry/Rotation.h"
 
@@ -29,4 +20,3 @@ public:
 
 	FirstPersonCamera();
 };
-#endif 

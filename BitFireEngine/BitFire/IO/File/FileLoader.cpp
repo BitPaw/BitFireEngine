@@ -1,5 +1,4 @@
 #include "FileLoader.h"
-#include "EmptyFileName.h"
 
 std::string FileLoader::ReadCompleteFile(const std::string filePath)
 {

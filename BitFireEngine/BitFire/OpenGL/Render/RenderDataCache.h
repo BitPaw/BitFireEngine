@@ -1,5 +1,7 @@
 #pragma once
 
+#include <GL/glew.h>
+
 #include "VertexDataCache.h"
 #include "IndexDataCache.h"
 #include "RenderInformation.h"
@@ -20,7 +22,6 @@ namespace BF
 	public:		
 		unsigned int IndexBufferID;
 		unsigned int VertexBufferID;
-
 
 		VertexDataCache VertexData;
 		IndexDataCache IndexData;

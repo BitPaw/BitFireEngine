@@ -10,9 +10,10 @@ int main()
 {
     MessagerSystem::PushMessage(MessagePriorityType::Notfication, "BitFire Engine: Starting");
 
-    std::string vertexShader = "Shader/VertexShader.vert";
-    std::string fragmentShader = "Shader/FragmentShader.frag";
-    std::string objectFilePath = "Objects/Dust II.obj";
+    // Paths for Shader & Object, Change this here...
+    std::string vertexShader = "OpenGL/Shader/Files/VertexShader.vert";
+    std::string fragmentShader = "OpenGL/Shader/Files/FragmentShader.frag";
+    std::string objectFilePath = "Dust II.obj";
 
     ShaderFile shaderfile(vertexShader, fragmentShader);
     OpenGLAPI* openGL = OpenGLAPI::Instance();

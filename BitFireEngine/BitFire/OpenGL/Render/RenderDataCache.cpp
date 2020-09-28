@@ -1,5 +1,4 @@
 #include "RenderDataCache.h"
-#include <GLEW\glew.h>
 
 RenderInformation* BF::RenderDataCache::GetRenderInformation(RenderModel* renderModel)
 {
