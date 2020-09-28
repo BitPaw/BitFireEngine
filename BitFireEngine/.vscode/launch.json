@@ -8,7 +8,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/BFELX.out",
+            "program": "${workspaceFolder}/BFELX.run",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

@@ -33,11 +33,14 @@ int main()
         BF::RenderModel cube = BF::CubeModel();
         cube.Move(BF::Vector3(1.5f, 5, 5));
 
-        BF::RenderModel dust;
-        BF::WaveFront dustObject = BF::WaveFrontLoader::LoadFromFile(objectFilePath);
-        dust.LoadFromWaveFront(dustObject);
-        dust.ReSize(BF::Vector3(0.005f, 0.005f, 0.005f));
-        dust.Move(BF::Vector3(0, -1, 2));    
+        if (FileLoader::DoesFileExist(objectFilePath))
+        {
+            BF::RenderModel dust;
+            BF::WaveFront dustObject = BF::WaveFrontLoader::LoadFromFile(objectFilePath);
+            dust.LoadFromWaveFront(dustObject);
+            dust.ReSize(BF::Vector3(0.005f, 0.005f, 0.005f));
+            dust.Move(BF::Vector3(0, -1, 2));
+        }       
         
         while (!openGL->ShouldExit())
         {           
