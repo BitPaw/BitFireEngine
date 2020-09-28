@@ -11,8 +11,8 @@ int main()
     MessagerSystem::PushMessage(MessagePriorityType::Notfication, "BitFire Engine: Starting");
 
     // Paths for Shader & Object, Change this here...
-    std::string vertexShader = "OpenGL/Shader/Files/VertexShader.vert";
-    std::string fragmentShader = "OpenGL/Shader/Files/FragmentShader.frag";
+    std::string vertexShader = "BitFire/OpenGL/Shader/Files/VertexShader.vert";
+    std::string fragmentShader = "BitFire/OpenGL/Shader/Files/FragmentShader.frag";
     std::string objectFilePath = "Dust II.obj";
 
     ShaderFile shaderfile(vertexShader, fragmentShader);

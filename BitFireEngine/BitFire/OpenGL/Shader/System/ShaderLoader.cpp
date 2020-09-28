@@ -38,9 +38,9 @@ unsigned int ShaderLoader::CompileShader(unsigned int type, const std::string& s
 unsigned int ShaderLoader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
 {
     unsigned int programm = glCreateProgram();
-    printf("Trining to compile GL_VERTEX_SHADER\n");
+    printf("Tryining to compile GL_VERTEX_SHADER\n");
     unsigned int vertexShaderIndex = CompileShader(GL_VERTEX_SHADER, vertexShader);
-    printf("Trining to compile GL_FRAGMENT_SHADER\n");
+    printf("Tryining to compile GL_FRAGMENT_SHADER\n");
     unsigned int fragmentShaderIndex = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
 
     glAttachShader(programm, vertexShaderIndex);
