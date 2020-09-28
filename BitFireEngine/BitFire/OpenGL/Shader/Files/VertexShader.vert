@@ -1,4 +1,4 @@
-#version 330 core
+#version 300 es
 
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
@@ -19,6 +19,7 @@ void main()
     gl_Position = ModelViewProjection * vec4(position,1);
     vertexColor = color;
     vertexNormal = mat3(InverseModelView) * normal;
+   //vertexNormal = normal;
     vertexPosition = vec3(ModelView) * position;
 
     vertexTexturePosition = texturePosition;

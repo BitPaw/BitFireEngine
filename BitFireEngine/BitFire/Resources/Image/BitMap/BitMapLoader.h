@@ -1,10 +1,6 @@
 #pragma once
 
-#ifndef BF_BitMapLoader
-#define BF_BitMapLoader
-
 #include <string>
-#include <vector>
 
 #include "BitMap.h"
 #include "Chunk/BitMapType.h"
@@ -12,6 +8,7 @@
 
 #include "../PixelArray/PixelArray.h"
 #include "../../../IO/File/FileLoader.h"
+#include "../../../Mathematic/Math.h"
 #include "../../../Mathematic/Converter/Converter.h"
 
 class BitMapLoader
@@ -28,4 +25,3 @@ public:
 	static PixelArray GeneratePixelArray(BitMap& bitmap);
 	static void PrintBitMapInformation(BitMap& bitMap);
 };
-#endif 

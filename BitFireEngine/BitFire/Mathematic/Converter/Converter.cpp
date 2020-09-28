@@ -61,26 +61,6 @@ unsigned int Converter::CovertByteToNumber(EndianType type, std::vector<unsigned
         value = value | byte << bitShitftIndex;
     }
 
-    /*
-
-    
-           unsigned char byte = 
-
-        dynNumber = bytes.at << (8 * (i + 1)
-
-        //value = value << (8 * (i + 1));
-
-        if (type == EndianType::Big)
-        {
-            value = value | bytes.at(i);
-        }
-        else
-        {
-            value = value | bytes.at((lenght - 1) - i);
-        }
-    
-    */
-
     return value;
 }
 
@@ -94,8 +74,6 @@ unsigned int Converter::ConvertTwoBytesToNumber(EndianType type, unsigned char b
     bytes.push_back(byteB);
 
     unsigned int result = CovertByteToNumber(type, bytes);
-
-    printf("%02x %02x = %u\n", byteA, byteB, result);
 
     return result;
 }
@@ -112,8 +90,6 @@ unsigned int Converter::Convert4BytesToNumber(EndianType type, unsigned char byt
     bytes.push_back(byteD);
 
     unsigned int result = CovertByteToNumber(type, bytes);
-
-    printf("%02x %02x %02x %02x = %u\n", byteA, byteB, byteC, byteD, result);
 
     return result;
 }

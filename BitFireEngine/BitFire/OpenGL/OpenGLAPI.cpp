@@ -15,9 +15,7 @@ OpenGLAPI* OpenGLAPI::Instance()
 void OpenGLAPI::Initialize(Player* player)
 {
     MainWindow = new Window(player);
-    Render = new BF::RenderSystem(player);
-
-    Render->AddShader(ShaderFile("BitFire/OpenGL/Shader/Files/VertexShader.vert", "BitFire/OpenGL/Shader/Files/FragmentShader.frag"));
+    Render = new BF::RenderSystem(player);    
 }
 
 void OpenGLAPI::Update()

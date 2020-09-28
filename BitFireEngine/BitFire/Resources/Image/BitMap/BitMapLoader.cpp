@@ -102,7 +102,7 @@ BitMapType BitMapLoader::ParseType(unsigned char leftByte, unsigned char rightBy
 unsigned int CalculateNeddedRowSize(unsigned int bitsPerPixel, unsigned int imageWidth)
 {
     float x = (bitsPerPixel * imageWidth) / (32.0f);
-    x = std::ceilf(x); 
+    x = BF::Math::Ceiling(x);
     x *= 4;
 
     return x;

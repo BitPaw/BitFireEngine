@@ -132,7 +132,7 @@ void BF::RenderDataCache::UpdateDataLink(RenderModel* renderModel)
         dataSize *= sizeof(float);
 
         glBindBuffer(GL_ARRAY_BUFFER, VertexBufferID);
-        glBufferSubData(GL_ARRAY_BUFFER, startPosition, dataSize, vertexDataPos);    
+        glBufferSubData(GL_ARRAY_BUFFER, startPosition, dataSize, vertexDataPos);       
     }
     else
     {      
@@ -153,10 +153,7 @@ void BF::RenderDataCache::UpdateDataLink(RenderModel* renderModel)
             VertexData.Size.Current += (3 + 3 + 4 + 2) * size;          
         }
 
-        for (unsigned int i = 0; i < IndexData.Size.Current; i++)
-        {
-
-        }
+        std::cout << "New Object registered : " << "[ " << renderModel->ModelID << "] " << renderModel->ModelName << std::endl;
 
         renderInformation->IndexOffset = _faceModelOffset;
 

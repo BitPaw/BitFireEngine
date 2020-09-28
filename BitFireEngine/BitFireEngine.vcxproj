@@ -123,6 +123,7 @@
     <ClCompile Include="BitFire\IO\File\EmptyFileName.cpp" />
     <ClCompile Include="BitFire\Mathematic\Geometry\Matrix\Matrix3x3.cpp" />
     <ClCompile Include="BitFire\Mathematic\Geometry\Matrix\Matrix4x4.cpp" />
+    <ClCompile Include="BitFire\Mathematic\Math.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitFire\Color\RGB.h" />
@@ -241,6 +242,7 @@
     <ClInclude Include="BitFire\IO\File\EmptyFileName.h" />
     <ClInclude Include="BitFire\Mathematic\Geometry\Matrix\Matrix3x3.h" />
     <ClInclude Include="BitFire\Mathematic\Geometry\Matrix\Matrix4x4.h" />
+    <ClInclude Include="BitFire\Mathematic\Math.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="BitFire\OpenGL\Shader\Files\FragmentShader.frag" />

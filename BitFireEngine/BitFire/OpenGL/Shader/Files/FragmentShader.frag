@@ -1,4 +1,6 @@
-#version 330 core
+#version 300 es
+
+precision mediump float;
 
 layout(location = 0) out vec4 fragcolor;
 
@@ -6,7 +8,6 @@ in vec3 vertexPosition;
 in vec3 vertexNormal;
 in vec4 vertexColor;
 in vec2 vertexTexturePosition;
-
 
 uniform sampler2D objtexture;
 
@@ -26,4 +27,6 @@ void main()
     vec4 calcolr = vec4(ambient + diffuse + specular, 1.0f);
 
    fragcolor = texture(objtexture, vertexTexturePosition) + calcolr;
+
+ // fragcolor = vec4( vertexNormal, 1);
 }

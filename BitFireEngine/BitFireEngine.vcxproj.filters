@@ -327,6 +327,9 @@
     <ClCompile Include="BitFire\OpenGL\Render\RenderInformation.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="BitFire\Mathematic\Math.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitFire\Color\RGB.h">
@@ -675,6 +678,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\OpenGL\Render\RenderInformation.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Math.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

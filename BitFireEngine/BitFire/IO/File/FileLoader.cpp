@@ -117,8 +117,12 @@ BF::List<unsigned char> FileLoader::ReadFileAsBytes(const std::string filePath)
 
 bool FileLoader::DoesFileExist(std::string filePath)
 {
-    struct stat buffer;
-    return (stat(filePath.c_str(), &buffer) == 0);
+    std::ifstream file(filePath.c_str());
+    bool fileExists = file.good();
+
+    file.close();
+
+    return fileExists;
 }
 
 void FileLoader::WriteFileAsBytes(const std::string filePath, const unsigned int size, const unsigned char* data)
