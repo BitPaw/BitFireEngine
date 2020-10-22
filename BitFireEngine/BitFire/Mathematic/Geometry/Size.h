@@ -1,11 +1,14 @@
 #pragma once
 
-class Size
+namespace BF
 {
-public:
-	unsigned int Width;
-	unsigned int Height;
+	class Size
+	{
+		public:
+		unsigned int Width;
+		unsigned int Height;
 
-	Size();
-	Size(unsigned int width, unsigned int height);
-};
+		Size();
+		Size(unsigned int width, unsigned int height);
+	};
+}

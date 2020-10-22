@@ -1,5 +1,9 @@
 #pragma once
-class Hexagon
-{
-};
 
+namespace BF
+{
+	class Hexagon
+	{
+
+	};
+}

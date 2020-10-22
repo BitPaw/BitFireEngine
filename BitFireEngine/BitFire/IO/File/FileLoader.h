@@ -9,19 +9,22 @@
 #include "FileNotFound.h"
 #include "EmptyFileName.h"
 
-#include "../../Utility/List.h"
+#include "../../Utility/List.hpp"
 
-class FileLoader
+namespace BF
 {
-public:
-	static bool DoesFileExist(const std::string filePath);
+	class FileLoader
+	{
+	public:
+		static bool DoesFileExist(const std::string filePath);
 
-	static BF::List<unsigned char> ReadFileAsBytes(const std::string filePath);
-	static void WriteFileAsBytes(const std::string filePath, const unsigned int size, const unsigned char* data);
+		static BF::List<unsigned char> ReadFileAsBytes(const std::string filePath);
+		static void WriteFileAsBytes(const std::string filePath, const unsigned int size, const unsigned char* data);
 
-	static std::string ReadCompleteFile(const std::string filePath);
-	static BF::List<std::string> ReadFileByLines(const std::string filePath);
+		static std::string ReadCompleteFile(const std::string filePath);
+		static BF::List<std::string> ReadFileByLines(const std::string filePath);
 
-	static TextFile ReadTextFile(const std::string filePath);
-	static TextFile ReadTextFile(const std::string filePath, const bool splittLines);
-};
+		static TextFile ReadTextFile(const std::string filePath);
+		static TextFile ReadTextFile(const std::string filePath, const bool splittLines);
+	};
+}

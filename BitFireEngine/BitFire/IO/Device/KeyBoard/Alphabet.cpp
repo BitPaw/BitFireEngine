@@ -1,11 +1,11 @@
 #include "Alphabet.h"
 
-Alphabet::Alphabet()
+BF::Alphabet::Alphabet()
 {
 	Reset();
 }
 
-void Alphabet::Reset()
+void BF::Alphabet::Reset()
 {
 	A = false;
 	B = false;

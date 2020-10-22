@@ -5,18 +5,21 @@
 #include "Camera.h"
 #include "../../Mathematic/Geometry/Rotation.h"
 
-class FirstPersonCamera : public Camera
+namespace BF
 {
-private:
-	glm::vec3 _up;
-	glm::vec3 _lookAt;
+	class FirstPersonCamera : public Camera
+	{
+	private:
+		glm::vec3 _up;
+		glm::vec3 _lookAt;
 
-public:
-	Rotation CurrentRotation;
+	public:
+		Rotation CurrentRotation;
 
-	void Rotate(float x, float y);
-	void Update() override;
-	void Move(Direcion direction) override;
+		void Rotate(float x, float y);
+		void Update() override;
+		void Move(Direcion direction) override;
 
-	FirstPersonCamera();
-};
+		FirstPersonCamera();
+	};
+}

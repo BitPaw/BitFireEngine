@@ -3,28 +3,31 @@
 #include "../../../Mathematic/Geometry/Point.h"
 #include "CursorMode.h"
 
-class Mouse
+namespace BF
 {
-public:
-	Point Position;
-	Point InputAxis;
-	CursorMode Mode;
+	class Mouse
+	{
+		public:
+		Point Position;
+		Point InputAxis;
+		CursorMode Mode;
 
-	bool LeftButton;
-	bool ScrollButton;
-	bool RightButton;
+		bool LeftButton;
+		bool ScrollButton;
+		bool RightButton;
 
-	bool CustomButton1;
-	bool CustomButton2;
-	bool CustomButton3;
-	bool CustomButton4;
-	bool CustomButton5;
+		bool CustomButton1;
+		bool CustomButton2;
+		bool CustomButton3;
+		bool CustomButton4;
+		bool CustomButton5;
 
-	Mouse();
-	~Mouse();
+		Mouse();
+		~Mouse();
 
-	void ResetInput();
-	void ResetAxis();
+		void ResetInput();
+		void ResetAxis();
 
-	bool ShoudRegisterInput();
-};
+		bool ShoudRegisterInput();
+	};
+}

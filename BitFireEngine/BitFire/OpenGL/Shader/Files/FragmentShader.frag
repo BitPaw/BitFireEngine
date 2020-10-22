@@ -26,7 +26,7 @@ void main()
 
     vec4 calcolr = vec4(ambient + diffuse + specular, 1.0f);
 
-   fragcolor = texture(objtexture, vertexTexturePosition) + calcolr;
+   fragcolor = (texture(objtexture, vertexTexturePosition)) + calcolr;
 
  // fragcolor = vec4( vertexNormal, 1);
 }

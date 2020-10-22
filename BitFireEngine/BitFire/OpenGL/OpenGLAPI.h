@@ -4,26 +4,31 @@
 #include "Shader/System/ShaderFile.h"
 #include "Shader/System/ShaderLoader.h"
 
-#include "../IO/Message/MessagerSystem.h"
+#include "../IO/Message/MessageSystem.h"
 #include "../Player/Player.h"
 #include "Render/RenderSystem.h"
 
-class OpenGLAPI
+namespace BF
 {
-private:
-	static OpenGLAPI* _instance;
+	class OpenGLAPI
+	{
+	private:
+		static OpenGLAPI* _instance;
 
-	Player* _currentPlayer;
+		Player* _currentPlayer;
 
-	OpenGLAPI();
+		OpenGLAPI();
 
-public:
-	static OpenGLAPI* Instance();
+	public:
+		static OpenGLAPI* Instance();
 
-	Window* MainWindow;
-	BF::RenderSystem* Render;
+		Window* MainWindow;
+		RenderSystem* Render;
 
-	void Initialize(Player* player);
-	void Update();
-	bool ShouldExit();
-};
+		void Initialize(Player* player);
+		void Update();
+		bool ShouldExit();
+
+
+	};
+}

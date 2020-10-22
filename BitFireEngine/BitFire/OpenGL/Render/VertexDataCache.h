@@ -2,17 +2,20 @@
 
 #include "DataSize.h"
 
-class VertexDataCache
+namespace BF
 {
-public:
-	const unsigned int DataBlockSizeInBytes = sizeof(float) * (3 + 3 + 4 + 2);
-	DataSize SizeInBytes;
-	DataSize Size;
-	float* Data;
+	class VertexDataCache
+	{
+		public:
+		const unsigned int DataBlockSizeInBytes = sizeof(float) * (3 + 3 + 4 + 2);
+		DataSize SizeInBytes;
+		DataSize Size;
+		float* Data;
 
-	VertexDataCache();
-	~VertexDataCache();
+		VertexDataCache();
+		~VertexDataCache();
 
-	void AllocateSpace(unsigned int amountOfValues);
-	void CalculateByteSize();
-};
+		void AllocateSpace(unsigned int amountOfValues);
+		void CalculateByteSize();
+	};
+}

@@ -1,11 +1,14 @@
 #pragma once
 
-class FunctionKeys
+namespace BF
 {
-public:
-	bool ShitftLeft;
-	bool ShitftRight;
+	class FunctionKeys
+	{
+		public:
+		bool ShitftLeft;
+		bool ShitftRight;
 
-	FunctionKeys();
-	void Reset();
-};
+		FunctionKeys();
+		void Reset();
+	};
+}

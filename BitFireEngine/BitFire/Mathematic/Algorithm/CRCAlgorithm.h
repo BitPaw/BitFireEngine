@@ -1,8 +1,11 @@
 #pragma once
 
-class CRCAlgorithm
+namespace BF
 {
-public:
-	static bool Check(unsigned int);
-	static unsigned int Calculate();
-};
+	class CRCAlgorithm
+	{
+		public:
+		static bool Check(unsigned int);
+		static unsigned int Calculate();
+	};
+}

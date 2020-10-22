@@ -1,30 +1,30 @@
 #include "OpenGLAPI.h"
 
-OpenGLAPI* OpenGLAPI::_instance = nullptr;
+BF::OpenGLAPI* BF::OpenGLAPI::_instance = nullptr;
 
-OpenGLAPI::OpenGLAPI()
+BF::OpenGLAPI::OpenGLAPI()
 {
     _instance = this;
 }
 
-OpenGLAPI* OpenGLAPI::Instance()
+BF::OpenGLAPI* BF::OpenGLAPI::Instance()
 {
     return _instance == nullptr ? new OpenGLAPI() : _instance;
 }
 
-void OpenGLAPI::Initialize(Player* player)
+void BF::OpenGLAPI::Initialize(Player* player)
 {
     MainWindow = new Window(player);
     Render = new BF::RenderSystem(player);    
 }
 
-void OpenGLAPI::Update()
+void BF::OpenGLAPI::Update()
 {
     MainWindow->Update();
     Render->RenderScene();
 }
 
-bool OpenGLAPI::ShouldExit()
+bool BF::OpenGLAPI::ShouldExit()
 {
     return MainWindow->ShouldExit();
 }

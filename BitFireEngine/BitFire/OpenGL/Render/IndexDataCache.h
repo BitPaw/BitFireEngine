@@ -2,18 +2,21 @@
 
 #include "DataSize.h"
 
-class IndexDataCache
+namespace BF
 {
-public:
-	const unsigned int DataBlockSizeInBytes = sizeof(unsigned int);
-	DataSize SizeInBytes;
-	DataSize Size;
-	unsigned int* Data;
+	class IndexDataCache
+	{
+		public:
+		const unsigned int DataBlockSizeInBytes = sizeof(unsigned int);
+		DataSize SizeInBytes;
+		DataSize Size;
+		unsigned int* Data;
 
-	// unsigned int HighestValue;
+		// unsigned int HighestValue;
 
-	IndexDataCache();
-	~IndexDataCache();
+		IndexDataCache();
+		~IndexDataCache();
 
-	void AllocateSpace(unsigned int amountOfValues);
-};
+		void AllocateSpace(unsigned int amountOfValues);
+	};
+}

@@ -4,15 +4,18 @@
 #include "Alphabet.h"
 #include "FunctionKeys.h"
 
-class KeyBoard
+namespace BF
 {
-public:
-	Numbers Number;
-	Alphabet Letter;	
-	FunctionKeys FunktionKey;
-	bool SpaceBar;
+	class KeyBoard
+	{
+		public:
+		Numbers Number;
+		Alphabet Letter;
+		FunctionKeys FunktionKey;
+		bool SpaceBar;
 
-	KeyBoard();
+		KeyBoard();
 
-	void Reset();
-};
+		void Reset();
+	};
+}

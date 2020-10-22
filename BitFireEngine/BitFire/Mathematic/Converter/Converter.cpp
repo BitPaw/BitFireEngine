@@ -1,6 +1,6 @@
 #include "Converter.h"
 
-unsigned int Converter::ConvertHexadezimalToDezimal(unsigned char hex)
+unsigned int BF::Converter::ConvertHexadezimalToDezimal(unsigned char hex)
 {
         switch (hex)
         {
@@ -33,7 +33,7 @@ unsigned int Converter::ConvertHexadezimalToDezimal(unsigned char hex)
         return -1;
 }
 
-unsigned int Converter::CovertByteToNumber(EndianType type, std::vector<unsigned char> bytes)
+unsigned int BF::Converter::CovertByteToNumber(EndianType type, std::vector<unsigned char> bytes)
 {
     unsigned int lenght = bytes.size();
     unsigned int value = 0;
@@ -64,7 +64,7 @@ unsigned int Converter::CovertByteToNumber(EndianType type, std::vector<unsigned
     return value;
 }
 
-unsigned int Converter::ConvertTwoBytesToNumber(EndianType type, unsigned char byteA, unsigned char byteB)
+unsigned int BF::Converter::ConvertTwoBytesToNumber(EndianType type, unsigned char byteA, unsigned char byteB)
 {
     std::vector<unsigned char> bytes;
 
@@ -78,7 +78,7 @@ unsigned int Converter::ConvertTwoBytesToNumber(EndianType type, unsigned char b
     return result;
 }
 
-unsigned int Converter::Convert4BytesToNumber(EndianType type, unsigned char byteA, unsigned char byteB, unsigned char byteC, unsigned char byteD)
+unsigned int BF::Converter::Convert4BytesToNumber(EndianType type, unsigned char byteA, unsigned char byteB, unsigned char byteC, unsigned char byteD)
 {
     std::vector<unsigned char> bytes;
 

@@ -1,11 +1,11 @@
 #include "VertexDataCache.h"
 
-VertexDataCache::VertexDataCache()
+BF::VertexDataCache::VertexDataCache()
 {
 	Data = nullptr;
 }
 
-VertexDataCache::~VertexDataCache()
+BF::VertexDataCache::~VertexDataCache()
 {
 	if (Data != nullptr)
 	{
@@ -13,14 +13,14 @@ VertexDataCache::~VertexDataCache()
 	}
 }
 
-void VertexDataCache::AllocateSpace(unsigned int amountOfValues)
+void BF::VertexDataCache::AllocateSpace(unsigned int amountOfValues)
 {
 	Data = new float[amountOfValues];
 	Size.Maximal = amountOfValues;
 	SizeInBytes.Maximal = amountOfValues * DataBlockSizeInBytes;
 }
 
-void VertexDataCache::CalculateByteSize()
+void BF::VertexDataCache::CalculateByteSize()
 {
 	SizeInBytes.Current = DataBlockSizeInBytes * Size.Current;
 }

@@ -1,7 +1,10 @@
 #pragma once
 
-enum class CameraMode
+namespace BF
 {
-	Orthographic,
-	Perspectdive
-};
+	enum class CameraMode
+	{
+		Orthographic,
+		Perspectdive
+	};
+}

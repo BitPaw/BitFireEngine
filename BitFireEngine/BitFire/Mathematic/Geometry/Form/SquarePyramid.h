@@ -1,7 +1,10 @@
 #pragma once
 
-class SquarePyramid
+namespace BF
 {
-public:
+	class SquarePyramid
+	{
+		public:
 
-};
+	};
+}

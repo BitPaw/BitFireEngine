@@ -1,11 +1,11 @@
 #include "StringSplitter.h"
 
-StringSplitter::StringSplitter()
+BF::StringSplitter::StringSplitter()
 {
 
 }
 
-StringSplitter StringSplitter::Split(std::string content, char splitToken)
+BF::StringSplitter BF::StringSplitter::Split(std::string content, char splitToken)
 {
 	unsigned int tokenCounter = 0;
 	const unsigned int length = content.length();
@@ -40,12 +40,12 @@ StringSplitter StringSplitter::Split(std::string content, char splitToken)
 	}
 	tokenCounter++;
 
-	ss.NumberOfLines = 0;
-	ss.Lines = new std::string[tokenCounter];
-
+	// Create new space
+	ss.Lines.ReSize(tokenCounter);
 
 	// do stuff
 	{
+		unsigned int dynamicIndex = 0;
 		unsigned int cutStart;
 		unsigned int cutPoint;
 		std::string segment;
@@ -65,7 +65,7 @@ StringSplitter StringSplitter::Split(std::string content, char splitToken)
 			}
 			else
 			{
-				ss.Lines[ss.NumberOfLines++] = segment;
+				ss.Lines[dynamicIndex++] = segment;
 			}
 		}
 	}
@@ -73,7 +73,7 @@ StringSplitter StringSplitter::Split(std::string content, char splitToken)
 	return ss;
 }
 
-StringSplitter StringSplitter::Split(std::string content, std::string splitTokens)
+BF::StringSplitter BF::StringSplitter::Split(std::string content, std::string splitTokens)
 {	
 	StringSplitter ss;
 
@@ -111,8 +111,8 @@ StringSplitter StringSplitter::Split(std::string content, std::string splitToken
 	}
 	tokenCounter++;
 
-	ss.NumberOfLines = tokenCounter;
-//	ss.Lines.reserve(tokenCounter);
+	// Create new space
+	ss.Lines.ReSize(tokenCounter);
 
 	for (unsigned int i = 0; i < tokenCounter; i++)
 	{
@@ -129,7 +129,7 @@ StringSplitter StringSplitter::Split(std::string content, std::string splitToken
 	return ss;
 }
 
-std::string StringSplitter::CutInHalfAndTakeRightValue(std::string content, char splitToken)
+std::string BF::StringSplitter::CutInHalfAndTakeRightValue(std::string content, char splitToken)
 {
 	unsigned int startIndex = content.find(splitToken) + 1;
 	content = content.substr(startIndex);

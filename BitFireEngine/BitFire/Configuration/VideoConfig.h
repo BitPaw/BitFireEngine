@@ -3,12 +3,15 @@
 #include "RefreshRateMode.h"
 #include "../Mathematic/Geometry/Size.h"
 
-class VideoConfig
+namespace BF
 {
-public:
-	RefreshRateMode WindowRefreshRateMode;
-	Size ScreenResolution;
-	bool FullScreen;
+	class VideoConfig
+	{
+		public:
+		RefreshRateMode WindowRefreshRateMode;
+		Size ScreenResolution;
+		bool FullScreen;
 
-	VideoConfig();
-};
+		VideoConfig();
+	};
+}

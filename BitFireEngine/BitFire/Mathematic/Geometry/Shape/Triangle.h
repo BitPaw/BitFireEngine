@@ -3,13 +3,16 @@
 #include "Shape.h"
 #include "../Point.h"
 
-class Triangle : public Shape
+namespace BF
 {
-public:
-	Point A;
-	Point B;
-	Point C;
+	class Triangle : public Shape
+	{
+		public:
+		Point A;
+		Point B;
+		Point C;
 
-	Triangle();
-	Triangle(Point a, Point b, Point c);
-};
+		Triangle();
+		Triangle(Point a, Point b, Point c);
+	};
+}

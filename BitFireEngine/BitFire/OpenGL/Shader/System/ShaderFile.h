@@ -5,14 +5,17 @@
 #include "../../../IO/File/TextFile.h"
 #include "../../../IO/File/FileLoader.h"
 
-class ShaderFile
+namespace BF
 {
-public:
-	TextFile VertexShader;
-	TextFile FragmentShader;
+	class ShaderFile
+	{
+	public:
+		TextFile VertexShader;
+		TextFile FragmentShader;
 
-	ShaderFile();
-	ShaderFile(std::string vertexShaderPath, std::string fragmentShaderPath);
+		ShaderFile();
+		ShaderFile(std::string vertexShaderPath, std::string fragmentShaderPath);
 
-	void LoadShader(std::string vertexShaderPath, std::string fragmentShaderPath);
-};
+		void LoadShader(std::string vertexShaderPath, std::string fragmentShaderPath);
+	};
+}

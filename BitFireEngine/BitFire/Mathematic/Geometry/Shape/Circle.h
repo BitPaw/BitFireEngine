@@ -1,5 +1,9 @@
 #pragma once
-class Circle
-{
-};
 
+namespace BF
+{
+	class Circle
+	{
+
+	};
+}

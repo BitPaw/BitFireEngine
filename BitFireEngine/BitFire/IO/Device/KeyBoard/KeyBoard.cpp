@@ -1,11 +1,11 @@
 #include "KeyBoard.h"
 
-KeyBoard::KeyBoard()
+BF::KeyBoard::KeyBoard()
 {
 	Reset();
 }
 
-void KeyBoard::Reset()
+void BF::KeyBoard::Reset()
 {
 	Letter.Reset();
 	FunktionKey.Reset();

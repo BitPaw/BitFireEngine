@@ -1,11 +1,14 @@
 #pragma once
 
-class Rotation
+namespace BF
 {
-public:
-	float Yaw;
-	float Pitch;
-	float Roll;
+	class Rotation
+	{
+		public:
+		float Yaw;
+		float Pitch;
+		float Roll;
 
-	Rotation();
-};
+		Rotation();
+	};
+}

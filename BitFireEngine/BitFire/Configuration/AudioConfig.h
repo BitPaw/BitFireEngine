@@ -1,5 +1,11 @@
 #pragma once
-class AudioConfig
-{
-};
 
+namespace BF
+{
+	class AudioConfig
+	{
+		public:
+		float VolumeMusic;
+		float VolumeSFX;
+	};
+}

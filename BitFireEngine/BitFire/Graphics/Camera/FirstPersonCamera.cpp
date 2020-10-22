@@ -1,6 +1,6 @@
 #include "FirstPersonCamera.h"
 
-void FirstPersonCamera::Rotate(float x, float y)
+void BF::FirstPersonCamera::Rotate(float x, float y)
 {
 	const float maxValue = 85.0f;
 	const float minValue = -85.0f;
@@ -34,7 +34,7 @@ void FirstPersonCamera::Rotate(float x, float y)
 	Update();
 }
 
-void FirstPersonCamera::Update()
+void BF::FirstPersonCamera::Update()
 {
 
 	switch (Settings->Mode)
@@ -53,7 +53,7 @@ void FirstPersonCamera::Update()
 	_viewProjection = _projection * _view;
 }
 
-void FirstPersonCamera::Move(Direcion direction)
+void BF::FirstPersonCamera::Move(Direcion direction)
 {
 	glm::vec3 movement;
 	float movementSpeed = GetWalkSpeed();
@@ -92,7 +92,7 @@ void FirstPersonCamera::Move(Direcion direction)
 	Update();
 }
 
-FirstPersonCamera::FirstPersonCamera() : Camera()
+BF::FirstPersonCamera::FirstPersonCamera() : Camera()
 {
 	Settings->Mode = CameraMode::Perspectdive;
 

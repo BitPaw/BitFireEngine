@@ -1,11 +1,11 @@
 #include "IndexDataCache.h"
 
-IndexDataCache::IndexDataCache()
+BF::IndexDataCache::IndexDataCache()
 {
 	Data = nullptr;
 }
 
-IndexDataCache::~IndexDataCache()
+BF::IndexDataCache::~IndexDataCache()
 {
 	if (Data != nullptr)
 	{
@@ -13,7 +13,7 @@ IndexDataCache::~IndexDataCache()
 	}
 }
 
-void IndexDataCache::AllocateSpace(unsigned int amountOfValues)
+void BF::IndexDataCache::AllocateSpace(unsigned int amountOfValues)
 {
 	Data = new unsigned int[amountOfValues];
 	Size.Maximal = amountOfValues;

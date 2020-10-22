@@ -1,6 +1,6 @@
 #include "TimeCollection.h"
 
-StopWatch TimeCollection::_stopWatch;
+BF::StopWatch BF::TimeCollection::_stopWatch;
 
-double TimeCollection::ActiveTime = 0;
-float TimeCollection::DeltaTime = 0;
+double BF::TimeCollection::ActiveTime = 0;
+float BF::TimeCollection::DeltaTime = 0;

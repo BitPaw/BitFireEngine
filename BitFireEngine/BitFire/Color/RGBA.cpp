@@ -1,30 +1,26 @@
 #include "RGBA.h"
 
-#include <cstdlib>
-#include <iostream>
-#include <ctime>
-
-RGBA::RGBA()
+BF::RGBA::RGBA()
 {
 	SetColor(1, 1, 1, 1);
 }
 
-RGBA::RGBA(const float red, const float green, const float blue)
+BF::RGBA::RGBA(const float red, const float green, const float blue)
 {
 	SetColor(red, green, blue, 1);
 }
 
-RGBA::RGBA(const float red, const float green, const float blue, const float alpha)
+BF::RGBA::RGBA(const float red, const float green, const float blue, const float alpha)
 {
 	SetColor(red, green, blue, alpha);
 }
 
-void RGBA::SetColor(const float red, const float green, const float blue)
+void BF::RGBA::SetColor(const float red, const float green, const float blue)
 {
 	SetColor(red, green, blue, 1);
 }
 
-void RGBA::SetColor(const float red, const float green, const float blue, const float alpha)
+void BF::RGBA::SetColor(const float red, const float green, const float blue, const float alpha)
 {
 	Red = red;
 	Green = green;
@@ -32,19 +28,11 @@ void RGBA::SetColor(const float red, const float green, const float blue, const 
 	Alpha = alpha;	
 }
 
-RGBA RGBA::GetRandomeColor()
+BF::RGBA BF::RGBA::GetRandomeColor()
 {
-	srand(time(nullptr));
-
-	//float r = rand() % 255;
-	//float g = rand() % 255;
-	//float b = rand() % 255;
-
-
-	float r = std::rand() % 255;
-	float g = std::rand() % 255;
-	float b = std::rand() % 255;
-
+	float r = Math::RandomeNumber() % 255;
+	float g = Math::RandomeNumber() % 255;
+	float b = Math::RandomeNumber() % 255;
 
 	r = Interpolate::Liniar(0, 1, 0, 255, r);
 	g = Interpolate::Liniar(0, 1, 0, 255, g);

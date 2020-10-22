@@ -1,6 +1,6 @@
 #include "Message.h"
 
-Message::Message(MessagePriorityType priority, std::string content)
+BF::Message::Message(MessageType priority, std::string content)
 {
 	Priority = priority;
 	Content = content;

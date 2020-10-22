@@ -1,5 +1,9 @@
 #pragma once
-class Cone
-{
-};
 
+namespace BF
+{
+	class Cone
+	{
+
+	};
+}

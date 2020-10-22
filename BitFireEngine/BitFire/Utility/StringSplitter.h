@@ -3,17 +3,22 @@
 #include <string>
 #include <iostream>
 
-class StringSplitter
+#include "List.hpp"
+
+namespace BF
 {
-private:
-	StringSplitter();
+	class StringSplitter
+	{
+	private:
+		StringSplitter();
 
-public:
-	unsigned char SplitToken;
-	unsigned int NumberOfLines;
-	std::string* Lines;
+	public:
+		unsigned char SplitToken;
+		 
+		List<std::string> Lines;
 
-	static StringSplitter Split(std::string content, char splitToken);
-	static StringSplitter Split(std::string content, std::string splitTokens);
-	static std::string CutInHalfAndTakeRightValue(std::string content, char splitToken);
-};
+		static StringSplitter Split(std::string content, char splitToken);
+		static StringSplitter Split(std::string content, std::string splitTokens);
+		static std::string CutInHalfAndTakeRightValue(std::string content, char splitToken);
+	};
+}

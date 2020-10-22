@@ -1,21 +1,21 @@
 #include "Camera.h"
 
-float Camera::GetViewSpeed()
+float BF::Camera::GetViewSpeed()
 {
 	return ViewSpeed * TimeCollection::DeltaTime * 10000;
 }
 
-float Camera::GetWalkSpeed()
+float BF::Camera::GetWalkSpeed()
 {
 	return WalkSpeed * TimeCollection::DeltaTime * 500;
 }
 
-Camera::Camera() : Camera(new CameraSettings(1, 1))
+BF::Camera::Camera() : Camera(new CameraSettings(1, 1))
 {
 	
 }
 
-Camera::Camera(CameraSettings* settings)
+BF::Camera::Camera(CameraSettings* settings)
 {
 	_position = glm::vec3(0.0f);
 	_view = glm::mat4(1.0f);
@@ -29,13 +29,13 @@ Camera::Camera(CameraSettings* settings)
 	Update();
 }
 
-Camera::~Camera()
+BF::Camera::~Camera()
 {
 //	delete Settings;
 //	delete CurrentPosition;
 }
 
-void Camera::Move(Direcion direction)
+void BF::Camera::Move(Direcion direction)
 {
 	glm::vec3 movement;
 	float movementSpeed = GetWalkSpeed();
@@ -72,7 +72,7 @@ void Camera::Move(Direcion direction)
 	_view =  glm::translate(_view, movement * (-1.0f));
 }
 
-void Camera::Update()
+void BF::Camera::Update()
 {
 	switch (Settings->Mode)
 	{
@@ -88,7 +88,7 @@ void Camera::Update()
 	_viewProjection = _projection * _view;
 }
 
-void Camera::SetDeltaTime(float delteTime)
+void BF::Camera::SetDeltaTime(float delteTime)
 {
 	_deltaTime = delteTime;
 }

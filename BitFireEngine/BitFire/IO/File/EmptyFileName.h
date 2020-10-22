@@ -3,17 +3,20 @@
 #include <string>
 #include <exception>
 
-class EmptyFileName : public std::exception
+namespace BF
 {
-public:
-	char* ErrorMessage;
-
-	EmptyFileName();
-
-	~EmptyFileName();
-
-	const char* what() const noexcept
+	class EmptyFileName : public std::exception
 	{
-		return ErrorMessage;
-	}
-};
+		public:
+		char* ErrorMessage;
+
+		EmptyFileName();
+
+		~EmptyFileName();
+
+		const char* what() const noexcept
+		{
+			return ErrorMessage;
+		}
+	};
+}

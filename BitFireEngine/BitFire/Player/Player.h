@@ -1,16 +1,18 @@
 #pragma once
 
 #include "../Configuration/ConfigContainer.h"
-#include "../IO/InputContainer.h"
-
+#include "../OpenGL/Window/InputContainer.h"
 #include "../Graphics/Camera/FirstPersonCamera.h"
 
-class Player
+namespace BF
 {
-public:
-	ConfigContainer Config;
-	InputContainer Input;
-	FirstPersonCamera Camera;
+	class Player
+	{
+	public:
+		ConfigContainer Config;
+		InputContainer Input;
+		FirstPersonCamera Camera;
 
-	Player();
-};
+		Player();
+	};
+}

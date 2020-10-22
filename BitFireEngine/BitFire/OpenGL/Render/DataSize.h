@@ -1,9 +1,12 @@
 #pragma once
 
-struct DataSize
+namespace BF
 {
-	unsigned int Current;
-	unsigned int Maximal;
+	struct DataSize
+	{
+		unsigned int Current;
+		unsigned int Maximal;
 
-	DataSize();
-}; 
+		DataSize();
+	};
+}

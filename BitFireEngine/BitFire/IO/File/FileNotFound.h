@@ -3,18 +3,21 @@
 #include <string>
 #include <exception>
 
-class FileNotFound : public std::exception
+namespace BF
 {
-public:
-	char* ErrorMessage;
-	std::string FilePath;
-
-	FileNotFound(std::string filePath);
-
-	~FileNotFound();
-
-	const char* what() const noexcept
+	class FileNotFound : public std::exception
 	{
-		return ErrorMessage;
-	}
-};
+		public:
+		char* ErrorMessage;
+		std::string FilePath;
+
+		FileNotFound(std::string filePath);
+
+		~FileNotFound();
+
+		const char* what() const noexcept
+		{
+			return ErrorMessage;
+		}
+	};
+}

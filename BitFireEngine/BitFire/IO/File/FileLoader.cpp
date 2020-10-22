@@ -1,6 +1,6 @@
 #include "FileLoader.h"
 
-std::string FileLoader::ReadCompleteFile(const std::string filePath)
+std::string BF::FileLoader::ReadCompleteFile(const std::string filePath)
 {
     if (filePath.empty())
     {
@@ -25,7 +25,7 @@ std::string FileLoader::ReadCompleteFile(const std::string filePath)
     return fileContent;
 }
 
-BF::List<std::string> FileLoader::ReadFileByLines(const std::string filePath)
+BF::List<std::string> BF::FileLoader::ReadFileByLines(const std::string filePath)
 {
     if (filePath.empty())
     {
@@ -61,14 +61,14 @@ BF::List<std::string> FileLoader::ReadFileByLines(const std::string filePath)
     return lines;
 }
 
-TextFile FileLoader::ReadTextFile(const std::string filePath)
+BF::TextFile BF::FileLoader::ReadTextFile(const std::string filePath)
 {
     return ReadTextFile(filePath, false);
 }
 
-TextFile FileLoader::ReadTextFile(const std::string filePath, const bool splittLines)
+BF::TextFile BF::FileLoader::ReadTextFile(const std::string filePath, const bool splittLines)
 {
-    bool isEmpty = filePath.empty();
+    bool isEmpty = filePath.empty() || filePath == "";
 
     if (isEmpty)
     {
@@ -96,8 +96,16 @@ TextFile FileLoader::ReadTextFile(const std::string filePath, const bool splittL
     return textFile;
 }
 
-BF::List<unsigned char> FileLoader::ReadFileAsBytes(const std::string filePath)
+BF::List<unsigned char> BF::FileLoader::ReadFileAsBytes(const std::string filePath)
 {
+    bool isEmpty = filePath.empty() || filePath == "";
+
+    if (isEmpty)
+    {
+        throw EmptyFileName();
+    }
+
+
     if (!DoesFileExist(filePath))
     {
         throw FileNotFound(filePath);
@@ -114,7 +122,7 @@ BF::List<unsigned char> FileLoader::ReadFileAsBytes(const std::string filePath)
     return byteList;
 }
 
-bool FileLoader::DoesFileExist(std::string filePath)
+bool BF::FileLoader::DoesFileExist(std::string filePath)
 {
     std::ifstream file(filePath.c_str());
     bool fileExists = file.good();
@@ -124,7 +132,7 @@ bool FileLoader::DoesFileExist(std::string filePath)
     return fileExists;
 }
 
-void FileLoader::WriteFileAsBytes(const std::string filePath, const unsigned int size, const unsigned char* data)
+void BF::FileLoader::WriteFileAsBytes(const std::string filePath, const unsigned int size, const unsigned char* data)
 {
     unsigned int byteLengh = size;
     std::ofstream fout;

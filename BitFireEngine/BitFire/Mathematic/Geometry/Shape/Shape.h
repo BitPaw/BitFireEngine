@@ -1,10 +1,13 @@
 #pragma once
 
-class Shape
+namespace BF
 {
-protected:
-	Shape(const unsigned int cornerPoints);
+	class Shape
+	{
+		protected:
+		Shape(const unsigned int cornerPoints);
 
-public:
-	unsigned int CornerPoints;
-};
+		public:
+		unsigned int CornerPoints;
+	};
+}

@@ -1,6 +1,6 @@
 #include "Rotation.h"
 
-Rotation::Rotation()
+BF::Rotation::Rotation()
 {
 	Yaw = -90;
 	Pitch = 0;

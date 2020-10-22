@@ -1,5 +1,9 @@
 #pragma once
-class Sphere
-{
-};
 
+namespace BF
+{
+	class Sphere
+	{
+
+	};
+}

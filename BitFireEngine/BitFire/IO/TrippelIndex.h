@@ -1,13 +1,15 @@
 #pragma once
 
-class TrippelIndex
+namespace BF
 {
-public:
-	unsigned int A;
-	unsigned int B;
-	unsigned int C;
+	class TrippelIndex
+	{
+		public:
+		unsigned int A;
+		unsigned int B;
+		unsigned int C;
 
-	TrippelIndex();
-	TrippelIndex(const unsigned int a, const unsigned int b, const unsigned int c);
-};
-
+		TrippelIndex();
+		TrippelIndex(const unsigned int a, const unsigned int b, const unsigned int c);
+	};
+}

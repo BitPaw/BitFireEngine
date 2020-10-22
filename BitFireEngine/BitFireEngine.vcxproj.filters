@@ -18,10 +18,10 @@
     <ClCompile Include="BitFire\Color\RGB.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Color\RGBA.cpp">
+    <ClCompile Include="BitFire\Color\RGB8Bit.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Color\RGBEightBit.cpp">
+    <ClCompile Include="BitFire\Color\RGBA.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Configuration\AudioConfig.cpp">
@@ -42,33 +42,6 @@
     <ClCompile Include="BitFire\Graphics\Camera\FirstPersonCamera.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Graphics\Model\CubeModel.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Graphics\Model\RectangleModel.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Graphics\Model\SquarePyramidModel.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Graphics\Model\TriangleModel.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Graphics\LinkedMesh.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Graphics\Mesh.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Graphics\MeshIndexData.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Graphics\RenderModel.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Graphics\Vertex.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="BitFire\IO\Device\KeyBoard\Alphabet.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -84,7 +57,13 @@
     <ClCompile Include="BitFire\IO\Device\Mouse\Mouse.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="BitFire\IO\File\EmptyFileName.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
     <ClCompile Include="BitFire\IO\File\FileLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\IO\File\FileNotFound.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\IO\File\TextFile.cpp">
@@ -93,10 +72,7 @@
     <ClCompile Include="BitFire\IO\Message\Message.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\IO\Message\MessagerSystem.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\IO\InputContainer.cpp">
+    <ClCompile Include="BitFire\IO\Message\MessageSystem.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\IO\TrippelIndex.cpp">
@@ -106,6 +82,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Mathematic\Converter\Converter.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Mathematic\Diagrams\BoxPlot.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Mathematic\Geometry\Form\Cone.cpp">
@@ -127,6 +106,12 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Mathematic\Geometry\Form\SquarePyramid.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Mathematic\Geometry\Matrix\Matrix3x3.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Mathematic\Geometry\Matrix\Matrix4x4.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Mathematic\Geometry\Shape\Circle.cpp">
@@ -153,6 +138,15 @@
     <ClCompile Include="BitFire\Mathematic\Geometry\Shape\Triangle.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="BitFire\Mathematic\Geometry\Vector\Vector2.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Mathematic\Geometry\Vector\Vector3.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Mathematic\Geometry\Vector\Vector4.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
     <ClCompile Include="BitFire\Mathematic\Geometry\IndexPoint.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -171,7 +165,19 @@
     <ClCompile Include="BitFire\Mathematic\Geometry\Size.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="BitFire\Mathematic\Physic\GravityBox.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Mathematic\Physic\GravityField.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Mathematic\Physic\GravitySphere.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
     <ClCompile Include="BitFire\Mathematic\Interpolate.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Mathematic\Math.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\OpenGL\Render\DataSize.cpp">
@@ -181,6 +187,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\OpenGL\Render\RenderDataCache.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\OpenGL\Render\RenderInformation.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\OpenGL\Render\RenderSystem.cpp">
@@ -204,82 +213,211 @@
     <ClCompile Include="BitFire\Player\Player.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Font\BitMapFont\BitMapFont.cpp">
+    <ClCompile Include="BitFire\Resources\Font\FNT\FNT.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Font\BitMapFont\BitMapFontCharacter.cpp">
+    <ClCompile Include="BitFire\Resources\Font\FNT\FNTCharacter.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Font\BitMapFont\BitMapFontCommonData.cpp">
+    <ClCompile Include="BitFire\Resources\Font\FNT\FNTCommonData.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Font\BitMapFont\BitMapFontInfo.cpp">
+    <ClCompile Include="BitFire\Resources\Font\FNT\FNTInfo.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Font\BitMapFont\BitMapFontLoader.cpp">
+    <ClCompile Include="BitFire\Resources\Font\FNT\FNTLoader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Font\BitMapFont\BitMapFontPage.cpp">
+    <ClCompile Include="BitFire\Resources\Font\FNT\FNTPage.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\BitMap\Chunk\Header\BitMapInfoHeader.cpp">
+    <ClCompile Include="BitFire\Resources\Font\OTF\OTF.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\BitMap\Chunk\BitMapFileHeader.cpp">
+    <ClCompile Include="BitFire\Resources\Font\OTF\OTFLoader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\BitMap\Chunk\BitMapInformationHeader.cpp">
+    <ClCompile Include="BitFire\Resources\Font\TTF\TTF.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\BitMap\BitMap.cpp">
+    <ClCompile Include="BitFire\Resources\Font\TTF\TTFLoader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\BitMap\BitMapLoader.cpp">
+    <ClCompile Include="BitFire\Resources\Font\Font.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PixelArray\PixelArray.cpp">
+    <ClCompile Include="BitFire\Resources\Font\FontLoader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PixelArray\PixelArrayLoader.cpp">
+    <ClCompile Include="BitFire\Resources\Font\IFont.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PortableNetworkGraphic\Chunk\Type\PortableNetworkGraphicChunkImageHeader.cpp">
+    <ClCompile Include="BitFire\Resources\Image\BMP\Chunk\Header\BMPInfoHeader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PortableNetworkGraphic\Chunk\Type\PortableNetworkGraphicChunkPalette.cpp">
+    <ClCompile Include="BitFire\Resources\Image\BMP\Chunk\BMPFileHeader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PortableNetworkGraphic\Chunk\Type\PortableNetworkGraphicFileHeader.cpp">
+    <ClCompile Include="BitFire\Resources\Image\BMP\Chunk\BMPInformationHeader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PortableNetworkGraphic\Chunk\Type\PortableNetworkGraphicImageData.cpp">
+    <ClCompile Include="BitFire\Resources\Image\BMP\BMP.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PortableNetworkGraphic\Chunk\PortableNetworkGraphicChunk.cpp">
+    <ClCompile Include="BitFire\Resources\Image\BMP\BMPLoader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PortableNetworkGraphic\PortableNetworkGraphic.cpp">
+    <ClCompile Include="BitFire\Resources\Image\GIF\GIF.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PortableNetworkGraphic\PortableNetworkGraphicLoader.cpp">
+    <ClCompile Include="BitFire\Resources\Image\GIF\GIFLoader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\Material.cpp">
+    <ClCompile Include="BitFire\Resources\Image\JPEG\JPEG.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\MaterialLibrary.cpp">
+    <ClCompile Include="BitFire\Resources\Image\JPEG\JPEGLoader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\MaterialLibraryLoader.cpp">
+    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\Type\PNGChunkImageHeader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Model\WaveFront\WaveFront.cpp">
+    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\Type\PortableNetworkGraphicChunkPalette.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Model\WaveFront\WaveFrontElement.cpp">
+    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\Type\PortableNetworkGraphicFileHeader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Model\WaveFront\WaveFrontLoader.cpp">
+    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\Type\PortableNetworkGraphicImageData.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGChunk.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Image\PNG\PNG.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Image\PNG\PNGLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Image\TIFF\TIFF.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Image\TIFF\TIFFLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Image\IImage.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Image\Image.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Image\ImageLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\3DS\A3DS.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\3DS\A3DSLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\FBX\FBX.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\FBX\FBXLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\OBJ\MTL\Material.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\OBJ\MTL\MTL.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\OBJ\MTL\MTLLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\OBJ\OBJ.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\OBJ\OBJElement.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\OBJ\OBJLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\PLY\PLY.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\PLY\PLYLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\STL\STL.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\STL\STLLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\WRL\WRL.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\WRL\WRLLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\IModel.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\LinkedMesh.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\Mesh.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\MeshIndexData.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\Model.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\ModelLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\Vertex.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Sound\MID\MID.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Sound\MID\MIDLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Sound\MP3\MP3.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Sound\MP3\MP3Loader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Sound\OGG\OGG.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Sound\OGG\OGGLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Sound\WAV\WAV.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Sound\WAV\WAVLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Sound\ISound.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Sound\Sound.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Sound\SoundLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\ILoader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Time\StopWatch.cpp">
@@ -288,10 +426,13 @@
     <ClCompile Include="BitFire\Time\TimeCollection.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="BitFire\UI\Button.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
     <ClCompile Include="BitFire\UI\Padding.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Utility\List.cpp">
+    <ClCompile Include="BitFire\UI\Text.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Utility\ListSize.cpp">
@@ -303,31 +444,19 @@
     <ClCompile Include="BitFire\Main.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\IO\File\FileNotFound.cpp">
+    <ClCompile Include="BitFire\IO\Serialization\YAML\YAMLLoader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\IO\File\EmptyFileName.cpp">
+    <ClCompile Include="BitFire\IO\Serialization\XML\XMLLoader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Mathematic\Geometry\Vector\Vector2.cpp">
+    <ClCompile Include="BitFire\IO\Serialization\JSON\JSONLoader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Mathematic\Geometry\Vector\Vector3.cpp">
+    <ClCompile Include="BitFire\IO\Serialization\INI\INILoader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Mathematic\Geometry\Vector\Vector4.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Mathematic\Geometry\Matrix\Matrix3x3.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Mathematic\Geometry\Matrix\Matrix4x4.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\OpenGL\Render\RenderInformation.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Mathematic\Math.cpp">
+    <ClCompile Include="BitFire\OpenGL\Window\InputContainer.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -335,10 +464,10 @@
     <ClInclude Include="BitFire\Color\RGB.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Color\RGBA.h">
+    <ClInclude Include="BitFire\Color\RGB8Bit.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Color\RGBEightBit.h">
+    <ClInclude Include="BitFire\Color\RGBA.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Configuration\AudioConfig.h">
@@ -365,33 +494,6 @@
     <ClInclude Include="BitFire\Graphics\Camera\FirstPersonCamera.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Graphics\Model\CubeModel.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Graphics\Model\RectangleModel.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Graphics\Model\SquarePyramidModel.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Graphics\Model\TriangleModel.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Graphics\LinkedMesh.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Graphics\Mesh.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Graphics\MeshIndexData.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Graphics\RenderModel.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Graphics\Vertex.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="BitFire\IO\Device\KeyBoard\Alphabet.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -410,7 +512,13 @@
     <ClInclude Include="BitFire\IO\Device\Mouse\Mouse.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="BitFire\IO\File\EmptyFileName.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
     <ClInclude Include="BitFire\IO\File\FileLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\IO\File\FileNotFound.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\IO\File\TextFile.h">
@@ -419,16 +527,13 @@
     <ClInclude Include="BitFire\IO\Message\Message.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\IO\Message\MessagePriorityType.h">
+    <ClInclude Include="BitFire\IO\Message\MessageSystem.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\IO\Message\MessagerSystem.h">
+    <ClInclude Include="BitFire\IO\Message\MessageType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\IO\EndianType.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\IO\InputContainer.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\IO\TrippelIndex.h">
@@ -438,6 +543,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Mathematic\Converter\Converter.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Diagrams\BoxPlot.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Mathematic\Geometry\Form\Cone.h">
@@ -459,6 +567,12 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Mathematic\Geometry\Form\SquarePyramid.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Geometry\Matrix\Matrix3x3.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Geometry\Matrix\Matrix4x4.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Mathematic\Geometry\Shape\Circle.h">
@@ -485,6 +599,15 @@
     <ClInclude Include="BitFire\Mathematic\Geometry\Shape\Triangle.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Geometry\Vector\Vector2.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Geometry\Vector\Vector3.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Geometry\Vector\Vector4.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
     <ClInclude Include="BitFire\Mathematic\Geometry\Direction.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -506,7 +629,19 @@
     <ClInclude Include="BitFire\Mathematic\Geometry\Size.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Physic\GravityBox.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Physic\GravityField.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Physic\GravitySphere.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
     <ClInclude Include="BitFire\Mathematic\Interpolate.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Math.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\OpenGL\Render\DataSize.h">
@@ -516,6 +651,12 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\OpenGL\Render\RenderDataCache.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\OpenGL\Render\RenderInformation.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\OpenGL\Render\RenderMode.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\OpenGL\Render\RenderSystem.h">
@@ -539,103 +680,247 @@
     <ClInclude Include="BitFire\Player\Player.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Font\BitMapFont\BitMapFont.h">
+    <ClInclude Include="BitFire\Resources\Font\FNT\FNT.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Font\BitMapFont\BitMapFontCharacter.h">
+    <ClInclude Include="BitFire\Resources\Font\FNT\FNTCharacter.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Font\BitMapFont\BitMapFontCommand.h">
+    <ClInclude Include="BitFire\Resources\Font\FNT\FNTCommand.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Font\BitMapFont\BitMapFontCommonData.h">
+    <ClInclude Include="BitFire\Resources\Font\FNT\FNTCommonData.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Font\BitMapFont\BitMapFontInfo.h">
+    <ClInclude Include="BitFire\Resources\Font\FNT\FNTInfo.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Font\BitMapFont\BitMapFontLoader.h">
+    <ClInclude Include="BitFire\Resources\Font\FNT\FNTLoader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Font\BitMapFont\BitMapFontPage.h">
+    <ClInclude Include="BitFire\Resources\Font\FNT\FNTPage.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\BitMap\Chunk\Header\BitMapInfoHeader.h">
+    <ClInclude Include="BitFire\Resources\Font\OTF\OTF.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\BitMap\Chunk\Header\BitMapInformationHeaderType.h">
+    <ClInclude Include="BitFire\Resources\Font\OTF\OTFLoader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\BitMap\Chunk\Header\IBitMapInformationHeader.h">
+    <ClInclude Include="BitFire\Resources\Font\TTF\TTF.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\BitMap\Chunk\BitMapFileHeader.h">
+    <ClInclude Include="BitFire\Resources\Font\TTF\TTFLoader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\BitMap\Chunk\BitMapInformationHeader.h">
+    <ClInclude Include="BitFire\Resources\Font\Font.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\BitMap\Chunk\BitMapType.h">
+    <ClInclude Include="BitFire\Resources\Font\FontFormat.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\BitMap\BitMap.h">
+    <ClInclude Include="BitFire\Resources\Font\FontLoader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\BitMap\BitMapLoader.h">
+    <ClInclude Include="BitFire\Resources\Font\IFont.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PixelArray\PixelArray.h">
+    <ClInclude Include="BitFire\Resources\Image\BMP\Chunk\Header\BMPInfoHeader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PixelArray\PixelArrayLoader.h">
+    <ClInclude Include="BitFire\Resources\Image\BMP\Chunk\Header\BMPInformationHeaderType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PortableNetworkGraphic\Chunk\Type\PortableNetworkGraphicChunkImageHeader.h">
+    <ClInclude Include="BitFire\Resources\Image\BMP\Chunk\Header\IBMPInformationHeader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PortableNetworkGraphic\Chunk\Type\PortableNetworkGraphicChunkPalette.h">
+    <ClInclude Include="BitFire\Resources\Image\BMP\Chunk\BMPFileHeader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PortableNetworkGraphic\Chunk\Type\PortableNetworkGraphicFileHeader.h">
+    <ClInclude Include="BitFire\Resources\Image\BMP\Chunk\BMPInformationHeader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PortableNetworkGraphic\Chunk\Type\PortableNetworkGraphicImageData.h">
+    <ClInclude Include="BitFire\Resources\Image\BMP\Chunk\BMPType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PortableNetworkGraphic\Chunk\PortableNetworkGraphicChunk.h">
+    <ClInclude Include="BitFire\Resources\Image\BMP\BMP.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PortableNetworkGraphic\Chunk\PortableNetworkGraphicChunkType.h">
+    <ClInclude Include="BitFire\Resources\Image\BMP\BMPLoader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PortableNetworkGraphic\PortableNetworkGraphic.h">
+    <ClInclude Include="BitFire\Resources\Image\GIF\GIF.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PortableNetworkGraphic\PortableNetworkGraphicLoader.h">
+    <ClInclude Include="BitFire\Resources\Image\GIF\GIFLoader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\IlluminationMode.h">
+    <ClInclude Include="BitFire\Resources\Image\JPEG\JPEG.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\Material.h">
+    <ClInclude Include="BitFire\Resources\Image\JPEG\JPEGLoader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\MaterialLibrary.h">
+    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\Type\PNGChunkImageHeader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Model\WaveFront\MaterialLibrary\MaterialLibraryLoader.h">
+    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\Type\PortableNetworkGraphicChunkPalette.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Model\WaveFront\WaveFront.h">
+    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\Type\PortableNetworkGraphicFileHeader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Model\WaveFront\WaveFrontElement.h">
+    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\Type\PortableNetworkGraphicImageData.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Model\WaveFront\WaveFrontLineCommand.h">
+    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGChunk.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Model\WaveFront\WaveFrontLoader.h">
+    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGChunkType.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Image\PNG\PNG.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Image\PNG\PNGLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Image\TIFF\TIFF.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Image\TIFF\TIFFLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Image\IImage.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Image\Image.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Image\ImageFormat.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Image\ImageLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\3DS\A3DS.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\3DS\A3DSLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\FBX\FBX.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\FBX\FBXLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\OBJ\MTL\IlluminationMode.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\OBJ\MTL\Material.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\OBJ\MTL\MTL.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\OBJ\MTL\MTLCommand.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\OBJ\MTL\MTLLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\OBJ\OBJ.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\OBJ\OBJElement.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\OBJ\OBJLineCommand.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\OBJ\OBJLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\PLY\PLY.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\PLY\PLYLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\STL\STL.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\STL\STLLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\WRL\WRL.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\WRL\WRLLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\IModel.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\LinkedMesh.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\Mesh.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\MeshIndexData.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\Model.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\ModelLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\ModelType.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\Vertex.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Sound\MID\MID.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Sound\MID\MIDLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Sound\MP3\MP3.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Sound\MP3\MP3Loader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Sound\OGG\OGG.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Sound\OGG\OGGLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Sound\WAV\WAV.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Sound\WAV\WAVLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Sound\ISound.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Sound\Sound.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Sound\SoundFormat.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Sound\SoundLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\ILoader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Time\StopWatch.h">
@@ -644,51 +929,47 @@
     <ClInclude Include="BitFire\Time\TimeCollection.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="BitFire\UI\Button.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
     <ClInclude Include="BitFire\UI\Padding.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Utility\List.h">
+    <ClInclude Include="BitFire\UI\Text.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Utility\Dictionary.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Utility\LinkedList.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Utility\List.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Utility\ListSize.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="BitFire\Utility\Queue.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
     <ClInclude Include="BitFire\Utility\StringSplitter.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\IO\File\FileNotFound.h">
+    <ClInclude Include="BitFire\IO\Serialization\YAML\YAMLLoader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\IO\File\EmptyFileName.h">
+    <ClInclude Include="BitFire\IO\Serialization\XML\XMLLoader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Mathematic\Geometry\Vector\Vector4.h">
+    <ClInclude Include="BitFire\IO\Serialization\JSON\JSONLoader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Mathematic\Geometry\Vector\Vector2.h">
+    <ClInclude Include="BitFire\IO\Serialization\INI\INILoader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Mathematic\Geometry\Vector\Vector3.h">
+    <ClInclude Include="BitFire\OpenGL\Window\InputContainer.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Mathematic\Geometry\Matrix\Matrix3x3.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Mathematic\Geometry\Matrix\Matrix4x4.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\OpenGL\Render\RenderInformation.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Mathematic\Math.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="BitFire\OpenGL\Shader\Files\FragmentShader.frag" />
-    <None Include="BitFire\OpenGL\Shader\Files\VertexShader.vert" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="BitFire\ToDo.txt" />
   </ItemGroup>
 </Project>

@@ -1,11 +1,20 @@
 #pragma once
 
+
+
 #include <math.h>
+#include <cstdlib>
+#include <ctime>
+
+#include "Interpolate.h"
 
 namespace BF
 {
 	class Math
 	{
+	private:
+		static bool _timerSet;
+
 	public:
 		// Pi, Archimedes' constant or Ludolph's number
 		const float PI = 3.1415926535897932384626433832795028841971693993751058209749445923;
@@ -53,5 +62,7 @@ namespace BF
 
 		// Rounds x downward, returning the largest integral value that is not greater than x.
 		static int Floor(double value);
+
+		static int RandomeNumber();
 	};
 }

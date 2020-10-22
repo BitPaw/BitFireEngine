@@ -1,6 +1,6 @@
 #include "EmptyFileName.h"
 
-EmptyFileName::EmptyFileName()
+BF::EmptyFileName::EmptyFileName()
 {
 	std::string messagePre = "Filepath is empty.";
 	ErrorMessage = new char[messagePre.size() + 1]{ '\x00' };
@@ -11,7 +11,7 @@ EmptyFileName::EmptyFileName()
 	}
 }
 
-EmptyFileName::~EmptyFileName()
+BF::EmptyFileName::~EmptyFileName()
 {
 	if (ErrorMessage != nullptr)
 	{

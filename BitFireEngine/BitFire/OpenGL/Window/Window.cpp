@@ -1,10 +1,8 @@
 #include "Window.h"
-#include "../../Mathematic/Interpolate.h"
-#include "../../Resources/Image/PixelArray/PixelArrayLoader.h"
 
-Window* Window::_instance;
+BF::Window* BF::Window::_instance;
 
-void Window::UpdateInput()
+void BF::Window::UpdateInput()
 {
     KeyBoard* keyboard = &CurrentPlayer->Input.KeyBoardInput;
     Mouse* mouse = &CurrentPlayer->Input.MouseInput;
@@ -73,12 +71,12 @@ void Window::UpdateInput()
     mouse->ResetAxis();
 }
 
-Window* Window::GetInstance()
+BF::Window* BF::Window::GetInstance()
 {
     return _instance;
 }
 
-Window::Window(Player* player)
+BF::Window::Window(Player* player)
 {
     CurrentPlayer = player;
 
@@ -93,7 +91,7 @@ Window::Window(Player* player)
     }
 }
 
-Window::~Window()
+BF::Window::~Window()
 {
     float cx = TimeCollection::ActiveTime;
 
@@ -111,8 +109,8 @@ Window::~Window()
 
 void OnKeyPressed(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    Window* currentWindow = Window::GetInstance();
-    KeyBoard* keyBoard = &currentWindow->CurrentPlayer->Input.KeyBoardInput;
+    BF::Window* currentWindow = BF::Window::GetInstance();
+    BF::KeyBoard* keyBoard = &currentWindow->CurrentPlayer->Input.KeyBoardInput;
 
     /* [key]
         The key will be GLFW_KEY_UNKNOWN
@@ -168,8 +166,8 @@ void OnKeyPressed(GLFWwindow* window, int key, int scancode, int action, int mod
 
 void OnMouseButton(GLFWwindow* window, int button, int action, int mods)
 {
-    Window* currentWindow = Window::GetInstance();
-    Mouse* mouse = &currentWindow->CurrentPlayer->Input.MouseInput;
+    BF::Window* currentWindow = BF::Window::GetInstance();
+    BF::Mouse* mouse = &currentWindow->CurrentPlayer->Input.MouseInput;
 
     /*
     0 = GLFW_MOUSE_BUTTON_1 | GLFW_MOUSE_BUTTON_LEFT
@@ -220,8 +218,8 @@ void OnMouseButton(GLFWwindow* window, int button, int action, int mods)
 
 void OnMousePosition(GLFWwindow* window, double xpos, double ypos)
 {
-    Window* currentWindow = Window::GetInstance();
-    Mouse* mouse = &currentWindow->CurrentPlayer->Input.MouseInput;
+    BF::Window* currentWindow = BF::Window::GetInstance();
+    BF::Mouse* mouse = &currentWindow->CurrentPlayer->Input.MouseInput;
 
     if (mouse->ShoudRegisterInput())
     {
@@ -229,8 +227,8 @@ void OnMousePosition(GLFWwindow* window, double xpos, double ypos)
         mouse->InputAxis.Y = mouse->Position.Y - ypos;
 
         // Clamp
-        mouse->InputAxis.X = Interpolate::Liniar(-1, 1, -15, 15, mouse->InputAxis.X);
-        mouse->InputAxis.Y = Interpolate::Liniar(-1, 1, -15, 15, mouse->InputAxis.Y);
+        mouse->InputAxis.X = BF::Interpolate::Liniar(-1, 1, -15, 15, mouse->InputAxis.X);
+        mouse->InputAxis.Y = BF::Interpolate::Liniar(-1, 1, -15, 15, mouse->InputAxis.Y);
 
         mouse->Position.X = xpos;
         mouse->Position.Y = ypos;
@@ -239,53 +237,50 @@ void OnMousePosition(GLFWwindow* window, double xpos, double ypos)
 
 void OnWindowSizeChanged(GLFWwindow* window, int _width, int _height)
 {
-    Window* currentWindow = Window::GetInstance();    
+    BF::Window* currentWindow = BF::Window::GetInstance();
 
-    currentWindow->ResizeWindow(_width, _height);
+    currentWindow->Resize(_width, _height);
 }
 
-void Window::ResizeWindow(const int width, const int height)
+void BF::Window::Resize(const unsigned int width, const unsigned int height)
 {
-    float* cwidth = &CurrentPlayer->Camera.Settings->Width;
-    float* cheight = &CurrentPlayer->Camera.Settings->Height;
+    unsigned int cwidth = CurrentPlayer->Camera.Settings->Width;
+    unsigned int cheight = CurrentPlayer->Camera.Settings->Height;
 
-    bool hasChanged = *cwidth != width || *cheight != height;
-
+    bool hasChanged = cwidth != width || cheight != height;
+     
     if (hasChanged)
     {
-        *cwidth = width;
-        *cheight = height;
+        cwidth = (width / 2);
+        cheight = (height / 2);
 
-        glViewport(0, 0, width, height);
+       // *cwidth = width;
+       // *cheight = height;
 
-        //glfwSetWindowSize(_window, width, height);
+       // glViewport(0, 0, cwidth, cheight); <---- changed the acual size of the render window
+
+       // glfwSetWindowSize(_window, width, height);
     }
 }
 
-void Window::SetCursorTexture(std::string filePath)
-{
-    /*
-    BitMap bitMap = BitMapLoader::LoadFromFile(filePath);
-    PixelArray pixelArray = BitMapLoader::GeneratePixelArray(bitMap);
+void BF::Window::SetCursorTexture(Image* image)
+{    
+    GLFWimage flfwImage
+    {
+        image->Width,
+        image->Height,
+        &image->PixelData[0]
+    };
 
-    GLFWimage image;
-    image.width = bitMap.InformationHeader->Width;
-    image.height = bitMap.InformationHeader->Height;
-    image.pixels = pixelArray.PixelData;
-
-    _cursor = glfwCreateCursor(&image, 0, 0);
+    _cursor = glfwCreateCursor(&flfwImage, 0, 0);
 
     // GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR);
-    glfwSetCursor(_window, _cursor);*/
+    glfwSetCursor(_window, _cursor);
+    
 }
 
-void Window::SetCursorMode(CursorMode mode)
+void BF::Window::SetCursorMode(CursorMode mode)
 {
-    /*
-    GLFW_CURSOR_NORMAL
-    GLFW_CURSOR_HIDDEN
-    GLFW_CURSOR_DISABLED
-    */
     Mouse* mouse = &Window::CurrentPlayer->Input.MouseInput;
 
     mouse->Mode = mode;
@@ -307,31 +302,34 @@ void Window::SetCursorMode(CursorMode mode)
     }  
 }
 
-void Window::SetVideoRefreshRate(RefreshRateMode mode)
+void BF::Window::SetVideoRefreshRate(RefreshRateMode mode)
 {
+    int modeID = -1;
+
     switch (mode)
     {
     case RefreshRateMode::Unlimited:
-        glfwSwapInterval(0);
+        modeID = 0;
         break;
 
     case RefreshRateMode::VSync:
-        glfwSwapInterval(1);
+        modeID = 1;
         break;
 
     case RefreshRateMode::CustomSync:
-        glfwSwapInterval(2);
+        modeID = 2;
         break;
-
     }
+
+    glfwSwapInterval(modeID);
 }
 
-void Window::SetWindowPosition(unsigned int x, unsigned int y)
+void BF::Window::SetPosition(unsigned int x, unsigned int y)
 {
     glfwSetWindowPos(_window, x, y);
 }
 
-void Window::SetWindowPositionToCenter()
+void BF::Window::SetPositionToCenter()
 {
     VideoConfig* videoConfig = &CurrentPlayer->Config.Video;
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());  
@@ -341,32 +339,52 @@ void Window::SetWindowPositionToCenter()
     x -= videoConfig->ScreenResolution.Width / 2;
     y -= videoConfig->ScreenResolution.Height / 2;
 
-    SetWindowPosition(x, y);
+    SetPosition(x, y);
 }
 
-PixelArray Window::TakeScreenShot()
+void BF::Window::SetTitle(std::string title)
 {
-    VideoConfig* videoConfig = &CurrentPlayer->Config.Video;   
+    glfwSetWindowTitle(_window, title.c_str());
+}
+
+void BF::Window::SetIcon(Image* image)
+{
+    const unsigned int numberOfImages = 1;
+    GLFWimage flfwImage 
+    {
+        image->Width, 
+        image->Height, 
+        &image->PixelData[0] 
+    };
+
+    glfwSetWindowIcon(_window, numberOfImages, &flfwImage);
+}
+
+BF::Image* BF::Window::TakeScreenShot()
+{
+    Image* image = new Image();
+    VideoConfig* videoConfig = &CurrentPlayer->Config.Video;
     int width = videoConfig->ScreenResolution.Width;
     int height = videoConfig->ScreenResolution.Height;
-    PixelArray pixelArray;
-
-    pixelArray.Size = width * height * 3;
-    pixelArray.PixelData = new unsigned char[pixelArray.Size];
+    unsigned int size = width * height * 4;
+   
+    image->Width = width;
+    image->Height = height;
+    image->PixelData.ReSize(size);
 
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
     glReadBuffer(GL_FRONT);
-    glReadPixels(0, 0, width, height, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixelArray.PixelData);
+    glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, &image->PixelData[0]);
 
-    return pixelArray;
+    return image;
 }
 
-bool Window::ShouldExit()
+bool BF::Window::ShouldExit()
 {
     return _exitWindow;
 }
 
-bool Window::Create()
+bool BF::Window::Create()
 {
     VideoConfig* videoConfig = &CurrentPlayer->Config.Video;
 
@@ -409,7 +427,7 @@ bool Window::Create()
         SetCursorMode(CursorMode::Locked);
     }
 
-    SetWindowPositionToCenter();
+    SetPositionToCenter();
     SetVideoRefreshRate(RefreshRateMode::VSync);
 
     if (false)
@@ -434,7 +452,7 @@ bool Window::Create()
     return true;
 }
 
-void Window::Update()
+void BF::Window::Update()
 {
     _exitWindow = glfwWindowShouldClose(_window);
 
@@ -451,77 +469,3 @@ void Window::Update()
     TimeCollection::SetDeltaTimeStamp();
     TimeCollection::ActiveTime = glfwGetTime();
 }
-
-
-     /*
-     //model = glm::rotate(model, 0.002f, glm::vec3(0, 1, 0));      
-
-    glm::mat4 model = glm::mat4(1.0f);
-
-    model = glm::scale(model, glm::vec3(1,1.2,0));
-
-    modelView = _camera._view * model;
-    invModelView = glm::transpose(glm::inverse(modelView));
-
-    std::string text = "Who_is_sample_text?";
-
-    for (size_t i = 0; i < text.size(); i++)
-    {
-        Mesh* mesh = &_renderModel.VertexMeshList.at(0);        
-        BitMapFontCharacter bitMapFontCharacter = font.GetCharacterPosition(text.at(i));
-                
-        float p00 = bitMapFontCharacter.StartPosition.X;
-        float p10 = bitMapFontCharacter.StartPosition.X + bitMapFontCharacter.Size.X;
-        float p01 = bitMapFontCharacter.StartPosition.Y;
-        float p11 = bitMapFontCharacter.StartPosition.Y + bitMapFontCharacter.Size.Y;
-
-        if (true)
-        {
-            p00 = Interpolate::Liniar(0, 1, 0, 512, p00);
-            p10 = Interpolate::Liniar(0, 1, 0, 512, p10);
-            p01 = Interpolate::Liniar(0, 1, 0, 512, p01);
-            p11 = Interpolate::Liniar(0, 1, 0, 512, p11);
-        }
-
-        Rectangle rectangle = Rectangle(Point(p00, p10), Point(), Point(), Point());
-
-       // printf("\n\n%c => %.2f | %.2f | %.2f | %.2f \n", bitMapFontCharacter.ID, p00, p10, p01, p11);
-                
-       // mesh->Vertices.at(0).CurrentPosition = Position(p00,0, 0);
-       // mesh->Vertices.at(1).CurrentPosition = Position(p10,0,0);
-       // mesh->Vertices.at(2).CurrentPosition = Position(p10,0,0);
-        //mesh->Vertices.at(3).CurrentPosition = Position(p00,0, 0);
-
-       // mesh->Vertices.at(1).Color = RGBA(1,0,0);
-        mesh->Vertices.at(0).TexturePoint = Point(p00, p01); // RightUpper 00
-        mesh->Vertices.at(1).TexturePoint = Point(p10, p01); // Left upper 10
-
-       // mesh->Vertices.at(3).Color = RGBA(0, 1, 0);
-        mesh->Vertices.at(2).TexturePoint = Point(p10, p11); // Left Under 11 
-        mesh->Vertices.at(3).TexturePoint = Point(p00, p11); //Right under 01
-           
-        mesh->GenerateArrayData();
-        
-        buffer.ChangeMesh(mesh);
-        buffer.BindBuffer();
-        
-
-        unsigned int indsize = mesh->GetIndiceData()->Lengh;
-
-        //buffer.ChangeMesh(mesh);
-
-        int off = 6;
-        int xOFF = 0;
-        int yOFF = 0;
-
-
-       // glfwGetWindowPos(_window, &xOFF, &yOFF);
-
-        x += 0.01f;
-
-        xOFF += sin(x) * 100 * TimeCollection::DeltaTime;
-        //yOFF += cos(i) * TimeCollection::DeltaTime;
-
-       // glfwSetWindowPos(_window, xOFF, yOFF);
-
-        */

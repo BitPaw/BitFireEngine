@@ -1,11 +1,11 @@
 #include "StopWatch.h"
 
-StopWatch::StopWatch() : StopWatch(0)
+BF::StopWatch::StopWatch() : StopWatch(0)
 {
 
 }
 
-StopWatch::StopWatch(const unsigned int amountOfTimeStamps)
+BF::StopWatch::StopWatch(const unsigned int amountOfTimeStamps)
 {
 	TimeStampListSizeCurrent = 0;
 	TimeStampListSizeMaximal = amountOfTimeStamps;
@@ -20,12 +20,12 @@ StopWatch::StopWatch(const unsigned int amountOfTimeStamps)
 	}
 }
 
-StopWatch::~StopWatch()
+BF::StopWatch::~StopWatch()
 {
 	delete[] TimeStampList;
 }
 
-double StopWatch::CalulateDeltaTimeTime()
+double BF::StopWatch::CalulateDeltaTimeTime()
 {
 	const TimeSpampType current = std::chrono::high_resolution_clock::now();
 	const std::chrono::duration<double> elapsed = current - _lastTimeStamp;
@@ -33,24 +33,24 @@ double StopWatch::CalulateDeltaTimeTime()
 	return elapsed.count();
 }
 
-void StopWatch::Start()
+void BF::StopWatch::Start()
 {
 	_lastTimeStamp = std::chrono::high_resolution_clock::now();
 }
 
-double StopWatch::Stop()
+double BF::StopWatch::Stop()
 {
 	Duration = CalulateDeltaTimeTime();
 
 	return Duration;
 }
 
-double StopWatch::TimeStamp()
+double BF::StopWatch::TimeStamp()
 {
 	return 0;
 }
 
-double StopWatch::Reset()
+double BF::StopWatch::Reset()
 {
 	double value = CalulateDeltaTimeTime();
 

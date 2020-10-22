@@ -1,8 +1,11 @@
 #pragma once
 
-enum class RefreshRateMode
+namespace BF
 {
-	Unlimited,
-	VSync,
-	CustomSync
-};
+	enum class RefreshRateMode
+	{
+		Unlimited,
+		VSync,
+		CustomSync
+	};
+}

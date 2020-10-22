@@ -1,16 +1,16 @@
 #include "Mouse.h"
 
-Mouse::Mouse()
+BF::Mouse::Mouse()
 {
 	ResetInput();
 }
 
-Mouse::~Mouse()
+BF::Mouse::~Mouse()
 {
 
 }
 
-void Mouse::ResetInput()
+void BF::Mouse::ResetInput()
 {
 	Position = Point();
 	ResetAxis();
@@ -27,13 +27,13 @@ void Mouse::ResetInput()
 	CustomButton5 = false;
 }
 
-void Mouse::ResetAxis()
+void BF::Mouse::ResetAxis()
 {
 	InputAxis.X = 0;
 	InputAxis.Y = 0;
 }
 
-bool Mouse::ShoudRegisterInput()
+bool BF::Mouse::ShoudRegisterInput()
 {
 	switch (Mode)
 	{

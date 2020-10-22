@@ -1,6 +1,6 @@
 #include "Shape.h"
 
-Shape::Shape(const unsigned int cornerPoints)
+BF::Shape::Shape(const unsigned int cornerPoints)
 {
 	CornerPoints = cornerPoints;
 }

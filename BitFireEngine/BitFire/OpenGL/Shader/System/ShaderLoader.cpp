@@ -1,6 +1,6 @@
 #include "ShaderLoader.h"
 
-unsigned int ShaderLoader::CompileShader(unsigned int type, const std::string& source)
+unsigned int BF::ShaderLoader::CompileShader(unsigned int type, const std::string& source)
 {
     unsigned int id = glCreateShader(type);
     const char* src = source.c_str();
@@ -35,7 +35,7 @@ unsigned int ShaderLoader::CompileShader(unsigned int type, const std::string& s
     return id;
 }
 
-unsigned int ShaderLoader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
+unsigned int BF::ShaderLoader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
 {
     unsigned int programm = glCreateProgram();
     printf("Tryining to compile GL_VERTEX_SHADER\n");

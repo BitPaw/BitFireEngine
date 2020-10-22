@@ -2,8 +2,8 @@
 
 #include <GL/glew.h>
 
-#include "VertexDataCache.h"
-#include "IndexDataCache.h"
+#include "../../Utility/List.hpp"
+
 #include "RenderInformation.h"
 
 namespace BF
@@ -12,24 +12,19 @@ namespace BF
 	{
 	private:		
 		List<RenderInformation> _renderInformationCache;
-		unsigned int _faceModelOffset = 0;
+	
 		unsigned int _renderObjectCounter = 0;
-
-		
 
 		void Update(RenderInformation* renderInformation);
 
 	public:		
-		unsigned int IndexBufferID;
-		unsigned int VertexBufferID;
+		RenderInformation* GetRenderInformation(Model* renderModel);
 
-		VertexDataCache VertexData;
-		IndexDataCache IndexData;
+		
 
-		RenderInformation* GetRenderInformation(RenderModel* renderModel);
+		RenderDataCache();
 
-		RenderDataCache(unsigned int bufferSize);
-	
-		void UpdateDataLink(RenderModel* renderModel);
+		void DrawAll();	
+		void UpdateDataLink(Model* renderModel);
 	};
 }

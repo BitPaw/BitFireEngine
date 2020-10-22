@@ -1,26 +1,31 @@
 #include "TextFile.h"
 
-TextFile::TextFile()
+BF::TextFile::TextFile()
 {
-
 }
 
-TextFile::TextFile(std::string path)
+BF::TextFile::TextFile(std::string path)
 {
 	StringSplitter splittedString = StringSplitter::Split(path, '/');
 
-	FileName = splittedString.Lines[splittedString.NumberOfLines - 1];
+	FileName = splittedString.Lines[splittedString.Lines.Size.Value - 1];
 
 	Path = path;
 }
-/*
-void TextFile::SplitContentIntoLines()
-{
-	if (AmountOfLines == 0)
-	{
-		StringSplitter splittedString = StringSplitter::Split(Content, '\n');
 
-		Lines = splittedString.Lines;
-		AmountOfLines = splittedString.NumberOfLines;
+std::string BF::TextFile::GetFileExtension()
+{
+	std::string result = "";
+
+	if (!FileName.empty())
+	{
+		int position = FileName.find_last_of('.');
+
+		if (position != -1)
+		{
+			result = FileName.substr(position +1);
+		}
 	}
-}*/
+
+	return result;
+}

@@ -1,11 +1,14 @@
 #pragma once
 
-class IndexPoint
+namespace BF
 {
-public:
-	unsigned int X;
-	unsigned int Y;
+	class IndexPoint
+	{
+		public:
+		unsigned int X;
+		unsigned int Y;
 
-	IndexPoint();
-	IndexPoint(unsigned int x, unsigned int y);
-};
+		IndexPoint();
+		IndexPoint(unsigned int x, unsigned int y);
+	};
+}

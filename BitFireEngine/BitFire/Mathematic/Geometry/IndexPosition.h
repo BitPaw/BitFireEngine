@@ -2,11 +2,14 @@
 
 #include "IndexPoint.h"
 
-class IndexPosition : public IndexPoint
+namespace BF
 {
-public:
-	unsigned int Z;
+	class IndexPosition : public IndexPoint
+	{
+		public:
+		unsigned int Z;
 
-	IndexPosition();
-	IndexPosition(unsigned int x, unsigned int y, unsigned int z);
-};
+		IndexPosition();
+		IndexPosition(unsigned int x, unsigned int y, unsigned int z);
+	};
+}

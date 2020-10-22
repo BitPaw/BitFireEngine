@@ -1,1 +1,0 @@
-#include "BitMapFileHeader.h"

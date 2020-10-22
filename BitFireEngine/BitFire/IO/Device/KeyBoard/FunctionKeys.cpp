@@ -1,11 +1,11 @@
 #include "FunctionKeys.h"
 
-FunctionKeys::FunctionKeys()
+BF::FunctionKeys::FunctionKeys()
 {
 	Reset();
 }
 
-void FunctionKeys::Reset()
+void BF::FunctionKeys::Reset()
 {
 	ShitftLeft = false;
 	ShitftRight = false;

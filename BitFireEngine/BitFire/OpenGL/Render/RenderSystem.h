@@ -1,10 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
-
-#if defined(_WIN32)
-#include <glm\ext\matrix_transform.hpp>
-#endif
+#include <glm/ext/matrix_transform.hpp>
 
 #include "RenderDataCache.h"
 
@@ -12,14 +9,13 @@
 #include "../Shader/System/ShaderFile.h"
 #include "../Shader/System/ShaderLoader.h"
 #include "../../Graphics/Camera/Camera.h"
-#include "../../Resources/Image/BitMap/BitMap.h"
-#include "../../Resources/Font/BitMapFont/BitMapFont.h"
-#include "../../Graphics/Model/RectangleModel.h"
-#include "../../Resources/Image/PixelArray/PixelArray.h"
-#include "../../Resources/Font/BitMapFont/BitMapFontLoader.h"
-#include "../../Resources/Image/BitMap/BitMapLoader.h"
-#include "../../Resources/Model/WaveFront/WaveFrontLoader.h"
-#include "../../Graphics/Model/TriangleModel.h"
+
+#include "../../Resources/Image/BMP/BMP.h"
+#include "../../Resources/Image/BMP/BMPLoader.h"
+
+#include "../../Resources/Font/FNT/FNT.h"
+#include "../../Resources/Font/FNT/FNTLoader.h"
+#include "../../Resources/Image/Image.h"
 
 namespace BF
 {
@@ -37,14 +33,11 @@ namespace BF
 		int _modelViewProjectionID;
 		int _inverseModelViewID;
 		int _modelViewID;
-		int _textureID;
+		int _textureID;	
 
-	
-
-		BitMapFont _front;
-		BitMap _texture;
-		PixelArray _pixelArray;
-
+		FNT _front;
+		BMP _texture;
+		//PixelArray _pixelArray;
 
 		//--------------------------------
 		RenderDataCache* _dataCache;
@@ -55,16 +48,6 @@ namespace BF
 
 		Player* _currentPlayer;
 
-		void AllocateGPUCache();
-
-
-
-		// Update Object
-		void UpdateModel(RenderModel* renderModel);
-
-		void UpdatePosition(RenderModel* renderModel);
-		void UpdateNormals(RenderModel* renderModel);
-
 	public:
 		RenderSystem(Player* player);
 
@@ -72,7 +55,9 @@ namespace BF
 		void AddShader(ShaderFile shaderFile);
 
 
-		void RegisterRenderModel(RenderModel* renderModel);
-		int UnRegisterRenderModel(RenderModel* renderModel);
+		void RegisterRenderModel(Model* renderModel);
+		int UnRegisterRenderModel(Model* renderModel);
+
+		int RegisterImage(Image* image);
 	};
 }

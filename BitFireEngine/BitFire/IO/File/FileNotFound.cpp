@@ -1,6 +1,6 @@
 #include "FileNotFound.h"
 
-FileNotFound::FileNotFound(std::string filePath)
+BF::FileNotFound::FileNotFound(std::string filePath)
 {
 	std::string messagePre = "File is missing at path <" + filePath + ">.";
 	ErrorMessage = new char[messagePre.size() + 1]{'\x00'};
@@ -13,7 +13,7 @@ FileNotFound::FileNotFound(std::string filePath)
 	FilePath = filePath;
 }
 
-FileNotFound::~FileNotFound()
+BF::FileNotFound::~FileNotFound()
 {
 	if (ErrorMessage != nullptr)
 	{

@@ -6,44 +6,108 @@
 
 #include <string>
 
-#include "../../Resources/Image/PixelArray/PixelArray.h"
-#include "../../IO/InputContainer.h"
+#include "InputContainer.h"
+
 #include "../../Graphics/Camera/FirstPersonCamera.h"
 #include "../../Time/TimeCollection.h"
 #include "../../Configuration/VideoConfig.h"
 #include "../../Player/Player.h"
+#include "../../Mathematic/Interpolate.h"
+#include "../../Resources/Image/Image.h"
 
-class Window
+namespace BF
 {
-private:
-	static Window* _instance;
-	GLFWwindow* _window;
-	GLFWcursor* _cursor;
-	GLFWmonitor* _montor;
-	bool _exitWindow;
+	class Window
+	{
+	private:
+		static Window* _instance;
+		GLFWwindow* _window;
+		GLFWcursor* _cursor;
+		GLFWmonitor* _montor;
+		bool _exitWindow;
 
-	void UpdateInput();
-	bool Create();
+		void UpdateInput();
+		bool Create();
 
-public:
-	static Window* GetInstance();
+	public:
+		static Window* GetInstance();
 
-	Player* CurrentPlayer;
+		Player* CurrentPlayer;
 
-	Window(Player* player);
-	~Window();
+		Window(Player* player);
+		~Window();
 
-	// Window Utility	
-	void ResizeWindow(const int width, const int height);
-	void SetCursorTexture(std::string filePath);
-	void SetCursorMode(CursorMode mode);
-	void SetVideoRefreshRate(RefreshRateMode mode);
-	void SetWindowPosition(unsigned int x, unsigned int y);
-	void SetWindowPositionToCenter();
+		/*
+		Changed the size of this window.
 
-	PixelArray TakeScreenShot();
+		@param Width of this window.			
+		@param Height of this window.
+		*/
+		void Resize(const unsigned int width, const unsigned int height);
 
-	bool ShouldExit();
+		/*
+		Changed the cursor mode in this window.	
 
-	void Update();
-};
+		Default: The cursor is shown. 
+		Hidden: Useful when you are in playmode.
+
+		@param Mode of the cursor. Hide or show cursor.
+		*/
+		void SetCursorMode(CursorMode mode);
+
+		/*
+		Changed the cursor texture in this window.
+		if the Cursor is not hidden.
+
+		@param Texture of the cursor.
+		*/
+		void SetCursorTexture(Image* image);
+		
+		/*
+		Changed the title for this window.
+		The Text on top of this window.
+
+		@param The title.
+		*/
+		void SetVideoRefreshRate(RefreshRateMode mode);
+			
+		/*
+		Move this windows in the middle of the primary screen.
+		*/
+		void SetPositionToCenter();
+
+		/*
+		Move this window to a specific location.	
+
+		@param X Position
+		@param Y Position
+		*/
+		void SetPosition(unsigned int x, unsigned int y);
+
+		/*
+		Changed the title for this window.
+		The Text on top of this window.
+
+		@param The title.
+		*/
+		void SetTitle(std::string title);
+
+		/*
+		Changed the icon that is shown in the taskbar.
+
+		@param The image that will be used.
+		*/
+		void SetIcon(Image* image);
+
+		/*
+		Takes a picture of the curently rendered image.
+
+		@return Image of the current scene.
+		*/
+		Image* TakeScreenShot();
+
+		bool ShouldExit();
+
+		void Update();
+	};
+}

@@ -10,27 +10,30 @@
 #define TimeSpampType std::chrono::_V2::system_clock::time_point  
 #endif
 
-class StopWatch
+namespace BF
 {
-private: 
-	TimeSpampType _lastTimeStamp = std::chrono::high_resolution_clock::now();;
+	class StopWatch
+	{
+	private:
+		TimeSpampType _lastTimeStamp = std::chrono::high_resolution_clock::now();
 
-	double Duration;
-	
-	unsigned int TimeStampListSizeCurrent;
-	unsigned int TimeStampListSizeMaximal;
-	double* TimeStampList;
+		double Duration;
 
-	double CalulateDeltaTimeTime();
+		unsigned int TimeStampListSizeCurrent;
+		unsigned int TimeStampListSizeMaximal;
+		double* TimeStampList;
 
-public:
-	StopWatch();
-	StopWatch(const unsigned int amountOfTimeStamps);
+		double CalulateDeltaTimeTime();
 
-	~StopWatch();
+	public:
+		StopWatch();
+		StopWatch(const unsigned int amountOfTimeStamps);
 
-	void Start();
-	double Stop();
-	double TimeStamp();
-	double Reset();
-};
+		~StopWatch();
+
+		void Start();
+		double Stop();
+		double TimeStamp();
+		double Reset();
+	};
+}

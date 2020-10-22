@@ -1,12 +1,15 @@
 #pragma once
 
-enum class Direcion
+namespace BF
 {
-	Up,
-	Down,
-	Left,
-	Right,
+	enum class Direcion
+	{
+		Up,
+		Down,
+		Left,
+		Right,
 
-	Forward,
-	Backward
-};
+		Forward,
+		Backward
+	};
+}

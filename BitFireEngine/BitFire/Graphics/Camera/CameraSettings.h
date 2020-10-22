@@ -4,21 +4,24 @@
 
 #include "../../Configuration/RefreshRateMode.h"
 
-class CameraSettings
+namespace BF
 {
-public:
-	RefreshRateMode RefreshRate;
-	CameraMode Mode;
 
-	float FieldOfView;
-	float Height;
-	float Width;
-	float Near;
-	float Far;
+	class CameraSettings
+	{
+		public:
+		RefreshRateMode RefreshRate;
+		CameraMode Mode;
 
-	CameraSettings(const float height, const float width);
-	~CameraSettings();
+		float FieldOfView;
+		unsigned int Height;
+		unsigned int Width;
+		float Near;
+		float Far;
+		CameraSettings(const unsigned int height, const unsigned int width);
+		~CameraSettings();
 
-	float GetVieldOfViewY();
-	float GetAspectRatio();
-};
+		float GetVieldOfViewY();
+		float GetAspectRatio();
+	};
+}

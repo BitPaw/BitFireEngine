@@ -1,6 +1,6 @@
 #include "Rectangle.h"
 
-Rectangle::Rectangle() : Rectangle(Point(), Point(), Point(), Point())
+BF::Rectangle::Rectangle() : Rectangle(Point(), Point(), Point(), Point())
 {
 	const float x = 0.5f;
 	const float y = 0.25f;
@@ -11,7 +11,7 @@ Rectangle::Rectangle() : Rectangle(Point(), Point(), Point(), Point())
 	D = Point(-x, y);
 }
 
-Rectangle::Rectangle(Point a, Point b, Point c, Point d) : Shape(4)
+BF::Rectangle::Rectangle(Point a, Point b, Point c, Point d) : Shape(4)
 {
 	A = a;
 	B = b;

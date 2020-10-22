@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player()
+BF::Player::Player()
 {
 	Camera = FirstPersonCamera();
 }

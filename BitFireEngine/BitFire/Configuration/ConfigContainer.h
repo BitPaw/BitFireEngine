@@ -3,9 +3,13 @@
 #include "AudioConfig.h"
 #include "VideoConfig.h"
 
-class ConfigContainer
+namespace BF
 {
-public:
-	VideoConfig Video;
-	AudioConfig Audio;
-};
+
+	class ConfigContainer
+	{
+		public:
+		VideoConfig Video;
+		AudioConfig Audio;
+	};
+}

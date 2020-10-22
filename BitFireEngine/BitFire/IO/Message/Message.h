@@ -2,13 +2,16 @@
 
 #include <string>
 
-#include "MessagePriorityType.h"
+#include "MessageType.h"
 
-class Message
+namespace BF
 {
-public:
-	MessagePriorityType Priority;
-	std::string Content;
+	class Message
+	{
+	public:
+		MessageType Priority;
+		std::string Content;
 
-	Message(MessagePriorityType Priority, std::string Content);
-};
+		Message(MessageType Priority, std::string Content);
+	};
+}

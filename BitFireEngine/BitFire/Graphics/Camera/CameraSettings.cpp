@@ -1,6 +1,6 @@
 #include "CameraSettings.h"
 
-CameraSettings::CameraSettings(const float height, const float width)
+BF::CameraSettings::CameraSettings(const unsigned int height, const unsigned int width)
 {
 	RefreshRate = RefreshRateMode::VSync;
 	Mode = CameraMode::Orthographic;
@@ -13,17 +13,17 @@ CameraSettings::CameraSettings(const float height, const float width)
 	Far = -1;
 }
 
-CameraSettings::~CameraSettings()
+BF::CameraSettings::~CameraSettings()
 {
 	//delete RefreshRate;
 }
 
-float CameraSettings::GetVieldOfViewY()
+float BF::CameraSettings::GetVieldOfViewY()
 {
 	return FieldOfView / 2.0f;
 }
 
-float CameraSettings::GetAspectRatio()
+float BF::CameraSettings::GetAspectRatio()
 {
 	return Width / Height;
 }

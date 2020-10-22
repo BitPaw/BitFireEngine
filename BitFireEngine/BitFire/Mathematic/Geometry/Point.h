@@ -1,13 +1,15 @@
 #pragma once
 
-// [X | Y] Position in 2D-WorldSpace.
-struct Point
+namespace BF
 {
-public:
-	float X;
-	float Y;
+	// [X | Y] Position in 2D-WorldSpace.
+	struct Point
+	{
+		public:
+		float X;
+		float Y;
 
-	Point();
-	Point(const float x, const float y);
-};
-
+		Point();
+		Point(const float x, const float y);
+	};
+}

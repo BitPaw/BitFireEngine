@@ -1,51 +1,44 @@
-//-----------------------------------------------------------------------------
-#include "IO/Message/MessagerSystem.h"
+ //-----------------------------------------------------------------------------
+#include "IO/Message/MessageSystem.h"
 #include "OpenGL/OpenGLAPI.h"
 #include "Player/Player.h"
 
-#include "Graphics/Model/CubeModel.h"
 #include "Mathematic/Geometry/Vector/Vector3.h"
+
+#include "Resources/Model/ModelLoader.h"
+#include "Resources/Image/ImageLoader.h"
 //-----------------------------------------------------------------------------
 int main()
 {
-    MessagerSystem::PushMessage(MessagePriorityType::Notfication, "BitFire Engine: Starting");
+    BF::MessageSystem::PushMessage(BF::MessageType::Notfication, "BitFire Engine: Starting");
 
     // Paths for Shader & Object, Change this here...
-    std::string vertexShader = "BitFire/OpenGL/Shader/Files/VertexShader.vert";
-    std::string fragmentShader = "BitFire/OpenGL/Shader/Files/FragmentShader.frag";
-    std::string objectFilePath = "Dust II.obj";
+    std::string vertexShader = "A:/VertexShader.vert";
+    std::string fragmentShader = "A:/FragmentShader.frag";
+    std::string objectFilePath = "A:/Dust II.obj";
 
-    ShaderFile shaderfile(vertexShader, fragmentShader);
-    OpenGLAPI* openGL = OpenGLAPI::Instance();
-    Player player;  
+    BF::ShaderFile shaderfile(vertexShader, fragmentShader);
+    BF::OpenGLAPI* openGL = BF::OpenGLAPI::Instance();
+    BF::Player player;
 
     openGL->Initialize(&player);
     openGL->Render->AddShader(shaderfile);
-
+    
     try
-    {
-        BF::RenderModel triangle = BF::TriangleModel();
-        triangle.Move(BF::Vector3(1.5f, 5, -2));
+    {   
+        // Loads a texture
+        BF::IImage* image = BF::ImageLoader::LoadFromFile("A:/B.bmp");
 
-        BF::RenderModel rectangle = BF::RectangleModel();
-        rectangle.Move(BF::Vector3(-1.5f, 5, 0));
-
-        BF::RenderModel cube = BF::CubeModel();
-        cube.Move(BF::Vector3(1.5f, 5, 5));
-
-        if (FileLoader::DoesFileExist(objectFilePath))
-        {
-            BF::RenderModel dust;
-            BF::WaveFront dustObject = BF::WaveFrontLoader::LoadFromFile(objectFilePath);
-            dust.LoadFromWaveFront(dustObject);
-            dust.ReSize(BF::Vector3(0.005f, 0.005f, 0.005f));
-            dust.Move(BF::Vector3(0, -1, 2));
-        }       
+        // Load a object
+        BF::IModel* country = BF::ModelLoader::LoadFromFile(objectFilePath);
+        country->Scale(BF::Vector3(0.02, 0.02, 0.02));
+        country->MoveBy(BF::Vector3(-10, -2, 0));
         
+        openGL->MainWindow->SetCursorTexture((BF::Image*)image);
+        openGL->MainWindow->SetIcon((BF::Image*)image);
+
         while (!openGL->ShouldExit())
         {           
-            triangle.Rotate(BF::Vector3(0, 0.01f,0));
-
             openGL->Update();
         }
     }
@@ -53,14 +46,14 @@ int main()
     {
         const char* message = e.what();
 
-        MessagerSystem::PushMessage(MessagePriorityType::Error, message);
+        BF::MessageSystem::PushMessage(BF::MessageType::Error, message);
 
         e.~exception();
 
         return 1;
     }
 
-    MessagerSystem::PushMessage(MessagePriorityType::Notfication, "BitFire Engine : Closing");
+    BF::MessageSystem::PushMessage(BF::MessageType::Notfication, "BitFire Engine : Closing");
      
     return 0;
 }

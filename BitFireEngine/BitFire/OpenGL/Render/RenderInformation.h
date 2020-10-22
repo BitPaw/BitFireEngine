@@ -1,21 +1,40 @@
 #pragma once
 
-#include "../../Graphics/RenderModel.h"
+#include "VertexDataCache.h"
+#include "IndexDataCache.h"
 
-struct RenderInformation
+#include "../../Resources/Model/Model.h"
+
+namespace BF
 {
-public:
-	BF::RenderModel* Model;
-	unsigned int RenderID;
-	bool ShouldItBeRendered;
+	class RenderInformation
+	{
+	public:
+		Model* Model;
+		unsigned int RenderID;
+		bool ShouldItBeRendered;
 
-	unsigned int VertexDataPosition;
-	unsigned int VertexDataLength;
+		unsigned int ShaderID;		
 
-	unsigned int IndiceIndex;
-	unsigned int IndiceIndexLength;
+		unsigned int VertexDataPosition;
+		unsigned int VertexDataLength;
 
-	unsigned int IndexOffset;
+		unsigned int IndiceIndex;
+		unsigned int IndiceIndexLength;
 
-	RenderInformation();
-};
+		unsigned int IndexOffset;
+
+		// Data
+		unsigned int VertexArrayID = -1;
+
+		unsigned int FaceModelOffset = 0;		
+
+		unsigned int IndexBufferID = -1;
+		unsigned int VertexBufferID = -1;
+
+		VertexDataCache VertexData;
+		IndexDataCache IndexData;
+
+		RenderInformation();
+	};
+}

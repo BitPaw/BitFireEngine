@@ -1,5 +1,9 @@
 #pragma once
-class Icosahedron
-{
-};
 
+namespace BF
+{
+	class Icosahedron
+	{
+
+	};
+}

@@ -9,17 +9,17 @@
         .comp - a compute shader
 */
 
-ShaderFile::ShaderFile()
+BF::ShaderFile::ShaderFile()
 {
 
 }
 
-ShaderFile::ShaderFile(std::string vertexShaderPath, std::string fragmentShaderPath)
+BF::ShaderFile::ShaderFile(std::string vertexShaderPath, std::string fragmentShaderPath)
 {
     LoadShader(vertexShaderPath, fragmentShaderPath);
 }
 
-void ShaderFile::LoadShader(std::string vertexShaderPath, std::string fragmentShaderPath)
+void BF::ShaderFile::LoadShader(std::string vertexShaderPath, std::string fragmentShaderPath)
 {
     VertexShader = FileLoader::ReadTextFile(vertexShaderPath);
     FragmentShader = FileLoader::ReadTextFile(fragmentShaderPath);
