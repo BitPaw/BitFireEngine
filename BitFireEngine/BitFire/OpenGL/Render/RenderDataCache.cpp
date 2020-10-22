@@ -7,7 +7,7 @@ BF::RenderInformation* BF::RenderDataCache::GetRenderInformation(Model* renderMo
     for (unsigned int i = 0; i < _renderObjectCounter; i++)
     {
         RenderInformation* targetRenderInformation = &_renderInformationCache[i];
-        bool isSameObject = targetRenderInformation->Model->ModelID == renderModel->ModelID;
+        bool isSameObject = targetRenderInformation->RenderModel->ModelID == renderModel->ModelID;
 
         if (isSameObject)
         {
@@ -40,9 +40,9 @@ void BF::RenderDataCache::Update(RenderInformation* renderInformation)
     Position* normal = nullptr;
     Point* texture = nullptr;
 
-    Model* renderModel = renderInformation->Model;
+    Model* renderModel = renderInformation->RenderModel;
 
-    LinkedMesh* mesh = &renderInformation->Model->GlobalMesh;
+    LinkedMesh* mesh = &renderInformation->RenderModel->GlobalMesh;
     List<MeshIndexData*>* indiceData = &mesh->IndexList;
    
     unsigned int dataIndex = renderInformation->VertexDataPosition;
@@ -50,7 +50,7 @@ void BF::RenderDataCache::Update(RenderInformation* renderInformation)
 
     //printf("Update: <%p> <%.2u> %s\n", renderInformation, renderInformation->RenderID, renderInformation->Model->ModelName.c_str());
 
-    if (renderInformation->Model->ModelName == "")
+    if (renderInformation->RenderModel->ModelName == "")
     {
         //printf("YEET\n");
         return;
@@ -190,7 +190,7 @@ void BF::RenderDataCache::UpdateDataLink(Model* renderModel)
         renderInformation = &_renderInformationCache[_renderObjectCounter];       
         renderInformation->RenderID = _renderObjectCounter++;
         renderInformation->ShouldItBeRendered = true;
-        renderInformation->Model = renderModel;
+        renderInformation->RenderModel = renderModel;
 
 
         renderInformation->IndexOffset = renderInformation->FaceModelOffset;

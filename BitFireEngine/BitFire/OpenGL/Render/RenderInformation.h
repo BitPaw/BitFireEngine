@@ -10,7 +10,7 @@ namespace BF
 	class RenderInformation
 	{
 	public:
-		Model* Model;
+		Model* RenderModel;
 		unsigned int RenderID;
 		bool ShouldItBeRendered;
 

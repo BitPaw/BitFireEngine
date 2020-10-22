@@ -2,7 +2,7 @@
 
 BF::RenderInformation::RenderInformation()
 {
-	Model = nullptr;
+	RenderModel = nullptr;
 	RenderID = -1;
 	ShouldItBeRendered = false;
 

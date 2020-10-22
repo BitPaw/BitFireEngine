@@ -13,9 +13,9 @@ int main()
     BF::MessageSystem::PushMessage(BF::MessageType::Notfication, "BitFire Engine: Starting");
 
     // Paths for Shader & Object, Change this here...
-    std::string vertexShader = "A:/VertexShader.vert";
-    std::string fragmentShader = "A:/FragmentShader.frag";
-    std::string objectFilePath = "A:/Dust II.obj";
+    std::string vertexShader = "VertexShader.vert";
+    std::string fragmentShader = "FragmentShader.frag";
+    std::string objectFilePath = "Dust II.obj";
 
     BF::ShaderFile shaderfile(vertexShader, fragmentShader);
     BF::OpenGLAPI* openGL = BF::OpenGLAPI::Instance();
@@ -27,7 +27,7 @@ int main()
     try
     {   
         // Loads a texture
-        BF::IImage* image = BF::ImageLoader::LoadFromFile("A:/B.bmp");
+        BF::IImage* image = BF::ImageLoader::LoadFromFile("B.bmp");
 
         // Load a object
         BF::IModel* country = BF::ModelLoader::LoadFromFile(objectFilePath);
