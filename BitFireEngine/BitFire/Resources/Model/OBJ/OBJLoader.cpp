@@ -1,106 +1,34 @@
 ﻿#include "OBJLoader.h"
-#include "MTL/MTL.h"
-#include "MTL/MTLLoader.h"
 
-BF::Position BF::OBJLoader::ParsePositionLine(std::string& line)
-{
-    StringSplitter ss = StringSplitter::Split(line, ' ');
-
-    float x = std::stof(ss.Lines[1]);
-    float y = std::stof(ss.Lines[2]);
-    float z = std::stof(ss.Lines[3]);
-
-    Position position(x, y, z);
-
-    ss.Lines.DeleteAll();
-
-    return position;
-}
-
-BF::Point BF::OBJLoader::ParsePointLine(std::string& line)
-{
-    StringSplitter ss = StringSplitter::Split(line, ' ');
-
-    float x = std::stof(ss.Lines[1]);
-    float y = std::stof(ss.Lines[2]);
-
-    Point point(x, y);
-
-    ss.Lines.DeleteAll();
-
-    return point;
-}
-
-BF::List<BF::IndexPosition> BF::OBJLoader::ParseFaceLine(std::string& line)
-{
-    StringSplitter ss = StringSplitter::Split(line, ' ');
-    List<IndexPosition> indexPositions;
-    unsigned int dynamicIndex = 0;
-
-    indexPositions.ReSize(3);
-
-    for (unsigned int i = 1; i < 4; i++)
-    {
-        StringSplitter aa = StringSplitter::Split(ss.Lines[i], '/');
-        std::string xValue, yValue, zValue;
-
-        unsigned int x = -1;
-        unsigned int y = -1;
-        unsigned int z = -1;
-
-        // Possiple error if char is '/'
-        xValue = aa.Lines[0];
-        yValue = aa.Lines[1];
-
-        x = std::stoi(xValue);
-        y = std::stoi(yValue);
-
-        if (aa.Lines.Size.Value >= 3)
-        {
-            zValue = aa.Lines[2];
-            z = std::stoi(zValue);
-        }
-
-        indexPositions[dynamicIndex++] = IndexPosition(x, y, z);
-
-        aa.Lines.DeleteAll();
-    }
-
-    ss.Lines.DeleteAll();
-
-    return indexPositions;
-}
-
-BF::OBJ* BF::OBJLoader::LoadFromFile(std::string filePath)
+BF::OBJ* BF::OBJLoader::LoadFromFile(ASCIIString filePath)
 {
     StopWatch stopWatch;
     OBJ* waveFront = new OBJ();
-    List<OBJLineCommand> commandList;
+    bool isFirstVertex = true;   
 
     stopWatch.Start();
 
-    TextFile textFIle = FileLoader::ReadTextFile(filePath, true);
-    unsigned int numberOfLines = textFIle.Lines.Size.Value;
-    bool isFirstVertex = true;
+    TextFile textFile(filePath);
+    FileLoader::ReadTextFile(textFile, true);
+    unsigned int numberOfLines = textFile.Lines.Size();
+    List<OBJLineCommand> commandList(numberOfLines);
 
-    waveFront->Name = textFIle.FileName;
+    //waveFront->Name.Copy(textFile.FileName);
 
-    printf("  Loading File : %lf\n", stopWatch.Reset());   
-
-   commandList.ReSize(numberOfLines);
+    printf("  Loading File  : %lf\n", stopWatch.Reset());   
 
    // Translate to enum commands
    {
        bool usedFacesBefore = false;
        bool newMeshKey = false;
-
-       waveFront->ElementList.Size.Value = 1; // We will have at least one mesh.
-
+       bool checkedRenderType = false;
+       unsigned int elementListSize = 1; // We will have at least one mesh.
+    
        for (unsigned int lineIndex = 0; lineIndex < numberOfLines; lineIndex++)
        {
            OBJLineCommand* currentCommand = &commandList[lineIndex];
-           std::string* line = &textFIle.Lines[lineIndex];
-           unsigned int functionChar = (*line).length() <= 0 ? _characterNone : (*line)[0];
+           ASCIIString* line = &textFile.Lines[lineIndex];
+           unsigned int functionChar = (line->Size() <= 0 ? _characterNone : (*line)[0]);
 
            switch (functionChar)
            {
@@ -135,6 +63,14 @@ BF::OBJ* BF::OBJLoader::LoadFromFile(std::string filePath)
                case _characterFace:
                    *currentCommand = OBJLineCommand::FaceElement;
                    usedFacesBefore = true;
+
+                   if (!checkedRenderType)
+                   {
+                       waveFront->VertexStructureSize = line->Count('/') / 2;
+
+                       checkedRenderType = true;
+                   }
+
                    break;
 
                case _characterVertex:
@@ -179,11 +115,11 @@ BF::OBJ* BF::OBJLoader::LoadFromFile(std::string filePath)
            if (newMeshKey)
            {
                newMeshKey = false;
-               waveFront->ElementList.Size.Value++;
+               elementListSize++;
            }
        }
 
-       waveFront->ElementList.ReSize();
+       waveFront->ElementList.ReSize(elementListSize-1);
    }       
 
    printf("  Command lookup: %lf\n", stopWatch.Reset());
@@ -195,6 +131,12 @@ BF::OBJ* BF::OBJLoader::LoadFromFile(std::string filePath)
 
         unsigned int elementIndex = 0;
         unsigned int materialsCounter = 0;
+
+        unsigned int vertexPositionListSize = 0;
+        unsigned int textureCoordinateListSize = 0;
+        unsigned int vertexNormalPositionListSize = 0;
+        unsigned int vertexParameterListSize = 0;
+        unsigned int faceElementListSize = 0;
 
         OBJElement* elemtent = &waveFront->ElementList[elementIndex++];
 
@@ -235,57 +177,63 @@ BF::OBJ* BF::OBJLoader::LoadFromFile(std::string filePath)
                     break;
 
                 case OBJLineCommand::VertexGeometric:
-                    elemtent->VertexPositionList.Size.Value++;
+                    vertexPositionListSize++;
                     break;
 
                 case OBJLineCommand::VertexTexture:
-                    elemtent->TextureCoordinateList.Size.Value++;
+                    textureCoordinateListSize++;
                     break;
 
                 case OBJLineCommand::VertexNormal:
-                    elemtent->VertexNormalPositionList.Size.Value++;
+                    vertexNormalPositionListSize++;
                     break;
 
                 case OBJLineCommand::VertexParameter:
-                    elemtent->VertexParameterList.Size.Value++;
+                    vertexParameterListSize++;
                     break;
 
                 case OBJLineCommand::SmoothShading:
                     break;
 
                 case OBJLineCommand::FaceElement:
-                    elemtent->FaceElementList.Size.Value++;
+                    faceElementListSize++;
 
                     usedFacesBefore = true;
                     break;
             }
 
-            if (newMeshKey && (elementIndex <= waveFront->ElementList.Size.Value))
+            if (newMeshKey && (elementIndex <= waveFront->ElementList.Size()))
             {
                 newMeshKey = false;
 
-                elemtent->FaceElementList.Size.Value *= 3;
+                faceElementListSize *= 3;
 
-                elemtent->VertexPositionList.ReSize();
-                elemtent->TextureCoordinateList.ReSize();
-                elemtent->VertexNormalPositionList.ReSize();
-                elemtent->VertexParameterList.ReSize();
-                elemtent->FaceElementList.ReSize();
-
+                elemtent->VertexPositionList.ReSize(vertexPositionListSize);
+                elemtent->TextureCoordinateList.ReSize(textureCoordinateListSize);
+                elemtent->VertexNormalPositionList.ReSize(vertexNormalPositionListSize);
+                elemtent->VertexParameterList.ReSize(vertexParameterListSize);
+                elemtent->FaceElementList.ReSize(faceElementListSize);
 
                 elemtent = &waveFront->ElementList[elementIndex++];
+
+                vertexPositionListSize = 0;
+                textureCoordinateListSize = 0;
+                vertexNormalPositionListSize = 0;
+                vertexParameterListSize = 0;
+                faceElementListSize = 0;
             }
         }
 
         // Register Memory
         {
-            elemtent->FaceElementList.Size.Value *= 3;
 
-            elemtent->VertexPositionList.ReSize();
-            elemtent->TextureCoordinateList.ReSize();
-            elemtent->VertexNormalPositionList.ReSize();
-            elemtent->VertexParameterList.ReSize();
-            elemtent->FaceElementList.ReSize();
+            faceElementListSize *= waveFront->VertexStructureSize;                   
+
+            elemtent->VertexPositionList.ReSize(vertexPositionListSize);
+            elemtent->TextureCoordinateList.ReSize(textureCoordinateListSize);
+            elemtent->VertexNormalPositionList.ReSize(vertexNormalPositionListSize);
+            elemtent->VertexParameterList.ReSize(vertexParameterListSize);
+            elemtent->FaceElementList.ReSize(faceElementListSize);
 
             waveFront->Materials.ReSize(materialsCounter);
         }    
@@ -306,13 +254,24 @@ BF::OBJ* BF::OBJLoader::LoadFromFile(std::string filePath)
         unsigned int currentFaceElement = 0;
         unsigned int materialIndex = 0;
         OBJElement* elemtent = &waveFront->ElementList[elementIndex++];
+        //List<Position<unsigned int>> indexPositionCache(waveFront->VertexStructureSize); // 36 Byte alloc
+        unsigned int faceStructureSize = waveFront->VertexStructureSize;
+
+
+        printf("Struc´tursize <%u>\n", faceStructureSize);
+        List<ASCIIString> faceTextCache(faceStructureSize);
+        List<ASCIIString> dupTextCache(2);
+        List<ASCIIString> trippelTextCache(3); // X, Y [28 Byte alloc]
+        List<ASCIIString> quadTextCache(4); // v X, Y, Z [36 Byte alloc]
+        Position<float>* currentVectorValue;       
 
         // Parse
         for (unsigned int lineIndex = 0; lineIndex < numberOfLines; lineIndex++)
         {
-            std::string* line = &textFIle.Lines[lineIndex];
+            ASCIIString* line = &textFile.Lines[lineIndex];
+            OBJLineCommand command = commandList[lineIndex];
 
-            switch (commandList[lineIndex])
+            switch (command)
             {
                 case OBJLineCommand::Invalid:
                     break;
@@ -326,55 +285,64 @@ BF::OBJ* BF::OBJLoader::LoadFromFile(std::string filePath)
                 case OBJLineCommand::MaterialLibraryInclude:
                 {
                     try
-                    {
-                        StringSplitter ss = StringSplitter::Split(*line, ' ');
-                        std::string mtlfilePath = ss.Lines[1];
+                    {                 
+                        line->Splitt(' ', trippelTextCache);
+
+                        ASCIIString& mtlfilePath = trippelTextCache[1]; //[20 Byte]
 
                         // Merge File Path
+                        
+                        int position = filePath.FindFirst('/');
+                        bool hasSlash = position != -1;
+
+                        if (hasSlash)
                         {
-                            int position = filePath.find_first_of("/");
-                            bool hasSlash = position != -1;
+                            //ASCIIString rootFolder;
 
-                            if (hasSlash)
-                            {
-                                std::string rootFolder = filePath.substr(0, position);
+                            //filePath.Cut(position, rootFolder);
 
-                                mtlfilePath = rootFolder + "/" + mtlfilePath;
-                            }
-                        }
+                            // mtlfilePath.Copy(rootFolder + "/" + mtlfilePath);
+                        }                        
 
-                        MTL* materialFile = MTLLoader::LoadFromFile(mtlfilePath);
+                        bool doesFileExist = FileLoader::DoesFileExist(mtlfilePath);
 
-                        waveFront->Materials[materialIndex++] = *materialFile;
+                        if (doesFileExist)
+                        {
+                            MTL* materialFile = MTLLoader::LoadFromFile(mtlfilePath);
+
+                            waveFront->Materials[materialIndex++] = *materialFile;
+                        }                      
 
                         //delete materialFile;
                     }
-                    catch (const std::exception&)
+                    catch (FileNotFound fileNotFound)
                     {
-                        MessageSystem::PushMessage(MessageType::Error, "Could not load File");
+                        printf("[!] Could not load File @ %s\n", fileNotFound.FilePath);
+                        //Log::Write(LogMessageType::Warning, "Could not load File");
                     }    
                 }
                 break;
 
                 case OBJLineCommand::MaterialLibraryUse:
                 {
-                    StringSplitter ss = StringSplitter::Split(*line, ' ');
-                    std::string materialName = ss.Lines[1];
+                   
+                    line->Splitt(' ', dupTextCache);
+                    ASCIIString& materialName = line[1];
                     unsigned int materialID = -1;
 
-                    for (unsigned int i = 0; i < waveFront->Materials.Size.Value; i++)
+                    for (unsigned int i = 0; i < waveFront->Materials.Size(); i++)
                     {
                         MTL* mtl = &waveFront->Materials[i];
 
-                        for (unsigned int j = 0; j < mtl->MaterialList.Size.Value; j++)
+                        for (unsigned int j = 0; j < mtl->MaterialList.Size(); j++)
                         {
                             Material* material = &mtl->MaterialList[j];
 
-                            if (material->Name == materialName)
+                            if (material->Name.Compare(materialName))
                             {
                                 materialID = j;
-                                j = 9999999;
-                                i = 9999999;
+                                j = -1;
+                                i = -1;
 
                                 //printf("%s == %s >> %i\n", material->Name.c_str(), materialName.c_str(), materialID);
                                 //break;
@@ -395,7 +363,7 @@ BF::OBJ* BF::OBJLoader::LoadFromFile(std::string filePath)
              
 
                 case OBJLineCommand::ObjectName:
-                    elemtent->Name = (*line).substr(2);
+                     line->Cut(2, elemtent->Name);
 
                     if (usedFacesBefore)
                     {
@@ -403,35 +371,74 @@ BF::OBJ* BF::OBJLoader::LoadFromFile(std::string filePath)
                         newMeshKey = true;
                     }
                     break;
-
+                    
+            
+                case OBJLineCommand::VertexParameter:
+                case OBJLineCommand::VertexNormal:                 
                 case OBJLineCommand::VertexGeometric:
-                    elemtent->VertexPositionList[currentPositionElement++] = ParsePositionLine(*line);
+                {
+                    switch (command)
+                    {
+                    case OBJLineCommand::VertexParameter:
+                        currentVectorValue = &elemtent->VertexParameterList[currentParameterElement++];
+                        break;
+
+                    case OBJLineCommand::VertexNormal:
+                        currentVectorValue = &elemtent->VertexNormalPositionList[currentNormalElement++];
+                        break;
+
+                    case OBJLineCommand::VertexGeometric:
+                        currentVectorValue = &elemtent->VertexPositionList[currentPositionElement++];
+                        break;
+
+                    default:
+                        throw "Error";
+                    }
+
+                    line->Splitt(' ', quadTextCache);
+
+                    currentVectorValue->Set
+                    (
+                        quadTextCache[1].ToFloat(), // X
+                        quadTextCache[2].ToFloat(), // Y
+                        quadTextCache[3].ToFloat() // Z
+                    );
+                }
                     break;
 
                 case OBJLineCommand::VertexTexture:
-                    elemtent->TextureCoordinateList[currentTextureElement++] = ParsePointLine(*line);
-                    break;
+                {
+                    Point<float>& point = elemtent->TextureCoordinateList[currentTextureElement++];
+               
+                    line->Splitt(' ', trippelTextCache);
 
-                case OBJLineCommand::VertexNormal:
-                    elemtent->VertexNormalPositionList[currentNormalElement++] = ParsePositionLine(*line);
+                    point.Set
+                    (
+                        trippelTextCache[1].ToFloat(),
+                        trippelTextCache[2].ToFloat()
+                    );
+                }                     
                     break;
-
-                case OBJLineCommand::VertexParameter:
-                    elemtent->VertexParameterList[currentParameterElement++] = ParsePositionLine(*line);
-                    break;
+      
 
                 case OBJLineCommand::SmoothShading:
                     break;
 
-                case OBJLineCommand::FaceElement:
-                    List<IndexPosition> indexPosition = ParseFaceLine(*line);
+                case OBJLineCommand::FaceElement:                    
+                    line->Splitt(' ', faceTextCache);
 
-                    for (unsigned int i = 0; i < indexPosition.Size.Value; i++)
+                    for (unsigned int i = 1; i <= faceStructureSize; i++)
                     {
-                        elemtent->FaceElementList[currentFaceElement++] = indexPosition[i];
-                    }
+                        faceTextCache[i].Splitt('/', trippelTextCache);
+                        // Possiple error if char is '/'
 
-                    indexPosition.DeleteAll();
+                        elemtent->FaceElementList[currentFaceElement++].Set
+                        (
+                            trippelTextCache[0].ToInt(),
+                            trippelTextCache[1].ToInt(),
+                            trippelTextCache[2].ToInt()
+                        );
+                    }
 
                     usedFacesBefore = true;
 
@@ -455,356 +462,51 @@ BF::OBJ* BF::OBJLoader::LoadFromFile(std::string filePath)
 
     printf("  Exact Parse   : %lf\n", stopWatch.Reset());
 
-    //PrintObjectDataToConsole(*waveFront);
-
     return waveFront;
 }
 
-void BF::OBJLoader::SaveToFile(std::string filePath, BF::OBJ& waveFont)
+void BF::OBJLoader::SaveToFile(ASCIIString filePath, BF::OBJ& waveFont)
 {
 
 }
 
 void BF::OBJLoader::PrintObjectDataToConsole(BF::OBJ& waveFont)
 {
-    printf("\n[=====================]\n");
-    printf("  [Object: %s]\n", waveFont.Name.c_str());
+    printf(" +-------+-------+-------+-------+-------+-------\n");
+    printf(" | Object: %s\n", &waveFont.Name[0]);
+    printf(" +-------+-------+-------+-------+-------+-------\n");
+    printf(" | %5s | %5s | %5s | %5s | %5s | %s\n", "Vert", "Norm", "Text", "Para", "Face", "Name");
+    printf(" +-------+-------+-------+-------+-------+-------\n");
 
-    for (unsigned int i = 0; i < waveFont.ElementList.Size.Value; i++)
+    for (unsigned int i = 0; i < waveFont.ElementList.Size(); i++)
     {
         OBJElement* waveFrontElement = &waveFont.ElementList[i];
 
-        unsigned int sizePos = waveFrontElement->VertexPositionList.Size.Value;
-        unsigned int sizeNormal = waveFrontElement->VertexNormalPositionList.Size.Value;
-        unsigned int sizeText = waveFrontElement->TextureCoordinateList.Size.Value;
-        unsigned int sizePara = waveFrontElement->VertexParameterList.Size.Value;
-        unsigned int sizeFace = waveFrontElement->FaceElementList.Size.Value;
+        unsigned int sizePos = waveFrontElement->VertexPositionList.Size();
+        unsigned int sizeNormal = waveFrontElement->VertexNormalPositionList.Size();
+        unsigned int sizeText = waveFrontElement->TextureCoordinateList.Size();
+        unsigned int sizePara = waveFrontElement->VertexParameterList.Size();
+        unsigned int sizeFace = waveFrontElement->FaceElementList.Size();
 
-        if (i + 1 >= waveFont.ElementList.Size.Value)
-        {
-            printf("  |-<Element %u : %4s>\n", i, waveFrontElement->Name.c_str());
-            if (sizePos == 0)
-            {
-                printf("    |-<V   : %4s>\n", "---");
-            }
-            else
-            {
-                printf("    |-<V   : %4u>\n", sizePos);
-            }
-
-            if (sizeNormal == 0)
-            {
-                printf("    |-<VN  : %4s>\n", "---");
-            }
-            else
-            {
-                printf("    |-<VN  : %4u>\n", sizeNormal);
-            }
-
-            if (sizeText == 0)
-            {
-                printf("    |-<VT  : %4s>\n", "---");
-            }
-            else
-            {
-                printf("    |-<VT  : %4u>\n", sizeText);
-            }
-
-            if (sizePara == 0)
-            {
-                printf("    |-<VP  : %4s>\n", "---");
-            }
-            else
-            {
-                printf("    |-<VP : %4u>\n", sizePara);
-            }
-
-            if (sizeFace == 0)
-            {
-                printf("    |-<F   : %4s>\n", "---");
-            }
-            else
-            {
-                printf("    ^-<F   : %4u>\n", sizeFace);
-            }
-
-        }
-        else
-        {
-            printf("  |-<Element %u : %4s>\n", i, waveFrontElement->Name.c_str());
-            if (sizePos == 0)
-            {
-                printf("  | |-<V   : %4s>\n", "---");
-            }
-            else
-            {
-                printf("  | |-<V   : %4u>\n", sizePos);
-            }
-
-            if (sizeNormal == 0)
-            {
-                printf("  | |-< VN  : %4s>\n", "---");
-            }
-            else
-            {
-                printf("  | |-<VN  : %4u>\n", sizeNormal);
-            }
-
-            if (sizeText == 0)
-            {
-                printf("  | |-<VT  : %4s>\n", "---");
-            }
-            else
-            {
-                printf("  | |-<VT  : %4u>\n", sizeText);
-            }
-
-            if (sizePara == 0)
-            {
-                printf("  | |-<VP  : %4s>\n", "---");
-            }
-            else
-            {
-                printf("  | |-<VP : %4u>\n", sizePara);
-            }
-
-            if (sizeFace == 0)
-            {
-                printf("  | |-<F   : %4s>\n", "---");
-            }
-            else
-            {
-                printf("  | ^-<F   : %4u>\n", sizeFace);
-            }
-        }
+        printf(" | %5u | %5u | %5u | %5u | %5u | %s\n", sizePos, sizeNormal, sizeText, sizePara, sizeFace, &waveFrontElement->Name[0]);
     }
 
-    printf("[---------------------]\n\n");
-
-    for (unsigned int i = 0; i < waveFont.Materials.Size.Value; i++)
+    printf(" +-------+-------+-------+-------+-------+-------\n");
+        
+    for (unsigned int i = 0; i < waveFont.Materials.Size(); i++)
     {
         MTL* mtl = &waveFont.Materials[i];
 
-        for (unsigned int j = 0; j < mtl->MaterialList.Size.Value; j++)
+        for (unsigned int j = 0; j < mtl->MaterialList.Size(); j++)
         {
             Material* material = &mtl->MaterialList[j];
 
-            printf(" Material: %s\n", material->Name.c_str());
+            printf(" Material: %s\n", &material->Name[0]);
             printf(" - Ambient  [%4.4f|%4.4f|%4.4f]\n", material->Ambient.X, material->Ambient.Y, material->Ambient.Z);
             printf(" - Diffuse  [%4.4f|%4.4f|%4.4f]\n", material->Diffuse.X, material->Ambient.Y, material->Ambient.Z);
             printf(" - Specular [%4.4f|%4.4f|%4.4f]\n", material->Specular.X, material->Ambient.Y, material->Ambient.Z);
         }
+
+        printf(" +-------+-------+-------+-------+-------+-------\n");
     }
-
-    printf("[=====================]\n\n");
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-WaveFront WaveFrontLoader::LoadFromFile(std::string filePath)
-{
-    WaveFront waveFront;
-    TextFile textFIle = FileLoader::ReadTextFile(filePath);
-    textFIle.SplitContentIntoLines();
-
-    unsigned int numberOfLines = textFIle.AmountOfLines;
-
-    WaveFrontLineCommand* commandList = new WaveFrontLineCommand[numberOfLines];
-
-    // Loose Parese
-    {
-        unsigned int vertexPositionCounter = 0;
-        unsigned int vertexTextureCounter = 0;
-        unsigned int vertexNormalCounter = 0;
-        unsigned int vertexParameterCounter = 0;
-        unsigned int faceCounter = 0;
-        WaveFrontLineCommand* currentCommand;
-        std::string* line;
-        char functionChar;
-
-        for (unsigned int i = 0; i < numberOfLines; i++)
-        {
-            currentCommand = &commandList[i];
-            line = &textFIle.Lines[i];
-
-            functionChar = (*line)[0];
-
-            //char functionChar = line.length() <= 0 ? _characterNone : line.at(0);
-
-            // Parse Command
-            switch (functionChar)
-            {
-            case _characterComment:
-            {
-                *currentCommand = WaveFrontLineCommand::Comment;
-                break;
-            }
-
-
-            case _characterObjectName:
-            {
-                *currentCommand = WaveFrontLineCommand::ObjectName;
-                break;
-            }
-
-
-            case _characterSmoothShading:
-            {
-                *currentCommand = WaveFrontLineCommand::SmoothShading;
-                break;
-            }
-
-
-            case _characterFace:
-            {
-                *currentCommand = WaveFrontLineCommand::Face;
-                faceCounter++;
-                break;
-            }
-
-            case _characterVertex:
-            {
-                functionChar = (*line)[1];
-
-                switch (functionChar)
-                {
-                case _characterNone:
-                {
-                    *currentCommand = WaveFrontLineCommand::VertexGeometric;
-                    vertexPositionCounter++;
-                    break;
-                }
-
-
-                case _characterVertexTexture:
-                {
-                    *currentCommand = WaveFrontLineCommand::VertexTexture;
-                    vertexTextureCounter++;
-                    break;
-                }
-
-
-                case _characterVertexNormal:
-                {
-                    *currentCommand = WaveFrontLineCommand::VertexNormal;
-                    vertexNormalCounter++;
-                    break;
-                }
-
-                case _characterParameter:
-                {
-                    *currentCommand = WaveFrontLineCommand::VertexParameter;
-                    vertexParameterCounter++;
-                    break;
-                }
-
-                default:
-                {
-                    *currentCommand = WaveFrontLineCommand::Invalid;
-                    break;
-                }
-                }
-
-                break;
-            }
-
-            default:
-            {
-                *currentCommand = WaveFrontLineCommand::None;
-                break;
-            }
-
-            }
-        }
-
-        // Reserve
-        waveFront.VectorPositions.reserve(vertexPositionCounter);
-        waveFront.VectorNormalPositions.reserve(vertexNormalCounter);
-        waveFront.TextureCoordinates.reserve(vertexTextureCounter);
-        waveFront.VectorParameter.reserve(vertexParameterCounter);
-        waveFront.FaceElements.reserve(faceCounter);
-    }
-
-    // Fill Data
-    for (unsigned int i = 0; i < textFIle.AmountOfLines; i++)
-    {
-        std::string line = textFIle.Lines[i];
-
-        switch (commandList[i])
-        {
-
-        case WaveFrontLineCommand::VertexGeometric:
-        {
-            waveFront.VectorPositions.push_back(ParsePositionLine(line));
-            break;
-        }
-
-        case WaveFrontLineCommand::VertexTexture:
-        {
-            waveFront.TextureCoordinates.push_back(ParsePointLine(line));
-            break;
-        }
-
-        case WaveFrontLineCommand::VertexNormal:
-        {
-            waveFront.VectorNormalPositions.push_back(ParsePositionLine(line));
-            break;
-        }
-
-        case WaveFrontLineCommand::VertexParameter:
-        {
-            waveFront.VectorParameter.push_back(ParsePositionLine(line));
-            break;
-        }
-
-        case WaveFrontLineCommand::Face:
-        {
-            std::vector<IndexPosition> indexPosition = ParseFaceLine(line);
-
-            for (size_t i = 0; i < indexPosition.size(); i++)
-            {
-                waveFront.FaceElements.push_back(indexPosition.at(i));
-            }
-
-            break;
-        }
-
-        case WaveFrontLineCommand::ObjectName:
-        {
-            waveFront.Name = line.substr(2);
-            break;
-        }
-
-        default:
-        {
-            // Do nothing
-            break;
-        }
-
-        }
-    }
-
-    delete[] commandList;
-
-    PrintObjectDataToConsole(waveFront);
-
-    return waveFront;
-}
-*/
+}  

@@ -1,8 +1,8 @@
 #include "FileLoader.h"
 
-std::string BF::FileLoader::ReadCompleteFile(const std::string filePath)
+void BF::FileLoader::ReadCompleteFile(ASCIIString& filePath, ASCIIString& fileContent)
 {
-    if (filePath.empty())
+    if (filePath.Empty())
     {
         throw EmptyFileName();
     }
@@ -11,23 +11,20 @@ std::string BF::FileLoader::ReadCompleteFile(const std::string filePath)
     {
         throw FileNotFound(filePath);
     }
-
-    std::ifstream file(filePath);
-    std::string fileContent;
-
+    
+    std::ifstream file(&filePath[0]);
     std::stringstream buffer;
+   
     buffer << file.rdbuf();
 
-    fileContent = buffer.str();
+    fileContent.Copy(buffer.str().c_str());
 
     file.close();
-
-    return fileContent;
 }
 
-BF::List<std::string> BF::FileLoader::ReadFileByLines(const std::string filePath)
+void BF::FileLoader::ReadFileByLines(ASCIIString& filePath, List<ASCIIString>& stringList)
 {
-    if (filePath.empty())
+    if (filePath.Empty())
     {
         throw EmptyFileName();
     }
@@ -37,94 +34,101 @@ BF::List<std::string> BF::FileLoader::ReadFileByLines(const std::string filePath
         throw FileNotFound(filePath);
     }
   
-    BF::List<std::string> lines;
-    std::ifstream infile(filePath);
+    std::ifstream infile(&filePath[0]);
     std::string currentLine; 
+    unsigned int amountOfLines = 0;
+    unsigned int dynamicIndex = 0;
 
     while (std::getline(infile, currentLine))
     {
-        lines.Size.Value++;
+        amountOfLines++;
     }
 
-    lines.ReSize();
+    stringList.ReSize(amountOfLines);
 
     infile.clear();
     infile.seekg(0, std::ios_base::beg);
 
     while (std::getline(infile, currentLine))
     {
-        lines[lines.CurrentIndex++] = currentLine;
+        stringList[dynamicIndex++] = currentLine;
     }
 
     infile.close();
-
-    return lines;
 }
 
-BF::TextFile BF::FileLoader::ReadTextFile(const std::string filePath)
+void BF::FileLoader::ReadTextFile(TextFile& textFile)
 {
-    return ReadTextFile(filePath, false);
+    return ReadTextFile(textFile, false);
 }
 
-BF::TextFile BF::FileLoader::ReadTextFile(const std::string filePath, const bool splittLines)
+void BF::FileLoader::ReadTextFile(TextFile& textFile, const bool splittLines)
 {
-    bool isEmpty = filePath.empty() || filePath == "";
+    bool isEmpty = textFile.Path.Empty();
 
     if (isEmpty)
     {
         throw EmptyFileName();
     }
 
-    if (!DoesFileExist(filePath))
+    if (!DoesFileExist(textFile.Path))
     {
-        throw FileNotFound(filePath);        
+        throw FileNotFound(textFile.Path);
     }
-
-    TextFile textFile(filePath);    
 
     if (splittLines)
     {
-        BF::List<std::string> lines = ReadFileByLines(filePath);
-        textFile.Lines = lines;
+        ReadFileByLines(textFile.Path, textFile.Lines);
     }
     else
     {
         textFile.Lines.ReSize(1);
-        textFile.Lines[0] = ReadCompleteFile(filePath);
+        ReadCompleteFile(textFile.Path, textFile.Lines[0]);
     }
-
-    return textFile;
 }
 
-BF::List<unsigned char> BF::FileLoader::ReadFileAsBytes(const std::string filePath)
+void BF::FileLoader::GetFileExtension(ASCIIString& fileName, ASCIIString& extension)
 {
-    bool isEmpty = filePath.empty() || filePath == "";
+    if (!fileName.Empty())
+    {
+        int position = fileName.FindLast('.');
+
+        if (position != -1)
+        {
+            fileName.Cut(position + 1, extension);
+        }
+    }
+}
+void BF::FileLoader::ReadFileAsBytes(ASCIIString& filePath, ByteString& byteString)
+{
+    bool isEmpty = filePath.Empty();
 
     if (isEmpty)
     {
         throw EmptyFileName();
     }
-
 
     if (!DoesFileExist(filePath))
     {
         throw FileNotFound(filePath);
     }
 
-    BF::List<unsigned char> byteList;
-    std::ifstream inputFileStream(filePath, std::ios::binary | std::ios::ate);
+    std::ifstream inputFileStream(&filePath[0], std::ios::binary | std::ios::ate);
+    unsigned int lengh = inputFileStream.tellg();
 
-    byteList.ReSize(inputFileStream.tellg());
+    byteString.ReSize(lengh);
+
+    unsigned char* add = &byteString[0];
+    char* stringAdress = reinterpret_cast<char*>(add);
+
     inputFileStream.seekg(0, inputFileStream.beg);
-
-    inputFileStream.read((char*)(&byteList[0]), byteList.Size.Value);
-
-    return byteList;
+    inputFileStream.read(stringAdress, lengh);
 }
 
-bool BF::FileLoader::DoesFileExist(std::string filePath)
+bool BF::FileLoader::DoesFileExist(ASCIIString& filePath)
 {
-    std::ifstream file(filePath.c_str());
+    char* string = &filePath.operator[](0);
+    std::ifstream file(string);
     bool fileExists = file.good();
 
     file.close();
@@ -132,13 +136,12 @@ bool BF::FileLoader::DoesFileExist(std::string filePath)
     return fileExists;
 }
 
-void BF::FileLoader::WriteFileAsBytes(const std::string filePath, const unsigned int size, const unsigned char* data)
+void BF::FileLoader::WriteFileAsBytes(ASCIIString& filePath, ByteString& byteString)
 {
-    unsigned int byteLengh = size;
     std::ofstream fout;
 
-    fout.open(filePath, std::ios::binary | std::ios::out);
-    fout.write((char*)data, byteLengh);
+    fout.open(&filePath[0], std::ios::binary | std::ios::out);
+    fout.write((char*)(&byteString[0]),(std::streamsize)byteString.Size());
 
     fout.close();
 }

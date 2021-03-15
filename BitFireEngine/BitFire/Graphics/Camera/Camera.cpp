@@ -1,19 +1,13 @@
 #include "Camera.h"
 
-float BF::Camera::GetViewSpeed()
-{
-	return ViewSpeed * TimeCollection::DeltaTime * 10000;
-}
-
-float BF::Camera::GetWalkSpeed()
-{
-	return WalkSpeed * TimeCollection::DeltaTime * 500;
-}
+//#include "../../System/GameSystem.h"
 
 BF::Camera::Camera() : Camera(new CameraSettings(1, 1))
 {
-	
+
 }
+
+
 
 BF::Camera::Camera(CameraSettings* settings)
 {
@@ -21,74 +15,72 @@ BF::Camera::Camera(CameraSettings* settings)
 	_view = glm::mat4(1.0f);
 
 	Settings = settings;
-	CurrentPosition = new Position();
-
-	WalkSpeed = 0.01f;
-	ViewSpeed = 0.03f;
-
-	Update();
+	CurrentPosition.Set(0,0,0);
 }
 
-BF::Camera::~Camera()
+void BF::Camera::UpdateSystemLink()
 {
-//	delete Settings;
-//	delete CurrentPosition;
+	//BF::System.OnGameTick.AddListener([&](GameTickData gameTickData) {Update(gameTickData); });
 }
 
 void BF::Camera::Move(Direcion direction)
 {
-	glm::vec3 movement;
-	float movementSpeed = GetWalkSpeed();
+	Position<float> movement;
+	glm::vec3 movementGLM;
+	float movementSpeed = _walkSpeed;
 
 	switch (direction)
 	{
-	case Direcion::Up:
-		movement = glm::vec3(0, movementSpeed, 0);
-		break;
+		case Direcion::Up:
+			movement.Set(0, movementSpeed, 0);
+			break;
 
-	case Direcion::Down:
-		movement = glm::vec3(0, -movementSpeed, 0);
-		break;
+		case Direcion::Down:
+			movement.Set(0, -movementSpeed, 0);
+			break;
 
-	case Direcion::Left:
-		movement = glm::vec3(-movementSpeed, 0, 0);
-		break;
+		case Direcion::Left:
+			movement.Set(-movementSpeed, 0, 0);
+			break;
 
-	case Direcion::Right:
-		movement = glm::vec3(movementSpeed, 0, 0);
-		break;
+		case Direcion::Right:
+			movement.Set(movementSpeed, 0, 0);
+			break;
 
-	case Direcion::Forward:
-		movement = glm::vec3(0, 0, -movementSpeed);
-		break;
+		case Direcion::Forward:
+			movement.Set(0, 0, -movementSpeed);
+			break;
 
-	case Direcion::Backward:
-		movement = glm::vec3(0, 0, movementSpeed);
-		break;
+		case Direcion::Backward:
+			movement.Set(0, 0, movementSpeed);
+			break;
 	}
 
-	_position += movement;
+	_position += movementGLM;
+	CurrentPosition.Add(movement);
 
-	_view =  glm::translate(_view, movement * (-1.0f));
+	movementGLM = glm::vec3(movement.X, movement.Y, movement.Z);
+
+	_view = glm::translate(_view, movementGLM * (-1.0f));
 }
 
-void BF::Camera::Update()
+void BF::Camera::Update(GameTickData gameTickData)
 {
+	printf("Updated! Camera\n");
+
+	_walkSpeed = gameTickData.DeltaTime * 500;
+	_viewSpeed = gameTickData.DeltaTime * 10000;
+
 	switch (Settings->Mode)
 	{
-	case CameraMode::Orthographic:
-		_projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -10.0f, Settings->Far);		
-		break;
+		case CameraMode::Orthographic:
+			_projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -10.0f, Settings->Far);
+			break;
 
-	case CameraMode::Perspectdive:
-		_projection = glm::perspective(glm::radians(Settings->FieldOfView), 1.0f, Settings->Near, Settings->Far);
-		break;
+		case CameraMode::Perspectdive:
+			_projection = glm::perspective(glm::radians(Settings->FieldOfView), 1.0f, Settings->Near, Settings->Far);
+			break;
 	}
 
 	_viewProjection = _projection * _view;
-}
-
-void BF::Camera::SetDeltaTime(float delteTime)
-{
-	_deltaTime = delteTime;
 }

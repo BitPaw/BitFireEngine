@@ -1,61 +1,49 @@
 #pragma once
 
-
-
-#include <math.h>
-#include <cstdlib>
-#include <ctime>
-
-#include "Interpolate.h"
-
 namespace BF
 {
 	class Math
 	{
-	private:
+		private:
 		static bool _timerSet;
 
-	public:
+		public:
 		// Pi, Archimedes' constant or Ludolph's number
-		const float PI = 3.1415926535897932384626433832795028841971693993751058209749445923;
+		static const float PI;
 
 		// e, Napier's constant, or Euler's number
-		const float e = 2.71828182845904523536028747135266249;
+		static const float e;
 
 		// Plastic constant
-		const float p = 1.32471795724474602596090885447809734;
+		static const float p;
 
 		// Feigenbaum constant
-		const float a = 2.50290787509589282228390287321821578;
+		static const float a;
 
 		// gravitational constant. 6.673×10^-11 N m2 kg^-2
-		const float g = 0.00000000006673;
+		static const float g;
 
 		// All in m/s^2
-		const float GravityOnVenus = 8.87;
-		const float GravityOnEarth = 9.807;
-		const float GravityOnMoon = 1.62;
-		const float GravityOnMars = 3.711;
+		static const float GravityOnVenus;
+		static const float GravityOnEarth;
+		static const float GravityOnMoon;
+		static const float GravityOnMars;
 
-		float Power(float base, float exponent)
-		{
-			return powf(base, exponent);
-		}
+		static float FastInverseSqaureRoot(float number);
+		
+		static double Power(double base, double exponent);
+		static double PowerOfTwo(double base);
 
-		float Root(float value, float rootOf)
-		{
-			return 0;
-		}
+		static double Root(unsigned int rootNr, double value);
 
-		float Pythagoras(float a, float b)
-		{
-			return Root(Power(a, 2) + Power(b, 2), 2);
-		}
+		static double SquareRoot(double value);
 
-		float NewtonGravitation(float massA, float massB, float distance)
-		{
-			return g * ((massA * massB) / (Power(distance, 2)));
-		}
+		static double CubicRoot(double value);
+
+		static double Pythagoras(double a, double b);
+		static double PythagorasReverse(double c, double a);
+
+		static double NewtonGravitation(double massA, double massB, double distance);
 
 		// Rounds x upward, returning the smallest integral value that is not less than x.
 		static int Ceiling(double value);
@@ -63,6 +51,15 @@ namespace BF
 		// Rounds x downward, returning the largest integral value that is not greater than x.
 		static int Floor(double value);
 
-		static int RandomeNumber();
+		static int Absolute(int value);
+		static float Absolute(float value);
+		static double Absolute(double value);
+
+		static unsigned int RandomeNumber();
+
+		static double Sinus(double value);
+		static double Tangens(double value);
+		static double Cosinus(double value);
+		static unsigned long Fibonacci(unsigned long step);
 	};
 }

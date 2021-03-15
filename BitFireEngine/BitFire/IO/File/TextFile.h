@@ -1,23 +1,21 @@
 #pragma once
 
-#include <string>
-
-#include "../../Utility/StringSplitter.h"
+#include "../../Utility/ASCIIString.h"
 #include "../../Utility/List.hpp"
 
 namespace BF
 {
 	class TextFile
 	{
-	public:
-		List<std::string> Lines;
+		public:
+		List<ASCIIString> Lines;
 
-		std::string Path;
-		std::string FileName;
+		ASCIIString Path;
+		ASCIIString FileExtension;
 
 		TextFile();
-		TextFile(std::string path);
+		TextFile(ASCIIString& path);
 
-		std::string GetFileExtension();
+		static void GetFileExtension(ASCIIString& path, ASCIIString& extension);
 	};
 }

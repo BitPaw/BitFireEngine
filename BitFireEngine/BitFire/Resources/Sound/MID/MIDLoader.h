@@ -1,10 +1,9 @@
 #pragma once
 
-#include <string>
-
 #include "MID.h"
 
 #include "../../ILoader.h"
+#include "../../../Utility/ASCIIString.h"
 
 namespace BF
 {
@@ -14,6 +13,6 @@ namespace BF
 		MIDLoader();
 
 		public:
-		static MID* LoadFromFile(std::string filePath);
+		static MID* LoadFromFile(ASCIIString filePath);
 	};
 }

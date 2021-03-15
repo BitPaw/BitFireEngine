@@ -1,52 +1,70 @@
 #include "ImageLoader.h"
-#include "../../OpenGL/OpenGLAPI.h"
 
-BF::IImage* BF::ImageLoader::LoadFromFile(std::string filePath)
+BF::ImageFormat BF::ImageLoader::CheckImageFormat(ASCIIString& fileExtension)
+{
+    bool isBMP = fileExtension.CompareIgnoreCase("bmp");
+    bool isGIF = fileExtension.CompareIgnoreCase("gif");
+    bool isJPEG = fileExtension.CompareIgnoreCase("jpeg");
+    bool isPNG = fileExtension.CompareIgnoreCase("png");
+    bool isTIFF = fileExtension.CompareIgnoreCase("tiff");
+
+    if (isBMP) return ImageFormat::BMP;
+    if (isGIF) return ImageFormat::GIF;
+    if (isJPEG) return ImageFormat::JPEG;
+    if (isPNG) return ImageFormat::PNG;
+    if (isTIFF) return ImageFormat::TIFF;
+
+    return ImageFormat::Unkown;
+}
+
+bool BF::ImageLoader::IsImageFileExtension(ASCIIString& fileExtension)
+{
+    return CheckImageFormat(fileExtension) != ImageFormat::Unkown;
+}
+
+BF::Image* BF::ImageLoader::LoadFromFile(ASCIIString& filePath)
 {    
     Image* image = nullptr;
-    ImageFormat imageFormat = ImageFormat::Unkown;
     TextFile textFile(filePath);
-    std::string fileExtension = textFile.GetFileExtension();
-
-    bool isBMP = fileExtension == "bmp";
-    bool isGIF = fileExtension == "gif";
-    bool isJPEG = fileExtension == "jpeg";
-    bool isPNG = fileExtension == "png";
-    bool isTIFF = fileExtension == "tiff";
-
-    if (isBMP) imageFormat = ImageFormat::BMP;
-    if (isGIF) imageFormat = ImageFormat::GIF;
-    if (isJPEG) imageFormat = ImageFormat::JPEG;
-    if (isPNG) imageFormat = ImageFormat::PNG;
-    if (isTIFF) imageFormat = ImageFormat::TIFF;
+    ASCIIString fileExtension = textFile.FileExtension;
+    ImageFormat imageFormat = CheckImageFormat(fileExtension); 
 
     switch (imageFormat)
     {
         case ImageFormat::BMP:
         {
-            MessageSystem::PushMessage(MessageType::Info, "[.BMP] BitMap File detected.");
+            Log::Write(LogMessageType::Event, "[.BMP] BitMap File detected.");
 
             BMP* bmp = BMPLoader::LoadFromFile(filePath);
 
             image = BMPToImage(bmp);
-
+                        
             break;
         }          
 
         case ImageFormat::GIF:
-            MessageSystem::PushMessage(MessageType::Info, "[.GIF] GIF File detected.");
+            Log::Write(LogMessageType::Event, "[.GIF] GIF File detected.");
             break;
 
         case ImageFormat::JPEG:        
-            MessageSystem::PushMessage(MessageType::Info, "[.JPEG] JPEG File detected.");
+            Log::Write(LogMessageType::Event, "[.JPEG] JPEG File detected.");
             break;        
 
-        case ImageFormat::PNG:
-            MessageSystem::PushMessage(MessageType::Info, "[.PNG] PNG File detected.");
+        case ImageFormat::PNG:            
+            {
+                Log::Write(LogMessageType::Event, "[.PNG] PNG File detected.");
+
+                PNG* png = PNGLoader::LoadFromFile(filePath);
+                png->PrintData();
+                //image = BMPToImage(bmp);
+
+                break;
+            }
+
             break;
 
         case ImageFormat::TIFF:
-            MessageSystem::PushMessage(MessageType::Info, "[.TIFF] TIFF File detected.");
+            Log::Write(LogMessageType::Event, "[.TIFF] TIFF File detected.");
             break;
 
         case ImageFormat::Unkown:
@@ -54,12 +72,12 @@ BF::IImage* BF::ImageLoader::LoadFromFile(std::string filePath)
             throw "Unsuported Type/File";
     }
 
-    OpenGLAPI* openGLAPI = OpenGLAPI::Instance();
-
-    openGLAPI->Render->RegisterImage(image);
+    image->FilePath.Copy(filePath);
 
     return image;
 }
+
+
 
 BF::Image* BF::ImageLoader::BMPToImage(BMP* bitmap)
 {
@@ -68,7 +86,7 @@ BF::Image* BF::ImageLoader::BMPToImage(BMP* bitmap)
     int height = bitmap->Height;
     int width = bitmap->Width;
     int dimension = 4;
-    int size = bitmap->Pixel.Size.Value;
+    int size = bitmap->Pixel.Size();
 
 
     size *= dimension;
@@ -92,9 +110,9 @@ BF::Image* BF::ImageLoader::BMPToImage(BMP* bitmap)
     } 
     */
     
-    for (unsigned int i = 0; i < bitmap->Pixel.Size.Value; i++)
+    for (unsigned int i = 0; i < bitmap->Pixel.Size(); i++)
     {
-        RGB8Bit* pixel = &bitmap->Pixel[i];
+        RGB<unsigned char>* pixel = &bitmap->Pixel[i];
 
         image->PixelData[dynamicIndex++] = pixel->Red;
         image->PixelData[dynamicIndex++] = pixel->Green;

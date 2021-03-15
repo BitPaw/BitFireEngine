@@ -1,6 +1,6 @@
 #include "OGGLoader.h"
 
-BF::OGG* BF::OGGLoader::LoadFromFile(std::string filePath)
+BF::OGG* BF::OGGLoader::LoadFromFile(ASCIIString filePath)
 {
     return nullptr;
 }

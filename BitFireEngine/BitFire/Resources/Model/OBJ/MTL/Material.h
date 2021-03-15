@@ -1,25 +1,24 @@
 #pragma once
 
-#include <string>
-
 #include "IlluminationMode.h"
 
-#include "../../../../Mathematic/Geometry/Position.h"
+#include "../../../../Mathematic/Geometry/Position.hpp"
+#include "../../../../Utility/ASCIIString.h"
 
 namespace BF
 {
 	struct Material
 	{
-	public:
-		std::string Name;
+		public:
+		ASCIIString Name;
 
 		// Ranges between 0 and 1000
 		float Weight;
 
-		Position Ambient;
-		Position Diffuse;
-		Position Specular;
-		Position Emission;
+		Position<float> Ambient;
+		Position<float> Diffuse;
+		Position<float> Specular;
+		Position<float> Emission;
 
 		float Dissolved;
 

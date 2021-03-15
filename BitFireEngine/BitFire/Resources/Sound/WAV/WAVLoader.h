@@ -1,10 +1,9 @@
 #pragma once
 
-#include <string>
-
 #include "WAV.h"
 
 #include "../../ILoader.h"
+#include "../../../Utility/ASCIIString.h"
 
 namespace BF
 {
@@ -14,6 +13,6 @@ namespace BF
 		WAVLoader();
 
 		public:
-		static WAV* LoadFromFile(std::string filePath);
+		static WAV* LoadFromFile(ASCIIString filePath);
 	};
 }

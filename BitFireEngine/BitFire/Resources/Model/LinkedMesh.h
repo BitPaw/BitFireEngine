@@ -3,20 +3,19 @@
 #include "Vertex.h"
 #include "MeshIndexData.h"
 
-#include "../../Color/RGBA.h"
-
 #include "../../Utility/List.hpp"
+#include "../../Color/RGBA.hpp"
 
 namespace BF
 {
 	class LinkedMesh
 	{
-	public:
+		public:
 		List<Vertex*> VertexList;
-		List<Position*> NormalPointList;
-		List<Point*> TexturePointList;	
+		List<Position<float>*> NormalPointList;
+		List<Point<float>*> TexturePointList;
 		List<MeshIndexData*> IndexList;
 
-		List<RGBA*> ColorList;
+		List<RGBA<float>*> ColorList;
 	};
 }

@@ -9,7 +9,6 @@
 #include "../../ILoader.h"
 #include "../../../IO/File/FileLoader.h"
 #include "../../../Mathematic/Math.h"
-#include "../../../Mathematic/Converter/Converter.h"
 
 namespace BF
 {
@@ -21,8 +20,8 @@ namespace BF
 		static BMPType ParseType(unsigned char leftByte, unsigned char rightByte);
 
 	public:
-		static BMP* LoadFromFile(std::string path);
-		static void SaveToFile(std::string path, BMP& bitMap);
+		static BMP* LoadFromFile(ASCIIString& path);
+		static void SaveToFile(ASCIIString& path, BMP& bitMap);
 
 		//static PixelArray GeneratePixelArray(BMP& bitmap);
 		static void PrintBitMapInformation(BMP& bitMap);

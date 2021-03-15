@@ -4,28 +4,28 @@ BF::TextFile::TextFile()
 {
 }
 
-BF::TextFile::TextFile(std::string path)
+BF::TextFile::TextFile(ASCIIString& path)
 {
-	StringSplitter splittedString = StringSplitter::Split(path, '/');
+	Path.Copy(path);
+	//FileName.Copy(lines[lines.Size() - 1]);
 
-	FileName = splittedString.Lines[splittedString.Lines.Size.Value - 1];
-
-	Path = path;
+	GetFileExtension(path, FileExtension);
 }
 
-std::string BF::TextFile::GetFileExtension()
+void BF::TextFile::GetFileExtension(ASCIIString& path, ASCIIString& extension)
 {
-	std::string result = "";
+	List<ASCIIString> lines;
 
-	if (!FileName.empty())
+	path.Splitt('/', lines);	
+
+	if (lines.Size() > 0)
 	{
-		int position = FileName.find_last_of('.');
+		ASCIIString& fileName = lines[lines.Size() - 1];
+		unsigned int position = fileName.FindLast('.');
 
 		if (position != -1)
 		{
-			result = FileName.substr(position +1);
+			fileName.Cut(position + 1, extension);
 		}
 	}
-
-	return result;
 }

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include "MTL.h"
 #include "../../../../IO/File/TextFile.h"
 #include "../../../../IO/File/FileLoader.h"
@@ -25,6 +23,6 @@ namespace BF
 		//static const char _newMaterialCharacter = 'i';
 
 	public:
-		static MTL* LoadFromFile(std::string filePath);
+		static MTL* LoadFromFile(ASCIIString& filePath);
 	};
 }

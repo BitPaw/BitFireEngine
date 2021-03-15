@@ -1,68 +1,84 @@
 #pragma once
 
-#include <string>
-
 #include "Mesh.h"
 #include "LinkedMesh.h"
 #include "IModel.h"
+#include "ModelRenderInformation.h"
 
-#include "../../Mathematic/Geometry/Vector/Vector3.h"
-#include "../../Mathematic/Geometry/Position.h"
-#include "../../Color/RGBA.h"
+#include "../Resource.h"
+
+#include "../../Mathematic/Geometry/Position.hpp"
 #include "../../Utility/List.hpp"
+#include "../../Utility/LinkedList.hpp"
+#include "../../Color/RGBA.hpp"
 //-----------------------------------------------------------------------------
 namespace BF
 {
 	// Renderable Object used as core element for the rendersystem.
-	class Model : public IModel
+	class Model : public Resource, public IModel
 	{
 	protected:
-		void UpdateRenderSystemLink();
-		Vector3 _currentPosition;
+		Position<float> _currentPosition;
+		Position<float> _currentRotation;
 
 	public:
-		unsigned int ModelID;
+		ModelRenderInformation RenderInformation;
 
-		std::string ModelName;
+		ASCIIString ModelName;
 
 		LinkedMesh GlobalMesh;
-
-		List<RGBA> ColorList;
-		List<Mesh> MeshList;
+		List<RGBA<float>> ColorList;
+		List<Mesh> MeshList;		
 
 		Model();
-		Model(std::string name);
+		Model(ASCIIString& name);
 
-		~Model();	
+		void Move(float x, float y, float z) override;
+		void Move(Position<float> position) override;
+		void MoveTo(float x, float y, float z) override;
+		void MoveTo(Position<float> position) override;		
+
+		void Rotate(float x, float y, float z) override;
+		void Rotate(Position<float> rotation) override;
+		void RotateTo(float x, float y, float z) override;
+		void RotateTo(Position<float> rotation) override;
+
+		void Orbit(float x, float y, float z) override;
+		void Orbit(Position<float> rotation) override;
+		void Orbit(Position<float> rotation, Position<float> ancerPosition) override;
+
+		void Scale(float x, float y, float z) override;
+		void Scale(Position<float> scaleFactor) override;
 
 
-		void MoveBy(Vector3 vector) override;		
-		void MoveTo(Vector3 vector) override;
+
+		// Image
+		void ScaleTexturePoints(float x, float y);
+		void ScaleTexturePoints(Point<float> scale);
 
 		/**
 			Get the current position of this object in this worldspace.
 			@return Current position.
 		*/
-		Vector3 CurrentPosition();
+		Position<float> CurrentPosition();
 
-		
-		void Orbit(Vector3 vector) override;
-		void Rotate(Vector3 vector) override;
-		void Scale(Vector3 vector) override;
+		Position<float> CurrentRotation();
 
+		void UseTexturePointAsColor();
+
+	
 		/**
 			Returns the area of a circle with the specified radius.
 			@param radius The radius of the circle.
 			@return The area of the circle.
 		*/
 		void CalculateNormalVectors();
+		void UpdateGlobalMesh();
 
-
-		void UseTexturePointAsColor();
 
 		void PrintModelData();
-
-		void UpdateGlobalMesh();
+		void PrintCurrentPosition();
+		void PrintCurrentRotation();
 	};
 }
 //-----------------------------------------------------------------------------

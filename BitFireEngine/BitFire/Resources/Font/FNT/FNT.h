@@ -6,18 +6,19 @@
 #include "FNTInfo.h"
 #include "FNTCommonData.h"
 
-#include "../IFont.h"
+#include "../Font.h"
 
 namespace BF
 {
-	class FNT : public IFont
+	class FNT : public Font
 	{
-	public:
+		public:
 		FNTInfo FontInfo;
 		FNTCommonData FontCommon;
 
 		List<FNTPage> FontPages;
 
-		FNTCharacter GetCharacterPosition(unsigned char character);
+		FNTCharacter* GetCharacterPosition(unsigned char character);
+		void PrintData();
 	};
 }

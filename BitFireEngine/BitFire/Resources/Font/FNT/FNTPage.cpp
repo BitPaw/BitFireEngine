@@ -1,12 +1,12 @@
 #include "FNTPage.h"
 
-BF::FNTPage::FNTPage() : FNTPage(0, "[N/A]")
+BF::FNTPage::FNTPage()
 {
-
+	PageID = -1;
 }
 
-BF::FNTPage::FNTPage(const unsigned int pageID, std::string pageFileName)
+BF::FNTPage::FNTPage(const unsigned int pageID, ASCIIString& pageFileName)
 {
 	PageID = pageID;
-	PageFileName = pageFileName;
+	PageFileName.Copy(pageFileName);
 }

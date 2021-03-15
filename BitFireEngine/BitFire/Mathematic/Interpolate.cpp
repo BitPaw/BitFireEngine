@@ -11,7 +11,7 @@ float BF::Interpolate::Liniar(const float yMinimum, const float yMaximum, const 
     return (((yMaximum - yMinimum) * (xValue - xMinimum)) / (xMaximum - xMinimum)) + yMinimum;
 }
 
-float BF::Interpolate::LiniarClampBetweenZeroAndOne(const float minimum, const float maximum, const float value)
+float BF::Interpolate::Normalize(const float minimum, const float maximum, const float value)
 {
     return Interpolate::Liniar(0, 1, minimum, maximum, value);
 }

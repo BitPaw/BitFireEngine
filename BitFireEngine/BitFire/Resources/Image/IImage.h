@@ -9,8 +9,8 @@ namespace BF
 	struct IImage
 	{
 		public:
-		unsigned int Height;
-		unsigned int Width;
+		int Height;
+		int Width;
 
 		IImage();
 	};

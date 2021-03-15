@@ -15,11 +15,12 @@ BF::BMP::~BMP()
 	}
 }
 
-BF::RGB8Bit* BF::BMP::GetPixel(unsigned int x, unsigned int y)
+BF::RGB<unsigned char>* BF::BMP::GetPixel(unsigned int x, unsigned int y)
 {
 	int width = InformationHeader->Width;
 	int height = InformationHeader->Height;
 	unsigned int index;
+	RGB<unsigned char>* rgb;
 
 	bool flipY = false; // flipüx
 	bool flipX = false;
@@ -38,7 +39,7 @@ BF::RGB8Bit* BF::BMP::GetPixel(unsigned int x, unsigned int y)
 
 	// printf("%u | %u = %u\n", x,y, index);
 
-	RGB8Bit* rgb = &Pixel[index];
+	rgb = &Pixel[index];
 
 	return rgb;
 }

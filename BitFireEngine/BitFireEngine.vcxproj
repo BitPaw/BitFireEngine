@@ -19,29 +19,27 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BitFire\Color\RGB.cpp" />
-    <ClCompile Include="BitFire\Color\RGB8Bit.cpp" />
-    <ClCompile Include="BitFire\Color\RGBA.cpp" />
     <ClCompile Include="BitFire\Configuration\AudioConfig.cpp" />
     <ClCompile Include="BitFire\Configuration\ConfigContainer.cpp" />
     <ClCompile Include="BitFire\Configuration\VideoConfig.cpp" />
     <ClCompile Include="BitFire\Graphics\Camera\Camera.cpp" />
     <ClCompile Include="BitFire\Graphics\Camera\CameraSettings.cpp" />
     <ClCompile Include="BitFire\Graphics\Camera\FirstPersonCamera.cpp" />
-    <ClCompile Include="BitFire\IO\Device\KeyBoard\Alphabet.cpp" />
-    <ClCompile Include="BitFire\IO\Device\KeyBoard\FunctionKeys.cpp" />
     <ClCompile Include="BitFire\IO\Device\KeyBoard\KeyBoard.cpp" />
-    <ClCompile Include="BitFire\IO\Device\KeyBoard\Numbers.cpp" />
     <ClCompile Include="BitFire\IO\Device\Mouse\Mouse.cpp" />
     <ClCompile Include="BitFire\IO\File\EmptyFileName.cpp" />
     <ClCompile Include="BitFire\IO\File\FileLoader.cpp" />
     <ClCompile Include="BitFire\IO\File\FileNotFound.cpp" />
     <ClCompile Include="BitFire\IO\File\TextFile.cpp" />
+    <ClCompile Include="BitFire\Network\Client.cpp" />
+    <ClCompile Include="BitFire\Network\ConnectionCredential.cpp" />
+    <ClCompile Include="BitFire\Network\IP.cpp" />
+    <ClCompile Include="BitFire\Network\IPv4.cpp" />
+    <ClCompile Include="BitFire\Network\IPv6.cpp" />
+    <ClCompile Include="BitFire\Network\Server.cpp" />
+    <ClCompile Include="BitFire\OpenGL\Render\RenderSpace.h" />
     <ClCompile Include="BitFire\OpenGL\Window\InputContainer.cpp" />
-    <ClCompile Include="BitFire\IO\Message\Message.cpp" />
-    <ClCompile Include="BitFire\IO\Message\MessageSystem.cpp" />
     <ClCompile Include="BitFire\IO\Serialization\INI\INILoader.cpp" />
-    <ClCompile Include="BitFire\IO\TrippelIndex.cpp" />
     <ClCompile Include="BitFire\Main.cpp" />
     <ClCompile Include="BitFire\Mathematic\Algorithm\CRCAlgorithm.cpp" />
     <ClCompile Include="BitFire\Mathematic\Converter\Converter.cpp" />
@@ -53,13 +51,6 @@
     <ClCompile Include="BitFire\Mathematic\Geometry\Form\Icosahedron.cpp" />
     <ClCompile Include="BitFire\Mathematic\Geometry\Form\Sphere.cpp" />
     <ClCompile Include="BitFire\Mathematic\Geometry\Form\SquarePyramid.cpp" />
-    <ClCompile Include="BitFire\Mathematic\Geometry\IndexPoint.cpp" />
-    <ClCompile Include="BitFire\Mathematic\Geometry\IndexPosition.cpp" />
-    <ClCompile Include="BitFire\Mathematic\Geometry\Matrix\Matrix3x3.cpp" />
-    <ClCompile Include="BitFire\Mathematic\Geometry\Matrix\Matrix4x4.cpp" />
-    <ClCompile Include="BitFire\Mathematic\Geometry\Point.cpp" />
-    <ClCompile Include="BitFire\Mathematic\Geometry\Position.cpp" />
-    <ClCompile Include="BitFire\Mathematic\Geometry\Rotation.cpp" />
     <ClCompile Include="BitFire\Mathematic\Geometry\Shape\Circle.cpp" />
     <ClCompile Include="BitFire\Mathematic\Geometry\Shape\Hexagon.cpp" />
     <ClCompile Include="BitFire\Mathematic\Geometry\Shape\Pentagon.cpp" />
@@ -68,27 +59,15 @@
     <ClCompile Include="BitFire\Mathematic\Geometry\Shape\Square.cpp" />
     <ClCompile Include="BitFire\Mathematic\Geometry\Shape\Star.cpp" />
     <ClCompile Include="BitFire\Mathematic\Geometry\Shape\Triangle.cpp" />
-    <ClCompile Include="BitFire\Mathematic\Geometry\Size.cpp" />
-    <ClCompile Include="BitFire\Mathematic\Geometry\Vector\Vector2.cpp" />
-    <ClCompile Include="BitFire\Mathematic\Geometry\Vector\Vector3.cpp" />
-    <ClCompile Include="BitFire\Mathematic\Geometry\Vector\Vector4.cpp" />
     <ClCompile Include="BitFire\Mathematic\Interpolate.cpp" />
     <ClCompile Include="BitFire\Mathematic\Math.cpp" />
     <ClCompile Include="BitFire\Mathematic\Physic\GravityBox.cpp" />
     <ClCompile Include="BitFire\Mathematic\Physic\GravityField.cpp" />
     <ClCompile Include="BitFire\Mathematic\Physic\GravitySphere.cpp" />
-    <ClCompile Include="BitFire\OpenGL\OpenGLAPI.cpp" />
-    <ClCompile Include="BitFire\OpenGL\Render\DataSize.cpp" />
-    <ClCompile Include="BitFire\OpenGL\Render\IndexDataCache.cpp" />
-    <ClCompile Include="BitFire\OpenGL\Render\RenderDataCache.cpp" />
-    <ClCompile Include="BitFire\OpenGL\Render\RenderInformation.cpp" />
-    <ClCompile Include="BitFire\OpenGL\Render\RenderSystem.cpp" />
-    <ClCompile Include="BitFire\OpenGL\Render\VertexDataCache.cpp" />
-    <ClCompile Include="BitFire\OpenGL\Shader\System\ShaderFile.cpp" />
-    <ClCompile Include="BitFire\OpenGL\Shader\System\ShaderLoader.cpp" />
     <ClCompile Include="BitFire\OpenGL\Window\Window.cpp" />
     <ClCompile Include="BitFire\Player\Player.cpp" />
     <ClCompile Include="BitFire\Resources\Font\FNT\FNT.cpp" />
+    <ClCompile Include="BitFire\Resources\Font\FNT\FNTChanalMode.cpp" />
     <ClCompile Include="BitFire\Resources\Font\FNT\FNTCharacter.cpp" />
     <ClCompile Include="BitFire\Resources\Font\FNT\FNTCommonData.cpp" />
     <ClCompile Include="BitFire\Resources\Font\FNT\FNTInfo.cpp" />
@@ -115,10 +94,6 @@
     <ClCompile Include="BitFire\Resources\Image\JPEG\JPEG.cpp" />
     <ClCompile Include="BitFire\Resources\Image\JPEG\JPEGLoader.cpp" />
     <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGChunk.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\Type\PNGChunkImageHeader.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\Type\PortableNetworkGraphicChunkPalette.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\Type\PortableNetworkGraphicFileHeader.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\Type\PortableNetworkGraphicImageData.cpp" />
     <ClCompile Include="BitFire\Resources\Image\PNG\PNG.cpp" />
     <ClCompile Include="BitFire\Resources\Image\PNG\PNGLoader.cpp" />
     <ClCompile Include="BitFire\Resources\Image\TIFF\TIFF.cpp" />
@@ -158,32 +133,86 @@
     <ClCompile Include="BitFire\Resources\Sound\WAV\WAV.cpp" />
     <ClCompile Include="BitFire\Resources\Sound\WAV\WAVLoader.cpp" />
     <ClCompile Include="BitFire\Time\StopWatch.cpp" />
-    <ClCompile Include="BitFire\Time\TimeCollection.cpp" />
     <ClCompile Include="BitFire\UI\Button.cpp" />
-    <ClCompile Include="BitFire\UI\Padding.cpp" />
+    <ClCompile Include="BitFire\UI\DialogBox\DialogBox.cpp" />
     <ClCompile Include="BitFire\UI\Text.cpp" />
-    <ClCompile Include="BitFire\Utility\ListSize.cpp" />
-    <ClCompile Include="BitFire\Utility\StringSplitter.cpp" />
     <ClCompile Include="BitFire\IO\Serialization\JSON\JSONLoader.cpp" />
     <ClCompile Include="BitFire\IO\Serialization\XML\XMLLoader.cpp" />
     <ClCompile Include="BitFire\IO\Serialization\YAML\YAMLLoader.cpp" />
+    <ClCompile Include="BitFire\System\GameSystem.cpp" />
+    <ClCompile Include="BitFire\Resources\Shader\Shader.cpp" />
+    <ClCompile Include="BitFire\Resources\Shader\ShaderLoader.cpp" />
+    <ClCompile Include="BitFire\Resources\Shader\ShaderProgram.cpp" />
+    <ClCompile Include="BitFire\Resources\Dialog\Dialog.cpp" />
+    <ClCompile Include="BitFire\Resources\Dialog\DialogLoader.cpp" />
+    <ClCompile Include="BitFire\Utility\ASCIIString.cpp" />
+    <ClCompile Include="BitFire\Utility\ByteString.cpp" />
+    <ClCompile Include="BitFire\Crypto\ISBN.cpp" />
+    <ClCompile Include="BitFire\Crypto\Caesar.cpp" />
+    <ClCompile Include="BitFire\Crypto\ICypher.cpp" />
+    <ClCompile Include="BitFire\Crypto\RSA.cpp" />
+    <ClCompile Include="BitFire\System\GameTickEvent.cpp" />
+    <ClCompile Include="BitFire\System\GameTickData.cpp" />
+    <ClCompile Include="BitFire\UI\DialogBox\CloseEvent.cpp" />
+    <ClCompile Include="BitFire\UI\DialogBox\NewCharacterEvent.cpp" />
+    <ClCompile Include="BitFire\UI\DialogBox\NewPageEvent.cpp" />
+    <ClCompile Include="BitFire\UI\DialogBox\OpenEvent.cpp" />
+    <ClCompile Include="BitFire\Mathematic\Geometry\Form\Form.cpp" />
+    <ClCompile Include="BitFire\Resources\Image\ImageInformation.cpp" />
+    <ClCompile Include="BitFire\IO\Log\Log.cpp" />
+    <ClCompile Include="BitFire\IO\Log\LogMessage.cpp" />
+    <ClCompile Include="BitFire\Level\Level.cpp" />
+    <ClCompile Include="BitFire\Mathematic\Physic\Collider.cpp" />
+    <ClCompile Include="BitFire\IO\InputSystem.cpp" />
+    <ClCompile Include="BitFire\IO\Device\InputButton.cpp" />
+    <ClCompile Include="BitFire\OpenGL\Render\HUD.cpp" />
+    <ClCompile Include="BitFire\Level\LevelLoader.cpp" />
+    <ClCompile Include="BitFire\Level\LevelManager.cpp" />
+    <ClCompile Include="MineCraft\Block.cpp" />
+    <ClCompile Include="MineCraft\World.cpp" />
+    <ClCompile Include="BitFire\UI\UIElement.cpp" />
+    <ClCompile Include="BitFire\Utility\UUID.cpp" />
+    <ClCompile Include="BitFire\Resources\ResouceManager.cpp" />
+    <ClCompile Include="BitFire\Resources\Resource.cpp" />
+    <ClCompile Include="BitFire\Resources\Model\ModelRenderInformation.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BitFire\Color\RGB.h" />
-    <ClInclude Include="BitFire\Color\RGB8Bit.h" />
-    <ClInclude Include="BitFire\Color\RGBA.h" />
+    <ClInclude Include="BitFire\IO\Log\LogColorData.h" />
+    <ClInclude Include="BitFire\IO\Log\LogMessageType.h" />
+    <ClInclude Include="BitFire\IO\Log\TextColor.h" />
+    <ClInclude Include="BitFire\Mathematic\Geometry\Matrix2x2.hpp" />
+    <ClInclude Include="BitFire\Network\Client.h" />
+    <ClInclude Include="BitFire\Network\ComunicationRole.h" />
+    <ClInclude Include="BitFire\Network\ConnectionCredential.h" />
+    <ClInclude Include="BitFire\Network\IP.h" />
+    <ClInclude Include="BitFire\Network\IPv4.h" />
+    <ClInclude Include="BitFire\Network\IPv6.h" />
+    <ClInclude Include="BitFire\Network\Server.h" />
+    <ClInclude Include="BitFire\OpenGL\Window\OnInputEvent.h" />
+    <ClInclude Include="BitFire\OpenGL\Window\OnWindowCloseEvent.h" />
+    <ClInclude Include="BitFire\Resources\Image\ImageFilterMode.h" />
+    <ClInclude Include="BitFire\Resources\Image\ImageFormatMode.h" />
+    <ClInclude Include="BitFire\Resources\Image\ImageLayout.h" />
+    <ClInclude Include="BitFire\Resources\Image\ImageWrap.h" />
+    <ClInclude Include="BitFire\Resources\ResourceType.h" />
+    <ClInclude Include="BitFire\Utility\BinaryTree\BinaryTree.hpp" />
+    <ClInclude Include="BitFire\Utility\BinaryTree\BinaryTreeData.hpp" />
+    <ClInclude Include="BitFire\Utility\BinaryTree\BinaryTreeDataRotationInformation.h" />
+    <ClInclude Include="BitFire\Utility\BinaryTree\BinaryTreeDirection.h" />
+    <ClInclude Include="BitFire\Utility\BinaryTree\BinaryTreeNode.hpp" />
+    <ClInclude Include="BitFire\Color\RGB.hpp" />
+    <ClInclude Include="BitFire\Color\RGBA.hpp" />
     <ClInclude Include="BitFire\Configuration\AudioConfig.h" />
     <ClInclude Include="BitFire\Configuration\ConfigContainer.h" />
     <ClInclude Include="BitFire\Configuration\RefreshRateMode.h" />
     <ClInclude Include="BitFire\Configuration\VideoConfig.h" />
+    <ClInclude Include="BitFire\Event\TriggerEvent.hpp" />
     <ClInclude Include="BitFire\Graphics\Camera\Camera.h" />
     <ClInclude Include="BitFire\Graphics\Camera\CameraMode.h" />
     <ClInclude Include="BitFire\Graphics\Camera\CameraSettings.h" />
     <ClInclude Include="BitFire\Graphics\Camera\FirstPersonCamera.h" />
-    <ClInclude Include="BitFire\IO\Device\KeyBoard\Alphabet.h" />
-    <ClInclude Include="BitFire\IO\Device\KeyBoard\FunctionKeys.h" />
+    <ClInclude Include="BitFire\Resources\Shader\ShaderType.h" />
     <ClInclude Include="BitFire\IO\Device\KeyBoard\KeyBoard.h" />
-    <ClInclude Include="BitFire\IO\Device\KeyBoard\Numbers.h" />
     <ClInclude Include="BitFire\IO\Device\Mouse\CursorMode.h" />
     <ClInclude Include="BitFire\IO\Device\Mouse\Mouse.h" />
     <ClInclude Include="BitFire\IO\EndianType.h" />
@@ -192,10 +221,6 @@
     <ClInclude Include="BitFire\IO\File\FileNotFound.h" />
     <ClInclude Include="BitFire\IO\File\TextFile.h" />
     <ClInclude Include="BitFire\OpenGL\Window\InputContainer.h" />
-    <ClInclude Include="BitFire\IO\Message\Message.h" />
-    <ClInclude Include="BitFire\IO\Message\MessageSystem.h" />
-    <ClInclude Include="BitFire\IO\Message\MessageType.h" />
-    <ClInclude Include="BitFire\IO\TrippelIndex.h" />
     <ClInclude Include="BitFire\Mathematic\Algorithm\CRCAlgorithm.h" />
     <ClInclude Include="BitFire\Mathematic\Converter\Converter.h" />
     <ClInclude Include="BitFire\Mathematic\Diagrams\BoxPlot.h" />
@@ -207,13 +232,10 @@
     <ClInclude Include="BitFire\Mathematic\Geometry\Form\Icosahedron.h" />
     <ClInclude Include="BitFire\Mathematic\Geometry\Form\Sphere.h" />
     <ClInclude Include="BitFire\Mathematic\Geometry\Form\SquarePyramid.h" />
-    <ClInclude Include="BitFire\Mathematic\Geometry\IndexPoint.h" />
-    <ClInclude Include="BitFire\Mathematic\Geometry\IndexPosition.h" />
-    <ClInclude Include="BitFire\Mathematic\Geometry\Matrix\Matrix3x3.h" />
-    <ClInclude Include="BitFire\Mathematic\Geometry\Matrix\Matrix4x4.h" />
-    <ClInclude Include="BitFire\Mathematic\Geometry\Point.h" />
-    <ClInclude Include="BitFire\Mathematic\Geometry\Position.h" />
-    <ClInclude Include="BitFire\Mathematic\Geometry\Rotation.h" />
+    <ClInclude Include="BitFire\Mathematic\Geometry\Matrix3x3.hpp" />
+    <ClInclude Include="BitFire\Mathematic\Geometry\Matrix4x4.hpp" />
+    <ClInclude Include="BitFire\Mathematic\Geometry\Point.hpp" />
+    <ClInclude Include="BitFire\Mathematic\Geometry\Position.hpp" />
     <ClInclude Include="BitFire\Mathematic\Geometry\Shape\Circle.h" />
     <ClInclude Include="BitFire\Mathematic\Geometry\Shape\Hexagon.h" />
     <ClInclude Include="BitFire\Mathematic\Geometry\Shape\Pentagon.h" />
@@ -222,25 +244,15 @@
     <ClInclude Include="BitFire\Mathematic\Geometry\Shape\Square.h" />
     <ClInclude Include="BitFire\Mathematic\Geometry\Shape\Star.h" />
     <ClInclude Include="BitFire\Mathematic\Geometry\Shape\Triangle.h" />
-    <ClInclude Include="BitFire\Mathematic\Geometry\Size.h" />
-    <ClInclude Include="BitFire\Mathematic\Geometry\Vector\Vector2.h" />
-    <ClInclude Include="BitFire\Mathematic\Geometry\Vector\Vector3.h" />
-    <ClInclude Include="BitFire\Mathematic\Geometry\Vector\Vector4.h" />
+    <ClInclude Include="BitFire\Mathematic\Geometry\Vector2.hpp" />
+    <ClInclude Include="BitFire\Mathematic\Geometry\Vector3.hpp" />
+    <ClInclude Include="BitFire\Mathematic\Geometry\Vector4.hpp" />
     <ClInclude Include="BitFire\Mathematic\Interpolate.h" />
     <ClInclude Include="BitFire\Mathematic\Math.h" />
     <ClInclude Include="BitFire\Mathematic\Physic\GravityBox.h" />
     <ClInclude Include="BitFire\Mathematic\Physic\GravityField.h" />
     <ClInclude Include="BitFire\Mathematic\Physic\GravitySphere.h" />
-    <ClInclude Include="BitFire\OpenGL\OpenGLAPI.h" />
-    <ClInclude Include="BitFire\OpenGL\Render\DataSize.h" />
-    <ClInclude Include="BitFire\OpenGL\Render\IndexDataCache.h" />
-    <ClInclude Include="BitFire\OpenGL\Render\RenderDataCache.h" />
-    <ClInclude Include="BitFire\OpenGL\Render\RenderInformation.h" />
     <ClInclude Include="BitFire\OpenGL\Render\RenderMode.h" />
-    <ClInclude Include="BitFire\OpenGL\Render\RenderSystem.h" />
-    <ClInclude Include="BitFire\OpenGL\Render\VertexDataCache.h" />
-    <ClInclude Include="BitFire\OpenGL\Shader\System\ShaderFile.h" />
-    <ClInclude Include="BitFire\OpenGL\Shader\System\ShaderLoader.h" />
     <ClInclude Include="BitFire\OpenGL\Window\Window.h" />
     <ClInclude Include="BitFire\Player\Player.h" />
     <ClInclude Include="BitFire\Resources\Font\FNT\FNT.h" />
@@ -277,10 +289,6 @@
     <ClInclude Include="BitFire\Resources\Image\JPEG\JPEGLoader.h" />
     <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGChunk.h" />
     <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGChunkType.h" />
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\Type\PNGChunkImageHeader.h" />
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\Type\PortableNetworkGraphicChunkPalette.h" />
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\Type\PortableNetworkGraphicFileHeader.h" />
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\Type\PortableNetworkGraphicImageData.h" />
     <ClInclude Include="BitFire\Resources\Image\PNG\PNG.h" />
     <ClInclude Include="BitFire\Resources\Image\PNG\PNGLoader.h" />
     <ClInclude Include="BitFire\Resources\Image\TIFF\TIFF.h" />
@@ -324,21 +332,62 @@
     <ClInclude Include="BitFire\Resources\Sound\SoundLoader.h" />
     <ClInclude Include="BitFire\Resources\Sound\WAV\WAV.h" />
     <ClInclude Include="BitFire\Resources\Sound\WAV\WAVLoader.h" />
+    <ClInclude Include="BitFire\System\SystemState.h" />
     <ClInclude Include="BitFire\Time\StopWatch.h" />
-    <ClInclude Include="BitFire\Time\TimeCollection.h" />
     <ClInclude Include="BitFire\UI\Button.h" />
-    <ClInclude Include="BitFire\UI\Padding.h" />
+    <ClInclude Include="BitFire\UI\DialogBox.h" />
+    <ClInclude Include="BitFire\UI\DialogBox\DialogBox.h" />
+    <ClInclude Include="BitFire\Mathematic\Geometry\Padding.hpp" />
     <ClInclude Include="BitFire\UI\Text.h" />
     <ClInclude Include="BitFire\Utility\Dictionary.hpp" />
-    <ClInclude Include="BitFire\Utility\LinkedList.h" />
+    <ClInclude Include="BitFire\Utility\LinkedList.hpp" />
     <ClInclude Include="BitFire\Utility\List.hpp" />
-    <ClInclude Include="BitFire\Utility\ListSize.h" />
     <ClInclude Include="BitFire\Utility\Queue.hpp" />
-    <ClInclude Include="BitFire\Utility\StringSplitter.h" />
     <ClInclude Include="BitFire\IO\Serialization\JSON\JSONLoader.h" />
     <ClInclude Include="BitFire\IO\Serialization\XML\XMLLoader.h" />
     <ClInclude Include="BitFire\IO\Serialization\YAML\YAMLLoader.h" />
     <ClInclude Include="BitFire\IO\Serialization\INI\INILoader.h" />
+    <ClInclude Include="BitFire\Utility\Table.hpp" />
+    <ClInclude Include="BitFire\System\GameSystem.h" />
+    <ClInclude Include="BitFire\Resources\Shader\Shader.h" />
+    <ClInclude Include="BitFire\Resources\Shader\ShaderLoader.h" />
+    <ClInclude Include="BitFire\Resources\Shader\ShaderProgram.h" />
+    <ClInclude Include="BitFire\Resources\Dialog\Dialog.h" />
+    <ClInclude Include="BitFire\Resources\Dialog\DialogLoader.h" />
+    <ClInclude Include="BitFire\Utility\ASCIIString.h" />
+    <ClInclude Include="BitFire\Utility\ByteString.h" />
+    <ClInclude Include="BitFire\Crypto\ISBN.h" />
+    <ClInclude Include="BitFire\Crypto\Caesar.h" />
+    <ClInclude Include="BitFire\Crypto\ICypher.h" />
+    <ClInclude Include="BitFire\Crypto\RSA.h" />
+    <ClInclude Include="BitFire\Mathematic\Complex.h" />
+    <ClInclude Include="BitFire\Utility\LinkedListNode.hpp" />
+    <ClInclude Include="BitFire\Event\DataEvent.hpp" />
+    <ClInclude Include="BitFire\System\GameTickEvent.h" />
+    <ClInclude Include="BitFire\System\GameTickData.h" />
+    <ClInclude Include="BitFire\UI\DialogBox\CloseEvent.h" />
+    <ClInclude Include="BitFire\UI\DialogBox\NewCharacterEvent.h" />
+    <ClInclude Include="BitFire\UI\DialogBox\NewPageEvent.h" />
+    <ClInclude Include="BitFire\UI\DialogBox\OpenEvent.h" />
+    <ClInclude Include="BitFire\Mathematic\Geometry\Form\Form.h" />
+    <ClInclude Include="BitFire\Resources\Image\ImageInformation.h" />
+    <ClInclude Include="BitFire\IO\Log\Log.h" />
+    <ClInclude Include="BitFire\IO\Log\LogMessage.h" />
+    <ClInclude Include="BitFire\Level\Level.h" />
+    <ClInclude Include="BitFire\Mathematic\Physic\Collider.h" />
+    <ClInclude Include="BitFire\IO\InputSystem.h" />
+    <ClInclude Include="BitFire\IO\Device\InputButton.h" />
+    <ClInclude Include="BitFire\OpenGL\Render\HUD.h" />
+    <ClInclude Include="BitFire\Level\LevelLoader.h" />
+    <ClInclude Include="BitFire\Level\LevelManager.h" />
+    <ClInclude Include="MineCraft\Block.h" />
+    <ClInclude Include="MineCraft\World.h" />
+    <ClInclude Include="BitFire\UI\UIElement.h" />
+    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGHeader.h" />
+    <ClInclude Include="BitFire\Utility\UUID.h" />
+    <ClInclude Include="BitFire\Resources\ResouceManager.h" />
+    <ClInclude Include="BitFire\Resources\Resource.h" />
+    <ClInclude Include="BitFire\Resources\Model\ModelRenderInformation.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -414,27 +463,30 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);GLEW_STATIC;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>OpenAL32.lib;glfw3.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);GLEW_STATIC;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -451,22 +503,25 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);GLEW_STATIC;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>OpenAL32.lib;glfw3.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);GLEW_STATIC;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -1,10 +1,9 @@
 #pragma once
 
-#include <string>
-
 #include "OGG.h"
 
 #include "../../ILoader.h"
+#include "../../../Utility/ASCIIString.h"
 
 namespace BF
 {
@@ -14,6 +13,6 @@ namespace BF
 		OGGLoader();
 
 		public:
-		static OGG* LoadFromFile(std::string filePath);
+		static OGG* LoadFromFile(ASCIIString filePath);
 	};
 }

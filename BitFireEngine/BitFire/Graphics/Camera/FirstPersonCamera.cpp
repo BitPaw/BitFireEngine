@@ -1,27 +1,53 @@
 #include "FirstPersonCamera.h"
 
+void BF::FirstPersonCamera::FetchGPUReferences(unsigned int shaderID)
+{
+	int old_modelViewProjectionID = _modelViewProjectionID;
+	int old_inverseModelViewID = _inverseModelViewID;
+	int old_modelViewID = _modelViewID;
+	int old_textureID = _textureID;
+
+	_modelViewProjectionID = glGetUniformLocation(shaderID, "ModelViewProjection");
+	_inverseModelViewID = glGetUniformLocation(shaderID, "ModelView");
+	_modelViewID = glGetUniformLocation(shaderID, "InverseModelView");
+	_textureID = glGetUniformLocation(shaderID, "objtexture");
+
+	if (_modelViewProjectionID == -1 || _inverseModelViewID == -1 || _modelViewID == -1)
+	{
+		_modelViewProjectionID = old_modelViewProjectionID;
+		_inverseModelViewID = old_inverseModelViewID;
+		_modelViewID = old_modelViewID;
+		_textureID = old_textureID;
+		ValidShader = false;
+	}
+	else
+	{
+		ValidShader = true;
+	}
+}
+
 void BF::FirstPersonCamera::Rotate(float x, float y)
 {
 	const float maxValue = 85.0f;
 	const float minValue = -85.0f;
-	float movementSpeed = GetViewSpeed();
+	float movementSpeed = _viewSpeed;
 
-	CurrentRotation.Yaw -= x * movementSpeed;
-	CurrentRotation.Pitch += y * movementSpeed;
+	CurrentRotation.X -= x * movementSpeed;
+	CurrentRotation.Y += y * movementSpeed;
 
 	// Cap
-	if (CurrentRotation.Pitch > maxValue)
+	if (CurrentRotation.Y > maxValue)
 	{
-		CurrentRotation.Pitch = maxValue;
+		CurrentRotation.Y = maxValue;
 	}
 
-	if (CurrentRotation.Pitch < minValue)
+	if (CurrentRotation.Y < minValue)
 	{
-		CurrentRotation.Pitch = minValue;
+		CurrentRotation.Y = minValue;
 	}
 
-	float pitchRAD = glm::radians(CurrentRotation.Pitch);
-	float yawRAD = glm::radians(CurrentRotation.Yaw);
+	float pitchRAD = glm::radians(CurrentRotation.Y);
+	float yawRAD = glm::radians(CurrentRotation.X);
 
 	glm::vec3 temp;
 
@@ -30,33 +56,55 @@ void BF::FirstPersonCamera::Rotate(float x, float y)
 	temp.z = cos(pitchRAD) * sin(yawRAD);
 
 	_lookAt = glm::normalize(temp);
-
-	Update();
 }
 
-void BF::FirstPersonCamera::Update()
+void BF::FirstPersonCamera::Update(GameTickData gameTickData)
 {
+	_walkSpeed = gameTickData.DeltaTime * 30;
+	_viewSpeed = gameTickData.DeltaTime * 350;
+
+	if (!ValidShader)
+	{
+		return;
+	}
 
 	switch (Settings->Mode)
 	{
-	case CameraMode::Orthographic:
-		_projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -10.0f, Settings->Far);
-		break;
+		case CameraMode::Orthographic:
+			_projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -10.0f, Settings->Far);
+			break;
 
-	case CameraMode::Perspectdive:
-		_projection = glm::perspective(glm::radians(Settings->FieldOfView), 1.0f, Settings->Near, Settings->Far);
-		break;
+		case CameraMode::Perspectdive:
+			_projection = glm::perspective(glm::radians(Settings->FieldOfView), 1.0f, Settings->Near, Settings->Far);
+			break;
 	}
 
 	_view = glm::lookAt(_position, _position + _lookAt, _up);
 
 	_viewProjection = _projection * _view;
+
+	//----
+	glm::mat4 cameraView = _view;
+	glm::mat4 cameraProjection = _projection;
+
+	_modelView = cameraView * glm::mat4(1.0f);
+	_invModelView = glm::transpose(glm::inverse(_modelView));
+
+	glm::vec3 offset = glm::vec3(0, 0, 0);
+	glm::mat4 diff = glm::translate(cameraView, offset);
+
+	_completematrix = cameraProjection * diff * glm::mat4(1.0f);
+
+	glUniformMatrix4fv(_modelViewID, 1, GL_FALSE, &_modelView[0][0]);
+	glUniformMatrix4fv(_modelViewProjectionID, 1, GL_FALSE, &_completematrix[0][0]);
+	glUniformMatrix4fv(_inverseModelViewID, 1, GL_FALSE, &_invModelView[0][0]);
+	// -----
 }
 
 void BF::FirstPersonCamera::Move(Direcion direction)
 {
 	glm::vec3 movement;
-	float movementSpeed = GetWalkSpeed();
+	float movementSpeed = _walkSpeed;
 
 	switch (direction)
 	{
@@ -87,13 +135,14 @@ void BF::FirstPersonCamera::Move(Direcion direction)
 
 	_position += movement;
 
-	_view = glm::translate(_view, movement * (-1.0f));
+	CurrentPosition.Add(movement.x, movement.y, movement.z);
 
-	Update();
+	_view = glm::translate(_view, movement * (-1.0f));
 }
 
 BF::FirstPersonCamera::FirstPersonCamera() : Camera()
 {
+	ValidShader = false;
 	Settings->Mode = CameraMode::Perspectdive;
 
 	_up = glm::vec3(0.0f, 1.0f, 0.0f);

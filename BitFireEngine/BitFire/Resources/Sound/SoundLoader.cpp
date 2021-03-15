@@ -1,16 +1,16 @@
 #include "SoundLoader.h"
 
-BF::ISound* BF::SoundLoader::LoadFromFile(std::string filePath)
+BF::Sound* BF::SoundLoader::LoadFromFile(ASCIIString filePath)
 {
-    ISound* sound = nullptr;
+    Sound* sound = nullptr;
     SoundFormat soundFormat = SoundFormat::Unkown;
     TextFile textFile(filePath);
-    std::string fileExtension = textFile.GetFileExtension();
+    ASCIIString fileExtension = textFile.FileExtension;
 
-    bool isMIDI = fileExtension == "mid";
-    bool isMP3 = fileExtension == "mp3";
-    bool isOGG = fileExtension == "ogg";
-    bool isWAV = fileExtension == "wav";
+    bool isMIDI = fileExtension.CompareIgnoreCase("mid");
+    bool isMP3 = fileExtension.CompareIgnoreCase("mp3"); 
+    bool isOGG = fileExtension.CompareIgnoreCase("ogg"); 
+    bool isWAV = fileExtension.CompareIgnoreCase("wav"); 
 
     if (isMIDI) soundFormat = SoundFormat::MID;
     if (isMP3) soundFormat = SoundFormat::MP3;
@@ -21,11 +21,11 @@ BF::ISound* BF::SoundLoader::LoadFromFile(std::string filePath)
     {
         case SoundFormat::MID:
         {
-            MessageSystem::PushMessage(MessageType::Info, "[.MID] MIDI File detected.");
+           Log::Write(LogMessageType::Event, "[.MID] MIDI File detected.");
 
             MID* mid = MIDLoader::LoadFromFile(filePath);
 
-            sound = mid;
+            //sound = mid;
 
             break;
         }
@@ -33,33 +33,33 @@ BF::ISound* BF::SoundLoader::LoadFromFile(std::string filePath)
 
         case SoundFormat::MP3:
         {
-            MessageSystem::PushMessage(MessageType::Info, "[.MP3] MPEG File detected.");
+            Log::Write(LogMessageType::Event, "[.MP3] MPEG File detected.");
 
             MP3* mp3 = MP3Loader::LoadFromFile(filePath);
 
-            sound = mp3;
+            //sound = mp3;
 
             break;
         }
 
         case SoundFormat::OGG:
         {
-            MessageSystem::PushMessage(MessageType::Info, "[.OGG] Ogging File detected.");
+            Log::Write(LogMessageType::Event, "[.OGG] Ogging File detected.");
 
             OGG* ogg = OGGLoader::LoadFromFile(filePath);
 
-            sound = ogg;
+           // sound = ogg;
 
             break;
         }
 
         case SoundFormat::WAV:
         {
-            MessageSystem::PushMessage(MessageType::Info, "[.WAV] Wave File detected.");
+            Log::Write(LogMessageType::Event, "[.WAV] Wave File detected.");
 
             WAV* wav = WAVLoader::LoadFromFile(filePath);
 
-            sound = wav;
+            //sound = wav;
 
             break;
         }

@@ -1,182 +1,328 @@
 #include "Model.h"
+#include "../../Mathematic/Geometry/Shape/Triangle.h"
+#include "../../Mathematic/Geometry/Shape/Rectangle.h"
 
-#include "../../OpenGL/OpenGLAPI.h"
 
-void BF::Model::UpdateRenderSystemLink()
+
+BF::Model::Model()
 {
-    OpenGLAPI* openGLAPI = OpenGLAPI::Instance();
-
-    if (openGLAPI == nullptr)
-    {
-        // Error  
-    }
-    else
-    {
-        openGLAPI->Render->RegisterRenderModel(this);
-    }
+    RenderInformation.RenderType = RenderMode::Unkown;
 }
 
-BF::Model::Model() : Model("[N/A]")
-{
-
-}
-
-BF::Model::Model(std::string name)
+BF::Model::Model(ASCIIString& name)
 {   
-    _currentPosition = Vector3(0, 0, 0);
-       
-    ModelID = -1;
-    ModelName = name;
+    RenderInformation.RenderType = RenderMode::Unkown; 
+    ModelName.Copy(name);
 }
 
-BF::Model::~Model()
+void BF::Model::Move(float x, float y, float z)
 {
-    ModelName = "[DELETED] " + ModelName;
-
-   // MeshList.DeleteAll();
+    Move(Position<float>(x, y, z));
 }
 
-void BF::Model::MoveBy(BF::Vector3 vector)
-{  
-    _currentPosition += vector;
-
-    for (unsigned int i = 0; i < GlobalMesh.VertexList.Size.Value; i++)
+void BF::Model::Move(Position<float> position)
+{
+    for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
     {
-        Vertex* vertex = GlobalMesh.VertexList[i];
-        Position* currentPosition = &vertex->CurrentPosition;
-
-        currentPosition->X += vector.X;
-        currentPosition->Y += vector.Y;
-        currentPosition->Z += vector.Z;  
+        GlobalMesh.VertexList[i]->CurrentPosition.Add(position);
     }
 
-    UpdateRenderSystemLink();
+    _currentPosition += position;
 }
 
-void BF::Model::MoveTo(Vector3 vector)
+void BF::Model::MoveTo(float x, float y, float z)
 {
-    for (unsigned int i = 0; i < GlobalMesh.VertexList.Size.Value; i++)
+    MoveTo(Position<float>(x, y, z));
+}
+
+void BF::Model::MoveTo(Position<float> position)
+{
+    for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
     {
         Vertex* vertex = GlobalMesh.VertexList[i];
-        Position* currentPosition = &vertex->CurrentPosition;
 
-        currentPosition->X += -_currentPosition.X + vector.X;
-        currentPosition->Y += -_currentPosition.Y + vector.Y;
-        currentPosition->Z += -_currentPosition.Z + vector.Z;
+        vertex->CurrentPosition.Substract(_currentPosition);
+        vertex->CurrentPosition.Add(position);
     }
 
-    _currentPosition = vector;
-
-    UpdateRenderSystemLink();
+    _currentPosition = position;
 }
 
-BF::Vector3 BF::Model::CurrentPosition()
+void BF::Model::Rotate(float x, float y, float z)
+{
+    Rotate(Position<float>(x, y, z));
+}
+
+void BF::Model::Rotate(Position<float> rotation)
+{
+    for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
+    {
+        Vertex* vertex = GlobalMesh.VertexList[i];
+        Position<float>* currentPosition = &vertex->CurrentPosition;
+
+        currentPosition->Substract(_currentPosition);
+        currentPosition->Rotate(rotation);
+        currentPosition->Add(_currentPosition);
+    }
+
+    _currentRotation += rotation;
+
+    if (_currentRotation.X > 360)
+    {
+        _currentRotation.X -= 360;
+    }
+
+    if (_currentRotation.Y > 360)
+    {
+        _currentRotation.Y -= 360;
+    }
+
+    if (_currentRotation.Z > 360)
+    {
+        _currentRotation.Z -= 360;
+    }
+}
+
+void BF::Model::RotateTo(float x, float y, float z)
+{
+
+}
+
+void BF::Model::RotateTo(Position<float> rotation)
+{
+
+}
+
+
+
+void BF::Model::Orbit(float x, float y, float z)
+{
+    Orbit(Position<float>(x, y, z));
+}
+
+void BF::Model::Orbit(Position<float> rotation)
+{
+    for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
+    {
+        Vertex* vertex = GlobalMesh.VertexList[i];
+
+        vertex->CurrentPosition.Rotate(rotation);
+    }
+}
+
+void BF::Model::Orbit(Position<float> rotation, Position<float> ancerPosition)
+{
+}
+
+
+void BF::Model::Scale(float x, float y, float z)
+{
+    Scale(Position<float>(x, y, z));
+}
+
+void BF::Model::Scale(Position<float> scaleFactor)
+{
+    for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
+    {
+        Vertex* vertex = GlobalMesh.VertexList[i];
+
+        vertex->CurrentPosition.Multiply(scaleFactor);
+    }
+}
+
+
+BF::Position<float> BF::Model::CurrentPosition()
 {
     return _currentPosition;
 }
 
-void BF::Model::Orbit(Vector3 vector)
+BF::Position<float> BF::Model::CurrentRotation()
 {
-    for (unsigned int i = 0; i < GlobalMesh.VertexList.Size.Value; i++)
-    {
-        Vertex* vertex = GlobalMesh.VertexList[i];
-        Position* currentPosition = &vertex->CurrentPosition;
-        Vector3 current = Vector3(currentPosition->X, currentPosition->Y, currentPosition->Z);
-
-        current.Rotate(vector);
-
-        currentPosition->X = current.X;
-        currentPosition->Y = current.Y;
-        currentPosition->Z = current.Z;
-    }
-
-    UpdateRenderSystemLink();
-}
-
-void BF::Model::Rotate(Vector3 vector)
-{
-    for (unsigned int i = 0; i < GlobalMesh.VertexList.Size.Value; i++)
-    {
-        Vertex* vertex = GlobalMesh.VertexList[i];
-        Position* currentPosition = &vertex->CurrentPosition;
-        Vector3 current = Vector3(currentPosition->X, currentPosition->Y, currentPosition->Z);  
-    
-        current -= _currentPosition;
-        current.Rotate(vector);
-        current += _currentPosition;
-
-        currentPosition->X = current.X;
-        currentPosition->Y = current.Y;
-        currentPosition->Z = current.Z;
-    }
-
-    UpdateRenderSystemLink();
-}
-
-void BF::Model::Scale(Vector3 vector)
-{
-    for (unsigned int i = 0; i < GlobalMesh.VertexList.Size.Value; i++)
-    {
-        Vertex* vertex = GlobalMesh.VertexList[i];
-        Position* currentPosition = &vertex->CurrentPosition;
-
-        currentPosition->X *= vector.X;
-        currentPosition->Y *= vector.Y;
-        currentPosition->Z *= vector.Z;
-    }
-
-    UpdateRenderSystemLink();
+    return _currentRotation;
 }
 
 void BF::Model::CalculateNormalVectors()
 {
-    for (unsigned int i = 0; i < MeshList.Size.Value; i++)
+    for (unsigned int i = 0; i < MeshList.Size(); i++)
     {
         Mesh* mesh = &MeshList[i];
         List<MeshIndexData>* indexList = &mesh->IndexList;
         List<Vertex>* vertexList = &mesh->VertexList;
-        unsigned int size = mesh->IndexList.Size.Value;
+        unsigned int indexListSize = mesh->IndexList.Size();
 
-        mesh->NormalPointList.ReSize(size);
-
-        for (unsigned int i = 0; i < size; i += 3)
+        switch (indexListSize)
         {
-            unsigned int indexA = (*indexList)[i].VertexPositionID;
-            unsigned int indexB = (*indexList)[i + 1].VertexPositionID;
-            unsigned int indexC = (*indexList)[i + 2].VertexPositionID;
+            case 0:
+                // Poligon has no points, there cant be a normal verctor.
+                break;
 
-            Vertex* vertexA = &(*vertexList)[indexA];
-            Vertex* vertexB = &(*vertexList)[indexB];
-            Vertex* vertexC = &(*vertexList)[indexC];
+            case 1:
+                // Poligon has only one Point, normal will be teh point itself.
 
-            Position* aPos = &vertexA->CurrentPosition;
-            Position* bPos = &vertexB->CurrentPosition;
-            Position* cPos = &vertexC->CurrentPosition;
+                break;
 
-            glm::vec3 a(aPos->X, aPos->Y, aPos->Z);
-            glm::vec3 b(bPos->X, bPos->Y, bPos->Z);
-            glm::vec3 c(cPos->X, cPos->Y, cPos->Z);
+            case 2:
+                // There are only 2 points, you cant render something like this. Or can it?
+                break;
 
-            glm::vec3 nA = glm::cross(a, b);
-            glm::vec3 nB = glm::cross(b, c);
-            glm::vec3 nC = glm::cross(c, a);  
+            case 3:                
+            default:     
+                switch (RenderInformation.RenderType)
+                {
+                    case RenderMode::Triangle:
+                    {
+                        unsigned int i = 0;
+                        unsigned int normalPointIndex = 0;
+                        float normals = indexListSize / 3.0f;
+                        unsigned int normalSaveVectorSize = Math::Floor(normals);
+                        unsigned int normalExactVectorSize = Math::Ceiling(normals);
+                        mesh->NormalPointList.ReSize(normalExactVectorSize);
 
-            // BAd code, this memory waste
-            (*indexList)[i].NormalVectorID = mesh->NormalPointList.CurrentIndex;
-            mesh->NormalPointList[mesh->NormalPointList.CurrentIndex++] = Position(nA.x, nA.y, nA.z);
+                        while (normalPointIndex < normalSaveVectorSize)
+                        {
+                            MeshIndexData* mIndexA = &(*indexList)[i++];
+                            MeshIndexData* mIndexB = &(*indexList)[i++];
+                            MeshIndexData* mIndexC = &(*indexList)[i++];
 
-            (*indexList)[i + 1].NormalVectorID = mesh->NormalPointList.CurrentIndex;
-            mesh->NormalPointList[mesh->NormalPointList.CurrentIndex++] = Position(nB.x, nB.y, nB.z);
+                            Vertex* vertexA = &(*vertexList)[mIndexA->VertexPositionID];
+                            Vertex* vertexB = &(*vertexList)[mIndexB->VertexPositionID];
+                            Vertex* vertexC = &(*vertexList)[mIndexC->VertexPositionID];
 
-            (*indexList)[i + 2].NormalVectorID = mesh->NormalPointList.CurrentIndex;
-            mesh->NormalPointList[mesh->NormalPointList.CurrentIndex++] = Position(nC.x, nC.y, nC.z);
+                            Triangle triangle
+                            (
+                                vertexA->CurrentPosition,
+                                vertexB->CurrentPosition,
+                                vertexC->CurrentPosition
+                            );
+
+                            mIndexA->NormalVectorID = normalPointIndex;
+                            mIndexB->NormalVectorID = normalPointIndex;
+                            mIndexC->NormalVectorID = normalPointIndex;
+
+                            mesh->NormalPointList[normalPointIndex++] = triangle.NormalDirection();
+                        }
+
+                        if (normalSaveVectorSize < normalExactVectorSize)
+                        {
+                            MeshIndexData* mIndexA = &(*indexList)[i - 1];
+                            MeshIndexData* mIndexB = &(*indexList)[i];
+                            MeshIndexData* mIndexC = &(*indexList)[0];
+
+                            Vertex* vertexA = &(*vertexList)[mIndexA->VertexPositionID];
+                            Vertex* vertexB = &(*vertexList)[mIndexB->VertexPositionID];
+                            Vertex* vertexC = &(*vertexList)[mIndexC->VertexPositionID];
+
+                            Triangle triangle
+                            (
+                                vertexA->CurrentPosition,
+                                vertexB->CurrentPosition,
+                                vertexC->CurrentPosition
+                            );
+
+                            mIndexA->NormalVectorID = normalPointIndex;
+                            mIndexB->NormalVectorID = normalPointIndex;
+                            mIndexC->NormalVectorID = normalPointIndex;
+
+                            mesh->NormalPointList[normalPointIndex++] = triangle.NormalDirection();
+                        }
+                }
+                        break;
+
+                    case RenderMode::Square:
+                    {
+                        unsigned int i = 0;
+                        unsigned int normalPointIndex = 0;
+                        float normals = indexListSize / 4.0f;
+                        unsigned int normalSaveVectorSize = Math::Floor(normals);
+                        unsigned int normalExactVectorSize = Math::Ceiling(normals);
+                        mesh->NormalPointList.ReSize(normalExactVectorSize);
+
+                        while (normalPointIndex < normalSaveVectorSize)
+                        {
+                            MeshIndexData* mIndexA = &(*indexList)[i];
+                            MeshIndexData* mIndexB = &(*indexList)[i + 1];
+                            MeshIndexData* mIndexC = &(*indexList)[i + 2];
+                            MeshIndexData* mIndexD = &(*indexList)[i + 3];
+
+                            Vertex* vertexA = &(*vertexList)[mIndexA->VertexPositionID];
+                            Vertex* vertexB = &(*vertexList)[mIndexB->VertexPositionID];
+                            Vertex* vertexC = &(*vertexList)[mIndexC->VertexPositionID];
+                            Vertex* vertexD = &(*vertexList)[mIndexD->VertexPositionID];
+
+                            Rectangle rectangle
+                            (
+                                vertexA->CurrentPosition,
+                                vertexB->CurrentPosition,
+                                vertexC->CurrentPosition,
+                                vertexD->CurrentPosition
+                            );
+
+                            mIndexA->NormalVectorID = normalPointIndex;
+                            mIndexB->NormalVectorID = normalPointIndex;
+                            mIndexC->NormalVectorID = normalPointIndex;
+                            mIndexD->NormalVectorID = normalPointIndex;
+
+                            mesh->NormalPointList[normalPointIndex++] = rectangle.NormalDirection();
+                        }
+
+                        if (normalSaveVectorSize < normalExactVectorSize)
+                        {
+                            printf("Error");
+                        }
+
+
+
+              
+
+                    }
+                        break;
+
+
+                }
+                break;
         }
+
+
+
+        /*
+
+                for (unsigned int i = 0; i < size; i += 3)
+                {
+                    unsigned int indexA = (*indexList)[i].VertexPositionID;
+                    unsigned int indexB = (*indexList)[i + 1].VertexPositionID;
+                    unsigned int indexC = (*indexList)[i + 2].VertexPositionID;
+
+                    Vertex* vertexA = &(*vertexList)[indexA];
+                    Vertex* vertexB = &(*vertexList)[indexB];
+                    Vertex* vertexC = &(*vertexList)[indexC];
+
+                    Position<float>* aPos = &vertexA->CurrentPosition;
+                    Position<float>* bPos = &vertexB->CurrentPosition;
+                    Position<float>* cPos = &vertexC->CurrentPosition;
+
+                    // BAd code, this memory waste
+                    (*indexList)[i].NormalVectorID = normalPointIndex;
+                    mesh->NormalPointList[normalPointIndex++] = aPos->CrossProduct(*bPos);
+
+                    (*indexList)[i + 1].NormalVectorID = normalPointIndex;
+                    mesh->NormalPointList[normalPointIndex++] = bPos->CrossProduct(*cPos);
+
+                    (*indexList)[i + 2].NormalVectorID = normalPointIndex;
+                    mesh->NormalPointList[normalPointIndex++] = cPos->CrossProduct(*aPos);
+                }
+
+                */
+                
+        
+
+
+
     }   
 }
 
 void BF::Model::UseTexturePointAsColor()
 {
-    const unsigned int indexListLength = GlobalMesh.IndexList.Size.Value;
+    const unsigned int indexListLength = GlobalMesh.IndexList.Size();
 
     GlobalMesh.ColorList.ReSize(indexListLength);
     
@@ -195,86 +341,113 @@ void BF::Model::UseTexturePointAsColor()
         MeshIndexData* meshIndexData = GlobalMesh.IndexList[i];
         
         Vertex* vertex = GlobalMesh.VertexList[meshIndexData->VertexPositionID];
-        Point* texturepoint = GlobalMesh.TexturePointList[meshIndexData->TexturePointID];
+        Point<float>* texturepoint = GlobalMesh.TexturePointList[meshIndexData->TexturePointID];
 
         vertex->ColorID = i;
         GlobalMesh.ColorList[i]->SetColor(texturepoint->X, texturepoint->Y, 0);
     }
-
-    UpdateRenderSystemLink();
 }
 
 void BF::Model::PrintModelData()
 {
-    printf("Meshes %u\n", MeshList.Size.Value);
+    printf("Meshes %u\n", MeshList.Size());
 
-    for (unsigned int i = 0; i < MeshList.Size.Value; i++)
+    for (unsigned int i = 0; i < MeshList.Size(); i++)
     {
         Mesh* mesh = &MeshList[i];
 
-        printf("N: %u\n", mesh->NormalPointList.Size.Value);
+        printf("M: %5u %5u %5u\n", mesh->VertexList.Size(), mesh->NormalPointList.Size(), mesh->TexturePointList.Size());
 
         
     }
 }
 
+void BF::Model::PrintCurrentPosition()
+{
+    printf("ID:  Position: X:%5.2f Y:%5.2f Z:%5.2f\n", _currentPosition.X, _currentPosition.Y, _currentPosition.Z);
+}
+
+void BF::Model::PrintCurrentRotation()
+{
+    printf("ID:  Rotation: X:%5.2f Y:%5.2f Z:%5.2f\n", _currentRotation.X, _currentRotation.Y, _currentRotation.Z);
+}
+
 void BF::Model::UpdateGlobalMesh()
 {
-    const unsigned int length = MeshList.Size.Value;
+    const unsigned int length = MeshList.Size();
     unsigned int vertexListLength = 0;
     unsigned int texturePointListLength = 0;
     unsigned int normalPointListLength = 0;
-    unsigned int colorListLength = ColorList.Size.Value;
+    unsigned int colorListLength = ColorList.Size();
     unsigned int indexListLength = 0;
+
+    unsigned int vertexIndex = 0;
+    unsigned int textureIndex = 0;
+    unsigned int normalIndex = 0;
+    unsigned int colorIndex = 0;
+    unsigned int indexIndex = 0;
 
     for (unsigned int i = 0; i < length; i++)
     {
         Mesh* mesh = &MeshList[i];
 
-        vertexListLength += mesh->VertexList.Size.Value;
-        texturePointListLength += mesh->TexturePointList.Size.Value;
-        normalPointListLength += mesh->NormalPointList.Size.Value;
-        indexListLength += mesh->IndexList.Size.Value;
+        vertexListLength += mesh->VertexList.Size();
+        texturePointListLength += mesh->TexturePointList.Size();
+        normalPointListLength += mesh->NormalPointList.Size();
+        indexListLength += mesh->IndexList.Size();
     }
 
     GlobalMesh.VertexList.ReSize(vertexListLength);
     GlobalMesh.TexturePointList.ReSize(texturePointListLength);
     GlobalMesh.NormalPointList.ReSize(normalPointListLength);
     GlobalMesh.ColorList.ReSize(colorListLength);
-    GlobalMesh.IndexList.ReSize(indexListLength);
+    GlobalMesh.IndexList.ReSize(indexListLength); 
 
     for (unsigned int i = 0; i < length; i++)
     {
-        Mesh* mesh = &MeshList[i];
-        vertexListLength = mesh->VertexList.Size.Value;
-        texturePointListLength = mesh->TexturePointList.Size.Value;
-        normalPointListLength = mesh->NormalPointList.Size.Value;
-        indexListLength = mesh->IndexList.Size.Value;
+        Mesh* mesh = &MeshList[i];        
+
+        vertexListLength = mesh->VertexList.Size();
+        texturePointListLength = mesh->TexturePointList.Size();
+        normalPointListLength = mesh->NormalPointList.Size();
+        indexListLength = mesh->IndexList.Size();
 
         for (unsigned int i = 0; i < vertexListLength; i++)
         {
-            GlobalMesh.VertexList[GlobalMesh.VertexList.CurrentIndex++] = &mesh->VertexList[i];
+            GlobalMesh.VertexList[vertexIndex++] = &mesh->VertexList[i];
         }
 
         for (unsigned int i = 0; i < texturePointListLength; i++)
         {
-            GlobalMesh.TexturePointList[GlobalMesh.TexturePointList.CurrentIndex++] = &mesh->TexturePointList[i];
+            GlobalMesh.TexturePointList[textureIndex++] = &mesh->TexturePointList[i];
         }
 
         for (unsigned int i = 0; i < normalPointListLength; i++)
         {
-            GlobalMesh.NormalPointList[GlobalMesh.NormalPointList.CurrentIndex++] = &mesh->NormalPointList[i];
+            GlobalMesh.NormalPointList[normalIndex++] = &mesh->NormalPointList[i];
         }
 
-        GlobalMesh.ColorList.CurrentIndex = 0;
         for (unsigned int i = 0; i < colorListLength; i++)
         {
-            GlobalMesh.ColorList[GlobalMesh.ColorList.CurrentIndex++] = &ColorList[i];
+            GlobalMesh.ColorList[colorIndex++] = &ColorList[i];
         }
 
         for (unsigned int i = 0; i < indexListLength; i++)
         {
-            GlobalMesh.IndexList[GlobalMesh.IndexList.CurrentIndex++] = &mesh->IndexList[i];
+            GlobalMesh.IndexList[indexIndex++] = &mesh->IndexList[i];
         }
+    }
+}
+
+void BF::Model::ScaleTexturePoints(float x, float y)
+{
+    ScaleTexturePoints(Point<float>(x, y));
+}
+
+void BF::Model::ScaleTexturePoints(Point<float> scale)
+{
+    for (unsigned int i = 0; i < GlobalMesh.TexturePointList.Size(); i++)
+    {
+        GlobalMesh.TexturePointList[i]->Multiply(scale);
     }
 }

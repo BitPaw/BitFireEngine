@@ -10,7 +10,7 @@ BF::FNTInfo::FNTInfo()
 	Unicode = false;
 	StretchH = 100;
 	Smooth = 1;
-	AA = 1;
-	CharacterPadding = Padding(3);
-	SpacerOffset = Point();
+	Supersampling = 1;
+	CharacterPadding.Set(0);
+	SpacerOffset.Set(0, 0);
 }

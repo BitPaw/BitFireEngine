@@ -3,18 +3,18 @@
 #include <glm/glm.hpp>
 #include <glm/geometric.hpp>
 
-#include "../../Mathematic/Geometry/Position.h"
+#include "../../Mathematic/Geometry/Position.hpp"
 
 namespace BF
 {
 	class Vertex
 	{
 		public:
-		Position CurrentPosition;
+		Position<float> CurrentPosition;
 		unsigned int ColorID;
 
 		Vertex();
-		Vertex(Position currentPosition);
-		Vertex(Position currentPosition, const unsigned int colorID);
+		Vertex(Position<float> currentPosition);
+		Vertex(Position<float> currentPosition, const unsigned int colorID);
 	};
 }

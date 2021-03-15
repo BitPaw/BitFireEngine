@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include "TIFF/TIFF.h"
 #include "JPEG/JPEG.h"
 #include "GIF/GIF.h"
@@ -17,14 +15,18 @@
 #include "ImageFormat.h"
 
 #include "../../IO/File/TextFile.h"
-#include "../../IO/Message/MessageSystem.h"
+#include "../../IO/Log/Log.h"
 
 namespace BF
 {
 	class ImageLoader
 	{
 	public:
-		static IImage* LoadFromFile(std::string filePath);
+		static Image* LoadFromFile(ASCIIString& filePath);
+
+		static ImageFormat CheckImageFormat(ASCIIString& fileExtension);
+
+		static bool IsImageFileExtension(ASCIIString& fileExtension);
 
 		static Image* BMPToImage(BMP* bitmap);
 		static Image* GIFToImage(GIF* bitmap);

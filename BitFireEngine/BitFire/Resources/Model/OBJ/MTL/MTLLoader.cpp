@@ -1,20 +1,21 @@
 #include "MTLLoader.h"
 
 
-BF::MTL* BF::MTLLoader::LoadFromFile(std::string filePath)
+BF::MTL* BF::MTLLoader::LoadFromFile(ASCIIString& filePath)
 {
     MTL* materialLibrary = new MTL();
-	List<std::string> lines = FileLoader::ReadFileByLines(filePath);
+	List<ASCIIString> lines;
+	FileLoader::ReadFileByLines(filePath, lines);
 	unsigned int materialIndex = 0;
 
 	// Count How many materials are needed
 	{
 		unsigned int materialCounter = 0;
 
-		for (unsigned int line = 0; line < lines.Size.Value; line++)
+		for (unsigned int line = 0; line < lines.Size(); line++)
 		{
-			std::string lineCommand = lines[line];
-			char commandChar = lineCommand.length() > 0 ? lineCommand.at(0) : ' ';
+			ASCIIString lineCommand = lines[line];
+			char commandChar = lineCommand.Empty() ? ' ' : lineCommand[0];
 
 			if (commandChar == 'n')
 			{
@@ -29,43 +30,48 @@ BF::MTL* BF::MTLLoader::LoadFromFile(std::string filePath)
 	
 	Material* material = nullptr;
 
-		for (unsigned int line = 0; line < lines.Size.Value; line++)
+		for (unsigned int line = 0; line < lines.Size(); line++)
 		{
-			std::string lineCommand = lines[line];
-			
-			char commandChar = lineCommand.length() > 0 ? lineCommand.at(0) : ' ';
+			ASCIIString lineCommand = lines[line];			
+			char commandChar = lineCommand.Empty() ? ' ' : lineCommand[0];
 
 			switch (commandChar)
 			{
 			case 'n':
 			{
-				StringSplitter ss = StringSplitter::Split(lineCommand, ' ');
+				List<ASCIIString> lines;
+
+				lineCommand.Splitt(' ', lines);
 
 				material = &materialLibrary->MaterialList[materialIndex++];
-				material->Name = ss.Lines[1];
+				material->Name.Copy(lines[1]);
 
 				break;
 			}
 				
 			case 'N':
 			{
-				commandChar = lineCommand.at(1);
+				commandChar = lineCommand[1];
 
 				switch (commandChar)
 				{
 				case 's':
 				{
-					StringSplitter ss = StringSplitter::Split(lineCommand, ' ');
-					material->Weight = stof(ss.Lines[1]);
+					List<ASCIIString> lines;
+
+					lineCommand.Splitt(' ', lines);
+					material->Weight = lines[1].ToFloat();
 
 					break;
 				}
 
 				case 'i':
 				{
-					StringSplitter ss = StringSplitter::Split(lineCommand, ' ');
+					List<ASCIIString> lines;
 
-					material->Density = stof(ss.Lines[1]);
+					lineCommand.Splitt(' ', lines);
+
+					material->Density = lines[1].ToFloat();
 
 					break;
 				}
@@ -77,39 +83,45 @@ BF::MTL* BF::MTLLoader::LoadFromFile(std::string filePath)
 				
 			case 'K':
 			{
-				commandChar = lineCommand.at(1);
+				commandChar = lineCommand[1];
 
 				switch (commandChar)
 				{
 				case 'a':
 				{
-					StringSplitter ss = StringSplitter::Split(lineCommand, ' ');
+					List<ASCIIString> lines;
 
-					material->Ambient.X = stof(ss.Lines[1]);
-					material->Ambient.Y = stof(ss.Lines[2]);
-					material->Ambient.Z = stof(ss.Lines[3]);
+					lineCommand.Splitt(' ', lines);
+
+					material->Ambient.X = lines[1].ToFloat();
+					material->Ambient.Y = lines[2].ToFloat();
+					material->Ambient.Z = lines[3].ToFloat();
 
 					break;
 				}				
 
 				case 'd':
 				{
-					StringSplitter ss = StringSplitter::Split(lineCommand, ' ');
+					List<ASCIIString> lines;
 
-					material->Diffuse.X = stof(ss.Lines[1]);
-					material->Diffuse.Y = stof(ss.Lines[2]);
-					material->Diffuse.Z = stof(ss.Lines[3]);
+					lineCommand.Splitt(' ', lines);
+
+					material->Diffuse.X = lines[1].ToFloat();
+					material->Diffuse.Y = lines[2].ToFloat();
+					material->Diffuse.Z = lines[3].ToFloat();
 
 					break;
 				}				
 
 				case 's':
 				{
-					StringSplitter ss = StringSplitter::Split(lineCommand, ' ');
+					List<ASCIIString> lines;
 
-					material->Specular.X = stof(ss.Lines[1]);
-					material->Specular.Y = stof(ss.Lines[2]);
-					material->Specular.Z = stof(ss.Lines[3]);
+					lineCommand.Splitt(' ', lines);
+
+					material->Specular.X = lines[1].ToFloat();
+					material->Specular.Y = lines[2].ToFloat();
+					material->Specular.Z = lines[3].ToFloat();
 
 					break;
 				}
@@ -117,11 +129,13 @@ BF::MTL* BF::MTLLoader::LoadFromFile(std::string filePath)
 
 				case 'e':
 				{
-					StringSplitter ss = StringSplitter::Split(lineCommand, ' ');
+					List<ASCIIString> lines;
 
-					material->Emission.X = stof(ss.Lines[1]);
-					material->Emission.Y = stof(ss.Lines[2]);
-					material->Emission.Z = stof(ss.Lines[3]);
+					lineCommand.Splitt(' ', lines);
+
+					material->Emission.X = lines[1].ToFloat();
+					material->Emission.Y = lines[2].ToFloat();
+					material->Emission.Z = lines[3].ToFloat();
 
 					break;
 				}
@@ -133,18 +147,22 @@ BF::MTL* BF::MTLLoader::LoadFromFile(std::string filePath)
 
 			case 'd':
 			{
-				StringSplitter ss = StringSplitter::Split(lineCommand, ' ');
+				List<ASCIIString> lines;
 
-				material->Dissolved = stof(ss.Lines[1]);
+				lineCommand.Splitt(' ', lines);
+
+				material->Dissolved = lines[1].ToFloat();
 
 				break;
 			}				
 
 			case 'i':
 			{
-				StringSplitter ss = StringSplitter::Split(lineCommand, ' ');
+				List<ASCIIString> lines;
+
+				lineCommand.Splitt(' ', lines);
 				IlluminationMode mode = IlluminationMode::None;
-				int number = stoi(ss.Lines[1]);
+				int number = lines[1].ToInt();
 
 				switch (number)
 				{

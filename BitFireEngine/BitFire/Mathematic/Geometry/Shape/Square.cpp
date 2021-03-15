@@ -1,1 +1,43 @@
 #include "Square.h"
+
+BF::Square::Square()
+{	
+	Set(1);
+}
+
+BF::Square::Square(float sideLength)
+{
+	Set(sideLength);
+}
+
+BF::Square::Square(Point<float> size) 
+{
+	Set(size);
+}
+
+float BF::Square::SideLength()
+{
+	return Math::Absolute(PointA.X - PointB.X);
+}
+
+float BF::Square::SurfaceArea()
+{
+	return Math::PowerOfTwo(SideLength());
+}
+
+float BF::Square::Perimeter()
+{
+	return SideLength() * 4;
+}
+
+void BF::Square::Set(float sideLength)
+{
+	PointA.Set(0, 0);
+	PointB.Set(sideLength, sideLength);
+}
+
+void BF::Square::Set(Point<float> size)
+{
+	PointA.Set(0,0);
+	PointB.Set(size);
+}

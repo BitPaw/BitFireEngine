@@ -1,20 +1,16 @@
 #pragma once
 
 #include "Shape.h"
-#include "../Point.h"
+
+#include "../Point.hpp"
 
 namespace BF
 {
-	class Pentagon : public Shape
+	class Pentagon 
 	{
 		public:
-		Point A;
-		Point B;
-		Point C;
-		Point D;
-		Point E;
 
 		Pentagon();
-		Pentagon(Point a, Point b, Point c, Point d, Point e);
+		Pentagon(Point<float> a, Point<float> b, Point<float> c, Point<float> d, Point<float> e);
 	};
 }

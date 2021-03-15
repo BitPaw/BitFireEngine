@@ -1,30 +1,44 @@
 #pragma once
 
+#include "LinkedList.hpp"
+
 namespace BF
 {
 	template <class T>
 	class Queue
 	{
 		private:
-		T* _data;
+		LinkedList<T> _objectQueue;
 
 
 		public:
-		void Add(T element);
+		void Add(T element)
+		{
+			_objectQueue.Add(element);
+		}
 
-		/**
-			Get the next value and deletes it.
+		unsigned int Size()
+		{
+			return _objectQueue.Size();
+		}
+
+		bool IsEmpty()
+		{
+			return Size() == 0;
+		}
+
+
+		/*
+		Gets the Next object in this queue and removes it from the list.
 		*/
-		T GetNext();
-	};
+		T GetNext()
+		{
+			LinkedListNode<T>* object = _objectQueue.GetFirst();
+			T queueedobject = object->Element;
 
-	template<class T>
-	inline void Queue<T>::Add(T element)
-	{
-	}
-	template<class T>
-	inline T Queue<T>::GetNext()
-	{
-		return T();
-	}
+			_objectQueue.RemoveFirst();
+
+			return queueedobject;
+		}
+	};
 }

@@ -7,8 +7,8 @@
 
 
 #include "../IImage.h"
-#include "../../../Color/RGB8Bit.h"
 #include "../../../Utility/List.hpp"
+#include "../../../Color/RGB.hpp"
 
 namespace BF
 {
@@ -20,12 +20,12 @@ namespace BF
 		BMPInformationHeaderType InformationHeaderType;
 		IBMPInformationHeader* InformationHeader;
 
-		List<RGB8Bit> Pixel;
+		List<RGB<unsigned char>> Pixel;
 
 		BMP();
 		~BMP();
 
 		// Raw Pixel, Image is already fliped!
-		RGB8Bit* GetPixel(unsigned int x, unsigned int y);
+		RGB<unsigned char>* GetPixel(unsigned int x, unsigned int y);
 	};
 }

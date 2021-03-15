@@ -1,10 +1,9 @@
 #pragma once
 
-#include <string>
-
 #include "TTF.h"
 
 #include "../../ILoader.h"
+#include "../../../Utility/ASCIIString.h"
 
 namespace BF
 {
@@ -14,6 +13,6 @@ namespace BF
 		TTFLoader();
 
 		public:
-		static TTF* LoadFromFile(std::string filePath);
+		static TTF* LoadFromFile(ASCIIString filePath);
 	};
 }

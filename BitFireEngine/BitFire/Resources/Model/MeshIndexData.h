@@ -11,5 +11,7 @@ namespace BF
 
 		MeshIndexData();
 		MeshIndexData(const unsigned int vertexPositionID, const unsigned int texturePointID, const unsigned int normalVectorID);
+
+		void Set(const unsigned int vertexPositionID, const unsigned int texturePointID, const unsigned int normalVectorID);
 	};
 }

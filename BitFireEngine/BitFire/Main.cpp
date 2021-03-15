@@ -1,60 +1,77 @@
- //-----------------------------------------------------------------------------
-#include "IO/Message/MessageSystem.h"
-#include "OpenGL/OpenGLAPI.h"
-#include "Player/Player.h"
+//-----------------------------------------------------------------------------
+#include "System/GameSystem.h"
+#include "IO/Log/Log.h"
 
-#include "Mathematic/Geometry/Vector/Vector3.h"
+#include <iostream>
+#include <filesystem>
 
-#include "Resources/Model/ModelLoader.h"
-#include "Resources/Image/ImageLoader.h"
+using namespace BF;
+
+/*
+
+void* operator new(size_t size)
+{
+    void* p = malloc(size);
+
+    //printf(">>> [NEW] Allocated <%p> %u Byte\n", p, size);
+
+    return p;
+}
+
+void operator delete(void* p)
+{
+    printf(">>> [DELETE] Removed <%p>\n", p);
+    free(p);
+}
+*/
+
 //-----------------------------------------------------------------------------
 int main()
-{
-    BF::MessageSystem::PushMessage(BF::MessageType::Notfication, "BitFire Engine: Starting");
-
-    // Paths for Shader & Object, Change this here...
-    std::string vertexShader = "VertexShader.vert";
-    std::string fragmentShader = "FragmentShader.frag";
-    std::string objectFilePath = "Dust II.obj";
-
-    BF::ShaderFile shaderfile(vertexShader, fragmentShader);
-    BF::OpenGLAPI* openGL = BF::OpenGLAPI::Instance();
-    BF::Player player;
-
-    openGL->Initialize(&player);
-    openGL->Render->AddShader(shaderfile);
+{    
+    GameSystem& system = GameSystem::Instance();
     
-    try
-    {   
-        // Loads a texture
-        BF::IImage* image = BF::ImageLoader::LoadFromFile("B.bmp");
+	try
+	{
+        system.Start();
 
-        // Load a object
-        BF::IModel* country = BF::ModelLoader::LoadFromFile(objectFilePath);
-        country->Scale(BF::Vector3(0.02, 0.02, 0.02));
-        country->MoveBy(BF::Vector3(-10, -2, 0));
-        
-        openGL->MainWindow->SetCursorTexture((BF::Image*)image);
-        openGL->MainWindow->SetIcon((BF::Image*)image);
-
-        while (!openGL->ShouldExit())
-        {           
-            openGL->Update();
+        while (system.IsRunning())
+        {
+            system.Update();
         }
-    }
-    catch (const std::exception& e)
+
+        system.Stop();
+	}
+    catch (FileNotFound& fileNotFound)
     {
-        const char* message = e.what();
+        printf("%s @ %s", &fileNotFound.ErrorMessage[0], &fileNotFound.FilePath[0]);
+    } 
 
-        BF::MessageSystem::PushMessage(BF::MessageType::Error, message);
-
-        e.~exception();
-
-        return 1;
-    }
-
-    BF::MessageSystem::PushMessage(BF::MessageType::Notfication, "BitFire Engine : Closing");
-     
     return 0;
 }
 //-----------------------------------------------------------------------------
+/*
+System* sys = System::Instance();
+
+
+GameTickEvent* t = new GameTickEvent();
+t->AddListener([&](GameTickData gameTickData) {OnUpdate(gameTickData); });
+
+
+
+
+
+template <class T> class MyFunctor
+{
+private:
+    T* ObjectPtr;
+    void (T::*MemberFunction) ();
+public:
+    void operator () ()
+    {
+        return (*this->ObjectPtr.*this->MemberFunction)();
+    }
+};
+
+
+
+*/

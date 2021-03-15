@@ -2,15 +2,15 @@
 
 BF::Material::Material()
 {
-	Name = "[N/A]";
+	Name.Copy("[N/A]");
 
 	// Ranges between 0 and 1000
 	Weight = 0;
 
-	Ambient = Position(1,1,1);
-	Diffuse = Position(1, 1, 1);
-	Specular = Position(1, 1, 1);
-	Emission = Position(0, 0, 0);
+	Ambient = Position<float>(1,1,1);
+	Diffuse = Position<float>(1, 1, 1);
+	Specular = Position<float>(1, 1, 1);
+	Emission = Position<float>(0, 0, 0);
 
 	Dissolved = 0;
 

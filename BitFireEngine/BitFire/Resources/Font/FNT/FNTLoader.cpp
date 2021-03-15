@@ -1,165 +1,241 @@
 #include "FNTLoader.h"
 
-BF::FNTInfo BF::FNTLoader::ParseInfoLine(std::string line)
+void BF::FNTLoader::ParseInfoLine(ASCIIString& line, FNTInfo& fntInfo)
 {
-	FNTInfo bitMapFontInfo;
-	StringSplitter ss = StringSplitter::Split(line, ' ');
+	List<ASCIIString> lines;
 	const char token = '=';
 
-	std::string face = ss.Lines[1];
-	std::string size = ss.Lines[2];
-	std::string bold = ss.Lines[3];
-	std::string italic = ss.Lines[4];
-	std::string charset = ss.Lines[5];
-	std::string unicode = ss.Lines[6];
-	std::string stretchH = ss.Lines[7];
-	std::string smooth = ss.Lines[8];
-	std::string aa = ss.Lines[9];
-	std::string padding = ss.Lines[10];
-	std::string spacing = ss.Lines[11];
-	
-	face = StringSplitter::CutInHalfAndTakeRightValue(face, token);
-	size = StringSplitter::CutInHalfAndTakeRightValue(size, token);
-	bold = StringSplitter::CutInHalfAndTakeRightValue(bold, token);
-	italic = StringSplitter::CutInHalfAndTakeRightValue(italic, token);
-	charset = StringSplitter::CutInHalfAndTakeRightValue(charset, token);
-	unicode = StringSplitter::CutInHalfAndTakeRightValue(unicode, token);
-	stretchH = StringSplitter::CutInHalfAndTakeRightValue(stretchH, token);
-	smooth = StringSplitter::CutInHalfAndTakeRightValue(smooth, token);
-	aa = StringSplitter::CutInHalfAndTakeRightValue(aa, token);
-	padding = StringSplitter::CutInHalfAndTakeRightValue(padding, token);
-	spacing = StringSplitter::CutInHalfAndTakeRightValue(spacing, token);
+	line.Splitt(' ', lines);
 
-	bitMapFontInfo.Name = face;
-	bitMapFontInfo.Size = stoi(size);
-	bitMapFontInfo.Bold = stoi(bold) == 0;
-	bitMapFontInfo.Italic = stoi(aa) == 0;
-	bitMapFontInfo.CharSet = charset;	
-	bitMapFontInfo.Unicode = stoi(unicode) == 0 ? false : true;
-	bitMapFontInfo.StretchH = stoi(unicode);
-	bitMapFontInfo.Smooth = stoi(smooth);
-	bitMapFontInfo.AA = stoi(aa) == 0 ? false : true;
+	ASCIIString face = lines[1];
+	ASCIIString size = lines[2];
+	ASCIIString bold = lines[3];
+	ASCIIString italic = lines[4];
+	ASCIIString charset = lines[5];
+	ASCIIString unicode = lines[6];
+	ASCIIString stretchH = lines[7];
+	ASCIIString smooth = lines[8];
+	ASCIIString aa = lines[9];
+	ASCIIString padding = lines[10];
+	ASCIIString spacing = lines[11];
+
+	lines.DeleteAll();
+
+	//----------------------------------------------------------------------------
+	face.Splitt(token, lines);
+	face = lines[1];
+	lines.DeleteAll();
+
+	size.Splitt(token, lines);
+	size = lines[1];
+	lines.DeleteAll();
+
+	bold.Splitt(token, lines);
+	bold = lines[1];
+	lines.DeleteAll();
+
+	italic.Splitt(token, lines);
+	italic = lines[1];
+	lines.DeleteAll();
+
+	charset.Splitt(token, lines);
+	charset = lines[1];
+	lines.DeleteAll();
+
+	unicode.Splitt(token, lines);
+	unicode = lines[1];
+	lines.DeleteAll();
+
+	stretchH.Splitt(token, lines);
+	stretchH = lines[1];
+	lines.DeleteAll();
+
+	smooth.Splitt(token, lines);
+	smooth = lines[1];
+	lines.DeleteAll();
+
+	aa.Splitt(token, lines);
+	aa = lines[1];
+	lines.DeleteAll();
+
+	padding.Splitt(token, lines);
+	padding = lines[1];
+	lines.DeleteAll();
+
+	spacing.Splitt(token, lines);
+	spacing = lines[1];
+	lines.DeleteAll();
+	//----------------------------------------------------------------------------
+
+	fntInfo.Name = face;
+	fntInfo.Size = size.ToInt();
+	fntInfo.Bold = bold.ToBool();
+	fntInfo.Italic = aa.ToBool();
+	fntInfo.CharSet = charset;
+	fntInfo.Unicode = unicode.ToBool();
+	fntInfo.StretchH = stretchH.ToInt();
+	fntInfo.Smooth = smooth.ToInt();
+	fntInfo.Supersampling = aa.ToBool();
 	// bitMapFontInfo.CharacterPadding = padding;
 	//bitMapFontInfo.SpacerOffset = spacing;
-
-	return bitMapFontInfo;
 }
 
-BF::FNTCommonData BF::FNTLoader::ParseCommonDataLine(std::string line)
+void BF::FNTLoader::ParseCommonDataLine(ASCIIString& line, FNTCommonData& fntCommonData)
 {
-	FNTCommonData bitMapFontCommonData;
-	StringSplitter ss = StringSplitter::Split(line, ' ');
+	List<ASCIIString> lines;
 	const char token = '=';
 
-	std::string lineHeight = ss.Lines[1];
-	std::string base = ss.Lines[2];
-	std::string scaleW = ss.Lines[3];
-	std::string scaleH = ss.Lines[4];
-	std::string pages = ss.Lines[5];
-	std::string packed = ss.Lines[6];
+	line.Splitt(' ', lines);
 
-	lineHeight = StringSplitter::CutInHalfAndTakeRightValue(lineHeight, token);
-	base = StringSplitter::CutInHalfAndTakeRightValue(base, token);
-	scaleW = StringSplitter::CutInHalfAndTakeRightValue(scaleW, token);
-	scaleH = StringSplitter::CutInHalfAndTakeRightValue(scaleH, token);
-	pages = StringSplitter::CutInHalfAndTakeRightValue(pages, token);
-	packed = StringSplitter::CutInHalfAndTakeRightValue(packed, token);
+	ASCIIString lineHeight = lines[1];
+	ASCIIString base = lines[2];
+	ASCIIString scaleW = lines[3];
+	ASCIIString scaleH = lines[4];
+	ASCIIString pages = lines[5];
+	ASCIIString packed = lines[6];
 
-	bitMapFontCommonData.LineHeight = stoi(lineHeight);
-	bitMapFontCommonData.Base = stoi(base);
-	bitMapFontCommonData.ScaleWidth = stoi(scaleW);
-	bitMapFontCommonData.ScaleHeight = stoi(scaleH);
-	bitMapFontCommonData.AmountOfPages = stoi(pages);
-	bitMapFontCommonData.Packed = stoi(packed) == 0 ? false : true;
+	//----------------------------------------------------------------------------
+	lineHeight.Splitt(token, lines);
+	lineHeight = lines[1];
+	lines.DeleteAll();
 
-	return bitMapFontCommonData;
+	base.Splitt(token, lines);
+	base = lines[1];
+	lines.DeleteAll();
+
+	scaleW.Splitt(token, lines);
+	scaleW = lines[1];
+	lines.DeleteAll();
+
+	scaleH.Splitt(token, lines);
+	scaleH = lines[1];
+	lines.DeleteAll();
+
+	pages.Splitt(token, lines);
+	pages = lines[1];
+	lines.DeleteAll();
+
+	packed.Splitt(token, lines);
+	packed = lines[1];
+	lines.DeleteAll();
+	//----------------------------------------------------------------------------
+
+	fntCommonData.LineHeight = lineHeight.ToInt();
+	fntCommonData.Base = base.ToInt();
+	fntCommonData.ScaleWidth = scaleW.ToInt();
+	fntCommonData.ScaleHeight = scaleH.ToInt();
+	fntCommonData.AmountOfPages = pages.ToInt();
+	fntCommonData.Packed = packed.ToBool();
 }
 
-BF::FNTPage BF::FNTLoader::ParsePageLine(std::string line)
+void BF::FNTLoader::ParsePageLine(ASCIIString& line, FNTPage& fntPage)
 {
-	FNTPage bitMapFontPage;
-	StringSplitter ss = StringSplitter::Split(line, ' ');
-	char token;
+	List<ASCIIString> lines;
+	const char token = '\"';
 	unsigned int start = 0;
 	unsigned int stop = 0;
 	unsigned int cutlengh = 0;
 
-	std::string pageIDText = ss.Lines[1];
-	std::string pageFileNameText = ss.Lines[2];
+	line.Splitt(' ', lines);
 
-	token = '=';
-	pageIDText = StringSplitter::CutInHalfAndTakeRightValue(pageIDText, token);
+	ASCIIString pageIDText(lines[1]);
+	ASCIIString pageFileNameText(lines[2]);
 
-	token = '\"';
-	start = pageFileNameText.find_first_of(token) + 1;
-	stop = pageFileNameText.find_last_of(token);
-	cutlengh = stop - start;
-	pageFileNameText = pageFileNameText.substr(start, cutlengh);
+	lines.DeleteAll();
 
-	bitMapFontPage.PageID = std::stoi(pageIDText);
-	bitMapFontPage.PageFileName = pageFileNameText;
+	pageIDText.Splitt('=', lines);
+	pageIDText.Copy(lines[1]);
+	fntPage.PageID = pageIDText.ToInt();
 
-	return bitMapFontPage;
+	lines.DeleteAll();
+
+	start = pageFileNameText.FindFirst(token) + 1;
+	stop = pageFileNameText.FindLast(token);
+	
+	pageFileNameText.Cut(start, stop, fntPage.PageFileName);
 }
 
-unsigned int BF::FNTLoader::ParseCharacterCountLine(std::string line)
+unsigned int BF::FNTLoader::ParseCharacterCountLine(ASCIIString& line)
 {
-	line = StringSplitter::CutInHalfAndTakeRightValue(line, '=');
-	unsigned int count = stoi(line);
+	List<ASCIIString> lines;	
+	line.Splitt('=', lines);
+	ASCIIString pageIDText = lines[1];
+	lines.DeleteAll();
+
+	unsigned int count = pageIDText.ToInt();
 
 	return count;
 }
 
-BF::FNTCharacter BF::FNTLoader::ParseCharacterLine(std::string line)
+void BF::FNTLoader::ParseCharacterLine(ASCIIString& line, FNTCharacter& fntCharacter)
 {
-	FNTCharacter character;
-	StringSplitter ss = StringSplitter::Split(line, ' ');
-
 	const char token = '=';
 	unsigned int start = 0;
 	unsigned int stop = 0;
 	unsigned int cutlengh = 0;
+	List<ASCIIString> lines;
+	List<ASCIIString> charIDText;
+	List<ASCIIString> charXText;
+	List<ASCIIString> charYText;
+	List<ASCIIString> charWidthText;
+	List<ASCIIString> charHeightText;
+	List<ASCIIString> charXOffsetText;
+	List<ASCIIString> charYOffsetText;
+	List<ASCIIString> charXAdvanceText;
+	List<ASCIIString> charPageText;
+	List<ASCIIString> charChanelText;
 
-	std::string charIDText = ss.Lines[1];
-	std::string charXText = ss.Lines[2];
-	std::string charYText = ss.Lines[3];
-	std::string charWidthText = ss.Lines[4];
-	std::string charHeightText = ss.Lines[5];
-	std::string charXOffsetText = ss.Lines[6];
-	std::string charYOffsetText = ss.Lines[7];
-	std::string charXAdvanceText = ss.Lines[8];
-	std::string charPageText = ss.Lines[9];
-	std::string charChanelText = ss.Lines[10];
+	line.MergeRepeatingWhiteSpace();
 
-	charIDText = StringSplitter::CutInHalfAndTakeRightValue(charIDText, token);
-	charXText = StringSplitter::CutInHalfAndTakeRightValue(charXText, token);
-	charYText = StringSplitter::CutInHalfAndTakeRightValue(charYText, token);
-	charWidthText = StringSplitter::CutInHalfAndTakeRightValue(charWidthText, token);
-	charHeightText = StringSplitter::CutInHalfAndTakeRightValue(charHeightText, token);
-	charXOffsetText = StringSplitter::CutInHalfAndTakeRightValue(charXOffsetText, token);
-	charYOffsetText = StringSplitter::CutInHalfAndTakeRightValue(charYOffsetText, token);
-	charXAdvanceText = StringSplitter::CutInHalfAndTakeRightValue(charXAdvanceText, token);
-	charPageText = StringSplitter::CutInHalfAndTakeRightValue(charPageText, token);
-	charChanelText = StringSplitter::CutInHalfAndTakeRightValue(charChanelText, token);
+	line.Splitt(' ', lines);
 
-	character.ID = std::stoi(charIDText);
-	character.StartPosition = Point(std::stoi(charXText), std::stoi(charYText));
-	character.Size = Point(std::stoi(charWidthText), std::stoi(charHeightText));
-	character.Offset = Point(std::stoi(charXOffsetText), std::stoi(charYOffsetText));
-	character.XAdvance = std::stoi(charXAdvanceText);
-	character.Page = std::stoi(charPageText);
-	character.Chanal = std::stoi(charChanelText);
+	lines[1].Splitt(token, charIDText);
+	lines[2].Splitt(token, charXText);
+	lines[3].Splitt(token, charYText);
+	lines[4].Splitt(token, charWidthText);
+	lines[5].Splitt(token, charHeightText);
+	lines[6].Splitt(token, charXOffsetText);
+	lines[7].Splitt(token, charYOffsetText);
+	lines[8].Splitt(token, charXAdvanceText);
+	lines[9].Splitt(token, charPageText);
+	lines[10].Splitt(token, charChanelText);
 
-	return character;
+
+	fntCharacter.ID = charIDText[1].ToInt();
+
+	fntCharacter.Position.Set
+	(
+		charXText[1].ToInt(), 
+		charYText[1].ToInt()
+	);
+	
+	fntCharacter.Size.Set
+	(
+		charWidthText[1].ToInt(), 
+		charHeightText[1].ToInt()
+	);
+
+	fntCharacter.Offset.Set
+	(
+		charXOffsetText[1].ToInt(), 
+		charYOffsetText[1].ToInt()
+	);	
+	
+	fntCharacter.XAdvance = charXAdvanceText[1].ToInt();
+	fntCharacter.Page = charPageText[1].ToInt();
+	fntCharacter.Chanal = charChanelText[1].ToInt();
 }
 
-BF::FNT* BF::FNTLoader::LoadFromFile(std::string path)
+BF::FNT* BF::FNTLoader::LoadFromFile(ASCIIString& path)
 {
-	TextFile textFile = FileLoader::ReadTextFile(path, true);
+	TextFile textFile(path);
+	FileLoader::ReadTextFile(textFile, true);
 	List<FNTCommand> commandList;
 	FNT* bitMapFont = new FNT();
-	unsigned int amountOfLines = textFile.Lines.Size.Value;
+	unsigned int amountOfLines = textFile.Lines.Size();
 
+
+	bitMapFont->FontPages.ReSize(1);
 	commandList.ReSize(amountOfLines);
 
 	// Raw-Parse (Counting)
@@ -178,58 +254,58 @@ BF::FNT* BF::FNTLoader::LoadFromFile(std::string path)
 
 		for (unsigned int i = 0; i < amountOfLines; i++)
 		{
-			std::string line = textFile.Lines[i];
+			ASCIIString* line = &textFile.Lines[i];
 			FNTCommand currentCommand;
-			char firstCharacter = line.size() <= 0 ? ' ' : line.at(0);
+			char firstCharacter = line->Empty() ? ' ' : (*line)[0];
 
 			switch (firstCharacter)
 			{
-			case commandInfo:
-				currentCommand = FNTCommand::Info;
-				break;
-			case commandPage:
-				currentCommand = FNTCommand::Page;
-				break;
-
-			case commandC:
-				firstCharacter = line.at(1);
-
-				switch (firstCharacter)
-				{
-				case commandCommon:
-					currentCommand = FNTCommand::Common;
+				case commandInfo:
+					currentCommand = FNTCommand::Info;
+					break;
+				case commandPage:
+					currentCommand = FNTCommand::Page;
 					break;
 
-				case commandH:
-					firstCharacter = line.at(4);
+				case commandC:
+					firstCharacter = (*line)[1];
 
 					switch (firstCharacter)
 					{
-					case commandNone:
-						currentCommand = FNTCommand::Char;
-						characterCounter++;
-						break;
+						case commandCommon:
+							currentCommand = FNTCommand::Common;
+							break;
 
-					case commandS:
-						currentCommand = FNTCommand::Chars;
-						break;
+						case commandH:
+							firstCharacter = (*line)[4];
 
-					default:
-						currentCommand = FNTCommand::Invalid;
-						break;
+							switch (firstCharacter)
+							{
+								case commandNone:
+									currentCommand = FNTCommand::Char;
+									characterCounter++;
+									break;
+
+								case commandS:
+									currentCommand = FNTCommand::Chars;
+									break;
+
+								default:
+									currentCommand = FNTCommand::Invalid;
+									break;
+							}
+							break;
+
+						default:
+							currentCommand = FNTCommand::Invalid;
+							break;
 					}
+
 					break;
 
 				default:
 					currentCommand = FNTCommand::Invalid;
 					break;
-				}
-
-				break;
-
-			default:
-				currentCommand = FNTCommand::Invalid;
-				break;
 			}
 
 			commandList[currentCommandIndex++] = currentCommand;
@@ -246,45 +322,58 @@ BF::FNT* BF::FNTLoader::LoadFromFile(std::string path)
 
 	// Parse
 	unsigned int pageCounter = 0;
+	unsigned int charCounter = 0;
 
 	for (unsigned int i = 0; i < amountOfLines; i++)
 	{
-		std::string line = textFile.Lines[i];
+		ASCIIString& line = textFile.Lines[i];
 		FNTCommand currentCommand = commandList[i];
 
 		switch (currentCommand)
 		{
-		case FNTCommand::Info:
-			bitMapFont->FontInfo = ParseInfoLine(line);
+			case FNTCommand::Info:
+				//bitMapFont->FontInfo = ParseInfoLine(line);
+				break;
+
+			case FNTCommand::Common:
+				//bitMapFont->FontCommon = ParseCommonDataLine(line);
+				break;
+
+			case FNTCommand::Page:
+			{
+				FNTPage& currentPage = bitMapFont->FontPages[pageCounter];
+
+				ParsePageLine(line, currentPage);
+
+				pageCounter++;
+			}
+
+
 			break;
 
-		case FNTCommand::Common:
-			bitMapFont->FontCommon = ParseCommonDataLine(line);
-			break;
+			case FNTCommand::Chars:
+				// Ignore?
+				// ParseCharacterCountLine(line);
+				break;
 
-		case FNTCommand::Page:
-			bitMapFont->FontPages[pageCounter++] = ParsePageLine(line);
-			break;
+			case FNTCommand::Char:
+			{
+				FNTCharacter character;
+				
+				ParseCharacterLine(line, character);
+				FNTPage* page = &bitMapFont->FontPages[character.Page];
 
-		case FNTCommand::Chars:
-			// Ignore?
-			// ParseCharacterCountLine(line);
-			break;
+				// ERROR!
+				page->Characters[charCounter++] = character;
 
-		case FNTCommand::Char:
-		{
-			FNTCharacter character = ParseCharacterLine(line);
-			FNTPage* page = &bitMapFont->FontPages[character.Page];
 
-			// ERROR!
-			page->Characters[character.ID] = character;
-			break;
-		}		
+				break;
+			}
 
-		case FNTCommand::Invalid:
-		default:
-			// Do nothing
-			break;
+			case FNTCommand::Invalid:
+			default:
+				// Do nothing
+				break;
 		}
 	}
 

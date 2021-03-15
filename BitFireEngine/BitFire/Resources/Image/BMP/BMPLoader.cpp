@@ -101,16 +101,17 @@ BF::BMPType BF::BMPLoader::ParseType(unsigned char leftByte, unsigned char right
 unsigned int CalculateNeddedRowSize(unsigned int bitsPerPixel, unsigned int imageWidth)
 {
     float x = (bitsPerPixel * imageWidth) / (32.0f);
-    x = BF::Math::Ceiling(x);
-    x *= 4;
+    unsigned int cappedValue = BF::Math::Ceiling(x) * 4;
 
-    return x;
+    return cappedValue;
 }
 
-BF::BMP* BF::BMPLoader::LoadFromFile(std::string path)
+BF::BMP* BF::BMPLoader::LoadFromFile(ASCIIString& path)
 {
     BMP* bitMap = new BMP();
-    BF::List<unsigned char> bytes = FileLoader::ReadFileAsBytes(path);
+    ByteString bytes;
+
+    FileLoader::ReadFileAsBytes(path, bytes);
 
     unsigned int dynamicIndex = 0;
     unsigned char byteA = bytes[dynamicIndex++]; // Index = 0
@@ -129,19 +130,19 @@ BF::BMP* BF::BMPLoader::LoadFromFile(std::string path)
         byteB = bytes[dynamicIndex++];// Index = 3
         byteC = bytes[dynamicIndex++]; // Index = 4
         byteD = bytes[dynamicIndex++];// Index = 5
-        bitMap->Header.SizeOfFile = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
+        bitMap->Header.SizeOfFile = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
 
         byteA = bytes[dynamicIndex++];// Index = 6
         byteB = bytes[dynamicIndex++]; // Index = 7
         byteC = bytes[dynamicIndex++]; // Index = 8
         byteD = bytes[dynamicIndex++];// Index = 9
-        bitMap->Header.ActualSizeOfFile = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
+        bitMap->Header.ActualSizeOfFile = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
 
         byteA = bytes[dynamicIndex++]; // Index = 10
         byteB = bytes[dynamicIndex++]; // Index = 11
         byteC = bytes[dynamicIndex++]; // Index = 12
         byteD = bytes[dynamicIndex++]; // Index = 13
-        bitMap->Header.DataOffset = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
+        bitMap->Header.DataOffset = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
     }
 
     // DIP
@@ -151,7 +152,7 @@ BF::BMP* BF::BMPLoader::LoadFromFile(std::string path)
         byteB = bytes[dynamicIndex++];// Index = 15
         byteC = bytes[dynamicIndex++];// Index = 16
         byteD = bytes[dynamicIndex++]; // Index = 17
-        unsigned char result = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
+        unsigned char result = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
         bitMap->InformationHeaderType = GetType(result);
 
         switch (bitMap->InformationHeaderType)
@@ -167,57 +168,57 @@ BF::BMP* BF::BMPLoader::LoadFromFile(std::string path)
             byteB = bytes[dynamicIndex++]; // Index = 19
             byteC = bytes[dynamicIndex++]; // Index = 20
             byteD = bytes[dynamicIndex++]; // Index = 21
-            bitMapInfoHeader->Width = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
+            bitMapInfoHeader->Width = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
 
             byteA = bytes[dynamicIndex++];// Index = 22
             byteB = bytes[dynamicIndex++]; // Index = 23
             byteC = bytes[dynamicIndex++]; // Index = 24
             byteD = bytes[dynamicIndex++];// Index = 25
-            bitMapInfoHeader->Height = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
+            bitMapInfoHeader->Height = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
            
             byteA = bytes[dynamicIndex++]; // Index = 
             byteB = bytes[dynamicIndex++]; // Index = 
-            bitMapInfoHeader->NumberOfColorPlanes = Converter::ConvertTwoBytesToNumber(EndianType::Little, byteA, byteB);
+            bitMapInfoHeader->NumberOfColorPlanes = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB);
 
             byteA = bytes[dynamicIndex++]; // Index = 
             byteB = bytes[dynamicIndex++]; // Index = 
-            bitMapInfoHeader->NumberOfBitsPerPixel = Converter::ConvertTwoBytesToNumber(EndianType::Little, byteA, byteB);
+            bitMapInfoHeader->NumberOfBitsPerPixel = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB);
 
             byteA = bytes[dynamicIndex++]; // Index = 
             byteB = bytes[dynamicIndex++]; // Index = 
             byteC = bytes[dynamicIndex++]; // Index = 
             byteD = bytes[dynamicIndex++]; // Index = 
-            bitMapInfoHeader->CompressionMethod = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
+            bitMapInfoHeader->CompressionMethod = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
 
             byteA = bytes[dynamicIndex++]; // Index = 
             byteB = bytes[dynamicIndex++]; // Index = 
             byteC = bytes[dynamicIndex++];// Index = 
             byteD = bytes[dynamicIndex++]; // Index = 
-            bitMapInfoHeader->ImageSize = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
+            bitMapInfoHeader->ImageSize = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
 
             byteA = bytes[dynamicIndex++]; // Index = 
             byteB = bytes[dynamicIndex++]; // Index = 
             byteC = bytes[dynamicIndex++]; // Index = 
             byteD = bytes[dynamicIndex++]; // Index = 
-            bitMapInfoHeader->HorizontalResolution = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
+            bitMapInfoHeader->HorizontalResolution = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
 
             byteA = bytes[dynamicIndex++]; // Index = 
             byteB = bytes[dynamicIndex++]; // Index = 
             byteC = bytes[dynamicIndex++]; // Index = 
             byteD = bytes[dynamicIndex++]; // Index = 
-            bitMapInfoHeader->VerticalResolution = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
+            bitMapInfoHeader->VerticalResolution = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
 
             byteA = bytes[dynamicIndex++];// Index = 
             byteB = bytes[dynamicIndex++]; // Index = 
             byteC = bytes[dynamicIndex++]; // Index = 
             byteD = bytes[dynamicIndex++];// Index = 
-            bitMapInfoHeader->NumberOfColorsInTheColorPalette = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
+            bitMapInfoHeader->NumberOfColorsInTheColorPalette = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
 
             byteA = bytes[dynamicIndex++]; // Index = 
             byteB = bytes[dynamicIndex++]; // Index = 
             byteC = bytes[dynamicIndex++];// Index = 
             byteD = bytes[dynamicIndex++]; // Index = 
-            bitMapInfoHeader->NumberOfImportantColorsUsed = Converter::Convert4BytesToNumber(EndianType::Little, byteA, byteB, byteC, byteD);
+            bitMapInfoHeader->NumberOfImportantColorsUsed = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
 
             bitMap->InformationHeader = bitMapInfoHeader;
 
@@ -243,38 +244,41 @@ BF::BMP* BF::BMPLoader::LoadFromFile(std::string path)
 
         bitMap->Pixel.ReSize(size);
 
-        unsigned int leftbits = bytes.Size.Value;
+        unsigned int length = bytes.Size();
         unsigned int neededRows = CalculateNeddedRowSize(dip, width);
-        unsigned int paddingSize = neededRows % 4;
-
-        printf("Width=%i Rows size=%u padding=%u\n", width, neededRows, paddingSize);
-
+        unsigned int paddingSize = neededRows % 4; // <--  hardcoded
         unsigned int rowIndex = 0;
+        const unsigned int rowWidth = width * 3;             
 
-        while (dynamicIndex < (leftbits))
+        printf("Width=%i Rows size=%u padding=%u\n", width, neededRows, paddingSize);   
+
+        while (pixelIndex < size)
         {       
-            if (rowIndex < (width *3))
-            {
-                RGB8Bit color;
+            bool ifPixelData = rowIndex < rowWidth; 
+
+            if (ifPixelData)
+            {    
+                unsigned char blue = bytes[dynamicIndex++];
+                unsigned char green = bytes[dynamicIndex++];
+                unsigned char red = bytes[dynamicIndex++];
+
+                RGB<unsigned char> color(red, green, blue);
 
                 rowIndex += 3;
 
-                color.Blue = bytes[dynamicIndex++];// Index = 
-                color.Green = bytes[dynamicIndex++];// Index = 
-                color.Red = bytes[dynamicIndex++]; // Index = 
-
                 bitMap->Pixel[pixelIndex++] = color;
 
-              //  printf("[Pixel][%05u/%05u] %03u %03u %03u\n", dynamicIndex, leftbits, color.Red, color.Green, color.Blue);
+               // printf("[Pixel][%05u/%05u] Pixel: ", pixelNr++, size);
+               // printf("%03u %03u %03u\n", red, green, blue);
             }
             else
-            {
+            {     
                 for (unsigned int i = 0; i < paddingSize; i++)
                 {
                     dynamicIndex++;
                     rowIndex++;
 
-                  //  printf("[Pixel][%05u/%05u] Padding\n", dynamicIndex, leftbits);
+                    //printf("[Pixel][xxxxx/%05u] Padding\n", size);
                 }
 
                 rowIndex = 0;
@@ -285,38 +289,10 @@ BF::BMP* BF::BMPLoader::LoadFromFile(std::string path)
     return bitMap;
 }
 
-void BF::BMPLoader::SaveToFile(std::string path, BMP& bitMap)
+void BF::BMPLoader::SaveToFile(ASCIIString& path, BMP& bitMap)
 {
     
 }
-/*
-PixelArray BitMapLoader::GeneratePixelArray(BMP& bitmap)
-{
-    PixelArray pixelArray;
-
-    unsigned int dynIndex = 0;
-    unsigned int dataSize = bitmap.Pixel.size();
-    unsigned int height = bitmap.InformationHeader->Height;
-    unsigned int width = bitmap.InformationHeader->Width;
-
-    pixelArray.Size = dataSize * 4;
-    pixelArray.PixelData = new unsigned char[pixelArray.Size];
-
-    for (unsigned int x = 0; x < width; x++)
-    {
-        for (unsigned int y = 0; y < height; y++)
-        {
-            RGBEightBit* rgb = bitmap.GetPixel(x, y);
-
-            pixelArray.PixelData[dynIndex++] = rgb->Red;
-            pixelArray.PixelData[dynIndex++] = rgb->Green;
-            pixelArray.PixelData[dynIndex++] = rgb->Blue;
-            pixelArray.PixelData[dynIndex++] = '\xFF';
-        }
-    }
-
-    return pixelArray;
-}*/
 
 void BF::BMPLoader::PrintBitMapInformation(BF::BMP& bitMap)
 {

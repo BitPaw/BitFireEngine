@@ -1,27 +1,24 @@
 #pragma once
 
-#include <string>
-
 #include "FNT.h"
 #include "FNTInfo.h"
 #include "FNTCharacter.h"
 #include "FNTCommand.h"
 
 #include "../../ILoader.h"
-#include "../../../Utility/StringSplitter.h"
 
-namespace BF 
+namespace BF
 {
 	class FNTLoader : public ILoader
 	{
-	private:
-		static FNTInfo ParseInfoLine(std::string line);
-		static FNTCommonData ParseCommonDataLine(std::string line);
-		static FNTPage ParsePageLine(std::string line);
-		static unsigned int ParseCharacterCountLine(std::string line);
-		static FNTCharacter ParseCharacterLine(std::string line);
+		private:
+		static void ParseInfoLine(ASCIIString& line, FNTInfo& fntInfo);
+		static void ParseCommonDataLine(ASCIIString& line, FNTCommonData& fntCommonData);
+		static void ParsePageLine(ASCIIString& line, FNTPage& fntPage);
+		static unsigned int ParseCharacterCountLine(ASCIIString& line);
+		static void ParseCharacterLine(ASCIIString& line, FNTCharacter& fntCharacter);
 
-	public:
-		static FNT* LoadFromFile(std::string path);
+		public:
+		static FNT* LoadFromFile(ASCIIString& path);
 	};
 }

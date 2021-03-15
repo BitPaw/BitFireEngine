@@ -1,6 +1,6 @@
 #include "MIDLoader.h"
 
-BF::MID* BF::MIDLoader::LoadFromFile(std::string filePath)
+BF::MID* BF::MIDLoader::LoadFromFile(ASCIIString filePath)
 {
     return nullptr;
 }

@@ -1,16 +1,18 @@
 #pragma once
 
-#include "Chunk/Type/PNGChunkImageHeader.h"
-
 #include "../IImage.h"
+#include "Chunk/PNGChunk.h"
+#include "Chunk/PNGHeader.h"
 
 namespace BF
 {
 	struct PNG : public IImage
 	{
-	public:
-		PNGChunkImageHeader ImageHeader;
+		public:
+		PNGHeader Header;
 
-		PNG();
+		List<PNGChunk> ChunkList;
+
+		void PrintData();
 	};
 }

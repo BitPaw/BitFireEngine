@@ -9,8 +9,8 @@ BF::CameraSettings::CameraSettings(const unsigned int height, const unsigned int
 	Height = height;
 	Width = width;
 	Near = 0.01F;
-	//Far = 1000;
-	Far = -1;
+	Far = 1000;
+	//Far = -1;
 }
 
 BF::CameraSettings::~CameraSettings()

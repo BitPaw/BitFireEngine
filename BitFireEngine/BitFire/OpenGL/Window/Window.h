@@ -4,51 +4,56 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-#include <string>
-
 #include "InputContainer.h"
+#include "OnInputEvent.h"
+#include "OnWindowCloseEvent.h"
 
-#include "../../Graphics/Camera/FirstPersonCamera.h"
-#include "../../Time/TimeCollection.h"
 #include "../../Configuration/VideoConfig.h"
-#include "../../Player/Player.h"
 #include "../../Mathematic/Interpolate.h"
 #include "../../Resources/Image/Image.h"
+#include "../../Utility/ASCIIString.h"
+#include "../../Utility/Dictionary.hpp"
 
 namespace BF
 {
 	class Window
 	{
-	private:
-		static Window* _instance;
+		private:
 		GLFWwindow* _window;
 		GLFWcursor* _cursor;
 		GLFWmonitor* _montor;
-		bool _exitWindow;
-
-		void UpdateInput();
 		bool Create();
 
-	public:
-		static Window* GetInstance();
+		public:
+		float ActiveTime;
+		bool ShouldCloseWindow;
 
-		Player* CurrentPlayer;
+		// Events
+		//OnWindowCloseEvent OnWindowClose;
 
-		Window(Player* player);
-		~Window();
+		Window();
+		~Window();		
+
+		static Dictionary<GLFWwindow*, InputContainer> WindowsInput;
+
+		InputContainer* GetInput()
+		{
+			return WindowsInput.GetValue(_window);
+		}
+
 
 		/*
 		Changed the size of this window.
 
-		@param Width of this window.			
+		@param Width of this window.
 		@param Height of this window.
 		*/
 		void Resize(const unsigned int width, const unsigned int height);
 
 		/*
-		Changed the cursor mode in this window.	
+		Changed the cursor mode in this window.
 
-		Default: The cursor is shown. 
+		Default: The cursor is shown.
 		Hidden: Useful when you are in playmode.
 
 		@param Mode of the cursor. Hide or show cursor.
@@ -62,7 +67,7 @@ namespace BF
 		@param Texture of the cursor.
 		*/
 		void SetCursorTexture(Image* image);
-		
+
 		/*
 		Changed the title for this window.
 		The Text on top of this window.
@@ -70,14 +75,14 @@ namespace BF
 		@param The title.
 		*/
 		void SetVideoRefreshRate(RefreshRateMode mode);
-			
+
 		/*
 		Move this windows in the middle of the primary screen.
 		*/
 		void SetPositionToCenter();
 
 		/*
-		Move this window to a specific location.	
+		Move this window to a specific location.
 
 		@param X Position
 		@param Y Position
@@ -90,7 +95,7 @@ namespace BF
 
 		@param The title.
 		*/
-		void SetTitle(std::string title);
+		void SetTitle(ASCIIString title);
 
 		/*
 		Changed the icon that is shown in the taskbar.
@@ -106,7 +111,7 @@ namespace BF
 		*/
 		Image* TakeScreenShot();
 
-		bool ShouldExit();
+		//bool ShouldExit();
 
 		void Update();
 	};

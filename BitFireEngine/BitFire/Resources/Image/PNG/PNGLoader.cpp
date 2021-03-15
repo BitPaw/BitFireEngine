@@ -1,67 +1,109 @@
 #include "PNGLoader.h"
 
-BF::PNG BF::PNGLoader::LoadFromFile(std::string filePath)
+BF::PNG* BF::PNGLoader::LoadFromFile(ASCIIString& filePath)
 {
-    PNG portableNetworkGraphic;
-    BF::List<unsigned char> bytes = FileLoader::ReadFileAsBytes(filePath);
-    
-    unsigned char dynamicIndex = 0;
-
-    // Check Header
-    while (dynamicIndex < PortableNetworkGraphicFileHeader::FileHeaderSize)
+    PNG* png = new PNG(); 
+        
+    // Read Data & Save into png
     {
-        unsigned char target = bytes[dynamicIndex];
-        unsigned char source = PortableNetworkGraphicFileHeader::FileHeader[dynamicIndex];
-        bool sameValue = target == source;
+        ByteString bytes;
+            
+        FileLoader::ReadFileAsBytes(filePath, bytes);
+        unsigned char dynamicIndex = 0;
+        unsigned int chunkIndex = 0;
+        const unsigned int fileheaderSize = 8;
+        const unsigned char fileHeader[fileheaderSize]{ 137, 80, 78, 71, 13, 10, 26, 10 };
 
-        printf("%c:%u | %c:%u\n", target, target, source, source);
+        png->ChunkList.ReSize(2);
 
-        if (!sameValue)
+        // Check Header
+        while (dynamicIndex < fileheaderSize)
         {
-            if (target == '\r' || target == '\n')
-            {
+            unsigned char target = bytes[dynamicIndex];
+            unsigned char source = fileHeader[dynamicIndex];
+            bool sameValue = target == source;
 
-            }
-            else
+            if (!sameValue)
             {
-                printf("Error\n");
-               // throw std::exception("Inavlid Header / PNG File");
-            }           
+                throw std::exception("Inavlid Header / PNG File");
+            }
+
+            dynamicIndex++;
         }
 
-        dynamicIndex++;
+        // Fetch data
+        while (dynamicIndex < bytes.Size())
+        {
+            PNGChunk* chunk = &png->ChunkList[chunkIndex++];
+
+            if (chunkIndex ==3)
+            {
+                break;
+            }
+
+            unsigned int chunkLengh = ByteString::ToUnsignedInt
+            (
+                EndianType::Big,
+                bytes[dynamicIndex++],
+                bytes[dynamicIndex++],
+                bytes[dynamicIndex++],
+                bytes[dynamicIndex++]
+            );
+
+            chunk->Lengh = chunkLengh;
+
+            chunk->ChunkType[0] = bytes[dynamicIndex++];
+            chunk->ChunkType[1] = bytes[dynamicIndex++];
+            chunk->ChunkType[2] = bytes[dynamicIndex++];
+            chunk->ChunkType[3] = bytes[dynamicIndex++];
+
+            // Get Chunk Data
+            if (chunkLengh > 0)
+            {
+                chunk->ChunkData.ReSize(chunkLengh);
+
+                for (unsigned int i = 0; i < chunkLengh; i++)
+                {
+                    chunk->ChunkData[i] = bytes[dynamicIndex++];
+                }
+            }
+
+            chunk->CRC = ByteString::ToUnsignedInt
+            (
+                EndianType::Big,
+                bytes[dynamicIndex++],
+                bytes[dynamicIndex++],
+                bytes[dynamicIndex++],
+                bytes[dynamicIndex++]
+            );
+        }
     }
 
-    // Check Image Header
+    /* Compute Chunks
     {
-        unsigned char byteA;
-        unsigned char byteB;
+        PNGHeader* header = &png->Header;
 
-        /*
-        Width:             4 bytes
-        Height:             4 bytes
-        Bit depth:          1 byte
-        Color type:         1 byte
-        Compression method: 1 byte
-        Filter method:      1 byte
-        Interlace method:   1 byte
-        */
-        byteA = bytes[dynamicIndex++];
-        byteB = bytes[dynamicIndex++];
+        // Check Image Header
+        header->Width = ByteString::ToUnsignedInt
+        (
+            EndianType::Little,
+            bytes[dynamicIndex++],
+            bytes[dynamicIndex++]
+        );
 
-        portableNetworkGraphic.ImageHeader.Width = Converter::ConvertTwoBytesToNumber(EndianType::Little,byteA, byteB);
+        header->Height = ByteString::ToUnsignedInt
+        (
+            EndianType::Little,
+            bytes[dynamicIndex++],
+            bytes[dynamicIndex++]
+        );
 
-        byteA = bytes[dynamicIndex++];
-        byteB = bytes[dynamicIndex++];
+        header->BitDepth = bytes[dynamicIndex++];
+        header->ColorType = bytes[dynamicIndex++];
+        header->CompressionMethod = bytes[dynamicIndex++];
+        header->FilterMethod = bytes[dynamicIndex++];
+        header->InterlaceMethod = bytes[dynamicIndex++];
+    }*/
 
-        portableNetworkGraphic.ImageHeader.Height = Converter::ConvertTwoBytesToNumber(EndianType::Little, byteA, byteB);
-
-        portableNetworkGraphic.ImageHeader.BitDepth = bytes[dynamicIndex++];
-        portableNetworkGraphic.ImageHeader.ColorType = bytes[dynamicIndex++];
-        portableNetworkGraphic.ImageHeader.CompressionMethod = bytes[dynamicIndex++];
-        portableNetworkGraphic.ImageHeader.FilterMethod = bytes[dynamicIndex++];
-        portableNetworkGraphic.ImageHeader.InterlaceMethod = bytes[dynamicIndex++];
-    }
-
-    return portableNetworkGraphic;
+    return png;
 }

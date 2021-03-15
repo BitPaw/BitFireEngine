@@ -1,10 +1,9 @@
 #pragma once
 
-#include <string>
-
 #include "OTF.h"
 
 #include "../../ILoader.h"
+#include "../../../Utility/ASCIIString.h"
 
 namespace BF
 {
@@ -14,6 +13,6 @@ namespace BF
 		OTFLoader();
 
 		public:
-		static OTF* LoadFromFile(std::string filePath);
+		static OTF* LoadFromFile(ASCIIString filePath);
 	};
 }

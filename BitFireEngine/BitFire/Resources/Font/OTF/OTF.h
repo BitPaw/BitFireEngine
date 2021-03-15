@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../IFont.h"
+#include "../Font.h"
 
 namespace BF
 {
-	struct OTF : public IFont
+	struct OTF : public Font
 	{
 
 	};

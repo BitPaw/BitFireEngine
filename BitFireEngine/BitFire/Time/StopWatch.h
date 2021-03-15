@@ -15,7 +15,7 @@ namespace BF
 	class StopWatch
 	{
 	private:
-		TimeSpampType _lastTimeStamp = std::chrono::high_resolution_clock::now();
+	TimeSpampType _lastTimeStamp;
 
 		double Duration;
 

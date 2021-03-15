@@ -1,7 +1,8 @@
 #pragma once
 
 #include "RefreshRateMode.h"
-#include "../Mathematic/Geometry/Size.h"
+
+#include "../Mathematic/Geometry/Point.hpp"
 
 namespace BF
 {
@@ -9,7 +10,7 @@ namespace BF
 	{
 		public:
 		RefreshRateMode WindowRefreshRateMode;
-		Size ScreenResolution;
+		Point<unsigned int> ScreenResolution;
 		bool FullScreen;
 
 		VideoConfig();

@@ -12,19 +12,19 @@ BF::Mouse::~Mouse()
 
 void BF::Mouse::ResetInput()
 {
-	Position = Point();
+	Position.Set(0,0);
 	ResetAxis();
 	Mode = CursorMode::Ignore;
 
-	LeftButton = false;
-	ScrollButton = false;
-	RightButton = false;
+	LeftButton.Value = 0;
+	ScrollButton.Value = 0;
+	RightButton.Value = 0;
 
-	CustomButton1 = false;
-	CustomButton2 = false;
-	CustomButton3 = false;
-	CustomButton4 = false;
-	CustomButton5 = false;
+	CustomButton1.Value = 0;
+	CustomButton2.Value = 0;
+	CustomButton3.Value = 0;
+	CustomButton4.Value = 0;
+	CustomButton5.Value = 0;
 }
 
 void BF::Mouse::ResetAxis()

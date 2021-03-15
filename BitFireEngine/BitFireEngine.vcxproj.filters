@@ -15,15 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BitFire\Color\RGB.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Color\RGB8Bit.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Color\RGBA.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="BitFire\Configuration\AudioConfig.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -42,16 +33,7 @@
     <ClCompile Include="BitFire\Graphics\Camera\FirstPersonCamera.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\IO\Device\KeyBoard\Alphabet.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\IO\Device\KeyBoard\FunctionKeys.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="BitFire\IO\Device\KeyBoard\KeyBoard.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\IO\Device\KeyBoard\Numbers.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\IO\Device\Mouse\Mouse.cpp">
@@ -67,15 +49,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\IO\File\TextFile.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\IO\Message\Message.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\IO\Message\MessageSystem.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\IO\TrippelIndex.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Mathematic\Algorithm\CRCAlgorithm.cpp">
@@ -108,12 +81,6 @@
     <ClCompile Include="BitFire\Mathematic\Geometry\Form\SquarePyramid.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Mathematic\Geometry\Matrix\Matrix3x3.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Mathematic\Geometry\Matrix\Matrix4x4.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="BitFire\Mathematic\Geometry\Shape\Circle.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -138,33 +105,6 @@
     <ClCompile Include="BitFire\Mathematic\Geometry\Shape\Triangle.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Mathematic\Geometry\Vector\Vector2.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Mathematic\Geometry\Vector\Vector3.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Mathematic\Geometry\Vector\Vector4.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Mathematic\Geometry\IndexPoint.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Mathematic\Geometry\IndexPosition.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Mathematic\Geometry\Point.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Mathematic\Geometry\Position.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Mathematic\Geometry\Rotation.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Mathematic\Geometry\Size.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="BitFire\Mathematic\Physic\GravityBox.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -180,34 +120,7 @@
     <ClCompile Include="BitFire\Mathematic\Math.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\OpenGL\Render\DataSize.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\OpenGL\Render\IndexDataCache.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\OpenGL\Render\RenderDataCache.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\OpenGL\Render\RenderInformation.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\OpenGL\Render\RenderSystem.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\OpenGL\Render\VertexDataCache.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\OpenGL\Shader\System\ShaderFile.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\OpenGL\Shader\System\ShaderLoader.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="BitFire\OpenGL\Window\Window.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\OpenGL\OpenGLAPI.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Player\Player.cpp">
@@ -277,18 +190,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Resources\Image\JPEG\JPEGLoader.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\Type\PNGChunkImageHeader.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\Type\PortableNetworkGraphicChunkPalette.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\Type\PortableNetworkGraphicFileHeader.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\Type\PortableNetworkGraphicImageData.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGChunk.cpp">
@@ -405,22 +306,7 @@
     <ClCompile Include="BitFire\Time\StopWatch.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Time\TimeCollection.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="BitFire\UI\Button.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\UI\Padding.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\UI\Text.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Utility\ListSize.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Utility\StringSplitter.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Main.cpp">
@@ -459,17 +345,146 @@
     <ClCompile Include="BitFire\Resources\Model\OBJ\OBJLoader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="BitFire\Resources\Shader\Shader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Shader\ShaderLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Shader\ShaderProgram.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Dialog\Dialog.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Dialog\DialogLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Utility\ByteString.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Crypto\ISBN.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Crypto\ICypher.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Crypto\Caesar.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Crypto\RSA.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\UI\DialogBox\DialogBox.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\UI\DialogBox\NewCharacterEvent.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\UI\DialogBox\NewPageEvent.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\UI\DialogBox\OpenEvent.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\UI\DialogBox\CloseEvent.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\System\GameTickData.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\System\GameTickEvent.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Mathematic\Geometry\Form\Form.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Image\ImageInformation.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Network\Client.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Network\ConnectionCredential.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Network\IP.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Network\IPv4.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Network\IPv6.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Network\Server.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="MineCraft\Block.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="MineCraft\World.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\IO\Log\Log.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\IO\Log\LogMessage.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Level\Level.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Mathematic\Physic\Collider.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\IO\InputSystem.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\UI\UIElement.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\UI\Text.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Font\FNT\FNTChanalMode.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\IO\Device\InputButton.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\OpenGL\Render\RenderSpace.h">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Utility\UUID.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\OpenGL\Render\HUD.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Utility\ASCIIString.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Level\LevelLoader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Level\LevelManager.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\ResouceManager.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\System\GameSystem.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Resource.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Model\ModelRenderInformation.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BitFire\Color\RGB.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Color\RGB8Bit.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Color\RGBA.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="BitFire\Configuration\AudioConfig.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -494,16 +509,7 @@
     <ClInclude Include="BitFire\Graphics\Camera\FirstPersonCamera.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\IO\Device\KeyBoard\Alphabet.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\IO\Device\KeyBoard\FunctionKeys.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="BitFire\IO\Device\KeyBoard\KeyBoard.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\IO\Device\KeyBoard\Numbers.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\IO\Device\Mouse\CursorMode.h">
@@ -524,19 +530,7 @@
     <ClInclude Include="BitFire\IO\File\TextFile.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\IO\Message\Message.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\IO\Message\MessageSystem.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\IO\Message\MessageType.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="BitFire\IO\EndianType.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\IO\TrippelIndex.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Mathematic\Algorithm\CRCAlgorithm.h">
@@ -569,12 +563,6 @@
     <ClInclude Include="BitFire\Mathematic\Geometry\Form\SquarePyramid.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Mathematic\Geometry\Matrix\Matrix3x3.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Mathematic\Geometry\Matrix\Matrix4x4.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="BitFire\Mathematic\Geometry\Shape\Circle.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -599,34 +587,7 @@
     <ClInclude Include="BitFire\Mathematic\Geometry\Shape\Triangle.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Mathematic\Geometry\Vector\Vector2.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Mathematic\Geometry\Vector\Vector3.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Mathematic\Geometry\Vector\Vector4.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="BitFire\Mathematic\Geometry\Direction.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Mathematic\Geometry\IndexPoint.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Mathematic\Geometry\IndexPosition.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Mathematic\Geometry\Point.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Mathematic\Geometry\Position.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Mathematic\Geometry\Rotation.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Mathematic\Geometry\Size.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Mathematic\Physic\GravityBox.h">
@@ -644,37 +605,10 @@
     <ClInclude Include="BitFire\Mathematic\Math.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\OpenGL\Render\DataSize.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\OpenGL\Render\IndexDataCache.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\OpenGL\Render\RenderDataCache.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\OpenGL\Render\RenderInformation.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="BitFire\OpenGL\Render\RenderMode.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\OpenGL\Render\RenderSystem.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\OpenGL\Render\VertexDataCache.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\OpenGL\Shader\System\ShaderFile.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\OpenGL\Shader\System\ShaderLoader.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="BitFire\OpenGL\Window\Window.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\OpenGL\OpenGLAPI.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Player\Player.h">
@@ -759,18 +693,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Resources\Image\JPEG\JPEGLoader.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\Type\PNGChunkImageHeader.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\Type\PortableNetworkGraphicChunkPalette.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\Type\PortableNetworkGraphicFileHeader.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\Type\PortableNetworkGraphicImageData.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGChunk.h">
@@ -899,34 +821,16 @@
     <ClInclude Include="BitFire\Time\StopWatch.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Time\TimeCollection.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="BitFire\UI\Button.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\UI\Padding.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\UI\Text.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Utility\Dictionary.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Utility\LinkedList.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="BitFire\Utility\List.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Utility\ListSize.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="BitFire\Utility\Queue.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Utility\StringSplitter.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\IO\Serialization\YAML\YAMLLoader.h">
@@ -969,6 +873,252 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Resources\Model\OBJ\OBJLineCommand.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Utility\Table.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Color\RGB.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Color\RGBA.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\System\SystemState.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Shader\Shader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Shader\ShaderType.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Shader\ShaderLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Shader\ShaderProgram.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Dialog\Dialog.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Dialog\DialogLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Utility\ByteString.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Crypto\ISBN.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Crypto\ICypher.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Crypto\Caesar.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Crypto\RSA.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Complex.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Geometry\Point.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Geometry\Position.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Utility\LinkedList.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Utility\LinkedListNode.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\UI\DialogBox.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\UI\DialogBox.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\UI\DialogBox\DialogBox.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\UI\DialogBox\OpenEvent.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\UI\DialogBox\NewCharacterEvent.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\UI\DialogBox\NewPageEvent.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\UI\DialogBox\CloseEvent.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\System\GameTickData.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\System\GameTickEvent.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Event\TriggerEvent.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Event\DataEvent.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Utility\BinaryTree\BinaryTreeNode.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Utility\BinaryTree\BinaryTree.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Utility\BinaryTree\BinaryTreeDirection.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Utility\BinaryTree\BinaryTreeData.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Utility\BinaryTree\BinaryTreeDataRotationInformation.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Geometry\Form\Form.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Image\ImageFilterMode.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Image\ImageFormatMode.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Image\ImageInformation.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Image\ImageLayout.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Image\ImageWrap.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Network\Server.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Network\Client.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Network\ComunicationRole.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Network\ConnectionCredential.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Network\IP.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Network\IPv4.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Network\IPv6.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="MineCraft\Block.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="MineCraft\World.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\IO\Log\Log.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\IO\Log\LogMessageType.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\IO\Log\LogMessage.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\IO\Log\TextColor.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\IO\Log\LogColorData.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Geometry\Vector4.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Geometry\Vector2.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Geometry\Vector3.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Geometry\Matrix4x4.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Geometry\Matrix2x2.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Geometry\Matrix3x3.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Level\Level.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Physic\Collider.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\IO\InputSystem.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\OpenGL\Window\OnInputEvent.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\OpenGL\Window\OnWindowCloseEvent.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\UI\UIElement.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\UI\Text.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Mathematic\Geometry\Padding.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\IO\Device\InputButton.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGHeader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Utility\UUID.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\OpenGL\Render\HUD.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Utility\ASCIIString.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Level\LevelLoader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Level\LevelManager.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\ResouceManager.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\System\GameSystem.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Resource.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\ResourceType.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Model\ModelRenderInformation.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,11 +2,11 @@
 
 #include <string>
 
-#include "../IFont.h"
+#include "../Font.h"
 
 namespace BF
 {
-	struct TTF : public IFont
+	struct TTF : public Font
 	{
 
 	};

@@ -46,14 +46,16 @@ unsigned int BF::Converter::CovertByteToNumber(EndianType type, std::vector<unsi
         unsigned int bitShitftIndex;
         unsigned int bitShitftValue;
 
-        if (type == EndianType::Big)
+        switch (type)
         {
-            bitShitftIndex = i;
-        }
-        else
-        {
-            bitShitftIndex = lenght - i - 1;
-        }       
+            case EndianType::Big:
+                bitShitftIndex = i;
+                break;
+
+            case EndianType::Little:
+                bitShitftIndex = lenght - i - 1;
+                break;
+        }     
 
         byte = bytes.at(bitShitftIndex);
         bitShitftIndex = 8 * (bitShitftIndex);

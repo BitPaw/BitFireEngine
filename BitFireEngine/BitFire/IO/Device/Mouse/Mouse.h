@@ -1,26 +1,27 @@
 #pragma once
 
-#include "../../../Mathematic/Geometry/Point.h"
+#include "../../../Mathematic/Geometry/Point.hpp"
 #include "CursorMode.h"
+#include "../InputButton.h"
 
 namespace BF
 {
 	class Mouse
 	{
 		public:
-		Point Position;
-		Point InputAxis;
+		Point<float> Position;
+		Point<float> InputAxis;
 		CursorMode Mode;
 
-		bool LeftButton;
-		bool ScrollButton;
-		bool RightButton;
+		InputButton LeftButton;
+		InputButton ScrollButton;
+		InputButton RightButton;
 
-		bool CustomButton1;
-		bool CustomButton2;
-		bool CustomButton3;
-		bool CustomButton4;
-		bool CustomButton5;
+		InputButton CustomButton1;
+		InputButton CustomButton2;
+		InputButton CustomButton3;
+		InputButton CustomButton4;
+		InputButton CustomButton5;
 
 		Mouse();
 		~Mouse();

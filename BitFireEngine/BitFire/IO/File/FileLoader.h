@@ -10,21 +10,24 @@
 #include "EmptyFileName.h"
 
 #include "../../Utility/List.hpp"
+#include "../../Utility/ByteString.h"
 
 namespace BF
 {
 	class FileLoader
 	{
-	public:
-		static bool DoesFileExist(const std::string filePath);
+		public:
+		static bool DoesFileExist(ASCIIString& filePath);
 
-		static BF::List<unsigned char> ReadFileAsBytes(const std::string filePath);
-		static void WriteFileAsBytes(const std::string filePath, const unsigned int size, const unsigned char* data);
+		static void ReadFileAsBytes(ASCIIString& filePath, ByteString& byteString);
+		static void WriteFileAsBytes(ASCIIString& filePath, ByteString& byteString);
 
-		static std::string ReadCompleteFile(const std::string filePath);
-		static BF::List<std::string> ReadFileByLines(const std::string filePath);
+		static void ReadCompleteFile(ASCIIString& filePath, ASCIIString& fileContent);
+		static void ReadFileByLines(ASCIIString& filePath, List<ASCIIString>& stringList);
 
-		static TextFile ReadTextFile(const std::string filePath);
-		static TextFile ReadTextFile(const std::string filePath, const bool splittLines);
+		static void ReadTextFile(TextFile& textFile);
+		static void ReadTextFile(TextFile& textFile, const bool splittLines);
+
+		static void GetFileExtension(ASCIIString& fileName, ASCIIString& extension);
 	};
 }

@@ -5,7 +5,6 @@
 
 namespace BF
 {
-
 	class ConfigContainer
 	{
 		public:

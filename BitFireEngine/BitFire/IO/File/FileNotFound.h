@@ -1,23 +1,22 @@
 #pragma once
 
-#include <string>
 #include <exception>
+
+#include "../../Utility/ASCIIString.h"
 
 namespace BF
 {
 	class FileNotFound : public std::exception
 	{
 		public:
-		char* ErrorMessage;
-		std::string FilePath;
+		ASCIIString ErrorMessage;
+		ASCIIString FilePath;
 
-		FileNotFound(std::string filePath);
-
-		~FileNotFound();
+		FileNotFound(ASCIIString& filePath);
 
 		const char* what() const noexcept
 		{
-			return ErrorMessage;
+			return 0;
 		}
 	};
 }

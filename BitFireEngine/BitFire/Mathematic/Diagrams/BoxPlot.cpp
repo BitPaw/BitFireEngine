@@ -3,12 +3,12 @@
 BF::BoxPlot::BoxPlot(List<double> values)
 {
     const int iqrFactor = 1;
-    bool hasEvenLengh = -1;
+    bool hasEvenLengh = false;
     int medianIndex = -1;
     int lowerQuartialIndex = -1;
     int higherQuartialIndex = -1;
 
-    Size = values.Size.Value;
+    Size = values.Size();
     Sum = -1;
     Minimum = std::numeric_limits<double>::min();
     Maximum = std::numeric_limits<double>::max();
@@ -29,7 +29,7 @@ BF::BoxPlot::BoxPlot(List<double> values)
         higherQuartialIndex = medianIndex + lowerQuartialIndex;
     }
 
-    values.Sort();
+    //values.Sort();
 
     for (int i = 0; i < Size; i++)
     {

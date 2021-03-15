@@ -7,42 +7,38 @@
 
 #include "CameraSettings.h"
 
-#include "../../Time/TimeCollection.h"
-#include "../../Mathematic/Geometry/Position.h"
+#include "../../Mathematic/Geometry/Position.hpp"
 #include "../../Mathematic/Geometry/Direction.h"
+
+#include "../../System/GameTickData.h"
 
 namespace BF
 {
 	class Camera
 	{
-	protected:
-		float GetViewSpeed();
-		float GetWalkSpeed();
-		float _deltaTime;
+		protected:
+		float _walkSpeed;
+		float _viewSpeed;
 
-	public:
+		public:
 		glm::mat4 _projection;
 		glm::mat4 _view;
 		glm::mat4 _viewProjection;
 		glm::vec3 _position;
 
 		CameraSettings* Settings;
-		Position* CurrentPosition;
-		float WalkSpeed;
-		float ViewSpeed;
+		Position<float> CurrentPosition;
 
 		Camera();
 		Camera(CameraSettings* settings);
-		~Camera();
+
+		void UpdateSystemLink();
 
 		virtual void Move(Direcion direction);
-		virtual void Update();
-		void SetDeltaTime(float delteTime);
+		virtual void Update(GameTickData gameTickData);
 
 		glm::mat4 GetUpdatedViewProjection()
 		{
-			Update();
-
 			return _viewProjection;
 		}
 	};

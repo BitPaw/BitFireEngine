@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include "Sound.h"
 #include "ISound.h"
 #include "SoundFormat.h"
@@ -12,14 +10,14 @@
 #include "WAV/WAVLoader.h"
 
 #include "../../IO/File/TextFile.h"
-#include "../../IO/Message/MessageSystem.h"
+#include "../../IO/Log/Log.h"
 
 namespace BF
 {
 	class SoundLoader
 	{
 		public:
-		ISound* LoadFromFile(std::string filePath);
+		Sound* LoadFromFile(ASCIIString filePath);
 
 		Sound* MIDToSound(MID* midi);
 		Sound* MP3ToSound(MP3* mp3);

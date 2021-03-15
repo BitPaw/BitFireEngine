@@ -1,20 +1,21 @@
 #pragma once
 
-#include <string>
-#include <stdio.h>
-
 #include "OBJElement.h"
 #include "MTL/MTL.h"
 
 #include "../IModel.h"
+#include "../../../OpenGL/Render/RenderMode.h"
 
 namespace BF
 {
 	// [.OBJ] Wavefront - 3D model format
-	struct OBJ : public IModel
+	struct OBJ// : public IModel
 	{
-	public:
-		std::string Name = "[N/A]";
+		public:
+		OBJ();
+
+		ASCIIString Name = "[N/A]";
+		unsigned char VertexStructureSize;
 		List<MTL> Materials;
 		List<OBJElement> ElementList;
 	};

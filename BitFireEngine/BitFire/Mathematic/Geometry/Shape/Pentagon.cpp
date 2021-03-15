@@ -1,15 +1,11 @@
 #include "Pentagon.h"
 
-BF::Pentagon::Pentagon() : Pentagon(Point(), Point(), Point(), Point(), Point())
+BF::Pentagon::Pentagon() 
 {
 
 }
 
-BF::Pentagon::Pentagon(Point a, Point b, Point c, Point d, Point e) : Shape(5)
+BF::Pentagon::Pentagon(Point<float> a, Point<float> b, Point<float> c, Point<float> d, Point<float> e) 
 {
-	A = a;
-	B = b;
-	C = c;
-	D = d;
-	E = e;
+
 }

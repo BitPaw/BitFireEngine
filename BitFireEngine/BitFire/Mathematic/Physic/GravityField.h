@@ -1,12 +1,13 @@
 #pragma once
 
-#include "../Geometry/Vector/Vector3.h"
+#include "Collider.h"
+#include "../Geometry/Position.hpp"
 
 namespace BF
 {
-	class GravityField
+	class GravityField : public Collider
 	{
 		public:
-		Vector3 Direction;
+		Position<float> Force;
 	};
 }
