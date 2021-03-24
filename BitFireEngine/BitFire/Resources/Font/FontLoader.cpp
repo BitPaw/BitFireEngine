@@ -1,10 +1,10 @@
 #include "FontLoader.h"
 
-BF::Font* BF::FontLoader::LoadFontFromFile(ASCIIString& filePath)
+BF::Font* BF::FontLoader::LoadFontFromFile(AsciiString& filePath)
 {
     Font* font = nullptr;
     TextFile textFile(filePath);
-    ASCIIString fileExtension = textFile.FileExtension;
+    AsciiString fileExtension = textFile.FileExtension;
     FontFormat fontFormat = ParseFontFormat(fileExtension);
 
     switch (fontFormat)
@@ -52,7 +52,7 @@ BF::Font* BF::FontLoader::LoadFontFromFile(ASCIIString& filePath)
 
 
 
-BF::FontFormat BF::FontLoader::ParseFontFormat(ASCIIString& fileExtension)
+BF::FontFormat BF::FontLoader::ParseFontFormat(AsciiString& fileExtension)
 {
     bool isFNT = fileExtension.CompareIgnoreCase("fnt");
     bool isOTF = fileExtension.CompareIgnoreCase("otf");
@@ -65,7 +65,7 @@ BF::FontFormat BF::FontLoader::ParseFontFormat(ASCIIString& fileExtension)
     return FontFormat::Unkown;
 }
 
-bool BF::FontLoader::IsFontFile(ASCIIString& fileExtension)
+bool BF::FontLoader::IsFontFile(AsciiString& fileExtension)
 {
     return ParseFontFormat(fileExtension) != FontFormat::Unkown;
 }

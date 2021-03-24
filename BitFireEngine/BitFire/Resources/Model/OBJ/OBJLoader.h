@@ -35,8 +35,8 @@ namespace BF
         static const char _characterParameter = 'p';
      
         public:
-        static OBJ* LoadFromFile(ASCIIString filePath);
-        static void SaveToFile(ASCIIString filePath, OBJ& waveFont);
+        static OBJ* LoadFromFile(AsciiString filePath);
+        static void SaveToFile(AsciiString filePath, OBJ& waveFont);
         static void PrintObjectDataToConsole(OBJ& waveFont);
     };
 }

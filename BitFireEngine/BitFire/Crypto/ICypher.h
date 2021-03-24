@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Utility/ASCIIString.h"
+#include "../Utility/AsciiString.h"
 
 namespace BF
 {
@@ -10,7 +10,7 @@ namespace BF
 		ICypher();
 
 		public:
-		virtual ASCIIString Cypher(ASCIIString message);
-		virtual ASCIIString DeCypher(ASCIIString message);
+		virtual AsciiString Cypher(AsciiString message);
+		virtual AsciiString DeCypher(AsciiString message);
 	};
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PNGColorType.h"
 
 namespace BF
 {
@@ -22,7 +23,7 @@ namespace BF
 			Color type codes represent sums of the following values: 1 (palette used), 2 (color used), 
 			and 4 (alpha channel used). Valid values are 0, 2, 3, 4, and 6. 		
 		*/
-		char ColorType;
+		PNGColorType ColorType;
 		char CompressionMethod;
 		char FilterMethod;
 		char InterlaceMethod;

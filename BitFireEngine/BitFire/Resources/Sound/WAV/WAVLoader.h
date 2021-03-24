@@ -3,7 +3,7 @@
 #include "WAV.h"
 
 #include "../../ILoader.h"
-#include "../../../Utility/ASCIIString.h"
+#include "../../../Utility/AsciiString.h"
 
 namespace BF
 {
@@ -13,6 +13,6 @@ namespace BF
 		WAVLoader();
 
 		public:
-		static WAV* LoadFromFile(ASCIIString filePath);
+		static WAV* LoadFromFile(AsciiString filePath);
 	};
 }

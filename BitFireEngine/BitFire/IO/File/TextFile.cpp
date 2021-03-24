@@ -4,7 +4,7 @@ BF::TextFile::TextFile()
 {
 }
 
-BF::TextFile::TextFile(ASCIIString& path)
+BF::TextFile::TextFile(AsciiString& path)
 {
 	Path.Copy(path);
 	//FileName.Copy(lines[lines.Size() - 1]);
@@ -12,15 +12,15 @@ BF::TextFile::TextFile(ASCIIString& path)
 	GetFileExtension(path, FileExtension);
 }
 
-void BF::TextFile::GetFileExtension(ASCIIString& path, ASCIIString& extension)
+void BF::TextFile::GetFileExtension(AsciiString& path, AsciiString& extension)
 {
-	List<ASCIIString> lines;
+	List<AsciiString> lines;
 
 	path.Splitt('/', lines);	
 
 	if (lines.Size() > 0)
 	{
-		ASCIIString& fileName = lines[lines.Size() - 1];
+		AsciiString& fileName = lines[lines.Size() - 1];
 		unsigned int position = fileName.FindLast('.');
 
 		if (position != -1)

@@ -3,7 +3,7 @@
 #include "ShaderType.h"
 
 #include "../Resource.h"
-#include "../../Utility/ASCIIString.h"
+#include "../../Utility/AsciiString.h"
 
 namespace BF
 {
@@ -11,9 +11,9 @@ namespace BF
 	{
 		public:
 		ShaderType Type;
-		ASCIIString Content;
+		AsciiString Content;
 
 		Shader();
-		Shader(ShaderType type, ASCIIString& content);
+		Shader(ShaderType type, AsciiString& content);
 	};
 }

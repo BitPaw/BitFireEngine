@@ -1,6 +1,6 @@
 #include "ImageLoader.h"
 
-BF::ImageFormat BF::ImageLoader::CheckImageFormat(ASCIIString& fileExtension)
+BF::ImageFormat BF::ImageLoader::CheckImageFormat(AsciiString& fileExtension)
 {
     bool isBMP = fileExtension.CompareIgnoreCase("bmp");
     bool isGIF = fileExtension.CompareIgnoreCase("gif");
@@ -17,16 +17,16 @@ BF::ImageFormat BF::ImageLoader::CheckImageFormat(ASCIIString& fileExtension)
     return ImageFormat::Unkown;
 }
 
-bool BF::ImageLoader::IsImageFileExtension(ASCIIString& fileExtension)
+bool BF::ImageLoader::IsImageFileExtension(AsciiString& fileExtension)
 {
     return CheckImageFormat(fileExtension) != ImageFormat::Unkown;
 }
 
-BF::Image* BF::ImageLoader::LoadFromFile(ASCIIString& filePath)
+BF::Image* BF::ImageLoader::LoadFromFile(AsciiString& filePath)
 {    
-    Image* image = nullptr;
+    Image* image = new Image();
     TextFile textFile(filePath);
-    ASCIIString fileExtension = textFile.FileExtension;
+    AsciiString fileExtension = textFile.FileExtension;
     ImageFormat imageFormat = CheckImageFormat(fileExtension); 
 
     switch (imageFormat)
@@ -52,12 +52,9 @@ BF::Image* BF::ImageLoader::LoadFromFile(ASCIIString& filePath)
 
         case ImageFormat::PNG:            
             {
-                Log::Write(LogMessageType::Event, "[.PNG] PNG File detected.");
-
-                PNG* png = PNGLoader::LoadFromFile(filePath);
-                png->PrintData();
-                //image = BMPToImage(bmp);
-
+                PNG png;
+                PNGLoader::LoadFromFile(filePath, png);                
+                PNGLoader::PNGToImage(png, *image);
                 break;
             }
 

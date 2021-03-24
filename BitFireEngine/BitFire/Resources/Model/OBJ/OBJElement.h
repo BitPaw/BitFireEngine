@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../Utility/ASCIIString.h"
+#include "../../../Utility/AsciiString.h"
 #include "../../../Utility/List.hpp"
 #include "../../../Mathematic/Geometry/Position.hpp"
 
@@ -9,7 +9,7 @@ namespace BF
 	struct OBJElement
 	{
 		public:
-		ASCIIString Name;
+		AsciiString Name;
 
 		unsigned int MaterialID = -1;
 		float Smoothing;

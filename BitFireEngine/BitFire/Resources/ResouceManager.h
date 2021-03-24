@@ -15,7 +15,7 @@
 #include "Dialog/Dialog.h"
 
 #include "../Utility/LinkedList.hpp"
-#include "../Utility/ASCIIString.h"
+#include "../Utility/AsciiString.h"
 #include "../Graphics/Camera/FirstPersonCamera.h"
 #include "../Level/Level.h"
 
@@ -45,7 +45,7 @@ namespace BF
 
         void UpdateVBOData(Model& model);
 
-        unsigned int CompileShader(unsigned int type, ASCIIString& shaderString);
+        unsigned int CompileShader(unsigned int type, AsciiString& shaderString);
 
 	public:
         FirstPersonCamera MainCamera;
@@ -56,9 +56,9 @@ namespace BF
 		//void RegisterGPU(Font& font);
 		void PushToGPU(ShaderProgram& shader);
 
-		void Load(ASCIIString& filePath);
+		void Load(AsciiString& filePath);
 
-        void AddShaderProgram(ASCIIString& vertexShader, ASCIIString& fragmentShader);
+        void AddShaderProgram(AsciiString& vertexShader, AsciiString& fragmentShader);
 
         void RenderModels(GameTickData& gameTickData);
 
@@ -95,8 +95,8 @@ Cube cube;
 // _currentMainCamera.UpdateSystemLink();
 
  // Shader
- ASCIIString vertex("A:/_WorkSpace/BitFireEngine/Shader/WorldSpace.vert");
- ASCIIString fragment("A:/_WorkSpace/BitFireEngine/Shader/WorldSpace.frag");
+ AsciiString vertex("A:/_WorkSpace/BitFireEngine/Shader/WorldSpace.vert");
+ AsciiString fragment("A:/_WorkSpace/BitFireEngine/Shader/WorldSpace.frag");
 
  worldShader = new ShaderWorldSpace();
  worldShader->AddShader
@@ -112,8 +112,8 @@ Cube cube;
  LevelLoader::worldShader = worldShader;
 
  ShaderHUD* hudShader = new ShaderHUD();
- ASCIIString vertexHUD("A:/_WorkSpace/BitFireEngine/Shader/HUD.vert");
- ASCIIString fragmentHUD("A:/_WorkSpace/BitFireEngine/Shader/HUD.frag");
+ AsciiString vertexHUD("A:/_WorkSpace/BitFireEngine/Shader/HUD.vert");
+ AsciiString fragmentHUD("A:/_WorkSpace/BitFireEngine/Shader/HUD.frag");
 
  hudShader->AddShader // !!!! aaloc
  (
@@ -141,7 +141,7 @@ Cube cube;
 
 
 
- ASCIIString blockTexture("A:/_WorkSpace/BitFireEngine/Texture/Block.bmp");
+ AsciiString blockTexture("A:/_WorkSpace/BitFireEngine/Texture/Block.bmp");
 
 
  // Texture
@@ -157,8 +157,8 @@ Cube cube;
 // Image* png = ImageLoader::LoadFromFile("Font/segoe.png");
 
  // Font
- ASCIIString fontTextureFilePath("A:/_WorkSpace/BitFireEngine/Font/segoe.bmp");
- ASCIIString fontFilePath("A:/_WorkSpace/BitFireEngine/Font/segoe.fnt");
+ AsciiString fontTextureFilePath("A:/_WorkSpace/BitFireEngine/Font/segoe.bmp");
+ AsciiString fontFilePath("A:/_WorkSpace/BitFireEngine/Font/segoe.fnt");
 
  Image* fontTexture = ImageLoader::LoadFromFile(fontTextureFilePath);
  fontTexture->FlipHorizontal(); // !!! alloc
@@ -168,7 +168,7 @@ Cube cube;
  RegisterImage(fontTexture);
 
  // Model
- ASCIIString uiText("BitFireEngine 21.01.2021");
+ AsciiString uiText("BitFireEngine 21.01.2021");
  text = new Text(uiText, fnt, -1, -0.9f);
 
  text->progremm = hudShader;
@@ -190,7 +190,7 @@ Cube cube;
 
   if (false)
   {
-      ASCIIString modelDust("A:/_WorkSpace/BitFireEngine/Model/Dust_II.obj");
+      AsciiString modelDust("A:/_WorkSpace/BitFireEngine/Model/Dust_II.obj");
 
 
       Model* map = ModelLoader::LoadFromFile(modelDust);
@@ -218,7 +218,7 @@ Cube cube;
 
 
 
-  ASCIIString modelCube("A:/_WorkSpace/BitFireEngine/Model/QF.obj");
+  AsciiString modelCube("A:/_WorkSpace/BitFireEngine/Model/QF.obj");
 
   cube = ModelLoader::LoadFromFile(modelCube);
   cube->progremm = worldShader;

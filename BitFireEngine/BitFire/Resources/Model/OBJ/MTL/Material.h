@@ -3,14 +3,14 @@
 #include "IlluminationMode.h"
 
 #include "../../../../Mathematic/Geometry/Position.hpp"
-#include "../../../../Utility/ASCIIString.h"
+#include "../../../../Utility/AsciiString.h"
 
 namespace BF
 {
 	struct Material
 	{
 		public:
-		ASCIIString Name;
+		AsciiString Name;
 
 		// Ranges between 0 and 1000
 		float Weight;

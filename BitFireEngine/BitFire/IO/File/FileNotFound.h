@@ -2,17 +2,17 @@
 
 #include <exception>
 
-#include "../../Utility/ASCIIString.h"
+#include "../../Utility/AsciiString.h"
 
 namespace BF
 {
 	class FileNotFound : public std::exception
 	{
 		public:
-		ASCIIString ErrorMessage;
-		ASCIIString FilePath;
+		AsciiString ErrorMessage;
+		AsciiString FilePath;
 
-		FileNotFound(ASCIIString& filePath);
+		FileNotFound(AsciiString& filePath);
 
 		const char* what() const noexcept
 		{

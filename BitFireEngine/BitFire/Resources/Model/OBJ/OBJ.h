@@ -14,7 +14,7 @@ namespace BF
 		public:
 		OBJ();
 
-		ASCIIString Name = "[N/A]";
+		AsciiString Name = "[N/A]";
 		unsigned char VertexStructureSize;
 		List<MTL> Materials;
 		List<OBJElement> ElementList;

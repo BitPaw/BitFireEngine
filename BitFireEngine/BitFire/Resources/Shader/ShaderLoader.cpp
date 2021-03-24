@@ -1,6 +1,6 @@
 #include "ShaderLoader.h"
 
-BF::ShaderType BF::ShaderLoader::CheckShaderType(ASCIIString& fileExtension)
+BF::ShaderType BF::ShaderLoader::CheckShaderType(AsciiString& fileExtension)
 {
     bool isVertexType = fileExtension.CompareIgnoreCase("vert");
     bool isTessellationControlType = fileExtension.CompareIgnoreCase("tesc");
@@ -30,9 +30,9 @@ BF::ShaderType BF::ShaderLoader::CheckShaderType(ASCIIString& fileExtension)
     return ShaderType::Unkown;
 }
 
-void BF::ShaderLoader::LoadFromFile(ASCIIString& filePath, Shader& shader)
+void BF::ShaderLoader::LoadFromFile(AsciiString& filePath, Shader& shader)
 {
-    ASCIIString extension;
+    AsciiString extension;
    
     FileLoader::ReadCompleteFile(filePath, shader.Content);    
     FileLoader::GetFileExtension(filePath, extension);

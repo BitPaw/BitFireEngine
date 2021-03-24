@@ -1,11 +1,11 @@
 #include "SoundLoader.h"
 
-BF::Sound* BF::SoundLoader::LoadFromFile(ASCIIString filePath)
+BF::Sound* BF::SoundLoader::LoadFromFile(AsciiString& filePath)
 {
     Sound* sound = nullptr;
     SoundFormat soundFormat = SoundFormat::Unkown;
     TextFile textFile(filePath);
-    ASCIIString fileExtension = textFile.FileExtension;
+    AsciiString fileExtension = textFile.FileExtension;
 
     bool isMIDI = fileExtension.CompareIgnoreCase("mid");
     bool isMP3 = fileExtension.CompareIgnoreCase("mp3"); 

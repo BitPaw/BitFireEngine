@@ -9,7 +9,7 @@ namespace BF
 	class ShaderLoader
 	{
 		public:
-		static ShaderType CheckShaderType(ASCIIString& fileExtension);
-		static void LoadFromFile(ASCIIString& filePath, Shader& shader);
+		static ShaderType CheckShaderType(AsciiString& fileExtension);
+		static void LoadFromFile(AsciiString& filePath, Shader& shader);
 	};
 }

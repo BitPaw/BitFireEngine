@@ -1,10 +1,10 @@
 #include "MTLLoader.h"
 
 
-BF::MTL* BF::MTLLoader::LoadFromFile(ASCIIString& filePath)
+BF::MTL* BF::MTLLoader::LoadFromFile(AsciiString& filePath)
 {
     MTL* materialLibrary = new MTL();
-	List<ASCIIString> lines;
+	List<AsciiString> lines;
 	FileLoader::ReadFileByLines(filePath, lines);
 	unsigned int materialIndex = 0;
 
@@ -14,7 +14,7 @@ BF::MTL* BF::MTLLoader::LoadFromFile(ASCIIString& filePath)
 
 		for (unsigned int line = 0; line < lines.Size(); line++)
 		{
-			ASCIIString lineCommand = lines[line];
+			AsciiString lineCommand = lines[line];
 			char commandChar = lineCommand.Empty() ? ' ' : lineCommand[0];
 
 			if (commandChar == 'n')
@@ -32,14 +32,14 @@ BF::MTL* BF::MTLLoader::LoadFromFile(ASCIIString& filePath)
 
 		for (unsigned int line = 0; line < lines.Size(); line++)
 		{
-			ASCIIString lineCommand = lines[line];			
+			AsciiString lineCommand = lines[line];			
 			char commandChar = lineCommand.Empty() ? ' ' : lineCommand[0];
 
 			switch (commandChar)
 			{
 			case 'n':
 			{
-				List<ASCIIString> lines;
+				List<AsciiString> lines;
 
 				lineCommand.Splitt(' ', lines);
 
@@ -57,7 +57,7 @@ BF::MTL* BF::MTLLoader::LoadFromFile(ASCIIString& filePath)
 				{
 				case 's':
 				{
-					List<ASCIIString> lines;
+					List<AsciiString> lines;
 
 					lineCommand.Splitt(' ', lines);
 					material->Weight = lines[1].ToFloat();
@@ -67,7 +67,7 @@ BF::MTL* BF::MTLLoader::LoadFromFile(ASCIIString& filePath)
 
 				case 'i':
 				{
-					List<ASCIIString> lines;
+					List<AsciiString> lines;
 
 					lineCommand.Splitt(' ', lines);
 
@@ -89,7 +89,7 @@ BF::MTL* BF::MTLLoader::LoadFromFile(ASCIIString& filePath)
 				{
 				case 'a':
 				{
-					List<ASCIIString> lines;
+					List<AsciiString> lines;
 
 					lineCommand.Splitt(' ', lines);
 
@@ -102,7 +102,7 @@ BF::MTL* BF::MTLLoader::LoadFromFile(ASCIIString& filePath)
 
 				case 'd':
 				{
-					List<ASCIIString> lines;
+					List<AsciiString> lines;
 
 					lineCommand.Splitt(' ', lines);
 
@@ -115,7 +115,7 @@ BF::MTL* BF::MTLLoader::LoadFromFile(ASCIIString& filePath)
 
 				case 's':
 				{
-					List<ASCIIString> lines;
+					List<AsciiString> lines;
 
 					lineCommand.Splitt(' ', lines);
 
@@ -129,7 +129,7 @@ BF::MTL* BF::MTLLoader::LoadFromFile(ASCIIString& filePath)
 
 				case 'e':
 				{
-					List<ASCIIString> lines;
+					List<AsciiString> lines;
 
 					lineCommand.Splitt(' ', lines);
 
@@ -147,7 +147,7 @@ BF::MTL* BF::MTLLoader::LoadFromFile(ASCIIString& filePath)
 
 			case 'd':
 			{
-				List<ASCIIString> lines;
+				List<AsciiString> lines;
 
 				lineCommand.Splitt(' ', lines);
 
@@ -158,7 +158,7 @@ BF::MTL* BF::MTLLoader::LoadFromFile(ASCIIString& filePath)
 
 			case 'i':
 			{
-				List<ASCIIString> lines;
+				List<AsciiString> lines;
 
 				lineCommand.Splitt(' ', lines);
 				IlluminationMode mode = IlluminationMode::None;

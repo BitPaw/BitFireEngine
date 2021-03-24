@@ -1,6 +1,6 @@
 #include "ISBN.h"
 
-BF::ISBN::ISBN(ASCIIString isbn)
+BF::ISBN::ISBN(AsciiString isbn)
 {
     _isbn = isbn;
 }

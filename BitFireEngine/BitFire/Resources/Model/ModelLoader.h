@@ -22,13 +22,13 @@ namespace BF
 	class ModelLoader
 	{
 	public:
-		static ModelType ParseModelType(ASCIIString& extension);
+		static ModelType ParseModelType(AsciiString& extension);
 
-		static bool IsModelFile(ASCIIString& extension);
+		static bool IsModelFile(AsciiString& extension);
 
-		static Model* LoadFromFile(ASCIIString& filePath);
-		static void LoadFromFile(Model& model, ASCIIString& filePath);
-		static void SaveToFile(Model& model, ASCIIString& filePath);
+		static Model* LoadFromFile(AsciiString& filePath);
+		static void LoadFromFile(Model& model, AsciiString& filePath);
+		static void SaveToFile(Model& model, AsciiString& filePath);
 
 		// Translator
 		static void ToModel(OBJ& waveFront, Model& model);

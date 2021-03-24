@@ -1,6 +1,6 @@
 #include "Text.h"
 
-void BF::Text::CreateText(ASCIIString& text, FNT* font, float x, float y)
+void BF::Text::CreateText(AsciiString& text, FNT* font, float x, float y)
 {
 	_font = font;
 
@@ -18,12 +18,12 @@ void BF::Text::CreateText(ASCIIString& text, FNT* font, float x, float y)
 	SetText(text);
 }
 
-BF::Text::Text(ASCIIString& text, FNT* font)
+BF::Text::Text(AsciiString& text, FNT* font)
 {
 	CreateText(text, font, 0, 0);
 }
 
-BF::Text::Text(ASCIIString& text, FNT* font, float x, float y)
+BF::Text::Text(AsciiString& text, FNT* font, float x, float y)
 {
 	CreateText(text, font, x, y);
 }
@@ -43,7 +43,7 @@ void BF::Text::SetTextPosition(float x, float y)
 	 MoveTo(x- Width, y- Height, 0);
 }
 
-void BF::Text::SetText(ASCIIString& text)
+void BF::Text::SetText(AsciiString& text)
 {
 	bool hasTextChanged = !Content.Compare(text);
 	bool isDifferentSize = Content.Size() != text.Size();

@@ -1,6 +1,6 @@
 #include "FileLoader.h"
 
-void BF::FileLoader::ReadCompleteFile(ASCIIString& filePath, ASCIIString& fileContent)
+void BF::FileLoader::ReadCompleteFile(AsciiString& filePath, AsciiString& fileContent)
 {
     if (filePath.Empty())
     {
@@ -22,7 +22,7 @@ void BF::FileLoader::ReadCompleteFile(ASCIIString& filePath, ASCIIString& fileCo
     file.close();
 }
 
-void BF::FileLoader::ReadFileByLines(ASCIIString& filePath, List<ASCIIString>& stringList)
+void BF::FileLoader::ReadFileByLines(AsciiString& filePath, List<AsciiString>& stringList)
 {
     if (filePath.Empty())
     {
@@ -87,7 +87,7 @@ void BF::FileLoader::ReadTextFile(TextFile& textFile, const bool splittLines)
     }
 }
 
-void BF::FileLoader::GetFileExtension(ASCIIString& fileName, ASCIIString& extension)
+void BF::FileLoader::GetFileExtension(AsciiString& fileName, AsciiString& extension)
 {
     if (!fileName.Empty())
     {
@@ -99,7 +99,7 @@ void BF::FileLoader::GetFileExtension(ASCIIString& fileName, ASCIIString& extens
         }
     }
 }
-void BF::FileLoader::ReadFileAsBytes(ASCIIString& filePath, ByteString& byteString)
+void BF::FileLoader::ReadFileAsBytes(AsciiString& filePath, AsciiString& byteString)
 {
     bool isEmpty = filePath.Empty();
 
@@ -118,14 +118,13 @@ void BF::FileLoader::ReadFileAsBytes(ASCIIString& filePath, ByteString& byteStri
 
     byteString.ReSize(lengh);
 
-    unsigned char* add = &byteString[0];
-    char* stringAdress = reinterpret_cast<char*>(add);
+    char* stringAdress = &byteString[0];
 
     inputFileStream.seekg(0, inputFileStream.beg);
     inputFileStream.read(stringAdress, lengh);
 }
 
-bool BF::FileLoader::DoesFileExist(ASCIIString& filePath)
+bool BF::FileLoader::DoesFileExist(AsciiString& filePath)
 {
     char* string = &filePath.operator[](0);
     std::ifstream file(string);
@@ -136,7 +135,7 @@ bool BF::FileLoader::DoesFileExist(ASCIIString& filePath)
     return fileExists;
 }
 
-void BF::FileLoader::WriteFileAsBytes(ASCIIString& filePath, ByteString& byteString)
+void BF::FileLoader::WriteFileAsBytes(AsciiString& filePath, AsciiString& byteString)
 {
     std::ofstream fout;
 

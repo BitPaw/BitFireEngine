@@ -19,5 +19,7 @@ namespace BF
 
 		void FlipHorizontal();
 		void PrintData();
+
+		void Resize(unsigned int width, unsigned height);
 	};
 }

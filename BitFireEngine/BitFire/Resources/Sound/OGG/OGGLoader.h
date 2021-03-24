@@ -3,7 +3,7 @@
 #include "OGG.h"
 
 #include "../../ILoader.h"
-#include "../../../Utility/ASCIIString.h"
+#include "../../../Utility/AsciiString.h"
 
 namespace BF
 {
@@ -13,6 +13,6 @@ namespace BF
 		OGGLoader();
 
 		public:
-		static OGG* LoadFromFile(ASCIIString filePath);
+		static OGG* LoadFromFile(AsciiString filePath);
 	};
 }

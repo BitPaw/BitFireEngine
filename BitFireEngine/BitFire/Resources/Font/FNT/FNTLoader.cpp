@@ -1,23 +1,23 @@
 #include "FNTLoader.h"
 
-void BF::FNTLoader::ParseInfoLine(ASCIIString& line, FNTInfo& fntInfo)
+void BF::FNTLoader::ParseInfoLine(AsciiString& line, FNTInfo& fntInfo)
 {
-	List<ASCIIString> lines;
+	List<AsciiString> lines;
 	const char token = '=';
 
 	line.Splitt(' ', lines);
 
-	ASCIIString face = lines[1];
-	ASCIIString size = lines[2];
-	ASCIIString bold = lines[3];
-	ASCIIString italic = lines[4];
-	ASCIIString charset = lines[5];
-	ASCIIString unicode = lines[6];
-	ASCIIString stretchH = lines[7];
-	ASCIIString smooth = lines[8];
-	ASCIIString aa = lines[9];
-	ASCIIString padding = lines[10];
-	ASCIIString spacing = lines[11];
+	AsciiString face = lines[1];
+	AsciiString size = lines[2];
+	AsciiString bold = lines[3];
+	AsciiString italic = lines[4];
+	AsciiString charset = lines[5];
+	AsciiString unicode = lines[6];
+	AsciiString stretchH = lines[7];
+	AsciiString smooth = lines[8];
+	AsciiString aa = lines[9];
+	AsciiString padding = lines[10];
+	AsciiString spacing = lines[11];
 
 	lines.DeleteAll();
 
@@ -80,19 +80,19 @@ void BF::FNTLoader::ParseInfoLine(ASCIIString& line, FNTInfo& fntInfo)
 	//bitMapFontInfo.SpacerOffset = spacing;
 }
 
-void BF::FNTLoader::ParseCommonDataLine(ASCIIString& line, FNTCommonData& fntCommonData)
+void BF::FNTLoader::ParseCommonDataLine(AsciiString& line, FNTCommonData& fntCommonData)
 {
-	List<ASCIIString> lines;
+	List<AsciiString> lines;
 	const char token = '=';
 
 	line.Splitt(' ', lines);
 
-	ASCIIString lineHeight = lines[1];
-	ASCIIString base = lines[2];
-	ASCIIString scaleW = lines[3];
-	ASCIIString scaleH = lines[4];
-	ASCIIString pages = lines[5];
-	ASCIIString packed = lines[6];
+	AsciiString lineHeight = lines[1];
+	AsciiString base = lines[2];
+	AsciiString scaleW = lines[3];
+	AsciiString scaleH = lines[4];
+	AsciiString pages = lines[5];
+	AsciiString packed = lines[6];
 
 	//----------------------------------------------------------------------------
 	lineHeight.Splitt(token, lines);
@@ -128,9 +128,9 @@ void BF::FNTLoader::ParseCommonDataLine(ASCIIString& line, FNTCommonData& fntCom
 	fntCommonData.Packed = packed.ToBool();
 }
 
-void BF::FNTLoader::ParsePageLine(ASCIIString& line, FNTPage& fntPage)
+void BF::FNTLoader::ParsePageLine(AsciiString& line, FNTPage& fntPage)
 {
-	List<ASCIIString> lines;
+	List<AsciiString> lines;
 	const char token = '\"';
 	unsigned int start = 0;
 	unsigned int stop = 0;
@@ -138,8 +138,8 @@ void BF::FNTLoader::ParsePageLine(ASCIIString& line, FNTPage& fntPage)
 
 	line.Splitt(' ', lines);
 
-	ASCIIString pageIDText(lines[1]);
-	ASCIIString pageFileNameText(lines[2]);
+	AsciiString pageIDText(lines[1]);
+	AsciiString pageFileNameText(lines[2]);
 
 	lines.DeleteAll();
 
@@ -155,11 +155,11 @@ void BF::FNTLoader::ParsePageLine(ASCIIString& line, FNTPage& fntPage)
 	pageFileNameText.Cut(start, stop, fntPage.PageFileName);
 }
 
-unsigned int BF::FNTLoader::ParseCharacterCountLine(ASCIIString& line)
+unsigned int BF::FNTLoader::ParseCharacterCountLine(AsciiString& line)
 {
-	List<ASCIIString> lines;	
+	List<AsciiString> lines;	
 	line.Splitt('=', lines);
-	ASCIIString pageIDText = lines[1];
+	AsciiString pageIDText = lines[1];
 	lines.DeleteAll();
 
 	unsigned int count = pageIDText.ToInt();
@@ -167,23 +167,23 @@ unsigned int BF::FNTLoader::ParseCharacterCountLine(ASCIIString& line)
 	return count;
 }
 
-void BF::FNTLoader::ParseCharacterLine(ASCIIString& line, FNTCharacter& fntCharacter)
+void BF::FNTLoader::ParseCharacterLine(AsciiString& line, FNTCharacter& fntCharacter)
 {
 	const char token = '=';
 	unsigned int start = 0;
 	unsigned int stop = 0;
 	unsigned int cutlengh = 0;
-	List<ASCIIString> lines;
-	List<ASCIIString> charIDText;
-	List<ASCIIString> charXText;
-	List<ASCIIString> charYText;
-	List<ASCIIString> charWidthText;
-	List<ASCIIString> charHeightText;
-	List<ASCIIString> charXOffsetText;
-	List<ASCIIString> charYOffsetText;
-	List<ASCIIString> charXAdvanceText;
-	List<ASCIIString> charPageText;
-	List<ASCIIString> charChanelText;
+	List<AsciiString> lines;
+	List<AsciiString> charIDText;
+	List<AsciiString> charXText;
+	List<AsciiString> charYText;
+	List<AsciiString> charWidthText;
+	List<AsciiString> charHeightText;
+	List<AsciiString> charXOffsetText;
+	List<AsciiString> charYOffsetText;
+	List<AsciiString> charXAdvanceText;
+	List<AsciiString> charPageText;
+	List<AsciiString> charChanelText;
 
 	line.MergeRepeatingWhiteSpace();
 
@@ -226,7 +226,7 @@ void BF::FNTLoader::ParseCharacterLine(ASCIIString& line, FNTCharacter& fntChara
 	fntCharacter.Chanal = charChanelText[1].ToInt();
 }
 
-BF::FNT* BF::FNTLoader::LoadFromFile(ASCIIString& path)
+BF::FNT* BF::FNTLoader::LoadFromFile(AsciiString& path)
 {
 	TextFile textFile(path);
 	FileLoader::ReadTextFile(textFile, true);
@@ -254,7 +254,7 @@ BF::FNT* BF::FNTLoader::LoadFromFile(ASCIIString& path)
 
 		for (unsigned int i = 0; i < amountOfLines; i++)
 		{
-			ASCIIString* line = &textFile.Lines[i];
+			AsciiString* line = &textFile.Lines[i];
 			FNTCommand currentCommand;
 			char firstCharacter = line->Empty() ? ' ' : (*line)[0];
 
@@ -326,7 +326,7 @@ BF::FNT* BF::FNTLoader::LoadFromFile(ASCIIString& path)
 
 	for (unsigned int i = 0; i < amountOfLines; i++)
 	{
-		ASCIIString& line = textFile.Lines[i];
+		AsciiString& line = textFile.Lines[i];
 		FNTCommand currentCommand = commandList[i];
 
 		switch (currentCommand)

@@ -23,6 +23,6 @@ namespace BF
 		//static const char _newMaterialCharacter = 'i';
 
 	public:
-		static MTL* LoadFromFile(ASCIIString& filePath);
+		static MTL* LoadFromFile(AsciiString& filePath);
 	};
 }

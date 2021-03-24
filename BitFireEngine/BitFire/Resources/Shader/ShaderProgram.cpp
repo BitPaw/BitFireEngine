@@ -1,7 +1,7 @@
 #include "ShaderProgram.h"
 #include "ShaderLoader.h"
 
-void BF::ShaderProgram::AddShader(ASCIIString& vertexShader, ASCIIString& fragmentShader)
+void BF::ShaderProgram::AddShader(AsciiString& vertexShader, AsciiString& fragmentShader)
 {
     ShaderList.ReSize(2);
 

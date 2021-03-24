@@ -6,7 +6,7 @@ BF::Shader::Shader()
 	Type = ShaderType::Unkown;
 }
 
-BF::Shader::Shader(ShaderType type, ASCIIString& content) : Shader()
+BF::Shader::Shader(ShaderType type, AsciiString& content) : Shader()
 {
 	Type = type;
 	Content.Copy(content);

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "CppUnitTest.h"
-#include "../BitFireEngine/BitFire/Utility/ASCIIString.h"
+#include "../BitFireEngine/BitFire/Utility/AsciiString.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -12,7 +12,7 @@ namespace BitFireEngineTest
 		
 		TEST_METHOD(ContructorCString) // ContructorCString
 		{
-			BF::ASCIIString stringA("ABC");
+			BF::AsciiString stringA("ABC");
 
 			Assert::AreEqual(3u, stringA.Size(), L"String lengh is not the same lengh as expected");
 			Assert::AreEqual('A', stringA[0], L"First character is incorrect.");
@@ -23,7 +23,7 @@ namespace BitFireEngineTest
 		TEST_METHOD(ContructorStdString)
 		{
 			std::string stdString("ABC");
-			BF::ASCIIString stringA(stdString);
+			BF::AsciiString stringA(stdString);
 
 			Assert::AreEqual(3u, stringA.Size(), L"String lengh is not the same lengh as expected");
 			Assert::AreEqual('A', stringA[0], L"First character is incorrect.");
@@ -34,10 +34,10 @@ namespace BitFireEngineTest
 		
 		TEST_METHOD(Addable)
 		{
-			BF::ASCIIString stringA("ABC");
-			BF::ASCIIString stringB("123");
+			BF::AsciiString stringA("ABC");
+			BF::AsciiString stringB("123");
 
-			BF::ASCIIString stringC = stringA + stringB;
+			BF::AsciiString stringC = stringA + stringB;
 
 			Assert::AreEqual(6u, stringC.Size(), L"String lengh is not the same lengh as expected");
 			Assert::AreEqual('A', stringA[0], L"First character is incorrect.");
@@ -50,8 +50,8 @@ namespace BitFireEngineTest
 		
 		TEST_METHOD(SubString)
 		{
-			BF::List<BF::ASCIIString> strings;
-			BF::ASCIIString csvText("1,2,3,4,5,6");
+			BF::List<BF::AsciiString> strings;
+			BF::AsciiString csvText("1,2,3,4,5,6");
 
 			csvText.Splitt(',', strings);
 

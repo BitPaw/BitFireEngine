@@ -22,11 +22,11 @@ namespace BF
 	class ImageLoader
 	{
 	public:
-		static Image* LoadFromFile(ASCIIString& filePath);
+		static Image* LoadFromFile(AsciiString& filePath);
 
-		static ImageFormat CheckImageFormat(ASCIIString& fileExtension);
+		static ImageFormat CheckImageFormat(AsciiString& fileExtension);
 
-		static bool IsImageFileExtension(ASCIIString& fileExtension);
+		static bool IsImageFileExtension(AsciiString& fileExtension);
 
 		static Image* BMPToImage(BMP* bitmap);
 		static Image* GIFToImage(GIF* bitmap);

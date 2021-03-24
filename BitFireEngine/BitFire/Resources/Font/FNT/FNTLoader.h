@@ -12,13 +12,13 @@ namespace BF
 	class FNTLoader : public ILoader
 	{
 		private:
-		static void ParseInfoLine(ASCIIString& line, FNTInfo& fntInfo);
-		static void ParseCommonDataLine(ASCIIString& line, FNTCommonData& fntCommonData);
-		static void ParsePageLine(ASCIIString& line, FNTPage& fntPage);
-		static unsigned int ParseCharacterCountLine(ASCIIString& line);
-		static void ParseCharacterLine(ASCIIString& line, FNTCharacter& fntCharacter);
+		static void ParseInfoLine(AsciiString& line, FNTInfo& fntInfo);
+		static void ParseCommonDataLine(AsciiString& line, FNTCommonData& fntCommonData);
+		static void ParsePageLine(AsciiString& line, FNTPage& fntPage);
+		static unsigned int ParseCharacterCountLine(AsciiString& line);
+		static void ParseCharacterLine(AsciiString& line, FNTCharacter& fntCharacter);
 
 		public:
-		static FNT* LoadFromFile(ASCIIString& path);
+		static FNT* LoadFromFile(AsciiString& path);
 	};
 }

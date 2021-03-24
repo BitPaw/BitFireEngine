@@ -1,4 +1,6 @@
 #include "BMPLoader.h"
+#include "../../../Utility/DoubleWord.h"
+#include "../../../Utility/Word.h"
 
 BF::BMPInformationHeaderType BF::BMPLoader::GetType(unsigned char byte)
 {
@@ -106,53 +108,55 @@ unsigned int CalculateNeddedRowSize(unsigned int bitsPerPixel, unsigned int imag
     return cappedValue;
 }
 
-BF::BMP* BF::BMPLoader::LoadFromFile(ASCIIString& path)
+
+
+
+BF::BMP* BF::BMPLoader::LoadFromFile(AsciiString& path)
 {
     BMP* bitMap = new BMP();
-    ByteString bytes;
-
-    FileLoader::ReadFileAsBytes(path, bytes);
-
+    AsciiString bytes;
+    Word word;
+    DoubleWord dWord;
     unsigned int dynamicIndex = 0;
-    unsigned char byteA = bytes[dynamicIndex++]; // Index = 0
-    unsigned char byteB = bytes[dynamicIndex++]; // Index = 1
-    unsigned char byteC = 0;
-    unsigned char byteD = 0;
-
     int size = 0;
     int dip = 0;
 
+    FileLoader::ReadFileAsBytes(path, bytes);
+  
+    word.ByteA = bytes[dynamicIndex++]; // Index = 0
+    word.ByteB = bytes[dynamicIndex++]; // Index = 1
+
     // Parsing Header
     {
-        bitMap->Header.Type = ParseType(byteA, byteB);
+        bitMap->Header.Type = ParseType(word.ByteA, word.ByteB);
 
-        byteA = bytes[dynamicIndex++];// Index = 2
-        byteB = bytes[dynamicIndex++];// Index = 3
-        byteC = bytes[dynamicIndex++]; // Index = 4
-        byteD = bytes[dynamicIndex++];// Index = 5
-        bitMap->Header.SizeOfFile = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
+        dWord.ByteA = bytes[dynamicIndex++];
+        dWord.ByteB = bytes[dynamicIndex++];
+        dWord.ByteC = bytes[dynamicIndex++]; 
+        dWord.ByteD = bytes[dynamicIndex++];
+        bitMap->Header.SizeOfFile = dWord.ExtractInt(EndianType::Big);
 
-        byteA = bytes[dynamicIndex++];// Index = 6
-        byteB = bytes[dynamicIndex++]; // Index = 7
-        byteC = bytes[dynamicIndex++]; // Index = 8
-        byteD = bytes[dynamicIndex++];// Index = 9
-        bitMap->Header.ActualSizeOfFile = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
+        dWord.ByteA = bytes[dynamicIndex++];
+        dWord.ByteB = bytes[dynamicIndex++];
+        dWord.ByteC = bytes[dynamicIndex++];
+        dWord.ByteD = bytes[dynamicIndex++];
+        bitMap->Header.ActualSizeOfFile = dWord.ExtractInt(EndianType::Big);
 
-        byteA = bytes[dynamicIndex++]; // Index = 10
-        byteB = bytes[dynamicIndex++]; // Index = 11
-        byteC = bytes[dynamicIndex++]; // Index = 12
-        byteD = bytes[dynamicIndex++]; // Index = 13
-        bitMap->Header.DataOffset = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
+        dWord.ByteA = bytes[dynamicIndex++];
+        dWord.ByteB = bytes[dynamicIndex++];
+        dWord.ByteC = bytes[dynamicIndex++];
+        dWord.ByteD = bytes[dynamicIndex++];
+        bitMap->Header.DataOffset = dWord.ExtractInt(EndianType::Big);
     }
 
     // DIP
     {
         // Get Header Version
-        byteA = bytes[dynamicIndex++]; // Index = 14
-        byteB = bytes[dynamicIndex++];// Index = 15
-        byteC = bytes[dynamicIndex++];// Index = 16
-        byteD = bytes[dynamicIndex++]; // Index = 17
-        unsigned char result = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
+        dWord.ByteA = bytes[dynamicIndex++];
+        dWord.ByteB = bytes[dynamicIndex++];
+        dWord.ByteC = bytes[dynamicIndex++];
+        dWord.ByteD = bytes[dynamicIndex++];
+        unsigned char result = dWord.ExtractInt(EndianType::Big);
         bitMap->InformationHeaderType = GetType(result);
 
         switch (bitMap->InformationHeaderType)
@@ -162,63 +166,63 @@ BF::BMP* BF::BMPLoader::LoadFromFile(ASCIIString& path)
         {
             BMPInfoHeader* bitMapInfoHeader = new BMPInfoHeader();
 
-            bitMapInfoHeader->HeaderSize = byteA;
+            bitMapInfoHeader->HeaderSize = dWord.ByteA;
 
-            byteA = bytes[dynamicIndex++]; // Index = 18
-            byteB = bytes[dynamicIndex++]; // Index = 19
-            byteC = bytes[dynamicIndex++]; // Index = 20
-            byteD = bytes[dynamicIndex++]; // Index = 21
-            bitMapInfoHeader->Width = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
+            dWord.ByteA = bytes[dynamicIndex++];
+            dWord.ByteB = bytes[dynamicIndex++];
+            dWord.ByteC = bytes[dynamicIndex++];
+            dWord.ByteD = bytes[dynamicIndex++];
+            bitMapInfoHeader->Width = dWord.ExtractInt(EndianType::Big);
 
-            byteA = bytes[dynamicIndex++];// Index = 22
-            byteB = bytes[dynamicIndex++]; // Index = 23
-            byteC = bytes[dynamicIndex++]; // Index = 24
-            byteD = bytes[dynamicIndex++];// Index = 25
-            bitMapInfoHeader->Height = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
+            dWord.ByteA = bytes[dynamicIndex++];
+            dWord.ByteB = bytes[dynamicIndex++];
+            dWord.ByteC = bytes[dynamicIndex++];
+            dWord.ByteD = bytes[dynamicIndex++];
+            bitMapInfoHeader->Height = dWord.ExtractInt(EndianType::Big);
            
-            byteA = bytes[dynamicIndex++]; // Index = 
-            byteB = bytes[dynamicIndex++]; // Index = 
-            bitMapInfoHeader->NumberOfColorPlanes = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB);
+            word.ByteA = bytes[dynamicIndex++]; 
+            word.ByteB = bytes[dynamicIndex++]; 
+            bitMapInfoHeader->NumberOfColorPlanes = word.ExtractInt(EndianType::Big);
 
-            byteA = bytes[dynamicIndex++]; // Index = 
-            byteB = bytes[dynamicIndex++]; // Index = 
-            bitMapInfoHeader->NumberOfBitsPerPixel = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB);
+            word.ByteA = bytes[dynamicIndex++];
+            word.ByteB = bytes[dynamicIndex++];
+            bitMapInfoHeader->NumberOfBitsPerPixel = word.ExtractInt(EndianType::Big);
 
-            byteA = bytes[dynamicIndex++]; // Index = 
-            byteB = bytes[dynamicIndex++]; // Index = 
-            byteC = bytes[dynamicIndex++]; // Index = 
-            byteD = bytes[dynamicIndex++]; // Index = 
-            bitMapInfoHeader->CompressionMethod = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
+            dWord.ByteA = bytes[dynamicIndex++];
+            dWord.ByteB = bytes[dynamicIndex++];
+            dWord.ByteC = bytes[dynamicIndex++];
+            dWord.ByteD = bytes[dynamicIndex++];
+            bitMapInfoHeader->CompressionMethod = dWord.ExtractInt(EndianType::Big);
 
-            byteA = bytes[dynamicIndex++]; // Index = 
-            byteB = bytes[dynamicIndex++]; // Index = 
-            byteC = bytes[dynamicIndex++];// Index = 
-            byteD = bytes[dynamicIndex++]; // Index = 
-            bitMapInfoHeader->ImageSize = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
+            dWord.ByteA = bytes[dynamicIndex++];
+            dWord.ByteB = bytes[dynamicIndex++];
+            dWord.ByteC = bytes[dynamicIndex++];
+            dWord.ByteD = bytes[dynamicIndex++];
+            bitMapInfoHeader->ImageSize = dWord.ExtractInt(EndianType::Big);
 
-            byteA = bytes[dynamicIndex++]; // Index = 
-            byteB = bytes[dynamicIndex++]; // Index = 
-            byteC = bytes[dynamicIndex++]; // Index = 
-            byteD = bytes[dynamicIndex++]; // Index = 
-            bitMapInfoHeader->HorizontalResolution = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
+            dWord.ByteA = bytes[dynamicIndex++];
+            dWord.ByteB = bytes[dynamicIndex++];
+            dWord.ByteC = bytes[dynamicIndex++];
+            dWord.ByteD = bytes[dynamicIndex++];
+            bitMapInfoHeader->HorizontalResolution = dWord.ExtractInt(EndianType::Big);
 
-            byteA = bytes[dynamicIndex++]; // Index = 
-            byteB = bytes[dynamicIndex++]; // Index = 
-            byteC = bytes[dynamicIndex++]; // Index = 
-            byteD = bytes[dynamicIndex++]; // Index = 
-            bitMapInfoHeader->VerticalResolution = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
+            dWord.ByteA = bytes[dynamicIndex++];
+            dWord.ByteB = bytes[dynamicIndex++];
+            dWord.ByteC = bytes[dynamicIndex++];
+            dWord.ByteD = bytes[dynamicIndex++];
+            bitMapInfoHeader->VerticalResolution = dWord.ExtractInt(EndianType::Big);
 
-            byteA = bytes[dynamicIndex++];// Index = 
-            byteB = bytes[dynamicIndex++]; // Index = 
-            byteC = bytes[dynamicIndex++]; // Index = 
-            byteD = bytes[dynamicIndex++];// Index = 
-            bitMapInfoHeader->NumberOfColorsInTheColorPalette = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
+            dWord.ByteA = bytes[dynamicIndex++];
+            dWord.ByteB = bytes[dynamicIndex++];
+            dWord.ByteC = bytes[dynamicIndex++];
+            dWord.ByteD = bytes[dynamicIndex++];
+            bitMapInfoHeader->NumberOfColorsInTheColorPalette = dWord.ExtractInt(EndianType::Big);
 
-            byteA = bytes[dynamicIndex++]; // Index = 
-            byteB = bytes[dynamicIndex++]; // Index = 
-            byteC = bytes[dynamicIndex++];// Index = 
-            byteD = bytes[dynamicIndex++]; // Index = 
-            bitMapInfoHeader->NumberOfImportantColorsUsed = ByteString::ToUnsignedInt(EndianType::Big, byteA, byteB, byteC, byteD);
+            dWord.ByteA = bytes[dynamicIndex++];
+            dWord.ByteB = bytes[dynamicIndex++];
+            dWord.ByteC = bytes[dynamicIndex++];
+            dWord.ByteD = bytes[dynamicIndex++];
+            bitMapInfoHeader->NumberOfImportantColorsUsed = dWord.ExtractInt(EndianType::Big);
 
             bitMap->InformationHeader = bitMapInfoHeader;
 
@@ -289,7 +293,7 @@ BF::BMP* BF::BMPLoader::LoadFromFile(ASCIIString& path)
     return bitMap;
 }
 
-void BF::BMPLoader::SaveToFile(ASCIIString& path, BMP& bitMap)
+void BF::BMPLoader::SaveToFile(AsciiString& path, BMP& bitMap)
 {
     
 }

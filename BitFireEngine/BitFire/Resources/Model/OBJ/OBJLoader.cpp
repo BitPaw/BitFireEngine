@@ -1,6 +1,6 @@
 ﻿#include "OBJLoader.h"
 
-BF::OBJ* BF::OBJLoader::LoadFromFile(ASCIIString filePath)
+BF::OBJ* BF::OBJLoader::LoadFromFile(AsciiString filePath)
 {
     StopWatch stopWatch;
     OBJ* waveFront = new OBJ();
@@ -27,7 +27,7 @@ BF::OBJ* BF::OBJLoader::LoadFromFile(ASCIIString filePath)
        for (unsigned int lineIndex = 0; lineIndex < numberOfLines; lineIndex++)
        {
            OBJLineCommand* currentCommand = &commandList[lineIndex];
-           ASCIIString* line = &textFile.Lines[lineIndex];
+           AsciiString* line = &textFile.Lines[lineIndex];
            unsigned int functionChar = (line->Size() <= 0 ? _characterNone : (*line)[0]);
 
            switch (functionChar)
@@ -258,66 +258,62 @@ BF::OBJ* BF::OBJLoader::LoadFromFile(ASCIIString filePath)
         unsigned int faceStructureSize = waveFront->VertexStructureSize;
 
 
-        printf("Struc´tursize <%u>\n", faceStructureSize);
-        List<ASCIIString> faceTextCache(faceStructureSize);
-        List<ASCIIString> dupTextCache(2);
-        List<ASCIIString> trippelTextCache(3); // X, Y [28 Byte alloc]
-        List<ASCIIString> quadTextCache(4); // v X, Y, Z [36 Byte alloc]
+        printf("Structursize <%u>\n", faceStructureSize);
+        List<AsciiString> faceTextCache(faceStructureSize);
+        List<AsciiString> dupTextCache(2);
+        List<AsciiString> trippelTextCache(3); // X, Y [28 Byte alloc]
+        List<AsciiString> quadTextCache(4); // v X, Y, Z [36 Byte alloc]
         Position<float>* currentVectorValue;       
 
         // Parse
         for (unsigned int lineIndex = 0; lineIndex < numberOfLines; lineIndex++)
         {
-            ASCIIString* line = &textFile.Lines[lineIndex];
+            AsciiString* line = &textFile.Lines[lineIndex];
             OBJLineCommand command = commandList[lineIndex];
 
             switch (command)
             {
-                case OBJLineCommand::Invalid:
-                    break;
-
-                case OBJLineCommand::None:
-                    break;
-
-                case OBJLineCommand::Comment:
-                    break;
-
                 case OBJLineCommand::MaterialLibraryInclude:
                 {
                     try
                     {                 
                         line->Splitt(' ', trippelTextCache);
 
-                        ASCIIString& mtlfilePath = trippelTextCache[1]; //[20 Byte]
-
-                        // Merge File Path
-                        
-                        int position = filePath.FindFirst('/');
+                        AsciiString& mtlfilePath = trippelTextCache[1]; //[20 Byte]
+                        AsciiString materialFileFolder;
+                        int position = filePath.FindLast('/');
                         bool hasSlash = position != -1;
+                        bool doesFileExist = false;                          
 
                         if (hasSlash)
+                        {           
+                            filePath.Cut(0, position + 1, materialFileFolder);
+                            materialFileFolder.AttachToBack(mtlfilePath);
+                        }           
+                        else
                         {
-                            //ASCIIString rootFolder;
-
-                            //filePath.Cut(position, rootFolder);
-
-                            // mtlfilePath.Copy(rootFolder + "/" + mtlfilePath);
+                            materialFileFolder.Copy(mtlfilePath);
                         }                        
 
-                        bool doesFileExist = FileLoader::DoesFileExist(mtlfilePath);
+                        doesFileExist = FileLoader::DoesFileExist(materialFileFolder);
 
                         if (doesFileExist)
                         {
-                            MTL* materialFile = MTLLoader::LoadFromFile(mtlfilePath);
+                            MTL* materialFile = MTLLoader::LoadFromFile(materialFileFolder);
 
                             waveFront->Materials[materialIndex++] = *materialFile;
-                        }                      
+                        }        
+                        else
+                        {
+                            printf("[Warning] Material (.mtl) file is missing at path <%s>\n", &materialFileFolder[0]);
+                        }
+                            
 
                         //delete materialFile;
                     }
-                    catch (FileNotFound fileNotFound)
+                    catch (FileNotFound& fileNotFound)
                     {
-                        printf("[!] Could not load File @ %s\n", fileNotFound.FilePath);
+                        printf("[!] Could not load File @ %s\n", &fileNotFound.FilePath[0]);
                         //Log::Write(LogMessageType::Warning, "Could not load File");
                     }    
                 }
@@ -327,7 +323,7 @@ BF::OBJ* BF::OBJLoader::LoadFromFile(ASCIIString filePath)
                 {
                    
                     line->Splitt(' ', dupTextCache);
-                    ASCIIString& materialName = line[1];
+                    AsciiString& materialName = line[1];
                     unsigned int materialID = -1;
 
                     for (unsigned int i = 0; i < waveFront->Materials.Size(); i++)
@@ -443,6 +439,12 @@ BF::OBJ* BF::OBJLoader::LoadFromFile(ASCIIString filePath)
                     usedFacesBefore = true;
 
                     break;
+
+                case OBJLineCommand::Invalid:
+                case OBJLineCommand::None:
+                case OBJLineCommand::Comment:
+                default:
+                    break;
             }
 
             if (newMeshKey) // && elementIndex < waveFront->ElementList.Size.Value
@@ -465,7 +467,7 @@ BF::OBJ* BF::OBJLoader::LoadFromFile(ASCIIString filePath)
     return waveFront;
 }
 
-void BF::OBJLoader::SaveToFile(ASCIIString filePath, BF::OBJ& waveFont)
+void BF::OBJLoader::SaveToFile(AsciiString filePath, BF::OBJ& waveFont)
 {
 
 }

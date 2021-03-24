@@ -2,7 +2,7 @@
 
 #include "../../../Mathematic/Geometry/Padding.hpp"
 #include "../../../Mathematic/Geometry/Point.hpp"
-#include "../../../Utility/ASCIIString.h"
+#include "../../../Utility/AsciiString.h"
 
 namespace BF
 {
@@ -13,7 +13,7 @@ namespace BF
 		/// <summary>
 		/// Name of this font. (synonym: face)
 		/// </summary>
-		ASCIIString Name;
+		AsciiString Name;
 
 		/// <summary>
 		/// Size of the Letters int Pixel as height.
@@ -33,7 +33,7 @@ namespace BF
 		/// <summary>
 		/// The name of the OEM charset used (when not unicode). Like 'ANSI'.
 		/// </summary>
-		ASCIIString	CharSet;
+		AsciiString	CharSet;
 
 		/// <summary>
 		/// Is the charset in the unicode format?

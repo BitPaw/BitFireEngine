@@ -42,6 +42,10 @@ namespace BF
 
 		static double Pythagoras(double a, double b);
 		static double PythagorasReverse(double c, double a);
+		
+		static double Logarithmus(int base, double exponent);
+		static double LogarithmusBase2(double exponent);
+		static double LogarithmusBase10(double exponent);
 
 		static double NewtonGravitation(double massA, double massB, double distance);
 

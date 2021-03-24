@@ -13,6 +13,6 @@ namespace BF
 		unsigned int ID;
 		List<Shader> ShaderList;			
 
-		void AddShader(ASCIIString& vertexShader, ASCIIString& fragmentShader);
+		void AddShader(AsciiString& vertexShader, AsciiString& fragmentShader);
 	};
 }

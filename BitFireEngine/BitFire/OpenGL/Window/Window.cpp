@@ -272,7 +272,7 @@ void BF::Window::SetPositionToCenter()
     SetPosition(x, y);*/
 }
 
-void BF::Window::SetTitle(ASCIIString title)
+void BF::Window::SetTitle(AsciiString& title)
 {
     glfwSetWindowTitle(_window, &title[0]);
 }

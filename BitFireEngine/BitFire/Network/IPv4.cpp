@@ -10,12 +10,12 @@ BF::IPv4::IPv4()
 	_octetList[3] = 1;
 }
 
-BF::IPv4::IPv4(ASCIIString ip) : IPv4()
+BF::IPv4::IPv4(AsciiString ip) : IPv4()
 {
 	SetAdress(ip);
 }
 
-void BF::IPv4::SetAdress(ASCIIString ip)
+void BF::IPv4::SetAdress(AsciiString ip)
 {
 	try
 	{
@@ -23,7 +23,7 @@ void BF::IPv4::SetAdress(ASCIIString ip)
 
 		if (amountOfDots == 3)
 		{
-			List<ASCIIString> octetList;
+			List<AsciiString> octetList;
 
 			ip.Splitt('.', octetList);
 
@@ -52,7 +52,7 @@ void BF::IPv4::SetAdress(ASCIIString ip)
 	}	
 }
 
-bool BF::IPv4::IsValidIP(ASCIIString ip)
+bool BF::IPv4::IsValidIP(AsciiString ip)
 {
 	try
 	{
@@ -66,13 +66,13 @@ bool BF::IPv4::IsValidIP(ASCIIString ip)
 	return true;
 }
 
-BF::ASCIIString BF::IPv4::ToString()
+BF::AsciiString BF::IPv4::ToString()
 {
-	ASCIIString point(".");
-	ASCIIString a(_octetList[0]);
-	ASCIIString b(_octetList[1]);
-	ASCIIString c(_octetList[2]);
-	ASCIIString d(_octetList[3]);
+	AsciiString point(".");
+	AsciiString a(_octetList[0]);
+	AsciiString b(_octetList[1]);
+	AsciiString c(_octetList[2]);
+	AsciiString d(_octetList[3]);
 
 	return	a + point + b + point + c + point + d;
 }

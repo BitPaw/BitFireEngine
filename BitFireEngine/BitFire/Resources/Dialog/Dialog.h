@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../../Utility/ASCIIString.h"
+#include "../../Utility/AsciiString.h"
 
 namespace BF
 {
 	class Dialog
 	{
 		public:
-		ASCIIString Message;		
+		AsciiString Message;		
 	};
 }

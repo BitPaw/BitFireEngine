@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Utility/ASCIIString.h"
+#include "../../Utility/AsciiString.h"
 #include "../../Utility/List.hpp"
 
 namespace BF
@@ -8,14 +8,14 @@ namespace BF
 	class TextFile
 	{
 		public:
-		List<ASCIIString> Lines;
+		List<AsciiString> Lines;
 
-		ASCIIString Path;
-		ASCIIString FileExtension;
+		AsciiString Path;
+		AsciiString FileExtension;
 
 		TextFile();
-		TextFile(ASCIIString& path);
+		TextFile(AsciiString& path);
 
-		static void GetFileExtension(ASCIIString& path, ASCIIString& extension);
+		static void GetFileExtension(AsciiString& path, AsciiString& extension);
 	};
 }

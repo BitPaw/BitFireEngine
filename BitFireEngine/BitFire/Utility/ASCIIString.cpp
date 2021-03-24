@@ -1,42 +1,42 @@
-#include "ASCIIString.h"
+#include "AsciiString.h"
 
-BF::ASCIIString::ASCIIString()
+BF::AsciiString::AsciiString()
 {
 	_data = nullptr;
 	_size = 0;
 }
 
-BF::ASCIIString::ASCIIString(const char* string) : ASCIIString()
+BF::AsciiString::AsciiString(const char* string) : AsciiString()
 {
 	Copy(string);
 }
 
-BF::ASCIIString::ASCIIString(std::string& stdstring) : ASCIIString()
+BF::AsciiString::AsciiString(std::string& stdstring) : AsciiString()
 {
 	Copy(stdstring);
 }
 
-BF::ASCIIString::ASCIIString(char character) : ASCIIString()
+BF::AsciiString::AsciiString(char character) : AsciiString()
 {
 	Copy(character);
 }
 
-BF::ASCIIString::ASCIIString(ASCIIString& string) : ASCIIString()
+BF::AsciiString::AsciiString(AsciiString& string) : AsciiString()
 {
 	Copy(string);
 }
 
-BF::ASCIIString::~ASCIIString()
+BF::AsciiString::~AsciiString()
 {
 	Delete();
 }
 
-char& BF::ASCIIString::operator[](unsigned int value)
+char& BF::AsciiString::operator[](unsigned int value)
 {
 	return _data[value];
 }
 
-BF::ASCIIString& BF::ASCIIString::operator+(const char* text)
+BF::AsciiString& BF::AsciiString::operator+(const char* text)
 {
 	//AttachToBack(string);
 
@@ -44,7 +44,7 @@ BF::ASCIIString& BF::ASCIIString::operator+(const char* text)
 }
 
 
-BF::ASCIIString& BF::ASCIIString::operator+(ASCIIString& string)
+BF::AsciiString& BF::AsciiString::operator+(AsciiString& string)
 {
 	AttachToBack(string);
 
@@ -52,21 +52,21 @@ BF::ASCIIString& BF::ASCIIString::operator+(ASCIIString& string)
 }
 
 
-BF::ASCIIString& BF::ASCIIString::operator=(const char* string)
+BF::AsciiString& BF::AsciiString::operator=(const char* string)
 {
 	Copy(string);
 
 	return *this;
 }
 
-BF::ASCIIString& BF::ASCIIString::operator=(std::string& string)
+BF::AsciiString& BF::AsciiString::operator=(std::string& string)
 {
 	Copy(string);
 
 	return *this;
 }
 
-bool BF::ASCIIString::operator==(const char* string)
+bool BF::AsciiString::operator==(const char* string)
 {
 	for (int i = 0 ; _data[i] == string[i] ; i++)
 	{
@@ -79,7 +79,7 @@ bool BF::ASCIIString::operator==(const char* string)
 	return false;
 }
 
-void BF::ASCIIString::ReSize(unsigned int size)
+void BF::AsciiString::ReSize(unsigned int size)
 {
 	_size = size + 1;
 	_data = (char*)realloc(_data, _size);
@@ -87,7 +87,7 @@ void BF::ASCIIString::ReSize(unsigned int size)
 	memset(_data, '\0', _size * sizeof(char));
 }
 
-void BF::ASCIIString::Delete()
+void BF::AsciiString::Delete()
 {
 	if (_data != nullptr)
 	{
@@ -97,7 +97,7 @@ void BF::ASCIIString::Delete()
 	}
 }
 
-unsigned int BF::ASCIIString::Size()
+unsigned int BF::AsciiString::Size()
 {
 	if (_size == 0)
 	{
@@ -109,17 +109,17 @@ unsigned int BF::ASCIIString::Size()
 	}   
 }
 
-unsigned int BF::ASCIIString::SizeInBytes()
+unsigned int BF::AsciiString::SizeInBytes()
 {
 	return sizeof(char) * Size();
 }
 
-bool BF::ASCIIString::Empty()
+bool BF::AsciiString::Empty()
 {
 	return _size == 0;
 }
 
-void BF::ASCIIString::AttachToBack(ASCIIString& string)
+void BF::AsciiString::AttachToBack(AsciiString& string)
 {
 	/*
 	A = old Data
@@ -149,22 +149,22 @@ void BF::ASCIIString::AttachToBack(ASCIIString& string)
 	_size = stringCLengh; // Update new size.
 }
 
-float BF::ASCIIString::ToFloat()
+float BF::AsciiString::ToFloat()
 {
 	return std::strtof(&_data[0], 0);
 }
 
-int BF::ASCIIString::ToInt()
+int BF::AsciiString::ToInt()
 {
 	return std::strtol(&_data[0], 0, 10);
 }
 
-bool BF::ASCIIString::ToBool()
+bool BF::AsciiString::ToBool()
 {
 	return ToInt() == 0;
 }
 
-unsigned int BF::ASCIIString::Count(char character)
+unsigned int BF::AsciiString::Count(char character)
 {
 	unsigned int size = Size();
 	unsigned int numberOfChars = 0; 
@@ -177,7 +177,7 @@ unsigned int BF::ASCIIString::Count(char character)
 	return numberOfChars;
 }
 
-unsigned int BF::ASCIIString::CountUnique(char character)
+unsigned int BF::AsciiString::CountUnique(char character)
 {
 	unsigned int size = Size();
 	unsigned int numberOfChars = 0;
@@ -204,7 +204,7 @@ unsigned int BF::ASCIIString::CountUnique(char character)
 	return numberOfChars;
 }
 
-void BF::ASCIIString::Replace(char from, char to)
+void BF::AsciiString::Replace(char from, char to)
 {
 	unsigned int size = Size();
 
@@ -219,7 +219,7 @@ void BF::ASCIIString::Replace(char from, char to)
 	}
 }
 
-void BF::ASCIIString::Remove(char character)
+void BF::AsciiString::Remove(char character)
 {
 	unsigned int amoutToRemove = Count(character);
 	unsigned int oldSize = _size;
@@ -249,14 +249,14 @@ void BF::ASCIIString::Remove(char character)
 	delete[] tempText;
 }
 
-void BF::ASCIIString::RemoveWhiteSpace()
+void BF::AsciiString::RemoveWhiteSpace()
 {
 	const char whiteSpace = ' ';
 
 	Remove(whiteSpace);
 }
 
-char BF::ASCIIString::GetFirstNonEmpty()
+char BF::AsciiString::GetFirstNonEmpty()
 {
 	unsigned int size = Size();
 	unsigned char emptyCharacter = ' ';
@@ -275,7 +275,7 @@ char BF::ASCIIString::GetFirstNonEmpty()
 	return emptyCharacter;
 }
 
-void BF::ASCIIString::MergeRepeatingCharacters(char character)
+void BF::AsciiString::MergeRepeatingCharacters(char character)
 {
 	const char removerKey = 0xFE;
 	unsigned int size = Size();
@@ -319,14 +319,14 @@ void BF::ASCIIString::MergeRepeatingCharacters(char character)
 	Remove(removerKey);
 }
 
-void BF::ASCIIString::MergeRepeatingWhiteSpace()
+void BF::AsciiString::MergeRepeatingWhiteSpace()
 {
 	const char whiteSpace = ' ';
 
 	MergeRepeatingCharacters(whiteSpace);
 }
 
-void BF::ASCIIString::ToLowerCase()
+void BF::AsciiString::ToLowerCase()
 {
 	const char bigA = 'A';
 	const char bigZ = 'Z';
@@ -341,7 +341,7 @@ void BF::ASCIIString::ToLowerCase()
 	}
 }
 
-void BF::ASCIIString::ToUpperCase()
+void BF::AsciiString::ToUpperCase()
 {
 	const char bigA = 'A';
 	const char smalA = 'a';
@@ -356,7 +356,7 @@ void BF::ASCIIString::ToUpperCase()
 	}
 }
 
-bool BF::ASCIIString::Compare(ASCIIString& string)
+bool BF::AsciiString::Compare(AsciiString& string)
 {
 	const unsigned int targetSize = string.Size();
 	const unsigned int sourceSize = Size();
@@ -384,14 +384,14 @@ bool BF::ASCIIString::Compare(ASCIIString& string)
 	return true;
 }
 
-bool BF::ASCIIString::CompareIgnoreCase(const char* string)
+bool BF::AsciiString::CompareIgnoreCase(const char* string)
 {
-	ASCIIString bfString(string);
+	AsciiString bfString(string);
 
 	return CompareIgnoreCase(bfString);
 }
 
-bool BF::ASCIIString::CompareIgnoreCase(ASCIIString& string)
+bool BF::AsciiString::CompareIgnoreCase(AsciiString& string)
 {
 	const unsigned int targetSize = string.Size();
 	const unsigned int sourceSize = Size();
@@ -434,7 +434,7 @@ bool BF::ASCIIString::CompareIgnoreCase(ASCIIString& string)
 	return true;
 }
 
-void BF::ASCIIString::Splitt(char seperator, List<ASCIIString>& stringList)
+void BF::AsciiString::Splitt(char seperator, List<AsciiString>& stringList)
 {
 	const unsigned int length = Size();
 	const unsigned int tokenCounter = CountUnique(seperator);	
@@ -450,7 +450,7 @@ void BF::ASCIIString::Splitt(char seperator, List<ASCIIString>& stringList)
 
 	for (unsigned int i = 0; i < size; i++)
 	{
-		ASCIIString& segment = stringList[dynamicIndex];		
+		AsciiString& segment = stringList[dynamicIndex];		
 		
 		seperatorIndex = FindFirst(seperator, cutStartIndex);
 
@@ -474,12 +474,12 @@ void BF::ASCIIString::Splitt(char seperator, List<ASCIIString>& stringList)
 	}	
 }
 
-void BF::ASCIIString::Cut(unsigned int startPosition, ASCIIString& cuttedString)
+void BF::AsciiString::Cut(unsigned int startPosition, AsciiString& cuttedString)
 {
 	Cut(startPosition, Size(), cuttedString);
 }
 
-void BF::ASCIIString::Cut(unsigned int startPosition, unsigned int endPosition, ASCIIString& cuttedString)
+void BF::AsciiString::Cut(unsigned int startPosition, unsigned int endPosition, AsciiString& cuttedString)
 {	
 	if (startPosition >= endPosition || endPosition == 0)
 	{
@@ -495,17 +495,17 @@ void BF::ASCIIString::Cut(unsigned int startPosition, unsigned int endPosition, 
 	memcpy(&cuttedString[0], startAdress, cuttedStringByteSize);
 }
 
-unsigned int BF::ASCIIString::FindFirst(char character)
+unsigned int BF::AsciiString::FindFirst(char character)
 {
 	return FindFirst(character, 0, Size());
 }
 
-unsigned int BF::ASCIIString::FindFirst(char character, unsigned int beginIndex)
+unsigned int BF::AsciiString::FindFirst(char character, unsigned int beginIndex)
 {
 	return FindFirst(character, beginIndex, Size());
 }
 
-unsigned int BF::ASCIIString::FindFirst(char character, unsigned int beginIndex, unsigned int endIndex)
+unsigned int BF::AsciiString::FindFirst(char character, unsigned int beginIndex, unsigned int endIndex)
 {
 	unsigned int foundIndex = -1;
 
@@ -520,17 +520,17 @@ unsigned int BF::ASCIIString::FindFirst(char character, unsigned int beginIndex,
 	return foundIndex;
 }
 
-unsigned int BF::ASCIIString::FindLast(char character)
+unsigned int BF::AsciiString::FindLast(char character)
 {
 	return FindLast(character, 0, Size());
 }
 
-unsigned int BF::ASCIIString::FindLast(char character, unsigned int beginIndex)
+unsigned int BF::AsciiString::FindLast(char character, unsigned int beginIndex)
 {
 	return FindLast(character, beginIndex, Size());
 }
 
-unsigned int BF::ASCIIString::FindLast(char character, unsigned int beginIndex, unsigned int endIndex)
+unsigned int BF::AsciiString::FindLast(char character, unsigned int beginIndex, unsigned int endIndex)
 {
 	unsigned int foundIndex = -1;
 
@@ -545,7 +545,7 @@ unsigned int BF::ASCIIString::FindLast(char character, unsigned int beginIndex, 
 	return foundIndex;
 }
 
-void BF::ASCIIString::Copy(const char* string)
+void BF::AsciiString::Copy(const char* string)
 {	
 	unsigned int stringSize = 0;
 
@@ -557,7 +557,7 @@ void BF::ASCIIString::Copy(const char* string)
 	Copy(string, stringSize);
 }
 
-void BF::ASCIIString::Copy(const char* string, unsigned int lengh)
+void BF::AsciiString::Copy(const char* string, unsigned int lengh)
 {
 	unsigned int sizeInBytes = lengh * sizeof(char);
 
@@ -566,19 +566,19 @@ void BF::ASCIIString::Copy(const char* string, unsigned int lengh)
 	memcpy(_data, string, sizeInBytes);
 }
 
-void BF::ASCIIString::Copy(std::string& stdstring)
+void BF::AsciiString::Copy(std::string& stdstring)
 {
 	Copy(stdstring.c_str(), stdstring.length());
 }
 
-void BF::ASCIIString::Copy(char character)
+void BF::AsciiString::Copy(char character)
 {
 	char* string = static_cast<char*>(&character);
 
 	Copy(string);
 }
 
-void BF::ASCIIString::Copy(ASCIIString& string)
+void BF::AsciiString::Copy(AsciiString& string)
 {
 	//unsigned int index = string.FindFirst('\0');
 

@@ -3,7 +3,7 @@
 #include "OTF.h"
 
 #include "../../ILoader.h"
-#include "../../../Utility/ASCIIString.h"
+#include "../../../Utility/AsciiString.h"
 
 namespace BF
 {
@@ -13,6 +13,6 @@ namespace BF
 		OTFLoader();
 
 		public:
-		static OTF* LoadFromFile(ASCIIString filePath);
+		static OTF* LoadFromFile(AsciiString filePath);
 	};
 }

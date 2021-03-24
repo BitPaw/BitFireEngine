@@ -12,19 +12,26 @@ BF::GameSystem* BF::GameSystem::_instance = nullptr;
 
 void BF::GameSystem::Start()
 {
-   // ASCIIString levelFilePath = "A:/_WorkSpace/BitFireEngine/Level/MainMenu.lev";
+   // AsciiString levelFilePath = "A:/_WorkSpace/BitFireEngine/Level/MainMenu.lev";
    // LevelLoader::LoadFromFile(level, levelFilePath); // ?? alloc
    // LevelLoader::PrintLevelInfo(level, false);
 
-    ASCIIString levelFilePath("A:/_WorkSpace/BitFireEngine/Model/Dust_II.obj");
-    ASCIIString missingTextureFilePath("A:/_WorkSpace/BitFireEngine/Texture/Block.bmp");
-    ASCIIString fontPath("A:/_WorkSpace/BitFireEngine/Font/segoe.fnt");
-    ASCIIString vertexShaderFilePath("A:/_WorkSpace/BitFireEngine/Shader/WorldSpace.vert");
-    ASCIIString fragmentShaderFilePath("A:/_WorkSpace/BitFireEngine/Shader/WorldSpace.frag");
+    AsciiString levelFilePath("A:/_WorkSpace/BitFireEngine/Model/Dust_II.obj");
+    AsciiString cubeFilePath("A:/_WorkSpace/BitFireEngine/Model/Cube.obj");
 
-    Resource.Load(levelFilePath);
-    Resource.Load(missingTextureFilePath);
-    Resource.Load(fontPath);
+    AsciiString missingTextureFilePath("A:/_WorkSpace/BitFireEngine/Texture/MissingTexture.bmp");
+    AsciiString blockTextureFilePath("A:/_WorkSpace/BitFireEngine/Texture/Block.bmp");
+    AsciiString signTextureFilePath("A:/_WorkSpace/BitFireEngine/Texture/W.png");
+    AsciiString fontPath("A:/_WorkSpace/BitFireEngine/Font/segoe.fnt");
+
+    AsciiString vertexShaderFilePath("A:/_WorkSpace/BitFireEngine/Shader/WorldSpace.vert");
+    AsciiString fragmentShaderFilePath("A:/_WorkSpace/BitFireEngine/Shader/WorldSpace.frag");
+
+
+   // Resource.Load("Text");
+    Resource.Load(cubeFilePath);
+    Resource.Load(signTextureFilePath);
+   // Resource.Load(fontPath);
     Resource.AddShaderProgram(vertexShaderFilePath, fragmentShaderFilePath);
     Resource.PrintContent(true);
 
@@ -125,12 +132,7 @@ void BF::GameSystem::Stop()
 BF::GameSystem::GameSystem()
 {
     _instance = this;
-    _state = SystemState::UnInitialized;
-
-    //_mainWindow = new Window();
-    //_currentMainCamera = new FirstPersonCamera();
-
-    
+    _state = SystemState::UnInitialized;   
 
     _gameTickData.DeltaTime = _stopWatch.Reset();
 

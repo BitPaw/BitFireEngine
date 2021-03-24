@@ -3,7 +3,7 @@
 #include "MID.h"
 
 #include "../../ILoader.h"
-#include "../../../Utility/ASCIIString.h"
+#include "../../../Utility/AsciiString.h"
 
 namespace BF
 {
@@ -13,6 +13,6 @@ namespace BF
 		MIDLoader();
 
 		public:
-		static MID* LoadFromFile(ASCIIString filePath);
+		static MID* LoadFromFile(AsciiString filePath);
 	};
 }

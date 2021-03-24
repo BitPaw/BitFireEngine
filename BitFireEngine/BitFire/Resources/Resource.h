@@ -1,5 +1,5 @@
 #pragma once
-#include "../Utility/ASCIIString.h"
+#include "../Utility/AsciiString.h"
 
 namespace BF
 {
@@ -34,6 +34,6 @@ namespace BF
 		Path from where the resource was loaded from.
 		Can be used to prevent double loading.
 		*/
-		ASCIIString FilePath;	
+		AsciiString FilePath;	
 	};
 }

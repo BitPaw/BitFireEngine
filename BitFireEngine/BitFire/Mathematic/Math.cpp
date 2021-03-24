@@ -170,6 +170,21 @@ double BF::Math::PythagorasReverse(double biggestSide, double smalerSide)
 	return SquareRoot(PowerOfTwo(biggestSide) - PowerOfTwo(smalerSide));
 }
 
+double BF::Math::Logarithmus(int base, double exponent)
+{
+	return _dlog(exponent, base);
+}
+
+double BF::Math::LogarithmusBase2(double exponent)
+{
+	return log2(exponent);
+}
+
+double BF::Math::LogarithmusBase10(double exponent)
+{
+	return log10(exponent);
+}
+
 double BF::Math::NewtonGravitation(double massA, double massB, double distance)
 {
 	return g * ((massA * massB) / (Power(distance, 2)));

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Utility/List.hpp"
-#include "../Utility/ASCIIString.h"
+#include "../Utility/AsciiString.h"
 
 namespace BF
 {
@@ -12,10 +12,10 @@ namespace BF
 
 		public:
 		IPv4();
-		IPv4(ASCIIString ip);
+		IPv4(AsciiString ip);
 
-		void SetAdress(ASCIIString ip);
-		static bool IsValidIP(ASCIIString ip);
-		ASCIIString ToString();
+		void SetAdress(AsciiString ip);
+		static bool IsValidIP(AsciiString ip);
+		AsciiString ToString();
 	};
 }

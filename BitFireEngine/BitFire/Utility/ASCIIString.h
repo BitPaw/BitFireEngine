@@ -5,29 +5,29 @@
 
 namespace BF
 {
-	class ASCIIString
+	class AsciiString
 	{
 		private:
 		char* _data;
 		unsigned int _size;
 
 		public:
-		ASCIIString();
-		ASCIIString(const char* string);
-		ASCIIString(std::string& stdstring);
-		ASCIIString(char character);
-		ASCIIString(ASCIIString& string);
+		AsciiString();
+		AsciiString(const char* string);
+		AsciiString(std::string& stdstring);
+		AsciiString(char character);
+		AsciiString(AsciiString& string);
 
-		~ASCIIString();
+		~AsciiString();
 
 		char& operator[](unsigned int value);
 		
-		ASCIIString& operator+(const char* text);
-		ASCIIString& operator+(ASCIIString& string);
+		AsciiString& operator+(const char* text);
+		AsciiString& operator+(AsciiString& string);
 		//String& operator+(String& string);
 
-		ASCIIString& operator=(const char* string);
-		ASCIIString& operator=(std::string& string);
+		AsciiString& operator=(const char* string);
+		AsciiString& operator=(std::string& string);
 		//void operator=(String string);
 	
 		bool operator==(const char* string);
@@ -37,7 +37,7 @@ namespace BF
 		unsigned int Size();
 		unsigned int SizeInBytes();
 		bool Empty();
-		void AttachToBack(ASCIIString& string);
+		void AttachToBack(AsciiString& string);
 
 		float ToFloat();
 		int ToInt();
@@ -57,13 +57,13 @@ namespace BF
 		void ToLowerCase();
 		void ToUpperCase();
 				
-		bool Compare(ASCIIString& string);
+		bool Compare(AsciiString& string);
 		bool CompareIgnoreCase(const char* string);
-		bool CompareIgnoreCase(ASCIIString& string);
+		bool CompareIgnoreCase(AsciiString& string);
 
-		void Cut(unsigned int startPosition, ASCIIString& cuttedString);
-		void Cut(unsigned int startPosition, unsigned int endPosition, ASCIIString& cuttedString);
-		void Splitt(char seperator, List<ASCIIString>& stringList);
+		void Cut(unsigned int startPosition, AsciiString& cuttedString);
+		void Cut(unsigned int startPosition, unsigned int endPosition, AsciiString& cuttedString);
+		void Splitt(char seperator, List<AsciiString>& stringList);
 
 
 		unsigned int FindFirst(char character);
@@ -79,6 +79,6 @@ namespace BF
 		void Copy(const char* string, unsigned int lengh);
 		void Copy(std::string& stdstring);
 		void Copy(char character);
-		void Copy(ASCIIString& string);
+		void Copy(AsciiString& string);
 	};
 }

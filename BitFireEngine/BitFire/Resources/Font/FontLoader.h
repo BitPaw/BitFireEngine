@@ -16,10 +16,10 @@ namespace BF
 	class FontLoader
 	{
 		public:
-		static Font* LoadFontFromFile(ASCIIString& filePath);
+		static Font* LoadFontFromFile(AsciiString& filePath);
 
-		static FontFormat ParseFontFormat(ASCIIString& fileExtension);
-		static bool IsFontFile(ASCIIString& fileExtension);
+		static FontFormat ParseFontFormat(AsciiString& fileExtension);
+		static bool IsFontFile(AsciiString& fileExtension);
 
 		static FNT* FNTToFont(Font* font);
 		static OTF* OTFToFont(Font* font);

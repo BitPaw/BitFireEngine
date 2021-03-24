@@ -17,7 +17,7 @@ namespace BF
 	class SoundLoader
 	{
 		public:
-		Sound* LoadFromFile(ASCIIString filePath);
+		Sound* LoadFromFile(AsciiString& filePath);
 
 		Sound* MIDToSound(MID* midi);
 		Sound* MP3ToSound(MP3* mp3);

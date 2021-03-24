@@ -8,10 +8,10 @@ namespace BF
 	{
 		public:
 		unsigned int PageID;
-		ASCIIString PageFileName;
+		AsciiString PageFileName;
 		List<FNTCharacter> Characters;
 
 		FNTPage();
-		FNTPage(const unsigned int pageID, ASCIIString& pageFileName);
+		FNTPage(const unsigned int pageID, AsciiString& pageFileName);
 	};
 }

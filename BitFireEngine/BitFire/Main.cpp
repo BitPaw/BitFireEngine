@@ -5,15 +5,17 @@
 #include <iostream>
 #include <filesystem>
 
+//#define NewDeleteVisible
+
 using namespace BF;
 
-/*
+#ifdef NewDeleteVisible
 
 void* operator new(size_t size)
 {
     void* p = malloc(size);
 
-    //printf(">>> [NEW] Allocated <%p> %u Byte\n", p, size);
+    printf(">>> [NEW] Allocated <%p> %u Byte\n", p, size);
 
     return p;
 }
@@ -23,7 +25,10 @@ void operator delete(void* p)
     printf(">>> [DELETE] Removed <%p>\n", p);
     free(p);
 }
-*/
+
+#endif // NewDeleteVisible
+
+
 
 //-----------------------------------------------------------------------------
 int main()

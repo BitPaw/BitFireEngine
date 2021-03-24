@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Utility/ASCIIString.h"
+#include "../Utility/AsciiString.h"
 #include "../Utility/List.hpp"
 #include "../Resources/Model/Model.h"
 #include "../Resources/Image/Image.h"
@@ -14,7 +14,7 @@ namespace BF
 	{
 	public:
 		unsigned int ID;
-		ASCIIString Name;
+		AsciiString Name;
 
 		// Physics Container
 		List<Model> ModelList;

@@ -9,7 +9,7 @@ BF::Model::Model()
     RenderInformation.RenderType = RenderMode::Unkown;
 }
 
-BF::Model::Model(ASCIIString& name)
+BF::Model::Model(AsciiString& name)
 {   
     RenderInformation.RenderType = RenderMode::Unkown; 
     ModelName.Copy(name);

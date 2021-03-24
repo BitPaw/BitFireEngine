@@ -4,13 +4,13 @@
 #include "../Resources/Model/ModelLoader.h"
 #include "../System/GameSystem.h"
 
-void BF::LevelLoader::ParseModelFile(Model& model, ASCIIString& line)
+void BF::LevelLoader::ParseModelFile(Model& model, AsciiString& line)
 {
-	List<ASCIIString> lines;
-	ASCIIString path;
-	ASCIIString positionText;
-	ASCIIString rotationText;
-	ASCIIString scaleText;
+	List<AsciiString> lines;
+	AsciiString path;
+	AsciiString positionText;
+	AsciiString rotationText;
+	AsciiString scaleText;
 	Position<float> position;
 	Position<float> rotation;
 	Position<float> scale;
@@ -62,39 +62,39 @@ void BF::LevelLoader::ParseModelFile(Model& model, ASCIIString& line)
 	//-----------------------
 }
 
-void BF::LevelLoader::ParseImageFile(Image& image, ASCIIString& line)
+void BF::LevelLoader::ParseImageFile(Image& image, AsciiString& line)
 {
 
 }
 
-void BF::LevelLoader::ParseSoundFile(Sound& sound, ASCIIString& line)
+void BF::LevelLoader::ParseSoundFile(Sound& sound, AsciiString& line)
 {
 
 }
 
-void BF::LevelLoader::ParseFontFile(Font& font, ASCIIString& line)
+void BF::LevelLoader::ParseFontFile(Font& font, AsciiString& line)
 {
 
 }
 
-void BF::LevelLoader::ParseShaderFile(Shader& shader, ASCIIString& line)
+void BF::LevelLoader::ParseShaderFile(Shader& shader, AsciiString& line)
 {
 
 }
 
-void BF::LevelLoader::ParseDialogFile(Dialog& dialog, ASCIIString& line)
+void BF::LevelLoader::ParseDialogFile(Dialog& dialog, AsciiString& line)
 {
 
 }
 
-bool BF::LevelLoader::IsLevelFile(ASCIIString& fileExtension)
+bool BF::LevelLoader::IsLevelFile(AsciiString& fileExtension)
 {
 	return fileExtension.CompareIgnoreCase("lev");
 }
 
-void BF::LevelLoader::LoadFromFile(Level& level, ASCIIString& filePath)
+void BF::LevelLoader::LoadFromFile(Level& level, AsciiString& filePath)
 {
-	List<ASCIIString> fileLines;
+	List<AsciiString> fileLines;
 	FileLoader::ReadFileByLines(filePath, fileLines);
 	unsigned int amountOfLines = fileLines.Size();
 	unsigned int modelCounter = 0;
@@ -107,7 +107,7 @@ void BF::LevelLoader::LoadFromFile(Level& level, ASCIIString& filePath)
 	// Step I - Count objects
 	for (unsigned int i = 0; i < amountOfLines; i++)
 	{
-		ASCIIString& line = fileLines[i];
+		AsciiString& line = fileLines[i];
 		char character = line.GetFirstNonEmpty();
 
 		switch (character)
@@ -162,7 +162,7 @@ void BF::LevelLoader::LoadFromFile(Level& level, ASCIIString& filePath)
 	// Step II - Parse and Load
 	for (unsigned int i = 0; i < amountOfLines; i++)
 	{
-		ASCIIString& line = fileLines[i];
+		AsciiString& line = fileLines[i];
 		char character = line.GetFirstNonEmpty();	
 
 		switch (character)
@@ -200,7 +200,7 @@ void BF::LevelLoader::LoadFromFile(Level& level, ASCIIString& filePath)
 	}
 }
 
-void BF::LevelLoader::SaveFromFile(Level& level, ASCIIString& filePath)
+void BF::LevelLoader::SaveFromFile(Level& level, AsciiString& filePath)
 {
 
 }

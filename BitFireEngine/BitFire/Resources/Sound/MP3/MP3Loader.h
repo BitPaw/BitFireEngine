@@ -3,7 +3,7 @@
 #include "MP3.h"
 
 #include "../../ILoader.h"
-#include "../../../Utility/ASCIIString.h"
+#include "../../../Utility/AsciiString.h"
 
 namespace BF
 {
@@ -13,6 +13,6 @@ namespace BF
 		MP3Loader();
 
 		public:
-		static MP3* LoadFromFile(ASCIIString filePath);
+		static MP3* LoadFromFile(AsciiString filePath);
 	};
 }

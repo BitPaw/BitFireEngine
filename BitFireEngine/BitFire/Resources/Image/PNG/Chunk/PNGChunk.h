@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PNGChunkType.h"
 #include "../../../../Utility/List.hpp"
 
 namespace BF
@@ -12,6 +13,7 @@ namespace BF
 
 		// [4-byte] uppercase and lowercase ASCII letters (A-Z and a-z, or 65-90 and 97-122 decimal).
 		unsigned char ChunkType[4];
+		PNGChunkType Type;
 
 		// The data bytes appropriate to the chunk type, if any. This field can be of zero length. 
 		List<unsigned char> ChunkData;

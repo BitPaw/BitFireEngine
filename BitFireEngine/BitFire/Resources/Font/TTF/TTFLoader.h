@@ -3,7 +3,7 @@
 #include "TTF.h"
 
 #include "../../ILoader.h"
-#include "../../../Utility/ASCIIString.h"
+#include "../../../Utility/AsciiString.h"
 
 namespace BF
 {
@@ -13,6 +13,6 @@ namespace BF
 		TTFLoader();
 
 		public:
-		static TTF* LoadFromFile(ASCIIString filePath);
+		static TTF* LoadFromFile(AsciiString filePath);
 	};
 }

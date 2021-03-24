@@ -78,6 +78,30 @@ void BF::Image::PrintData()
         Width* Height * 4
     );
 }
+
+void BF::Image::Resize(unsigned int width, unsigned height)
+{
+    unsigned int newArraySize = width * height;
+    unsigned int pixelSize = 2;
+
+    switch (Information.Format)
+    {
+        case BF::ImageFormatMode::BlackAndWhite:
+            break;
+
+        case BF::ImageFormatMode::RGB:
+            pixelSize = 3;
+            break;
+        case BF::ImageFormatMode::RGBA:
+            pixelSize = 4;
+            break;
+    }
+
+    Width = width;
+    Height = height;
+
+    PixelData.ReSize(newArraySize * pixelSize);
+}
     
     
     

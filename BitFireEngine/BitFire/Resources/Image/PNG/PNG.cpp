@@ -9,11 +9,11 @@ void BF::PNG::PrintData()
 		"+---------------------------+\n"
 		"| Width             : %5i |\n"
 		"| Height            : %5i |\n"
-		"| BitDepth          : %5c |\n"
-		"| ColorType         : %5c |\n"
-		"| CompressionMethod : %5c |\n"
-		"| FilterMethod      : %5c |\n"
-		"| InterlaceMethod   : %5c |\n"
+		"| BitDepth          : %5u |\n"
+		"| ColorType         : %5u |\n"
+		"| CompressionMethod : %5u |\n"
+		"| FilterMethod      : %5u |\n"
+		"| InterlaceMethod   : %5u |\n"
 		"+---------------------------+\n"
 		"| Chunks                    |\n"
 		"+---------------------------+\n"
@@ -26,7 +26,7 @@ void BF::PNG::PrintData()
 		Header.FilterMethod,
 		Header.InterlaceMethod
 	);
-
+	/*
 	for (unsigned int i = 0; i < ChunkList.Size(); i++)
 	{
 		PNGChunk* chunk = &ChunkList[i];
@@ -38,7 +38,7 @@ void BF::PNG::PrintData()
 			&chunk->ChunkType,
 			chunk->Lengh
 		);
-	}
+	}*/
 
 	printf("+---------------------------+\n");
 }

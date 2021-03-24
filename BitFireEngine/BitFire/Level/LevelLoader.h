@@ -2,7 +2,7 @@
 
 #include "Level.h"
 
-#include "../Utility/ASCIIString.h"
+#include "../Utility/AsciiString.h"
 #include "../Resources/Font/Font.h"
 #include "../Resources/Dialog/Dialog.h"
 
@@ -20,18 +20,18 @@ namespace BF
 		static const char _emptyToken = ' ';
 		static const char _commentToken = '#';
 
-		static void ParseModelFile(Model& model, ASCIIString& line);
-		static void ParseImageFile(Image& image, ASCIIString& line);
-		static void ParseSoundFile(Sound& sound, ASCIIString& line);
-		static void ParseFontFile(Font& font, ASCIIString& line);
-		static void ParseShaderFile(Shader& shader, ASCIIString& line);
-		static void ParseDialogFile(Dialog& dialog, ASCIIString& line);
+		static void ParseModelFile(Model& model, AsciiString& line);
+		static void ParseImageFile(Image& image, AsciiString& line);
+		static void ParseSoundFile(Sound& sound, AsciiString& line);
+		static void ParseFontFile(Font& font, AsciiString& line);
+		static void ParseShaderFile(Shader& shader, AsciiString& line);
+		static void ParseDialogFile(Dialog& dialog, AsciiString& line);
 
 	public:
-		static bool IsLevelFile(ASCIIString& fileExtension);
+		static bool IsLevelFile(AsciiString& fileExtension);
 
-		static void LoadFromFile(Level& level, ASCIIString& filePath);
-		static void SaveFromFile(Level& level, ASCIIString& filePath);
+		static void LoadFromFile(Level& level, AsciiString& filePath);
+		static void SaveFromFile(Level& level, AsciiString& filePath);
 		static void PrintLevelInfo(Level& level, bool detailed);
 	};
 }

@@ -1,6 +1,6 @@
 #include "ModelLoader.h"
 
-BF::ModelType BF::ModelLoader::ParseModelType(ASCIIString& extension)
+BF::ModelType BF::ModelLoader::ParseModelType(AsciiString& extension)
 {
     bool is3DS = extension.CompareIgnoreCase("3ds");
     bool isOBJ = extension.CompareIgnoreCase("obj");
@@ -17,12 +17,12 @@ BF::ModelType BF::ModelLoader::ParseModelType(ASCIIString& extension)
     return ModelType::UnKown;
 }
 
-bool BF::ModelLoader::IsModelFile(ASCIIString& extension)
+bool BF::ModelLoader::IsModelFile(AsciiString& extension)
 {
     return ParseModelType(extension) != ModelType::UnKown;
 }
 
-BF::Model* BF::ModelLoader::LoadFromFile(ASCIIString& filePath)
+BF::Model* BF::ModelLoader::LoadFromFile(AsciiString& filePath)
 {
     Model* model = new Model();
 
@@ -31,10 +31,10 @@ BF::Model* BF::ModelLoader::LoadFromFile(ASCIIString& filePath)
     return model;
 }
 
-void BF::ModelLoader::LoadFromFile(Model& model, ASCIIString& filePath)
+void BF::ModelLoader::LoadFromFile(Model& model, AsciiString& filePath)
 {
     TextFile textFile(filePath);
-    ASCIIString fileExtension = textFile.FileExtension;
+    AsciiString fileExtension = textFile.FileExtension;
     ModelType modelType = ParseModelType(fileExtension);
 
     model.FilePath.Copy(filePath);
@@ -80,7 +80,7 @@ void BF::ModelLoader::LoadFromFile(Model& model, ASCIIString& filePath)
     }
 }
 
-void BF::ModelLoader::SaveToFile(Model& model, ASCIIString& filePath)
+void BF::ModelLoader::SaveToFile(Model& model, AsciiString& filePath)
 {
 
 }

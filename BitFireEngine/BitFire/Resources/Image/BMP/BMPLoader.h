@@ -20,8 +20,8 @@ namespace BF
 		static BMPType ParseType(unsigned char leftByte, unsigned char rightByte);
 
 	public:
-		static BMP* LoadFromFile(ASCIIString& path);
-		static void SaveToFile(ASCIIString& path, BMP& bitMap);
+		static BMP* LoadFromFile(AsciiString& path);
+		static void SaveToFile(AsciiString& path, BMP& bitMap);
 
 		//static PixelArray GeneratePixelArray(BMP& bitmap);
 		static void PrintBitMapInformation(BMP& bitMap);

@@ -1,15 +1,15 @@
 #pragma once
 
-#include "../Utility/ASCIIString.h"
+#include "../Utility/AsciiString.h"
 
 namespace BF
 {
 	class ISBN
 	{
 		public:
-		ASCIIString _isbn;
+		AsciiString _isbn;
 
-		ISBN(ASCIIString isbn);
+		ISBN(AsciiString isbn);
 
 		bool IsValid();
 	};

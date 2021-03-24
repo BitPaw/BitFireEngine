@@ -1,9 +1,9 @@
 #include "FileNotFound.h"
 
-BF::FileNotFound::FileNotFound(ASCIIString& filePath)
+BF::FileNotFound::FileNotFound(AsciiString& filePath)
 {
-	ASCIIString fileMissing("File is missing at path <");
-	ASCIIString messagePre = fileMissing + filePath + ">.";
+	AsciiString fileMissing("File is missing at path <");
+	AsciiString messagePre = fileMissing + filePath + ">.";
 	ErrorMessage = messagePre;
 
 	FilePath = filePath;

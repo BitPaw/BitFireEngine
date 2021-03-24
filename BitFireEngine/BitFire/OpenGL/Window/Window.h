@@ -11,7 +11,7 @@
 #include "../../Configuration/VideoConfig.h"
 #include "../../Mathematic/Interpolate.h"
 #include "../../Resources/Image/Image.h"
-#include "../../Utility/ASCIIString.h"
+#include "../../Utility/AsciiString.h"
 #include "../../Utility/Dictionary.hpp"
 
 namespace BF
@@ -95,7 +95,7 @@ namespace BF
 
 		@param The title.
 		*/
-		void SetTitle(ASCIIString title);
+		void SetTitle(AsciiString& title);
 
 		/*
 		Changed the icon that is shown in the taskbar.

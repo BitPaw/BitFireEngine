@@ -24,14 +24,14 @@ namespace BF
 	public:
 		ModelRenderInformation RenderInformation;
 
-		ASCIIString ModelName;
+		AsciiString ModelName;
 
 		LinkedMesh GlobalMesh;
 		List<RGBA<float>> ColorList;
 		List<Mesh> MeshList;		
 
 		Model();
-		Model(ASCIIString& name);
+		Model(AsciiString& name);
 
 		void Move(float x, float y, float z) override;
 		void Move(Position<float> position) override;
