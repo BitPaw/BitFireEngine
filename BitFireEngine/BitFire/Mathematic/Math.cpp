@@ -53,15 +53,22 @@ double BF::Math::Absolute(double value)
 	return value < 0 ? -value : value;
 }
 
-unsigned int BF::Math::RandomeNumber()
-{
-	if (!_timerSet)
-	{
-		srand(time(nullptr));
-		_timerSet = true;
-	}
+unsigned long x = 123456789, y = 362436069, z = 521288629;
 
-	return std::rand();
+unsigned int BF::Math::RandomeNumber()
+{	
+	unsigned long t;
+
+	x ^= x << 16;
+	x ^= x >> 5;
+	x ^= x << 1;
+
+	t = x;
+	x = y;
+	y = z;
+	z = t ^ x ^ y;
+
+	return z;
 }
 
 double BF::Math::Sinus(double value)

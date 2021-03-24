@@ -100,11 +100,14 @@ BF::PNG* BF::PNGLoader::LoadFromFile(AsciiString& filePath)
 
 void BF::PNGLoader::LoadFromFile(AsciiString& filePath, PNG& png)
 {   
+    PNGChunk chunk;
     AsciiString bytes;
     FileLoader::ReadFileAsBytes(filePath, bytes);
-
-    unsigned char* startAdress = reinterpret_cast<unsigned char*>(&bytes[0]);
-    ByteStreamHusk byteStream(startAdress + 8, bytes.Size() -8);
+    ByteStreamHusk byteStream
+    (
+        reinterpret_cast<unsigned char*>(&bytes[0]) + 8,
+        bytes.Size() -8
+    );  
 
     // Check Header
     {        
@@ -137,17 +140,23 @@ void BF::PNGLoader::LoadFromFile(AsciiString& filePath, PNG& png)
     // Fetch data
     while (!byteStream.IsAtEnd())
     {        
-        unsigned int chunkLengh = byteStream.ExtractIntegerAndMove();
-        unsigned int crc;        
-        DoubleWord chunkTypeDword = byteStream.ExtractDoubleWord();
-        PNGChunkType chunkType = ParseChunkType(chunkTypeDword);
-        
+        chunk.Lengh = byteStream.ExtractIntegerAndMove();
+        chunk.ChunkTypeBlock.Value = byteStream.ExtractDoubleWord();
+        chunk.ChunkTypeBlock.Type = ParseChunkType(chunk.ChunkTypeBlock.Value);        
         //----------------------------------------------------------
 
-        printf("| PNG Chunk Type: %c%c%c%c Size: %3u   |\n", chunkTypeDword.ByteA, chunkTypeDword.ByteB, chunkTypeDword.ByteC, chunkTypeDword.ByteD, chunkLengh);
+        printf
+        (
+            "| PNG Chunk Type: %c%c%c%c Size: %3u B |\n", 
+            chunk.ChunkTypeBlock.Value.ByteA,
+            chunk.ChunkTypeBlock.Value.ByteB,
+            chunk.ChunkTypeBlock.Value.ByteC,
+            chunk.ChunkTypeBlock.Value.ByteD,
+            chunk.Lengh
+        );
 
         //---Get Chunk Data------------------------------------------
-        switch (chunkType)
+        switch (chunk.ChunkTypeBlock.Type)
         {
             case PNGChunkType::ImageHeader:
             {
@@ -163,35 +172,35 @@ void BF::PNGLoader::LoadFromFile(AsciiString& filePath, PNG& png)
                     Interlace method 	1 byte
                 */
   
-                png.Header.Width = byteStream.ExtractIntegerAndMove(); 
-                png.Header.Height = byteStream.ExtractIntegerAndMove();
+                png.Width = byteStream.ExtractIntegerAndMove(); 
+                png.Height = byteStream.ExtractIntegerAndMove();
 
-                png.Header.BitDepth = byteStream.ExtractByteAndMove();
+                png.BitDepth = byteStream.ExtractByteAndMove();
                 colorType = byteStream.ExtractByteAndMove();
-                png.Header.CompressionMethod = byteStream.ExtractByteAndMove();
-                png.Header.FilterMethod = byteStream.ExtractByteAndMove();
-                png.Header.InterlaceMethod = byteStream.ExtractByteAndMove();
+                png.CompressionMethod = byteStream.ExtractByteAndMove();
+                png.FilterMethod = byteStream.ExtractByteAndMove();
+                png.InterlaceMethod = byteStream.ExtractByteAndMove();
 
                 switch (colorType)
                 {
                     case 0: 
-                        png.Header.ColorType = PNGColorType::Grayscale; 
+                        png.ColorType = PNGColorType::Grayscale; 
                         break;
 
                     case 2:
-                        png.Header.ColorType = PNGColorType::Truecolor; 
+                        png.ColorType = PNGColorType::Truecolor; 
                         break;
 
                     case 3: 
-                        png.Header.ColorType = PNGColorType::IndexedColor; 
+                        png.ColorType = PNGColorType::IndexedColor; 
                         break;
 
                     case 4: 
-                        png.Header.ColorType = PNGColorType::GrayscaleWithAlphaChannel; 
+                        png.ColorType = PNGColorType::GrayscaleWithAlphaChannel; 
                         break;
 
                     case 6: 
-                        png.Header.ColorType = PNGColorType::TruecolorWithAlphaChannel; 
+                        png.ColorType = PNGColorType::TruecolorWithAlphaChannel; 
                         break;
                 }  
 
@@ -213,7 +222,7 @@ void BF::PNGLoader::LoadFromFile(AsciiString& filePath, PNG& png)
             case PNGChunkType::ImageData:
             {
                 bool finished = false;
-                unsigned int dataLengh = chunkLengh - 6;
+                unsigned int dataLengh = chunk.Lengh - 6;
                 unsigned int pixelDataIndex = 0;
                 unsigned char* startingAdress = reinterpret_cast<unsigned char*>(&byteStream.StartAdress[byteStream.CurrentPosition]); 
                 BitStreamHusk bitStream(startingAdress, dataLengh);       
@@ -239,7 +248,7 @@ void BF::PNGLoader::LoadFromFile(AsciiString& filePath, PNG& png)
                 //---------------------------------
 
                 // Allignment = ZLIB Chunk - ADLER32
-                byteStream.CurrentPosition += chunkLengh-4;
+                byteStream.CurrentPosition += chunk .Lengh - 4;
 
                 zlibHeader.Adeler32CheckValue = byteStream.ExtractIntegerAndMove();
                 zlibHeader.FillMissingData();
@@ -255,7 +264,7 @@ void BF::PNGLoader::LoadFromFile(AsciiString& filePath, PNG& png)
                     "| - Window Size        %u\n"
                     "| - Compressed Data    %u Bytes\n"
                     "| - ADLER23            %u, Valid:%s\n",
-                    chunkLengh,
+                    chunk.Lengh,
                     zlibHeader.CompressionMethod,
                     zlibHeader.CompressionInfo,
 
@@ -287,25 +296,25 @@ void BF::PNGLoader::LoadFromFile(AsciiString& filePath, PNG& png)
             case PNGChunkType::ImageGamma:
             {
                 // sample = lightoutgamma ???
-                png.ImageGamma.Gamma = byteStream.ExtractIntegerAndMove();
+                png.Gamma = byteStream.ExtractIntegerAndMove();
 
                 break;
             }
             case PNGChunkType::PrimaryChromaticities:
             {
-                png.PrimaryChromaticities.White.X = byteStream.ExtractIntegerAndMove();
-                png.PrimaryChromaticities.White.Y = byteStream.ExtractIntegerAndMove();
-                png.PrimaryChromaticities.Red.X = byteStream.ExtractIntegerAndMove();
-                png.PrimaryChromaticities.Red.Y = byteStream.ExtractIntegerAndMove();
-                png.PrimaryChromaticities.Green.X = byteStream.ExtractIntegerAndMove();
-                png.PrimaryChromaticities.Green.Y = byteStream.ExtractIntegerAndMove();
-                png.PrimaryChromaticities.Blue.X = byteStream.ExtractIntegerAndMove();
-                png.PrimaryChromaticities.Blue.Y = byteStream.ExtractIntegerAndMove();
+                png.CromaWhite.X = byteStream.ExtractIntegerAndMove();
+                png.CromaWhite.Y = byteStream.ExtractIntegerAndMove();
+                png.CromaRed.X = byteStream.ExtractIntegerAndMove();
+                png.CromaRed.Y = byteStream.ExtractIntegerAndMove();
+                png.CromaGreen.X = byteStream.ExtractIntegerAndMove();
+                png.CromaGreen.Y = byteStream.ExtractIntegerAndMove();
+                png.CromaBlue.X = byteStream.ExtractIntegerAndMove();
+                png.CromaBlue.Y = byteStream.ExtractIntegerAndMove();
                 break;
             }
             case PNGChunkType::StandardRGBColorSpace:
             {
-                png.StandardRGBColorSpace.RenderingIntent = byteStream.ExtractByteAndMove();
+                png.RenderingIntent = byteStream.ExtractByteAndMove();
                 break;
             }
             case PNGChunkType::EmbeddedICCProfile:
@@ -315,9 +324,9 @@ void BF::PNGLoader::LoadFromFile(AsciiString& filePath, PNG& png)
             case PNGChunkType::BackgroundColor:
             case PNGChunkType::PhysicalPixelDimensions:
             {
-                png.PhysicalPixelDimensions.PixelsPerUnitXAxis = byteStream.ExtractIntegerAndMove();
-                png.PhysicalPixelDimensions.PixelsPerUnitYAxis = byteStream.ExtractIntegerAndMove();
-                png.PhysicalPixelDimensions.UnitSpecifier = byteStream.ExtractByteAndMove();
+                png.PixelsPerUnit.X = byteStream.ExtractIntegerAndMove();
+                png.PixelsPerUnit.Y = byteStream.ExtractIntegerAndMove();
+                png.UnitSpecifier = byteStream.ExtractByteAndMove();
 
                 break;
             }
@@ -326,7 +335,7 @@ void BF::PNGLoader::LoadFromFile(AsciiString& filePath, PNG& png)
                 unsigned int byteLength = 0;
                 unsigned int result = 0;
 
-                switch (png.Header.ColorType)
+                switch (png.ColorType)
                 {
                     case PNGColorType::Grayscale: // single byte,
                         byteLength = 1;
@@ -351,7 +360,7 @@ void BF::PNGLoader::LoadFromFile(AsciiString& filePath, PNG& png)
                     result = (result << (i * 8)) | byteStream.ExtractByteAndMove();
                 }
 
-                png.SignificantBits.Data = result;
+                png.SignificantBits = result;
 
                 break;
             }
@@ -361,13 +370,13 @@ void BF::PNGLoader::LoadFromFile(AsciiString& filePath, PNG& png)
             case PNGChunkType::Custom:
             default:
             {
-                byteStream.CurrentPosition += chunkLengh;
+                byteStream.CurrentPosition += chunk.Lengh;
                 break;
             }
         }
         //---------------------------------------------------------------
 
-        crc = byteStream.ExtractIntegerAndMove();
+        chunk.CRC = byteStream.ExtractIntegerAndMove();
     }
 
 
@@ -378,24 +387,13 @@ void BF::PNGLoader::LoadFromFile(AsciiString& filePath, PNG& png)
 }
 
 void BF::PNGLoader::PNGToImage(PNG& png, Image& image)
-{
-    PNGHeader& header = png.Header;
-    unsigned int width = header.Width;
-    unsigned int height = header.Height;
+{    
+    unsigned int width = png.Width * 256;
+    unsigned int height = png.Height * 256;
 
     image.Information.Format = ImageFormatMode::RGBA;
     image.Resize(width, height);
-
-    for (size_t y = 0; y < width; y++)
-    {      
-        for (size_t x = 0; x < height; x++)
-        {            
-            image.PixelData[x + (y * header.Width) + 0] = Math::RandomeNumber() % 255;
-            image.PixelData[x + (y * header.Width) + 1] = Math::RandomeNumber() % 255;
-            image.PixelData[x + (y * header.Width) + 2] = Math::RandomeNumber() % 255;
-            image.PixelData[x + (y * header.Width) + 3] = 0xFF;
-        }
-    }
+    image.FillRandome();
 }
 
 /*

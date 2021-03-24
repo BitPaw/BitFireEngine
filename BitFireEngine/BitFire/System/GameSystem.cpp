@@ -29,7 +29,7 @@ void BF::GameSystem::Start()
 
 
    // Resource.Load("Text");
-    Resource.Load(cubeFilePath);
+    Resource.Load(levelFilePath);
     Resource.Load(signTextureFilePath);
    // Resource.Load(fontPath);
     Resource.AddShaderProgram(vertexShaderFilePath, fragmentShaderFilePath);

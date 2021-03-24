@@ -474,9 +474,6 @@
     <ClCompile Include="BitFire\Resources\Model\ModelRenderInformation.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGPalette.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="BitFire\Utility\DoubleWord.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -504,31 +501,10 @@
     <ClCompile Include="BitFire\Resources\Compression\Deflate\DeflateCompressionType.h">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGPrimaryChromaticities.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGImageGamma.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGSignificantBits.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGBackgroundColor.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGPaletteHistogram.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGTransparency.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGStandardRGBColorSpace.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGPhysicalPixelDimensions.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="BitFire\Utility\ByteStreamHusk.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGChunkTypeBlock.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1127,9 +1103,6 @@
     <ClInclude Include="BitFire\IO\Device\InputButton.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGHeader.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="BitFire\Utility\UUID.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -1163,9 +1136,6 @@
     <ClInclude Include="BitFire\Utility\RingBuffer.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGPalette.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="BitFire\Utility\DoubleWord.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -1190,34 +1160,13 @@
     <ClInclude Include="BitFire\Utility\BitStreamHusk.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGPrimaryChromaticities.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGColorType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGSignificantBits.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGImageGamma.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGTransparency.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGBackgroundColor.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGPaletteHistogram.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGStandardRGBColorSpace.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGPhysicalPixelDimensions.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="BitFire\Utility\ByteStreamHusk.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGChunkTypeBlock.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

@@ -173,7 +173,6 @@
     <ClCompile Include="BitFire\Resources\ResouceManager.cpp" />
     <ClCompile Include="BitFire\Resources\Resource.cpp" />
     <ClCompile Include="BitFire\Resources\Model\ModelRenderInformation.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGPalette.cpp" />
     <ClCompile Include="BitFire\Utility\DoubleWord.cpp" />
     <ClCompile Include="BitFire\Utility\Word.cpp" />
     <ClCompile Include="BitFire\Resources\Compression\Deflate\Deflate.cpp" />
@@ -182,15 +181,8 @@
     <ClCompile Include="BitFire\Resources\Compression\Deflate\DeflateCompressedBlock.cpp" />
     <ClCompile Include="BitFire\Resources\Compression\ZLIB\ZLibHeader.cpp" />
     <ClCompile Include="BitFire\Utility\BitStreamHusk.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGPrimaryChromaticities.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGImageGamma.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGSignificantBits.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGBackgroundColor.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGPaletteHistogram.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGTransparency.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGStandardRGBColorSpace.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGPhysicalPixelDimensions.cpp" />
     <ClCompile Include="BitFire\Utility\ByteStreamHusk.cpp" />
+    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGChunkTypeBlock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitFire\IO\Log\LogColorData.h" />
@@ -397,13 +389,11 @@
     <ClInclude Include="BitFire\Level\LevelLoader.h" />
     <ClInclude Include="BitFire\Level\LevelManager.h" />
     <ClInclude Include="BitFire\UI\UIElement.h" />
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGHeader.h" />
     <ClInclude Include="BitFire\Utility\UUID.h" />
     <ClInclude Include="BitFire\Resources\ResouceManager.h" />
     <ClInclude Include="BitFire\Resources\Resource.h" />
     <ClInclude Include="BitFire\Resources\Model\ModelRenderInformation.h" />
     <ClInclude Include="BitFire\Utility\RingBuffer.hpp" />
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGPalette.h" />
     <ClInclude Include="BitFire\Utility\DoubleWord.h" />
     <ClInclude Include="BitFire\Utility\Word.h" />
     <ClInclude Include="BitFire\Resources\Compression\Deflate\Deflate.h" />
@@ -412,15 +402,8 @@
     <ClInclude Include="BitFire\Resources\Compression\Deflate\DeflateCompressedBlock.h" />
     <ClInclude Include="BitFire\Resources\Compression\ZLIB\ZLibHeader.h" />
     <ClInclude Include="BitFire\Utility\BitStreamHusk.h" />
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGPrimaryChromaticities.h" />
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGImageGamma.h" />
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGSignificantBits.h" />
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGBackgroundColor.h" />
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGPaletteHistogram.h" />
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGTransparency.h" />
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGStandardRGBColorSpace.h" />
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGPhysicalPixelDimensions.h" />
     <ClInclude Include="BitFire\Utility\ByteStreamHusk.h" />
+    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGChunkTypeBlock.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

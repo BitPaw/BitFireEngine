@@ -21,5 +21,7 @@ namespace BF
 		void PrintData();
 
 		void Resize(unsigned int width, unsigned height);
+
+		void FillRandome();
 	};
 }

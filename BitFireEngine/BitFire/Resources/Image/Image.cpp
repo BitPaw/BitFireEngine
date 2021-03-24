@@ -102,6 +102,22 @@ void BF::Image::Resize(unsigned int width, unsigned height)
 
     PixelData.ReSize(newArraySize * pixelSize);
 }
+
+void BF::Image::FillRandome()
+{
+    for (unsigned int y = 0; y < Width; y++)
+    {
+        for (unsigned int x = 0; x < Height; x++)
+        {
+            unsigned int index = (x + (y * Width)) * 4;
+
+            PixelData[index + 0] = Math::RandomeNumber() % 255;
+            PixelData[index + 1] = Math::RandomeNumber() % 255;
+            PixelData[index + 2] = Math::RandomeNumber() % 255;
+            PixelData[index + 3] = 0xFF;
+        }
+    }
+}
     
     
     

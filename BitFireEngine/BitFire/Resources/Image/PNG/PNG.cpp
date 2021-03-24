@@ -2,6 +2,7 @@
 
 void BF::PNG::PrintData()
 {
+	/*
 	printf
 	(
 	    "+---------------------------+\n"
@@ -18,13 +19,13 @@ void BF::PNG::PrintData()
 		"| Chunks                    |\n"
 		"+---------------------------+\n"
 		"| Type %4 s Lengh %4 i      |\n",
-		Header.Width,
-		Header.Height,
-		Header.BitDepth,
-		Header.ColorType,
-		Header.CompressionMethod,
-		Header.FilterMethod,
-		Header.InterlaceMethod
+		Width,
+		Height,
+		BitDepth,
+		ColorType,
+		CompressionMethod,
+		FilterMethod,
+		InterlaceMethod
 	);
 	/*
 	for (unsigned int i = 0; i < ChunkList.Size(); i++)
@@ -38,7 +39,8 @@ void BF::PNG::PrintData()
 			&chunk->ChunkType,
 			chunk->Lengh
 		);
-	}*/
+	}
 
 	printf("+---------------------------+\n");
+	*/
 }

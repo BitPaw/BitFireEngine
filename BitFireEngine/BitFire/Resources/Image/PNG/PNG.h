@@ -1,75 +1,114 @@
 #pragma once
 
-#include "../IImage.h"
 #include "Chunk/PNGChunk.h"
-#include "Chunk/PNGHeader.h"
-#include "Chunk/PNGPalette.h"
-#include "Chunk/PNGPrimaryChromaticities.h"
-#include "Chunk/PNGImageGamma.h"
-#include "Chunk/PNGSignificantBits.h"
-#include "Chunk/PNGBackgroundColor.h"
-#include "Chunk/PNGPaletteHistogram.h"
-#include "Chunk/PNGTransparency.h"
 
 #include "../../Compression/ZLIB/ZLibHeader.h"
-#include "Chunk/PNGStandardRGBColorSpace.h"
-#include "Chunk/PNGStandardRGBColorSpace.h"
-#include "Chunk/PNGPhysicalPixelDimensions.h"
 
+#include "../../../Color/RGB.hpp"
+#include "../../../Mathematic/Geometry/Point.hpp"
+#include "Chunk/PNGColorType.h"
 
 namespace BF
 {
-	struct PNG : public IImage
+	struct PNG
 	{
 		public:
-		PNGHeader Header; // IHDR
-		PNGPalette Palette; // PLTE
+		//---[ IHDR - Image Header ]----------------------------------------------
+		unsigned int Width;
+		unsigned int Height;
 
-		PNGPrimaryChromaticities PrimaryChromaticities; // cHRM
-		PNGImageGamma ImageGamma; // gAMA
-		PNGSignificantBits SignificantBits; // sBIT
-		PNGBackgroundColor BackgroundColor; // bKGD
-		PNGPaletteHistogram PaletteHistogram; // hIST
-		PNGTransparency Transparency; // tRNS
-
-		PNGStandardRGBColorSpace StandardRGBColorSpace;
-
-		// oFFs
-		PNGPhysicalPixelDimensions PhysicalPixelDimensions;// pHYs
-		// sCAL
-		// tIME
-		// tEXt
-		// zTXt
-		// fRAc
-		// gIFg
-		// gIFt
-		// gIFx
-		
 		/*
-		Chunk Type 	Multiple	Optional 	Position
-		IHDR 		No 			No 			First chunk
-		cHRM 		No 			Yes 		Before PLTE and IDAT
-		gAMA 		No 			Yes 		Before PLTE and IDAT
-		sBIT 		No 			Yes			Before PLTE and IDAT
-		PLTE 		No 			Yes			Before IDAT
-		bKGD 		No 			Yes 		After PLTE and before IDAT
-		hIST 		No 			Yes 		After PLTE and before IDAT
-		tRNS 		No 			Yes			After PLTE and before IDAT
-		oFFs 		No 			Yes			Before IDAT
-		pHYs 		No 			Yes			Before IDAT
-		sCAL 		No 			Yes 		Before IDAT
-		IDAT 		Yes 		No 			Contiguous with other IDATs
-	 	tIME 		No 			Yes			Any
-		tEXt 		Yes			Yes			Any
-		zTXt 		Yes			Yes 		Any
-		fRAc 		Yes			Yes 		Any
-		gIFg 		Yes			Yes 		Any
-		gIFt 		Yes			Yes 		Any
-		gIFx 		Yes			Yes 		Any
-		IEND 		No 			No 			Last chunk
+			Bit depth is a single-byte integer giving the number of bits per sample or per palette index (not per pixel).
+			Valid values are 1, 2, 4, 8, and 16, although not all values are allowed for all color types.
 		*/
+		unsigned char BitDepth;
 
+		/*
+			Color type is a single-byte integer that describes the interpretation of the image data.
+			Color type codes represent sums of the following values: 1 (palette used), 2 (color used),
+			and 4 (alpha channel used). Valid values are 0, 2, 3, 4, and 6.
+		*/
+		PNGColorType ColorType;
+		unsigned char CompressionMethod;
+		unsigned char FilterMethod;
+		unsigned char InterlaceMethod;
+		//---------------------------------------------------------------------------
 
+		//---[ PLTE - Palette ]------------------------------------------------------
+		RGB<unsigned char> Palette;
+		//---------------------------------------------------------------------------
+
+		//---[ cHRM - PrimaryChromaticities ]----------------------------------------
+		Point<unsigned int> CromaWhite;
+		Point<unsigned int> CromaRed;
+		Point<unsigned int> CromaGreen;
+		Point<unsigned int> CromaBlue;
+		//---------------------------------------------------------------------------
+
+		//---[ sBIT - SignificantBits]-----------------------------------------------
+		unsigned int SignificantBits;
+		//---------------------------------------------------------------------------
+
+		//---[ gAMA - ImageGamma ]---------------------------------------------------
+		unsigned int Gamma;
+		//---------------------------------------------------------------------------
+
+		//---[ bKGD - BackgroundColor]-----------------------------------------------
+		// Depends on colorType
+		//---------------------------------------------------------------------------
+
+		//---[ hIST - PaletteHistogram]----------------------------------------------
+
+		//---------------------------------------------------------------------------
+
+		//---[ tRNS - Transparency ]-------------------------------------------------
+		// Depends on colorType
+		//---------------------------------------------------------------------------
+
+		//---[ sRGB - StandardRGBColorSpace ]----------------------------------------
+		unsigned int RenderingIntent;
+		//---------------------------------------------------------------------------
+
+		//---[ pHYs - PhysicalPixelDimensions ]--------------------------------------
+		Point<unsigned int> PixelsPerUnit;
+		unsigned char UnitSpecifier;
+		//---------------------------------------------------------------------------
+
+		//---[ oFFs - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
+
+		//---------------------------------------------------------------------------
+
+		//---[ sCAL - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
+	
+		//---------------------------------------------------------------------------
+
+		//---[ tIME - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
+
+		//---------------------------------------------------------------------------
+
+		//---[ tEXt - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
+
+		//---------------------------------------------------------------------------
+
+		//---[ zTXt - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
+
+		//---------------------------------------------------------------------------
+
+		//---[ fRAc - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
+
+		//---------------------------------------------------------------------------
+
+		//---[ gIFg - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
+
+		//---------------------------------------------------------------------------
+
+		//---[ gIFt - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
+
+		//---------------------------------------------------------------------------
+
+		//---[ gIFx - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
+
+		//---------------------------------------------------------------------------
 
 		// Temp
 		ZLibHeader zlib;
