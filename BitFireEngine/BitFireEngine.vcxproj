@@ -83,20 +83,13 @@
     <ClCompile Include="BitFire\Resources\Font\TTF\TTFLoader.cpp" />
     <ClCompile Include="BitFire\Resources\ILoader.cpp" />
     <ClCompile Include="BitFire\Resources\Image\BMP\BMP.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\BMP\BMPLoader.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\BMP\Chunk\BMPFileHeader.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\BMP\Chunk\BMPInformationHeader.cpp" />
     <ClCompile Include="BitFire\Resources\Image\BMP\Chunk\Header\BMPInfoHeader.cpp" />
     <ClCompile Include="BitFire\Resources\Image\GIF\GIF.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\GIF\GIFLoader.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\IImage.cpp" />
     <ClCompile Include="BitFire\Resources\Image\Image.cpp" />
     <ClCompile Include="BitFire\Resources\Image\ImageLoader.cpp" />
     <ClCompile Include="BitFire\Resources\Image\JPEG\JPEG.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\JPEG\JPEGLoader.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGChunk.cpp" />
+    <ClCompile Include="BitFire\Resources\Image\PNG\PNGChunk.cpp" />
     <ClCompile Include="BitFire\Resources\Image\PNG\PNG.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\PNG\PNGLoader.cpp" />
     <ClCompile Include="BitFire\Resources\Image\TIFF\TIFF.cpp" />
     <ClCompile Include="BitFire\Resources\Image\TIFF\TIFFLoader.cpp" />
     <ClCompile Include="BitFire\Resources\Model\3DS\A3DS.cpp" />
@@ -158,7 +151,6 @@
     <ClCompile Include="BitFire\UI\DialogBox\NewPageEvent.cpp" />
     <ClCompile Include="BitFire\UI\DialogBox\OpenEvent.cpp" />
     <ClCompile Include="BitFire\Mathematic\Geometry\Form\Form.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\ImageInformation.cpp" />
     <ClCompile Include="BitFire\IO\Log\Log.cpp" />
     <ClCompile Include="BitFire\IO\Log\LogMessage.cpp" />
     <ClCompile Include="BitFire\Level\Level.cpp" />
@@ -182,7 +174,8 @@
     <ClCompile Include="BitFire\Resources\Compression\ZLIB\ZLibHeader.cpp" />
     <ClCompile Include="BitFire\Utility\BitStreamHusk.cpp" />
     <ClCompile Include="BitFire\Utility\ByteStreamHusk.cpp" />
-    <ClCompile Include="BitFire\Resources\Image\PNG\Chunk\PNGChunkTypeBlock.cpp" />
+    <ClCompile Include="BitFire\Resources\Image\PNG\PNGChunkTypeBlock.cpp" />
+    <ClCompile Include="BitFire\Resources\Image\TGA\TGA.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitFire\IO\Log\LogColorData.h" />
@@ -198,11 +191,14 @@
     <ClInclude Include="BitFire\Network\Server.h" />
     <ClInclude Include="BitFire\OpenGL\Window\OnInputEvent.h" />
     <ClInclude Include="BitFire\OpenGL\Window\OnWindowCloseEvent.h" />
-    <ClInclude Include="BitFire\Resources\Image\ImageFilterMode.h" />
-    <ClInclude Include="BitFire\Resources\Image\ImageFormatMode.h" />
+    <ClInclude Include="BitFire\Resources\Image\ImageFilter.h" />
+    <ClInclude Include="BitFire\Resources\Image\ImageFormat.h" />
     <ClInclude Include="BitFire\Resources\Image\ImageLayout.h" />
     <ClInclude Include="BitFire\Resources\Image\ImageWrap.h" />
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGColorType.h" />
+    <ClInclude Include="BitFire\Resources\Image\PNG\PNGColorType.h" />
+    <ClInclude Include="BitFire\Resources\Image\TGA\TGABitsPerPixel.h" />
+    <ClInclude Include="BitFire\Resources\Image\TGA\TGAColorType.h" />
+    <ClInclude Include="BitFire\Resources\Image\TGA\TGAImageDataType.h" />
     <ClInclude Include="BitFire\Resources\ResourceType.h" />
     <ClInclude Include="BitFire\Utility\BinaryTree\BinaryTree.hpp" />
     <ClInclude Include="BitFire\Utility\BinaryTree\BinaryTreeData.hpp" />
@@ -281,25 +277,18 @@
     <ClInclude Include="BitFire\Resources\Font\TTF\TTFLoader.h" />
     <ClInclude Include="BitFire\Resources\ILoader.h" />
     <ClInclude Include="BitFire\Resources\Image\BMP\BMP.h" />
-    <ClInclude Include="BitFire\Resources\Image\BMP\BMPLoader.h" />
-    <ClInclude Include="BitFire\Resources\Image\BMP\Chunk\BMPFileHeader.h" />
-    <ClInclude Include="BitFire\Resources\Image\BMP\Chunk\BMPInformationHeader.h" />
-    <ClInclude Include="BitFire\Resources\Image\BMP\Chunk\BMPType.h" />
+    <ClInclude Include="BitFire\Resources\Image\BMP\BMPType.h" />
     <ClInclude Include="BitFire\Resources\Image\BMP\Chunk\Header\BMPInfoHeader.h" />
     <ClInclude Include="BitFire\Resources\Image\BMP\Chunk\Header\BMPInformationHeaderType.h" />
     <ClInclude Include="BitFire\Resources\Image\BMP\Chunk\Header\IBMPInformationHeader.h" />
     <ClInclude Include="BitFire\Resources\Image\GIF\GIF.h" />
-    <ClInclude Include="BitFire\Resources\Image\GIF\GIFLoader.h" />
-    <ClInclude Include="BitFire\Resources\Image\IImage.h" />
     <ClInclude Include="BitFire\Resources\Image\Image.h" />
-    <ClInclude Include="BitFire\Resources\Image\ImageFormat.h" />
+    <ClInclude Include="BitFire\Resources\Image\ImageFileExtension.h" />
     <ClInclude Include="BitFire\Resources\Image\ImageLoader.h" />
     <ClInclude Include="BitFire\Resources\Image\JPEG\JPEG.h" />
-    <ClInclude Include="BitFire\Resources\Image\JPEG\JPEGLoader.h" />
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGChunk.h" />
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGChunkType.h" />
+    <ClInclude Include="BitFire\Resources\Image\PNG\PNGChunk.h" />
+    <ClInclude Include="BitFire\Resources\Image\PNG\PNGChunkType.h" />
     <ClInclude Include="BitFire\Resources\Image\PNG\PNG.h" />
-    <ClInclude Include="BitFire\Resources\Image\PNG\PNGLoader.h" />
     <ClInclude Include="BitFire\Resources\Image\TIFF\TIFF.h" />
     <ClInclude Include="BitFire\Resources\Image\TIFF\TIFFLoader.h" />
     <ClInclude Include="BitFire\Resources\Model\3DS\A3DS.h" />
@@ -378,7 +367,6 @@
     <ClInclude Include="BitFire\UI\DialogBox\NewPageEvent.h" />
     <ClInclude Include="BitFire\UI\DialogBox\OpenEvent.h" />
     <ClInclude Include="BitFire\Mathematic\Geometry\Form\Form.h" />
-    <ClInclude Include="BitFire\Resources\Image\ImageInformation.h" />
     <ClInclude Include="BitFire\IO\Log\Log.h" />
     <ClInclude Include="BitFire\IO\Log\LogMessage.h" />
     <ClInclude Include="BitFire\Level\Level.h" />
@@ -403,7 +391,8 @@
     <ClInclude Include="BitFire\Resources\Compression\ZLIB\ZLibHeader.h" />
     <ClInclude Include="BitFire\Utility\BitStreamHusk.h" />
     <ClInclude Include="BitFire\Utility\ByteStreamHusk.h" />
-    <ClInclude Include="BitFire\Resources\Image\PNG\Chunk\PNGChunkTypeBlock.h" />
+    <ClInclude Include="BitFire\Resources\Image\PNG\PNGChunkTypeBlock.h" />
+    <ClInclude Include="BitFire\Resources\Image\TGA\TGA.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -1,70 +1,76 @@
 #include "ImageLoader.h"
 
-BF::ImageFormat BF::ImageLoader::CheckImageFormat(AsciiString& fileExtension)
+#include "../../Time/StopWatch.h"
+#include "PNG/PNG.h"
+
+BF::ImageFileExtension BF::ImageLoader::CheckImageFormat(AsciiString& fileExtension)
 {
     bool isBMP = fileExtension.CompareIgnoreCase("bmp");
     bool isGIF = fileExtension.CompareIgnoreCase("gif");
     bool isJPEG = fileExtension.CompareIgnoreCase("jpeg");
     bool isPNG = fileExtension.CompareIgnoreCase("png");
+    bool isTGA = fileExtension.CompareIgnoreCase("tga");
     bool isTIFF = fileExtension.CompareIgnoreCase("tiff");
 
-    if (isBMP) return ImageFormat::BMP;
-    if (isGIF) return ImageFormat::GIF;
-    if (isJPEG) return ImageFormat::JPEG;
-    if (isPNG) return ImageFormat::PNG;
-    if (isTIFF) return ImageFormat::TIFF;
+    if (isBMP) return ImageFileExtension::BMP;
+    if (isGIF) return ImageFileExtension::GIF;
+    if (isJPEG) return ImageFileExtension::JPEG;
+    if (isPNG) return ImageFileExtension::PNG;
+    if (isTGA) return ImageFileExtension::TGA;
+    if (isTIFF) return ImageFileExtension::TIFF;
 
-    return ImageFormat::Unkown;
+    return ImageFileExtension::Unkown;
 }
 
 bool BF::ImageLoader::IsImageFileExtension(AsciiString& fileExtension)
 {
-    return CheckImageFormat(fileExtension) != ImageFormat::Unkown;
+    return CheckImageFormat(fileExtension) != ImageFileExtension::Unkown;
 }
 
 BF::Image* BF::ImageLoader::LoadFromFile(AsciiString& filePath)
-{    
+{
     Image* image = new Image();
     TextFile textFile(filePath);
     AsciiString fileExtension = textFile.FileExtension;
-    ImageFormat imageFormat = CheckImageFormat(fileExtension); 
+    ImageFileExtension imageFormat = CheckImageFormat(fileExtension);
 
     switch (imageFormat)
     {
-        case ImageFormat::BMP:
+        case ImageFileExtension::BMP:
         {
-            Log::Write(LogMessageType::Event, "[.BMP] BitMap File detected.");
-
-            BMP* bmp = BMPLoader::LoadFromFile(filePath);
-
-            image = BMPToImage(bmp);
-                        
+            BMP bitmap;
+            bitmap.Load(filePath);   
+            bitmap.Convert(*image);
             break;
-        }          
-
-        case ImageFormat::GIF:
-            Log::Write(LogMessageType::Event, "[.GIF] GIF File detected.");
+        }
+        case ImageFileExtension::GIF:
+        {
             break;
-
-        case ImageFormat::JPEG:        
-            Log::Write(LogMessageType::Event, "[.JPEG] JPEG File detected.");
-            break;        
-
-        case ImageFormat::PNG:            
-            {
-                PNG png;
-                PNGLoader::LoadFromFile(filePath, png);                
-                PNGLoader::PNGToImage(png, *image);
-                break;
-            }
-
+        }
+        case ImageFileExtension::JPEG:
+        {
             break;
-
-        case ImageFormat::TIFF:
-            Log::Write(LogMessageType::Event, "[.TIFF] TIFF File detected.");
+        }  
+        case ImageFileExtension::PNG:
+        {
+            PNG png;
+            png.Load(filePath);
+            png.Convert(*image);
             break;
+        }
+        case ImageFileExtension::TGA:
+        {            
+            TGA tga;
+            tga.Load(filePath);
+            tga.Convert(*image);            
+            break;
+        }
+        case ImageFileExtension::TIFF:
+        {
+            break;
+        }           
 
-        case ImageFormat::Unkown:
+        case ImageFileExtension::Unkown:
         default:
             throw "Unsuported Type/File";
     }
@@ -72,70 +78,4 @@ BF::Image* BF::ImageLoader::LoadFromFile(AsciiString& filePath)
     image->FilePath.Copy(filePath);
 
     return image;
-}
-
-
-
-BF::Image* BF::ImageLoader::BMPToImage(BMP* bitmap)
-{
-    Image* image = new Image();
-    unsigned int dynamicIndex = 0;
-    int height = bitmap->Height;
-    int width = bitmap->Width;
-    int dimension = 4;
-    int size = bitmap->Pixel.Size();
-
-
-    size *= dimension;
-    image->Height = height;
-    image->Width = width;
-
-    image->PixelData.ReSize(size);
-    /*
-    
-    for (int x = 0; x < width; x++)
-    {
-        for (int y = 0; y < height; y++)
-        {
-            RGB8Bit* pixel = bitmap->GetPixel(x, y);
-
-            image->PixelData[dynamicIndex++] = pixel->Red;
-            image->PixelData[dynamicIndex++] = pixel->Green;
-            image->PixelData[dynamicIndex++] = pixel->Blue;
-            image->PixelData[dynamicIndex++] = '\xFF';
-        }
-    } 
-    */
-    
-    for (unsigned int i = 0; i < bitmap->Pixel.Size(); i++)
-    {
-        RGB<unsigned char>* pixel = &bitmap->Pixel[i];
-
-        image->PixelData[dynamicIndex++] = pixel->Red;
-        image->PixelData[dynamicIndex++] = pixel->Green;
-        image->PixelData[dynamicIndex++] = pixel->Blue;
-        image->PixelData[dynamicIndex++] = '\xFF';
-    }
-
-    return image;
-}
-
-BF::Image* BF::ImageLoader::GIFToImage(GIF* bitmap)
-{
-    return nullptr;
-}
-
-BF::Image* BF::ImageLoader::JPEGToImage(JPEG* bitmap)
-{
-    return nullptr;
-}
-
-BF::Image* BF::ImageLoader::PNGToImage(PNG* bitmap)
-{
-    return nullptr;
-}
-
-BF::Image* BF::ImageLoader::TIFFToImage(TIFF* bitmap)
-{
-    return nullptr;
 }

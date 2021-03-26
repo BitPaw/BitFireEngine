@@ -2,7 +2,7 @@
 
 namespace BF
 {
-	enum class ImageFilterMode
+	enum class ImageFilter
 	{
 		// No filter Option, use this for Pixelated Textures.
 		NoFilter,

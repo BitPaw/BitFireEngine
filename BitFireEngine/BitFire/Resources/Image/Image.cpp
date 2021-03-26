@@ -16,6 +16,21 @@ BF::RGBA<unsigned char> BF::Image::GetPixel(unsigned int x, unsigned int y)
     return pixel;
 }
 
+BF::Image::Image()
+{
+    Width = 0;
+    Height = 0;
+
+    Format = ImageFormat::RGB;
+    Filter = ImageFilter::NoFilter;
+
+    LayoutNear = ImageLayout::Nearest;
+    LayoutFar = ImageLayout::Nearest;
+
+    WrapHeight = ImageWrap::Repeat;
+    WrapWidth = ImageWrap::Repeat;
+}
+
 void BF::Image::FlipHorizontal()
 {
     unsigned int length = PixelData.Size();
@@ -84,21 +99,21 @@ void BF::Image::Resize(unsigned int width, unsigned height)
     unsigned int newArraySize = width * height;
     unsigned int pixelSize = 2;
 
-    switch (Information.Format)
+    Width = width;
+    Height = height;
+
+    switch (Format)
     {
-        case BF::ImageFormatMode::BlackAndWhite:
+        case ImageFormat::BlackAndWhite:
             break;
 
-        case BF::ImageFormatMode::RGB:
+        case ImageFormat::RGB:
             pixelSize = 3;
             break;
-        case BF::ImageFormatMode::RGBA:
+        case ImageFormat::RGBA:
             pixelSize = 4;
             break;
     }
-
-    Width = width;
-    Height = height;
 
     PixelData.ReSize(newArraySize * pixelSize);
 }

@@ -1,21 +1,32 @@
 #pragma once
 
-#include "IImage.h"
-
-#include "ImageInformation.h"
+#include "ImageFormat.h"
+#include "ImageFilter.h"
+#include "ImageLayout.h"
+#include "ImageWrap.h"
 
 #include "../../Color/RGBA.hpp"
 #include "../Resource.h"
 
 namespace BF
 {
-	class Image : public Resource, public IImage
+	class Image : public Resource
 	{
 		public:
-		ImageInformation Information;
+		unsigned int Width;
+		unsigned int Height;
+
+		ImageFormat Format;
+		ImageFilter Filter;
+		ImageLayout LayoutNear;
+		ImageLayout LayoutFar;
+		ImageWrap WrapHeight;
+		ImageWrap WrapWidth;
 
 		List<unsigned char> PixelData;
 		RGBA<unsigned char> GetPixel(unsigned int x, unsigned int y);
+
+		Image();
 
 		void FlipHorizontal();
 		void PrintData();

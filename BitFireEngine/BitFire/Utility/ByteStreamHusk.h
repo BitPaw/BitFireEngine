@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Word.h"
 #include "DoubleWord.h"
 
 namespace BF
@@ -17,8 +18,11 @@ namespace BF
 		ByteStreamHusk(unsigned char* startAdress, unsigned int dataLengh);
 
 		unsigned char ExtractByteAndMove();
-		unsigned int ExtractIntegerAndMove();
+		unsigned short ExtractShortAndMove(EndianType endianType);
+		unsigned int ExtractIntegerAndMove(EndianType endianType);
+
 		DoubleWord ExtractDoubleWord();
+		Word ExtractWord();
 
 		bool IsAtEnd();
 	};

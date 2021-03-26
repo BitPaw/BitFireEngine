@@ -6,13 +6,12 @@ namespace BF
 	class Word
 	{
 		public:
-		char ByteA;
-		char ByteB;
+		unsigned char ByteData[2];
 
 		Word();
-		Word(char byteA, char byteB);
+		Word(unsigned char byteA, unsigned char byteB);
 
-		void Set(char byteA, char byteB);
+		void Set(unsigned char byteA, unsigned char byteB);
 
 		unsigned int ExtractInt(EndianType endianType);
 		unsigned int InsertInt(EndianType endianType, unsigned int value);

@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <filesystem>
+#include "Resources/Image/TGA/TGA.h"
 
 //#define NewDeleteVisible
 
@@ -50,7 +51,7 @@ int main()
     {
         printf("%s @ %s", &fileNotFound.ErrorMessage[0], &fileNotFound.FilePath[0]);
     } 
-
+    
     return 0;
 }
 //-----------------------------------------------------------------------------

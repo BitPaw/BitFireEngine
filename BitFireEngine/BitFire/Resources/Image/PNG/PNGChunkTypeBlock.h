@@ -1,7 +1,7 @@
 #pragma once
 
 #include "PNGChunkType.h"
-#include "../../../../Utility/DoubleWord.h"
+#include "../../../Utility/DoubleWord.h"
 
 namespace BF
 {

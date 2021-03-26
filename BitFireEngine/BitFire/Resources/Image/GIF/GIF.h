@@ -1,12 +1,10 @@
 #pragma once
 
-#include "../IImage.h"
-
 namespace BF
 {
-	struct GIF : public IImage
+	struct GIF
 	{
-	public:
+		public:
 		GIF();
 	};
 }

@@ -5,15 +5,15 @@ BF::Word::Word()
 	Set(0, 0);
 }
 
-BF::Word::Word(char byteA, char byteB)
+BF::Word::Word(unsigned char byteA, unsigned char byteB)
 {
 	Set(byteA, byteB);
 }
 
-void BF::Word::Set(char byteA, char byteB)
+void BF::Word::Set(unsigned char byteA, unsigned char byteB)
 {
-	ByteA = byteA;
-	ByteB = byteB;
+	ByteData[0] = byteA;
+	ByteData[1] = byteB;
 }
 
 unsigned int BF::Word::ExtractInt(EndianType endianType)
@@ -21,11 +21,11 @@ unsigned int BF::Word::ExtractInt(EndianType endianType)
 	switch (endianType)
 	{
 		case BF::EndianType::Big:
-			return (ByteA << 8) | (ByteB);			
+			return (ByteData[0] << 8) | (ByteData[1]);
 
 		default:
 		case BF::EndianType::Little:
-			return (ByteA) | (ByteB << 8);
+			return (ByteData[0]) | (ByteData[1] << 8);
 	}
 }
 

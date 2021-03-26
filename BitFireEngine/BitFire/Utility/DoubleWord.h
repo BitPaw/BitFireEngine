@@ -6,10 +6,7 @@ namespace BF
 	struct DoubleWord
 	{
 		public:
-		unsigned char ByteA;
-		unsigned char ByteB;
-		unsigned char ByteC;
-		unsigned char ByteD;
+		unsigned char ByteData[4];
 
 		DoubleWord();
 		DoubleWord(unsigned char byteA, unsigned char byteB, unsigned char byteC, unsigned  char byteD);

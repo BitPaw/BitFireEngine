@@ -87,11 +87,11 @@ namespace BF
 		// Delete all elements
 		void DeleteAll()
 		{
-			if (_content != nullptr)
+			if (_content != nullptr && _size != 0)
 			{
-				delete[] _content;
-				_content = nullptr;
 				_size = 0;
+				delete[] _content;
+				_content = nullptr;			
 			}
 		}
 

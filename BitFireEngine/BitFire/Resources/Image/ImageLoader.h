@@ -3,16 +3,11 @@
 #include "TIFF/TIFF.h"
 #include "JPEG/JPEG.h"
 #include "GIF/GIF.h"
+#include "TGA/TGA.h"
+#include "BMP/BMP.h"
 
-#include "BMP/BMPLoader.h"
-#include "GIF/GIFLoader.h"
-#include "JPEG/JPEGLoader.h"
-#include "PNG/PNGLoader.h"
-#include "TIFF/TIFFLoader.h"
-
-#include "IImage.h"
 #include "Image.h"
-#include "ImageFormat.h"
+#include "ImageFileExtension.h"
 
 #include "../../IO/File/TextFile.h"
 #include "../../IO/Log/Log.h"
@@ -24,14 +19,8 @@ namespace BF
 	public:
 		static Image* LoadFromFile(AsciiString& filePath);
 
-		static ImageFormat CheckImageFormat(AsciiString& fileExtension);
+		static ImageFileExtension CheckImageFormat(AsciiString& fileExtension);
 
 		static bool IsImageFileExtension(AsciiString& fileExtension);
-
-		static Image* BMPToImage(BMP* bitmap);
-		static Image* GIFToImage(GIF* bitmap);
-		static Image* JPEGToImage(JPEG* bitmap);
-		static Image* PNGToImage(PNG* bitmap);
-		static Image* TIFFToImage(TIFF* bitmap);
 	};
 }

@@ -12,10 +12,18 @@ unsigned char BF::ByteStreamHusk::ExtractByteAndMove()
 	return StartAdress[CurrentPosition++];
 }
 
-unsigned int BF::ByteStreamHusk::ExtractIntegerAndMove()
+unsigned short BF::ByteStreamHusk::ExtractShortAndMove(EndianType endianType)
+{
+	Word word = ExtractWord();
+	unsigned int result = word.ExtractInt(endianType);
+
+	return result;
+}
+
+unsigned int BF::ByteStreamHusk::ExtractIntegerAndMove(EndianType endianType)
 {
 	DoubleWord dWord = ExtractDoubleWord();
-	unsigned int result = dWord.ExtractInt(EndianType::Big);
+	unsigned int result = dWord.ExtractInt(endianType);
 
 	return result;
 }
@@ -24,12 +32,22 @@ BF::DoubleWord BF::ByteStreamHusk::ExtractDoubleWord()
 {
 	DoubleWord dWord;
 
-	dWord.ByteA = ExtractByteAndMove();
-	dWord.ByteB = ExtractByteAndMove();
-	dWord.ByteC = ExtractByteAndMove();
-	dWord.ByteD = ExtractByteAndMove();
+	dWord.ByteData[0] = ExtractByteAndMove();
+	dWord.ByteData[1] = ExtractByteAndMove();
+	dWord.ByteData[2] = ExtractByteAndMove();
+	dWord.ByteData[3] = ExtractByteAndMove();
 
 	return dWord;
+}
+
+BF::Word BF::ByteStreamHusk::ExtractWord()
+{
+	Word word;
+
+	word.ByteData[0] = ExtractByteAndMove();
+	word.ByteData[1] = ExtractByteAndMove();
+
+	return word;
 }
 
 bool BF::ByteStreamHusk::IsAtEnd()

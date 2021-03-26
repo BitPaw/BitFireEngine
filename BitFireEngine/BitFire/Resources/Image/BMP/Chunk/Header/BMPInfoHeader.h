@@ -9,10 +9,10 @@ namespace BF
 	{
 	public:
 		// [2-Bytes] number of color planes(must be 1)
-		unsigned int NumberOfColorPlanes;
+		unsigned short NumberOfColorPlanes;
 
 		// [2-Bytes] number of bits per pixel, which is the color depth of the image.Typical values are 1, 4, 8, 16, 24 and 32.
-		unsigned int NumberOfBitsPerPixel;
+		unsigned short NumberOfBitsPerPixel;
 
 		// [4-Bytes] compression method being used.See the next table for a list of possible values
 		unsigned int CompressionMethod;

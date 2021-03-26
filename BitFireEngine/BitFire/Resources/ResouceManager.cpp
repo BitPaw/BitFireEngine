@@ -223,20 +223,36 @@ void BF::ResourceManager::PushToGPU(Model& model)
 
 void BF::ResourceManager::PushToGPU(Image& image)
 {
-    ImageInformation& info = image.Information;
     unsigned int& imageID = image.ID;
+    unsigned int format;
+
+    switch (image.Format)
+    {
+        case BF::ImageFormat::RGB:
+            format = GL_RGB;
+            break;
+
+        case BF::ImageFormat::RGBA:
+            format = GL_RGBA;
+            break;
+
+        case BF::ImageFormat::BlackAndWhite:
+        default:
+            throw "Invalid ImageFormat";
+    }
+
 
     glGenTextures(1, &imageID);
 
     glBindTexture(GL_TEXTURE_2D, imageID);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, ImageWrapToOpenGLFormat(info.WrapWidth));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, ImageWrapToOpenGLFormat(info.WrapHeight));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, ImageWrapToOpenGLFormat(image.WrapWidth));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, ImageWrapToOpenGLFormat(image.WrapHeight));
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, ImageLayoutToOpenGLFormat(info.LayoutNear));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, ImageLayoutToOpenGLFormat(info.LayoutFar));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, ImageLayoutToOpenGLFormat(image.LayoutNear));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, ImageLayoutToOpenGLFormat(image.LayoutFar));
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.Width, image.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &image.PixelData[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, format, image.Width, image.Height, 0, format, GL_UNSIGNED_BYTE, &image.PixelData[0]);
     glGenerateMipmap(GL_TEXTURE_2D);
 }
 

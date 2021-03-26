@@ -1,12 +1,15 @@
 #pragma once
 
-#include "Chunk/PNGChunk.h"
+#include "PNGColorType.h"
+#include "PNGChunk.h"
+
+#include "../Image.h"
 
 #include "../../Compression/ZLIB/ZLibHeader.h"
 
 #include "../../../Color/RGB.hpp"
 #include "../../../Mathematic/Geometry/Point.hpp"
-#include "Chunk/PNGColorType.h"
+#include "../../../Utility/ASCIIString.h"
 
 namespace BF
 {
@@ -113,6 +116,9 @@ namespace BF
 		// Temp
 		ZLibHeader zlib;
 
+		void Load(AsciiString& filePath);
+		void Save(AsciiString& filePath);
+		void Convert(Image& image);
 		void PrintData();
 	};
 }
