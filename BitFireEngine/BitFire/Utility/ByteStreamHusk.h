@@ -24,6 +24,9 @@ namespace BF
 		DoubleWord ExtractDoubleWord();
 		Word ExtractWord();
 
+		void CopyBytesAndMove(char* destination, unsigned int size);
+		void CopyBytesAndMove(unsigned char* destination, unsigned int size);
+
 		bool IsAtEnd();
 	};
 }

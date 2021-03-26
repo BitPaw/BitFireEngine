@@ -12,14 +12,9 @@ namespace BF
 	struct TGA
 	{
 		public:	
-		//---[Header]----------------------
-		unsigned char ImageIDLengh;
+		//---[Header]----------------------	
 		unsigned char ColorPaletteType;
 		TGAImageDataType ImageDataType;
-
-		unsigned short ColorPaletteChunkEntryIndex;
-		unsigned short ColorPaletteChunkSize;
-		unsigned char ColorPaletteEntrySizeInBits;
 
 		unsigned short OriginX;
 		unsigned short OriginY;
@@ -38,13 +33,33 @@ namespace BF
 
 		//---- Versiion 2.0 only----------------
 		// Extension Area
+		char AuthorName[41]; // Name of the author. If not used, bytes should be set to NULL (\0) or spaces 
+		char AuthorComment[324]; // A comment, organized as four lines, each consisting of 80 characters plus a NULL 
 
-		// Footer
-		unsigned int ExtensionOffset;
-		unsigned int DeveloperAreaOffset;
-		unsigned char Signature[16];
-		unsigned char DotField;
-		unsigned char NULLField;
+		unsigned short DateTimeMonth;// Date and time at which the image was created 
+		unsigned short JobTimeDay;
+		unsigned short JobTimeYear;
+		unsigned short JobTimeHour;
+		unsigned short JobTimeMinute;
+		unsigned short JobTimeSecond;
+
+		char JobID[41];
+		unsigned short JobTimeHours; // spent creating the file (for billing, etc.) 
+		unsigned short JobTimeMinutes;
+		unsigned short JobTimeSeconds;
+		char SoftwareName[41]; // The application that created the file. 
+		unsigned short VersionNumber;
+		char SoftwareVersion;
+		unsigned int BackGroundColor;
+		unsigned short PixelAspectRatioCounter;
+		unsigned short PixelAspectRatioDenominator;
+		unsigned short GammaCounter;
+		unsigned short GammaDenominator;
+
+		unsigned int ColorCorrectionOffset; // Number of bytes from the beginning of the file to the color correction table if present
+		unsigned int PostagestampOffset; // Number of bytes from the beginning of the file to the postage stamp image if present
+		unsigned int ScanlineOffset; // Number of bytes from the beginning of the file to the scan lines table if present 
+		unsigned char AttributesType; // Specifies the alpha channel
 		//-------------------------------
 
 		TGA();

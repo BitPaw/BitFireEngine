@@ -114,14 +114,14 @@ void BF::FileLoader::ReadFileAsBytes(AsciiString& filePath, AsciiString& byteStr
     }
 
     std::ifstream inputFileStream(&filePath[0], std::ios::binary | std::ios::ate);
-    unsigned int lengh = inputFileStream.tellg();
+    unsigned int length = inputFileStream.tellg();
 
-    byteString.ReSize(lengh);
+    byteString.ReSize(length);
 
     char* stringAdress = &byteString[0];
 
     inputFileStream.seekg(0, inputFileStream.beg);
-    inputFileStream.read(stringAdress, lengh);
+    inputFileStream.read(stringAdress, length);
 }
 
 bool BF::FileLoader::DoesFileExist(AsciiString& filePath)

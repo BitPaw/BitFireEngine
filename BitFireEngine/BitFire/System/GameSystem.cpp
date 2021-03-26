@@ -23,6 +23,7 @@ void BF::GameSystem::Start()
     AsciiString blockTextureFilePath("A:/_WorkSpace/BitFireEngine/Texture/Block.bmp");
     AsciiString signTextureFilePath("A:/_WorkSpace/BitFireEngine/Texture/W.png"); 
     AsciiString tgaFile("A:/E.tga");
+    AsciiString tgaearthFile("A:/earth.tga");
     AsciiString fontPath("A:/_WorkSpace/BitFireEngine/Font/segoe.fnt");
 
     AsciiString vertexShaderFilePath("A:/_WorkSpace/BitFireEngine/Shader/WorldSpace.vert");
@@ -33,6 +34,7 @@ void BF::GameSystem::Start()
     Resource.Load(levelFilePath);
     Resource.Load(cubeFilePath);
     Resource.Load(tgaFile);
+    Resource.Load(tgaearthFile);
     Resource.Load(missingTextureFilePath);
     Resource.Load(blockTextureFilePath);
     Resource.Load(signTextureFilePath);

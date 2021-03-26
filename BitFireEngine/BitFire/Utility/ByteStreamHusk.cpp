@@ -1,5 +1,7 @@
 #include "ByteStreamHusk.h"
 
+#include <vcruntime_string.h>
+
 BF::ByteStreamHusk::ByteStreamHusk(unsigned char* startAdress, unsigned int dataLengh)
 {
 	StartAdress = startAdress;
@@ -48,6 +50,18 @@ BF::Word BF::ByteStreamHusk::ExtractWord()
 	word.ByteData[1] = ExtractByteAndMove();
 
 	return word;
+}
+
+void BF::ByteStreamHusk::CopyBytesAndMove(char* destination, unsigned int size)
+{
+	CopyBytesAndMove((unsigned char*)(destination), size);
+}
+
+void BF::ByteStreamHusk::CopyBytesAndMove(unsigned char* destination, unsigned int size)
+{
+	memcpy(destination, &StartAdress[CurrentPosition], size);
+
+	CurrentPosition += size;
 }
 
 bool BF::ByteStreamHusk::IsAtEnd()
