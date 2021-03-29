@@ -174,11 +174,11 @@ void BF::AsciiString::AttachToBack(AsciiString& string)
 	unsigned int byteLenghC = sizeof(char) * stringCLengh;
 	char* startA = _data;
 	char* startB = &string[0];
-	void* insertionPoint = 0;
+	char* insertionPoint = 0;
 
 	if (_isReferenceToOtherString) // If the String is just a reference, create a new string to manipulate
 	{
-		startA = new char[stringCLengh]; // create space
+		startA = new char[stringCLengh+1]; // create space
 		memcpy(startA, _data, _size); // Copy old referenced string to new location
 		_isReferenceToOtherString = false; // its no longer a reference
 
@@ -189,7 +189,7 @@ void BF::AsciiString::AttachToBack(AsciiString& string)
 		_data = (char*)realloc(_data, byteLenghC);
 	}	
 	
-	insertionPoint = (void*)((unsigned int)_data + byteLenghA); // Move to the next insertion point (After A).
+	insertionPoint = _data + byteLenghA; // Move to the next insertion point (After A).
 	
 	memcpy(insertionPoint, startB, byteLenghB); // Attach content from B after the A part.
 
@@ -550,7 +550,7 @@ void BF::AsciiString::Cut(unsigned int startPosition, unsigned int endPosition, 
 
 	unsigned int cuttedStringSize = endPosition - startPosition;
 	unsigned int cuttedStringByteSize = cuttedStringSize * sizeof(char);
-	void* startAdress = (void*)((unsigned int)_data + startPosition);
+	char* startAdress = _data + startPosition;
 
 	cuttedString.ReSize(cuttedStringSize);	 
 

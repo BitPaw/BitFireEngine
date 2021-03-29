@@ -429,21 +429,21 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir)Dependencies\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(LibraryPath);$(SolutionDir)Dependencies\lib32\AL\Debug;$(SolutionDir)Dependencies\lib32\GL;$(SolutionDir)Dependencies\lib32\GLFW</LibraryPath>
+    <LibraryPath>$(LibraryPath);$(SolutionDir)Dependencies\lib32\AL\Deb;$(SolutionDir)Dependencies\lib32\GL;$(SolutionDir)Dependencies\lib32\GLFW</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(LibraryPath);$(SolutionDir)Dependencies\lib32\AL\Release;$(SolutionDir)Dependencies\lib32\GL;$(SolutionDir)Dependencies\lib32\GLFW</LibraryPath>
+    <LibraryPath>$(LibraryPath);$(SolutionDir)Dependencies\lib32\AL\Rel;$(SolutionDir)Dependencies\lib32\GL;$(SolutionDir)Dependencies\lib32\GLFW</LibraryPath>
     <IncludePath>$(SolutionDir)Dependencies\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir)Dependencies\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(LibraryPath);$(SolutionDir)Dependencies\lib64\AL\Debug;$(SolutionDir)Dependencies\lib64\GL;$(SolutionDir)Dependencies\lib64\GLFW</LibraryPath>
+    <LibraryPath>$(LibraryPath);$(SolutionDir)Dependencies\lib64\AL\Deb;$(SolutionDir)Dependencies\lib64\GL;$(SolutionDir)Dependencies\lib64\GLFW</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(LibraryPath);$(SolutionDir)Dependencies\lib64\AL\Release;$(SolutionDir)Dependencies\lib64\GL;$(SolutionDir)Dependencies\lib64\GLFW</LibraryPath>
+    <LibraryPath>$(LibraryPath);$(SolutionDir)Dependencies\lib64\AL\Rel;$(SolutionDir)Dependencies\lib64\GL;$(SolutionDir)Dependencies\lib64\GLFW</LibraryPath>
     <IncludePath>$(SolutionDir)Dependencies\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -507,6 +507,9 @@
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

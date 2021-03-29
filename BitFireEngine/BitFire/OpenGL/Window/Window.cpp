@@ -320,7 +320,7 @@ bool BF::Window::Create()
 
     videoConfig->FullScreen = false;
     videoConfig->ScreenResolution.Set(1600,900);
-    videoConfig->WindowRefreshRateMode == RefreshRateMode::VSync;
+    videoConfig->WindowRefreshRateMode == RefreshRateMode::Unlimited;
 
     /* Initialize the library */
     if (!glfwInit())
