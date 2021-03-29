@@ -9,15 +9,14 @@
 #include "Image.h"
 #include "ImageFileExtension.h"
 
-#include "../../IO/File/TextFile.h"
-#include "../../IO/Log/Log.h"
+#include "../ErrorCode.h"
 
 namespace BF
 {
 	class ImageLoader
 	{
 	public:
-		static Image* LoadFromFile(AsciiString& filePath);
+		static ErrorCode LoadFromFile(AsciiString& filePath, Image& image);
 
 		static ImageFileExtension CheckImageFormat(AsciiString& fileExtension);
 

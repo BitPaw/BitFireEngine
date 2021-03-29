@@ -32,6 +32,7 @@
 
 #include "../Level/LevelLoader.h"
 #include "../Resources/ResouceManager.h"
+#include "../Time/StopWatch.h"
 
 namespace BF
 {

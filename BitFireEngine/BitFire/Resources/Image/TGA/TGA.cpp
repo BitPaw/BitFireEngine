@@ -1,6 +1,6 @@
 #include "TGA.h"
-#include "../../../IO/File/FileLoader.h"
 #include "../../../Utility/ByteStreamHusk.h"
+#include "../../File/File.h"
 
 BF::TGA::TGA()
 {
@@ -17,9 +17,10 @@ BF::TGA::TGA()
 
 void BF::TGA::Load(AsciiString& filePath)
 {
-	AsciiString bytes;
-	FileLoader::ReadFileAsBytes(filePath, bytes);
-	ByteStreamHusk byteSteam((unsigned char*)&bytes[0], bytes.Size() -1);
+	File file(filePath);
+	file.Read();
+
+	ByteStreamHusk byteSteam((unsigned char*)&file.Data[0], file.Data.Size() -1);
 
 	unsigned int footerEntryIndex = 0;
 
@@ -186,7 +187,7 @@ void BF::TGA::Load(AsciiString& filePath)
 
 		footerEntryIndex = byteSteam.DataLength - compareLength + 1 - 8u;
 
-		isTGAVersionTwo = memcmp(truevisionString, string, stringLengh) == 0; // Is this string at this address?;
+		isTGAVersionTwo = memcmp(truevisionString, string, compareLength) == 0; // Is this string at this address?;
 
 		if (!isTGAVersionTwo) // Is this a TGA v.1.0 file?
 		{

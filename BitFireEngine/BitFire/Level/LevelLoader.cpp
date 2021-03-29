@@ -1,8 +1,8 @@
 #include "LevelLoader.h"
 
-#include "../IO/File/FileLoader.h"
 #include "../Resources/Model/ModelLoader.h"
 #include "../System/GameSystem.h"
+#include "../Resources/File/File.h"
 
 void BF::LevelLoader::ParseModelFile(Model& model, AsciiString& line)
 {
@@ -52,7 +52,7 @@ void BF::LevelLoader::ParseModelFile(Model& model, AsciiString& line)
 	//------------------------------------------------
 
 	// Load Model----------------
-	ModelLoader::LoadFromFile(model, path);
+	ModelLoader::LoadFromFile(path, model);
 	//-------------------
 
 	//--[Apply Data]-------------
@@ -95,14 +95,18 @@ bool BF::LevelLoader::IsLevelFile(AsciiString& fileExtension)
 void BF::LevelLoader::LoadFromFile(Level& level, AsciiString& filePath)
 {
 	List<AsciiString> fileLines;
-	FileLoader::ReadFileByLines(filePath, fileLines);
-	unsigned int amountOfLines = fileLines.Size();
+	File file(filePath);
 	unsigned int modelCounter = 0;
 	unsigned int imageCounter = 0;
 	unsigned int soundCounter = 0;
 	unsigned int fontCounter = 0;
 	unsigned int shaderCounter = 0;
 	unsigned int dialogCounter = 0;
+	unsigned int amountOfLines;
+
+	file.ReadAsLines(fileLines);
+
+	amountOfLines = fileLines.Size();
 
 	// Step I - Count objects
 	for (unsigned int i = 0; i < amountOfLines; i++)

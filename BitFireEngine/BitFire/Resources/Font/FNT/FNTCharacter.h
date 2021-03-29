@@ -1,8 +1,6 @@
 #pragma once
 
 #include "../../../Mathematic/Geometry/Point.hpp"
-#include "../../../IO/File/TextFile.h"
-#include "../../../IO/File/FileLoader.h"
 
 namespace BF
 {

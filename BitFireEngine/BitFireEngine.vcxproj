@@ -27,10 +27,6 @@
     <ClCompile Include="BitFire\Graphics\Camera\FirstPersonCamera.cpp" />
     <ClCompile Include="BitFire\IO\Device\KeyBoard\KeyBoard.cpp" />
     <ClCompile Include="BitFire\IO\Device\Mouse\Mouse.cpp" />
-    <ClCompile Include="BitFire\IO\File\EmptyFileName.cpp" />
-    <ClCompile Include="BitFire\IO\File\FileLoader.cpp" />
-    <ClCompile Include="BitFire\IO\File\FileNotFound.cpp" />
-    <ClCompile Include="BitFire\IO\File\TextFile.cpp" />
     <ClCompile Include="BitFire\Network\Client.cpp" />
     <ClCompile Include="BitFire\Network\ConnectionCredential.cpp" />
     <ClCompile Include="BitFire\Network\IP.cpp" />
@@ -72,11 +68,9 @@
     <ClCompile Include="BitFire\Resources\Font\FNT\FNTCharacter.cpp" />
     <ClCompile Include="BitFire\Resources\Font\FNT\FNTCommonData.cpp" />
     <ClCompile Include="BitFire\Resources\Font\FNT\FNTInfo.cpp" />
-    <ClCompile Include="BitFire\Resources\Font\FNT\FNTLoader.cpp" />
     <ClCompile Include="BitFire\Resources\Font\FNT\FNTPage.cpp" />
     <ClCompile Include="BitFire\Resources\Font\Font.cpp" />
     <ClCompile Include="BitFire\Resources\Font\FontLoader.cpp" />
-    <ClCompile Include="BitFire\Resources\Font\IFont.cpp" />
     <ClCompile Include="BitFire\Resources\Font\OTF\OTF.cpp" />
     <ClCompile Include="BitFire\Resources\Font\OTF\OTFLoader.cpp" />
     <ClCompile Include="BitFire\Resources\Font\TTF\TTF.cpp" />
@@ -104,10 +98,8 @@
     <ClCompile Include="BitFire\Resources\Model\ModelLoader.cpp" />
     <ClCompile Include="BitFire\Resources\Model\OBJ\MTL\Material.cpp" />
     <ClCompile Include="BitFire\Resources\Model\OBJ\MTL\MTL.cpp" />
-    <ClCompile Include="BitFire\Resources\Model\OBJ\MTL\MTLLoader.cpp" />
     <ClCompile Include="BitFire\Resources\Model\OBJ\OBJ.cpp" />
     <ClCompile Include="BitFire\Resources\Model\OBJ\OBJElement.cpp" />
-    <ClCompile Include="BitFire\Resources\Model\OBJ\OBJLoader.cpp" />
     <ClCompile Include="BitFire\Resources\Model\PLY\PLY.cpp" />
     <ClCompile Include="BitFire\Resources\Model\PLY\PLYLoader.cpp" />
     <ClCompile Include="BitFire\Resources\Model\STL\STL.cpp" />
@@ -151,8 +143,6 @@
     <ClCompile Include="BitFire\UI\DialogBox\NewPageEvent.cpp" />
     <ClCompile Include="BitFire\UI\DialogBox\OpenEvent.cpp" />
     <ClCompile Include="BitFire\Mathematic\Geometry\Form\Form.cpp" />
-    <ClCompile Include="BitFire\IO\Log\Log.cpp" />
-    <ClCompile Include="BitFire\IO\Log\LogMessage.cpp" />
     <ClCompile Include="BitFire\Level\Level.cpp" />
     <ClCompile Include="BitFire\Mathematic\Physic\Collider.cpp" />
     <ClCompile Include="BitFire\IO\InputSystem.cpp" />
@@ -176,11 +166,9 @@
     <ClCompile Include="BitFire\Utility\ByteStreamHusk.cpp" />
     <ClCompile Include="BitFire\Resources\Image\PNG\PNGChunkTypeBlock.cpp" />
     <ClCompile Include="BitFire\Resources\Image\TGA\TGA.cpp" />
+    <ClCompile Include="BitFire\Resources\File\File.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BitFire\IO\Log\LogColorData.h" />
-    <ClInclude Include="BitFire\IO\Log\LogMessageType.h" />
-    <ClInclude Include="BitFire\IO\Log\TextColor.h" />
     <ClInclude Include="BitFire\Mathematic\Geometry\Matrix2x2.hpp" />
     <ClInclude Include="BitFire\Network\Client.h" />
     <ClInclude Include="BitFire\Network\ComunicationRole.h" />
@@ -191,6 +179,7 @@
     <ClInclude Include="BitFire\Network\Server.h" />
     <ClInclude Include="BitFire\OpenGL\Window\OnInputEvent.h" />
     <ClInclude Include="BitFire\OpenGL\Window\OnWindowCloseEvent.h" />
+    <ClInclude Include="BitFire\Resources\ErrorCode.h" />
     <ClInclude Include="BitFire\Resources\Image\ImageFilter.h" />
     <ClInclude Include="BitFire\Resources\Image\ImageFormat.h" />
     <ClInclude Include="BitFire\Resources\Image\ImageLayout.h" />
@@ -221,10 +210,6 @@
     <ClInclude Include="BitFire\IO\Device\Mouse\CursorMode.h" />
     <ClInclude Include="BitFire\IO\Device\Mouse\Mouse.h" />
     <ClInclude Include="BitFire\IO\EndianType.h" />
-    <ClInclude Include="BitFire\IO\File\EmptyFileName.h" />
-    <ClInclude Include="BitFire\IO\File\FileLoader.h" />
-    <ClInclude Include="BitFire\IO\File\FileNotFound.h" />
-    <ClInclude Include="BitFire\IO\File\TextFile.h" />
     <ClInclude Include="BitFire\OpenGL\Window\InputContainer.h" />
     <ClInclude Include="BitFire\Mathematic\Algorithm\CRCAlgorithm.h" />
     <ClInclude Include="BitFire\Mathematic\Converter\Converter.h" />
@@ -265,12 +250,10 @@
     <ClInclude Include="BitFire\Resources\Font\FNT\FNTCommand.h" />
     <ClInclude Include="BitFire\Resources\Font\FNT\FNTCommonData.h" />
     <ClInclude Include="BitFire\Resources\Font\FNT\FNTInfo.h" />
-    <ClInclude Include="BitFire\Resources\Font\FNT\FNTLoader.h" />
     <ClInclude Include="BitFire\Resources\Font\FNT\FNTPage.h" />
     <ClInclude Include="BitFire\Resources\Font\Font.h" />
     <ClInclude Include="BitFire\Resources\Font\FontFormat.h" />
     <ClInclude Include="BitFire\Resources\Font\FontLoader.h" />
-    <ClInclude Include="BitFire\Resources\Font\IFont.h" />
     <ClInclude Include="BitFire\Resources\Font\OTF\OTF.h" />
     <ClInclude Include="BitFire\Resources\Font\OTF\OTFLoader.h" />
     <ClInclude Include="BitFire\Resources\Font\TTF\TTF.h" />
@@ -306,11 +289,9 @@
     <ClInclude Include="BitFire\Resources\Model\OBJ\MTL\Material.h" />
     <ClInclude Include="BitFire\Resources\Model\OBJ\MTL\MTL.h" />
     <ClInclude Include="BitFire\Resources\Model\OBJ\MTL\MTLCommand.h" />
-    <ClInclude Include="BitFire\Resources\Model\OBJ\MTL\MTLLoader.h" />
     <ClInclude Include="BitFire\Resources\Model\OBJ\OBJ.h" />
     <ClInclude Include="BitFire\Resources\Model\OBJ\OBJElement.h" />
     <ClInclude Include="BitFire\Resources\Model\OBJ\OBJLineCommand.h" />
-    <ClInclude Include="BitFire\Resources\Model\OBJ\OBJLoader.h" />
     <ClInclude Include="BitFire\Resources\Model\PLY\PLY.h" />
     <ClInclude Include="BitFire\Resources\Model\PLY\PLYLoader.h" />
     <ClInclude Include="BitFire\Resources\Model\STL\STL.h" />
@@ -367,8 +348,6 @@
     <ClInclude Include="BitFire\UI\DialogBox\NewPageEvent.h" />
     <ClInclude Include="BitFire\UI\DialogBox\OpenEvent.h" />
     <ClInclude Include="BitFire\Mathematic\Geometry\Form\Form.h" />
-    <ClInclude Include="BitFire\IO\Log\Log.h" />
-    <ClInclude Include="BitFire\IO\Log\LogMessage.h" />
     <ClInclude Include="BitFire\Level\Level.h" />
     <ClInclude Include="BitFire\Mathematic\Physic\Collider.h" />
     <ClInclude Include="BitFire\IO\InputSystem.h" />
@@ -393,6 +372,7 @@
     <ClInclude Include="BitFire\Utility\ByteStreamHusk.h" />
     <ClInclude Include="BitFire\Resources\Image\PNG\PNGChunkTypeBlock.h" />
     <ClInclude Include="BitFire\Resources\Image\TGA\TGA.h" />
+    <ClInclude Include="BitFire\Resources\File\File.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

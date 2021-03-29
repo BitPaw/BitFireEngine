@@ -4,11 +4,23 @@ BF::AsciiString::AsciiString()
 {
 	_data = nullptr;
 	_size = 0;
+
+	_isReferenceToOtherString = false;
 }
 
-BF::AsciiString::AsciiString(const char* string) : AsciiString()
+BF::AsciiString::AsciiString(const char* string)
 {
-	Copy(string);
+	char* currentAdress = (char*)string;
+	_size = 1;
+
+	while (*(currentAdress++) != '\0') _size++;
+
+	SetAsReference((char*)string, _size);
+}
+
+BF::AsciiString::AsciiString(const char* string, unsigned int size)
+{
+	SetAsReference((char*)string, size);
 }
 
 BF::AsciiString::AsciiString(std::string& stdstring) : AsciiString()
@@ -20,6 +32,7 @@ BF::AsciiString::AsciiString(char character) : AsciiString()
 {
 	Copy(character);
 }
+
 
 BF::AsciiString::AsciiString(AsciiString& string) : AsciiString()
 {
@@ -79,6 +92,18 @@ bool BF::AsciiString::operator==(const char* string)
 	return false;
 }
 
+void BF::AsciiString::SetAsReference(AsciiString& string)
+{
+	SetAsReference(&string[0], string.Size());
+}
+
+void BF::AsciiString::SetAsReference(char* stringAdress, unsigned int size)
+{
+	_isReferenceToOtherString = true;
+	_data = stringAdress;
+	_size = size;
+}
+
 void BF::AsciiString::ReSize(unsigned int size)
 {
 	_size = size + 1;
@@ -89,7 +114,11 @@ void BF::AsciiString::ReSize(unsigned int size)
 
 void BF::AsciiString::Delete()
 {
-	if (_data != nullptr)
+	bool hasData = _data != nullptr;
+	bool hasAllocatedSpace = !_isReferenceToOtherString;
+	bool shouldBeDeleted = hasData && hasAllocatedSpace;
+
+	if (shouldBeDeleted)
 	{
 		delete[] _data;
 		_data = nullptr;
@@ -119,6 +148,14 @@ bool BF::AsciiString::Empty()
 	return _size == 0;
 }
 
+void BF::AsciiString::AttachToBack(char character)
+{
+	AsciiString characterCaontainer;
+	characterCaontainer.SetAsReference(&character, 2);
+	
+	AttachToBack(characterCaontainer);
+}
+
 void BF::AsciiString::AttachToBack(AsciiString& string)
 {
 	/*
@@ -135,11 +172,22 @@ void BF::AsciiString::AttachToBack(AsciiString& string)
 	unsigned int byteLenghA = sizeof(char) * stringALengh;
 	unsigned int byteLenghB = sizeof(char) * stringBLengh;
 	unsigned int byteLenghC = sizeof(char) * stringCLengh;
-	void* startA = _data;
-	void* startB = &string[0];
+	char* startA = _data;
+	char* startB = &string[0];
 	void* insertionPoint = 0;
 
-	_data = (char*)realloc(startA, byteLenghC);
+	if (_isReferenceToOtherString) // If the String is just a reference, create a new string to manipulate
+	{
+		startA = new char[stringCLengh]; // create space
+		memcpy(startA, _data, _size); // Copy old referenced string to new location
+		_isReferenceToOtherString = false; // its no longer a reference
+
+		_data = startA;
+	}
+	else
+	{
+		_data = (char*)realloc(_data, byteLenghC);
+	}	
 	
 	insertionPoint = (void*)((unsigned int)_data + byteLenghA); // Move to the next insertion point (After A).
 	
@@ -254,6 +302,20 @@ void BF::AsciiString::RemoveWhiteSpace()
 	const char whiteSpace = ' ';
 
 	Remove(whiteSpace);
+}
+
+bool BF::AsciiString::IsCharacterInBetween(char target, char curroundedChar)
+{
+	return IsCharacterInBetween(target, curroundedChar, 0);
+}
+
+bool BF::AsciiString::IsCharacterInBetween(char target, char curroundedChar, unsigned int startIndex)
+{
+	unsigned int leftFoundIndex = FindFirst(curroundedChar, startIndex);
+	unsigned int rightFoundIndex = FindFirst(curroundedChar, leftFoundIndex);
+	unsigned int targetIndex = FindFirst(target, leftFoundIndex, rightFoundIndex);
+
+	return targetIndex != -1;
 }
 
 char BF::AsciiString::GetFirstNonEmpty()

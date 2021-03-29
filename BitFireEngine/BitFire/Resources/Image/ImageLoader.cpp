@@ -2,6 +2,7 @@
 
 #include "../../Time/StopWatch.h"
 #include "PNG/PNG.h"
+#include "../File/File.h"
 
 BF::ImageFileExtension BF::ImageLoader::CheckImageFormat(AsciiString& fileExtension)
 {
@@ -27,12 +28,13 @@ bool BF::ImageLoader::IsImageFileExtension(AsciiString& fileExtension)
     return CheckImageFormat(fileExtension) != ImageFileExtension::Unkown;
 }
 
-BF::Image* BF::ImageLoader::LoadFromFile(AsciiString& filePath)
+BF::ErrorCode BF::ImageLoader::LoadFromFile(AsciiString& filePath, Image& image)
 {
-    Image* image = new Image();
-    TextFile textFile(filePath);
-    AsciiString fileExtension = textFile.FileExtension;
+    File file(filePath);
+    AsciiString fileExtension = file.Extension;
     ImageFileExtension imageFormat = CheckImageFormat(fileExtension);
+
+    image.FilePath.Copy(filePath);
 
     switch (imageFormat)
     {
@@ -40,7 +42,7 @@ BF::Image* BF::ImageLoader::LoadFromFile(AsciiString& filePath)
         {
             BMP bitmap;
             bitmap.Load(filePath);   
-            bitmap.Convert(*image);
+            bitmap.Convert(image);
             break;
         }
         case ImageFileExtension::GIF:
@@ -55,14 +57,14 @@ BF::Image* BF::ImageLoader::LoadFromFile(AsciiString& filePath)
         {
             PNG png;
             png.Load(filePath);
-            png.Convert(*image);
+            png.Convert(image);
             break;
         }
         case ImageFileExtension::TGA:
         {            
             TGA tga;
             tga.Load(filePath);
-            tga.Convert(*image);            
+            tga.Convert(image);            
             break;
         }
         case ImageFileExtension::TIFF:
@@ -72,10 +74,8 @@ BF::Image* BF::ImageLoader::LoadFromFile(AsciiString& filePath)
 
         case ImageFileExtension::Unkown:
         default:
-            throw "Unsuported Type/File";
+            return ErrorCode::NotSupported;
     }
 
-    image->FilePath.Copy(filePath);
-
-    return image;
+    return ErrorCode::NoError;
 }

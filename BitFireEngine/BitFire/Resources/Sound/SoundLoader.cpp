@@ -1,11 +1,12 @@
 #include "SoundLoader.h"
+#include "../File/File.h"
 
 BF::Sound* BF::SoundLoader::LoadFromFile(AsciiString& filePath)
 {
     Sound* sound = nullptr;
     SoundFormat soundFormat = SoundFormat::Unkown;
-    TextFile textFile(filePath);
-    AsciiString fileExtension = textFile.FileExtension;
+    File file(filePath);
+    AsciiString& fileExtension = file.Extension;
 
     bool isMIDI = fileExtension.CompareIgnoreCase("mid");
     bool isMP3 = fileExtension.CompareIgnoreCase("mp3"); 
@@ -21,9 +22,7 @@ BF::Sound* BF::SoundLoader::LoadFromFile(AsciiString& filePath)
     {
         case SoundFormat::MID:
         {
-           Log::Write(LogMessageType::Event, "[.MID] MIDI File detected.");
-
-            MID* mid = MIDLoader::LoadFromFile(filePath);
+            MID mid;
 
             //sound = mid;
 
@@ -33,9 +32,7 @@ BF::Sound* BF::SoundLoader::LoadFromFile(AsciiString& filePath)
 
         case SoundFormat::MP3:
         {
-            Log::Write(LogMessageType::Event, "[.MP3] MPEG File detected.");
-
-            MP3* mp3 = MP3Loader::LoadFromFile(filePath);
+            MP3 mp3;
 
             //sound = mp3;
 
@@ -44,9 +41,7 @@ BF::Sound* BF::SoundLoader::LoadFromFile(AsciiString& filePath)
 
         case SoundFormat::OGG:
         {
-            Log::Write(LogMessageType::Event, "[.OGG] Ogging File detected.");
-
-            OGG* ogg = OGGLoader::LoadFromFile(filePath);
+            OGG ogg;
 
            // sound = ogg;
 
@@ -55,9 +50,7 @@ BF::Sound* BF::SoundLoader::LoadFromFile(AsciiString& filePath)
 
         case SoundFormat::WAV:
         {
-            Log::Write(LogMessageType::Event, "[.WAV] Wave File detected.");
-
-            WAV* wav = WAVLoader::LoadFromFile(filePath);
+            WAV wav;
 
             //sound = wav;
 
@@ -70,48 +63,4 @@ BF::Sound* BF::SoundLoader::LoadFromFile(AsciiString& filePath)
     }
 
     return sound;
-}
-
-
-
-BF::Sound* BF::SoundLoader::MIDToSound(MID* midi)
-{
-    return nullptr;
-}
-
-BF::Sound* BF::SoundLoader::MP3ToSound(MP3* mp3)
-{
-    return nullptr;
-}
-
-BF::Sound* BF::SoundLoader::OGGToSound(OGG* ogg)
-{
-    return nullptr;
-}
-
-BF::Sound* BF::SoundLoader::WAVToSound(WAV* wave)
-{
-    return nullptr;
-}
-
-
-
-BF::MID* BF::SoundLoader::SoundToMID(Sound* sound)
-{
-    return nullptr;
-}
-
-BF::MP3* BF::SoundLoader::SoundToMP3(Sound* sound)
-{
-    return nullptr;
-}
-
-BF::OGG* BF::SoundLoader::SoundToOGG(Sound* sound)
-{
-    return nullptr;
-}
-
-BF::WAV* BF::SoundLoader::SoundToWav(Sound* sound)
-{
-    return nullptr;
 }

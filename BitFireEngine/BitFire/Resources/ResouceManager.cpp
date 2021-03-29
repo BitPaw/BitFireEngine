@@ -1,5 +1,7 @@
 #include "ResouceManager.h"
 #include "../Level/LevelLoader.h"
+#include "Font/FNT/FNTPage.h"
+#include "File/File.h"
 
 int BF::ResourceManager::ImageWrapToOpenGLFormat(ImageWrap imageWrap)
 {
@@ -139,8 +141,7 @@ unsigned int BF::ResourceManager::CompileShader(unsigned int type, AsciiString& 
 
             glGetShaderInfoLog(id, lengh, &lengh, message);
 
-            std::cout << "Failed to compile Shader ID:" << id << "!" << std::endl;
-            std::cout << message << std::endl;
+            printf("Failed to compile Shader ID:%u!\nReason: %s", id, message);
 
             delete[] message;
 
@@ -337,14 +338,20 @@ void BF::ResourceManager::PushToGPU(ShaderProgram& shaderProgram)
     }
 }
 
+void BF::ResourceManager::Load(const char* string)
+{
+    AsciiString asciiString(string);
+    Load(asciiString);
+}
+
 void BF::ResourceManager::Load(AsciiString& filePath)
 {
     ResourceType resourceType = ResourceType::Unknown;
-    AsciiString fileExtension;
-     
-    {       
-        TextFile::GetFileExtension(filePath, fileExtension);
+    ErrorCode errorCode = ErrorCode::Undefined;
+    File file(filePath);
+    AsciiString& fileExtension = file.Extension;
 
+    {       
         bool isModel = ModelLoader::IsModelFile(fileExtension);
         bool isImage = ImageLoader::IsImageFileExtension(fileExtension);
         bool isSound = false;
@@ -358,100 +365,132 @@ void BF::ResourceManager::Load(AsciiString& filePath)
         if (isSound) resourceType = ResourceType::Sound;
         if (isFont) resourceType = ResourceType::Font;
         if (isShader) resourceType = ResourceType::Shader;
-        if (isDialog) resourceType = ResourceType::Dialog;
-        if (isLevel) resourceType = ResourceType::Level;
+        if (isDialog && false) resourceType = ResourceType::Dialog;
+        if (isLevel && false) resourceType = ResourceType::Level;
     }
 
-    try
+    if (file.DoesFileExist())
     {
         switch (resourceType)
         {
-        case BF::ResourceType::Dialog:
-            break;
+            case BF::ResourceType::Dialog:
+                break;
 
-        case BF::ResourceType::Font:
-        {
-            FontFormat fontFormat = FontLoader::ParseFontFormat(fileExtension);
-
-            Font* font = FontLoader::LoadFontFromFile(filePath);
-
-            font->ID = _fontList.Size();
-            font->FilePath.Copy(filePath);
-
-            _fontList.Add(font);
-
-            if (fontFormat == FontFormat::FNT)
+            case BF::ResourceType::Font:
             {
-                FNT* fnt = (FNT*)font;
-                unsigned int amountOfTextures = fnt->FontPages.Size();
+                FontFormat fontFormat = FontLoader::ParseFontFormat(fileExtension);
+                Font* font = new Font();
 
-                for (unsigned int i = 0; i < amountOfTextures; i++)
+                errorCode = FontLoader::LoadFontFromFile(filePath, *font);
+
+                font->ID = _fontList.Size();
+                font->FilePath.Copy(filePath);
+
+                _fontList.Add(font);
+
+                /*
+                if (fontFormat == FontFormat::FNT)
                 {
-                    FNTPage& fontPage = fnt->FontPages[i];
-                    AsciiString& fileName = fontPage.PageFileName;
-                    AsciiString path;
-                    unsigned int lastDot = filePath.FindLast('/') + 1;
+                    FNT* fnt = (FNT*)font;
+                    unsigned int amountOfTextures = fnt->FontPages.Size();
 
-                    filePath.Cut(0, lastDot, path);
+                    for (unsigned int i = 0; i < amountOfTextures; i++)
+                    {
+                        FNTPage& fontPage = fnt->FontPages[i];
+                        AsciiString& fileName = fontPage.PageFileName;
+                        AsciiString path;
+                        unsigned int lastDot = filePath.FindLast('/') + 1;
 
-                    path.AttachToBack(fileName);
+                        filePath.Cut(0, lastDot, path);
 
-                    Load(path);
-                }
+                        path.AttachToBack(fileName);
+
+                        Load(path);
+                    }
+                }*/
+
+                break;
             }
 
-            break;
-        }
-
-        case BF::ResourceType::Image:
-        {
-            Image* image = ImageLoader::LoadFromFile(filePath);
-            bool firstImage = _imageList.Size() == 0;
-
-            _imageList.Add(image);
-
-            PushToGPU(*image);
-
-            if (firstImage)
+            case BF::ResourceType::Image:
             {
-                _defaultTextureID = image->ID;
+                Image* image = new Image();
+                errorCode = ImageLoader::LoadFromFile(filePath, *image);
+
+                if (errorCode == ErrorCode::NoError)
+                {
+                    bool firstImage = _imageList.Size() == 0;
+
+                    _imageList.Add(image);
+
+                    PushToGPU(*image);
+
+                    if (firstImage)
+                    {
+                        _defaultTextureID = image->ID;
+                    }
+                }
+
+                break;
             }
 
-            break;
-        }
+            case ResourceType::Level:
+            {
 
-        case ResourceType::Level:
+
+                //Level* level = new Level();
+
+                //LevelLoader::LoadFromFile(*level, filePath);
+
+                //_levelList.Add(level);
+
+                break;
+            }
+
+            case ResourceType::Model:
+            {
+                Model* model = new Model();
+                
+                errorCode = ModelLoader::LoadFromFile(filePath, *model);
+
+                if (errorCode == ErrorCode::NoError)
+                {
+                    //model->Scale(0.05, 0.05, 0.05);
+
+                    _modelList.Add(model);
+
+                    PushToGPU(*model);
+                }               
+            }
+            break;
+
+            case BF::ResourceType::Shader:
+                break;
+
+            case BF::ResourceType::Sound:
+                break;
+        }
+    }        
+
+    switch (errorCode)
+    {
+        case ErrorCode::NoError:
+            break;
+
+        case ErrorCode::FileNotFound:
+            printf("[Error] File is missing at path <%s>\n", &filePath[0]);
+            break;
+
+        case ErrorCode::LoadingFailed:
+            printf("[Error] Loading file failed at path <%s>\n", &filePath[0]);
+            break;
+
+        case ErrorCode::SavingFailed:
+            printf("[Error] File saving failed at path <%s>\n", &filePath[0]);
+            break;
+
+        case ErrorCode::Undefined:
         {
-
-
-            //Level* level = new Level();
-
-            //LevelLoader::LoadFromFile(*level, filePath);
-
-            //_levelList.Add(level);
-
-            break;
-        }
-
-        case ResourceType::Model:
-        {
-            Model* model = ModelLoader::LoadFromFile(filePath);
-
-           // model->Scale(0.05, 0.05, 0.05);
-
-            _modelList.Add(model);
-
-            PushToGPU(*model);
-        }
-        break;
-
-        case BF::ResourceType::Shader:
-            break;
-
-        case BF::ResourceType::Sound:
-            break;
-
-        default:
             printf
             (
                 "[Warning] Fileextension <%s> is not supported or reconised by the system!\n"
@@ -459,15 +498,9 @@ void BF::ResourceManager::Load(AsciiString& filePath)
                 &fileExtension[0],
                 &filePath[0]
             );
-            break;
         }
+        break;
     }
-    catch (const std::exception& exception)
-    {
-        printf("[Error] Something went wrong while loading the file at path <%s>\nReason : %s\n", &filePath[0], exception.what());
-    }
-
-    
 }
 
 void BF::ResourceManager::AddShaderProgram(AsciiString& vertexShader, AsciiString& fragmentShader)
@@ -484,6 +517,7 @@ void BF::ResourceManager::AddShaderProgram(AsciiString& vertexShader, AsciiStrin
     if (firstShaderProgram)
     {
         _defaultShaderID = shaderProgram->ID;
+        MainCamera.FetchGPUReferences(_defaultShaderID);
     }
 }
 

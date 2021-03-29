@@ -11,5 +11,7 @@ namespace BF
 	{
 		public:
 		List<Material> MaterialList;
+
+		void Load(AsciiString& filePath);
 	};
 }

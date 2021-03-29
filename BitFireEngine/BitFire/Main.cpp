@@ -1,17 +1,10 @@
 //-----------------------------------------------------------------------------
 #include "System/GameSystem.h"
-#include "IO/Log/Log.h"
 
 #include <iostream>
 #include <filesystem>
-#include "Resources/Image/TGA/TGA.h"
 
-//#define NewDeleteVisible
-
-using namespace BF;
-
-#ifdef NewDeleteVisible
-
+#if 0
 void* operator new(size_t size)
 {
     void* p = malloc(size);
@@ -26,58 +19,22 @@ void operator delete(void* p)
     printf(">>> [DELETE] Removed <%p>\n", p);
     free(p);
 }
-
-#endif // NewDeleteVisible
-
-
+#endif 
 
 //-----------------------------------------------------------------------------
 int main()
 {    
-    GameSystem& system = GameSystem::Instance();
+    BF::GameSystem& system = BF::GameSystem::Instance();
     
-	try
-	{
-        system.Start();
+    system.Start();
 
-        while (system.IsRunning())
-        {
-            system.Update();
-        }
-
-        system.Stop();
-	}
-    catch (FileNotFound& fileNotFound)
+    while (system.IsRunning())
     {
-        printf("%s @ %s", &fileNotFound.ErrorMessage[0], &fileNotFound.FilePath[0]);
-    } 
+        system.Update();
+    }
+
+    system.Stop();
     
     return 0;
 }
 //-----------------------------------------------------------------------------
-/*
-System* sys = System::Instance();
-
-
-GameTickEvent* t = new GameTickEvent();
-t->AddListener([&](GameTickData gameTickData) {OnUpdate(gameTickData); });
-
-
-
-
-
-template <class T> class MyFunctor
-{
-private:
-    T* ObjectPtr;
-    void (T::*MemberFunction) ();
-public:
-    void operator () ()
-    {
-        return (*this->ObjectPtr.*this->MemberFunction)();
-    }
-};
-
-
-
-*/

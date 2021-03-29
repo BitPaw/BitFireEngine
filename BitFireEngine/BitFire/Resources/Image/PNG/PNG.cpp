@@ -2,37 +2,30 @@
 
 #include "../../../Utility/BitStreamHusk.h"
 #include "../../../Utility/ByteStreamHusk.h"
-#include "../../../IO/File/FileLoader.h"
+#include "../../File/File.h"
 
 void BF::PNG::Load(AsciiString& filePath)
 {
     PNGChunk chunk;
-    AsciiString bytes;
-    FileLoader::ReadFileAsBytes(filePath, bytes);
+    File file(filePath);
+    file.Read();
     ByteStreamHusk byteStream
     (
-        reinterpret_cast<unsigned char*>(&bytes[0]) + 8,
-        bytes.Size() - 8
-    );
+        reinterpret_cast<unsigned char*>(&file.Data[0]),
+        file.Data.Size()
+    );  
 
     // Check Header
     {
-        unsigned int dynamicIndex = 0;
-        const unsigned int fileheaderSize = 8;
-        const unsigned char fileHeader[fileheaderSize] = { 137, 80, 78, 71, 13, 10, 26, 10 };
+        const unsigned char pngFileHeader[8] = { 137u, 'P', 'N', 'G', '\r', '\n', 26u, '\n' }; //  137, 80, 78, 71, 13, 10, 26, 10
 
-        while (dynamicIndex < fileheaderSize)
+        bool isValidHeader = memcmp(pngFileHeader, &byteStream.StartAdress[0], 8) == 0;
+
+        byteStream.CurrentPosition += 8u;
+
+        if (!isValidHeader)
         {
-            unsigned char target = bytes[dynamicIndex];
-            unsigned char source = fileHeader[dynamicIndex];
-            bool sameValue = target == source;
-
-            if (!sameValue)
-            {
-                throw std::exception("Inavlid Header / PNG File");
-            }
-
-            dynamicIndex++;
+            throw std::exception("Inavlid Header / PNG File");
         }
     }
 

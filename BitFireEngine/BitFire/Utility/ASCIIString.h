@@ -11,9 +11,12 @@ namespace BF
 		char* _data;
 		unsigned int _size;
 
+		bool _isReferenceToOtherString;
+
 		public:
 		AsciiString();
 		AsciiString(const char* string);
+		AsciiString(const char* string, unsigned int size);
 		AsciiString(std::string& stdstring);
 		AsciiString(char character);
 		AsciiString(AsciiString& string);
@@ -21,7 +24,7 @@ namespace BF
 		~AsciiString();
 
 		char& operator[](unsigned int value);
-		
+	
 		AsciiString& operator+(const char* text);
 		AsciiString& operator+(AsciiString& string);
 		//String& operator+(String& string);
@@ -32,11 +35,15 @@ namespace BF
 	
 		bool operator==(const char* string);
 
+		void SetAsReference(AsciiString& string);
+		void SetAsReference(char* stringAdress, unsigned int size);
 		void ReSize(unsigned int size);
 		void Delete();
 		unsigned int Size();
 		unsigned int SizeInBytes();
 		bool Empty();
+
+		void AttachToBack(char character);
 		void AttachToBack(AsciiString& string);
 
 		float ToFloat();
@@ -48,6 +55,9 @@ namespace BF
 		void Replace(char from, char to);
 		void Remove(char character);
 		void RemoveWhiteSpace();
+
+		bool IsCharacterInBetween(char target, char curroundedChar);
+		bool IsCharacterInBetween(char target, char curroundedChar, unsigned int startIndex);
 
 		char GetFirstNonEmpty();
 

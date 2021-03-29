@@ -16,33 +16,31 @@ void BF::GameSystem::Start()
    // LevelLoader::LoadFromFile(level, levelFilePath); // ?? alloc
    // LevelLoader::PrintLevelInfo(level, false);
 
-    AsciiString levelFilePath("A:/_WorkSpace/BitFireEngine/Model/Dust_II.obj");
-    AsciiString cubeFilePath("A:/_WorkSpace/BitFireEngine/Model/Cube.obj");
-
-    AsciiString missingTextureFilePath("A:/_WorkSpace/BitFireEngine/Texture/MissingTexture.bmp");
-    AsciiString blockTextureFilePath("A:/_WorkSpace/BitFireEngine/Texture/Block.bmp");
-    AsciiString signTextureFilePath("A:/_WorkSpace/BitFireEngine/Texture/W.png"); 
-    AsciiString tgaFile("A:/E.tga");
-    AsciiString tgaearthFile("A:/earth.tga");
-    AsciiString fontPath("A:/_WorkSpace/BitFireEngine/Font/segoe.fnt");
-
     AsciiString vertexShaderFilePath("A:/_WorkSpace/BitFireEngine/Shader/WorldSpace.vert");
     AsciiString fragmentShaderFilePath("A:/_WorkSpace/BitFireEngine/Shader/WorldSpace.frag");
 
+    StopWatch stopwatch;
 
-   // Resource.Load("Text");
-    Resource.Load(levelFilePath);
-    Resource.Load(cubeFilePath);
-    Resource.Load(tgaFile);
-    Resource.Load(tgaearthFile);
-    Resource.Load(missingTextureFilePath);
-    Resource.Load(blockTextureFilePath);
-    Resource.Load(signTextureFilePath);
+    stopwatch.Start();
 
-   // Resource.Load(fontPath);
     Resource.AddShaderProgram(vertexShaderFilePath, fragmentShaderFilePath);
-    Resource.PrintContent(true);
 
+    Resource.Load("A:/_WorkSpace/BitFireEngine/Model/Dust_II.obj");
+    Resource.Load("A:/_WorkSpace/BitFireEngine/Model/Cube.obj");
+
+    Resource.Load("A:/_WorkSpace/BitFireEngine/Texture/MissingTexture.bmp");
+    Resource.Load("A:/_WorkSpace/BitFireEngine/Texture/Block.bmp");
+    Resource.Load("A:/_WorkSpace/BitFireEngine/Texture/W.png");
+
+    Resource.Load("A:/E.tga");
+    Resource.Load("A:/earth.tga");
+    Resource.Load("A:/_WorkSpace/BitFireEngine/Font/segoe.fnt");
+    
+    
+    printf(">>> Loading took %lfs\n",stopwatch.Stop());
+
+    Resource.PrintContent(true);
+    
     _state = SystemState::Running;
 
     glLineWidth(10);

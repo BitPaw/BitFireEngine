@@ -2,8 +2,6 @@
 
 #include "Shader.h"
 
-#include "../../IO/File/FileLoader.h"
-
 namespace BF
 {
 	class ShaderLoader

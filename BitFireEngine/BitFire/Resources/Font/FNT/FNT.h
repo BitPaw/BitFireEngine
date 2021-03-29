@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include "FNTPage.h"
 #include "FNTInfo.h"
 #include "FNTCommonData.h"
@@ -10,15 +8,19 @@
 
 namespace BF
 {
-	class FNT : public Font
+	class FNT
 	{
 		public:
 		FNTInfo FontInfo;
-		FNTCommonData FontCommon;
+		FNTCommonData FontCommonData;
 
 		List<FNTPage> FontPages;
 
 		FNTCharacter* GetCharacterPosition(unsigned char character);
+		
+		void Load(AsciiString& filePath);
+		void Save(AsciiString& filePath);
+		void Convert(Font& font);
 		void PrintData();
 	};
 }

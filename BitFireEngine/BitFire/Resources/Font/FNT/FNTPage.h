@@ -2,6 +2,8 @@
 
 #include "FNTCharacter.h"
 
+#include "../../../Utility/ASCIIString.h"
+
 namespace BF
 {
 	struct FNTPage

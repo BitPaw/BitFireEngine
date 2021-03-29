@@ -39,18 +39,6 @@
     <ClCompile Include="BitFire\IO\Device\Mouse\Mouse.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\IO\File\EmptyFileName.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\IO\File\FileLoader.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\IO\File\FileNotFound.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\IO\File\TextFile.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="BitFire\Mathematic\Algorithm\CRCAlgorithm.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -138,9 +126,6 @@
     <ClCompile Include="BitFire\Resources\Font\FNT\FNTInfo.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Font\FNT\FNTLoader.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="BitFire\Resources\Font\FNT\FNTPage.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -160,9 +145,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Resources\Font\FontLoader.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Resources\Font\IFont.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Resources\Image\BMP\Chunk\Header\BMPInfoHeader.cpp">
@@ -309,16 +291,10 @@
     <ClCompile Include="BitFire\Resources\Model\OBJ\MTL\MTL.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="BitFire\Resources\Model\OBJ\MTL\MTLLoader.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="BitFire\Resources\Model\OBJ\OBJ.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Resources\Model\OBJ\OBJElement.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\Resources\Model\OBJ\OBJLoader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Resources\Shader\Shader.cpp">
@@ -388,12 +364,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Network\Server.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\IO\Log\Log.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="BitFire\IO\Log\LogMessage.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="BitFire\Level\Level.cpp">
@@ -486,6 +456,9 @@
     <ClCompile Include="BitFire\Resources\Image\PNG\PNGChunkTypeBlock.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="BitFire\Resources\File\File.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitFire\Configuration\AudioConfig.h">
@@ -519,18 +492,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\IO\Device\Mouse\Mouse.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\IO\File\EmptyFileName.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\IO\File\FileLoader.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\IO\File\FileNotFound.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\IO\File\TextFile.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\IO\EndianType.h">
@@ -632,9 +593,6 @@
     <ClInclude Include="BitFire\Resources\Font\FNT\FNTInfo.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Font\FNT\FNTLoader.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="BitFire\Resources\Font\FNT\FNTPage.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -657,9 +615,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Resources\Font\FontLoader.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Resources\Font\IFont.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Resources\Image\BMP\Chunk\Header\BMPInfoHeader.h">
@@ -818,9 +773,6 @@
     <ClInclude Include="BitFire\OpenGL\Window\InputContainer.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\Resources\Model\OBJ\OBJLoader.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="BitFire\Resources\Model\OBJ\MTL\IlluminationMode.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -831,9 +783,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Resources\Model\OBJ\MTL\MTLCommand.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\Resources\Model\OBJ\MTL\MTLLoader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Resources\Model\OBJ\OBJ.h">
@@ -980,21 +929,6 @@
     <ClInclude Include="BitFire\Network\IPv6.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="BitFire\IO\Log\Log.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\IO\Log\LogMessageType.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\IO\Log\LogMessage.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\IO\Log\TextColor.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="BitFire\IO\Log\LogColorData.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="BitFire\Mathematic\Geometry\Vector4.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -1134,6 +1068,12 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="BitFire\Resources\Image\PNG\PNGChunkTypeBlock.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\ErrorCode.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="BitFire\Resources\File\File.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

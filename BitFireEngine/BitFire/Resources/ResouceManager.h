@@ -56,6 +56,7 @@ namespace BF
 		//void RegisterGPU(Font& font);
 		void PushToGPU(ShaderProgram& shader);
 
+        void Load(const char* string);
 		void Load(AsciiString& filePath);
 
         void AddShaderProgram(AsciiString& vertexShader, AsciiString& fragmentShader);

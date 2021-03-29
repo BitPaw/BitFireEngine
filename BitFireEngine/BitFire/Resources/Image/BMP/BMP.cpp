@@ -2,8 +2,8 @@
 
 #include "../../../Utility/Word.h"
 #include "../../../Utility/DoubleWord.h"
-#include "../../../IO/File/FileLoader.h"
 #include "../../../Utility/ByteStreamHusk.h"
+#include "../../File/File.h"
 
 BF::BMP::BMP()
 {
@@ -51,11 +51,10 @@ BF::RGB<unsigned char>* BF::BMP::GetPixel(unsigned int x, unsigned int y)
 
 void BF::BMP::Load(AsciiString& filePath)
 {
-    AsciiString bytes;
-    FileLoader::ReadFileAsBytes(filePath, bytes);
-    ByteStreamHusk byteStream((unsigned char*)&bytes[0], bytes.Size());
-    int dip = 0;    
-
+    File file(filePath);
+    file.Read();
+    ByteStreamHusk byteStream((unsigned char*)&file.Data[0], file.Data.Size());
+    int dip = 0; 
 
     //-- Parsing Header Tag
     {
@@ -206,7 +205,7 @@ void BF::BMP::Load(AsciiString& filePath)
     unsigned int pixelIndex = 0;
     unsigned int width = Width;
     unsigned int size = width * Height * 3;
-    unsigned int length = bytes.Size();
+    unsigned int length = byteStream.DataLength;
     unsigned int neededRows = Math::Ceiling((dip * width) / (32.0f)) * 4;
     unsigned int paddingSize = neededRows % 4; // <--  hardcoded
     unsigned int rowIndex = 0;

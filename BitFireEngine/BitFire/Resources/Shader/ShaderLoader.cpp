@@ -1,4 +1,5 @@
 #include "ShaderLoader.h"
+#include "../File/File.h"
 
 BF::ShaderType BF::ShaderLoader::CheckShaderType(AsciiString& fileExtension)
 {
@@ -31,12 +32,12 @@ BF::ShaderType BF::ShaderLoader::CheckShaderType(AsciiString& fileExtension)
 }
 
 void BF::ShaderLoader::LoadFromFile(AsciiString& filePath, Shader& shader)
-{
-    AsciiString extension;
-   
-    FileLoader::ReadCompleteFile(filePath, shader.Content);    
-    FileLoader::GetFileExtension(filePath, extension);
+{   
+    File file(filePath); 
 
+    file.Read();
+
+    shader.Content.Copy((char*)&file.Data[0], file.Data.Size());
     shader.FilePath.Copy(filePath);
-    shader.Type = CheckShaderType(extension); 
+    shader.Type = CheckShaderType(file.Extension);
 }
