@@ -166,6 +166,14 @@ namespace BF
 			float y = this->Y;
 			float z = this->Z;
 
+			rotation.X = Math::DegreeToRadians(rotation.X);
+			rotation.Y = Math::DegreeToRadians(rotation.Y);
+			rotation.Z = Math::DegreeToRadians(rotation.Z);
+
+			x = Math::DegreeToRadians(x);
+			y = Math::DegreeToRadians(y);
+			z = Math::DegreeToRadians(z);
+
 			float tempX = 0; 
 			float tempY = 0;
 			float tempZ = 0;
@@ -205,6 +213,10 @@ namespace BF
 			y = tempY;
 			z = tempZ;
 			//------------------------------------------------------
+
+			x = Math::RadiansToDegree(x);
+			y = Math::RadiansToDegree(y);
+			z = Math::RadiansToDegree(z);
 
 			Set(x, y, z);
 		}

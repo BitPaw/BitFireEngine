@@ -5,7 +5,7 @@
 BF::OBJ::OBJ()
 {
 	Name.Copy("[N/A]");
-	VertexStructureSize = -1;
+	//VertexStructureSize = -1;
 }
 
 void BF::OBJ::Load(AsciiString& filePath)
@@ -83,8 +83,6 @@ void BF::OBJ::Load(AsciiString& filePath)
 
                     if (!checkedRenderType)
                     {
-                        VertexStructureSize = line.Count('/') / 2;
-
                         checkedRenderType = true;
                     }
 
@@ -155,6 +153,8 @@ void BF::OBJ::Load(AsciiString& filePath)
 
         OBJElement* elemtent = &ElementList[elementIndex++];
 
+        VertexStructureSize = 0;
+
         // How many data do i need?
         for (unsigned int i = 0; i < numberOfLines; i++)
         {
@@ -213,17 +213,22 @@ void BF::OBJ::Load(AsciiString& filePath)
                     break;
 
                 case OBJLineCommand::FaceElement:
-                    faceElementListSize++;
+                {
+                    unsigned int amount = lineList[i].Count(' ');
 
-                    usedFacesBefore = true;
+                    faceElementListSize += amount;
+
+                    if (VertexStructureSize < amount)  VertexStructureSize = amount;
+
+                      usedFacesBefore = true;
                     break;
+                }           
+             
             }
 
             if (newMeshKey && (elementIndex <= ElementList.Size()))
             {
                 newMeshKey = false;
-
-                faceElementListSize *= VertexStructureSize;
 
                 elemtent->VertexPositionList.ReSize(vertexPositionListSize);
                 elemtent->TextureCoordinateList.ReSize(textureCoordinateListSize);
@@ -243,9 +248,6 @@ void BF::OBJ::Load(AsciiString& filePath)
 
         // Register Memory
         {
-
-            faceElementListSize *= VertexStructureSize;
-
             elemtent->VertexPositionList.ReSize(vertexPositionListSize);
             elemtent->TextureCoordinateList.ReSize(textureCoordinateListSize);
             elemtent->VertexNormalPositionList.ReSize(vertexNormalPositionListSize);
@@ -268,13 +270,11 @@ void BF::OBJ::Load(AsciiString& filePath)
         unsigned int currentParameterElement = 0;
         unsigned int currentFaceElement = 0;
         unsigned int materialIndex = 0;
+        unsigned int materialIDCounter = 0;
         OBJElement* elemtent = &ElementList[elementIndex++];
         //List<Position<unsigned int>> indexPositionCache(waveFront->VertexStructureSize); // 36 Byte alloc
-        unsigned int faceStructureSize = VertexStructureSize;
 
-
-        printf("Structursize <%u>\n", faceStructureSize);
-        List<AsciiString> faceTextCache(faceStructureSize);
+        List<AsciiString> faceTextCache(3);
         List<AsciiString> dupTextCache(2);
         List<AsciiString> trippelTextCache(3); // X, Y [28 Byte alloc]
         List<AsciiString> quadTextCache(4); // v X, Y, Z [36 Byte alloc]
@@ -283,171 +283,177 @@ void BF::OBJ::Load(AsciiString& filePath)
         // Parse
         for (unsigned int lineIndex = 0; lineIndex < numberOfLines; lineIndex++)
         {
-            AsciiString* line = &lineList[lineIndex];
+            AsciiString& line = lineList[lineIndex];
             OBJLineCommand command = commandList[lineIndex];
 
             switch (command)
             {
-                case OBJLineCommand::MaterialLibraryInclude:
+            case OBJLineCommand::MaterialLibraryInclude:
+            {
+                line.Splitt(' ', trippelTextCache);
+
+                AsciiString& mtlfilePath = trippelTextCache[1]; //[20 Byte]
+                AsciiString materialFileFolder;
+                int position = filePath.FindLast('/');
+                bool hasSlash = position != -1;
+                bool doesFileExist = false;
+
+                if (hasSlash)
                 {
+                    filePath.Cut(0, position + 1, materialFileFolder);
+                    materialFileFolder.AttachToBack(mtlfilePath);
+                }
+                else
+                {
+                    materialFileFolder.Copy(mtlfilePath);
+                }
 
-                    line->Splitt(' ', trippelTextCache);
+                File file(materialFileFolder);
+                doesFileExist = file.DoesFileExist();
 
-                    AsciiString& mtlfilePath = trippelTextCache[1]; //[20 Byte]
-                    AsciiString materialFileFolder;
-                    int position = filePath.FindLast('/');
-                    bool hasSlash = position != -1;
-                    bool doesFileExist = false;
+                if (doesFileExist)
+                {
+                    MTL& material = Materials[materialIndex++];
 
-                    if (hasSlash)
-                    {
-                        filePath.Cut(0, position + 1, materialFileFolder);
-                        materialFileFolder.AttachToBack(mtlfilePath);
-                    }
-                    else
-                    {
-                        materialFileFolder.Copy(mtlfilePath);
-                    }
+                    material.Load(materialFileFolder);   
 
-                    //doesFileExist = FileLoader::DoesFileExist(materialFileFolder);
-
-                    if (doesFileExist)
-                    {
-                       // MTL* materialFile = MTLLoader::LoadFromFile(materialFileFolder);
-
-                        //waveFront->Materials[materialIndex++] = *materialFile;
-                    }
-                    else
-                    {
-                        printf("[Warning] Material (.mtl) file is missing at path <%s>\n", &materialFileFolder[0]);
-                    }
-
-
-                    //delete materialFile;
-
+                    // material.PrintContent();
+                }
+                else
+                {
+                    printf("[Warning] Material (.mtl) file is missing at path <%s>\n", &materialFileFolder[0]);
                 }
                 break;
-
-                case OBJLineCommand::MaterialLibraryUse:
+            }
+            case OBJLineCommand::MaterialLibraryUse:
+            {
+                if (usedFacesBefore)
                 {
+                    usedFacesBefore = false;
+                    elemtent = &ElementList[elementIndex++];
+                    newMeshKey = true;
+                }
 
-                    line->Splitt(' ', dupTextCache);
-                    AsciiString& materialName = line[1];
-                    unsigned int materialID = -1;
+                line.Splitt(' ', dupTextCache);
+                int lengh = line.FindFirst(' ') + 1;
+                char* data = &line[lengh];
+                AsciiString materialName(data, line.Size() - lengh +1);
+                unsigned int materialID = -1;
 
-                    for (unsigned int i = 0; i < Materials.Size(); i++)
+                for (unsigned int i = 0; i < Materials.Size(); i++)
+                {
+                    MTL& mtl = Materials[i];
+                    unsigned int materialListSize = mtl.MaterialList.Size();
+
+                    for (unsigned int j = 0; j < materialListSize; j++)
                     {
-                        MTL* mtl = &Materials[i];
+                        MTLMaterial& material = mtl.MaterialList[j];
 
-                        for (unsigned int j = 0; j < mtl->MaterialList.Size(); j++)
+                        if (material.Name.Compare(materialName))
                         {
-                            Material* material = &mtl->MaterialList[j];
-
-                            if (material->Name.Compare(materialName))
-                            {
-                                materialID = j;
-                                j = -1;
-                                i = -1;
-
-                                //printf("%s == %s >> %i\n", material->Name.c_str(), materialName.c_str(), materialID);
-                                //break;
-                            }
+                            materialID = j;
+                            //printf("%s == %s >> %i\n", material->Name.c_str(), materialName.c_str(), materialID);
+                            break;
                         }
                     }
-
-                    elemtent->MaterialID = materialID;
-
-                    if (usedFacesBefore)
-                    {
-                        usedFacesBefore = false;
-                        newMeshKey = true;
-                    }
-
-                    break;
                 }
 
+                elemtent->MaterialListIndex = materialID;
 
-                case OBJLineCommand::ObjectName:
-                    line->Cut(2, elemtent->Name);
+          
 
-                    if (usedFacesBefore)
-                    {
-                        usedFacesBefore = false;
-                        newMeshKey = true;
-                    }
-                    break;
+                break;
+            }
 
 
+            case OBJLineCommand::ObjectName:
+            {
+                if (usedFacesBefore)
+                {
+                    usedFacesBefore = false;
+                    elemtent = &ElementList[elementIndex++];
+                    newMeshKey = true;
+                }
+
+                line.Cut(2, elemtent->Name);
+
+               
+                break;
+            }  
+
+
+            case OBJLineCommand::VertexParameter:
+            case OBJLineCommand::VertexNormal:
+            case OBJLineCommand::VertexGeometric:
+            {
+                switch (command)
+                {
                 case OBJLineCommand::VertexParameter:
+                    currentVectorValue = &elemtent->VertexParameterList[currentParameterElement++];
+                    break;
+
                 case OBJLineCommand::VertexNormal:
+                    currentVectorValue = &elemtent->VertexNormalPositionList[currentNormalElement++];
+                    break;
+
                 case OBJLineCommand::VertexGeometric:
-                {
-                    switch (command)
-                    {
-                        case OBJLineCommand::VertexParameter:
-                            currentVectorValue = &elemtent->VertexParameterList[currentParameterElement++];
-                            break;
-
-                        case OBJLineCommand::VertexNormal:
-                            currentVectorValue = &elemtent->VertexNormalPositionList[currentNormalElement++];
-                            break;
-
-                        case OBJLineCommand::VertexGeometric:
-                            currentVectorValue = &elemtent->VertexPositionList[currentPositionElement++];
-                            break;
-
-                        default:
-                            throw "Error";
-                    }
-
-                    line->Splitt(' ', quadTextCache);
-
-                    currentVectorValue->Set
-                    (
-                        quadTextCache[1].ToFloat(), // X
-                        quadTextCache[2].ToFloat(), // Y
-                        quadTextCache[3].ToFloat() // Z
-                    );
-                }
-                break;
-
-                case OBJLineCommand::VertexTexture:
-                {
-                    Point<float>& point = elemtent->TextureCoordinateList[currentTextureElement++];
-
-                    line->Splitt(' ', trippelTextCache);
-
-                    point.Set
-                    (
-                        trippelTextCache[1].ToFloat(),
-                        trippelTextCache[2].ToFloat()
-                    );
-                }
-                break;
-
-
-                case OBJLineCommand::SmoothShading:
+                    currentVectorValue = &elemtent->VertexPositionList[currentPositionElement++];
                     break;
 
-                case OBJLineCommand::FaceElement:
-                    line->Splitt(' ', faceTextCache);
+                default:
+                    throw "Error";
+                }
 
-                    for (unsigned int i = 1; i <= faceStructureSize; i++)
-                    {
-                        faceTextCache[i].Splitt('/', trippelTextCache);
-                        // Possiple error if char is '/'
+                line.Splitt(' ', quadTextCache);
 
-                        elemtent->FaceElementList[currentFaceElement++].Set
-                        (
-                            trippelTextCache[0].ToInt(),
-                            trippelTextCache[1].ToInt(),
-                            trippelTextCache[2].ToInt()
-                        );
-                    }
+                currentVectorValue->Set
+                (
+                    quadTextCache[1].ToFloat(), // X
+                    quadTextCache[2].ToFloat(), // Y
+                    quadTextCache[3].ToFloat() // Z
+                );
+            }
+            break;
 
-                    usedFacesBefore = true;
+            case OBJLineCommand::VertexTexture:
+            {
+                Point<float>& point = elemtent->TextureCoordinateList[currentTextureElement++];
 
-                    break;
+                line.Splitt(' ', trippelTextCache);
+
+                point.Set
+                (
+                    trippelTextCache[1].ToFloat(),
+                    trippelTextCache[2].ToFloat()
+                );
+            }
+            break;
+
+
+            case OBJLineCommand::SmoothShading:
+                break;
+
+            case OBJLineCommand::FaceElement:
+            {
+                line.Splitt(' ', faceTextCache);
+                unsigned int amountOfValuesline = line.Count(' ');
+                for (unsigned int i = 1; i <= amountOfValuesline; i++)
+                {
+                    faceTextCache[i].Splitt('/', trippelTextCache);
+                    // Possiple error if char is '/'
+
+                    elemtent->FaceElementList[currentFaceElement++].Set
+                    (
+                        trippelTextCache[0].ToInt(),
+                        trippelTextCache[1].ToInt(),
+                        trippelTextCache[2].ToInt()
+                    );
+                }
+
+                usedFacesBefore = true;
+
+                break;
+            }
 
                 case OBJLineCommand::Invalid:
                 case OBJLineCommand::None:
@@ -456,11 +462,9 @@ void BF::OBJ::Load(AsciiString& filePath)
                     break;
             }
 
-            if (newMeshKey) // && elementIndex < waveFront->ElementList.Size.Value
+            if (newMeshKey)
             {
-                newMeshKey = false;
-
-                elemtent = &ElementList[elementIndex++];
+                newMeshKey = false;               
 
                 currentPositionElement = 0;
                 currentTextureElement = 0;
@@ -470,8 +474,6 @@ void BF::OBJ::Load(AsciiString& filePath)
             }
         }
     }
-
-    PrintData();
 }
 
 void BF::OBJ::Save(AsciiString& filePath)
@@ -481,49 +483,52 @@ void BF::OBJ::Save(AsciiString& filePath)
 void BF::OBJ::Convert(Model& model)
 {
     bool usedNormals = false;
-    unsigned int vertexListSize = VertexStructureSize;
 
-    if ((vertexListSize % 3) == 0)
+    switch (VertexStructureSize)
+    {
+    case 3:
     {
         model.RenderInformation.RenderType = RenderMode::Triangle;
+        break;
     }
 
-    if ((vertexListSize % 4) == 0)
+    case 4:
     {
         model.RenderInformation.RenderType = RenderMode::Square;
+        break;
     }
-
+    }
+    
     model.MeshList.ReSize(ElementList.Size());
 
-    //unsigned int offset = 0;
-    unsigned int size = model.MeshList.Size();
-    unsigned int materialSize = Materials.Size();
 
-    if (materialSize > 0)
+    // Convert Materials
     {
-        unsigned int materialSize = Materials[0].MaterialList.Size();
-        unsigned int colorIndex = 0;
+        unsigned int materialSize = Materials.Size();
+        unsigned int mtlMaterialListSize = Materials[0].MaterialList.Size();
 
-        model.ColorList.ReSize(materialSize);
+        model.MaterialList.ReSize(mtlMaterialListSize);
 
-        for (unsigned int i = 0; i < Materials.Size(); i++)
+        for (unsigned int mtlIndex = 0; mtlIndex < materialSize; mtlIndex++)
         {
-            MTL* mtl = &Materials[i];
+            MTL& mtl = Materials[mtlIndex];
 
-            for (unsigned int j = 0; j < materialSize; j++)
+            for (unsigned int mtlMaterialIndex = 0; mtlMaterialIndex < mtlMaterialListSize; mtlMaterialIndex++)
             {
-                Material* material = &mtl->MaterialList[j];
+                MTLMaterial& mtlMaterial = mtl.MaterialList[mtlMaterialIndex];
+                Material& material = model.MaterialList[mtlMaterialIndex];
 
-                float r = material->Diffuse.X;
-                float g = material->Diffuse.Y;
-                float b = material->Diffuse.Z;
-
-                model.ColorList[colorIndex++].SetColor(r, g, b);
+                material.Name.Copy(mtlMaterial.Name);
+                material.Ambient.Set(mtlMaterial.Ambient);
+                material.Diffuse.Set(mtlMaterial.Diffuse);
+                material.Specular.Set(mtlMaterial.Specular);
+                material.Emission.Set(mtlMaterial.Emission);
+                material.TextureFilePath.Copy(mtlMaterial.TextureFilePath);
             }
         }
     }
 
-    for (unsigned int elementIndex = 0; elementIndex < size; elementIndex++)
+    for (unsigned int elementIndex = 0; elementIndex < model.MeshList.Size(); elementIndex++)
     {
         OBJElement* element = &ElementList[elementIndex]; // Get current source Mesh
         Mesh* mesh = &model.MeshList[elementIndex]; // Get current target Mesh
@@ -533,6 +538,7 @@ void BF::OBJ::Convert(Model& model)
         unsigned int textureCoordinateListSize = element->TextureCoordinateList.Size();
 
         mesh->Name = element->Name;
+        mesh->MeshMaterial = element->MaterialListIndex == -1 ? nullptr : &model.MaterialList[element->MaterialListIndex];
 
         // Color
 
@@ -541,7 +547,7 @@ void BF::OBJ::Convert(Model& model)
         for (unsigned int i = 0; i < vertexListSize; i++)
         {
             Vertex* vertex = &mesh->VertexList[i];
-            vertex->ColorID = element->MaterialID;
+            vertex->ColorID = -1;
             vertex->CurrentPosition = element->VertexPositionList[i];
 
             //printf("V: <%f|%f|%f> C:%u\n", vertex->CurrentPosition.X, vertex->CurrentPosition.Y, vertex->CurrentPosition.Z, vertex->ColorID);
@@ -576,8 +582,8 @@ void BF::OBJ::Convert(Model& model)
             meshData->NormalVectorID = indexPosition->Z - 1;
 
             //printf("F: <%5u|%5u|%5u>\n", meshData->VertexPositionID, meshData->TexturePointID, meshData->NormalVectorID);
-        }
-    }
+        }       
+    }    
 
     if (!usedNormals)
     {
@@ -612,16 +618,16 @@ void BF::OBJ::PrintData()
 
     for (unsigned int i = 0; i < Materials.Size(); i++)
     {
-        MTL* mtl = &Materials[i];
+        MTL& mtl = Materials[i];
 
-        for (unsigned int j = 0; j < mtl->MaterialList.Size(); j++)
+        for (unsigned int j = 0; j < mtl.MaterialList.Size(); j++)
         {
-            Material* material = &mtl->MaterialList[j];
+            MTLMaterial& material = mtl.MaterialList[j];
 
-            printf(" Material: %s\n", &material->Name[0]);
-            printf(" - Ambient  [%4.4f|%4.4f|%4.4f]\n", material->Ambient.X, material->Ambient.Y, material->Ambient.Z);
-            printf(" - Diffuse  [%4.4f|%4.4f|%4.4f]\n", material->Diffuse.X, material->Ambient.Y, material->Ambient.Z);
-            printf(" - Specular [%4.4f|%4.4f|%4.4f]\n", material->Specular.X, material->Ambient.Y, material->Ambient.Z);
+            printf(" Material <%u> : %s\n", j, &material.Name[0]);
+            printf(" - Ambient  [%4.4f|%4.4f|%4.4f]\n", material.Ambient.X, material.Ambient.Y, material.Ambient.Z);
+            printf(" - Diffuse  [%4.4f|%4.4f|%4.4f]\n", material.Diffuse.X, material.Ambient.Y, material.Ambient.Z);
+            printf(" - Specular [%4.4f|%4.4f|%4.4f]\n", material.Specular.X, material.Ambient.Y, material.Ambient.Z);
         }
 
         printf(" +-------+-------+-------+-------+-------+-------\n");

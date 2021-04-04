@@ -41,6 +41,7 @@ namespace BF
 			return WindowsInput.GetValue(_window);
 		}
 
+		double GetTime();
 
 		/*
 		Changed the size of this window.

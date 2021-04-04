@@ -17,7 +17,7 @@ void BF::MTL::Load(AsciiString& filePath)
 	List<AsciiString> lineList;
 	File file(filePath);
 
-	file.Read();
+	file.ReadAsLines(lineList);
 
 	// Count How many materials are needed
 	{
@@ -25,8 +25,8 @@ void BF::MTL::Load(AsciiString& filePath)
 
 		for (unsigned int line = 0; line < lineList.Size(); line++)
 		{
-			AsciiString lineCommand = lineList[line];
-			char commandChar = lineCommand.Empty() ? ' ' : lineCommand[0];
+			AsciiString& lineCommand = lineList[line];
+			char commandChar = lineCommand.GetFirstNonEmpty();
 
 			if (commandChar == 'n')
 			{
@@ -39,15 +39,25 @@ void BF::MTL::Load(AsciiString& filePath)
 
 	// Raw Parse
 
-	Material* material = nullptr;
+	MTLMaterial* material = nullptr; // current material, has to be here, its state dependend
 
 	for (unsigned int line = 0; line < lineList.Size(); line++)
 	{
-		AsciiString lineCommand = lineList[line];
-		char commandChar = lineCommand.Empty() ? ' ' : lineCommand[0];
+		AsciiString& lineCommand = lineList[line];
+		char commandChar = lineCommand.GetFirstNonEmpty();	
 
 		switch (commandChar)
 		{
+		case 'm':
+		{
+			unsigned int startIndex = lineCommand.FindFirst(' ') + 1;
+			unsigned int length = lineCommand.Size() - startIndex + 1;
+			AsciiString tetxurePath(&lineCommand[startIndex], length);
+
+			material->TextureFilePath.Copy(tetxurePath);
+			break;
+		}
+
 			case 'n':
 			{
 				List<AsciiString> lines;
@@ -233,4 +243,53 @@ void BF::MTL::Load(AsciiString& filePath)
 				break;
 		}
 	}
+}
+
+void BF::MTL::PrintContent()
+{
+	printf("===[Material]===\n");
+
+	for (size_t i = 0; i < MaterialList.Size(); i++)
+	{
+		MTLMaterial& material = MaterialList[i];
+
+		if (i > 0)
+		{
+			printf("+--------------------+\n");
+		}
+
+		printf
+		(
+			"| ID        : %u\n"
+			"| Name      : %s\n"
+			"| FilePath  : %s\n"
+			"| Weight    : %f\n"
+			"| Ambient   : <%f|%f|%f>\n"
+			"| Diffuse   : <%f|%f|%f>\n"
+			"| Specular  : <%f|%f|%f>\n"
+			"| Emmission : <%f|%f|%f>\n"
+			"| Dissolved : %f\n"
+			"| Density   : %f\n",
+			i,
+			&material.Name[0],
+			&material.TextureFilePath[0],
+			material.Weight,
+			material.Ambient.X,
+			material.Ambient.Y,
+			material.Ambient.Z,
+			material.Diffuse.X,
+			material.Diffuse.Y,
+			material.Diffuse.Z,
+			material.Specular.X,
+			material.Specular.Y,
+			material.Specular.Z,
+			material.Emission.X,
+			material.Emission.Y,
+			material.Emission.Z,
+			material.Dissolved,
+			material.Density
+		);
+	}
+
+	printf("================\n");
 }

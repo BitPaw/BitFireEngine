@@ -2,6 +2,6 @@
 
 BF::OBJElement::OBJElement()
 {
-	Name = "[N/A]";
 	Smoothing = 0;
+	MaterialListIndex = -1;
 }

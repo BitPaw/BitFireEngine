@@ -17,17 +17,11 @@ namespace BF
 		unsigned int ShaderProgramID = -1;
 
 		RenderMode RenderType;
-		LinkedList<unsigned int> UsedTextureList;
-
 		ShaderProgram* UsedShaderProgram;
 
 		const unsigned int DataBlockSizeInBytes = sizeof(float) * (3 + 3 + 4 + 2);
 
 		List<float> VertexData;
 		List<unsigned int> IndexData;
-
-		
-
-		bool UsesTextures() { return UsedTextureList.Size() > 0; }
 	};
 }

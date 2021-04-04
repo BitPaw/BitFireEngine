@@ -64,17 +64,12 @@
     <ClCompile Include="BitFire\Player\Player.cpp" />
     <ClCompile Include="BitFire\Resources\Compression\Deflate\DeflateCompressionType.h" />
     <ClCompile Include="BitFire\Resources\Font\FNT\FNT.cpp" />
-    <ClCompile Include="BitFire\Resources\Font\FNT\FNTChanalMode.cpp" />
+    <ClCompile Include="BitFire\Resources\Font\FNT\FNTChanalMode.h" />
     <ClCompile Include="BitFire\Resources\Font\FNT\FNTCharacter.cpp" />
-    <ClCompile Include="BitFire\Resources\Font\FNT\FNTCommonData.cpp" />
-    <ClCompile Include="BitFire\Resources\Font\FNT\FNTInfo.cpp" />
     <ClCompile Include="BitFire\Resources\Font\FNT\FNTPage.cpp" />
     <ClCompile Include="BitFire\Resources\Font\Font.cpp" />
-    <ClCompile Include="BitFire\Resources\Font\FontLoader.cpp" />
     <ClCompile Include="BitFire\Resources\Font\OTF\OTF.cpp" />
-    <ClCompile Include="BitFire\Resources\Font\OTF\OTFLoader.cpp" />
     <ClCompile Include="BitFire\Resources\Font\TTF\TTF.cpp" />
-    <ClCompile Include="BitFire\Resources\Font\TTF\TTFLoader.cpp" />
     <ClCompile Include="BitFire\Resources\ILoader.cpp" />
     <ClCompile Include="BitFire\Resources\Image\BMP\BMP.cpp" />
     <ClCompile Include="BitFire\Resources\Image\BMP\Chunk\Header\BMPInfoHeader.cpp" />
@@ -96,7 +91,7 @@
     <ClCompile Include="BitFire\Resources\Model\MeshIndexData.cpp" />
     <ClCompile Include="BitFire\Resources\Model\Model.cpp" />
     <ClCompile Include="BitFire\Resources\Model\ModelLoader.cpp" />
-    <ClCompile Include="BitFire\Resources\Model\OBJ\MTL\Material.cpp" />
+    <ClCompile Include="BitFire\Resources\Model\OBJ\MTL\MTLMaterial.cpp" />
     <ClCompile Include="BitFire\Resources\Model\OBJ\MTL\MTL.cpp" />
     <ClCompile Include="BitFire\Resources\Model\OBJ\OBJ.cpp" />
     <ClCompile Include="BitFire\Resources\Model\OBJ\OBJElement.cpp" />
@@ -121,7 +116,7 @@
     <ClCompile Include="BitFire\Time\StopWatch.cpp" />
     <ClCompile Include="BitFire\UI\Button.cpp" />
     <ClCompile Include="BitFire\UI\DialogBox\DialogBox.cpp" />
-    <ClCompile Include="BitFire\UI\Text.cpp" />
+    <ClCompile Include="BitFire\UI\UIText.cpp" />
     <ClCompile Include="BitFire\IO\Serialization\JSON\JSONLoader.cpp" />
     <ClCompile Include="BitFire\IO\Serialization\XML\XMLLoader.cpp" />
     <ClCompile Include="BitFire\IO\Serialization\YAML\YAMLLoader.cpp" />
@@ -148,8 +143,6 @@
     <ClCompile Include="BitFire\IO\InputSystem.cpp" />
     <ClCompile Include="BitFire\IO\Device\InputButton.cpp" />
     <ClCompile Include="BitFire\OpenGL\Render\HUD.cpp" />
-    <ClCompile Include="BitFire\Level\LevelLoader.cpp" />
-    <ClCompile Include="BitFire\Level\LevelManager.cpp" />
     <ClCompile Include="BitFire\UI\UIElement.cpp" />
     <ClCompile Include="BitFire\Utility\UUID.cpp" />
     <ClCompile Include="BitFire\Resources\ResouceManager.cpp" />
@@ -167,6 +160,8 @@
     <ClCompile Include="BitFire\Resources\Image\PNG\PNGChunkTypeBlock.cpp" />
     <ClCompile Include="BitFire\Resources\Image\TGA\TGA.cpp" />
     <ClCompile Include="BitFire\Resources\File\File.cpp" />
+    <ClCompile Include="BitFire\UI\UIImage.cpp" />
+    <ClCompile Include="BitFire\Resources\Model\Material.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitFire\Mathematic\Geometry\Matrix2x2.hpp" />
@@ -248,16 +243,11 @@
     <ClInclude Include="BitFire\Resources\Font\FNT\FNT.h" />
     <ClInclude Include="BitFire\Resources\Font\FNT\FNTCharacter.h" />
     <ClInclude Include="BitFire\Resources\Font\FNT\FNTCommand.h" />
-    <ClInclude Include="BitFire\Resources\Font\FNT\FNTCommonData.h" />
-    <ClInclude Include="BitFire\Resources\Font\FNT\FNTInfo.h" />
     <ClInclude Include="BitFire\Resources\Font\FNT\FNTPage.h" />
     <ClInclude Include="BitFire\Resources\Font\Font.h" />
     <ClInclude Include="BitFire\Resources\Font\FontFormat.h" />
-    <ClInclude Include="BitFire\Resources\Font\FontLoader.h" />
     <ClInclude Include="BitFire\Resources\Font\OTF\OTF.h" />
-    <ClInclude Include="BitFire\Resources\Font\OTF\OTFLoader.h" />
     <ClInclude Include="BitFire\Resources\Font\TTF\TTF.h" />
-    <ClInclude Include="BitFire\Resources\Font\TTF\TTFLoader.h" />
     <ClInclude Include="BitFire\Resources\ILoader.h" />
     <ClInclude Include="BitFire\Resources\Image\BMP\BMP.h" />
     <ClInclude Include="BitFire\Resources\Image\BMP\BMPType.h" />
@@ -286,7 +276,7 @@
     <ClInclude Include="BitFire\Resources\Model\ModelLoader.h" />
     <ClInclude Include="BitFire\Resources\Model\ModelType.h" />
     <ClInclude Include="BitFire\Resources\Model\OBJ\MTL\IlluminationMode.h" />
-    <ClInclude Include="BitFire\Resources\Model\OBJ\MTL\Material.h" />
+    <ClInclude Include="BitFire\Resources\Model\OBJ\MTL\MTLMaterial.h" />
     <ClInclude Include="BitFire\Resources\Model\OBJ\MTL\MTL.h" />
     <ClInclude Include="BitFire\Resources\Model\OBJ\MTL\MTLCommand.h" />
     <ClInclude Include="BitFire\Resources\Model\OBJ\OBJ.h" />
@@ -317,7 +307,7 @@
     <ClInclude Include="BitFire\UI\DialogBox.h" />
     <ClInclude Include="BitFire\UI\DialogBox\DialogBox.h" />
     <ClInclude Include="BitFire\Mathematic\Geometry\Padding.hpp" />
-    <ClInclude Include="BitFire\UI\Text.h" />
+    <ClInclude Include="BitFire\UI\UIText.h" />
     <ClInclude Include="BitFire\Utility\Dictionary.hpp" />
     <ClInclude Include="BitFire\Utility\LinkedList.hpp" />
     <ClInclude Include="BitFire\Utility\List.hpp" />
@@ -353,8 +343,6 @@
     <ClInclude Include="BitFire\IO\InputSystem.h" />
     <ClInclude Include="BitFire\IO\Device\InputButton.h" />
     <ClInclude Include="BitFire\OpenGL\Render\HUD.h" />
-    <ClInclude Include="BitFire\Level\LevelLoader.h" />
-    <ClInclude Include="BitFire\Level\LevelManager.h" />
     <ClInclude Include="BitFire\UI\UIElement.h" />
     <ClInclude Include="BitFire\Utility\UUID.h" />
     <ClInclude Include="BitFire\Resources\ResouceManager.h" />
@@ -373,6 +361,8 @@
     <ClInclude Include="BitFire\Resources\Image\PNG\PNGChunkTypeBlock.h" />
     <ClInclude Include="BitFire\Resources\Image\TGA\TGA.h" />
     <ClInclude Include="BitFire\Resources\File\File.h" />
+    <ClInclude Include="BitFire\UI\UIImage.h" />
+    <ClInclude Include="BitFire\Resources\Model\Material.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

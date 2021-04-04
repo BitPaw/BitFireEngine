@@ -4,44 +4,36 @@
 #include "../Mathematic/Geometry/Shape/Triangle.h"
 #include "../Mathematic/Geometry/Shape/Square.h"
 #include "../Mathematic/Geometry/Shape/Rectangle.h"
-#include "../UI/Text.h"
 
 #include <future>
+#include "../UI/UIText.h"
 
 BF::GameSystem* BF::GameSystem::_instance = nullptr;
 
+BF::UIText* text;
+
 void BF::GameSystem::Start()
 {
-   // AsciiString levelFilePath = "A:/_WorkSpace/BitFireEngine/Level/MainMenu.lev";
-   // LevelLoader::LoadFromFile(level, levelFilePath); // ?? alloc
-   // LevelLoader::PrintLevelInfo(level, false);
-
-    AsciiString vertexShaderFilePath("A:/_WorkSpace/BitFireEngine/Shader/WorldSpace.vert");
-    AsciiString fragmentShaderFilePath("A:/_WorkSpace/BitFireEngine/Shader/WorldSpace.frag");
+    printf(">>> Supported GLSL version is %s.\n", (char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
 
     StopWatch stopwatch;
 
     stopwatch.Start();
 
-    Resource.AddShaderProgram(vertexShaderFilePath, fragmentShaderFilePath);
+    Resource.AddShaderProgram("Shader/WorldSpace.vert", "Shader/WorldSpace.frag");
+    unsigned int hudShaderID = Resource.AddShaderProgram("Shader/HUD.vert", "Shader/HUD.frag");
+    Resource.Load("Level/MainMenu.lev");
 
-    Resource.Load("A:/_WorkSpace/BitFireEngine/Model/Dust_II.obj");
-    Resource.Load("A:/_WorkSpace/BitFireEngine/Model/Cube.obj");
-
-    Resource.Load("A:/_WorkSpace/BitFireEngine/Texture/MissingTexture.bmp");
-    Resource.Load("A:/_WorkSpace/BitFireEngine/Texture/Block.bmp");
-    Resource.Load("A:/_WorkSpace/BitFireEngine/Texture/W.png");
-
-    Resource.Load("A:/E.tga");
-    Resource.Load("A:/earth.tga");
-    Resource.Load("A:/_WorkSpace/BitFireEngine/Font/segoe.fnt");
-    
-    
     printf(">>> Loading took %lfs\n",stopwatch.Stop());
 
-    Resource.PrintContent(true);
-    
+    text = new UIText("SampleText", *Resource.DefaultFont, -1, -0.8);
+    text->RenderInformation.ShaderProgramID = hudShaderID;
+    text->FilePath.Copy("Local Text");
+    Resource.Add(*text);
+
+
     _state = SystemState::Running;
+    Resource.PrintContent(true);
 
     glLineWidth(10);
     glPointSize(5);
@@ -57,14 +49,27 @@ void BF::GameSystem::Update()
     {
         //---[Variable Reset]--------------------------------------------------
         _gameTickData.ActiveTime = _mainWindow.ActiveTime;
-        _gameTickData.DeltaTime = _stopWatch.Reset();
+        _gameTickData.CalcualteFramesPerSecounds(_stopWatch.Reset());
 
+        if(_gameTickData.FramesRendered == 0)
+        {
+           // printf("FPS: %f\n", _gameTickData.FramesPerSecound);
+
+            //sprintf(&text->TextContent[0], "FPS: %4i", (Math::Ceiling(1/ _gameTickData.GetSmoothDeltaTime())));
+            //text->SetText(text->TextContent);
+            //Resource.Add(*text);
+        }
+
+    
+   
         //---[User-Input]------------------------------------------------------
         UpdateInput(_mainWindow.GetInput());
 
         //---[Game-Logic]------------------------------------------------------
         OnGameTick.Trigger(_gameTickData);
       
+     
+
         //---[Render World]----------------------------------------------------
         RenderScene();
     }
@@ -139,8 +144,6 @@ BF::GameSystem::GameSystem()
 {
     _instance = this;
     _state = SystemState::UnInitialized;   
-
-    _gameTickData.DeltaTime = _stopWatch.Reset();
 
     _state = SystemState::Ready;
 }

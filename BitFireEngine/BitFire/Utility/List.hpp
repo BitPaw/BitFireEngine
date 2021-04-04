@@ -43,6 +43,16 @@ namespace BF
 			return _size * sizeof(T);
 		}
 
+		T* SwapBuffer(T* newBuffer, unsigned int size)
+		{
+			T* oldBuffer = _content;
+
+			_content = newBuffer;
+			_size = size;
+
+			return oldBuffer;
+		}
+
 		void ReSize(unsigned int size)
 		{
 			ReSize(size, false);

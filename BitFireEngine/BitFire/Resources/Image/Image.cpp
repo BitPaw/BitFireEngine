@@ -31,49 +31,83 @@ BF::Image::Image()
     WrapWidth = ImageWrap::Repeat;
 }
 
+void BF::Image::RemoveColor(unsigned char red, unsigned char green, unsigned char blue)
+{
+    
+
+    switch (Format)
+    {
+    case ImageFormat::BlackAndWhite:
+    {
+       
+    }
+
+    case ImageFormat::RGB:
+    { 
+        unsigned int size = (PixelData.Size() / 3) *4;        
+        unsigned char* newData = new unsigned char[size];
+        unsigned char* oldData = PixelData.SwapBuffer(newData, size);
+        unsigned int oldIndex = 0;
+
+        for (unsigned int i = 0; i < size; )
+        {
+            newData[i++] = oldData[oldIndex++];
+            newData[i++] = oldData[oldIndex++];
+            newData[i++] = oldData[oldIndex++];
+            newData[i++] = 0xFF;
+        }
+        Format = ImageFormat::RGBA;
+
+        delete[] oldData;
+    }
+    case ImageFormat::RGBA:
+    {    
+        for (size_t i = 0; i < PixelData.Size(); )
+    {
+        unsigned char cred = PixelData[i++];
+        unsigned char cgreen = PixelData[i++];
+        unsigned char cblue = PixelData[i++];
+        unsigned char& calpha = PixelData[i++];
+
+        if (cred == red && cgreen == green && cblue == blue)
+        {
+            calpha = 0u;
+        }
+    }
+    break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+
+
+
+
+}
+
 void BF::Image::FlipHorizontal()
 {
-    unsigned int length = PixelData.Size();
     unsigned int height = Height;
+    unsigned int width = Width;
+    unsigned int bytesPerPixel = 3;
+    unsigned int scanLineWidth = width * bytesPerPixel;
+    unsigned int scanLinesToSwap = height / 2;
+    unsigned char* dataStartAdress = &PixelData[0];
+    unsigned char* copyBufferRow = new unsigned char[scanLineWidth];
 
-    unsigned int x = 0;
-    unsigned int y = 0;
-    unsigned int dIndex = 0;
-    Table<RGBA<unsigned char>> table(Width, Height);
-       
-    for (unsigned int i = 0; i < length; )
+    for (unsigned int scanlineIndex = 0; scanlineIndex < scanLinesToSwap; scanlineIndex++)
     {
-        unsigned int r = PixelData[i++];
-        unsigned int g = PixelData[i++];
-        unsigned int b = PixelData[i++];
-        unsigned int a = PixelData[i++];
+        unsigned char* destination = dataStartAdress + (scanlineIndex * scanLineWidth); // D
+        unsigned char* source = dataStartAdress + ((height - scanlineIndex) * scanLineWidth) - scanLineWidth; // S
 
-        table[x++][y] = RGBA<unsigned char>(r, g, b, a);
-
-        //printf("[%i|%i] %.2x %.2x %.2x %.2x\n", x, y, r, g, b, a);
-
-        if (x == Width)
-        {
-            x = 0;
-            y++;
-        }
+        memcpy(copyBufferRow, source, scanLineWidth); // S -> X 'Save S'
+        memcpy(source, destination, scanLineWidth); // D -> S 'Move D to S(override)'
+        memcpy(destination, copyBufferRow, scanLineWidth); // X -> D 'Move SaveCopy to D'
     }
 
-    for (unsigned int y = Height; y > 0; y--)
-    {
-        for (unsigned int x = 0; x < Width; x++)
-        {
-            RGBA<unsigned char>* pixel = &table[x][y-1];
-
-           // printf("[%i|%i] %.2x %.2x %.2x %.2x\n", x, y-1, pixel->Red, pixel->Green, pixel->Blue, pixel->Alpha);
-
-            PixelData[dIndex++] = pixel->Red;
-            PixelData[dIndex++] = pixel->Green;
-            PixelData[dIndex++] = pixel->Blue;
-            PixelData[dIndex++] = '\xFF';//pixel->Alpha;
-        }
-    }
-
+    delete[] copyBufferRow;
 }
 
 void BF::Image::PrintData()
@@ -90,7 +124,7 @@ void BF::Image::PrintData()
         ID,
         Width,
         Height,
-        Width* Height * 4
+        Width * Height * 4
     );
 }
 
@@ -104,15 +138,15 @@ void BF::Image::Resize(unsigned int width, unsigned height)
 
     switch (Format)
     {
-        case ImageFormat::BlackAndWhite:
-            break;
+    case ImageFormat::BlackAndWhite:
+        break;
 
-        case ImageFormat::RGB:
-            pixelSize = 3;
-            break;
-        case ImageFormat::RGBA:
-            pixelSize = 4;
-            break;
+    case ImageFormat::RGB:
+        pixelSize = 3;
+        break;
+    case ImageFormat::RGBA:
+        pixelSize = 4;
+        break;
     }
 
     PixelData.ReSize(newArraySize * pixelSize);
@@ -133,69 +167,69 @@ void BF::Image::FillRandome()
         }
     }
 }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    /*
-    unsigned int length = PixelData.Size.Value;
-    for (unsigned int i = 0; i < length; i++)
+
+
+
+
+
+
+
+
+
+
+
+/*
+unsigned int length = PixelData.Size.Value;
+for (unsigned int i = 0; i < length; i++)
+{
+    printf("%.2x ", PixelData[i]);
+
+
+   if (((i+1) % 4) == 0)
     {
-        printf("%.2x ", PixelData[i]);
-
-
-       if (((i+1) % 4) == 0)
-        {
-            printf("\n"); 
-        }
-   
-    }
-    printf("\n");
-
-    unsigned int pixelDataSize = PixelData.Size.Value;
-    unsigned int pixelListSize = pixelDataSize / 4;
-    unsigned int dIndex = 0;
-    List<RGBA8Bit> pixels;
-    pixels.ReSize(pixelListSize);
-
-
-    for (unsigned int y = Height; y > 0; y--)
-    {
-        for (unsigned int x = 0; x < Width; x++)
-        {
-            pixels[dIndex++] = GetPixel(x, y-1);
-
-            RGBA8Bit* xww = &pixels[dIndex];;
-
-            printf("%.2x %.2x %.2x %.2x\n", xww->Red, xww->Green, xww->Blue, xww->Alpha);
-        }   
-    }   
-
-    dIndex = 0;
-
-    for (unsigned int i = 0; i < pixelListSize; i++)
-    {
-        RGBA8Bit* pixel = &pixels[i];
-
-       PixelData[dIndex++] = pixel->Red;
-       PixelData[dIndex++] = pixel->Green;
-       PixelData[dIndex++] = pixel->Blue;
-       PixelData[dIndex++] = pixel->Alpha;
+        printf("\n");
     }
 
-    pixels.DeleteAll();
+}
+printf("\n");
+
+unsigned int pixelDataSize = PixelData.Size.Value;
+unsigned int pixelListSize = pixelDataSize / 4;
+unsigned int dIndex = 0;
+List<RGBA8Bit> pixels;
+pixels.ReSize(pixelListSize);
+
+
+for (unsigned int y = Height; y > 0; y--)
+{
+    for (unsigned int x = 0; x < Width; x++)
+    {
+        pixels[dIndex++] = GetPixel(x, y-1);
+
+        RGBA8Bit* xww = &pixels[dIndex];;
+
+        printf("%.2x %.2x %.2x %.2x\n", xww->Red, xww->Green, xww->Blue, xww->Alpha);
+    }
+}
+
+dIndex = 0;
+
+for (unsigned int i = 0; i < pixelListSize; i++)
+{
+    RGBA8Bit* pixel = &pixels[i];
+
+   PixelData[dIndex++] = pixel->Red;
+   PixelData[dIndex++] = pixel->Green;
+   PixelData[dIndex++] = pixel->Blue;
+   PixelData[dIndex++] = pixel->Alpha;
+}
+
+pixels.DeleteAll();
 }
 
 /*
 * To RGB List
-* 
+*
     unsigned int pixelDataSize = PixelData.Size.Value;
     unsigned int pixelListSize = pixelDataSize / 4;
     unsigned int dIndex = 0;

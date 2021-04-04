@@ -10,8 +10,7 @@ namespace BF
 	{
 		public:
 		AsciiString Name;
-
-		unsigned int MaterialID = -1;
+		unsigned int MaterialListIndex;
 		float Smoothing;
 
 		// List of geometric vertices, with (x, y, z [,w]) coordinates, w is optional and defaults to 1.

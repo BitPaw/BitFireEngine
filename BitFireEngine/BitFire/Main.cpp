@@ -1,29 +1,30 @@
 //-----------------------------------------------------------------------------
 #include "System/GameSystem.h"
 
-#include <iostream>
-#include <filesystem>
-
 #if 0
-void* operator new(size_t size)
+unsigned long long allocatedSpace = 0;
+
+void* operator new(unsigned int sizeOfDataBlock)
 {
-    void* p = malloc(size);
+    void* newAdress = malloc(sizeOfDataBlock);
 
-    printf(">>> [NEW] Allocated <%p> %u Byte\n", p, size);
+    allocatedSpace += sizeOfDataBlock;
 
-    return p;
+    printf(">>> [New] Allocated <%p> [%4u Byte] - %lu\n", newAdress, sizeOfDataBlock, allocatedSpace);
+
+    return newAdress;
 }
 
-void operator delete(void* p)
+void operator delete(void* adressToDelete)
 {
-    printf(">>> [DELETE] Removed <%p>\n", p);
-    free(p);
+    printf(">>> [Delete] Removed <%p>\n", adressToDelete);
+    free(adressToDelete);
 }
 #endif 
 
 //-----------------------------------------------------------------------------
 int main()
-{    
+{   
     BF::GameSystem& system = BF::GameSystem::Instance();
     
     system.Start();
@@ -35,6 +36,6 @@ int main()
 
     system.Stop();
     
-    return 0;
+    return 0;    
 }
 //-----------------------------------------------------------------------------

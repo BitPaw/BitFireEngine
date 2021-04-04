@@ -26,11 +26,8 @@
 #include "../Player/Player.h"
 #include "../Configuration/ConfigContainer.h"
 
-#include "../Level/LevelManager.h"
-
 #include "../Graphics/Camera/FirstPersonCamera.h"
 
-#include "../Level/LevelLoader.h"
 #include "../Resources/ResouceManager.h"
 #include "../Time/StopWatch.h"
 

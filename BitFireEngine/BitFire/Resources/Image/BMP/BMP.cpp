@@ -15,7 +15,7 @@ BF::BMP::~BMP()
 {
 	if (InformationHeader != nullptr)
 	{
-		//delete InformationHeader;
+		delete InformationHeader;
 	}
 }
 
@@ -54,7 +54,7 @@ void BF::BMP::Load(AsciiString& filePath)
     File file(filePath);
     file.Read();
     ByteStreamHusk byteStream((unsigned char*)&file.Data[0], file.Data.Size());
-    int dip = 0; 
+    int bitsPerPixel = 0; 
 
     //-- Parsing Header Tag
     {
@@ -194,7 +194,7 @@ void BF::BMP::Load(AsciiString& filePath)
             Width = bitMapInfoHeader->Width;
             Height = bitMapInfoHeader->Height;
 
-            dip = bitMapInfoHeader->NumberOfBitsPerPixel;
+            bitsPerPixel = bitMapInfoHeader->NumberOfBitsPerPixel;
         }
 
         break;
@@ -203,23 +203,22 @@ void BF::BMP::Load(AsciiString& filePath)
 
     //---[ Pixel Data ]--------------------------------------------------------    
     unsigned int pixelIndex = 0;
-    unsigned int width = Width;
-    unsigned int size = width * Height * 3;
     unsigned int length = byteStream.DataLength;
-    unsigned int neededRows = Math::Ceiling((dip * width) / (32.0f)) * 4;
-    unsigned int paddingSize = neededRows % 4; // <--  hardcoded
+    unsigned int bytesPerPixel = (bitsPerPixel / 8);
+    unsigned int pixelDataRowSize = Width * bytesPerPixel;
+    unsigned int pixelDataSize = pixelDataRowSize * Height;
+
+    unsigned int paddingSize = pixelDataRowSize % 4;
+    unsigned int rowSize = pixelDataRowSize + paddingSize;
     unsigned int rowIndex = 0;
-     const unsigned int rowWidth = width * 3;
 
-    PixelData.ReSize(size);
-
-    printf("Width=%i Rows size=%u padding=%u\n", width, neededRows, paddingSize);
+    PixelData.ReSize(pixelDataSize);
 
     while (!byteStream.IsAtEnd())
     {
-        bool ifPixelData = rowIndex < rowWidth;
+        bool isPixelData = rowIndex < pixelDataRowSize;
 
-        if (ifPixelData)
+        if (isPixelData)
         {
             unsigned char blue = byteStream.ExtractByteAndMove();
             unsigned char green = byteStream.ExtractByteAndMove();
@@ -230,20 +229,11 @@ void BF::BMP::Load(AsciiString& filePath)
             PixelData[pixelIndex++] = red;
             PixelData[pixelIndex++] = green;
             PixelData[pixelIndex++] = blue;
-
-            //printf("[Pixel][%05u/%05u] Pixel: ", rowIndex, size);
-            //printf("%03u %03u %03u\n", red, green, blue);
         }
         else
         {
-            for (unsigned int i = 0; i < paddingSize; i++)
-            {
-                rowIndex++;
-
-                printf("[Pixel][%05u/%05u] Pixel: ", rowIndex, size);
-            }
-
-            rowIndex = 0;
+            byteStream.CurrentPosition += paddingSize;
+            rowIndex = 0;        
         }
     }
 }
@@ -266,6 +256,9 @@ void BF::BMP::Convert(Image& image)
     destination = &image.PixelData[0];
     
     memcpy(destination, source, pixelDataSize);
+
+    image.FlipHorizontal();
+    image.RemoveColor(0,0,0);
 }
 
 void BF::BMP::PrintContent()

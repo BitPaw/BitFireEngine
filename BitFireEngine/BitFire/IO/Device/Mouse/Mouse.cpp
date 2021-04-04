@@ -5,11 +5,6 @@ BF::Mouse::Mouse()
 	ResetInput();
 }
 
-BF::Mouse::~Mouse()
-{
-
-}
-
 void BF::Mouse::ResetInput()
 {
 	Position.Set(0,0);

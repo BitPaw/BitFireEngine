@@ -28,6 +28,8 @@ namespace BF
 
 		Image();
 
+		void RemoveColor(unsigned char red, unsigned char green, unsigned char blue);
+
 		void FlipHorizontal();
 		void PrintData();
 

@@ -6,6 +6,8 @@
 #include "../../Utility/List.hpp"
 #include "../../Utility/AsciiString.h"
 
+#include "../../Resources/Model/Material.h"
+
 namespace BF
 {
 	class Mesh
@@ -14,6 +16,7 @@ namespace BF
 		AsciiString Name;
 
 		int ObjectBufferIndex;
+		Material* MeshMaterial;
 
 		List<Vertex> VertexList;
 		List<Position<float>> NormalPointList;

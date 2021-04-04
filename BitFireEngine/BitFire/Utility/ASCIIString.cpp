@@ -507,6 +507,11 @@ void BF::AsciiString::Splitt(char seperator, List<AsciiString>& stringList)
 	unsigned int seperatorIndex = -1;
 	unsigned int cutEndIndex = length;
 
+	if (length < 3)
+	{
+		return;
+	}
+
 	// Create new space
 	stringList.ReSize(size);
 
@@ -580,6 +585,42 @@ unsigned int BF::AsciiString::FindFirst(char character, unsigned int beginIndex,
 	}
 
 	return foundIndex;
+}
+
+unsigned int BF::AsciiString::FindFirst(AsciiString& string)
+{
+	return FindFirst(string, 0, Size());
+}
+
+unsigned int BF::AsciiString::FindFirst(AsciiString& string, unsigned int beginIndex)
+{
+	return FindFirst(string, beginIndex, Size());
+}
+
+unsigned int BF::AsciiString::FindFirst(AsciiString& string, unsigned int beginIndex, unsigned int endIndex)
+{
+	unsigned int searchPoolStringSize = Size();
+	unsigned int tokenSize = string.Size();
+	char searchToken = string[0];
+	unsigned int searchIndex = FindFirst(searchToken, beginIndex, endIndex);
+
+	if (searchIndex == -1)
+	{
+		return -1;
+	}
+
+	if (searchIndex + tokenSize <= searchPoolStringSize)
+	{
+		char* tokenAdress = &string[0];
+		char* searchPoolAdress = &_data[searchIndex];
+
+		if (memcmp(searchPoolAdress, tokenAdress, tokenSize) == 0)
+		{
+			return searchIndex;
+		}
+	}
+
+	return -1;
 }
 
 unsigned int BF::AsciiString::FindLast(char character)

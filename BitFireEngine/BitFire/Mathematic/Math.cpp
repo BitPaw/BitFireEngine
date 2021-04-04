@@ -7,10 +7,11 @@
 
 #include "Interpolate.h"
 
+
+
 bool BF::Math::_timerSet = false;
 
 
-const float BF::Math::PI = 3.1415926535897932384626433832795028841971693993751058209749445923;
 const float BF::Math::e = 2.71828182845904523536028747135266249;
 const float BF::Math::p = 1.32471795724474602596090885447809734;
 const float BF::Math::a = 2.50290787509589282228390287321821578;
@@ -108,6 +109,16 @@ unsigned long BF::Math::Fibonacci(unsigned long step)
 
 		// return FibonacciRetardVersion(step -1) + FibonacciRetardVersion(step -2); Recusive version
 	}
+}
+
+double BF::Math::RadiansToDegree(double radians)
+{
+	return radians * (180.0 / PI);
+}
+
+double BF::Math::DegreeToRadians(double degree)
+{
+	return degree * (PI / 180.0);
 }
 
 float BF::Math::FastInverseSqaureRoot(float number)

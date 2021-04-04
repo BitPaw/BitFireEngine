@@ -10,24 +10,19 @@
 
 namespace BF
 {
-	class Level
+	class Level : public Resource
 	{
 	public:
-		unsigned int ID;
 		AsciiString Name;
 
 		// Physics Container
-		List<Model> ModelList;
-		List<Image> ImageList;
-		List<Sound> SoundList;
-		List<Font> FontList;
-		List<Shader> ShaderList;
-		List<Dialog> DialogList;
+		List<Model**> ModelList;
+		List<Image**> ImageList;
+		List<Sound**> SoundList;
+		List<Font**> FontList;
+		List<Shader**> ShaderList;
+		List<Dialog**> DialogList;
 
-		Level()
-		{
-			ID = -1;
-			Name.Copy("[N/A]");
-		}
+		Level();
 	};
 }

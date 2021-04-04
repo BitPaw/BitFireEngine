@@ -24,7 +24,6 @@ namespace BF
 		InputButton CustomButton5;
 
 		Mouse();
-		~Mouse();
 
 		void ResetInput();
 		void ResetAxis();

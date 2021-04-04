@@ -23,6 +23,28 @@ BF::FNTCharacter* BF::FNT::GetCharacterPosition(unsigned char character)
 	return nullptr;
 }
 
+BF::FNT::FNT()
+{
+	//Name = "[N/A]";
+	Size = 70;
+	Bold = false;
+	Italic = false;
+	//CharSet = "";
+	Unicode = false;
+	StretchH = 100;
+	Smooth = 1;
+	Supersampling = 1;
+	CharacterPadding.Set(0);
+	SpacerOffset.Set(0, 0);
+
+	LineHeight = 95;
+	Base = 71;
+	ScaleWidth = 512;
+	ScaleHeight = 512;
+	AmountOfPages = 1;
+	Packed = false;
+}
+
 void BF::FNT::Load(AsciiString& filePath)
 {
 	List<FNTCommand> commandList;
@@ -119,16 +141,17 @@ void BF::FNT::Load(AsciiString& filePath)
 	}
 
 	// Parse
-	unsigned int pageCounter = 0;
-	unsigned int charCounter = 0;
-
-	for (unsigned int i = 0; i < amountOfLines; i++)
 	{
-		AsciiString& line = lineList[i];
-		FNTCommand currentCommand = commandList[i];
+		unsigned int pageCounter = 0;
+		unsigned int charCounter = 0;
 
-		switch (currentCommand)
+		for (unsigned int i = 0; i < amountOfLines; i++)
 		{
+			AsciiString& line = lineList[i];
+			FNTCommand& currentCommand = commandList[i];
+
+			switch (currentCommand)
+			{
 			case FNTCommand::Info:
 			{
 				List<AsciiString> lines;
@@ -163,7 +186,7 @@ void BF::FNT::Load(AsciiString& filePath)
 					else
 					{
 						face = lines[lineIndex++];
-					}					
+					}
 				}
 
 				size.Copy(lines[lineIndex++]);
@@ -225,15 +248,15 @@ void BF::FNT::Load(AsciiString& filePath)
 				lines.DeleteAll();
 				//----------------------------------------------------------------------------
 
-				FontInfo.Name.Copy(face);
-				FontInfo.Size = size.ToInt();
-				FontInfo.Bold = bold.ToBool();
-				FontInfo.Italic = aa.ToBool();
-				FontInfo.CharSet.Copy(charset);
-				FontInfo.Unicode = unicode.ToBool();
-				FontInfo.StretchH = stretchH.ToInt();
-				FontInfo.Smooth = smooth.ToInt();
-				FontInfo.Supersampling = aa.ToBool();
+				Name.Copy(face);
+				Size = size.ToInt();
+				Bold = bold.ToBool();
+				Italic = aa.ToBool();
+				CharSet.Copy(charset);
+				Unicode = unicode.ToBool();
+				StretchH = stretchH.ToInt();
+				Smooth = smooth.ToInt();
+				Supersampling = aa.ToBool();
 				// bitMapFontInfo.CharacterPadding = padding;
 				//bitMapFontInfo.SpacerOffset = spacing;
 				break;
@@ -285,13 +308,13 @@ void BF::FNT::Load(AsciiString& filePath)
 				packed.Copy(lines[1]);
 				lines.DeleteAll();
 				//----------------------------------------------------------------------------
-				
-				FontCommonData.LineHeight = lineHeight.ToInt();
-				FontCommonData.Base = base.ToInt();
-				FontCommonData.ScaleWidth = scaleW.ToInt();
-				FontCommonData.ScaleHeight = scaleH.ToInt();
-				FontCommonData.AmountOfPages = pages.ToInt();
-				FontCommonData.Packed = packed.ToBool();
+
+				LineHeight = lineHeight.ToInt();
+				Base = base.ToInt();
+				ScaleWidth = scaleW.ToInt();
+				ScaleHeight = scaleH.ToInt();
+				AmountOfPages = pages.ToInt();
+				Packed = packed.ToBool();
 				break;
 			}
 
@@ -378,7 +401,7 @@ void BF::FNT::Load(AsciiString& filePath)
 				lines[9].Splitt(token, charPageText);
 				lines[10].Splitt(token, charChanelText);
 
-				
+
 				fontCharacter.ID = charIDText[1].ToInt();
 
 				fontCharacter.Position.Set
@@ -417,6 +440,7 @@ void BF::FNT::Load(AsciiString& filePath)
 			default:
 				// Do nothing
 				break;
+			}
 		}
 	}
 }
@@ -427,27 +451,41 @@ void BF::FNT::Save(AsciiString& filePath)
 
 void BF::FNT::Convert(Font& font)
 {
+	unsigned int amountOfResources = FontPages.Size();
+
+	font.Name.Copy(Name);
+	font.CharacterSize = Size;
+	font.SizeBetweenLines = LineHeight;
+	font.AdditionalResourceList.ReSize(amountOfResources);
+
+	for (size_t i = 0; i < amountOfResources; i++)
+	{
+		FNTPage& page = FontPages[i];
+		AsciiString& string = font.AdditionalResourceList[i];
+
+		string.Copy(page.PageFileName);
+	}
 }
 
 void BF::FNT::PrintData()
 {
 	printf(" +-------------------------------------------------------------------------+\n");
-	printf(" | Font (%s) : %s\n", &FontInfo.CharSet[0], &FontInfo.Name[0]);
+	printf(" | Font (%s) : %s\n", &CharSet[0], &Name[0]);
 	printf(" +-------------------------------------------------------------------------+\n");
-	printf(" | Size     : %4u | Smooth  : %3u |\n", FontInfo.Size, FontInfo.Smooth);
-	printf(" | Bold     : %4s | AA      : %3u |\n", FontInfo.Bold ? "Yes" : "No", FontInfo.Supersampling);
+	printf(" | Size     : %4u | Smooth  : %3u |\n", Size, Smooth);
+	printf(" | Bold     : %4s | AA      : %3u |\n", Bold ? "Yes" : "No", Supersampling);
 	printf
 	(
 		" | Italic   : %4s | Padding : %u,%u,%u,%u |\n",
-		FontInfo.Italic ? "Yes" : "No",
-		FontInfo.CharacterPadding.Left,
-		FontInfo.CharacterPadding.Top,
-		FontInfo.CharacterPadding.Right,
-		FontInfo.CharacterPadding.Bottom
+		Italic ? "Yes" : "No",
+		CharacterPadding.Left,
+		CharacterPadding.Top,
+		CharacterPadding.Right,
+		CharacterPadding.Bottom
 
 	);
-	printf(" | unicode  : %4s | Spacing : %u,%u |\n", FontInfo.Unicode ? "Yes" : "No", FontInfo.SpacerOffset.X, FontInfo.SpacerOffset.Y);
-	printf(" | stretchH : %4u | Outline : %3u |\n", FontInfo.StretchH, FontInfo.OutlineThickness);
+	printf(" | unicode  : %4s | Spacing : %u,%u |\n", Unicode ? "Yes" : "No", SpacerOffset.X, SpacerOffset.Y);
+	printf(" | stretchH : %4u | Outline : %3u |\n", StretchH, OutlineThickness);
 
 
 	for (unsigned int pageIndex = 0; pageIndex < FontPages.Size(); pageIndex++)

@@ -68,8 +68,8 @@ void BF::Camera::Update(GameTickData gameTickData)
 {
 	printf("Updated! Camera\n");
 
-	_walkSpeed = gameTickData.DeltaTime * 500;
-	_viewSpeed = gameTickData.DeltaTime * 10000;
+	_walkSpeed = gameTickData.GetSmoothDeltaTime() * 500;
+	_viewSpeed = gameTickData.GetSmoothDeltaTime() * 10000;
 
 	switch (Settings->Mode)
 	{

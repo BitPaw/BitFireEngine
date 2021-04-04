@@ -85,7 +85,7 @@ BF::ErrorCode BF::File::ReadAsLines(List<AsciiString>& lineList)
 	dataString.Remove('\r');
 	dataString.MergeRepeatingCharacters('\n');	
 
-	numberOfLines = dataString.Count('\n');
+	numberOfLines = dataString.Count('\n') + 1;
 	
 	lineList.ReSize(numberOfLines);
 
@@ -94,6 +94,11 @@ BF::ErrorCode BF::File::ReadAsLines(List<AsciiString>& lineList)
 		AsciiString& string = lineList[i];
 
 		indexB = dataString.FindFirst('\n', indexA);
+
+		if (indexB == -1)
+		{
+			indexB = dataString.Size();
+		}
 
 		length = indexB - indexA;
 

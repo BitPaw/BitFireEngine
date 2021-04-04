@@ -4,6 +4,8 @@
 #include "../../../Utility/ByteStreamHusk.h"
 #include "../../File/File.h"
 
+#define PNGDebug 0
+
 void BF::PNG::Load(AsciiString& filePath)
 {
     PNGChunk chunk;
@@ -29,13 +31,15 @@ void BF::PNG::Load(AsciiString& filePath)
         }
     }
 
+#if PNGDebug
     printf
     (
         "+----------------------------------+\n"
         "| Parsing PNG File...              |\n"
         "+----------------------------------+\n"
     );
-
+#endif 
+ 
     // Fetch data
     while (!byteStream.IsAtEnd())
     {
@@ -101,6 +105,7 @@ void BF::PNG::Load(AsciiString& filePath)
 
         //----------------------------------------------------------
 
+#if PNGDebug
         printf
         (
             "| PNG Chunk Type: %c%c%c%c Size: %3u B |\n",
@@ -110,6 +115,7 @@ void BF::PNG::Load(AsciiString& filePath)
             chunk.ChunkTypeBlock.Value.ByteData[3],
             chunk.Lengh
         );
+#endif
 
         //---Get Chunk Data------------------------------------------
         switch (chunk.ChunkTypeBlock.Type)
@@ -208,34 +214,7 @@ void BF::PNG::Load(AsciiString& filePath)
 
                 zlibHeader.Adeler32CheckValue = byteStream.ExtractIntegerAndMove(EndianType::Big);
                 zlibHeader.FillMissingData();
-
-                printf
-                (
-                    "| zlib Header <%u> Bytes: \n"
-                    "| - Compression Method %u\n"
-                    "| - Compression Info   %u\n"
-                    "| - Check              %u, Valid:%s\n"
-                    "| - Dictionary         %s\n"
-                    "| - Level              %u\n"
-                    "| - Window Size        %u\n"
-                    "| - Compressed Data    %u Bytes\n"
-                    "| - ADLER23            %u, Valid:%s\n",
-                    chunk.Lengh,
-                    zlibHeader.CompressionMethod,
-                    zlibHeader.CompressionInfo,
-
-                    zlibHeader.Check,
-                    zlibHeader.IsCheckValid ? "Yes" : "No",
-                    zlibHeader.HasDictionary ? "Yes" : "No",
-                    zlibHeader.Level,
-
-                    zlibHeader.LZ77WindowSize,
-
-                    dataLengh,
-
-                    zlibHeader.Adeler32CheckValue,
-                    zlibHeader.Adeler32CheckValid ? "Yes" : "No"
-                );
+                
                 break;
             }
             case PNGChunkType::ImageEnd:
@@ -542,6 +521,34 @@ void BF::PNG::PrintData()
 			chunk->Lengh
 		);
 	}
+
+    printf
+                (
+                    "| zlib Header <%u> Bytes: \n"
+                    "| - Compression Method %u\n"
+                    "| - Compression Info   %u\n"
+                    "| - Check              %u, Valid:%s\n"
+                    "| - Dictionary         %s\n"
+                    "| - Level              %u\n"
+                    "| - Window Size        %u\n"
+                    "| - Compressed Data    %u Bytes\n"
+                    "| - ADLER23            %u, Valid:%s\n",
+                    chunk.Lengh,
+                    zlibHeader.CompressionMethod,
+                    zlibHeader.CompressionInfo,
+
+                    zlibHeader.Check,
+                    zlibHeader.IsCheckValid ? "Yes" : "No",
+                    zlibHeader.HasDictionary ? "Yes" : "No",
+                    zlibHeader.Level,
+
+                    zlibHeader.LZ77WindowSize,
+
+                    dataLengh,
+
+                    zlibHeader.Adeler32CheckValue,
+                    zlibHeader.Adeler32CheckValid ? "Yes" : "No"
+                );
 
 	printf("+---------------------------+\n");
 	*/

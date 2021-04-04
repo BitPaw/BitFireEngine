@@ -166,6 +166,11 @@ void OnWindowSizeChanged(GLFWwindow* window, int _width, int _height)
    //currentWindow->Resize(_width, _height);
 }
 
+double BF::Window::GetTime()
+{
+    return glfwGetTime();
+}
+
 void BF::Window::Resize(const unsigned int width, const unsigned int height)
 {
 

@@ -11,25 +11,25 @@
 #include "Model/ModelLoader.h"
 #include "Sound/Sound.h"
 #include "Font/Font.h"
-#include "Font/FontLoader.h"
 #include "Dialog/Dialog.h"
 
 #include "../Utility/LinkedList.hpp"
 #include "../Utility/AsciiString.h"
 #include "../Graphics/Camera/FirstPersonCamera.h"
 #include "../Level/Level.h"
+#include "Font/FNT/FNT.h"
 
 namespace BF
 {
     /*
     Stores resources and manages them to the GPU.
     */
-	class ResourceManager
-	{
-	private:
+    class ResourceManager
+    {
+        private:
         unsigned int _lastUsedShaderProgram = -1;
 
-		LinkedList<Model*> _modelList;
+        LinkedList<Model*> _modelList;
         LinkedList<Image*> _imageList;
         LinkedList<Sound*> _soundList;
         LinkedList<Font*> _fontList;
@@ -40,6 +40,9 @@ namespace BF
         unsigned int _defaultShaderID;
         unsigned int _defaultTextureID;
 
+        unsigned int _maximalAmountOfTexturesInOneCall;
+        unsigned int _maximalAmountOfTexturesLoaded;
+
         int ImageWrapToOpenGLFormat(ImageWrap imageWrap);
         int ImageLayoutToOpenGLFormat(ImageLayout layout);
 
@@ -47,24 +50,33 @@ namespace BF
 
         unsigned int CompileShader(unsigned int type, AsciiString& shaderString);
 
-	public:
+        public:
         FirstPersonCamera MainCamera;
+        Font* DefaultFont;
 
-		void PushToGPU(Model& model);
-		void PushToGPU(Image& image);
-		//void Add(Sound& sound);
-		//void RegisterGPU(Font& font);
-		void PushToGPU(ShaderProgram& shader);
+        ResourceManager();
 
-        void Load(const char* string);
-		void Load(AsciiString& filePath);
 
-        void AddShaderProgram(AsciiString& vertexShader, AsciiString& fragmentShader);
+        void PushToGPU(Model& model);
+        void PushToGPU(Image& image);
+        //void Add(Sound& sound);
+        //void RegisterGPU(Font& font);
+        void PushToGPU(ShaderProgram& shader);
+
+        void* Load(const char* string);
+        void* Load(AsciiString& filePath);
+
+
+        void Add(Model& model);
+        void Add(Image& image);
+
+        unsigned int AddShaderProgram(const char* vertexShader, const char* fragmentShader);
+        unsigned int AddShaderProgram(AsciiString& vertexShader, AsciiString& fragmentShader);
 
         void RenderModels(GameTickData& gameTickData);
 
-		void PrintContent(bool detailed);
-	};
+        void PrintContent(bool detailed);
+    };
 }
 
 

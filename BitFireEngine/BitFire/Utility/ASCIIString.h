@@ -79,6 +79,9 @@ namespace BF
 		unsigned int FindFirst(char character);
 		unsigned int FindFirst(char character, unsigned int beginIndex);
 		unsigned int FindFirst(char character, unsigned int beginIndex, unsigned int endIndex);
+		unsigned int FindFirst(AsciiString& string);
+		unsigned int FindFirst(AsciiString& string, unsigned int beginIndex);
+		unsigned int FindFirst(AsciiString& string, unsigned int beginIndex, unsigned int endIndex);
 
 		unsigned int FindLast(char character);
 		unsigned int FindLast(char character, unsigned int beginIndex);

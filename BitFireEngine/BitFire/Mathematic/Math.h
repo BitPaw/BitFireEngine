@@ -1,5 +1,7 @@
 #pragma once
 
+#define PI 3.1415926535897932384626433832 	// Pi, Archimedes' constant or Ludolph's number
+
 namespace BF
 {
 	class Math
@@ -8,8 +10,6 @@ namespace BF
 		static bool _timerSet;
 
 		public:
-		// Pi, Archimedes' constant or Ludolph's number
-		static const float PI;
 
 		// e, Napier's constant, or Euler's number
 		static const float e;
@@ -61,9 +61,15 @@ namespace BF
 
 		static unsigned int RandomeNumber();
 
+
+
 		static double Sinus(double value);
 		static double Tangens(double value);
 		static double Cosinus(double value);
 		static unsigned long Fibonacci(unsigned long step);
+
+
+		static double RadiansToDegree(double radians);
+		static double DegreeToRadians(double degree);
 	};
 }

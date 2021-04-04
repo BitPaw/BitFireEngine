@@ -60,8 +60,8 @@ void BF::FirstPersonCamera::Rotate(float x, float y)
 
 void BF::FirstPersonCamera::Update(GameTickData gameTickData)
 {
-	_walkSpeed = gameTickData.DeltaTime * 30;
-	_viewSpeed = gameTickData.DeltaTime * 350;
+	_walkSpeed = gameTickData.GetSmoothDeltaTime() * 30;
+	_viewSpeed = gameTickData.GetSmoothDeltaTime() * 350;
 
 	if (!ValidShader)
 	{

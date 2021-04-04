@@ -2,8 +2,6 @@
 #include "../../Mathematic/Geometry/Shape/Triangle.h"
 #include "../../Mathematic/Geometry/Shape/Rectangle.h"
 
-
-
 BF::Model::Model()
 {
     RenderInformation.RenderType = RenderMode::Unkown;
@@ -354,11 +352,34 @@ void BF::Model::PrintModelData()
 
     for (unsigned int i = 0; i < MeshList.Size(); i++)
     {
-        Mesh* mesh = &MeshList[i];
+        Mesh& mesh = MeshList[i];
 
-        printf("M: %5u %5u %5u\n", mesh->VertexList.Size(), mesh->NormalPointList.Size(), mesh->TexturePointList.Size());
+        printf("Material <%u>: %5u %5u %5u",i,  mesh.VertexList.Size(), mesh.NormalPointList.Size(), mesh.TexturePointList.Size());
 
-        
+        if (mesh.MeshMaterial == nullptr)
+        {
+            printf(" - No Material\n");
+        }
+        else
+        {
+            Material* material = mesh.MeshMaterial;
+            Image* texture = material->Texture;
+
+            if (texture == nullptr)
+            {
+                printf(" - <NoImage> Path %s", &mesh.MeshMaterial->Name[0]);
+              
+            }
+            else
+            {
+                printf(" - ImageID:%u Path %s", texture->ID, &mesh.MeshMaterial->Name[0]);
+            }
+
+
+           
+        }
+
+        printf("\n");
     }
 }
 

@@ -11,6 +11,7 @@
 #include "../../Utility/List.hpp"
 #include "../../Utility/LinkedList.hpp"
 #include "../../Color/RGBA.hpp"
+#include "Material.h"
 //-----------------------------------------------------------------------------
 namespace BF
 {
@@ -29,6 +30,7 @@ namespace BF
 		LinkedMesh GlobalMesh;
 		List<RGBA<float>> ColorList;
 		List<Mesh> MeshList;		
+		List<Material> MaterialList;
 
 		Model();
 		Model(AsciiString& name);

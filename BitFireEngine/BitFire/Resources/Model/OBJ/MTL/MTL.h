@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Material.h"
+#include "MTLMaterial.h"
 
 #include "../../../../Utility/List.hpp"
 
@@ -10,8 +10,10 @@ namespace BF
 	class MTL
 	{
 		public:
-		List<Material> MaterialList;
+		List<MTLMaterial> MaterialList;
 
 		void Load(AsciiString& filePath);
+
+		void PrintContent();
 	};
 }
