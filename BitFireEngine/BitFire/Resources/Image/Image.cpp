@@ -1,5 +1,9 @@
 #include "Image.h"
 #include "../../Utility/Table.hpp"
+#include "../File/File.h"
+#include "BMP/BMP.h"
+#include "PNG/PNG.h"
+#include "TGA/TGA.h"
 
 BF::RGBA<unsigned char> BF::Image::GetPixel(unsigned int x, unsigned int y)
 {
@@ -33,53 +37,53 @@ BF::Image::Image()
 
 void BF::Image::RemoveColor(unsigned char red, unsigned char green, unsigned char blue)
 {
-    
-
     switch (Format)
     {
-    case ImageFormat::BlackAndWhite:
-    {
-       
-    }
-
-    case ImageFormat::RGB:
-    { 
-        unsigned int size = (PixelData.Size() / 3) *4;        
-        unsigned char* newData = new unsigned char[size];
-        unsigned char* oldData = PixelData.SwapBuffer(newData, size);
-        unsigned int oldIndex = 0;
-
-        for (unsigned int i = 0; i < size; )
+        case ImageFormat::BlackAndWhite:
         {
-            newData[i++] = oldData[oldIndex++];
-            newData[i++] = oldData[oldIndex++];
-            newData[i++] = oldData[oldIndex++];
-            newData[i++] = 0xFF;
+            break;
         }
-        Format = ImageFormat::RGBA;
 
-        delete[] oldData;
-    }
-    case ImageFormat::RGBA:
-    {    
-        for (size_t i = 0; i < PixelData.Size(); )
-    {
-        unsigned char cred = PixelData[i++];
-        unsigned char cgreen = PixelData[i++];
-        unsigned char cblue = PixelData[i++];
-        unsigned char& calpha = PixelData[i++];
-
-        if (cred == red && cgreen == green && cblue == blue)
+        case ImageFormat::RGB:
         {
-            calpha = 0u;
+            unsigned int size = (PixelData.Size() / 3) * 4;
+            unsigned char* newData = new unsigned char[size];
+            unsigned char* oldData = PixelData.SwapBuffer(newData, size);
+            unsigned int oldIndex = 0;
+
+            for (unsigned int i = 0; i < size; )
+            {
+                newData[i++] = oldData[oldIndex++];
+                newData[i++] = oldData[oldIndex++];
+                newData[i++] = oldData[oldIndex++];
+                newData[i++] = 0xFF;
+            }
+            Format = ImageFormat::RGBA;
+
+            delete[] oldData;
+
+            // no break;
         }
-    }
-    break;
-    }
-    default:
-    {
-        break;
-    }
+        case ImageFormat::RGBA:
+        {
+            for (size_t i = 0; i < PixelData.Size(); )
+            {
+                unsigned char cred = PixelData[i++];
+                unsigned char cgreen = PixelData[i++];
+                unsigned char cblue = PixelData[i++];
+                unsigned char& calpha = PixelData[i++];
+
+                if (cred == red && cgreen == green && cblue == blue)
+                {
+                    calpha = 0u;
+                }
+            }
+            break;
+        }
+        default:
+        {
+            break;
+        }
     }
 
 
@@ -138,15 +142,15 @@ void BF::Image::Resize(unsigned int width, unsigned height)
 
     switch (Format)
     {
-    case ImageFormat::BlackAndWhite:
-        break;
+        case ImageFormat::BlackAndWhite:
+            break;
 
-    case ImageFormat::RGB:
-        pixelSize = 3;
-        break;
-    case ImageFormat::RGBA:
-        pixelSize = 4;
-        break;
+        case ImageFormat::RGB:
+            pixelSize = 3;
+            break;
+        case ImageFormat::RGBA:
+            pixelSize = 4;
+            break;
     }
 
     PixelData.ReSize(newArraySize * pixelSize);
@@ -168,84 +172,73 @@ void BF::Image::FillRandome()
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-/*
-unsigned int length = PixelData.Size.Value;
-for (unsigned int i = 0; i < length; i++)
+BF::ImageFileExtension BF::Image::CheckFileExtension(AsciiString& fileExtension)
 {
-    printf("%.2x ", PixelData[i]);
+    bool isBMP = fileExtension.CompareIgnoreCase("bmp");
+    bool isGIF = fileExtension.CompareIgnoreCase("gif");
+    bool isJPEG = fileExtension.CompareIgnoreCase("jpeg");
+    bool isPNG = fileExtension.CompareIgnoreCase("png");
+    bool isTGA = fileExtension.CompareIgnoreCase("tga");
+    bool isTIFF = fileExtension.CompareIgnoreCase("tiff");
 
+    if (isBMP) return ImageFileExtension::BMP;
+    if (isGIF) return ImageFileExtension::GIF;
+    if (isJPEG) return ImageFileExtension::JPEG;
+    if (isPNG) return ImageFileExtension::PNG;
+    if (isTGA) return ImageFileExtension::TGA;
+    if (isTIFF) return ImageFileExtension::TIFF;
 
-   if (((i+1) % 4) == 0)
-    {
-        printf("\n");
-    }
-
+    return ImageFileExtension::Unkown;
 }
-printf("\n");
 
-unsigned int pixelDataSize = PixelData.Size.Value;
-unsigned int pixelListSize = pixelDataSize / 4;
-unsigned int dIndex = 0;
-List<RGBA8Bit> pixels;
-pixels.ReSize(pixelListSize);
-
-
-for (unsigned int y = Height; y > 0; y--)
+BF::ErrorCode BF::Image::Load(AsciiString& filePath)
 {
-    for (unsigned int x = 0; x < Width; x++)
+    File file(filePath);
+    AsciiString fileExtension = file.Extension;
+    ImageFileExtension imageFormat = CheckFileExtension(fileExtension);
+
+    FilePath.Copy(filePath);
+
+    switch (imageFormat)
     {
-        pixels[dIndex++] = GetPixel(x, y-1);
-
-        RGBA8Bit* xww = &pixels[dIndex];;
-
-        printf("%.2x %.2x %.2x %.2x\n", xww->Red, xww->Green, xww->Blue, xww->Alpha);
-    }
-}
-
-dIndex = 0;
-
-for (unsigned int i = 0; i < pixelListSize; i++)
-{
-    RGBA8Bit* pixel = &pixels[i];
-
-   PixelData[dIndex++] = pixel->Red;
-   PixelData[dIndex++] = pixel->Green;
-   PixelData[dIndex++] = pixel->Blue;
-   PixelData[dIndex++] = pixel->Alpha;
-}
-
-pixels.DeleteAll();
-}
-
-/*
-* To RGB List
-*
-    unsigned int pixelDataSize = PixelData.Size.Value;
-    unsigned int pixelListSize = pixelDataSize / 4;
-    unsigned int dIndex = 0;
-    List<RGBA> pixels;
-
-    pixels.ReSize(pixelListSize);
-
-    for (unsigned int i = 0; i < pixelDataSize; )
-    {
-        RGBA pixel
+        case ImageFileExtension::BMP:
         {
-            PixelData[i++],
-            PixelData[i++],
-            PixelData[i++],
-        };
+            BMP bitmap;
+            bitmap.Load(filePath);
+            bitmap.Convert(*this);
+            break;
+        }
+        case ImageFileExtension::GIF:
+        {
+            break;
+        }
+        case ImageFileExtension::JPEG:
+        {
+            break;
+        }
+        case ImageFileExtension::PNG:
+        {
+            PNG png;
+            png.Load(filePath);
+            png.Convert(*this);
+            break;
+        }
+        case ImageFileExtension::TGA:
+        {
+            TGA tga;
+            tga.Load(filePath);
+            tga.Convert(*this);
+            break;
+        }
+        case ImageFileExtension::TIFF:
+        {
+            break;
+        }
 
-        pixels[dIndex++] = pixel;
+        case ImageFileExtension::Unkown:
+        default:
+            return ErrorCode::NotSupported;
     }
-*/
+
+    return ErrorCode::NoError;
+}

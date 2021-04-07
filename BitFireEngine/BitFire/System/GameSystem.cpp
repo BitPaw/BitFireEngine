@@ -14,7 +14,24 @@ BF::UIText* text;
 
 void BF::GameSystem::Start()
 {
-    printf(">>> Supported GLSL version is %s.\n", (char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
+    printf
+    (
+        "+------------------------------------------------------+\n"
+        "| __________ .__   __  ___________.__                  |\n"
+        "| \\______   \\|__|_/  |_\\_   _____/|__|_______   ____   |\n"
+        "|  |    |  _/|  |\\   __\\|    __)  |  |\\_  __ \\_/ __ \\  |\n"
+        "|  |    |   \\|  | |  |  |     \\   |  | |  | \\/\\  ___/  |\n"
+        "|  |______  /|__| |__|  \\___  /   |__| |__|    \\___  > |\n"
+        "|         \\/                \\/                     \\/  |\n"
+        "+------------------------------------------------------+\n"
+        "| OpenGL Version   : %s\n"
+        "| Texture Slots    : %u\n"
+        "| Maximal Textures : %u\n"
+        "+------------------------------------------------------+\n",
+        (char*)glGetString(GL_SHADING_LANGUAGE_VERSION),
+        Resource.GetMaximalAmountOfTexturesInOneCall(),
+        Resource.GetMaximalAmountOfTexturesLoaded()
+    );
 
     StopWatch stopwatch;
 
@@ -53,22 +70,16 @@ void BF::GameSystem::Update()
 
         if(_gameTickData.FramesRendered == 0)
         {
-           // printf("FPS: %f\n", _gameTickData.FramesPerSecound);
-
-            //sprintf(&text->TextContent[0], "FPS: %4i", (Math::Ceiling(1/ _gameTickData.GetSmoothDeltaTime())));
-            //text->SetText(text->TextContent);
-            //Resource.Add(*text);
-        }
-
-    
+            sprintf(&text->TextContent[0], "FPS: %4i", (Math::Ceiling(1/ _gameTickData.GetSmoothDeltaTime())));
+            text->SetText(text->TextContent);
+            Resource.Add(*text);
+        }    
    
         //---[User-Input]------------------------------------------------------
         UpdateInput(_mainWindow.GetInput());
 
         //---[Game-Logic]------------------------------------------------------
-        OnGameTick.Trigger(_gameTickData);
-      
-     
+        OnGameTick.Trigger(_gameTickData);    
 
         //---[Render World]----------------------------------------------------
         RenderScene();

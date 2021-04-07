@@ -140,7 +140,13 @@ unsigned int BF::ResourceManager::CompileShader(unsigned int type, AsciiString& 
 
             glGetShaderInfoLog(id, lengh, &lengh, message);
 
-            printf("Failed to compile Shader ID:%u!\nReason: %s", id, message);
+            printf
+            (
+                "[OpenGL-Error] Failed to compile Shader ID:%u!\n"
+                "               Reason: %s\n", 
+                id,
+                message
+            );
 
             delete[] message;
 
@@ -155,10 +161,13 @@ unsigned int BF::ResourceManager::CompileShader(unsigned int type, AsciiString& 
 
 BF::ResourceManager::ResourceManager()
 {
+    _lastUsedShaderProgram = -1;
     _defaultShaderID = 0;
     _defaultTextureID = 0;
 
-    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, (GLint*)&_maximalAmountOfTexturesInOneCall);;
+    DefaultFont = nullptr;
+
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, (GLint*)&_maximalAmountOfTexturesInOneCall);
     glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, (GLint*)&_maximalAmountOfTexturesLoaded);
 }
 
@@ -237,15 +246,15 @@ void BF::ResourceManager::PushToGPU(Image& image)
 
     switch (image.Format)
     {
-        case BF::ImageFormat::RGB:
+        case ImageFormat::RGB:
             format = GL_RGB;
             break;
 
-        case BF::ImageFormat::RGBA:
+        case ImageFormat::RGBA:
             format = GL_RGBA;
             break;
 
-        case BF::ImageFormat::BlackAndWhite:
+        case ImageFormat::BlackAndWhite:
         default:
             throw "Invalid ImageFormat";
     }
@@ -348,8 +357,8 @@ void* BF::ResourceManager::Load(AsciiString& filePath)
     if (doesFileExist)
     {
         {
-            bool isModel = ModelLoader::IsModelFile(fileExtension);
-            bool isImage = ImageLoader::IsImageFileExtension(fileExtension);
+            bool isModel = Model::CheckFileExtension(fileExtension) != ModelType::UnKown;
+            bool isImage = Image::CheckFileExtension(fileExtension) != ImageFileExtension::Unkown;
             bool isSound = false;
             bool isFont = Font::IsFontFile(fileExtension);
             bool isShader = false;
@@ -432,7 +441,7 @@ void* BF::ResourceManager::Load(AsciiString& filePath)
             case ResourceType::Image:
             {
                 Image* image = new Image();
-                errorCode = ImageLoader::LoadFromFile(filePath, *image);
+                errorCode = image->Load(filePath);
 
                 if (errorCode == ErrorCode::NoError)
                 {
@@ -652,7 +661,7 @@ void* BF::ResourceManager::Load(AsciiString& filePath)
             {
                 Model* model = new Model();
                 
-                errorCode = ModelLoader::LoadFromFile(filePath, *model);
+                errorCode = model->Load(filePath);
 
                 if (errorCode == ErrorCode::NoError)
                 {
@@ -662,9 +671,12 @@ void* BF::ResourceManager::Load(AsciiString& filePath)
                         AsciiString& imageFilePath = material.TextureFilePath;
                         Image* image = (Image*)(Load(imageFilePath));
 
-                        material.Texture = image;
+                        if (image != nullptr)
+                        {
+                            material.Texture = image;
 
-                        Add(*image);
+                            Add(*image);
+                        }                     
                     }
 
                     Add(*model);
@@ -672,13 +684,15 @@ void* BF::ResourceManager::Load(AsciiString& filePath)
                     loadedResource = model;
                 }    
                 break;
-            }      
-
+            }    
             case ResourceType::Shader:
+            {
                 break;
-
+            }
             case ResourceType::Sound:
+            {
                 break;
+            }               
         }
     } 
 

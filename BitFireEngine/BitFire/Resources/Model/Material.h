@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../Mathematic/Geometry/Position.hpp"
-#include "../../Utility/ASCIIString.h"
+#include "../../Utility/AsciiString.h"
 #include "../Image/Image.h"
 
 namespace BF

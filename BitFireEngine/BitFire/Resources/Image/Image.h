@@ -4,9 +4,11 @@
 #include "ImageFilter.h"
 #include "ImageLayout.h"
 #include "ImageWrap.h"
+#include "ImageFileExtension.h"
 
 #include "../../Color/RGBA.hpp"
 #include "../Resource.h"
+#include "../ErrorCode.h"
 
 namespace BF
 {
@@ -36,5 +38,8 @@ namespace BF
 		void Resize(unsigned int width, unsigned height);
 
 		void FillRandome();
+
+		static ImageFileExtension CheckFileExtension(AsciiString& fileExtension);
+		ErrorCode Load(AsciiString& filePath);
 	};
 }

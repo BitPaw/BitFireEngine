@@ -14,18 +14,18 @@ unsigned char BF::ByteStreamHusk::ExtractByteAndMove()
 	return StartAdress[CurrentPosition++];
 }
 
-unsigned short BF::ByteStreamHusk::ExtractShortAndMove(EndianType endianType)
+unsigned short BF::ByteStreamHusk::ExtractShortAndMove(Endian Endian)
 {
 	Word word = ExtractWord();
-	unsigned int result = word.ExtractInt(endianType);
+	unsigned int result = word.ExtractInt(Endian);
 
 	return result;
 }
 
-unsigned int BF::ByteStreamHusk::ExtractIntegerAndMove(EndianType endianType)
+unsigned int BF::ByteStreamHusk::ExtractIntegerAndMove(Endian Endian)
 {
 	DoubleWord dWord = ExtractDoubleWord();
-	unsigned int result = dWord.ExtractInt(endianType);
+	unsigned int result = dWord.ExtractInt(Endian);
 
 	return result;
 }

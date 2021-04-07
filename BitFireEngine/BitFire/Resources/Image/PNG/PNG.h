@@ -9,7 +9,7 @@
 
 #include "../../../Color/RGB.hpp"
 #include "../../../Mathematic/Geometry/Point.hpp"
-#include "../../../Utility/ASCIIString.h"
+#include "../../../Utility/AsciiString.h"
 
 namespace BF
 {

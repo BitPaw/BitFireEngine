@@ -3,7 +3,7 @@
 namespace BF
 {
 	// Ordering or sequencing of bytes
-	enum class EndianType
+	enum class Endian
 	{
 		// Left to Right. Left smallest value.
 		Big,

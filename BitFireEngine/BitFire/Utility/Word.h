@@ -1,5 +1,6 @@
 #pragma once
-#include "../IO/EndianType.h"
+
+#include "Endian.h"
 
 namespace BF
 {
@@ -13,7 +14,7 @@ namespace BF
 
 		void Set(unsigned char byteA, unsigned char byteB);
 
-		unsigned int ExtractInt(EndianType endianType);
-		unsigned int InsertInt(EndianType endianType, unsigned int value);
+		unsigned int ExtractInt(Endian Endian);
+		unsigned int InsertInt(Endian Endian, unsigned int value);
 	};
 }

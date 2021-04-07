@@ -43,7 +43,7 @@ void BF::PNG::Load(AsciiString& filePath)
     // Fetch data
     while (!byteStream.IsAtEnd())
     {
-        chunk.Lengh = byteStream.ExtractIntegerAndMove(EndianType::Big);
+        chunk.Lengh = byteStream.ExtractIntegerAndMove(Endian::Big);
         chunk.ChunkTypeBlock.Value = byteStream.ExtractDoubleWord();
         chunk.ChunkTypeBlock.Type = PNGChunkType::Custom;
         
@@ -134,8 +134,8 @@ void BF::PNG::Load(AsciiString& filePath)
                     Interlace method 	1 byte
                 */
 
-                Width = byteStream.ExtractIntegerAndMove(EndianType::Big);
-                Height = byteStream.ExtractIntegerAndMove(EndianType::Big);
+                Width = byteStream.ExtractIntegerAndMove(Endian::Big);
+                Height = byteStream.ExtractIntegerAndMove(Endian::Big);
 
                 BitDepth = byteStream.ExtractByteAndMove();
                 colorType = byteStream.ExtractByteAndMove();
@@ -212,7 +212,7 @@ void BF::PNG::Load(AsciiString& filePath)
                 // Allignment = ZLIB Chunk - ADLER32
                 byteStream.CurrentPosition += chunk.Lengh - 4;
 
-                zlibHeader.Adeler32CheckValue = byteStream.ExtractIntegerAndMove(EndianType::Big);
+                zlibHeader.Adeler32CheckValue = byteStream.ExtractIntegerAndMove(Endian::Big);
                 zlibHeader.FillMissingData();
                 
                 break;
@@ -231,20 +231,20 @@ void BF::PNG::Load(AsciiString& filePath)
             case PNGChunkType::ImageGamma:
             {
                 // sample = lightoutgamma ???
-                Gamma = byteStream.ExtractIntegerAndMove(EndianType::Big);
+                Gamma = byteStream.ExtractIntegerAndMove(Endian::Big);
 
                 break;
             }
             case PNGChunkType::PrimaryChromaticities:
             {
-                CromaWhite.X = byteStream.ExtractIntegerAndMove(EndianType::Big);
-                CromaWhite.Y = byteStream.ExtractIntegerAndMove(EndianType::Big);
-                CromaRed.X = byteStream.ExtractIntegerAndMove(EndianType::Big);
-                CromaRed.Y = byteStream.ExtractIntegerAndMove(EndianType::Big);
-                CromaGreen.X = byteStream.ExtractIntegerAndMove(EndianType::Big);
-                CromaGreen.Y = byteStream.ExtractIntegerAndMove(EndianType::Big);
-                CromaBlue.X = byteStream.ExtractIntegerAndMove(EndianType::Big);
-                CromaBlue.Y = byteStream.ExtractIntegerAndMove(EndianType::Big);
+                CromaWhite.X = byteStream.ExtractIntegerAndMove(Endian::Big);
+                CromaWhite.Y = byteStream.ExtractIntegerAndMove(Endian::Big);
+                CromaRed.X = byteStream.ExtractIntegerAndMove(Endian::Big);
+                CromaRed.Y = byteStream.ExtractIntegerAndMove(Endian::Big);
+                CromaGreen.X = byteStream.ExtractIntegerAndMove(Endian::Big);
+                CromaGreen.Y = byteStream.ExtractIntegerAndMove(Endian::Big);
+                CromaBlue.X = byteStream.ExtractIntegerAndMove(Endian::Big);
+                CromaBlue.Y = byteStream.ExtractIntegerAndMove(Endian::Big);
                 break;
             }
             case PNGChunkType::StandardRGBColorSpace:
@@ -259,8 +259,8 @@ void BF::PNG::Load(AsciiString& filePath)
             case PNGChunkType::BackgroundColor:
             case PNGChunkType::PhysicalPixelDimensions:
             {
-                PixelsPerUnit.X = byteStream.ExtractIntegerAndMove(EndianType::Big);
-                PixelsPerUnit.Y = byteStream.ExtractIntegerAndMove(EndianType::Big);
+                PixelsPerUnit.X = byteStream.ExtractIntegerAndMove(Endian::Big);
+                PixelsPerUnit.Y = byteStream.ExtractIntegerAndMove(Endian::Big);
                 UnitSpecifier = byteStream.ExtractByteAndMove();
 
                 break;
@@ -311,7 +311,7 @@ void BF::PNG::Load(AsciiString& filePath)
         }
         //---------------------------------------------------------------
 
-        chunk.CRC = byteStream.ExtractIntegerAndMove(EndianType::Big);
+        chunk.CRC = byteStream.ExtractIntegerAndMove(Endian::Big);
     }
 
     printf

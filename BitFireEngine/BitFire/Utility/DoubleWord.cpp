@@ -18,11 +18,11 @@ void BF::DoubleWord::Set(unsigned char byteA, unsigned  char byteB, unsigned cha
     ByteData[3] = byteD;
 }
 
-unsigned int BF::DoubleWord::ExtractInt(EndianType endianType)
+unsigned int BF::DoubleWord::ExtractInt(Endian Endian)
 {
-    switch (endianType)
+    switch (Endian)
     {
-        case EndianType::Big:
+        case Endian::Big:
             return 
                 (ByteData[0] << 24) |
                 (ByteData[1] << 16) |
@@ -30,7 +30,7 @@ unsigned int BF::DoubleWord::ExtractInt(EndianType endianType)
                 (ByteData[3]);
 
         default:
-        case EndianType::Little:
+        case Endian::Little:
             return 
                 (ByteData[0]) |
                 (ByteData[1] << 8) |
@@ -39,7 +39,7 @@ unsigned int BF::DoubleWord::ExtractInt(EndianType endianType)
     }
 }
 
-unsigned int BF::DoubleWord::InsertInt(EndianType endianType, unsigned int value)
+unsigned int BF::DoubleWord::InsertInt(Endian Endian, unsigned int value)
 {
     return 0;
 }

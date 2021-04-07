@@ -1,4 +1,8 @@
 #include "Model.h"
+
+#include "ModelType.h"
+#include "OBJ/OBJ.h"
+#include "../File/File.h"
 #include "../../Mathematic/Geometry/Shape/Triangle.h"
 #include "../../Mathematic/Geometry/Shape/Rectangle.h"
 
@@ -112,7 +116,6 @@ void BF::Model::Orbit(Position<float> rotation, Position<float> ancerPosition)
 {
 }
 
-
 void BF::Model::Scale(float x, float y, float z)
 {
     Scale(Position<float>(x, y, z));
@@ -127,7 +130,6 @@ void BF::Model::Scale(Position<float> scaleFactor)
         vertex->CurrentPosition.Multiply(scaleFactor);
     }
 }
-
 
 BF::Position<float> BF::Model::CurrentPosition()
 {
@@ -471,4 +473,97 @@ void BF::Model::ScaleTexturePoints(Point<float> scale)
     {
         GlobalMesh.TexturePointList[i]->Multiply(scale);
     }
+}
+
+BF::ModelType BF::Model::CheckFileExtension(AsciiString& fileExtension)
+{
+    if (fileExtension.CompareIgnoreCase("3ds")) return ModelType::A3DS;
+    if (fileExtension.CompareIgnoreCase("obj")) return ModelType::OBJ;
+    if (fileExtension.CompareIgnoreCase("ply")) return ModelType::PLY;
+    if (fileExtension.CompareIgnoreCase("stl")) return ModelType::STL;
+    if (fileExtension.CompareIgnoreCase("wrl")) return ModelType::WRL;
+
+    return ModelType::UnKown;
+}
+
+BF::ErrorCode BF::Model::Load(AsciiString& filePath)
+{
+    File file(filePath);
+    ModelType modelType = CheckFileExtension(file.Extension);
+
+    FilePath.Copy(filePath);
+
+    switch (modelType)
+    {
+        case ModelType::A3DS:
+            break;
+
+        case ModelType::FBX:
+            break;
+
+        case ModelType::OBJ:
+        {
+            OBJ obj;
+            obj.Load(filePath);
+            obj.Convert(*this);
+            break;
+        }
+
+        case ModelType::PLY:
+            break;
+
+        case ModelType::STL:
+            break;
+
+        case ModelType::WRL:
+            break;
+
+        case ModelType::UnKown:
+        default:
+            return ErrorCode::NotSupported;
+    }
+
+    return ErrorCode::NoError;
+}
+
+void BF::Model::ConvertFrom(Shape& shape)
+{
+    const unsigned int meshSize = 1;
+    List<Point<float>>* vertexData = shape.DrawPointList();
+    unsigned int vertexListSize = vertexData->Size();
+    Mesh* mesh;
+
+    if ((vertexListSize % 3) == 0)
+    {
+        RenderInformation.RenderType = RenderMode::Triangle;
+    }
+
+    if ((vertexListSize % 4) == 0)
+    {
+        RenderInformation.RenderType = RenderMode::Square;
+    }
+
+    MeshList.ReSize(meshSize);
+
+    mesh = &MeshList[0]; // Get current target Mesh
+    mesh->Name.Copy("Shape");
+
+
+    mesh->VertexList.ReSize(vertexListSize);
+    mesh->IndexList.ReSize(vertexListSize);
+
+    for (unsigned int i = 0; i < vertexListSize; i++)
+    {
+        Vertex* vertex = &mesh->VertexList[i];
+        vertex->ColorID = -1;
+        vertex->CurrentPosition = (*vertexData)[i];
+
+        mesh->IndexList[i].Set(i, -1, -1);
+    }
+
+    vertexData->DeleteAll();
+
+    CalculateNormalVectors();
+
+    UpdateGlobalMesh();
 }

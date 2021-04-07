@@ -1,18 +1,18 @@
 #pragma once
 
-#include "../Utility/AsciiString.h"
-#include "../Utility/List.hpp"
-#include "../Resources/Model/Model.h"
-#include "../Resources/Image/Image.h"
-#include "../Resources/Font/Font.h"
-#include "../Resources/Sound/Sound.h"
-#include "../Resources/Dialog/Dialog.h"
+#include "../../Utility/AsciiString.h"
+#include "../../Utility/List.hpp"
+#include "../Model/Model.h"
+#include "../Image/Image.h"
+#include "../Font/Font.h"
+#include "../Sound/Sound.h"
+#include "../Dialog/Dialog.h"
 
 namespace BF
 {
 	class Level : public Resource
 	{
-	public:
+		public:
 		AsciiString Name;
 
 		// Physics Container

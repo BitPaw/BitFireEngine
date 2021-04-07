@@ -2,57 +2,83 @@
 
 #include "Mesh.h"
 #include "LinkedMesh.h"
-#include "IModel.h"
 #include "ModelRenderInformation.h"
-
+#include "Material.h"
 #include "../Resource.h"
 
 #include "../../Mathematic/Geometry/Position.hpp"
 #include "../../Utility/List.hpp"
 #include "../../Utility/LinkedList.hpp"
 #include "../../Color/RGBA.hpp"
-#include "Material.h"
-//-----------------------------------------------------------------------------
+#include "../ErrorCode.h"
+#include "ModelType.h"
+
+#include "../../Mathematic/Geometry/Shape/Shape.h"
+
 namespace BF
 {
 	// Renderable Object used as core element for the rendersystem.
-	class Model : public Resource, public IModel
+	class Model : public Resource
 	{
-	protected:
+		protected:
 		Position<float> _currentPosition;
 		Position<float> _currentRotation;
 
-	public:
+		public:
 		ModelRenderInformation RenderInformation;
 
 		AsciiString ModelName;
 
 		LinkedMesh GlobalMesh;
 		List<RGBA<float>> ColorList;
-		List<Mesh> MeshList;		
+		List<Mesh> MeshList;
 		List<Material> MaterialList;
 
 		Model();
 		Model(AsciiString& name);
 
-		void Move(float x, float y, float z) override;
-		void Move(Position<float> position) override;
-		void MoveTo(float x, float y, float z) override;
-		void MoveTo(Position<float> position) override;		
+		/**
+	Move object in a specific direction in this worldspace.
+	@param Direction in which this object should be moved in.
+*/
+		void Move(float x, float y, float z);
+		void Move(Position<float> position);
 
-		void Rotate(float x, float y, float z) override;
-		void Rotate(Position<float> rotation) override;
-		void RotateTo(float x, float y, float z) override;
-		void RotateTo(Position<float> rotation) override;
+		/**
+		Move to specific location in this worldspace.
+		@param Position where this object should be moved to.
+	*/
+		void MoveTo(float x, float y, float z);
+		void MoveTo(Position<float> position);
 
-		void Orbit(float x, float y, float z) override;
-		void Orbit(Position<float> rotation) override;
-		void Orbit(Position<float> rotation, Position<float> ancerPosition) override;
+		/**
+			Rotate the object around itself.
+			@param Rotation, how much each axis should be rotated.
+		*/
+		void Rotate(float x, float y, float z);
+		void Rotate(Position<float> rotation);
+		void RotateTo(float x, float y, float z);
+		void RotateTo(Position<float> rotation);
 
-		void Scale(float x, float y, float z) override;
-		void Scale(Position<float> scaleFactor) override;
+		/**
+	Rotate the object around the worldspace.
+	@param Rotation, how much each axis should be rotated.
+*/
+		void Orbit(float x, float y, float z);
+		void Orbit(Position<float> rotation);
 
+		/**
+			Rotate the object around the worldspace.
+			@param Rotation, how much each axis should be rotated.
+		*/
+		void Orbit(Position<float> rotation, Position<float> ancerPosition);
 
+		/**
+		Change the size of this object in this worldspace.
+		@param Scalefactor, how much each axis should be Scaled. 1 => no change.
+		*/
+		void Scale(float x, float y, float z);
+		void Scale(Position<float> scaleFactor);
 
 		// Image
 		void ScaleTexturePoints(float x, float y);
@@ -68,7 +94,7 @@ namespace BF
 
 		void UseTexturePointAsColor();
 
-	
+
 		/**
 			Returns the area of a circle with the specified radius.
 			@param radius The radius of the circle.
@@ -81,6 +107,10 @@ namespace BF
 		void PrintModelData();
 		void PrintCurrentPosition();
 		void PrintCurrentRotation();
+
+		
+		static ModelType CheckFileExtension(AsciiString& fileExtension);
+		ErrorCode Load(AsciiString& filePath);
+		void ConvertFrom(Shape& shape);
 	};
 }
-//-----------------------------------------------------------------------------

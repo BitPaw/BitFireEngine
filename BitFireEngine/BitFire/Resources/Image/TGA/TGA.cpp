@@ -57,14 +57,14 @@ void BF::TGA::Load(AsciiString& filePath)
 	ColorPaletteType = byteSteam.ExtractByteAndMove();
 	imageTypeValue = byteSteam.ExtractByteAndMove();
 
-	colorPaletteChunkEntryIndex = byteSteam.ExtractShortAndMove(EndianType::Little);
-	colorPaletteChunkSize = byteSteam.ExtractShortAndMove(EndianType::Little);
+	colorPaletteChunkEntryIndex = byteSteam.ExtractShortAndMove(Endian::Little);
+	colorPaletteChunkSize = byteSteam.ExtractShortAndMove(Endian::Little);
 	colorPaletteEntrySizeInBits = byteSteam.ExtractByteAndMove();
 
-	OriginX = byteSteam.ExtractShortAndMove(EndianType::Little);
-	OriginY = byteSteam.ExtractShortAndMove(EndianType::Little);
-	Width = byteSteam.ExtractShortAndMove(EndianType::Little);
-	Height = byteSteam.ExtractShortAndMove(EndianType::Little);
+	OriginX = byteSteam.ExtractShortAndMove(Endian::Little);
+	OriginY = byteSteam.ExtractShortAndMove(Endian::Little);
+	Width = byteSteam.ExtractShortAndMove(Endian::Little);
+	Height = byteSteam.ExtractShortAndMove(Endian::Little);
 	pixelDepth = byteSteam.ExtractByteAndMove();
 	ImageDescriptor = byteSteam.ExtractByteAndMove();
 
@@ -202,8 +202,8 @@ void BF::TGA::Load(AsciiString& filePath)
 	//---[ Parse Footer ]--------------------------------------------------------
 	byteSteam.CurrentPosition = footerEntryIndex; // Move 26 Bytes before the end. Start of the TGA-Footer.
 
-	extensionOffset = byteSteam.ExtractIntegerAndMove(EndianType::Little);
-	developerAreaOffset = byteSteam.ExtractIntegerAndMove(EndianType::Little);
+	extensionOffset = byteSteam.ExtractIntegerAndMove(Endian::Little);
+	developerAreaOffset = byteSteam.ExtractIntegerAndMove(Endian::Little);
 	//---------------------------------------------------------------------------
 
 	//---------------------------------------------------------------------------
@@ -220,7 +220,7 @@ void BF::TGA::Load(AsciiString& filePath)
 	{
 		byteSteam.CurrentPosition = extensionOffset; // Jump to Extension Header
 
-		unsigned short extensionSize = byteSteam.ExtractShortAndMove(EndianType::Little);
+		unsigned short extensionSize = byteSteam.ExtractShortAndMove(Endian::Little);
 
 		if (extensionSize != 495u)
 		{
@@ -230,34 +230,34 @@ void BF::TGA::Load(AsciiString& filePath)
 		byteSteam.CopyBytesAndMove(AuthorName, 41u);
 		byteSteam.CopyBytesAndMove(AuthorComment, 324u);
 
-		DateTimeMonth = byteSteam.ExtractShortAndMove(EndianType::Little);
-		JobTimeDay = byteSteam.ExtractShortAndMove(EndianType::Little);
-		JobTimeYear = byteSteam.ExtractShortAndMove(EndianType::Little);
-		JobTimeHour = byteSteam.ExtractShortAndMove(EndianType::Little);
-		JobTimeMinute = byteSteam.ExtractShortAndMove(EndianType::Little);
-		JobTimeSecond = byteSteam.ExtractShortAndMove(EndianType::Little);
+		DateTimeMonth = byteSteam.ExtractShortAndMove(Endian::Little);
+		JobTimeDay = byteSteam.ExtractShortAndMove(Endian::Little);
+		JobTimeYear = byteSteam.ExtractShortAndMove(Endian::Little);
+		JobTimeHour = byteSteam.ExtractShortAndMove(Endian::Little);
+		JobTimeMinute = byteSteam.ExtractShortAndMove(Endian::Little);
+		JobTimeSecond = byteSteam.ExtractShortAndMove(Endian::Little);
 
 		byteSteam.CopyBytesAndMove(JobID, 41u);
 
-		JobTimeHours = byteSteam.ExtractShortAndMove(EndianType::Little);
-		JobTimeMinutes = byteSteam.ExtractShortAndMove(EndianType::Little);
-		JobTimeSeconds = byteSteam.ExtractShortAndMove(EndianType::Little);
+		JobTimeHours = byteSteam.ExtractShortAndMove(Endian::Little);
+		JobTimeMinutes = byteSteam.ExtractShortAndMove(Endian::Little);
+		JobTimeSeconds = byteSteam.ExtractShortAndMove(Endian::Little);
 
 		byteSteam.CurrentPosition += 12;
 
 		byteSteam.CopyBytesAndMove(SoftwareName, 41u);
 
-		VersionNumber = byteSteam.ExtractShortAndMove(EndianType::Little);;
+		VersionNumber = byteSteam.ExtractShortAndMove(Endian::Little);;
 		SoftwareVersion = byteSteam.ExtractByteAndMove();
 
-		BackGroundColor = byteSteam.ExtractIntegerAndMove(EndianType::Little);
+		BackGroundColor = byteSteam.ExtractIntegerAndMove(Endian::Little);
 		PixelAspectRatioCounter = byteSteam.ExtractByteAndMove();
 		PixelAspectRatioDenominator = byteSteam.ExtractByteAndMove();
 		GammaCounter = byteSteam.ExtractByteAndMove();
 		GammaDenominator = byteSteam.ExtractByteAndMove();
-		ColorCorrectionOffset = byteSteam.ExtractIntegerAndMove(EndianType::Little);
-		PostagestampOffset = byteSteam.ExtractIntegerAndMove(EndianType::Little);
-		ScanlineOffset = byteSteam.ExtractIntegerAndMove(EndianType::Little);
+		ColorCorrectionOffset = byteSteam.ExtractIntegerAndMove(Endian::Little);
+		PostagestampOffset = byteSteam.ExtractIntegerAndMove(Endian::Little);
+		ScanlineOffset = byteSteam.ExtractIntegerAndMove(Endian::Little);
 		AttributesType = byteSteam.ExtractByteAndMove();
 
 		/*

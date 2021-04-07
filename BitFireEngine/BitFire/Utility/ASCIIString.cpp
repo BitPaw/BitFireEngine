@@ -56,14 +56,12 @@ BF::AsciiString& BF::AsciiString::operator+(const char* text)
 	return *this;
 }
 
-
 BF::AsciiString& BF::AsciiString::operator+(AsciiString& string)
 {
 	AttachToBack(string);
 
 	return *this;
 }
-
 
 BF::AsciiString& BF::AsciiString::operator=(const char* string)
 {
@@ -109,7 +107,10 @@ void BF::AsciiString::ReSize(unsigned int size)
 	_size = size + 1;
 	_data = (char*)realloc(_data, _size);
 
-	memset(_data, '\0', _size * sizeof(char));
+	if (_data != nullptr)
+	{
+		memset(_data, '\0', _size * sizeof(char));
+	}	
 }
 
 void BF::AsciiString::Delete()

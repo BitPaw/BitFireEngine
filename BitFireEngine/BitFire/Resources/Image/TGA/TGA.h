@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../Utility/ASCIIString.h"
+#include "../../../Utility/AsciiString.h"
 #include "../../../Utility/List.hpp"
 #include "TGAImageDataType.h"
 #include "../Image.h"

@@ -111,13 +111,13 @@ void BF::BMP::Load(AsciiString& filePath)
     }
 
     //---[ Parsing Header ]----------------------------------------------------
-    SizeOfFile = byteStream.ExtractIntegerAndMove(EndianType::Little);
-    ReservedBlock = byteStream.ExtractIntegerAndMove(EndianType::Little);
-    DataOffset = byteStream.ExtractIntegerAndMove(EndianType::Little);
+    SizeOfFile = byteStream.ExtractIntegerAndMove(Endian::Little);
+    ReservedBlock = byteStream.ExtractIntegerAndMove(Endian::Little);
+    DataOffset = byteStream.ExtractIntegerAndMove(Endian::Little);
     //-------------------------------------------------------------------------
 
     //---[ DIP ]---------------------------------------------------------------
-    unsigned char result = byteStream.ExtractIntegerAndMove(EndianType::Little);
+    unsigned char result = byteStream.ExtractIntegerAndMove(Endian::Little);
 
     // Get Header Version
     {
@@ -176,16 +176,16 @@ void BF::BMP::Load(AsciiString& filePath)
             BMPInfoHeader* bitMapInfoHeader = new BMPInfoHeader();
 
             bitMapInfoHeader->HeaderSize = result;
-            bitMapInfoHeader->Width = byteStream.ExtractIntegerAndMove(EndianType::Little);
-            bitMapInfoHeader->Height = byteStream.ExtractIntegerAndMove(EndianType::Little);
-            bitMapInfoHeader->NumberOfColorPlanes = byteStream.ExtractShortAndMove(EndianType::Little);
-            bitMapInfoHeader->NumberOfBitsPerPixel = byteStream.ExtractShortAndMove(EndianType::Little);
-            bitMapInfoHeader->CompressionMethod = byteStream.ExtractIntegerAndMove(EndianType::Little);
-            bitMapInfoHeader->ImageSize = byteStream.ExtractIntegerAndMove(EndianType::Little);
-            bitMapInfoHeader->HorizontalResolution = byteStream.ExtractIntegerAndMove(EndianType::Little);
-            bitMapInfoHeader->VerticalResolution = byteStream.ExtractIntegerAndMove(EndianType::Little);
-            bitMapInfoHeader->NumberOfColorsInTheColorPalette = byteStream.ExtractIntegerAndMove(EndianType::Little);
-            bitMapInfoHeader->NumberOfImportantColorsUsed = byteStream.ExtractIntegerAndMove(EndianType::Little);
+            bitMapInfoHeader->Width = byteStream.ExtractIntegerAndMove(Endian::Little);
+            bitMapInfoHeader->Height = byteStream.ExtractIntegerAndMove(Endian::Little);
+            bitMapInfoHeader->NumberOfColorPlanes = byteStream.ExtractShortAndMove(Endian::Little);
+            bitMapInfoHeader->NumberOfBitsPerPixel = byteStream.ExtractShortAndMove(Endian::Little);
+            bitMapInfoHeader->CompressionMethod = byteStream.ExtractIntegerAndMove(Endian::Little);
+            bitMapInfoHeader->ImageSize = byteStream.ExtractIntegerAndMove(Endian::Little);
+            bitMapInfoHeader->HorizontalResolution = byteStream.ExtractIntegerAndMove(Endian::Little);
+            bitMapInfoHeader->VerticalResolution = byteStream.ExtractIntegerAndMove(Endian::Little);
+            bitMapInfoHeader->NumberOfColorsInTheColorPalette = byteStream.ExtractIntegerAndMove(Endian::Little);
+            bitMapInfoHeader->NumberOfImportantColorsUsed = byteStream.ExtractIntegerAndMove(Endian::Little);
 
             InformationHeader = bitMapInfoHeader;
 

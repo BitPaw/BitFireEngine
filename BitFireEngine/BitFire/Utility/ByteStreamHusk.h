@@ -11,15 +11,13 @@ namespace BF
 		unsigned char* StartAdress;
 		unsigned int DataLength;
 
-		unsigned int CurrentPosition;
-
-		
+		unsigned int CurrentPosition;		
 
 		ByteStreamHusk(unsigned char* startAdress, unsigned int dataLengh);
 
 		unsigned char ExtractByteAndMove();
-		unsigned short ExtractShortAndMove(EndianType endianType);
-		unsigned int ExtractIntegerAndMove(EndianType endianType);
+		unsigned short ExtractShortAndMove(Endian Endian);
+		unsigned int ExtractIntegerAndMove(Endian Endian);
 
 		DoubleWord ExtractDoubleWord();
 		Word ExtractWord();

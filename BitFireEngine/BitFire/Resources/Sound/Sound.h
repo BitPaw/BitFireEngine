@@ -1,11 +1,12 @@
 #pragma once
 
-#include "ISound.h"
+#include "../../Utility/AsciiString.h"
 
 namespace BF
 {
-	class Sound : public ISound
+	class Sound 
 	{
-
+		public :
+		void Load(AsciiString& filePath);
 	};
 }

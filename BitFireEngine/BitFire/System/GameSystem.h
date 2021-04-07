@@ -13,11 +13,8 @@
 #include "../Utility/Dictionary.hpp"
 
 #include "../Resources/Image/Image.h"
-#include "../Resources/Image/ImageLoader.h"
 #include "../Resources/Model/Model.h"
-#include "../Resources/Model/ModelLoader.h"
 #include "../Resources/Sound/Sound.h"
-#include "../Resources/Sound/SoundLoader.h"
 #include "../Resources/Shader/Shader.h"
 #include "../Resources/Shader/ShaderLoader.h"
 #include "../Resources/Shader/ShaderProgram.h"
