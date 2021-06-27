@@ -15,15 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BitFireEngineTest.cpp">
+    <ClCompile Include="Source\BitFireEngineTest.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
+    <ClCompile Include="Source\pch.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h">
+    <ClInclude Include="Source\pch.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
