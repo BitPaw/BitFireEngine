@@ -10,10 +10,10 @@ namespace BF
 	*/
 	struct Resource
 	{
-	protected:
+		protected:
 		Resource(); // Prevent that this can be an instance on its own (abstract class)
 
-	public:
+		public:
 
 		/*
 		Is the resource currently loaded to the GPU?
@@ -25,9 +25,9 @@ namespace BF
 		*/
 		unsigned int ID;
 
-		/* 
+		/*
 		Value that represents how many dependencies this resource has.
-		If the Value is '0' this resource shall be unloaded.		
+		If the Value is '0' this resource shall be unloaded.
 		*/
 		unsigned int SharedCounter;
 
@@ -35,6 +35,11 @@ namespace BF
 		Path from where the resource was loaded from.
 		Can be used to prevent double loading.
 		*/
-		AsciiString FilePath;	
+		char FilePath[255];
+
+		void FilePathSet(const char* filePath)
+		{
+			strcpy_s(FilePath, 255, filePath);
+		}
 	};
 }

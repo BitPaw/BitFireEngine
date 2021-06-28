@@ -191,7 +191,7 @@ void* BF::ResourceManager::Load(AsciiString& filePath)
                     }
 
                     font->ID = _fontList.Size();
-                    font->FilePath.Copy(filePath);
+                    font->FilePathSet(&filePath[0]);
 
                     _fontList.Add(font);
 
@@ -389,6 +389,12 @@ void* BF::ResourceManager::Load(AsciiString& filePath)
                             // Load Model----------------
                             Model* loadedModel = reinterpret_cast<Model*>(Load(path));
 
+                            if (loadedModel == nullptr)
+                            {
+                                printf("[Warning] Loading failed!\n");
+                                break;
+                            }
+
                             level->ModelList[modelCounter++] = &loadedModel;
                             //-------------------
 
@@ -545,20 +551,18 @@ void BF::ResourceManager::Add(Image& image)
     PushToGPU(image);
 }
 
-unsigned int BF::ResourceManager::AddShaderProgram(const char* vertexShader, const char* fragmentShader)
+unsigned int BF::ResourceManager::AddShaderProgram(AsciiString& vertexShader, AsciiString& fragmentShader)
 {
-    AsciiString vertexShaderString(vertexShader);
-    AsciiString fragmentShaderString(fragmentShader);
-
-    return AddShaderProgram(vertexShaderString, fragmentShaderString);
+    return AddShaderProgram(&vertexShader[0], &fragmentShader[0]);
 }
 
-unsigned int BF::ResourceManager::AddShaderProgram(AsciiString& vertexShader, AsciiString& fragmentShader)
+unsigned int BF::ResourceManager::AddShaderProgram(const char* vertexShader, const char* fragmentShader)
 {
     ShaderProgram* shaderProgram = new ShaderProgram();
     bool firstShaderProgram = _shaderProgramList.Size() == 0;
 
-    shaderProgram->AddShader(vertexShader, fragmentShader);
+    shaderProgram->AddShader((char*)vertexShader, (char*)fragmentShader);
+    shaderProgram->Load();
 
     _shaderProgramList.Add(shaderProgram);
 
@@ -576,6 +580,8 @@ unsigned int BF::ResourceManager::AddShaderProgram(AsciiString& vertexShader, As
 void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
 {
     LinkedListNode<Model*>* currentModel = _modelList.GetFirst(); 
+
+    OpenGLAPI::RenderClear();
 
     while (currentModel != nullptr)
     {
@@ -741,7 +747,7 @@ void BF::ResourceManager::PrintContent(bool detailed)
 
             printf("| ID:%u ShaderProgram\n", shaderProgram->ID);
 
-            for (size_t i = 0; i < shaderProgram->ShaderList.Size(); i++)
+            for (size_t i = 0; i < 2; i++)
             {
                 Shader& shader = shaderProgram->ShaderList[i];
 

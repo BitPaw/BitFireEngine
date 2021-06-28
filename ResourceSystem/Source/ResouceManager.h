@@ -3,7 +3,6 @@
 #include "ResourceType.h"
 
 #include "Shader/Shader.h"
-#include "Shader/ShaderLoader.h"
 #include "Image/Image.h"
 #include "Image/ImageWrap.h"
 #include "Model/Model.h"

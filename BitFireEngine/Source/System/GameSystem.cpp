@@ -36,25 +36,29 @@ void BF::GameSystem::Start()
 
     stopwatch.Start();
 
-    Resource.AddShaderProgram("Shader/WorldSpace.vert", "Shader/WorldSpace.frag");
-    unsigned int hudShaderID = Resource.AddShaderProgram("Shader/HUD.vert", "Shader/HUD.frag");
-    void* sphere = Resource.Load("N:/Schule/Studium/Semester/Semester 4/[CGA] Computergrafik und Animation/Praktikum/S21/Projekt/CGA/Praktikum/A_Geometry/assets/models/sphere.obj");
+    const char* vertexShaderWorld = "A:/_WorkSpace/Git/BitFireEngine/BitFireEngine/Resource/Shader/WorldSpace.vert";
+    const char* fragmentShaderWorld = "A:/_WorkSpace/Git/BitFireEngine/BitFireEngine/Resource/Shader/WorldSpace.frag";
+    const char* vertexShaderHUD = "A:/_WorkSpace/Git/BitFireEngine/BitFireEngine/Resource/Shader/HUD.vert";
+    const char* fragmentShaderHUD = "A:/_WorkSpace/Git/BitFireEngine/BitFireEngine/Resource/Shader/HUD.frag";
+
+    Resource.AddShaderProgram(vertexShaderWorld, fragmentShaderWorld);
+    unsigned int hudShaderID = Resource.AddShaderProgram(vertexShaderHUD, fragmentShaderHUD);
    
-    Model* model = (Model*)sphere;
-    model->UseTexturePointAsColor();
-    model->Move(6.5,1.5,0);
-    model->Scale(4, 4, 4);
-    Resource.PushToGPU(*model);
+    Model* sphere = (Model*)Resource.Load("N:/Schule/Studium/Semester/Semester 4/[CGA] Computergrafik und Animation/Praktikum/S21/Projekt/CGA/Praktikum/A_Geometry/assets/models/sphere.obj");
+    sphere->UseTexturePointAsColor();
+    sphere->Move(6.5, 1.5, 0);
+    sphere->Scale(4, 4, 4);
+    Resource.PushToGPU(*sphere);
     
-    Resource.Load("A:/_WorkSpace/Git/BitFireEngine/BitFireEngine/Texture/White.bmp");
+    Resource.Load("A:/_WorkSpace/Git/BitFireEngine/BitFireEngine/Resource/Texture/White.bmp");
    // Resource.Load("A:/_WorkSpace/BitFireEngine/Texture/Sign.png");
-    Resource.Load("Level/MainMenu.lev");
+    Resource.Load("A:/_WorkSpace/Git/BitFireEngine/BitFireEngine/Resource/Level/MainMenu.lev");
 
     printf(">>> Loading took %lfs\n",stopwatch.Stop());
 
     text = new UIText("SampleText", *Resource.DefaultFont, -1, -0.8);
     text->RenderInformation.ShaderProgramID = hudShaderID;
-    text->FilePath.Copy("Local Text");
+    text->FilePathSet("Local Text");
     Resource.Add(*text);
 
 
@@ -78,9 +82,9 @@ void BF::GameSystem::Update()
 
         if(_gameTickData.FramesRendered == 0)
         {
-            //sprintf(&text->TextContent[0], "FPS: %4i", (Math::Ceiling(1/ _gameTickData.GetSmoothDeltaTime())));
-            //text->SetText(text->TextContent);
-            //Resource.Add(*text);
+            sprintf(text->TextContent, "FPS: %4i", (Math::Ceiling(1/ _gameTickData.GetSmoothDeltaTime())));
+            text->SetText(text->TextContent);
+            Resource.Add(*text);
         }    
    
         //---[User-Input]------------------------------------------------------
@@ -90,18 +94,8 @@ void BF::GameSystem::Update()
         OnGameTick.Trigger(_gameTickData);    
 
         //---[Render World]----------------------------------------------------
-        RenderScene();
+        Resource.RenderModels(_gameTickData);
     }
-}
-
-void BF::GameSystem::RenderScene()
-{
-    int lastProgrammID = -1;
-    int lastTextureID = -1;
-
-    OpenGLAPI::RenderClear();
-
-    Resource.RenderModels(_gameTickData);
 }
 
 void BF::GameSystem::UpdateInput(InputContainer* input)

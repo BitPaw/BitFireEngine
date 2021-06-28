@@ -1,10 +1,35 @@
 #include "ShaderProgram.h"
-#include "ShaderLoader.h"
 
-void BF::ShaderProgram::AddShader(AsciiString& vertexShader, AsciiString& fragmentShader)
+void BF::ShaderProgram::AddShader(char* vertexShaderPath, char* fragmentShaderFilePath)
 {
-    ShaderList.ReSize(2);
+    ShaderList[0] = Shader(ShaderType::Vertex, vertexShaderPath);
+    ShaderList[1] = Shader(ShaderType::Fragment, fragmentShaderFilePath);
+}
 
-    ShaderLoader::LoadFromFile(vertexShader, ShaderList[0]);
-    ShaderLoader::LoadFromFile(fragmentShader, ShaderList[1]);
+void BF::ShaderProgram::Load()
+{
+    unsigned char size = static_cast<unsigned char>(2);
+
+    for (unsigned char i = 0; i < size; i++)
+    {
+        Shader& shader = ShaderList[i];
+
+        shader.Load();
+    }
+}
+
+bool BF::ShaderProgram::IsLoaded()
+{
+    for (size_t i = 0; i < 2; i++)
+    {
+        Shader& shader = ShaderList[i];
+        bool isLoaded = shader.Content != 0;
+
+        if (!isLoaded)
+        {
+            return false;
+        }
+    }
+
+    return true;
 }

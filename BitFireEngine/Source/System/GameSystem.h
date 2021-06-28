@@ -34,8 +34,6 @@ namespace BF
 		Window _mainWindow;
 		//----------------------------------------------
 
-		void RenderScene();
-
 	public:
 		ConfigContainer Config;
 		GameTickEvent OnGameTick;

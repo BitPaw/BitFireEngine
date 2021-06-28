@@ -197,7 +197,6 @@
     <ClCompile Include="Source\Serialization\XML\XMLLoader.cpp" />
     <ClCompile Include="Source\Serialization\YAML\YAMLLoader.cpp" />
     <ClCompile Include="Source\Shader\Shader.cpp" />
-    <ClCompile Include="Source\Shader\ShaderLoader.cpp" />
     <ClCompile Include="Source\Shader\ShaderProgram.cpp" />
     <ClCompile Include="Source\Sound\MID\MID.cpp" />
     <ClCompile Include="Source\Sound\MP3\MP3.cpp" />
@@ -305,7 +304,6 @@
     <ClInclude Include="Source\Serialization\XML\XMLLoader.h" />
     <ClInclude Include="Source\Serialization\YAML\YAMLLoader.h" />
     <ClInclude Include="Source\Shader\Shader.h" />
-    <ClInclude Include="Source\Shader\ShaderLoader.h" />
     <ClInclude Include="Source\Shader\ShaderProgram.h" />
     <ClInclude Include="Source\Shader\ShaderType.h" />
     <ClInclude Include="Source\Sound\MID\MID.h" />

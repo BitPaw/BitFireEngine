@@ -1,9 +1,7 @@
 #pragma once
 
 #include "ShaderType.h"
-
 #include "../Resource.h"
-#include "../Container/AsciiString.h"
 
 namespace BF
 {
@@ -11,9 +9,11 @@ namespace BF
 	{
 		public:
 		ShaderType Type;
-		AsciiString Content;
+		char* Content;
 
 		Shader();
-		Shader(ShaderType type, AsciiString& content);
+		Shader(ShaderType type, char* content);
+
+		void Load();
 	};
 }

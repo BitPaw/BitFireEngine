@@ -13,6 +13,8 @@ namespace BF
 		FileNotFound,
 		EmptyFileName,
 		LoadingFailed,
-		SavingFailed
+		SavingFailed,
+
+		OutOfMemory
 	};
 }

@@ -483,7 +483,7 @@ BF::ErrorCode BF::Model::Load(AsciiString& filePath)
     File file(filePath);
     ModelType modelType = CheckFileExtension(file.Extension);
 
-    FilePath.Copy(filePath);
+    FilePathSet(&filePath[0]);
 
     switch (modelType)
     {

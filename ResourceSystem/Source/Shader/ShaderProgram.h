@@ -12,8 +12,11 @@ namespace BF
 		protected:
 		public:
 		unsigned int ID;
-		List<Shader> ShaderList;
+		Shader ShaderList[2];
 
-		void AddShader(AsciiString& vertexShader, AsciiString& fragmentShader);
+		void AddShader(char* vertexShaderPath, char* fragmentShaderFilePath);
+		void Load();
+
+		bool IsLoaded();
 	};
 }

@@ -164,10 +164,16 @@ void BF::OpenGLAPI::VertexArrayUpdate(int vertexArrayID, int size, void* data)
 void BF::OpenGLAPI::ShaderCompile(ShaderProgram& shaderProgram)
 {
     unsigned int type;
+    bool isLoaded = shaderProgram.IsLoaded();
+
+    if (!isLoaded)
+    {
+        return;
+    }
 
     shaderProgram.ID = glCreateProgram();
 
-    for (unsigned int i = 0; i < shaderProgram.ShaderList.Size(); i++)
+    for (unsigned int i = 0; i < 2; i++)
     {
         Shader& shader = shaderProgram.ShaderList[i];
 
@@ -215,7 +221,7 @@ void BF::OpenGLAPI::ShaderCompile(ShaderProgram& shaderProgram)
     glValidateProgram(shaderProgram.ID);
 
     // We used the Shaders above to compile, these elements are not used anymore.
-    for (unsigned int i = 0; i < shaderProgram.ShaderList.Size(); i++)
+    for (unsigned int i = 0; i < 2; i++)
     {
         Shader* shader = &shaderProgram.ShaderList[i];
 
@@ -279,6 +285,8 @@ void BF::OpenGLAPI::VertexAttributeArrayDefine(int sizeOfElement, int listSize, 
 
         wholeBlockSize += vertexSize;
     }
+
+    wholeBlockSize *= sizeOfElement;
 
     for (unsigned int vertexAtributeIndex = 0; vertexAtributeIndex < listSize; vertexAtributeIndex++)
     {

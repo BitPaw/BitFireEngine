@@ -198,7 +198,7 @@ BF::ErrorCode BF::Image::Load(AsciiString& filePath)
     AsciiString fileExtension = file.Extension;
     ImageFileExtension imageFormat = CheckFileExtension(fileExtension);
 
-    FilePath.Copy(filePath);
+    FilePathSet(&filePath[0]);
 
     switch (imageFormat)
     {

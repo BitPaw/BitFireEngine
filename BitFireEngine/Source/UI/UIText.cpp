@@ -62,15 +62,17 @@ void BF::UIText::SetText(AsciiString& text)
 		return;
 	}
 
+	AsciiString currentText(TextContent);
+
 	FNT& bitmapFont = *((FNT*)(_font->BitMapFont));
 
-	bool hasTextChanged = !TextContent.Compare(text) || true;
-	bool isDifferentSize = (TextContent.Size() != text.Size()) || true;
+	bool hasTextChanged = !currentText.Compare(text) || true;
+	bool isDifferentSize = (currentText.Size() != text.Size()) || true;
 
-	TextContent.Copy(text);
+	strcpy(TextContent, &text[0]);
 
 	Mesh* mesh = &MeshList[0];
-	unsigned int textSize = TextContent.Size();
+	unsigned int textSize = currentText.Size();
 	unsigned int amountOfVertices = 4 * textSize;
 	mesh->MeshMaterial->Texture = _font->Texture;
 
@@ -185,32 +187,32 @@ void BF::UIText::UpdateText()
 
 void BF::UIText::PrintObjectData()
 {
-	Mesh* mesh = &MeshList[0];
+	Mesh& mesh = MeshList[0];
 
 	unsigned int vertexIndex = 0;
 	unsigned int textureIndex = 0;
 
 	printf(" |   x   |   y   | width   | height  |\n");
 
-	for (unsigned int i = 0; i < TextContent.Size(); i++)
+	for (unsigned int i = 0; TextContent[i] != '\0'; i++)
 	{
 		Rectangle vertexRectangle
 		(
-			mesh->VertexList[vertexIndex++].CurrentPosition,
-			mesh->VertexList[vertexIndex++].CurrentPosition,
-			mesh->VertexList[vertexIndex++].CurrentPosition,
-			mesh->VertexList[vertexIndex++].CurrentPosition
+			mesh.VertexList[vertexIndex++].CurrentPosition,
+			mesh.VertexList[vertexIndex++].CurrentPosition,
+			mesh.VertexList[vertexIndex++].CurrentPosition,
+			mesh.VertexList[vertexIndex++].CurrentPosition
 		);
 
 		Rectangle textureRectangle
 		(
-			mesh->TexturePointList[textureIndex++],
-			mesh->TexturePointList[textureIndex++],
-			mesh->TexturePointList[textureIndex++],
-			mesh->TexturePointList[textureIndex++]
+			mesh.TexturePointList[textureIndex++],
+			mesh.TexturePointList[textureIndex++],
+			mesh.TexturePointList[textureIndex++],
+			mesh.TexturePointList[textureIndex++]
 		);
 
-		printf("A| %5.1f | %5.1f | %1.5f | %1.5f | > Character <%c> %u/%u\n", vertexRectangle.PointA.X, vertexRectangle.PointA.Y, textureRectangle.PointA.X, textureRectangle.PointA.Y, TextContent[i], i, TextContent.Size());
+		printf("A| %5.1f | %5.1f | %1.5f | %1.5f | > Character <%c> %u/%u\n", vertexRectangle.PointA.X, vertexRectangle.PointA.Y, textureRectangle.PointA.X, textureRectangle.PointA.Y, TextContent[i], i, -1);
 		printf("B| %5.1f | %5.1f | %1.5f | %1.5f |\n", vertexRectangle.PointB.X, vertexRectangle.PointB.Y, textureRectangle.PointB.X, textureRectangle.PointB.Y);
 		printf("C| %5.1f | %5.1f | %1.5f | %1.5f |\n", vertexRectangle.PointC.X, vertexRectangle.PointC.Y, textureRectangle.PointC.X, textureRectangle.PointC.Y);
 		printf("D| %5.1f | %5.1f | %1.5f | %1.5f |\n", vertexRectangle.PointD.X, vertexRectangle.PointD.Y, textureRectangle.PointD.X, textureRectangle.PointD.Y);

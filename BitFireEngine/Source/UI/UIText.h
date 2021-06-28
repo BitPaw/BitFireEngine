@@ -18,7 +18,7 @@ namespace BF
 
 		void Setup(AsciiString& text, Font& font, float x, float y);
 
-		AsciiString TextContent;		
+		char TextContent[255];		
 		Point<float> AncerPosition;
 
 		UIText(const char* text, Font& font, float x, float y);

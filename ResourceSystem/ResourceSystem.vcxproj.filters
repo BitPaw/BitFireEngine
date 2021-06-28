@@ -171,9 +171,6 @@
     <ClCompile Include="Source\Shader\Shader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Shader\ShaderLoader.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Shader\ShaderProgram.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -483,9 +480,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Shader\Shader.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Shader\ShaderLoader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Shader\ShaderProgram.h">

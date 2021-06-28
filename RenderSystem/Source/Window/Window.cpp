@@ -328,8 +328,8 @@ bool BF::Window::Create()
     VideoConfig* videoConfig = new VideoConfig();//&BF::System.Config.Video;
 
     videoConfig->FullScreen = false;
-    videoConfig->ScreenResolution[0] = 1600;
-    videoConfig->ScreenResolution[1] = 900;
+    videoConfig->ScreenResolution[0] = 1000;
+    videoConfig->ScreenResolution[1] = 1000;
     videoConfig->WindowRefreshRateMode == RefreshRateMode::Unlimited;
 
     /* Initialize the library */
