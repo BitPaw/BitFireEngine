@@ -88,6 +88,22 @@ BF::ErrorCode BF::File::Write()
 	return ErrorCode::NoError;
 }
 
+BF::ErrorCode BF::File::Write(char* filePath, char* content)
+{
+	std::ofstream fout;
+	int length = 0;
+
+	for ( ; content[length] != '\0'; length++){}
+
+	FILE* file = fopen(filePath, "w");
+
+	fwrite(content, sizeof(char), length, file);
+
+	fclose(file);
+
+	return ErrorCode::NoError;
+}
+
 BF::ErrorCode BF::File::ReadAsLines(List<AsciiString>& lineList)
 {
 	if (Data.IsEmpty())

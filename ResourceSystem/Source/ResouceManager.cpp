@@ -15,6 +15,13 @@ void BF::ResourceManager::UpdateVBOData(Model& model)
 
    // printf("Update: <%p> <%.2u> %s\n", renderInformation, renderInformation->RenderID, &(renderInformation->RenderModel->ModelName[0]));
 
+    if (model.RenderInformation.IndexData.Size() == 0)
+    {
+
+        printf("[Could not UpdateVBOData(), index data empty or not set.]");
+        return;
+    }
+
     for (unsigned int i = 0; i < mesh.IndexList.Size(); i++)
     {
         //renderInformation->IndexData[indiceIndex++] = i;// +renderInformation->IndexOffset;
@@ -96,7 +103,10 @@ void BF::ResourceManager::PushToGPU(Model& model)
     {
         UpdateVBOData(model);
 
-        OpenGLAPI::VertexArrayUpdate(renderInfo.VertexBufferID, renderInfo.VertexData.SizeInBytes(), &renderInfo.VertexData[0]);     
+        if(renderInfo.VertexData.Size() != 0)
+        {
+            OpenGLAPI::VertexArrayUpdate(renderInfo.VertexBufferID, renderInfo.VertexData.SizeInBytes(), &renderInfo.VertexData[0]);
+        }      
     }
     else
     {       

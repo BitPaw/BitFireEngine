@@ -26,6 +26,7 @@ namespace BF
 		ErrorCode Read();
 		static ErrorCode Read(char* filePath, char** buffer);
 		ErrorCode Write();
+		static ErrorCode Write(char* filePath, char* content);
 
 		ErrorCode ReadAsLines(List<AsciiString>& lineList);
 

@@ -8,6 +8,8 @@ void BF::UIText::Setup(AsciiString& text, Font& font, float x, float y)
 	Height = 0;
 	RenderInformation.RenderType = RenderMode::Square;
 
+	strcpy(FilePath, "<Local Text>");
+
 	MeshList.ReSize(1); // textSize
 
 	Mesh* mesh = &MeshList[0];

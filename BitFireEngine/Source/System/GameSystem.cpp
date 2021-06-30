@@ -6,6 +6,7 @@
 #include "../../../RenderSystem/Source/Device/InputContainer.h"
 #include "../Time/StopWatch.h"
 #include "../UI/UIText.h"
+#include "../../../ResourceSystem/Source/File/File.h"
 
 BF::GameSystem* BF::GameSystem::_instance = nullptr;
 
@@ -36,10 +37,10 @@ void BF::GameSystem::Start()
 
     stopwatch.Start();
 
-    const char* vertexShaderWorld = "A:/_WorkSpace/Git/BitFireEngine/BitFireEngine/Resource/Shader/WorldSpace.vert";
-    const char* fragmentShaderWorld = "A:/_WorkSpace/Git/BitFireEngine/BitFireEngine/Resource/Shader/WorldSpace.frag";
-    const char* vertexShaderHUD = "A:/_WorkSpace/Git/BitFireEngine/BitFireEngine/Resource/Shader/HUD.vert";
-    const char* fragmentShaderHUD = "A:/_WorkSpace/Git/BitFireEngine/BitFireEngine/Resource/Shader/HUD.frag";
+    const char* vertexShaderWorld = "Shader/WorldSpace.vert";
+    const char* fragmentShaderWorld = "Shader/WorldSpace.frag";
+    const char* vertexShaderHUD = "Shader/HUD.vert";
+    const char* fragmentShaderHUD = "Shader/HUD.frag";
 
     Resource.AddShaderProgram(vertexShaderWorld, fragmentShaderWorld);
     unsigned int hudShaderID = Resource.AddShaderProgram(vertexShaderHUD, fragmentShaderHUD);
@@ -50,22 +51,20 @@ void BF::GameSystem::Start()
     sphere->Scale(4, 4, 4);
     Resource.PushToGPU(*sphere);
     
-    Resource.Load("A:/_WorkSpace/Git/BitFireEngine/BitFireEngine/Resource/Texture/White.bmp");
+    Resource.Load("Texture/White.bmp");
    // Resource.Load("A:/_WorkSpace/BitFireEngine/Texture/Sign.png");
-    Resource.Load("A:/_WorkSpace/Git/BitFireEngine/BitFireEngine/Resource/Level/MainMenu.lev");
-
-    printf(">>> Loading took %lfs\n",stopwatch.Stop());
+    Resource.Load("Level/MainMenu.lev");
+      
 
     text = new UIText("SampleText", *Resource.DefaultFont, -1, -0.8);
     text->RenderInformation.ShaderProgramID = hudShaderID;
-    text->FilePathSet("Local Text");
     Resource.Add(*text);
 
-
     _state = SystemState::Running;
+
     Resource.PrintContent(true);
 
-
+    printf("[Info] Loading took %.2fs\n", stopwatch.Stop());
 }
 
 void BF::GameSystem::Update()
@@ -82,9 +81,9 @@ void BF::GameSystem::Update()
 
         if(_gameTickData.FramesRendered == 0)
         {
-            sprintf(text->TextContent, "FPS: %4i", (Math::Ceiling(1/ _gameTickData.GetSmoothDeltaTime())));
-            text->SetText(text->TextContent);
-            Resource.Add(*text);
+            //sprintf(text->TextContent, "FPS: %4i", (Math::Ceiling(1/ _gameTickData.GetSmoothDeltaTime())));
+            //text->SetText(text->TextContent);
+           // Resource.Add(*text);
         }    
    
         //---[User-Input]------------------------------------------------------
