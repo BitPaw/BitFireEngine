@@ -36,9 +36,6 @@ namespace BF
         unsigned int _defaultShaderID;
         unsigned int _defaultTextureID;
 
-        unsigned int _maximalAmountOfTexturesInOneCall;
-        unsigned int _maximalAmountOfTexturesLoaded;
-
         int ImageWrapToOpenGLFormat(ImageWrap imageWrap);
         int ImageLayoutToOpenGLFormat(ImageLayout layout);
 
@@ -50,11 +47,6 @@ namespace BF
         Font* DefaultFont;
 
         ResourceManager();
-
-        //---[Getter/Setter]--
-        unsigned int GetMaximalAmountOfTexturesInOneCall() { return _maximalAmountOfTexturesInOneCall; }
-        unsigned int GetMaximalAmountOfTexturesLoaded() { return _maximalAmountOfTexturesLoaded; }
-        //---------------
 
 
         void PushToGPU(Model& model);

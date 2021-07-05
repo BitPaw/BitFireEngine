@@ -88,9 +88,6 @@ BF::ResourceManager::ResourceManager()
     _defaultTextureID = 0;
 
     DefaultFont = nullptr;
-
-    _maximalAmountOfTexturesInOneCall = OpenGLAPI::TextureMaxSlots();
-    _maximalAmountOfTexturesLoaded = OpenGLAPI::TextureMaxLoaded();
 }
 
 void BF::ResourceManager::PushToGPU(Model& model)

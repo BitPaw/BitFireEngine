@@ -36,6 +36,7 @@ namespace BF
 		bool operator==(const char* string);
 
 		void SetAsReference(AsciiString& string);
+		void SetAsReference(char* stringAdress);
 		void SetAsReference(char* stringAdress, unsigned int size);
 		void ReSize(unsigned int size);
 		void Delete();
@@ -53,8 +54,12 @@ namespace BF
 		unsigned int CountUnique(char character);
 
 		void Replace(char from, char to);
+		void ReplaceWhiteSpaceInQuotes(char key, bool revert);
 		void Remove(char character);
 		void RemoveWhiteSpace();
+
+		void PonterMoveBy(int offset);
+		void PointerMoveToFirstChar(char character);
 
 		bool IsCharacterInBetween(char target, char curroundedChar);
 		bool IsCharacterInBetween(char target, char curroundedChar, unsigned int startIndex);

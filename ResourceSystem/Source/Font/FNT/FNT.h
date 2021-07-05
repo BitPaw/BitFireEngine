@@ -12,26 +12,26 @@ namespace BF
 	{
 		public:
 		//---[ FontInfo ]------------------------------------------------------
-		AsciiString Name; // Name of this font. (synonym: face)
+		char Name[30]; // Name of this font. (synonym: face)
 		unsigned int Size;// Size of the Letters int Pixel as height.
 		bool Bold;// Is the text fat?
 		bool Italic;// Is the text cursive?
-		AsciiString CharSet;// The name of the OEM charset used (when not unicode). Like 'ANSI'.
+		char CharSet[10];// The name of the OEM charset used (when not unicode). Like 'ANSI'.
 		bool Unicode;// Is the charset in the unicode format?
 		unsigned int StretchH;
-		unsigned int Smooth;// Set to 1 if smoothing was turned on.
-		unsigned int Supersampling; // Supersampling level used. 1 means no supersampling was used. (AA)
+		bool Smooth;// Set to 1 if smoothing was turned on.
+		bool Supersampling; // Supersampling level used. 1 means no supersampling was used. (AA)
 		unsigned int CharacterPadding[4]; // Padding for each character.
 		unsigned int SpacerOffset[2];
 		unsigned int OutlineThickness;// How thick is the line arount the Letter?
 		//---------------------------------------------------------------------
 
 		//---[FontCommonData]--------------------------------------------------	
-		unsigned char LineHeight;	// This is the distance in pixels between each line of text.		
-		unsigned char Base;// The number of pixels from the absolute top of the line to the base of the characters.		
-		unsigned char ScaleWidth; // The width of the texture, normally used to scale the x pos of the character image.	
-		unsigned char ScaleHeight;	// The height of the texture, normally used to scale the y pos of the character image.	
-		unsigned char AmountOfPages;	// The number of texture pages included in the font.		
+		unsigned int LineHeight;	// This is the distance in pixels between each line of text.		
+		unsigned int Base;// The number of pixels from the absolute top of the line to the base of the characters.		
+		unsigned int ScaleWidth; // The width of the texture, normally used to scale the x pos of the character image.	
+		unsigned int ScaleHeight;	// The height of the texture, normally used to scale the y pos of the character image.	
+		unsigned int AmountOfPages;	// The number of texture pages included in the font.		
 		bool Packed; // Set to 1 if the monochrome characters have been packed into each of the texture channels.In this case alphaChnl describes what is stored in each channel.
 
 		FNTChanalMode AlphaChanal;
@@ -40,12 +40,14 @@ namespace BF
 		FNTChanalMode BlueChanal;
 		//---------------------------------------------------------------------
 
+
 		List<FNTPage> FontPages;
 
 		FNTCharacter* GetCharacterPosition(unsigned char character);
 
 		FNT();
 
+		void Load(char* filePath);
 		void Load(AsciiString& filePath);
 		void Save(AsciiString& filePath);
 		void Convert(Font& font);

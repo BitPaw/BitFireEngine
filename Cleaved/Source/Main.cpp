@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------------
 #include "../../BitFireEngine/Source/System/GameSystem.h"
-
+#include <math.h>
 //-----------------------------------------------------------------------------
 int main(int amountOFParameters, char** parameter)
 {   
@@ -16,7 +16,7 @@ int main(int amountOFParameters, char** parameter)
     }
 
     system.Stop();
-    
+
     return 0;    
 }
 //-----------------------------------------------------------------------------

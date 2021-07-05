@@ -25,6 +25,7 @@ namespace BF
 
 		ErrorCode Read();
 		static ErrorCode Read(char* filePath, char** buffer);
+		static ErrorCode Read(char* filePath, char** buffer, unsigned int maxSize);
 		ErrorCode Write();
 		static ErrorCode Write(char* filePath, char* content);
 

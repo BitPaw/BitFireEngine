@@ -22,10 +22,19 @@ BF::ErrorCode BF::Font::Load(AsciiString& filePath)
     {
         BitMapFont = new FNT();
 
-        FNT* fnt = (FNT*)BitMapFont;        
+        break;
 
-        fnt->Load(filePath);
+        AsciiString x("copy.fnt");
+
+        FNT* fnt = (FNT*)BitMapFont;   
+
+        fnt->Load(&filePath[0]);
         fnt->Convert(*this);
+
+        filePath.AttachToBack(x);
+
+        fnt->Save(filePath);
+
         break;
     }
 

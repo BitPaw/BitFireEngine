@@ -53,19 +53,32 @@ BF::ErrorCode BF::File::Read()
 
 BF::ErrorCode BF::File::Read(char* filePath, char** buffer)
 {
+	return Read(filePath, buffer, -1);
+}
+
+BF::ErrorCode BF::File::Read(char* filePath, char** buffer, unsigned int maxSize)
+{
 	std::ifstream inputFileStream(filePath, std::ios::binary | std::ios::ate);
 	unsigned int length = inputFileStream.tellg();
-	 
+
 	if (length == -1)
 	{
 		return ErrorCode::FileNotFound;
 	}
 
-	(*buffer) = new char[length + 1];
-
-	if ((*buffer) == 0)
+	if (length > maxSize && maxSize != -1)
 	{
 		return ErrorCode::OutOfMemory;
+	}
+
+	if ((*buffer) == nullptr)
+	{
+		(*buffer) = new char[length + 1];
+
+		if ((*buffer) == 0)
+		{
+			return ErrorCode::OutOfMemory;
+		}
 	}
 
 	inputFileStream.seekg(0, inputFileStream.beg);

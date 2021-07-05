@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "CppUnitTest.h"
-#include "../BitFireEngine/BitFire/Utility/AsciiString.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 

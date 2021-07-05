@@ -29,8 +29,8 @@ void BF::GameSystem::Start()
         "| Maximal Textures : %u\n"
         "+------------------------------------------------------+\n",
         OpenGLAPI::VersionName(),
-        Resource.GetMaximalAmountOfTexturesInOneCall(),
-        Resource.GetMaximalAmountOfTexturesLoaded()
+        OpenGLAPI::TextureMaxSlots(),
+        OpenGLAPI::TextureMaxLoaded()
     );
 
     BF::StopWatch stopwatch;
@@ -51,10 +51,14 @@ void BF::GameSystem::Start()
     sphere->Scale(4, 4, 4);
     Resource.PushToGPU(*sphere);
     
+   
+
     Resource.Load("Texture/White.bmp");
    // Resource.Load("A:/_WorkSpace/BitFireEngine/Texture/Sign.png");
     Resource.Load("Level/MainMenu.lev");
-      
+    
+    Resource.Load("Model/Bike/HQ_Movie cycle.obj");
+
 
     text = new UIText("SampleText", *Resource.DefaultFont, -1, -0.8);
     text->RenderInformation.ShaderProgramID = hudShaderID;

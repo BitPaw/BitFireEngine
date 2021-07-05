@@ -27,6 +27,10 @@
       <Project>{1420d6d2-264b-4789-9adf-2fd0093760ad}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader\WorldSpace.frag" />
+    <None Include="Shader\WorldSpace.vert" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

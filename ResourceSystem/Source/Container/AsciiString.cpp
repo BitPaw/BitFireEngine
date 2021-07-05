@@ -95,6 +95,11 @@ void BF::AsciiString::SetAsReference(AsciiString& string)
 	SetAsReference(&string[0], string.Size());
 }
 
+void BF::AsciiString::SetAsReference(char* stringAdress)
+{
+	SetAsReference(stringAdress, -1);
+}
+
 void BF::AsciiString::SetAsReference(char* stringAdress, unsigned int size)
 {
 	_isReferenceToOtherString = true;
@@ -133,10 +138,16 @@ unsigned int BF::AsciiString::Size()
 	{
 		return 0;
 	}
-	else
+
+	if (_size == -1)
 	{
-		return _size - 1;
-	}   
+		int index = 0;
+		_size = 0;
+
+		while (_data[index++] != '\0') _size++;
+	}
+	
+	return _size - 1;
 }
 
 unsigned int BF::AsciiString::SizeInBytes()
@@ -210,7 +221,7 @@ int BF::AsciiString::ToInt()
 
 bool BF::AsciiString::ToBool()
 {
-	return ToInt() == 0;
+	return !(_data[0] == '0');
 }
 
 unsigned int BF::AsciiString::Count(char character)
@@ -268,6 +279,45 @@ void BF::AsciiString::Replace(char from, char to)
 	}
 }
 
+void BF::AsciiString::ReplaceWhiteSpaceInQuotes(char key, bool revert)
+{
+	int dynamicIndex = 0;
+
+	if (_data == nullptr)
+	{
+		return;
+	}
+
+	while (true)
+	{
+		char currentChar = _data[dynamicIndex++];
+		bool isFirstComma = currentChar == '\"';
+		bool endOfString = currentChar == '\0';
+
+		if (endOfString)
+		{
+			return;
+		}
+
+		while (isFirstComma)
+		{
+			currentChar = _data[dynamicIndex++];
+			bool isSecondComma = currentChar == '\"';
+			bool isSpace = currentChar == (revert ? key : ' ');
+
+			if (isSpace)
+			{
+				_data[dynamicIndex - 1] = (revert ? ' ' : key);
+			}
+
+			if (isSecondComma)
+			{
+				return;
+			}
+		}
+	}
+}
+
 void BF::AsciiString::Remove(char character)
 {
 	unsigned int amoutToRemove = Count(character);
@@ -303,6 +353,19 @@ void BF::AsciiString::RemoveWhiteSpace()
 	const char whiteSpace = ' ';
 
 	Remove(whiteSpace);
+}
+
+void BF::AsciiString::PonterMoveBy(int offset)
+{
+	_data += offset;
+}
+
+void BF::AsciiString::PointerMoveToFirstChar(char character)
+{
+	while (*_data != '\0' || *_data == character)
+	{
+		_data++;
+	}
 }
 
 bool BF::AsciiString::IsCharacterInBetween(char target, char curroundedChar)

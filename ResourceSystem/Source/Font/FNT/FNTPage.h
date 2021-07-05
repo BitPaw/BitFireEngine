@@ -10,7 +10,7 @@ namespace BF
 	{
 		public:
 		unsigned int PageID;
-		AsciiString PageFileName;
+		char PageFileName[30];
 		List<FNTCharacter> Characters;
 
 		FNTPage();
