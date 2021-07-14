@@ -47,7 +47,9 @@ namespace BF
         Font* DefaultFont;
 
         ResourceManager();
+        ~ResourceManager();
 
+        void UnloadAll();
 
         void PushToGPU(Model& model);
         void PushToGPU(Image& image);

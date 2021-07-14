@@ -27,7 +27,7 @@ BF::Image::Image()
     Format = ImageFormat::RGB;
     Filter = ImageFilter::NoFilter;
 
-    LayoutNear = ImageLayout::Nearest;
+    LayoutNear = ImageLayout::Linear;
     LayoutFar = ImageLayout::Nearest;
 
     WrapHeight = ImageWrap::Repeat;

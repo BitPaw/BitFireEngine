@@ -9,22 +9,13 @@ namespace BF
 {
 	class FirstPersonCamera : public Camera
 	{
-	private:
-		glm::vec3 _up;
-		glm::vec3 _lookAt;
-
-		int _modelViewProjectionID;
-		int _inverseModelViewID;
-		int _modelViewID;
-		int _textureID;
-		glm::mat4 _modelView;
-		glm::mat4 _invModelView;
-		glm::mat4 _completematrix;
-		 
+		private:
+		Vector3<float> _up;
+		Vector3<float> _lookAt;
 
 		bool ValidShader;
 
-	public:
+		public:
 		Position<float> CurrentRotation;
 
 		void FetchGPUReferences(unsigned int shaderID);

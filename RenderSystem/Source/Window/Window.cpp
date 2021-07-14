@@ -10,6 +10,7 @@ BF::Dictionary<GLFWwindow*, BF::InputContainer> BF::Window::WindowsInput;
 
 BF::Window::Window()
 {
+    /*
     bool successful = Create();
 
     ShouldCloseWindow = false;
@@ -17,7 +18,7 @@ BF::Window::Window()
     if (!successful)
     {
         printf("Error loading window\n");
-    }
+    }*/
 }
 
 BF::Window::~Window()
@@ -332,11 +333,24 @@ bool BF::Window::Create()
     videoConfig->ScreenResolution[1] = 1000;
     videoConfig->WindowRefreshRateMode == RefreshRateMode::Unlimited;
 
+    printf("Initual GLFW Libary\n");
+
     /* Initialize the library */
-    if (!glfwInit())
+    int glfwErrorCode = glfwInit();
+
+    switch (glfwErrorCode)
     {
-        return false;
+        case GLFW_TRUE:
+            // OK
+            break;
+
+        default:
+        case GLFW_FALSE:
+        case GLFW_PLATFORM_ERROR:
+            return false; // Failed
     }
+
+
 
     /* Create a windowed mode window and its OpenGL context */
     {
@@ -344,13 +358,15 @@ bool BF::Window::Create()
         int width = videoConfig->ScreenResolution[0];
         int height = videoConfig->ScreenResolution[1];
 
-        
+        printf("Initual GLFW Create Window\n");
      
         _window = glfwCreateWindow(width, height, title, NULL, NULL);
        
 
         if (!_window)
         {
+            printf("Initual GLFW Create Failed!\n");
+
             glfwTerminate();
             return false;
         }
@@ -361,9 +377,12 @@ bool BF::Window::Create()
 
     }
 
+    printf("Initual GLFW Make Context\n");
+
     glfwMakeContextCurrent(_window);
 
 
+    printf("Initual GLFW init glew\n");
 
     if (glewInit() != GLEW_OK)
     {

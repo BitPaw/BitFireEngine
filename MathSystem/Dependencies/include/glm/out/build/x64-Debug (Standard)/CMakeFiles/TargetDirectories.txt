@@ -1,2 +1,0 @@
-C:/_WorkSpace/Git/BitFireEngine/BitFireEngine/Dependencies/include/glm/out/build/x64-Debug (Standard)/CMakeFiles/edit_cache.dir
-C:/_WorkSpace/Git/BitFireEngine/BitFireEngine/Dependencies/include/glm/out/build/x64-Debug (Standard)/CMakeFiles/rebuild_cache.dir

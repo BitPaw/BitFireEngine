@@ -24,7 +24,7 @@ void BF::OpenGLAPI::RegisterImage(Image& image)
 
     glGenTextures(1, &imageID);
 
-    glBindTexture(GL_TEXTURE_2D, imageID);
+    glBindTexture(GL_TEXTURE_2D, imageID);    
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, ImageWrapToOpenGLFormat(image.WrapWidth));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, ImageWrapToOpenGLFormat(image.WrapHeight));
@@ -32,8 +32,10 @@ void BF::OpenGLAPI::RegisterImage(Image& image)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, ImageLayoutToOpenGLFormat(image.LayoutNear));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, ImageLayoutToOpenGLFormat(image.LayoutFar));
 
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16.0f);
+
     glTexImage2D(GL_TEXTURE_2D, 0, format, image.Width, image.Height, 0, format, GL_UNSIGNED_BYTE, &image.PixelData[0]);
-    glGenerateMipmap(GL_TEXTURE_2D);
+    //glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 int BF::OpenGLAPI::ImageWrapToOpenGLFormat(ImageWrap imageWrap)

@@ -5,8 +5,8 @@
 #include "NewCharacterEvent.h"
 #include "NewPageEvent.h"
 
-#include "../../../ResourceSystem/Dialog/Dialog.h"
-#include "../../../ResourceSystem/Container/Queue.hpp"
+#include "../../../../ResourceSystem/Source/Container/Queue.hpp"
+#include "../../../../ResourceSystem/Source/Dialog/Dialog.h"
 
 namespace BF
 {

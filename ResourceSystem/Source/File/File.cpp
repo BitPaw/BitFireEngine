@@ -17,9 +17,20 @@ BF::ErrorCode BF::File::CheckFile()
 	return ErrorCode::NoError;
 }
 
+BF::File::File(char* filePath)
+{
+	Path.SetAsReference(filePath);
+
+	_currentCursorPosition = 0;
+
+	GetFileExtension(Path, Extension);
+}
+
 BF::File::File(AsciiString& filePath)
 {
 	Path.SetAsReference(filePath);
+
+	_currentCursorPosition = 0;
 
 	GetFileExtension(filePath, Extension);
 }
@@ -117,6 +128,37 @@ BF::ErrorCode BF::File::Write(char* filePath, char* content)
 	return ErrorCode::NoError;
 }
 
+BF::ErrorCode BF::File::ReadNextLineInto(char* exportBuffer)
+{
+	int length = 0;
+	int index = _currentCursorPosition;
+	int maxSize = Data.Size();
+
+	while (Data[index] != '\n' && index < maxSize)
+	{
+		index = _currentCursorPosition + length++;
+	}
+
+
+	if (length <= 1)
+	{
+		return ErrorCode::Empty;
+	}
+
+	memcpy(exportBuffer, &Data[0] + _currentCursorPosition, length);
+	exportBuffer[length-1] = '\0';
+
+	_currentCursorPosition += length;
+
+	while (Data[_currentCursorPosition] == '\n' && _currentCursorPosition < maxSize)
+	{
+		_currentCursorPosition++;
+	}
+
+
+	return ErrorCode::NoError;
+}
+
 BF::ErrorCode BF::File::ReadAsLines(List<AsciiString>& lineList)
 {
 	if (Data.IsEmpty())
@@ -200,6 +242,23 @@ void BF::File::GetFileExtension(AsciiString& path, AsciiString& extension)
 			extension.SetAsReference(adress, size);
         }
     }
+}
+
+int BF::File::CountAmountOfLines()
+{
+	int lineCounter = 0;
+
+	while (Data[lineCounter++] != '\0')
+	{
+
+	}
+
+	return lineCounter;
+}
+
+void BF::File::CursorToBeginning()
+{
+	_currentCursorPosition = 0;
 }
 
 void BF::File::Remove()

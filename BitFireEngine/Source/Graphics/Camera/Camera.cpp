@@ -1,7 +1,6 @@
 #include "Camera.h"
 #include "../../../../MathSystem/Source/Geometry/Direction.h"
-#include "../../../../MathSystem/Dependencies/include/glm/glm.hpp"
-#include "../../../../MathSystem/Dependencies/include/glm/ext.hpp"
+#include <stdio.h>
 
 //#include "../../System/GameSystem.h"
 
@@ -14,11 +13,7 @@ BF::Camera::Camera() : Camera(new CameraSettings(1, 1))
 
 BF::Camera::Camera(CameraSettings* settings)
 {
-	_position = glm::vec3(0.0f);
-	_view = glm::mat4(1.0f);
-
 	Settings = settings;
-	CurrentPosition.Set(0,0,0);
 }
 
 void BF::Camera::UpdateSystemLink()
@@ -28,8 +23,7 @@ void BF::Camera::UpdateSystemLink()
 
 void BF::Camera::Move(Direcion direction)
 {
-	Position<float> movement;
-	Vector3 movementGLM;
+	Vector3<float> movement;
 	float movementSpeed = _walkSpeed;
 
 	switch (direction)
@@ -59,13 +53,10 @@ void BF::Camera::Move(Direcion direction)
 			break;
 	}
 
-	_position += movementGLM;
-	CurrentPosition.Add(movement);
-
-	movementGLM = Vector3(movement.X, movement.Y, movement.Z);
-
-	_view = glm::translate(_view, movementGLM * (-1.0f));
+	MatrixModel.Move(movement);
 }
+
+
 
 void BF::Camera::Update(GameTickData gameTickData)
 {
@@ -77,13 +68,11 @@ void BF::Camera::Update(GameTickData gameTickData)
 	switch (Settings->Mode)
 	{
 		case CameraMode::Orthographic:
-			_projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -10.0f, Settings->Far);
+			MatrixProjection.Orthographic(-1.0f, 1.0f, -1.0f, 1.0f, -10.0f, Settings->Far);
 			break;
 
 		case CameraMode::Perspectdive:
-			_projection = glm::perspective(glm::radians(Settings->FieldOfView), 1.0f, Settings->Near, Settings->Far);
+			MatrixProjection.Perspective(Settings->FieldOfView, 1.0f, Settings->Near, Settings->Far);
 			break;
 	}
-
-	_viewProjection = _projection * _view;
 }

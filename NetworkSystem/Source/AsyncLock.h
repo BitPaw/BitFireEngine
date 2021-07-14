@@ -6,8 +6,9 @@
 #ifdef OSUnix
 #include <semaphore.h>
 #elif defined(OSWindows)
-#include <Windows.h>
-#include <process.h>
+typedef struct IUnknown IUnknown;
+#include <windows.h>
+//#include <process.h>
 #endif 
 
 namespace BF

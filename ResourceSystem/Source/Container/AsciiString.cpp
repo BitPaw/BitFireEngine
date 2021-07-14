@@ -1,4 +1,5 @@
 #include "AsciiString.h"
+#include "../../../MemoryManager/Memory.h"
 
 BF::AsciiString::AsciiString()
 {
@@ -10,6 +11,14 @@ BF::AsciiString::AsciiString()
 
 BF::AsciiString::AsciiString(const char* string)
 {
+	if (string == nullptr)
+	{
+		_data = nullptr;
+		_isReferenceToOtherString = false;
+		_size = 0;
+		return;
+	}
+
 	char* currentAdress = (char*)string;
 	_size = 1;
 
@@ -110,11 +119,11 @@ void BF::AsciiString::SetAsReference(char* stringAdress, unsigned int size)
 void BF::AsciiString::ReSize(unsigned int size)
 {
 	_size = size + 1;
-	_data = (char*)realloc(_data, _size);
+	_data = (char*)MemoryResize(_data, _size);
 
 	if (_data != nullptr)
 	{
-		memset(_data, '\0', _size * sizeof(char));
+		MemorySet(_data, '\0', _size * sizeof(char));
 	}	
 }
 
@@ -191,19 +200,19 @@ void BF::AsciiString::AttachToBack(AsciiString& string)
 	if (_isReferenceToOtherString) // If the String is just a reference, create a new string to manipulate
 	{
 		startA = new char[stringCLengh+1]; // create space
-		memcpy(startA, _data, _size); // Copy old referenced string to new location
+		MemoryCopy(startA, _data, _size); // Copy old referenced string to new location
 		_isReferenceToOtherString = false; // its no longer a reference
 
 		_data = startA;
 	}
 	else
 	{
-		_data = (char*)realloc(_data, byteLenghC);
+		_data = (char*)MemoryResize(_data, byteLenghC);
 	}	
 	
 	insertionPoint = _data + byteLenghA; // Move to the next insertion point (After A).
 	
-	memcpy(insertionPoint, startB, byteLenghB); // Attach content from B after the A part.
+	MemoryCopy(insertionPoint, startB, byteLenghB); // Attach content from B after the A part.
 
 	_data[stringCLengh - 1] = '\0'; // Add c-string style endmarker.	
 	_size = stringCLengh; // Update new size.
@@ -623,7 +632,7 @@ void BF::AsciiString::Cut(unsigned int startPosition, unsigned int endPosition, 
 
 	cuttedString.ReSize(cuttedStringSize);	 
 
-	memcpy(&cuttedString[0], startAdress, cuttedStringByteSize);
+	MemoryCopy(&cuttedString[0], startAdress, cuttedStringByteSize);
 }
 
 unsigned int BF::AsciiString::FindFirst(char character)
@@ -726,11 +735,9 @@ void BF::AsciiString::Copy(const char* string)
 
 void BF::AsciiString::Copy(const char* string, unsigned int lengh)
 {
-	unsigned int sizeInBytes = lengh * sizeof(char);
-
 	ReSize(lengh);
 
-	memcpy(_data, string, sizeInBytes);
+	MemoryCopy(_data, (void*)string, lengh);
 }
 
 void BF::AsciiString::Copy(std::string& stdstring)
@@ -747,9 +754,5 @@ void BF::AsciiString::Copy(char character)
 
 void BF::AsciiString::Copy(AsciiString& string)
 {
-	//unsigned int index = string.FindFirst('\0');
-
-	//index = index == -1 ? string.Size() : index - 1;
-
 	Copy(&string[0], string.Size());
 }

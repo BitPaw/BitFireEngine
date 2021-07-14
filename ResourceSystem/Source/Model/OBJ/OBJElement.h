@@ -9,7 +9,7 @@ namespace BF
 	struct OBJElement
 	{
 		public:
-		AsciiString Name;
+		char Name[20];
 		unsigned int MaterialListIndex;
 		float Smoothing;
 

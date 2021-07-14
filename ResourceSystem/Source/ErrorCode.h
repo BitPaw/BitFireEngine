@@ -15,6 +15,8 @@ namespace BF
 		LoadingFailed,
 		SavingFailed,
 
-		OutOfMemory
+		OutOfMemory,
+
+		Empty
 	};
 }

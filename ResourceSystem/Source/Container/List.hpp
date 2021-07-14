@@ -1,6 +1,6 @@
 #pragma once
 
-#include <malloc.h>
+#include "../../../MemoryManager/Memory.h"
 
 namespace BF
 {
@@ -62,6 +62,13 @@ namespace BF
 		{
 			T* oldData = _content;
 			int oldSize = _size;
+			bool reallocate = oldSize < size || (oldSize - size) > 128 ;
+			// 200 < 100 && 200 - 128 > 100
+
+			if (!reallocate)
+			{
+				return; // Cancel if the reallocation is to wasteful
+			}
 
 			if (_size == size || size == 0)
 			{
@@ -69,19 +76,14 @@ namespace BF
 			}
 
 			//---[Create new DataAraay]---
-			_content = new T[size];
+			_content = (T*)MemoryResize(_content, size * sizeof(T));
 			_size = size;
-			//----------------------------
 
-			if (copyOldContent)
+			for (unsigned int i = 0; i < _size; i++)
 			{
-				for (int i = 0; i < oldSize && i < size; i++)
-				{
-					//_content[i] = oldData[i];
-				}
-
-				delete[] oldData;
-			}						
+				_content[i] = T();
+			}
+			//----------------------------					
 		}
 
 		/*
@@ -98,9 +100,10 @@ namespace BF
 		void DeleteAll()
 		{
 			if (_content != nullptr && _size != 0)
-			{
+			{			
+				//delete[] _content; // Todo
+
 				_size = 0;
-				delete[] _content;
 				_content = nullptr;			
 			}
 		}

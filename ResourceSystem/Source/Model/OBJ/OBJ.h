@@ -11,15 +11,13 @@ namespace BF
 	struct OBJ
 	{
 		public:
-		OBJ();
-
-		AsciiString Name;
+		char Name[20];
 		unsigned char VertexStructureSize;
 		List<MTL> Materials;
 		List<OBJElement> ElementList;
 
-		void Load(AsciiString& filePath);
-		void Save(AsciiString& filePath);
+		void Load(char* filePath);
+		void Save(char* filePath);
 		void Convert(Model& model);
 
 		void PrintData();

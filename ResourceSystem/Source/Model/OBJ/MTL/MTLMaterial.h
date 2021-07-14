@@ -1,24 +1,22 @@
 #pragma once
 
 #include "IlluminationMode.h"
-#include "../../../Container/AsciiString.h"
-#include "../../../../../MathSystem/Source/Geometry/Position.hpp"
 
 namespace BF
 {
 	struct MTLMaterial
 	{
 		public:
-		AsciiString Name;
-		AsciiString TextureFilePath;
+		char Name[20];
+		char TextureFilePath[50];
 
 		// Ranges between 0 and 1000
 		float Weight;
 
-		Position<float> Ambient;
-		Position<float> Diffuse;
-		Position<float> Specular;
-		Position<float> Emission;
+		float Ambient[3];
+		float Diffuse[3];
+		float Specular[3];
+		float Emission[3];
 
 		float Dissolved;
 
@@ -26,7 +24,5 @@ namespace BF
 		float Density;
 
 		IlluminationMode Illumination;
-
-		MTLMaterial();
 	};
 }

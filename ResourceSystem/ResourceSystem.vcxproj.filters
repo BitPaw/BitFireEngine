@@ -129,9 +129,6 @@
     <ClCompile Include="Source\Model\OBJ\MTL\MTL.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Model\OBJ\MTL\MTLMaterial.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Model\OBJ\OBJ.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>

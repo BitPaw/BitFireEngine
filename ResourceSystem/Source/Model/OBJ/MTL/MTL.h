@@ -2,17 +2,16 @@
 
 #include "MTLMaterial.h"
 
-#include "../../../Container/List.hpp"
-
 namespace BF
 {	
 	// [.MTL]
 	class MTL
 	{
 		public:
-		List<MTLMaterial> MaterialList;
+		unsigned int MaterialListSize;
+		MTLMaterial* MaterialList;
 
-		void Load(AsciiString& filePath);
+		void Load(char* filePath);
 
 		void PrintContent();
 	};

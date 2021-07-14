@@ -6,6 +6,7 @@
 #ifdef OSUnix
 #include <pthread.h>
 #elif defined(OSWindows)
+typedef struct IUnknown IUnknown;
 #include <windows.h>
 #endif 
 

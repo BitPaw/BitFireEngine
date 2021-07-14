@@ -17,16 +17,17 @@ namespace BF
 		float _walkSpeed;
 		float _viewSpeed;
 
+		int _matrixModelID;
+		int _matrixViewID;
+		int _matrixProjectionID;
+		int _materialTextureID;
+
 		public:
-
-
-		Matrix4x4 _projection;
-		Matrix4x4 _view;
-		Matrix4x4 _viewProjection;
-		Vector3 _position;
+		Matrix4x4<float> MatrixModel;
+		Matrix4x4<float> MatrixProjection;
+		Matrix4x4<float> MatrixView;
 
 		CameraSettings* Settings;
-		Position<float> CurrentPosition;
 
 		Camera();
 		Camera(CameraSettings* settings);
@@ -35,10 +36,5 @@ namespace BF
 
 		virtual void Move(Direcion direction);
 		virtual void Update(GameTickData gameTickData);
-
-		Matrix4x4 GetUpdatedViewProjection()
-		{
-			return _viewProjection;
-		}
 	};
 }

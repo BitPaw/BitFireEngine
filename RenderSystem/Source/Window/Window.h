@@ -21,7 +21,7 @@ namespace BF
 		GLFWwindow* _window;
 		GLFWcursor* _cursor;
 		GLFWmonitor* _montor;
-		bool Create();
+	
 
 		public:
 		float ActiveTime;
@@ -39,6 +39,8 @@ namespace BF
 		{
 			return WindowsInput.GetValue(_window);
 		}
+
+		bool Create();
 
 		double GetTime();
 

@@ -10,6 +10,7 @@
 
 #include "../../../MathSystem/Source/Geometry/Position.hpp"
 #include "../../../MathSystem/Source/Geometry/Shape/Shape.h"
+#include "../../../MathSystem/Source/Geometry/Matrix4x4.hpp"
 
 namespace BF
 {
@@ -19,6 +20,7 @@ namespace BF
 		protected:
 		Position<float> _currentPosition;
 		Position<float> _currentRotation;
+		Matrix4x4<float> ModelMatrix;
 
 		public:
 		ModelRenderInformation RenderInformation;

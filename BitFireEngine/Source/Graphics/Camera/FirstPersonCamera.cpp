@@ -4,22 +4,22 @@
 
 void BF::FirstPersonCamera::FetchGPUReferences(unsigned int shaderID)
 {
-	int old_modelViewProjectionID = _modelViewProjectionID;
-	int old_inverseModelViewID = _inverseModelViewID;
-	int old_modelViewID = _modelViewID;
-	int old_textureID = _textureID;
+	int old_modelViewProjectionID = _matrixModelID;
+	int old_inverseModelViewID = _matrixViewID;
+	int old_modelViewID = _matrixProjectionID;
+	int old_textureID = _materialTextureID;
 
-	_modelViewProjectionID = OpenGLAPI::ShaderGetUniformLocationID(shaderID, "ModelViewProjection");
-	_inverseModelViewID = OpenGLAPI::ShaderGetUniformLocationID(shaderID, "ModelView");
-	_modelViewID = OpenGLAPI::ShaderGetUniformLocationID(shaderID, "InverseModelView");
-	_textureID = OpenGLAPI::ShaderGetUniformLocationID(shaderID, "objtexture");
+	_matrixModelID = OpenGLAPI::ShaderGetUniformLocationID(shaderID, "MatrixModel");
+	_matrixViewID = OpenGLAPI::ShaderGetUniformLocationID(shaderID, "MatrixView");
+	_matrixProjectionID = OpenGLAPI::ShaderGetUniformLocationID(shaderID, "MatrixProjection");
+	_materialTextureID = OpenGLAPI::ShaderGetUniformLocationID(shaderID, "MaterialTexture");
 
-	if (_modelViewProjectionID == -1 || _inverseModelViewID == -1 || _modelViewID == -1)
+	if (_matrixModelID == -1 || _matrixViewID == -1 || _matrixProjectionID == -1)
 	{
-		_modelViewProjectionID = old_modelViewProjectionID;
-		_inverseModelViewID = old_inverseModelViewID;
-		_modelViewID = old_modelViewID;
-		_textureID = old_textureID;
+		_matrixModelID = old_modelViewProjectionID;
+		_matrixViewID = old_inverseModelViewID;
+		_matrixProjectionID = old_modelViewID;
+		_materialTextureID = old_textureID;
 		ValidShader = false;
 	}
 	else
@@ -51,17 +51,20 @@ void BF::FirstPersonCamera::Rotate(float x, float y)
 	float pitchRAD = glm::radians(CurrentRotation.Y);
 	float yawRAD = glm::radians(CurrentRotation.X);
 
-	glm::vec3 temp;
 
-	temp.x = cos(pitchRAD) * cos(yawRAD);
-	temp.y = sin(pitchRAD);
-	temp.z = cos(pitchRAD) * sin(yawRAD);
+	float rx = cos(pitchRAD) * cos(yawRAD);
+	float ry = sin(pitchRAD);
+	float rz = cos(pitchRAD) * sin(yawRAD);
 
-	_lookAt = glm::normalize(temp);
+	_lookAt.Set(rx, ry, rz);
+	_lookAt.Normalize();
 }
 
 void BF::FirstPersonCamera::Update(GameTickData gameTickData)
 {
+	Vector4<float> currentPositionx4 = MatrixModel.CurrentPosition();
+	Vector3<float> currentPosition = Vector3<float>(currentPositionx4.Date[0], currentPositionx4.Date[1], currentPositionx4.Date[2]);
+
 	_walkSpeed = gameTickData.GetSmoothDeltaTime() * 30;
 	_viewSpeed = gameTickData.GetSmoothDeltaTime() * 350;
 
@@ -73,73 +76,62 @@ void BF::FirstPersonCamera::Update(GameTickData gameTickData)
 	switch (Settings->Mode)
 	{
 		case CameraMode::Orthographic:
-			_projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -10.0f, Settings->Far);
+			MatrixProjection.Orthographic(-1.0f, 1.0f, -1.0f, 1.0f, -10.0f, Settings->Far);
 			break;
 
 		case CameraMode::Perspectdive:
-			_projection = glm::perspective(glm::radians(Settings->FieldOfView), 1.0f, Settings->Near, Settings->Far);
+			MatrixProjection.Perspective(Settings->FieldOfView, 1.0f, Settings->Near, Settings->Far);
 			break;
 	}
 
-	_view = glm::lookAt(_position, _position + _lookAt, _up);
+	MatrixView.LookAt(currentPosition, currentPosition + _lookAt, _up);
 
-	_viewProjection = _projection * _view;
+	//printf("CurrentPosition <%2.2f %2.2f %2.2f>\n", currentPosition.Data[0], currentPosition.Data[1], currentPosition.Data[2]);
 
-	//----
-	glm::mat4 cameraView = _view;
-	glm::mat4 cameraProjection = _projection;
-
-	_modelView = cameraView * glm::mat4(1.0f);
-	_invModelView = glm::transpose(glm::inverse(_modelView));
-
-	glm::vec3 offset = glm::vec3(0, 0, 0);
-	glm::mat4 diff = glm::translate(cameraView, offset);
-
-	_completematrix = cameraProjection * diff * glm::mat4(1.0f);
-
-	OpenGLAPI::ShaderSetUniformMatrix4x4(_modelViewID, &_modelView[0][0]);
-	OpenGLAPI::ShaderSetUniformMatrix4x4(_modelViewProjectionID, &_completematrix[0][0]);
-	OpenGLAPI::ShaderSetUniformMatrix4x4(_inverseModelViewID, &_invModelView[0][0]);
-	// -----
+	OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, MatrixModel.Data);
+	OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixViewID, MatrixView.Data);
+	OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixProjectionID, MatrixProjection.Data);
 }
 
 void BF::FirstPersonCamera::Move(Direcion direction)
 {
-	glm::vec3 movement;
+	Vector3<float> movement;
 	float movementSpeed = _walkSpeed;
 
 	switch (direction)
 	{
 	case Direcion::Up:
-		movement = glm::vec3(0, movementSpeed, 0);
+		movement.Set(0, 1, 0);
 		break;
 
 	case Direcion::Down:
-		movement = glm::vec3(0, -movementSpeed, 0);
+		movement.Set(0, -1, 0);
 		break;
 
-	case Direcion::Left:
-		movement = glm::normalize(glm::cross(_lookAt, _up)) * -movementSpeed;
+	case Direcion::Left:		
+		movement.CrossProduct(_lookAt, _up);
+		movement *= Vector3<float>(-1, 0, -1);
+		movement.Normalize();
 		break;
 
 	case Direcion::Right:
-		movement = glm::normalize(glm::cross(_lookAt, _up)) * movementSpeed;
+		movement.CrossProduct(_lookAt, _up);
+		movement *= Vector3<float>(1, 0, 1);
+		movement.Normalize();
 		break;
 
 	case Direcion::Forward:
-		movement = glm::normalize(_lookAt) * glm::vec3(movementSpeed,0, movementSpeed);
+		movement = _lookAt * Vector3<float>(1, 0, 1); // Remove Y movement
 		break;
 
 	case Direcion::Backward:
-		movement = glm::normalize(_lookAt) * glm::vec3(-movementSpeed, 0, -movementSpeed);
+		movement = _lookAt * Vector3<float>(-1, 0, -1);
 		break;
 	}
 
-	_position += movement;
+	movement *= -movementSpeed;	
 
-	CurrentPosition.Add(movement.x, movement.y, movement.z);
-
-	_view = glm::translate(_view, movement * (-1.0f));
+	MatrixModel.Move(movement);
 }
 
 BF::FirstPersonCamera::FirstPersonCamera() : Camera()
@@ -147,7 +139,7 @@ BF::FirstPersonCamera::FirstPersonCamera() : Camera()
 	ValidShader = false;
 	Settings->Mode = CameraMode::Perspectdive;
 
-	_up = glm::vec3(0.0f, 1.0f, 0.0f);
+	_up.Set(0.0f, 1.0f, 0.0f);
 
 	Rotate(0,0);
 }

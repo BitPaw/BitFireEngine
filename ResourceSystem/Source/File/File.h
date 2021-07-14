@@ -14,6 +14,7 @@ namespace BF
 	{
 		private:
 		ErrorCode CheckFile();
+		unsigned int _currentCursorPosition;
 
 		public:
 		List<unsigned char> Data;
@@ -21,6 +22,7 @@ namespace BF
 		AsciiString Path;
 		AsciiString Extension;
 
+		File(char* filePath);
 		File(AsciiString& filePath);
 
 		ErrorCode Read();
@@ -28,12 +30,17 @@ namespace BF
 		static ErrorCode Read(char* filePath, char** buffer, unsigned int maxSize);
 		ErrorCode Write();
 		static ErrorCode Write(char* filePath, char* content);
+		ErrorCode ReadNextLineInto(char* exportBuffer);
 
 		ErrorCode ReadAsLines(List<AsciiString>& lineList);
 
 		bool DoesFileExist();
 		static bool DoesFileExist(AsciiString& filePath);
 		static void GetFileExtension(AsciiString& path, AsciiString& extension);
+
+		int CountAmountOfLines();
+
+		void CursorToBeginning();
 
 		void Remove();
 		static void Remove(AsciiString& filePath);

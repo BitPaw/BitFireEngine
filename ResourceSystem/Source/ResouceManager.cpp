@@ -18,7 +18,7 @@ void BF::ResourceManager::UpdateVBOData(Model& model)
     if (model.RenderInformation.IndexData.Size() == 0)
     {
 
-        printf("[Could not UpdateVBOData(), index data empty or not set.]");
+        printf("[Could not UpdateVBOData(), index data empty or not set.]\n");
         return;
     }
 
@@ -58,7 +58,7 @@ void BF::ResourceManager::UpdateVBOData(Model& model)
 
         position = &vertex->CurrentPosition;
 
-        indexData[i] = i;     
+        indexData[i] = i;
 
         vertexData[dataIndex++] = position->X;
         vertexData[dataIndex++] = position->Y;
@@ -90,6 +90,16 @@ BF::ResourceManager::ResourceManager()
     DefaultFont = nullptr;
 }
 
+BF::ResourceManager::~ResourceManager()
+{
+    UnloadAll();
+}
+
+void BF::ResourceManager::UnloadAll()
+{
+
+}
+
 void BF::ResourceManager::PushToGPU(Model& model)
 {
     unsigned int& modelID = model.ID;
@@ -100,14 +110,14 @@ void BF::ResourceManager::PushToGPU(Model& model)
     {
         UpdateVBOData(model);
 
-        if(renderInfo.VertexData.Size() != 0)
+        if (renderInfo.VertexData.Size() != 0)
         {
             OpenGLAPI::VertexArrayUpdate(renderInfo.VertexBufferID, renderInfo.VertexData.SizeInBytes(), &renderInfo.VertexData[0]);
-        }      
+        }
     }
     else
-    {       
-        modelID = _modelList.Size();        
+    {
+        modelID = _modelList.Size();
 
         renderInfo.VertexData.ReSize(model.GlobalMesh.IndexList.Size() * (3 + 3 + 4 + 2));
         renderInfo.IndexData.ReSize(model.GlobalMesh.IndexList.Size());
@@ -124,7 +134,7 @@ void BF::ResourceManager::PushToGPU(Model& model)
 
         OpenGLAPI::VertexAttributeArrayDefine(sizeof(float), 4, sizeList);
 
-        OpenGLAPI::IndexDataDefine(&renderInfo.IndexBufferID, renderInfo.IndexData.SizeInBytes(), &renderInfo.IndexData[0]);       
+        OpenGLAPI::IndexDataDefine(&renderInfo.IndexBufferID, renderInfo.IndexData.SizeInBytes(), &renderInfo.IndexData[0]);
     }
 }
 
@@ -136,7 +146,7 @@ void BF::ResourceManager::PushToGPU(Image& image)
 void* BF::ResourceManager::Load(const char* string)
 {
     AsciiString asciiString(string);
-    
+
     return Load(asciiString);
 }
 
@@ -145,7 +155,7 @@ void* BF::ResourceManager::Load(AsciiString& filePath)
     void* loadedResource = nullptr;
     ResourceType resourceType = ResourceType::Unknown;
     File file(filePath);
-    AsciiString& fileExtension = file.Extension;
+    AsciiString fileExtension(&file.Extension[0]);
     bool doesFileExist = file.DoesFileExist();
     ErrorCode errorCode = doesFileExist ? ErrorCode::Undefined : ErrorCode::FileNotFound;
 
@@ -177,11 +187,11 @@ void* BF::ResourceManager::Load(AsciiString& filePath)
             case ResourceType::Font:
             {
                 Font* font = new Font();
-                FontFormat fontFormat = Font::ParseFontFormat(fileExtension);               
+                FontFormat fontFormat = Font::ParseFontFormat(fileExtension);
 
                 errorCode = font->Load(filePath);
 
-                if(errorCode == ErrorCode::NoError)
+                if (errorCode == ErrorCode::NoError)
                 {
                     for (size_t i = 0; i < font->AdditionalResourceList.Size(); i++)
                     {
@@ -202,9 +212,9 @@ void* BF::ResourceManager::Load(AsciiString& filePath)
 
                     _fontList.Add(font);
 
-                    loadedResource = font;     
+                    loadedResource = font;
                     DefaultFont = font;
-                }     
+                }
 
 
 
@@ -258,39 +268,39 @@ void* BF::ResourceManager::Load(AsciiString& filePath)
             case ResourceType::Level:
             {
                 Level* level = new Level();
-                    List<AsciiString> fileLines;
-                    File file(filePath);
+                List<AsciiString> fileLines;
+                File file(filePath);
 
-                    errorCode = ErrorCode::LoadingFailed;
+                errorCode = ErrorCode::LoadingFailed;
 
-                    const char _modelToken = 'O';
-                    const char _textureToken = 'T';
-                    const char _musicToken = 'M';
-                    const char _fontToken = 'F';
-                    const char _shaderToken = 'S';
-                    const char _dialogToken = 'D';
-                    const char _emptyToken = ' ';
-                    const char _commentToken = '#';
-                    unsigned int modelCounter = 0;
-                    unsigned int imageCounter = 0;
-                    unsigned int soundCounter = 0;
-                    unsigned int fontCounter = 0;
-                    unsigned int shaderCounter = 0;
-                    unsigned int dialogCounter = 0;
-                    unsigned int amountOfLines;
+                const char _modelToken = 'O';
+                const char _textureToken = 'T';
+                const char _musicToken = 'M';
+                const char _fontToken = 'F';
+                const char _shaderToken = 'S';
+                const char _dialogToken = 'D';
+                const char _emptyToken = ' ';
+                const char _commentToken = '#';
+                unsigned int modelCounter = 0;
+                unsigned int imageCounter = 0;
+                unsigned int soundCounter = 0;
+                unsigned int fontCounter = 0;
+                unsigned int shaderCounter = 0;
+                unsigned int dialogCounter = 0;
+                unsigned int amountOfLines;
 
-                    file.ReadAsLines(fileLines);
+                file.ReadAsLines(fileLines);
 
-                    amountOfLines = fileLines.Size();
+                amountOfLines = fileLines.Size();
 
-                    // Step I - Count objects
-                    for (unsigned int i = 0; i < amountOfLines; i++)
+                // Step I - Count objects
+                for (unsigned int i = 0; i < amountOfLines; i++)
+                {
+                    AsciiString& line = fileLines[i];
+                    char character = line.GetFirstNonEmpty();
+
+                    switch (character)
                     {
-                        AsciiString& line = fileLines[i];
-                        char character = line.GetFirstNonEmpty();
-
-                        switch (character)
-                        {
                         case _modelToken:
                             modelCounter++;
                             break;
@@ -320,77 +330,76 @@ void* BF::ResourceManager::Load(AsciiString& filePath)
                         default:
                             // Do nothinf
                             break;
-                        }
                     }
+                }
 
-                    // Step II - Reserve space
-                    level->ModelList.ReSize(modelCounter);           
-                    level->ImageList.ReSize(imageCounter); 
-                    level->SoundList.ReSize(soundCounter);
-                    level->FontList.ReSize(fontCounter);
-                    level->ShaderList.ReSize(shaderCounter);
-                    level->DialogList.ReSize(dialogCounter);
+                // Step II - Reserve space
+                level->ModelList.ReSize(modelCounter);
+                level->ImageList.ReSize(imageCounter);
+                level->SoundList.ReSize(soundCounter);
+                level->FontList.ReSize(fontCounter);
+                level->ShaderList.ReSize(shaderCounter);
+                level->DialogList.ReSize(dialogCounter);
 
-                    modelCounter = 0;
-                    imageCounter = 0;
-                    soundCounter = 0;
-                    fontCounter = 0;
-                    shaderCounter = 0;
-                    dialogCounter = 0;
+                modelCounter = 0;
+                imageCounter = 0;
+                soundCounter = 0;
+                fontCounter = 0;
+                shaderCounter = 0;
+                dialogCounter = 0;
 
-                    // Step II - Parse and Load
-                    for (unsigned int i = 0; i < amountOfLines; i++)
+                // Step II - Parse and Load
+                for (unsigned int i = 0; i < amountOfLines; i++)
+                {
+                    AsciiString& line = fileLines[i];
+                    char* currentLine = &line[0];
+                    char character = line.GetFirstNonEmpty();
+                    char dummyBuffer[10];
+                    char path[30];
+
+                    switch (character)
                     {
-                        AsciiString& line = fileLines[i];
-                        char character = line.GetFirstNonEmpty();
-                        List<AsciiString> lines;
-
-                        line.Splitt(' ', lines);
-
-                        switch (character)
-                        {
                         case _modelToken:
-                        {
-                            AsciiString path;
-                            AsciiString positionText;
-                            AsciiString rotationText;
-                            AsciiString scaleText;
+                        {                          
+                            char positionText[30];
+                            char rotationText[30];
+                            char scaleText[30];
                             Position<float> position;
                             Position<float> rotation;
                             Position<float> scale;
 
-                            // Get raw Data-------------------------
-                            path.Copy(lines[1]);
-                            positionText.Copy(lines[2]);
-                            rotationText.Copy(lines[3]);
-                            scaleText.Copy(lines[4]);
+                            sscanf(currentLine, "%s %s %s %s %s", dummyBuffer, path, positionText, rotationText, scaleText);
 
-                            positionText.Splitt('|', lines);
+                            // Get raw Data-------------------------                         
+    
+                            // Replace 0|0|0 -> 0 0 0 
+                            for (size_t i = 0; i < positionText[i] != '\0'; i++)
+                            {
+                                if (positionText[i] == '|')
+                                {
+                                    positionText[i] = ' ';
+                                }
+                            }
 
-                            position.Set
-                            (
-                                lines[0].ToFloat(),
-                                lines[1].ToFloat(),
-                                lines[2].ToFloat()
-                            );
+                            for (size_t i = 0; i < rotationText[i] != '\0'; i++)
+                            {
+                                if (rotationText[i] == '|')
+                                {
+                                    rotationText[i] = ' ';
+                                }
+                            }
 
-                            rotationText.Splitt('|', lines);
+                            for (size_t i = 0; i < scaleText[i] != '\0'; i++)
+                            {
+                                if (scaleText[i] == '|')
+                                {
+                                    scaleText[i] = ' ';
+                                }
+                            }
 
-                            rotation.Set
-                            (
-                                lines[0].ToFloat(),
-                                lines[1].ToFloat(),
-                                lines[2].ToFloat()
-                            );
-
-                            scaleText.Splitt('|', lines);
-
-                            scale.Set
-                            (
-                                lines[0].ToFloat(),
-                                lines[1].ToFloat(),
-                                lines[2].ToFloat()
-                            );
+                            sscanf(positionText, "%f %f %f", &position.X, &position.Y, &position.Z);
+                            sscanf(rotationText, "%f %f %f", &rotation.X, &rotation.Y, &rotation.Z);
+                            sscanf(scaleText, "%f %f %f", &scale.X, &scale.Y, &scale.Z); 
                             //------------------------------------------------
 
                             // Load Model----------------
@@ -416,19 +425,25 @@ void* BF::ResourceManager::Load(AsciiString& filePath)
                         }
                         case _textureToken:
                         {
-                            Image* image = reinterpret_cast<Image*>(Load(lines[1]));
+                            sscanf(currentLine, "%s %s", dummyBuffer, path);
+
+                            Image* image = reinterpret_cast<Image*>(Load(path));
                             level->ImageList[imageCounter++] = &image;
                             break;
                         }
                         case _musicToken:
                         {
-                            Sound* sound = reinterpret_cast<Sound*>(Load(lines[1]));
+                            sscanf(currentLine, "%s %s", dummyBuffer, path);
+
+                            Sound* sound = reinterpret_cast<Sound*>(Load(path));
                             level->SoundList[soundCounter++] = &sound;
                             break;
                         }
                         case _fontToken:
                         {
-                            Font* font = reinterpret_cast<Font*>(Load(lines[1]));
+                            sscanf(currentLine, "%s %s", dummyBuffer, path);
+
+                            Font* font = reinterpret_cast<Font*>(Load(path));
                             level->FontList[fontCounter++] = &font;
                             break;
                         }
@@ -445,13 +460,13 @@ void* BF::ResourceManager::Load(AsciiString& filePath)
                         default:
                             // Do nothinf
                             break;
-                        }
                     }
-                
+                }
+
 
                 _levelList.Add(level);
 
-                loadedResource = level;             
+                loadedResource = level;
 
                 errorCode = ErrorCode::NoError;
 
@@ -461,7 +476,7 @@ void* BF::ResourceManager::Load(AsciiString& filePath)
             case ResourceType::Model:
             {
                 Model* model = new Model();
-                
+
                 errorCode = model->Load(filePath);
 
                 if (errorCode == ErrorCode::NoError)
@@ -469,23 +484,23 @@ void* BF::ResourceManager::Load(AsciiString& filePath)
                     for (unsigned int i = 0; i < model->MaterialList.Size(); i++)
                     {
                         Material& material = model->MaterialList[i];
-                        AsciiString& imageFilePath = material.TextureFilePath;
-                        Image* image = (Image*)(Load(imageFilePath));
+                        AsciiString imageFilePath(material.TextureFilePath);
+                        Image* image = reinterpret_cast<Image*>(Load(imageFilePath));
 
                         if (image != nullptr)
                         {
                             material.Texture = image;
 
                             Add(*image);
-                        }                     
+                        }
                     }
 
                     Add(*model);
 
                     loadedResource = model;
-                }    
+                }
                 break;
-            }    
+            }
             case ResourceType::Shader:
             {
                 break;
@@ -493,9 +508,9 @@ void* BF::ResourceManager::Load(AsciiString& filePath)
             case ResourceType::Sound:
             {
                 break;
-            }               
+            }
         }
-    } 
+    }
 
     switch (errorCode)
     {
@@ -507,7 +522,7 @@ void* BF::ResourceManager::Load(AsciiString& filePath)
         {
             printf("[Error] File is missing at path <%s>\n", &filePath[0]);
             break;
-        }       
+        }
         case ErrorCode::LoadingFailed:
         {
             printf("[Error] Loading file failed at path <%s>\n", &filePath[0]);
@@ -528,7 +543,7 @@ void* BF::ResourceManager::Load(AsciiString& filePath)
                 &filePath[0]
             );
             break;
-        }       
+        }
     }
 
     return loadedResource;
@@ -541,7 +556,7 @@ void BF::ResourceManager::Add(Model& model)
         _modelList.Add(&model);
 
         model.LoadedToGPU = true;
-    }  
+    }
 
     PushToGPU(model);
 }
@@ -553,7 +568,7 @@ void BF::ResourceManager::Add(Image& image)
         _imageList.Add(&image);
 
         image.LoadedToGPU = true;
-    }   
+    }
 
     PushToGPU(image);
 }
@@ -586,7 +601,7 @@ unsigned int BF::ResourceManager::AddShaderProgram(const char* vertexShader, con
 
 void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
 {
-    LinkedListNode<Model*>* currentModel = _modelList.GetFirst(); 
+    LinkedListNode<Model*>* currentModel = _modelList.GetFirst();
 
     OpenGLAPI::RenderClear();
 
@@ -595,23 +610,23 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
         Model* model = currentModel->Element;
         ModelRenderInformation& renderInfo = model->RenderInformation;
         unsigned int shaderProgramID = renderInfo.ShaderProgramID;
-        bool useDefaultShader = shaderProgramID == -1;   
+        bool useDefaultShader = shaderProgramID == -1;
         bool changeShader = shaderProgramID != _lastUsedShaderProgram;
 
         if (useDefaultShader)
         {
             shaderProgramID = _defaultShaderID;
             changeShader = shaderProgramID != _lastUsedShaderProgram;
-        }  
+        }
 
         currentModel = currentModel->Next;
 
-        OpenGLAPI::VertexArrayBind(renderInfo.VertexArrayID);   
+        OpenGLAPI::VertexArrayBind(renderInfo.VertexArrayID);
 
         //-----[Shader Lookup]--------------------------------------------------------------------
         if (changeShader)
         {
-            OpenGLAPI::UseShaderProgram(shaderProgramID);          
+            OpenGLAPI::UseShaderProgram(shaderProgramID);
 
             _lastUsedShaderProgram = shaderProgramID;
 
@@ -628,7 +643,7 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
 
         for (size_t i = 0; i < model->MeshList.Size(); i++)
         {
-            Mesh& mesh = model->MeshList[i]; 
+            Mesh& mesh = model->MeshList[i];
             Material* material = mesh.MeshMaterial;
             bool hasMaterial = material != nullptr;
             unsigned int textureID = _defaultTextureID;
@@ -651,7 +666,7 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
 
                  //---RenderStyle-------------------------
             if (renderInfo.RenderType != RenderMode::Unkown)
-            { 
+            {
                 amountToRender = mesh.IndexList.Size();
 
                 OpenGLAPI::Render(renderInfo.RenderType, currentIndex, amountToRender);
@@ -659,7 +674,7 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
                 currentIndex += amountToRender;
             }
             //------------------------------------------------------------------------------
-        }       
+        }
     }
 }
 
@@ -681,11 +696,11 @@ void BF::ResourceManager::PrintContent(bool detailed)
             "|   Loaded Resources                                                                               |\n"
             "+---<Models <%u>>-----------------------------------------------------------------------------------+\n";
 
-     
+
         printf(message, modelListSize);
         printf(empty);
 
-        
+
         LinkedListNode<Model*>* currentModel = _modelList.GetFirst();
 
         while (currentModel != nullptr)
@@ -696,13 +711,13 @@ void BF::ResourceManager::PrintContent(bool detailed)
 
             currentModel = currentModel->Next;
         }
-        
+
 
         printf(empty);
         printf("+---<Image <%u>>------------------------------------------------------------------------------------+\n", imageListSize);
         printf(empty);
 
-       
+
         LinkedListNode<Image*>* currentImage = _imageList.GetFirst();
 
         while (currentImage != nullptr)
@@ -713,7 +728,7 @@ void BF::ResourceManager::PrintContent(bool detailed)
 
             currentImage = currentImage->Next;
         }
-        
+
 
         printf(empty);
         printf("+---<Sound <%u>>------------------------------------------------------------------------------------+\n", soundListSize);
@@ -739,13 +754,13 @@ void BF::ResourceManager::PrintContent(bool detailed)
 
             currentFont = currentFont->Next;
         }
-        
+
 
         printf(empty);
         printf("+---<Shader <%u>>-----------------------------------------------------------------------------------+\n", shaderListSize);
         printf(empty);
 
-      
+
         LinkedListNode<ShaderProgram*>* currentChaderProgram = _shaderProgramList.GetFirst();
 
         while (currentChaderProgram != nullptr)
@@ -763,7 +778,7 @@ void BF::ResourceManager::PrintContent(bool detailed)
 
             currentChaderProgram = currentChaderProgram->Next;
         }
-        
+
 
         printf(empty);
         printf("+---<Dialog <%u>>-----------------------------------------------------------------------------------+\n", dialogListSize);
@@ -800,5 +815,5 @@ void BF::ResourceManager::PrintContent(bool detailed)
             fontListSize,
             dialogListSize
         );
-    }  
+    }
 }

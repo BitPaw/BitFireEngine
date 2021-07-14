@@ -73,7 +73,7 @@ BF::Client* BF::Server::WaitForClient()
 
     RegisterClient(client);
     
-    //ThreadCreate(&client->CommunicationThread, [](void* data) -> unsigned long { ReadAsync; }, &client->Socket);
+  //  ThreadCreate(&client->CommunicationThread, [](void* data) -> unsigned long { ReadAsync; }, &client->Socket);
 
     return client;
 }

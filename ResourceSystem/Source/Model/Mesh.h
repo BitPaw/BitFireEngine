@@ -13,7 +13,7 @@ namespace BF
 	class Mesh
 	{
 		public:
-		AsciiString Name;
+		char Name[30];
 
 		int ObjectBufferIndex;
 		Material* MeshMaterial;

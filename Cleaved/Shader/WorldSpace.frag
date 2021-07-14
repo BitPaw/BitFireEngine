@@ -4,6 +4,13 @@ precision mediump float;
 
 layout(location = 0) out vec4 fragcolor;
 
+struct Material
+{
+    vec4 Ambient;
+    vec4 Diffuse;
+    vec4 Specular;
+}material;
+
 in struct Vertex 
 {
   vec3 Position;
@@ -20,17 +27,13 @@ void main()
     vec3 view = normalize(vertex.Position);
     vec3 light = normalize(vec3(1.0f, 1.0f, 1.0f));
     vec3 normal = normalize(vertex.Normal);
-    vec3 color = vec3(vertex.Color);
     vec3 reflection = reflect(-light, normal);
    
-    vec3 ambient = color * 0.2;
-    vec3 diffuse = max(dot(normal, light), 0.0) * color;
-    vec3 specular = pow(max(dot(reflection, view), 0.0), 4.0) * color;
+    material.Ambient = vertex.Color * 0.2;
+    material.Diffuse = max(dot(normal, light), 0.0) * vertex.Color;
+    material.Specular = pow(max(dot(reflection, view), 0.0), 4.0) * vertex.Color;
 
-    vec4 calcolr = vec4((ambient + diffuse + specular) *vertex.Normal, 1.0f);
+    vec4 calcolr = material.Ambient + material.Diffuse + material.Specular;
 
-	//fragcolor = calcolr;
-   fragcolor = texture(objtexture, vertex.TexturePosition) * calcolr;
-
-  //fragcolor = vec4( normal, 1);
+   fragcolor = texture(objtexture, vertex.TexturePosition) * vec4(calcolr.xyz, 1.0f);
 }

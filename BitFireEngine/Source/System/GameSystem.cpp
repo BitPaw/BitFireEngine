@@ -11,18 +11,20 @@
 BF::GameSystem* BF::GameSystem::_instance = nullptr;
 
 BF::UIText* text;
+//BF::Model* sphere;
 
 void BF::GameSystem::Start()
-{
+{    
+    _mainWindow.Create();
+
     printf
     (
         "+------------------------------------------------------+\n"
         "| __________ .__   __  ___________.__                  |\n"
         "| \\______   \\|__|_/  |_\\_   _____/|__|_______   ____   |\n"
-        "|  |    |  _/|  |\\   __\\|    __)  |  |\\_  __ \\_/ __ \\  |\n"
-        "|  |    |   \\|  | |  |  |     \\   |  | |  | \\/\\  ___/  |\n"
-        "|  |______  /|__| |__|  \\___  /   |__| |__|    \\___  > |\n"
-        "|         \\/                \\/                     \\/  |\n"
+        "|  |    |  _/|  |\\   __\\|   __)   |  |\\_  __ \\_/ __ \\  |\n"
+        "|  |    |   \\|  | |  |  |    |    |  | |  | \\/\\  ___/  |\n"
+        "|  |________/|__| |__|  \\____|    |__| |__|    \\_____> |\n"
         "+------------------------------------------------------+\n"
         "| OpenGL Version   : %s\n"
         "| Texture Slots    : %u\n"
@@ -37,19 +39,21 @@ void BF::GameSystem::Start()
 
     stopwatch.Start();
 
-    const char* vertexShaderWorld = "Shader/WorldSpace.vert";
-    const char* fragmentShaderWorld = "Shader/WorldSpace.frag";
+
+
+    const char* vertexShaderWorld = "Shader/WS.vert";
+    const char* fragmentShaderWorld = "Shader/WS.frag";
     const char* vertexShaderHUD = "Shader/HUD.vert";
     const char* fragmentShaderHUD = "Shader/HUD.frag";
 
     Resource.AddShaderProgram(vertexShaderWorld, fragmentShaderWorld);
     unsigned int hudShaderID = Resource.AddShaderProgram(vertexShaderHUD, fragmentShaderHUD);
    
-    Model* sphere = (Model*)Resource.Load("N:/Schule/Studium/Semester/Semester 4/[CGA] Computergrafik und Animation/Praktikum/S21/Projekt/CGA/Praktikum/A_Geometry/assets/models/sphere.obj");
-    sphere->UseTexturePointAsColor();
-    sphere->Move(6.5, 1.5, 0);
-    sphere->Scale(4, 4, 4);
-    Resource.PushToGPU(*sphere);
+   // sphere = (Model*)Resource.Load("N:/Schule/Studium/Semester/Semester 4/[CGA] Computergrafik und Animation/Praktikum/S21/Projekt/CGA/Praktikum/A_Geometry/assets/models/sphere.obj");
+    //sphere->UseTexturePointAsColor();
+   // sphere->Move(6.5, 1.5, 0);
+   // sphere->Scale(4, 4, 4);
+  //  Resource.PushToGPU(*sphere);
     
    
 
@@ -57,7 +61,7 @@ void BF::GameSystem::Start()
    // Resource.Load("A:/_WorkSpace/BitFireEngine/Texture/Sign.png");
     Resource.Load("Level/MainMenu.lev");
     
-    Resource.Load("Model/Bike/HQ_Movie cycle.obj");
+    //Resource.Load("Model/Bike/HQ_Movie cycle.obj");
 
 
     text = new UIText("SampleText", *Resource.DefaultFont, -1, -0.8);
@@ -69,6 +73,8 @@ void BF::GameSystem::Start()
     Resource.PrintContent(true);
 
     printf("[Info] Loading took %.2fs\n", stopwatch.Stop());
+
+
 }
 
 void BF::GameSystem::Update()
@@ -98,6 +104,8 @@ void BF::GameSystem::Update()
 
         //---[Render World]----------------------------------------------------
         Resource.RenderModels(_gameTickData);
+
+        //sphere->Orbit(BF::Position<float>(10.0f,0.0f,0.0f));
     }
 }
 

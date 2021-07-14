@@ -18,12 +18,16 @@
     <ClCompile Include="Source\Main.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\AllocationDetector.hpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\WorldSpace.vert" />
     <None Include="Shader\WorldSpace.frag" />
+    <None Include="Shader\WS.vert" />
+    <None Include="Shader\WS.frag" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Main.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

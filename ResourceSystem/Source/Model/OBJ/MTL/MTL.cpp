@@ -2,7 +2,7 @@
 
 #include "../../../File/File.h"
 
-void BF::MTL::Load(AsciiString& filePath)
+void BF::MTL::Load(char* filePath)
 {
 	unsigned int materialIndex = 0;
 	const char _newMaterialCharacter = 'n';
@@ -14,220 +14,178 @@ void BF::MTL::Load(AsciiString& filePath)
 	//static const char _newMaterialCharacter = 'N';
 	const char _weightCharacter = 's';
 	//static const char _newMaterialCharacter = 'i';
-	List<AsciiString> lineList;
-	File file(filePath);
 
-	file.ReadAsLines(lineList);
+	File file(filePath);
+	file.Read();
+	unsigned int amountOfLines = file.CountAmountOfLines();
+	char currentLineBuffer[200];
 
 	// Count How many materials are needed
 	{
-		unsigned int materialCounter = 0;
 
-		for (unsigned int line = 0; line < lineList.Size(); line++)
+		for (unsigned int line = 0; line < amountOfLines; line++)
 		{
-			AsciiString& lineCommand = lineList[line];
-			char commandChar = lineCommand.GetFirstNonEmpty();
+			file.ReadNextLineInto(currentLineBuffer);
+			char commandChar = currentLineBuffer[0];
 
 			if (commandChar == 'n')
 			{
-				materialCounter++;
+				MaterialListSize++;
 			}
 		}
 
-		MaterialList.ReSize(materialCounter);
+		MaterialList = reinterpret_cast<MTLMaterial*>(MemoryAllocateCleared(MaterialListSize, sizeof(MTLMaterial)));
 	}
 
 	// Raw Parse
-
 	MTLMaterial* material = nullptr; // current material, has to be here, its state dependend
+	char dummyBuffer[20];
 
-	for (unsigned int line = 0; line < lineList.Size(); line++)
+	file.CursorToBeginning();
+
+	for (unsigned int line = 0; line < amountOfLines; line++)
 	{
-		AsciiString& lineCommand = lineList[line];
-		char commandChar = lineCommand.GetFirstNonEmpty();	
+		file.ReadNextLineInto(currentLineBuffer);
+		char commandChar = currentLineBuffer[0];
 
 		switch (commandChar)
 		{
-		case 'm':
-		{
-			unsigned int startIndex = lineCommand.FindFirst(' ') + 1;
-			unsigned int length = lineCommand.Size() - startIndex + 1;
-			AsciiString tetxurePath(&lineCommand[startIndex], length);
+			case 'm':
+			{
+				sscanf(currentLineBuffer, "%s %s", dummyBuffer, material->TextureFilePath);
 
-			material->TextureFilePath.Copy(tetxurePath);
-			break;
-		}
+				break;
+			}
 
 			case 'n':
 			{
-				List<AsciiString> lines;
-
-				lineCommand.Splitt(' ', lines);
-
 				material = &MaterialList[materialIndex++];
-				material->Name.Copy(lines[1]);
+
+				sscanf(currentLineBuffer, "%s %s", dummyBuffer, material->Name);
 
 				break;
 			}
 
 			case 'N':
 			{
-				commandChar = lineCommand[1];
+				float* value = nullptr;
+				commandChar = currentLineBuffer[1];
 
 				switch (commandChar)
 				{
 					case 's':
 					{
-						List<AsciiString> lines;
-
-						lineCommand.Splitt(' ', lines);
-						material->Weight = lines[1].ToFloat();
-
+						value = &material->Weight;
 						break;
 					}
 
 					case 'i':
 					{
-						List<AsciiString> lines;
-
-						lineCommand.Splitt(' ', lines);
-
-						material->Density = lines[1].ToFloat();
-
+						value = &material->Density;
 						break;
-					}
-
+					}					
 				}
+
+				sscanf(currentLineBuffer, "%s %f", dummyBuffer, value);
 
 				break;
 			}
 
 			case 'K':
 			{
-				commandChar = lineCommand[1];
+				float* colorVector = nullptr;
+
+				commandChar = currentLineBuffer[1];
 
 				switch (commandChar)
 				{
 					case 'a':
 					{
-						List<AsciiString> lines;
-
-						lineCommand.Splitt(' ', lines);
-
-						material->Ambient.X = lines[1].ToFloat();
-						material->Ambient.Y = lines[2].ToFloat();
-						material->Ambient.Z = lines[3].ToFloat();
-
+						colorVector = material->Ambient;
 						break;
 					}
 
 					case 'd':
 					{
-						List<AsciiString> lines;
-
-						lineCommand.Splitt(' ', lines);
-
-						material->Diffuse.X = lines[1].ToFloat();
-						material->Diffuse.Y = lines[2].ToFloat();
-						material->Diffuse.Z = lines[3].ToFloat();
-
+						colorVector = material->Diffuse;
 						break;
 					}
 
 					case 's':
 					{
-						List<AsciiString> lines;
-
-						lineCommand.Splitt(' ', lines);
-
-						material->Specular.X = lines[1].ToFloat();
-						material->Specular.Y = lines[2].ToFloat();
-						material->Specular.Z = lines[3].ToFloat();
-
+						colorVector = material->Specular;
 						break;
 					}
-
 
 					case 'e':
 					{
-						List<AsciiString> lines;
-
-						lineCommand.Splitt(' ', lines);
-
-						material->Emission.X = lines[1].ToFloat();
-						material->Emission.Y = lines[2].ToFloat();
-						material->Emission.Z = lines[3].ToFloat();
-
+						colorVector = material->Emission;
 						break;
 					}
-
 				}
+
+				sscanf(currentLineBuffer, "%s %f %f %f", dummyBuffer, &colorVector[0], &colorVector[1], &colorVector[2]);
 
 				break;
 			}
 
 			case 'd':
 			{
-				List<AsciiString> lines;
-
-				lineCommand.Splitt(' ', lines);
-
-				material->Dissolved = lines[1].ToFloat();
+				sscanf(currentLineBuffer, "%s %f", dummyBuffer, &material->Dissolved);
 
 				break;
 			}
 
 			case 'i':
 			{
-				List<AsciiString> lines;
-
-				lineCommand.Splitt(' ', lines);
 				IlluminationMode mode = IlluminationMode::None;
-				int number = lines[1].ToInt();
+				int number = -1;
+
+				sscanf(currentLineBuffer, "%s %i", dummyBuffer, &number);
 
 				switch (number)
 				{
-					case '0':
+					case 0:
 						mode = IlluminationMode::ColorAndAmbientDisable;
 						break;
 
-					case '1':
+					case 1:
 						mode = IlluminationMode::ColorAndAmbientEnable;
 						break;
 
-					case '2':
+					case 2:
 						mode = IlluminationMode::HighlightEnable;
 						break;
 
-					case '3':
+					case 3:
 						mode = IlluminationMode::ReflectionOnRayTraceEnable;
 						break;
 
-					case '4':
+					case 4:
 						mode = IlluminationMode::ReflectionOnRayTraceTransparency;
 						break;
 
-					case '5':
+					case 5:
 						mode = IlluminationMode::ReflectionOnRayTraceFresnel;
 						break;
 
-					case '6':
+					case 6:
 						mode = IlluminationMode::ReflectionOnRayTraceTransparencyFresnel;
 						break;
 
-					case '7':
+					case 7:
 						mode = IlluminationMode::ReflectionOnRayTraceFullEnable;
 						break;
 
-					case '8':
+					case 8:
 						mode = IlluminationMode::ReflectionEnable;
 						break;
 
-					case '9':
+					case 9:
 						mode = IlluminationMode::TransparencyEnable;
 						break;
 
-					case '10':
+					case 10:
 						mode = IlluminationMode::ShadowsEnable;
 						break;
 				}
@@ -245,11 +203,12 @@ void BF::MTL::Load(AsciiString& filePath)
 	}
 }
 
+
 void BF::MTL::PrintContent()
 {
 	printf("===[Material]===\n");
 
-	for (size_t i = 0; i < MaterialList.Size(); i++)
+	for (size_t i = 0; i < MaterialListSize; i++)
 	{
 		MTLMaterial& material = MaterialList[i];
 
@@ -274,18 +233,18 @@ void BF::MTL::PrintContent()
 			&material.Name[0],
 			&material.TextureFilePath[0],
 			material.Weight,
-			material.Ambient.X,
-			material.Ambient.Y,
-			material.Ambient.Z,
-			material.Diffuse.X,
-			material.Diffuse.Y,
-			material.Diffuse.Z,
-			material.Specular.X,
-			material.Specular.Y,
-			material.Specular.Z,
-			material.Emission.X,
-			material.Emission.Y,
-			material.Emission.Z,
+			material.Ambient[0],
+			material.Ambient[1],
+			material.Ambient[2],
+			material.Diffuse[0],
+			material.Diffuse[1],
+			material.Diffuse[2],
+			material.Specular[0],
+			material.Specular[1],
+			material.Specular[2],
+			material.Emission[0],
+			material.Emission[1],
+			material.Emission[2],
 			material.Dissolved,
 			material.Density
 		);

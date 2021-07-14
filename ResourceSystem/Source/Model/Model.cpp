@@ -496,7 +496,7 @@ BF::ErrorCode BF::Model::Load(AsciiString& filePath)
         case ModelType::OBJ:
         {
             OBJ obj;
-            obj.Load(filePath);
+            obj.Load(&filePath[0]);
             obj.Convert(*this);
             break;
         }
@@ -538,8 +538,8 @@ void BF::Model::ConvertFrom(Shape& shape)
     MeshList.ReSize(meshSize);
 
     mesh = &MeshList[0]; // Get current target Mesh
-    mesh->Name.Copy("Shape");
 
+    strcpy(mesh->Name, "Shape");
 
     mesh->VertexList.ReSize(vertexListSize);
     mesh->IndexList.ReSize(vertexListSize);
