@@ -132,10 +132,10 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -178,10 +178,10 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -244,6 +244,33 @@
     <ClCompile Include="Source\Image\TGA\TGA.cpp" />
     <ClCompile Include="Source\Image\TIFF\TIFF.cpp" />
     <ClCompile Include="Source\Level\Level.cpp" />
+    <ClCompile Include="Source\Math\Algorithm\CRCAlgorithm.cpp" />
+    <ClCompile Include="Source\Math\Encryption\Caesar.cpp" />
+    <ClCompile Include="Source\Math\Encryption\ICypher.cpp" />
+    <ClCompile Include="Source\Math\Encryption\ISBN.cpp" />
+    <ClCompile Include="Source\Math\Encryption\RSA.cpp" />
+    <ClCompile Include="Source\Math\Geometry\Form\Cone.cpp" />
+    <ClCompile Include="Source\Math\Geometry\Form\Cube.cpp" />
+    <ClCompile Include="Source\Math\Geometry\Form\Cuboid.cpp" />
+    <ClCompile Include="Source\Math\Geometry\Form\Cylinder.cpp" />
+    <ClCompile Include="Source\Math\Geometry\Form\Form.cpp" />
+    <ClCompile Include="Source\Math\Geometry\Form\Icosahedron.cpp" />
+    <ClCompile Include="Source\Math\Geometry\Form\Sphere.cpp" />
+    <ClCompile Include="Source\Math\Geometry\Form\SquarePyramid.cpp" />
+    <ClCompile Include="Source\Math\Geometry\Shape\Circle.cpp" />
+    <ClCompile Include="Source\Math\Geometry\Shape\Hexagon.cpp" />
+    <ClCompile Include="Source\Math\Geometry\Shape\Pentagon.cpp" />
+    <ClCompile Include="Source\Math\Geometry\Shape\Rectangle.cpp" />
+    <ClCompile Include="Source\Math\Geometry\Shape\Shape.cpp" />
+    <ClCompile Include="Source\Math\Geometry\Shape\Square.cpp" />
+    <ClCompile Include="Source\Math\Geometry\Shape\Star.cpp" />
+    <ClCompile Include="Source\Math\Geometry\Shape\Triangle.cpp" />
+    <ClCompile Include="Source\Math\Interpolate.cpp" />
+    <ClCompile Include="Source\Math\Math.cpp" />
+    <ClCompile Include="Source\Math\Physic\Collider.cpp" />
+    <ClCompile Include="Source\Math\Physic\GravityBox.cpp" />
+    <ClCompile Include="Source\Math\Physic\GravityField.cpp" />
+    <ClCompile Include="Source\Math\Physic\GravitySphere.cpp" />
     <ClCompile Include="Source\Model\3DS\A3DS.cpp" />
     <ClCompile Include="Source\Model\FBX\FBX.cpp" />
     <ClCompile Include="Source\Model\LinkedMesh.cpp" />
@@ -345,6 +372,45 @@
     <ClInclude Include="Source\Image\TGA\TGAImageDataType.h" />
     <ClInclude Include="Source\Image\TIFF\TIFF.h" />
     <ClInclude Include="Source\Level\Level.h" />
+    <ClInclude Include="Source\Math\Algorithm\CRCAlgorithm.h" />
+    <ClInclude Include="Source\Math\Complex.h" />
+    <ClInclude Include="Source\Math\Diagrams\BoxPlot.hpp" />
+    <ClInclude Include="Source\Math\Encryption\Caesar.h" />
+    <ClInclude Include="Source\Math\Encryption\ICypher.h" />
+    <ClInclude Include="Source\Math\Encryption\ISBN.h" />
+    <ClInclude Include="Source\Math\Encryption\RSA.h" />
+    <ClInclude Include="Source\Math\Geometry\Direction.h" />
+    <ClInclude Include="Source\Math\Geometry\Form\Cone.h" />
+    <ClInclude Include="Source\Math\Geometry\Form\Cube.h" />
+    <ClInclude Include="Source\Math\Geometry\Form\Cuboid.h" />
+    <ClInclude Include="Source\Math\Geometry\Form\Cylinder.h" />
+    <ClInclude Include="Source\Math\Geometry\Form\Form.h" />
+    <ClInclude Include="Source\Math\Geometry\Form\Icosahedron.h" />
+    <ClInclude Include="Source\Math\Geometry\Form\Sphere.h" />
+    <ClInclude Include="Source\Math\Geometry\Form\SquarePyramid.h" />
+    <ClInclude Include="Source\Math\Geometry\Matrix2x2.hpp" />
+    <ClInclude Include="Source\Math\Geometry\Matrix3x3.hpp" />
+    <ClInclude Include="Source\Math\Geometry\Matrix4x4.hpp" />
+    <ClInclude Include="Source\Math\Geometry\Padding.hpp" />
+    <ClInclude Include="Source\Math\Geometry\Point.hpp" />
+    <ClInclude Include="Source\Math\Geometry\Position.hpp" />
+    <ClInclude Include="Source\Math\Geometry\Shape\Circle.h" />
+    <ClInclude Include="Source\Math\Geometry\Shape\Hexagon.h" />
+    <ClInclude Include="Source\Math\Geometry\Shape\Pentagon.h" />
+    <ClInclude Include="Source\Math\Geometry\Shape\Rectangle.h" />
+    <ClInclude Include="Source\Math\Geometry\Shape\Shape.h" />
+    <ClInclude Include="Source\Math\Geometry\Shape\Square.h" />
+    <ClInclude Include="Source\Math\Geometry\Shape\Star.h" />
+    <ClInclude Include="Source\Math\Geometry\Shape\Triangle.h" />
+    <ClInclude Include="Source\Math\Geometry\Vector2.hpp" />
+    <ClInclude Include="Source\Math\Geometry\Vector3.hpp" />
+    <ClInclude Include="Source\Math\Geometry\Vector4.hpp" />
+    <ClInclude Include="Source\Math\Interpolate.h" />
+    <ClInclude Include="Source\Math\Math.h" />
+    <ClInclude Include="Source\Math\Physic\Collider.h" />
+    <ClInclude Include="Source\Math\Physic\GravityBox.h" />
+    <ClInclude Include="Source\Math\Physic\GravityField.h" />
+    <ClInclude Include="Source\Math\Physic\GravitySphere.h" />
     <ClInclude Include="Source\Model\3DS\A3DS.h" />
     <ClInclude Include="Source\Model\FBX\FBX.h" />
     <ClInclude Include="Source\Model\LinkedMesh.h" />
@@ -383,15 +449,10 @@
     <ClInclude Include="Source\Sound\WAV\WAV.h" />
     <ClInclude Include="Source\Types\DoubleWord.h" />
     <ClInclude Include="Source\Types\Endian.h" />
-    <ClInclude Include="Source\Types\RGB.hpp" />
-    <ClInclude Include="Source\Types\RGBA.hpp" />
     <ClInclude Include="Source\Types\UUID.h" />
     <ClInclude Include="Source\Types\Word.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MathSystem\MathSystem.vcxproj">
-      <Project>{2a8f1a2f-0283-4ce7-9439-fd8ea012632f}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\MemoryManager\MemoryManager.vcxproj">
       <Project>{2e3e50f7-6147-4fe7-87bc-10aea9bd36eb}</Project>
     </ProjectReference>

@@ -49,6 +49,8 @@ namespace BF
 
 		float ToFloat();
 		int ToInt();
+		static int ToInt(char* string);
+		static void ToInt(char* string, int* target);
 		bool ToBool();
 		unsigned int Count(char character);
 		unsigned int CountUnique(char character);

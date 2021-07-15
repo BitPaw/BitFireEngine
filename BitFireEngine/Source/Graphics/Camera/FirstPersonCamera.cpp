@@ -1,6 +1,6 @@
 #include "FirstPersonCamera.h"
 #include "../../../../RenderSystem/Source/OpenGLAPI.h"
-#include "../../../../MathSystem/Dependencies/include/glm/ext/matrix_clip_space.hpp"
+#include "../../../../ResourceSystem/Dependencies/include/glm/ext/matrix_clip_space.hpp"
 
 void BF::FirstPersonCamera::FetchGPUReferences(unsigned int shaderID)
 {

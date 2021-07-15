@@ -34,7 +34,7 @@ void PushToFile(char* buffer, int length)
 #ifdef _DEBUG
     fwrite(buffer, 1, length, file);
 
-    //printf("%s", buffer);    
+    printf("%s", buffer);    
 #endif
 }
 

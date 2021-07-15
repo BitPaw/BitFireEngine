@@ -1,5 +1,5 @@
 #include "Camera.h"
-#include "../../../../MathSystem/Source/Geometry/Direction.h"
+#include "../../../../ResourceSystem/Source/Math/Geometry/Direction.h"
 #include <stdio.h>
 
 //#include "../../System/GameSystem.h"
@@ -8,8 +8,6 @@ BF::Camera::Camera() : Camera(new CameraSettings(1, 1))
 {
 
 }
-
-
 
 BF::Camera::Camera(CameraSettings* settings)
 {
@@ -55,8 +53,6 @@ void BF::Camera::Move(Direcion direction)
 
 	MatrixModel.Move(movement);
 }
-
-
 
 void BF::Camera::Update(GameTickData gameTickData)
 {

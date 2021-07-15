@@ -11,18 +11,21 @@ BF::AsciiString::AsciiString()
 
 BF::AsciiString::AsciiString(const char* string)
 {
+	_data = (char*)string;
+	_size = 0;
+
 	if (string == nullptr)
 	{
-		_data = nullptr;
-		_isReferenceToOtherString = false;
-		_size = 0;
+		_isReferenceToOtherString = false;	
 		return;
 	}
 
-	char* currentAdress = (char*)string;
-	_size = 1;
+	_isReferenceToOtherString = true;
 
-	while (*(currentAdress++) != '\0') _size++;
+	while (string[_size++] != '\0')
+	{
+		
+	}
 
 	SetAsReference((char*)string, _size);
 }
@@ -225,7 +228,41 @@ float BF::AsciiString::ToFloat()
 
 int BF::AsciiString::ToInt()
 {
-	return std::strtol(&_data[0], 0, 10);
+	// atoi()
+	//std::strtol(&_data[0], 0, 10);
+
+	return AsciiString::ToInt(_data);	
+}
+
+int BF::AsciiString::ToInt(char* string)
+{
+	int value = -1;
+
+	AsciiString::ToInt(string, &value);
+
+	return value;
+}
+
+void BF::AsciiString::ToInt(char* string, int* target)
+{
+	int number = 0;
+
+	for (unsigned int i = 0; string[i] != '\0'; i++)
+	{
+		char character = string[i];
+		char isValidCharacter = (character >= '0' && character <= '9');
+
+		if (!isValidCharacter)
+		{
+			*target = number;
+			return;
+		}
+
+		number *= 10; // "Shft number to left" Example 12 -> 120
+		number += (character - '0'); // ASCII character to actual number.
+	}
+
+	*target = number;
 }
 
 bool BF::AsciiString::ToBool()
@@ -528,8 +565,8 @@ bool BF::AsciiString::CompareIgnoreCase(const char* string)
 
 bool BF::AsciiString::CompareIgnoreCase(AsciiString& string)
 {
-	const unsigned int targetSize = string.Size();
-	const unsigned int sourceSize = Size();
+	const unsigned int targetSize = strlen(&string[0]);
+	const unsigned int sourceSize = strlen(&this->operator[](0));
 
 	bool isDifferent = targetSize != sourceSize;
 

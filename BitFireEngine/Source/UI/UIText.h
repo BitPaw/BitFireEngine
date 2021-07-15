@@ -1,7 +1,7 @@
 #pragma once
 
 #include "UIElement.h"
-#include "../../../MathSystem/Source/Geometry/Shape/Rectangle.h"
+#include "../../../ResourceSystem/Source/Math/Geometry/Shape/Rectangle.h"
 #include "../../../ResourceSystem/Source/Font/Font.h"
 
 namespace BF

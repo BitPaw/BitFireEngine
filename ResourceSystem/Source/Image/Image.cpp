@@ -4,11 +4,11 @@
 #include "PNG/PNG.h"
 #include "TGA/TGA.h"
 
-BF::RGBA<unsigned char> BF::Image::GetPixel(unsigned int x, unsigned int y)
+BF::Vector4<unsigned char> BF::Image::GetPixel(unsigned int x, unsigned int y)
 {
     unsigned int pos = (x * Width + y) * 4;
 
-    RGBA<unsigned char> pixel
+    Vector4<unsigned char> pixel
     (
         PixelData[pos++],
         PixelData[pos++],

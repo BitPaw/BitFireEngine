@@ -108,7 +108,7 @@ namespace BF
 			}
 		}
 
-		T& operator[](unsigned int value)
+		inline T& operator[](unsigned int value)
 		{
 			return _content[value];
 		}

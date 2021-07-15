@@ -1,6 +1,6 @@
 #include "Window.h"
 #include "../VideoConfig.h"
-#include "../../../MathSystem/Source/Interpolate.h"
+#include "../../../ResourceSystem/Source/Math/Interpolate.h"
 #include "../../Dependencies/include/GL/glew.h"
 #include "../../Dependencies/include/GLFW/glfw3.h"
 #include <stdio.h>

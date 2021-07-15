@@ -1,6 +1,101 @@
 #include "OBJ.h"
 #include "../../File/File.h"
 #include "OBJLineCommand.h"
+#include <cstdarg>
+#include "../../Container/AsciiString.h"
+
+void StringParse(char* buffer, const char* syntax, ...)
+{
+    va_list args;
+    va_start(args, syntax);
+
+    int startIndex = 0;
+    int stopIndex = 0;
+    int command = 0;
+    bool finished = false;
+
+    while (!finished)
+    {
+        char commandKey = syntax[command++];
+
+        {
+            while (true)
+            {
+                char current = buffer[stopIndex++];
+                finished = current == '\0';
+
+                if (current == ' ' || finished || current == '/')
+                {
+                    break;
+                }
+            }
+
+
+            switch (commandKey)
+            {
+                case 's':
+                {
+                    char* destination = va_arg(args, char*);
+                    char* source = &buffer[startIndex];
+                    unsigned int length = stopIndex - startIndex - 1;
+
+                    memcpy(destination, source, length);
+                    destination[length] = '\0';
+                    break;
+                }
+
+
+                case 'u':
+                {
+                    unsigned int* i = va_arg(args, unsigned int*);
+                    char* source = &buffer[startIndex];
+
+                    BF::AsciiString::ToInt(source, (int*)i);
+
+                    break;
+                }
+
+
+                case 'f':
+                {
+
+                    float* number = va_arg(args, float*);
+                    char* source = &buffer[startIndex];
+
+                    (*number) = strtof(source, 0);
+
+                    break;
+                }
+
+                case 'c':
+                {
+                    int c = va_arg(args, int);
+                    std::cout << static_cast<char>(c) << '\n';
+                    break;
+                }
+
+
+                default:
+                    break;
+            }
+
+        }
+
+      
+
+
+      
+        
+
+        
+      
+            
+            startIndex = stopIndex;
+        
+    }
+
+    va_end(args);
+}
 
 void BF::OBJ::Load(char* filePath)
 {
@@ -434,46 +529,19 @@ void BF::OBJ::Load(char* filePath)
                          usedFacesBefore = true;
                     }*/                   
 
-                    char cacheA[20];
-                    char cacheB[20];
-                    char cacheC[20];
-
-                    sscanf(currentLineBuffer, "%s %s %s %s", dummyBuffer, cacheA, cacheB, cacheC);
-
-                    // '/' -> ' '
-                    {
-                        for (size_t i = 0; i < cacheA[i] != '\0'; i++)
-                        {
-                            if (cacheA[i] == '/')
-                            {
-                                cacheA[i] = ' ';
-                            }
-                        }
-
-                        for (size_t i = 0; i < cacheB[i] != '\0'; i++)
-                        {
-                            if (cacheB[i] == '/')
-                            {
-                                cacheB[i] = ' ';
-                            }
-                        }
-
-                        for (size_t i = 0; i < cacheC[i] != '\0'; i++)
-                        {
-                            if (cacheC[i] == '/')
-                            {
-                                cacheC[i] = ' ';
-                            }
-                        }
-                    }
-               
                     Position<unsigned int>& vectorA = elemtent->FaceElementList[currentFaceElement++];
                     Position<unsigned int>& vectorB = elemtent->FaceElementList[currentFaceElement++];
                     Position<unsigned int>& vectorC = elemtent->FaceElementList[currentFaceElement++];
 
-                    sscanf(cacheA, "%i %i %i", &vectorA.X, &vectorA.Y, &vectorA.Z);
-                    sscanf(cacheB, "%i %i %i", &vectorB.X, &vectorB.Y, &vectorB.Z);
-                    sscanf(cacheC, "%i %i %i", &vectorC.X, &vectorC.Y, &vectorC.Z);
+                    // sscanf(currentLineBuffer, "%s %s %s %s", dummyBuffer, cacheA, cacheB, cacheC);
+                    StringParse
+                    (
+                        currentLineBuffer, 
+                        "§uuuuuuuuu",
+                        &vectorA.X, &vectorA.Y, &vectorA.Z,
+                        &vectorB.X, &vectorB.Y, &vectorB.Z,
+                        &vectorC.X, &vectorC.Y, &vectorC.Z
+                    );
 
                     usedFacesBefore = true;
 

@@ -1,9 +1,9 @@
 #pragma once
 
-
 #include "Camera.h"
-#include "../../../../MathSystem/Dependencies/include/glm/ext/matrix_float4x4.hpp"
-#include "../../../../MathSystem/Source/Geometry/Direction.h"
+
+#include "../../../../ResourceSystem/Source/Math/Geometry/Vector3.hpp"
+#include "../../../../ResourceSystem/Source/Math/Geometry/Direction.h"
 
 namespace BF
 {

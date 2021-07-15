@@ -152,9 +152,9 @@ void BF::PNG::Load(AsciiString& filePath)
                 Green 	1 byte
                 Blue 	1 byte
                 */
-                Palette.Red = byteStream.ExtractByteAndMove();
-                Palette.Green = byteStream.ExtractByteAndMove();
-                Palette.Blue = byteStream.ExtractByteAndMove();
+                Palette[0] = byteStream.ExtractByteAndMove();
+                Palette[1] = byteStream.ExtractByteAndMove();
+                Palette[2] = byteStream.ExtractByteAndMove();
 
                 break;
             }

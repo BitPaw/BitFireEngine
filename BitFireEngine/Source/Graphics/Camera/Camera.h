@@ -3,11 +3,10 @@
 #include "CameraSettings.h"
 #include "../../System/GameTickData.h"
 
-#include "../../../../MathSystem/Source/Geometry/Direction.h"
-
-#include "../../../../MathSystem/Source/Geometry/Position.hpp"
-#include "../../../../MathSystem/Source/Geometry/Vector3.hpp"
-#include "../../../../MathSystem/Source/Geometry/Matrix4x4.hpp"
+#include "../../../../ResourceSystem/Source/Math/Geometry/Direction.h"
+#include "../../../../ResourceSystem/Source/Math/Geometry/Position.hpp"
+#include "../../../../ResourceSystem/Source/Math/Geometry/Vector3.hpp"
+#include "../../../../ResourceSystem/Source/Math/Geometry/Matrix4x4.hpp"
 
 namespace BF
 {

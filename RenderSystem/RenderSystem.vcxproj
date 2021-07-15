@@ -252,9 +252,6 @@
     <ClCompile Include="Source\Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MathSystem\MathSystem.vcxproj">
-      <Project>{2a8f1a2f-0283-4ce7-9439-fd8ea012632f}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\ResourceSystem\ResourceSystem.vcxproj">
       <Project>{398c5630-9092-486f-920c-c9992f8b7f6c}</Project>
     </ProjectReference>

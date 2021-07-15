@@ -237,7 +237,7 @@ void BF::File::GetFileExtension(AsciiString& path, AsciiString& extension)
         if (position != -1)
         {
 			char* adress = &path[position + 1];
-			unsigned int size = path.Size() - (position);
+			unsigned int size = path.Size() + 1 - (position);
 		
 			extension.SetAsReference(adress, size);
         }

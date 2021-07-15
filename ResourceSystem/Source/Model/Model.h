@@ -8,9 +8,11 @@
 
 #include "ModelType.h"
 
-#include "../../../MathSystem/Source/Geometry/Position.hpp"
-#include "../../../MathSystem/Source/Geometry/Shape/Shape.h"
-#include "../../../MathSystem/Source/Geometry/Matrix4x4.hpp"
+#include "../Math/Geometry/Vector3.hpp"
+#include "../Math/Geometry/Vector4.hpp"
+#include "../Math/Geometry/Position.hpp"
+#include "../Math/Geometry/Shape/Shape.h"
+#include "../Math/Geometry/Matrix4x4.hpp"
 
 namespace BF
 {
@@ -28,7 +30,7 @@ namespace BF
 		AsciiString ModelName;
 
 		LinkedMesh GlobalMesh;
-		List<RGBA<float>> ColorList;
+		List<Vector4<float>> ColorList;
 		List<Mesh> MeshList;
 		List<Material> MaterialList;
 

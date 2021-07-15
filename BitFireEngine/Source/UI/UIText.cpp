@@ -1,5 +1,6 @@
 #include "UIText.h"
 #include "../../../ResourceSystem/Source/Font/FNT/FNT.h"
+#include "../../../ResourceSystem/Source/Math/Interpolate.h"
 
 void BF::UIText::Setup(AsciiString& text, Font& font, float x, float y)
 {

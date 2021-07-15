@@ -4,9 +4,7 @@
 #include "MeshIndexData.h"
 
 #include "../Container/List.hpp"
-#include "../Types/RGBA.hpp"
-
-#include "../../../MathSystem/Source/Geometry/Position.hpp"
+#include "../Math/Geometry/Vector4.hpp"
 
 namespace BF
 {
@@ -18,6 +16,6 @@ namespace BF
 		List<Point<float>*> TexturePointList;
 		List<MeshIndexData*> IndexList;
 
-		List<RGBA<float>*> ColorList;
+		List<Vector4<float>*> ColorList;
 	};
 }

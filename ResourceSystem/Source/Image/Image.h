@@ -9,8 +9,8 @@
 #include "../Resource.h"
 #include "../ErrorCode.h"
 
-#include "../Types/RGBA.hpp"
 #include "../Container/AsciiString.h"
+#include "../Math/Geometry/Vector4.hpp"
 
 namespace BF
 {
@@ -28,7 +28,7 @@ namespace BF
 		ImageWrap WrapWidth;
 
 		List<unsigned char> PixelData;
-		RGBA<unsigned char> GetPixel(unsigned int x, unsigned int y);
+		Vector4<unsigned char> GetPixel(unsigned int x, unsigned int y);
 
 		Image();
 

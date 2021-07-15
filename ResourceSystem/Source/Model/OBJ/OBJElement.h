@@ -2,7 +2,7 @@
 
 #include "../../Container/AsciiString.h"
 #include "../../Container/List.hpp"
-#include "../../../../MathSystem/Source/Geometry/Position.hpp"
+#include "../../../../ResourceSystem/Source/Math/Geometry/Position.hpp"
 
 namespace BF
 {

@@ -6,7 +6,7 @@
 
 #include "../Container/AsciiString.h"
 
-#include "../../../MathSystem/Source/Geometry/Position.hpp"
+#include "../Math/Geometry/Point.hpp"
 
 namespace BF
 {

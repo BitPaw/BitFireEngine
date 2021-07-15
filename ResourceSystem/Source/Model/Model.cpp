@@ -3,8 +3,8 @@
 #include "ModelType.h"
 #include "OBJ/OBJ.h"
 #include "../File/File.h"
-#include "../../../MathSystem/Source/Geometry/Shape/Triangle.h"
-#include "../../../MathSystem/Source/Geometry/Shape/Rectangle.h"
+#include "../../../ResourceSystem/Source/Math/Geometry/Shape/Triangle.h"
+#include "../../../ResourceSystem/Source/Math/Geometry/Shape/Rectangle.h"
 
 BF::Model::Model()
 {
@@ -334,7 +334,8 @@ void BF::Model::UseTexturePointAsColor()
         Point<float>& texturepoint = MeshList[0].TexturePointList[meshIndexData.TexturePointID];
 
         vertex.ColorID = i;
-        ColorList[i].SetColor(texturepoint.X, texturepoint.Y, 0);
+
+        ColorList[i].Set(texturepoint.X, texturepoint.Y, 0, 0);
     }
 
     UpdateGlobalMesh();

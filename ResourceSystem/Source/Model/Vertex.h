@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../MathSystem/Source/Geometry/Position.hpp"
+#include "../Math/Geometry/Vector3.hpp"
 
 namespace BF
 {

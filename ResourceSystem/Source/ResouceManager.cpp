@@ -27,12 +27,12 @@ void BF::ResourceManager::UpdateVBOData(Model& model)
         //renderInformation->IndexData[indiceIndex++] = i;// +renderInformation->IndexOffset;
         MeshIndexData* indexList = mesh.IndexList[i];
 
-        RGBA<float> defaultColor(1, 1, 1, 1);
+        Vector4<float> defaultColor(1, 1, 1, 1);
         Point<float> defaultTexturepoint;
         Position<float> normalPosition;
 
         Vertex* vertex = nullptr;
-        RGBA<float>* color = nullptr;
+        Vector4<float>* color = nullptr;
         Position<float>* position = nullptr;
         Position<float>* normal = nullptr;
         Point<float>* texture = nullptr;
@@ -68,10 +68,12 @@ void BF::ResourceManager::UpdateVBOData(Model& model)
         vertexData[dataIndex++] = normal->Y;
         vertexData[dataIndex++] = normal->Z;
 
-        vertexData[dataIndex++] = color->Red;
-        vertexData[dataIndex++] = color->Green;
-        vertexData[dataIndex++] = color->Blue;
-        vertexData[dataIndex++] = color->Alpha;
+        void* destination = &vertexData[dataIndex++];
+        void* source = color;
+
+        memcpy(destination, source, 4 * sizeof(float));
+
+        dataIndex += 3;
 
         vertexData[dataIndex++] = texture->X;
         vertexData[dataIndex++] = texture->Y;
@@ -143,21 +145,21 @@ void BF::ResourceManager::PushToGPU(Image& image)
     OpenGLAPI::RegisterImage(image);
 }
 
-void* BF::ResourceManager::Load(const char* string)
+void* BF::ResourceManager::Load(AsciiString& filePath)
 {
-    AsciiString asciiString(string);
-
-    return Load(asciiString);
+    return Load(&filePath[0]);
 }
 
-void* BF::ResourceManager::Load(AsciiString& filePath)
+void* BF::ResourceManager::Load(const char* filePathString)
 {
     void* loadedResource = nullptr;
     ResourceType resourceType = ResourceType::Unknown;
-    File file(filePath);
+    File file((char*)filePathString);
     AsciiString fileExtension(&file.Extension[0]);
     bool doesFileExist = file.DoesFileExist();
     ErrorCode errorCode = doesFileExist ? ErrorCode::Undefined : ErrorCode::FileNotFound;
+
+    AsciiString filePath(filePathString);
 
     if (doesFileExist)
     {

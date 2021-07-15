@@ -57,7 +57,7 @@ namespace BF
         //void RegisterGPU(Font& font);
 
 
-        void* Load(const char* string);
+        void* Load(const char* filePathString);
         void* Load(AsciiString& filePath);
 
 
