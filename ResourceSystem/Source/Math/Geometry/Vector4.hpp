@@ -26,6 +26,29 @@ namespace BF
 			Date[3] = w;
 		}
 
+		Vector4<NumberType> operator+(Vector4<NumberType> vector4)
+		{
+			Vector4<NumberType> resultVector(*this);
+
+			resultVector.Add(vector4);
+
+			return resultVector;
+		}
+
+		void Add(NumberType x, NumberType y, NumberType z, NumberType w)
+		{
+			Date[0] += x;
+			Date[1] += y;
+			Date[2] += z;
+			Date[3] += w;
+		}
+
+
+		void Add(Vector4<NumberType>& vector4)
+		{
+			Add(vector4.Date[0], vector4.Date[1], vector4.Date[2], vector4.Date[3]);
+		}
+
 		void Set(NumberType x, NumberType y, NumberType z, NumberType w)
 		{
 			Date[0] = x;

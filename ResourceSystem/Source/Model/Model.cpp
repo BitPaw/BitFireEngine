@@ -24,12 +24,17 @@ void BF::Model::Move(float x, float y, float z)
 
 void BF::Model::Move(Position<float> position)
 {
-    for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
+    if (DirectMorth)
     {
-        GlobalMesh.VertexList[i]->CurrentPosition.Add(position);
+        for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
+        {
+            GlobalMesh.VertexList[i]->CurrentPosition.Add(position);
+        }
+
+        //_currentPosition += position;
     }
 
-    _currentPosition += position;
+    ModelMatrix.Move(position.X, position.Y, position.Z);
 }
 
 void BF::Model::MoveTo(float x, float y, float z)
@@ -39,15 +44,22 @@ void BF::Model::MoveTo(float x, float y, float z)
 
 void BF::Model::MoveTo(Position<float> position)
 {
-    for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
+    if (DirectMorth)
     {
-        Vertex* vertex = GlobalMesh.VertexList[i];
+        for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
+        {
+            Vertex* vertex = GlobalMesh.VertexList[i];
 
-        vertex->CurrentPosition.Substract(_currentPosition);
-        vertex->CurrentPosition.Add(position);
+            auto x = ModelMatrix.CurrentPosition();
+
+            vertex->CurrentPosition.Substract(x.Date[0], x.Date[1], x.Date[2]);
+            vertex->CurrentPosition.Add(position);
+        }
+
+       // _currentPosition = position;
     }
 
-    _currentPosition = position;
+    ModelMatrix.MoveTo(position.X, position.Y, position.Z);
 }
 
 void BF::Model::Rotate(float x, float y, float z)
@@ -57,42 +69,52 @@ void BF::Model::Rotate(float x, float y, float z)
 
 void BF::Model::Rotate(Position<float> rotation)
 {
-    for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
+    if (DirectMorth)
     {
-        Vertex* vertex = GlobalMesh.VertexList[i];
-        Position<float>* currentPosition = &vertex->CurrentPosition;
+        
+        for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
+        {
+            Vertex* vertex = GlobalMesh.VertexList[i];
+            Position<float>* currentPosition = &vertex->CurrentPosition;
 
-        currentPosition->Substract(_currentPosition);
-        currentPosition->Rotate(rotation);
-        currentPosition->Add(_currentPosition);
+            auto x = ModelMatrix.CurrentRotation();
+            Position<float> position(x.Date[0], x.Date[1], x.Date[2]);
+
+            currentPosition->Substract(position);
+            currentPosition->Rotate(rotation);
+            currentPosition->Add(position);
+        }
+
+        /*
+        _currentRotation += rotation;
+
+        if (_currentRotation.X > 360)
+        {
+            _currentRotation.X -= 360;
+        }
+
+        if (_currentRotation.Y > 360)
+        {
+            _currentRotation.Y -= 360;
+        }
+
+        if (_currentRotation.Z > 360)
+        {
+            _currentRotation.Z -= 360;
+        }*/
     }
 
-    _currentRotation += rotation;
-
-    if (_currentRotation.X > 360)
-    {
-        _currentRotation.X -= 360;
-    }
-
-    if (_currentRotation.Y > 360)
-    {
-        _currentRotation.Y -= 360;
-    }
-
-    if (_currentRotation.Z > 360)
-    {
-        _currentRotation.Z -= 360;
-    }
+    ModelMatrix.Rotate(rotation.X, rotation.Y, rotation.Z);
 }
 
 void BF::Model::RotateTo(float x, float y, float z)
 {
-
+    ModelMatrix.RotateTo(x, y, z);
 }
 
 void BF::Model::RotateTo(Position<float> rotation)
 {
-
+    ModelMatrix.RotateTo(rotation.X, rotation.Y, rotation.Z);
 }
 
 
@@ -114,6 +136,7 @@ void BF::Model::Orbit(Position<float> rotation)
 
 void BF::Model::Orbit(Position<float> rotation, Position<float> ancerPosition)
 {
+   // ModelMatrix.Orbit();
 }
 
 void BF::Model::Scale(float x, float y, float z)
@@ -123,22 +146,19 @@ void BF::Model::Scale(float x, float y, float z)
 
 void BF::Model::Scale(Position<float> scaleFactor)
 {
-    for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
+    if (DirectMorth)
     {
-        Vertex* vertex = GlobalMesh.VertexList[i];
+        for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
+        {
+            Vertex* vertex = GlobalMesh.VertexList[i];
 
-        vertex->CurrentPosition.Multiply(scaleFactor);
+            vertex->CurrentPosition.Multiply(scaleFactor);
+        }
     }
-}
-
-BF::Position<float> BF::Model::CurrentPosition()
-{
-    return _currentPosition;
-}
-
-BF::Position<float> BF::Model::CurrentRotation()
-{
-    return _currentRotation;
+    else
+    {
+        ModelMatrix.Scale(scaleFactor.X, scaleFactor.Y, scaleFactor.Z);
+    }
 }
 
 void BF::Model::CalculateNormalVectors()
@@ -376,16 +396,6 @@ void BF::Model::PrintModelData()
 
         printf("\n");
     }
-}
-
-void BF::Model::PrintCurrentPosition()
-{
-    printf("ID:  Position: X:%5.2f Y:%5.2f Z:%5.2f\n", _currentPosition.X, _currentPosition.Y, _currentPosition.Z);
-}
-
-void BF::Model::PrintCurrentRotation()
-{
-    printf("ID:  Rotation: X:%5.2f Y:%5.2f Z:%5.2f\n", _currentRotation.X, _currentRotation.Y, _currentRotation.Z);
 }
 
 void BF::Model::UpdateGlobalMesh()

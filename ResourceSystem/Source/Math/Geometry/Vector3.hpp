@@ -125,6 +125,69 @@ namespace BF
 			this->Data[1] = vectorA.Data[2] * vectorB.Data[0] - vectorA.Data[0] * vectorB.Data[2];
 			this->Data[2] = vectorA.Data[0] * vectorB.Data[1] - vectorA.Data[1] * vectorB.Data[0];
 		}
+
+		void Rotate(Vector3<NumberType> rotation)
+		{
+			NumberType x = Data[0];
+			NumberType y = Data[1];
+			NumberType z = Data[2];
+
+			rotation.X = Math::DegreeToRadians(rotation.X);
+			rotation.Y = Math::DegreeToRadians(rotation.Y);
+			rotation.Z = Math::DegreeToRadians(rotation.Z);
+
+			x = Math::DegreeToRadians(x);
+			y = Math::DegreeToRadians(y);
+			z = Math::DegreeToRadians(z);
+
+			NumberType tempX = 0;
+			NumberType tempY = 0;
+			NumberType tempZ = 0;
+
+			NumberType angleSin;
+			NumberType angleCos;
+
+			//--[Z-Axis rotation]-----------------------------------
+			angleSin = Math::Sinus(rotation.Z);
+			angleCos = Math::Cosinus(rotation.Z);
+
+			tempX = angleCos * x - angleSin * y;
+			tempY = angleSin * x + angleCos * y;
+
+			x = tempX;
+			y = tempY;
+			//------------------------------------------------------
+
+			//--[Y-Axis rotation]-----------------------------------
+			angleSin = Math::Sinus(rotation.Y);
+			angleCos = Math::Cosinus(rotation.Y);
+
+			tempX = angleCos * x + angleSin * z;
+			tempZ = -angleSin * x + angleCos * z;
+
+			x = tempX;
+			z = tempZ;
+			//------------------------------------------------------
+
+			//--[X-Axis rotation]-----------------------------------
+			angleSin = Math::Sinus(rotation.X);
+			angleCos = Math::Cosinus(rotation.X);
+
+			tempY = angleCos * y - angleSin * z;
+			tempZ = angleSin * y + angleCos * z;
+
+			y = tempY;
+			z = tempZ;
+			//------------------------------------------------------
+
+			x = Math::RadiansToDegree(x);
+			y = Math::RadiansToDegree(y);
+			z = Math::RadiansToDegree(z);
+
+			 Data[0] = x;
+			 Data[1] = y;
+			 Data[2] = z;
+		}
 	};
 }
 

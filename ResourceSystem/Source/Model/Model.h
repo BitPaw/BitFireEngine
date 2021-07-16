@@ -19,15 +19,12 @@ namespace BF
 	// Renderable Object used as core element for the rendersystem.
 	class Model : public Resource
 	{
-		protected:
-		Position<float> _currentPosition;
-		Position<float> _currentRotation;
-		Matrix4x4<float> ModelMatrix;
-
 		public:
 		ModelRenderInformation RenderInformation;
 
 		AsciiString ModelName;
+
+		Matrix4x4<float> ModelMatrix;
 
 		LinkedMesh GlobalMesh;
 		List<Vector4<float>> ColorList;
@@ -36,6 +33,8 @@ namespace BF
 
 		Model();
 		Model(AsciiString& name);
+
+		bool DirectMorth = true;
 
 		/**
 	Move object in a specific direction in this worldspace.

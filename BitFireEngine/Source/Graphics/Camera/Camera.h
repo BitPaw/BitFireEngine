@@ -21,10 +21,11 @@ namespace BF
 		int _matrixProjectionID;
 		int _materialTextureID;
 
-		public:
-		Matrix4x4<float> MatrixModel;
 		Matrix4x4<float> MatrixProjection;
 		Matrix4x4<float> MatrixView;
+
+		public:
+		Matrix4x4<float> MatrixModel;
 
 		CameraSettings* Settings;
 
@@ -32,6 +33,11 @@ namespace BF
 		Camera(CameraSettings* settings);
 
 		void UpdateSystemLink();
+
+		int GetModelMatrixID()
+		{
+			return _matrixModelID;
+		}
 
 		virtual void Move(Direcion direction);
 		virtual void Update(GameTickData gameTickData);

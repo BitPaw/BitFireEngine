@@ -132,6 +132,7 @@ void BF::FirstPersonCamera::Move(Direcion direction)
 	movement *= -movementSpeed;	
 
 	MatrixModel.Move(movement);
+	//MatrixView.Move(movement);
 }
 
 BF::FirstPersonCamera::FirstPersonCamera() : Camera()

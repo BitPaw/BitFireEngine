@@ -47,67 +47,67 @@ namespace BF
 
 		Matrix4x4()
 		{
+			memset(Data, 0, sizeof(float) * 16);
+
 			Data[0] = 1;
 			Data[5] = 1;
 			Data[10] = 1;
 			Data[15] = 1;
 		}
 
-		Matrix4x4<NumberType> operator*(Matrix4x4<NumberType> matrixB)
+		void Multiply(Matrix4x4<NumberType>& matrixB)
 		{
-			Matrix4x4<NumberType> resultMatrix;
+			NumberType a = this->Data[0];
+			NumberType b = this->Data[1];
+			NumberType c = this->Data[2];
+			NumberType d = this->Data[3];
+			NumberType e = this->Data[4];
+			NumberType f = this->Data[5];
+			NumberType g = this->Data[6];
+			NumberType h = this->Data[7];
+			NumberType i = this->Data[8];
+			NumberType j = this->Data[9];
+			NumberType k = this->Data[10];
+			NumberType l = this->Data[11];
+			NumberType m = this->Data[12];
+			NumberType n = this->Data[13];
+			NumberType o = this->Data[14];
+			NumberType p = this->Data[15];
 
-			NumberType& a = this->Data[0];
-			NumberType& b = this->Data[1];
-			NumberType& c = this->Data[2];
-			NumberType& d = this->Data[3];
-			NumberType& e = this->Data[4];
-			NumberType& f = this->Data[5];
-			NumberType& g = this->Data[6];
-			NumberType& h = this->Data[7];
-			NumberType& i = this->Data[8];
-			NumberType& j = this->Data[9];
-			NumberType& k = this->Data[10];
-			NumberType& l = this->Data[11];
-			NumberType& m = this->Data[12];
-			NumberType& n = this->Data[13];
-			NumberType& o = this->Data[14];
-			NumberType& p = this->Data[15];
+			NumberType A = matrixB.Data[0];
+			NumberType B = matrixB.Data[1];
+			NumberType C = matrixB.Data[2];
+			NumberType D = matrixB.Data[3];
+			NumberType E = matrixB.Data[4];
+			NumberType F = matrixB.Data[5];
+			NumberType G = matrixB.Data[6];
+			NumberType H = matrixB.Data[7];
+			NumberType I = matrixB.Data[8];
+			NumberType J = matrixB.Data[9];
+			NumberType K = matrixB.Data[10];
+			NumberType L = matrixB.Data[11];
+			NumberType M = matrixB.Data[12];
+			NumberType N = matrixB.Data[13];
+			NumberType O = matrixB.Data[14];
+			NumberType P = matrixB.Data[15];
 
-			NumberType& A = matrixB.Data[0];
-			NumberType& B = matrixB.Data[1];
-			NumberType& C = matrixB.Data[2];
-			NumberType& D = matrixB.Data[3];
-			NumberType& E = matrixB.Data[4];
-			NumberType& F = matrixB.Data[5];
-			NumberType& G = matrixB.Data[6];
-			NumberType& H = matrixB.Data[7];
-			NumberType& I = matrixB.Data[8];
-			NumberType& J = matrixB.Data[9];
-			NumberType& K = matrixB.Data[10];
-			NumberType& L = matrixB.Data[11];
-			NumberType& M = matrixB.Data[12];
-			NumberType& N = matrixB.Data[13];
-			NumberType& O = matrixB.Data[14];
-			NumberType& P = matrixB.Data[15];
+			NumberType& resultA = Data[0];
+			NumberType& resultB = Data[1];
+			NumberType& resultC = Data[2];
+			NumberType& resultD = Data[3];
+			NumberType& resultE = Data[4];
+			NumberType& resultF = Data[5];
+			NumberType& resultG = Data[6];
+			NumberType& resultH = Data[7];
+			NumberType& resultI = Data[8];
+			NumberType& resultJ = Data[9];
+			NumberType& resultK = Data[10];
+			NumberType& resultL = Data[11];
+			NumberType& resultM = Data[12];
+			NumberType& resultN = Data[13];
+			NumberType& resultO = Data[14];
+			NumberType& resultP = Data[15];
 
-			NumberType& resultA = resultMatrix.Data[0];
-			NumberType& resultB = resultMatrix.Data[1];
-			NumberType& resultC = resultMatrix.Data[2];
-			NumberType& resultD = resultMatrix.Data[3];
-			NumberType& resultE = resultMatrix.Data[4];
-			NumberType& resultF = resultMatrix.Data[5];
-			NumberType& resultG = resultMatrix.Data[6];
-			NumberType& resultH = resultMatrix.Data[7];
-			NumberType& resultI = resultMatrix.Data[8];
-			NumberType& resultJ = resultMatrix.Data[9];
-			NumberType& resultK = resultMatrix.Data[10];
-			NumberType& resultL = resultMatrix.Data[11];
-			NumberType& resultM = resultMatrix.Data[12];
-			NumberType& resultN = resultMatrix.Data[13];
-			NumberType& resultO = resultMatrix.Data[14];
-			NumberType& resultP = resultMatrix.Data[15];
-		
 			resultA = a * A + b * E + c * I + d * M;
 			resultB = e * A + f * E + g * I + h * M;
 			resultC = i * A + j * E + k * I + l * M;
@@ -127,13 +127,100 @@ namespace BF
 			resultN = e * D + f * H + g * L + h * P;
 			resultO = i * D + j * H + k * L + l * P;
 			resultP = m * D + n * H + o * L + p * P;
-
-			return resultMatrix;
 		}
+		
+
+		void Add(Matrix4x4<NumberType>& matrixB)
+		{
+			NumberType a = this->Data[0];
+			NumberType b = this->Data[1];
+			NumberType c = this->Data[2];
+			NumberType d = this->Data[3];
+			NumberType e = this->Data[4];
+			NumberType f = this->Data[5];
+			NumberType g = this->Data[6];
+			NumberType h = this->Data[7];
+			NumberType i = this->Data[8];
+			NumberType j = this->Data[9];
+			NumberType k = this->Data[10];
+			NumberType l = this->Data[11];
+			NumberType m = this->Data[12];
+			NumberType n = this->Data[13];
+			NumberType o = this->Data[14];
+			NumberType p = this->Data[15];
+
+			NumberType A = matrixB.Data[0];
+			NumberType B = matrixB.Data[1];
+			NumberType C = matrixB.Data[2];
+			NumberType D = matrixB.Data[3];
+			NumberType E = matrixB.Data[4];
+			NumberType F = matrixB.Data[5];
+			NumberType G = matrixB.Data[6];
+			NumberType H = matrixB.Data[7];
+			NumberType I = matrixB.Data[8];
+			NumberType J = matrixB.Data[9];
+			NumberType K = matrixB.Data[10];
+			NumberType L = matrixB.Data[11];
+			NumberType M = matrixB.Data[12];
+			NumberType N = matrixB.Data[13];
+			NumberType O = matrixB.Data[14];
+			NumberType P = matrixB.Data[15];
+
+			NumberType& resultA = Data[0];
+			NumberType& resultB = Data[1];
+			NumberType& resultC = Data[2];
+			NumberType& resultD = Data[3];
+			NumberType& resultE = Data[4];
+			NumberType& resultF = Data[5];
+			NumberType& resultG = Data[6];
+			NumberType& resultH = Data[7];
+			NumberType& resultI = Data[8];
+			NumberType& resultJ = Data[9];
+			NumberType& resultK = Data[10];
+			NumberType& resultL = Data[11];
+			NumberType& resultM = Data[12];
+			NumberType& resultN = Data[13];
+			NumberType& resultO = Data[14];
+			NumberType& resultP = Data[15];
+
+			resultA = a + A;
+			resultB = b + B;
+			resultC = c + C;
+			resultD = d + D;
+
+			resultE = e + E;
+			resultF = f + F;
+			resultG = g + G;
+			resultH = h + H;
+
+			resultI = i + I;
+			resultJ = j + J;
+			resultK = k + K;
+			resultL = l + L;
+
+			resultM = m + M;
+			resultN = n + N;
+			resultO = o + O;
+			resultP = p + P;
+		}
+
+		Matrix4x4<NumberType> operator*(Matrix4x4<NumberType> matrixB)
+		{
+			Matrix4x4<NumberType> matrix;
+
+			matrix.Multiply(matrixB);
+
+			return matrix;
+		}	
 
 		void operator=(Matrix4x4<NumberType> matrix4x4)
 		{
 			memcmp(this->Data, matrix4x4.Data, 16 * sizeof(NumberType));
+		}
+
+		Matrix4x4<NumberType> operator*=(Matrix4x4<NumberType> matrixB)
+		{
+			return (*this) * matrixB;
 		}
 
 		void Move(NumberType x, NumberType y, NumberType z)
@@ -156,7 +243,47 @@ namespace BF
 		}
 		void Rotate(NumberType x, NumberType y, NumberType z)
 		{
+			//-----<X ROT>-----
+			{
+				 Matrix4x4<NumberType> xRotation;
+				float cosResult = Math::Cosinus(x);
+				float sinResult = Math::Sinus(x);
 
+				xRotation.Data[5] = cosResult;
+				xRotation.Data[6] = sinResult;
+				xRotation.Data[9] = -sinResult;
+				xRotation.Data[10] = cosResult;
+
+				Add(xRotation);
+			}
+
+			//-----<X ROT>-----
+			{
+				Matrix4x4<NumberType> yRotation;
+				float cosResult = Math::Cosinus(y);
+				float sinResult = Math::Sinus(y);
+
+				yRotation.Data[0] = cosResult;
+				yRotation.Data[2] = -sinResult;
+				yRotation.Data[8] = sinResult;
+				yRotation.Data[10] = cosResult;
+
+				Add(yRotation);
+			}
+		
+			//-----<X ROT>-----
+			{
+				Matrix4x4<NumberType> zRotation;
+				float cosResult = Math::Cosinus(z);
+				float sinResult = Math::Sinus(z);
+
+				zRotation.Data[0] = cosResult;
+				zRotation.Data[1] = -sinResult;
+				zRotation.Data[4] = sinResult;
+				zRotation.Data[5] = cosResult;
+
+				Add(zRotation);
+			}		
 		}
 		void RotateTo(NumberType x, NumberType y, NumberType z)
 		{
@@ -165,6 +292,18 @@ namespace BF
 		void Orbit(NumberType x, NumberType y, NumberType z)
 		{
 
+		}
+		void Scale(NumberType x, NumberType y, NumberType z)
+		{
+			this->Data[0] *= x;
+			this->Data[5] *= y;
+			this->Data[10] *= z;
+		}
+		void Scale(Vector3<NumberType> vector3)
+		{
+			this->Data[0] *= vector3.Data[0];
+			this->Data[5] *= vector3.Data[1];
+			this->Data[10] *= vector3.Data[2];
 		}
 
 		void LookAt(NumberType x, NumberType y, NumberType z)
@@ -293,17 +432,23 @@ namespace BF
 			Set(matrix);
 		}
 
+
+
 		Vector4<NumberType> CurrentPosition()
 		{
 			return Vector4<NumberType>(Data[TransformX], Data[TransformY], Data[TransformZ], Data[TransformW]);
 		}
 		Vector4<NumberType> CurrentRotation()
 		{
-			return Vector4<NumberType>(Data[0], Data[5], Data[10]);
+			Vector4<NumberType> x = CurrentAxisX();
+			Vector4<NumberType> y = CurrentAxisY();
+			Vector4<NumberType> z = CurrentAxisZ();
+
+			return x + y + z;
 		}
 		Vector4<NumberType> CurrentScaling()
 		{
-			return Vector4<NumberType>(Data[0], Data[5], Data[10]);
+			return Vector4<NumberType>(Data[0], Data[5], Data[10], Data[15]);
 		}
 
 		void Print()

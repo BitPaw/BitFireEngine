@@ -421,6 +421,7 @@ void* BF::ResourceManager::Load(const char* filePathString)
                             loadedModel->Rotate(rotation);
                             loadedModel->Scale(scale);
                             loadedModel->UpdateGlobalMesh();
+
                             PushToGPU(*loadedModel);
                             //-----------------------
                             break;
@@ -633,7 +634,11 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
             _lastUsedShaderProgram = shaderProgramID;
 
             MainCamera.FetchGPUReferences(shaderProgramID);
+
+            OpenGLAPI::ShaderSetUniformMatrix4x4(MainCamera.GetModelMatrixID(), model->ModelMatrix.Data);
         }
+
+
 
         //---[Change Shader Data?
         MainCamera.Update(gameTickData);
@@ -662,7 +667,7 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
                 }
             }
 
-            // TextureLookup ----------------------------         
+            // TextureLookup ----------------------------     
             OpenGLAPI::TextureBind(textureID);
             //-------------------------------------------------
 
