@@ -3,7 +3,7 @@
 #ifndef MemoryManager
 #define MemoryManager
 
-#define EnableAllocationLogging 1
+#define EnableAllocationLogging 0
 
 #include <stdio.h>
 

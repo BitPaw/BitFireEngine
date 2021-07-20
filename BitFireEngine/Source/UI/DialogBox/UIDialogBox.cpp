@@ -41,7 +41,7 @@ void BF::UIDialogBox::AddMessage(Dialog dialog)
 
 BF::Dialog BF::UIDialogBox::GetNextMessage()
 {
-	return _messages.GetNext();
+	return (BF::Dialog)_messages.GetNext();
 }
 
 bool BF::UIDialogBox::HasMessages()

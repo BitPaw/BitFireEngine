@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include <malloc.h>
-#include <crtdbg.h>
+//#include <crtdbg.h>
 #include <string>
 
 void SetDebugOption(unsigned char option, bool enable)
@@ -24,14 +24,14 @@ void SetDebugOption(unsigned char option, bool enable)
 
 void FileOpen()
 {
-#ifdef _DEBUG
+#if EnableAllocationLogging
     file = fopen(filePath, "w");
 #endif
 }
 
 void PushToFile(char* buffer, int length)
 { 
-#ifdef _DEBUG
+#if EnableAllocationLogging
     fwrite(buffer, 1, length, file);
 
     printf("%s", buffer);    
@@ -40,7 +40,7 @@ void PushToFile(char* buffer, int length)
 
 void FileClose()
 {
-#ifdef _DEBUG
+#if EnableAllocationLogging
     char buffer[200];
     
     int amount = sprintf
@@ -68,12 +68,16 @@ void FileClose()
 
 void EnableDebug()
 {
+    #if EnableAllocationLogging
+
     SetDebugOption(_CRTDBG_ALLOC_MEM_DF, true); // Turn on debug allocation
     SetDebugOption(_CRTDBG_DELAY_FREE_MEM_DF, true); // Don't actually free memory
     //SetDebugOption(_CRTDBG_CHECK_ALWAYS_DF, true); // Check heap every alloc/dealloc
     //SetDebugOption(_CRTDBG_RESERVED_DF, true); // Reserved - do not use
     SetDebugOption(_CRTDBG_CHECK_CRT_DF, true); // Leak check/diff CRT blocks
     SetDebugOption(_CRTDBG_LEAK_CHECK_DF, true); // Leak check at program exit
+
+#endif
 }
 
 
@@ -84,7 +88,7 @@ void* MemoryAllocate(unsigned int sizeOfBlock)
 {
     void* newBlock = malloc(sizeOfBlock);
 
-#ifdef _DEBUG
+#if EnableAllocationLogging
     spaceAllocatedWholeInBytes += sizeOfBlock;
     spaceAllocationsWhole++;
     spaceAllocationsCurrent++;
@@ -104,7 +108,7 @@ void* MemoryAllocateCleared(unsigned int amountOfObjects, unsigned int sizeOfEle
 {
     void* newBlock = calloc(amountOfObjects, sizeOfElement);
     
-#ifdef _DEBUG
+#if EnableAllocationLogging
     char buffer[100];
     int amountOfChars = sprintf(buffer, "[CALOC] <%p> Cleared Allocate x%i (%i Bytes)\n", newBlock, amountOfObjects, amountOfObjects * sizeOfElement);
 
@@ -116,7 +120,7 @@ void* MemoryAllocateCleared(unsigned int amountOfObjects, unsigned int sizeOfEle
 
 void MemoryRelease(void* adress)
 {
-#ifdef _DEBUG
+#if EnableAllocationLogging
     char buffer[100];
     int amountOfChars = sprintf(buffer, "[DELOC] <%p>\n", adress);
 
@@ -139,7 +143,7 @@ void* MemoryResize(void* currentAdress, unsigned int newSize)
 
     void* newAdress = realloc(currentAdress, newSize);
 
-#ifdef _DEBUG
+#if EnableAllocationLogging
     bool hasChanged = currentAdress != newAdress;
     char buffer[100];
     int amountOfChars;
@@ -163,7 +167,7 @@ void* MemoryResize(void* currentAdress, unsigned int newSize)
 
 void MemoryCopy(void* destination, void* source, unsigned int length)
 {
-#ifdef _DEBUG
+#if EnableAllocationLogging
     char buffer[100];
     int amountOfChars = sprintf(buffer, "[MCOPY] <%p> -> <%p> (%i Bytes)\n", destination, source, length);
 
@@ -177,7 +181,7 @@ void MemoryCopy(void* destination, void* source, unsigned int length)
 
 void MemorySet(void* adress, char value, unsigned int length)
 {
-#ifdef _DEBUG
+#if EnableAllocationLogging
     char buffer[100];
     int amountOfChars = sprintf(buffer, "[MESET] <%p> set to <%i>(% i Bytes)\n", adress, value, length);
 

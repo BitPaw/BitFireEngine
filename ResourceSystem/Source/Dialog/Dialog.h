@@ -7,6 +7,6 @@ namespace BF
 	class Dialog
 	{
 		public:
-		AsciiString Message;		
+		char* Message;		
 	};
 }
