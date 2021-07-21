@@ -139,7 +139,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(ProjectDir)Dependencies\lib32\GLFW;$(ProjectDir)Dependencies\lib32\GL;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)Dependencies\lib64\GLFW;$(ProjectDir)Dependencies\lib64\GL;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|x64'">
     <LinkIncremental>false</LinkIncremental>

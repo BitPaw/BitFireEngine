@@ -1,5 +1,8 @@
 #include "UIDialogBox.h"
 
+#include "../../../../ResourceSystem/Source/Dialog/Dialog.h"
+#include "../../../../ResourceSystem/Source/Container/Queue.hpp"
+
 void BF::UIDialogBox::SetActiveState(bool shallBeOpen)
 {
 	bool isAlreadyInThisState = shallBeOpen == _isOpen;
