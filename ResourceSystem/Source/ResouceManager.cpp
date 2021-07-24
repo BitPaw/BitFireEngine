@@ -2,7 +2,9 @@
 #include "Font/FNT/FNTPage.h"
 #include "File/File.h"
 #include "../../RenderSystem/Source/OpenGLAPI.h"
-
+#include "Async/Thread.h"
+#include "Async/AsyncLock.h"
+#include <thread>
 
 void BF::ResourceManager::UpdateVBOData(Model& model)
 {
@@ -145,14 +147,9 @@ void BF::ResourceManager::PushToGPU(Image& image)
     OpenGLAPI::RegisterImage(image);
 }
 
-void* BF::ResourceManager::Load(AsciiString& filePath)
+BF::Resource* BF::ResourceManager::Load(const char* filePathString)
 {
-    return Load(&filePath[0]);
-}
-
-void* BF::ResourceManager::Load(const char* filePathString)
-{
-    void* loadedResource = nullptr;
+    Resource* resource = nullptr;
     ResourceType resourceType = ResourceType::Unknown;
     File file((char*)filePathString);
     AsciiString fileExtension(&file.Extension[0]);
@@ -164,13 +161,13 @@ void* BF::ResourceManager::Load(const char* filePathString)
     if (doesFileExist)
     {
         {
-            bool isModel = Model::CheckFileExtension(fileExtension) != ModelType::UnKown;
+            bool isModel = Model::CheckFileExtension(&fileExtension[0]) != ModelType::UnKown;
             bool isImage = Image::CheckFileExtension(fileExtension) != ImageFileExtension::Unkown;
             bool isSound = false;
-            bool isFont = Font::IsFontFile(fileExtension);
+            bool isFont = Font::IsFontFile(&fileExtension[0]);
             bool isShader = false;
             bool isDialog = false;
-            bool isLevel = file.Extension.CompareIgnoreCase("lev");
+            bool isLevel = fileExtension.CompareIgnoreCase("lev");
 
             if (isModel) resourceType = ResourceType::Model;
             if (isImage) resourceType = ResourceType::Image;
@@ -184,63 +181,21 @@ void* BF::ResourceManager::Load(const char* filePathString)
         switch (resourceType)
         {
             case ResourceType::Dialog:
+            {
+                Dialog* dialog = new Dialog();
+                errorCode = Load(*dialog, filePathString);
                 break;
+            }            
 
             case ResourceType::Font:
             {
                 Font* font = new Font();
-                FontFormat fontFormat = Font::ParseFontFormat(fileExtension);
-
-                errorCode = font->Load(filePath);
+                errorCode = Load(*font, filePathString);
 
                 if (errorCode == ErrorCode::NoError)
                 {
-                    for (size_t i = 0; i < font->AdditionalResourceList.Size(); i++)
-                    {
-                        AsciiString& string = font->AdditionalResourceList[i];
-
-                        AsciiString fullPath;
-
-                        filePath.Cut(0, filePath.FindLast('/'), fullPath);
-
-                        fullPath.AttachToBack('/');
-                        fullPath.AttachToBack(string);
-
-                        font->Texture = (Image*)Load(fullPath);
-                    }
-
-                    font->ID = _fontList.Size();
-                    font->FilePathSet(&filePath[0]);
-
-                    _fontList.Add(font);
-
-                    loadedResource = font;
-                    DefaultFont = font;
+                    Add(*font);
                 }
-
-
-
-
-                /*
-                if (fontFormat == FontFormat::FNT)
-                {
-                    FNT* fnt = (FNT*)font;
-                    unsigned int amountOfTextures = fnt->FontPages.Size();
-
-                    for (unsigned int i = 0; i < amountOfTextures; i++)
-                    {
-                        FNTPage& fontPage = fnt->FontPages[i];
-                        AsciiString& fileName = fontPage.PageFileName;
-                        AsciiString path;
-                        unsigned int lastDot = filePath.FindLast('/') + 1;
-
-                        filePath.Cut(0, lastDot, path);
-
-                        path.AttachToBack(fileName);
-
-                        Load(path);
-                    }
-                }*/
 
                 break;
             }
@@ -248,268 +203,44 @@ void* BF::ResourceManager::Load(const char* filePathString)
             case ResourceType::Image:
             {
                 Image* image = new Image();
-                errorCode = image->Load(filePath);
+                errorCode = Load(*image, filePathString);
 
                 if (errorCode == ErrorCode::NoError)
                 {
-                    bool firstImage = _imageList.Size() == 0;
-
                     Add(*image);
-
-                    if (firstImage)
-                    {
-                        _defaultTextureID = image->ID;
-                    }
-
-                    loadedResource = image;
                 }
 
                 break;
             }
 
             case ResourceType::Level:
-            {
+            {        
                 Level* level = new Level();
-                List<AsciiString> fileLines;
-                File file(filePath);
-
-                errorCode = ErrorCode::LoadingFailed;
-
-                const char _modelToken = 'O';
-                const char _textureToken = 'T';
-                const char _musicToken = 'M';
-                const char _fontToken = 'F';
-                const char _shaderToken = 'S';
-                const char _dialogToken = 'D';
-                const char _emptyToken = ' ';
-                const char _commentToken = '#';
-                unsigned int modelCounter = 0;
-                unsigned int imageCounter = 0;
-                unsigned int soundCounter = 0;
-                unsigned int fontCounter = 0;
-                unsigned int shaderCounter = 0;
-                unsigned int dialogCounter = 0;
-                unsigned int amountOfLines;
-
-                file.ReadAsLines(fileLines);
-
-                amountOfLines = fileLines.Size();
-
-                // Step I - Count objects
-                for (unsigned int i = 0; i < amountOfLines; i++)
-                {
-                    AsciiString& line = fileLines[i];
-                    char character = line.GetFirstNonEmpty();
-
-                    switch (character)
-                    {
-                        case _modelToken:
-                            modelCounter++;
-                            break;
-
-                        case _textureToken:
-                            imageCounter++;
-                            break;
-
-                        case _musicToken:
-                            soundCounter++;
-                            break;
-
-                        case _fontToken:
-                            fontCounter++;
-                            break;
-
-                        case _shaderToken:
-                            shaderCounter++;
-                            break;
-
-                        case _dialogToken:
-                            dialogCounter++;
-                            break;
-
-                        case _commentToken:
-                        case _emptyToken:
-                        default:
-                            // Do nothinf
-                            break;
-                    }
-                }
-
-                // Step II - Reserve space
-                level->ModelList.ReSize(modelCounter);
-                level->ImageList.ReSize(imageCounter);
-                level->SoundList.ReSize(soundCounter);
-                level->FontList.ReSize(fontCounter);
-                level->ShaderList.ReSize(shaderCounter);
-                level->DialogList.ReSize(dialogCounter);
-
-                modelCounter = 0;
-                imageCounter = 0;
-                soundCounter = 0;
-                fontCounter = 0;
-                shaderCounter = 0;
-                dialogCounter = 0;
-
-                // Step II - Parse and Load
-                for (unsigned int i = 0; i < amountOfLines; i++)
-                {
-                    AsciiString& line = fileLines[i];
-                    char* currentLine = &line[0];
-                    char character = line.GetFirstNonEmpty();
-                    char dummyBuffer[10];
-                    char path[30];
-
-                    switch (character)
-                    {
-                        case _modelToken:
-                        {                          
-                            char positionText[30];
-                            char rotationText[30];
-                            char scaleText[30];
-                            Position<float> position;
-                            Position<float> rotation;
-                            Position<float> scale;
-
-                            sscanf(currentLine, "%s %s %s %s %s", dummyBuffer, path, positionText, rotationText, scaleText);
-
-                            // Get raw Data-------------------------                         
-    
-                            // Replace 0|0|0 -> 0 0 0 
-                            for (size_t i = 0; i < positionText[i] != '\0'; i++)
-                            {
-                                if (positionText[i] == '|')
-                                {
-                                    positionText[i] = ' ';
-                                }
-                            }
-
-                            for (size_t i = 0; i < rotationText[i] != '\0'; i++)
-                            {
-                                if (rotationText[i] == '|')
-                                {
-                                    rotationText[i] = ' ';
-                                }
-                            }
-
-                            for (size_t i = 0; i < scaleText[i] != '\0'; i++)
-                            {
-                                if (scaleText[i] == '|')
-                                {
-                                    scaleText[i] = ' ';
-                                }
-                            }
-
-                            sscanf(positionText, "%f %f %f", &position.X, &position.Y, &position.Z);
-                            sscanf(rotationText, "%f %f %f", &rotation.X, &rotation.Y, &rotation.Z);
-                            sscanf(scaleText, "%f %f %f", &scale.X, &scale.Y, &scale.Z); 
-                            //------------------------------------------------
-
-                            // Load Model----------------
-                            Model* loadedModel = reinterpret_cast<Model*>(Load(path));
-
-                            if (loadedModel == nullptr)
-                            {
-                                printf("[Warning] Loading failed!\n");
-                                break;
-                            }
-
-                            level->ModelList[modelCounter++] = &loadedModel;
-                            //-------------------
-
-                            //--[Apply Data]-------------
-                            loadedModel->MoveTo(position);
-                            loadedModel->Rotate(rotation);
-                            loadedModel->Scale(scale);
-                            loadedModel->UpdateGlobalMesh();
-
-                            PushToGPU(*loadedModel);
-                            //-----------------------
-                            break;
-                        }
-                        case _textureToken:
-                        {
-                            sscanf(currentLine, "%s %s", dummyBuffer, path);
-
-                            Image* image = reinterpret_cast<Image*>(Load(path));
-                            level->ImageList[imageCounter++] = &image;
-                            break;
-                        }
-                        case _musicToken:
-                        {
-                            sscanf(currentLine, "%s %s", dummyBuffer, path);
-
-                            Sound* sound = reinterpret_cast<Sound*>(Load(path));
-                            level->SoundList[soundCounter++] = &sound;
-                            break;
-                        }
-                        case _fontToken:
-                        {
-                            sscanf(currentLine, "%s %s", dummyBuffer, path);
-
-                            Font* font = reinterpret_cast<Font*>(Load(path));
-                            level->FontList[fontCounter++] = &font;
-                            break;
-                        }
-                        case _shaderToken:
-                        {
-                            break;
-                        }
-                        case _dialogToken:
-                        {
-                            break;
-                        }
-                        case _commentToken:
-                        case _emptyToken:
-                        default:
-                            // Do nothinf
-                            break;
-                    }
-                }
-
-
-                _levelList.Add(level);
-
-                loadedResource = level;
-
-                errorCode = ErrorCode::NoError;
-
+                errorCode = Load(*level, filePathString);
                 break;
             }
 
             case ResourceType::Model:
             {
                 Model* model = new Model();
-
-                errorCode = model->Load(filePath);
-
+                errorCode = Load(*model, filePathString);
+                
                 if (errorCode == ErrorCode::NoError)
                 {
-                    for (unsigned int i = 0; i < model->MaterialList.Size(); i++)
-                    {
-                        Material& material = model->MaterialList[i];
-                        AsciiString imageFilePath(material.TextureFilePath);
-                        Image* image = reinterpret_cast<Image*>(Load(imageFilePath));
-
-                        if (image != nullptr)
-                        {
-                            material.Texture = image;
-
-                            Add(*image);
-                        }
-                    }
-
                     Add(*model);
-
-                    loadedResource = model;
                 }
+
                 break;
             }
             case ResourceType::Shader:
             {
+       
                 break;
             }
             case ResourceType::Sound:
             {
+                Sound* sound = new Sound();
+                errorCode = Load(*sound, filePathString);
                 break;
             }
         }
@@ -549,7 +280,336 @@ void* BF::ResourceManager::Load(const char* filePathString)
         }
     }
 
-    return loadedResource;
+    return resource;
+}
+
+BF::Resource* BF::ResourceManager::Load(AsciiString& filePath)
+{
+    return Load(&filePath[0]);
+}
+
+BF::ErrorCode BF::ResourceManager::Load(Model& model, const char* filePath)
+{
+    ErrorCode errorCode = model.Load(filePath);
+
+    if (errorCode == ErrorCode::NoError)
+    {
+        for (unsigned int i = 0; i < model.MaterialList.Size(); i++)
+        {
+            Material& material = model.MaterialList[i];
+            AsciiString imageFilePath(material.TextureFilePath);
+            Image* image = new Image();
+
+            ErrorCode imageErrorCode = Load(*image, &imageFilePath[0]);
+
+            if (imageErrorCode == ErrorCode::NoError)
+            {
+                material.Texture = image;
+
+                Add(*image);
+            }
+        }
+    }
+
+    return errorCode;
+}
+
+BF::ErrorCode BF::ResourceManager::Load(Image& image, const char* filePath)
+{
+    ErrorCode errorCode = image.Load(filePath);
+
+    if (errorCode == ErrorCode::NoError)
+    {    
+        Add(image);
+    }
+
+    return errorCode;
+}
+
+BF::ErrorCode BF::ResourceManager::Load(Sound& resource, const char* filePath)
+{
+    return ErrorCode();
+}
+
+BF::ErrorCode BF::ResourceManager::Load(Font& font, const char* filePath)
+{
+    ErrorCode errorCode = font.Load(filePath);
+
+    if (errorCode == ErrorCode::NoError)
+    {
+        for (unsigned int i = 0; i < font.AdditionalResourceList.Size(); i++)
+        {
+            AsciiString path(filePath);
+            AsciiString& resourcePath = font.AdditionalResourceList[i];          
+            char textureFilePath[30];
+            memset(textureFilePath, 0, 30);
+
+            int startIndex = path.FindLast('/') + 1;
+
+            memcpy(textureFilePath, &filePath[0], startIndex);
+
+            int length = strlen(textureFilePath);
+
+            memcpy(&textureFilePath[length], &resourcePath[0], resourcePath.Size());
+            
+            // Does file exist?
+
+            font.Texture = new Image();
+
+            errorCode = Load(*font.Texture, textureFilePath);
+        }
+
+        font.ID = _fontList.Size();
+        font.FilePathSet(&filePath[0]);   
+    }
+
+    /*
+    if (fontFormat == FontFormat::FNT)
+    {
+        FNT* fnt = (FNT*)font;
+        unsigned int amountOfTextures = fnt->FontPages.Size();
+
+        for (unsigned int i = 0; i < amountOfTextures; i++)
+        {
+            FNTPage& fontPage = fnt->FontPages[i];
+            AsciiString& fileName = fontPage.PageFileName;
+            AsciiString path;
+            unsigned int lastDot = filePath.FindLast('/') + 1;
+
+            filePath.Cut(0, lastDot, path);
+
+            path.AttachToBack(fileName);
+
+            Load(path);
+        }
+    }*/
+
+    return errorCode;
+}
+
+BF::ErrorCode BF::ResourceManager::Load(ShaderProgram& resource, const char* filePath)
+{
+    return ErrorCode();
+}
+
+BF::ErrorCode BF::ResourceManager::Load(Dialog& resource, const char* filePath)
+{
+    return ErrorCode::NoError;
+}
+
+BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath)
+{
+    List<AsciiString> fileLines;
+    File file((char*)filePath);
+    ErrorCode errorCode = ErrorCode::LoadingFailed;
+
+    const char _modelToken = 'O';
+    const char _textureToken = 'T';
+    const char _musicToken = 'M';
+    const char _fontToken = 'F';
+    const char _shaderToken = 'S';
+    const char _dialogToken = 'D';
+    const char _emptyToken = ' ';
+    const char _commentToken = '#';
+    unsigned int modelCounter = 0;
+    unsigned int imageCounter = 0;
+    unsigned int soundCounter = 0;
+    unsigned int fontCounter = 0;
+    unsigned int shaderCounter = 0;
+    unsigned int dialogCounter = 0;
+    unsigned int amountOfLines;
+
+    file.ReadAsLines(fileLines);
+
+    amountOfLines = fileLines.Size();
+
+    // Step I - Count objects
+    for (unsigned int i = 0; i < amountOfLines; i++)
+    {
+        AsciiString& line = fileLines[i];
+        char character = line.GetFirstNonEmpty();
+
+        switch (character)
+        {
+            case _modelToken:
+                modelCounter++;
+                break;
+
+            case _textureToken:
+                imageCounter++;
+                break;
+
+            case _musicToken:
+                soundCounter++;
+                break;
+
+            case _fontToken:
+                fontCounter++;
+                break;
+
+            case _shaderToken:
+                shaderCounter++;
+                break;
+
+            case _dialogToken:
+                dialogCounter++;
+                break;
+
+            case _commentToken:
+            case _emptyToken:
+            default:
+                // Do nothinf
+                break;
+        }
+    }
+
+    // Step II - Reserve space
+    level.ModelList.ReSize(modelCounter);
+    level.ImageList.ReSize(imageCounter);
+    level.SoundList.ReSize(soundCounter);
+    level.FontList.ReSize(fontCounter);
+    level.ShaderList.ReSize(shaderCounter);
+    level.DialogList.ReSize(dialogCounter);
+
+    modelCounter = 0;
+    imageCounter = 0;
+    soundCounter = 0;
+    fontCounter = 0;
+    shaderCounter = 0;
+    dialogCounter = 0;
+
+    // Step II - Parse and Load
+    for (unsigned int i = 0; i < amountOfLines; i++)
+    {
+        AsciiString& line = fileLines[i];
+        char* currentLine = &line[0];
+        char character = line.GetFirstNonEmpty();
+        char dummyBuffer[10];
+        char path[30];
+
+        switch (character)
+        {
+            case _modelToken:
+            {
+                char positionText[30];
+                char rotationText[30];
+                char scaleText[30];
+                Position<float> position;
+                Position<float> rotation;
+                Position<float> scale;
+
+                sscanf(currentLine, "%s %s %s %s %s", dummyBuffer, path, positionText, rotationText, scaleText);                
+
+                // Get raw Data-------------------------                         
+
+                // Replace 0|0|0 -> 0 0 0 
+                for (size_t i = 0; i < positionText[i] != '\0'; i++)
+                {
+                    if (positionText[i] == '|')
+                    {
+                        positionText[i] = ' ';
+                    }
+                }
+
+                for (size_t i = 0; i < rotationText[i] != '\0'; i++)
+                {
+                    if (rotationText[i] == '|')
+                    {
+                        rotationText[i] = ' ';
+                    }
+                }
+
+                for (size_t i = 0; i < scaleText[i] != '\0'; i++)
+                {
+                    if (scaleText[i] == '|')
+                    {
+                        scaleText[i] = ' ';
+                    }
+                }
+
+                sscanf(positionText, "%f %f %f", &position.X, &position.Y, &position.Z);
+                sscanf(rotationText, "%f %f %f", &rotation.X, &rotation.Y, &rotation.Z);
+                sscanf(scaleText, "%f %f %f", &scale.X, &scale.Y, &scale.Z);
+                //------------------------------------------------
+
+                // Load Model----------------
+                Model* loadedModel = new Model(); 
+
+                errorCode = Load(*loadedModel, path);
+
+                if (loadedModel == nullptr)
+                {
+                    printf("[Warning] Loading failed!\n");
+                    break;
+                }
+
+                level.ModelList[modelCounter++] = &loadedModel;
+                //-------------------
+
+                //--[Apply Data]-------------
+                loadedModel->MoveTo(position);
+                loadedModel->Rotate(rotation);
+                loadedModel->Scale(scale);
+                loadedModel->UpdateGlobalMesh();
+
+                Add(*loadedModel);
+                //-----------------------
+                break;
+            }
+            case _textureToken:
+            {
+                sscanf(currentLine, "%s %s", dummyBuffer, path);
+
+                Image* image = new Image();
+
+                errorCode = Load(*image, path);
+
+                Add(*image);
+
+                level.ImageList[imageCounter++] = &image;
+                break;
+            }
+            case _musicToken:
+            {
+                sscanf(currentLine, "%s %s", dummyBuffer, path);
+
+                Sound* sound = new Sound();
+                
+                errorCode = Load(*sound, path);
+
+                level.SoundList[soundCounter++] = &sound;
+                break;
+            }
+            case _fontToken:
+            {
+                sscanf(currentLine, "%s %s", dummyBuffer, path);
+
+                Font* font = new Font();
+                
+                errorCode = Load(*font, path);          
+
+                level.FontList[fontCounter++] = &font;
+
+                Add(*font);
+                break;
+            }
+            case _shaderToken:
+            {
+                break;
+            }
+            case _dialogToken:
+            {
+                break;
+            }
+            case _commentToken:
+            case _emptyToken:
+            default:
+                // Do nothinf
+                break;
+        }
+    }
+
+    return errorCode;
 }
 
 void BF::ResourceManager::Add(Model& model)
@@ -566,6 +626,8 @@ void BF::ResourceManager::Add(Model& model)
 
 void BF::ResourceManager::Add(Image& image)
 {
+    bool firstImage = _imageList.Size() == 0;
+
     if (!image.LoadedToGPU)
     {
         _imageList.Add(&image);
@@ -573,8 +635,32 @@ void BF::ResourceManager::Add(Image& image)
         image.LoadedToGPU = true;
     }
 
+    if (firstImage)
+    {
+        _defaultTextureID = image.ID;
+    }
+
     PushToGPU(image);
 }
+
+void BF::ResourceManager::Add(Font& font)
+{
+    bool firstImage = _fontList.Size() == 0;
+
+    if (!font.LoadedToGPU)
+    {
+        _fontList.Add(&font);
+
+        font.LoadedToGPU = true;
+    }
+
+    if (firstImage)
+    {
+        DefaultFont = &font;
+    }
+}
+
+
 
 unsigned int BF::ResourceManager::AddShaderProgram(AsciiString& vertexShader, AsciiString& fragmentShader)
 {
@@ -591,9 +677,9 @@ unsigned int BF::ResourceManager::AddShaderProgram(const char* vertexShader, con
 
     _shaderProgramList.Add(shaderProgram);
 
-    OpenGLAPI::ShaderCompile(*shaderProgram);
+    bool validShader = OpenGLAPI::ShaderCompile(*shaderProgram);
 
-    if (firstShaderProgram)
+    if (firstShaderProgram && validShader)
     {
         _defaultShaderID = shaderProgram->ID;
         MainCamera.FetchGPUReferences(_defaultShaderID);
@@ -638,8 +724,6 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
             OpenGLAPI::ShaderSetUniformMatrix4x4(MainCamera.GetModelMatrixID(), model->ModelMatrix.Data);
         }
 
-
-
         //---[Change Shader Data?
         MainCamera.Update(gameTickData);
         //-----------------------------------------------------------------------------------------
@@ -648,7 +732,7 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
 
         unsigned int currentIndex = 0;
 
-        for (size_t i = 0; i < model->MeshList.Size(); i++)
+        for (unsigned int i = 0; i < model->MeshList.Size(); i++)
         {
             Mesh& mesh = model->MeshList[i];
             Material* material = mesh.MeshMaterial;
@@ -656,7 +740,7 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
             unsigned int textureID = _defaultTextureID;
             unsigned int amountToRender;
 
-            if (hasMaterial && material != (void*)0xCDCDCDCD)
+            if (hasMaterial)
             {
                 Image* texture = material->Texture;
                 bool hasTexture = texture != nullptr;

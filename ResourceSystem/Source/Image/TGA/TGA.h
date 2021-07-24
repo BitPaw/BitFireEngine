@@ -64,8 +64,8 @@ namespace BF
 
 		TGA();
 
-		void Load(AsciiString& filePath);
-		void Save(AsciiString& filePath);
+		void Load(const char* filePath);
+		void Save(const char* filePath);
 		void Convert(Image& image);
 	};
 }

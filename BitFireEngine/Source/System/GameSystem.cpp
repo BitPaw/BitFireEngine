@@ -15,8 +15,6 @@ BF::UIText* text;
 
 void BF::GameSystem::Start()
 {    
-    _mainWindow.Create();
-
     printf
     (
         "+------------------------------------------------------+\n"
@@ -25,6 +23,13 @@ void BF::GameSystem::Start()
         "|  |    |  _/|  |\\   __\\|   __)   |  |\\_  __ \\_/ __ \\  |\n"
         "|  |    |   \\|  | |  |  |    |    |  | |  | \\/\\  ___/  |\n"
         "|  |________/|__| |__|  \\____|    |__| |__|    \\_____> |\n"
+        "+------------------------------------------------------+\n"
+    );
+
+    _mainWindow.Create(1000, 1000, "[BFE] <BitFireEngine>");
+
+    printf
+    (
         "+------------------------------------------------------+\n"
         "| OpenGL Version   : %s\n"
         "| Texture Slots    : %u\n"
@@ -39,42 +44,21 @@ void BF::GameSystem::Start()
 
     stopwatch.Start();
 
-
-
-    const char* vertexShaderWorld = "Shader/WS.vert";
-    const char* fragmentShaderWorld = "Shader/WS.frag";
-    const char* vertexShaderHUD = "Shader/HUD.vert";
-    const char* fragmentShaderHUD = "Shader/HUD.frag";
-
-    Resource.AddShaderProgram(vertexShaderWorld, fragmentShaderWorld);
-    unsigned int hudShaderID = Resource.AddShaderProgram(vertexShaderHUD, fragmentShaderHUD);
+    unsigned int worldShader = Resource.AddShaderProgram("Shader/WS.vert", "Shader/WS.frag");
+    unsigned int hudShaderID = Resource.AddShaderProgram("Shader/HUD.vert", "Shader/HUD.frag");
    
-   // sphere = (Model*)Resource.Load("N:/Schule/Studium/Semester/Semester 4/[CGA] Computergrafik und Animation/Praktikum/S21/Projekt/CGA/Praktikum/A_Geometry/assets/models/sphere.obj");
-    //sphere->UseTexturePointAsColor();
-   // sphere->Move(6.5, 1.5, 0);
-   // sphere->Scale(4, 4, 4);
-  //  Resource.PushToGPU(*sphere);
-    
-   
-
-    Resource.Load("Texture/White.bmp");
-   // Resource.Load("A:/_WorkSpace/BitFireEngine/Texture/Sign.png");
-    Resource.Load("Level/MainMenu.lev");
-    
-    //Resource.Load("Model/Bike/HQ_Movie cycle.obj");
-
+   // Resource.Load("Level/MainMenu.lev");    
 
     text = new UIText("SampleText", *Resource.DefaultFont, -1, -0.8);
     text->RenderInformation.ShaderProgramID = hudShaderID;
+    text->SetFont(*Resource.DefaultFont);
     Resource.Add(*text);
 
     _state = SystemState::Running;
 
     Resource.PrintContent(true);
-
+    
     printf("[Info] Loading took %.2fs\n", stopwatch.Stop());
-
-
 }
 
 void BF::GameSystem::Update()
@@ -91,9 +75,9 @@ void BF::GameSystem::Update()
 
         if(_gameTickData.FramesRendered == 0)
         {
-            //sprintf(text->TextContent, "FPS: %4i", (Math::Ceiling(1/ _gameTickData.GetSmoothDeltaTime())));
-            //text->SetText(text->TextContent);
-           // Resource.Add(*text);
+            sprintf(text->TextContent, "FPS: %4i", (Math::Ceiling(1/ _gameTickData.GetSmoothDeltaTime())));
+            text->SetText(text->TextContent);
+            Resource.Add(*text);
         }    
    
         //---[User-Input]------------------------------------------------------

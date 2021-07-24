@@ -49,7 +49,7 @@ BF::FNT::FNT()
 	Packed = false;
 }
 
-void BF::FNT::Load(char* filePath)
+void BF::FNT::Load(const char* filePath)
 {
 	AsciiString dataString;
 	AsciiString referenceSting;
@@ -137,6 +137,7 @@ void BF::FNT::Load(char* filePath)
 		);
 	
 		AsciiString reData;
+		//AsciiString extrectfileName(); // face="SegoeþScript"
 
 		referenceSting.SetAsReference(textName);
 		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
@@ -233,18 +234,29 @@ void BF::FNT::Load(char* filePath)
 	if (isPageLine)
 	{
 		char textPageID[12];
+		char imageFileName[30];
 
 		currentPage = &FontPages[pageCounter++];
 
 		dataString.ReplaceWhiteSpaceInQuotes('\xFE', false);
 
-		sscanf(currentCursor, "%s %s %s", textCharacter, textPageID, currentPage->PageFileName);
+		sscanf(currentCursor, "%s %s %s", textCharacter, textPageID, imageFileName);
 
 		dataString.ReplaceWhiteSpaceInQuotes('\xFE', true);
 
 		referenceSting.SetAsReference(textPageID);
 		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
 		currentPage->PageID = referenceSting.ToInt();	
+
+
+		AsciiString nameExtract(imageFileName);
+
+		int startIndex = nameExtract.FindFirst('\"') + 1;
+		int endIndex = nameExtract.FindLast('\"');
+		int length = endIndex - startIndex;
+
+		memcpy(currentPage->PageFileName, &imageFileName[startIndex], length);
+		currentPage->PageFileName[length] = '\0';
 	}
 
 	if (isCharacterCountLine)
@@ -353,7 +365,7 @@ void BF::FNT::Load(char* filePath)
 		}				
 	}
 }
-
+/*
 void BF::FNT::Load(AsciiString& filePath)
 {
 	List<FNTCommand> commandList;
@@ -746,8 +758,9 @@ void BF::FNT::Load(AsciiString& filePath)
 		}
 	}
 }
+*/
 
-void BF::FNT::Save(AsciiString& filePath)
+void BF::FNT::Save(const char* filePath)
 {
 	char fileBuffer[16384];
 	char* currentCursorIndex = fileBuffer;

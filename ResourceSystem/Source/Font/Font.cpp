@@ -6,7 +6,7 @@
 
 #include "../File/File.h"
 
-BF::ErrorCode BF::Font::Load(AsciiString& filePath)
+BF::ErrorCode BF::Font::Load(const char* filePath)
 {
     File file(filePath);
     FontFormat fontFormat = ParseFontFormat(file.Extension);
@@ -20,20 +20,22 @@ BF::ErrorCode BF::Font::Load(AsciiString& filePath)
     {
     case FontFormat::FNT:
     {
-        BitMapFont = new FNT();
+        FNT* fnt = new FNT();
+        fnt->Load(filePath);
+        fnt->Convert(*this);
 
         break;
-
+        /*
         AsciiString x("copy.fnt");
 
         FNT* fnt = (FNT*)BitMapFont;   
 
-        fnt->Load(&filePath[0]);
+        fnt->Load(filePath);
         fnt->Convert(*this);
 
         filePath.AttachToBack(x);
 
-        fnt->Save(filePath);
+        fnt->Save(filePath);*/
 
         break;
     }
@@ -59,11 +61,13 @@ BF::ErrorCode BF::Font::Load(AsciiString& filePath)
     return ErrorCode::NoError;
 }
 
-BF::FontFormat BF::Font::ParseFontFormat(AsciiString& fileExtension)
+BF::FontFormat BF::Font::ParseFontFormat(const char* fileExtension)
 {
-    bool isFNT = fileExtension.CompareIgnoreCase("fnt");
-    bool isOTF = fileExtension.CompareIgnoreCase("otf");
-    bool isTTF = fileExtension.CompareIgnoreCase("ttf");
+    AsciiString fileExtensionAS(fileExtension);
+
+    bool isFNT = fileExtensionAS.CompareIgnoreCase("fnt");
+    bool isOTF = fileExtensionAS.CompareIgnoreCase("otf");
+    bool isTTF = fileExtensionAS.CompareIgnoreCase("ttf");
 
     if (isFNT) return FontFormat::FNT;
     if (isOTF) return FontFormat::OFT;
@@ -72,7 +76,7 @@ BF::FontFormat BF::Font::ParseFontFormat(AsciiString& fileExtension)
     return FontFormat::Unkown;
 }
 
-bool BF::Font::IsFontFile(AsciiString& fileExtension)
+bool BF::Font::IsFontFile(const char* fileExtension)
 {
     return ParseFontFormat(fileExtension) != FontFormat::Unkown;
 }

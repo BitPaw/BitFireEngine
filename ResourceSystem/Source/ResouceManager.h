@@ -57,12 +57,20 @@ namespace BF
         //void RegisterGPU(Font& font);
 
 
-        void* Load(const char* filePathString);
-        void* Load(AsciiString& filePath);
+        Resource* Load(const char* filePathString);
+        Resource* Load(AsciiString& filePath);
 
+        ErrorCode Load(Model& model, const char* filePath);
+        ErrorCode Load(Image& image, const char* filePath);
+        ErrorCode Load(Sound& sound, const char* filePath);
+        ErrorCode Load(Font& font, const char* filePath);
+        ErrorCode Load(ShaderProgram& shaderProgram, const char* filePath);
+        ErrorCode Load(Dialog& dialog, const char* filePath);
+        ErrorCode Load(Level& level, const char* filePath);
 
         void Add(Model& model);
         void Add(Image& image);
+        void Add(Font& font);
 
         unsigned int AddShaderProgram(const char* vertexShader, const char* fragmentShader);
         unsigned int AddShaderProgram(AsciiString& vertexShader, AsciiString& fragmentShader);

@@ -47,9 +47,8 @@ namespace BF
 
 		FNT();
 
-		void Load(char* filePath);
-		void Load(AsciiString& filePath);
-		void Save(AsciiString& filePath);
+		void Load(const char* filePath);
+		void Save(const char* filePath);
 		void Convert(Font& font);
 		void PrintData();
 	};

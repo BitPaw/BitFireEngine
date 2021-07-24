@@ -77,9 +77,6 @@
     <ProjectReference Include="..\MemoryManager\MemoryManager.vcxproj">
       <Project>{2e3e50f7-6147-4fe7-87bc-10aea9bd36eb}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\NetworkSystem\NetworkSystem.vcxproj">
-      <Project>{dce40aec-d3bd-4cb2-b0af-2099b4cff133}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\RenderSystem\RenderSystem.vcxproj">
       <Project>{4304423b-6009-45f9-b023-7c0c2c405e0e}</Project>
     </ProjectReference>
@@ -200,7 +197,7 @@
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <LanguageStandard_C>stdc11</LanguageStandard_C>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -261,7 +258,7 @@
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <LanguageStandard_C>stdc11</LanguageStandard_C>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

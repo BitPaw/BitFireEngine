@@ -1,7 +1,7 @@
 #ifndef IOSocketInclude
 #define IOSocketInclude
 
-#include "OSDefine.h"
+#include "../OSDefine.h"
 #include "SocketError.h"
 #include "IPVersion.h"
 

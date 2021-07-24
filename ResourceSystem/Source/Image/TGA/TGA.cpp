@@ -16,12 +16,12 @@ BF::TGA::TGA()
 	ImageDescriptor = 0;
 }
 
-void BF::TGA::Load(AsciiString& filePath)
+void BF::TGA::Load(const char* filePath)
 {
 	File file(filePath);
 	file.Read();
 
-	ByteStreamHusk byteSteam((unsigned char*)&file.Data[0], file.Data.Size() -1);
+	ByteStreamHusk byteSteam((unsigned char*)file.Data, file.Size -1);
 
 	unsigned int footerEntryIndex = 0;
 
@@ -280,7 +280,7 @@ void BF::TGA::Load(AsciiString& filePath)
 	//-----------------------------------------------------------		
 }
 
-void BF::TGA::Save(AsciiString& filePath)
+void BF::TGA::Save(const char* filePath)
 {
 	const char footer[18] = "TRUEVISION-XFILE.";
 }
@@ -293,7 +293,7 @@ void BF::TGA::Convert(Image& image)
 	image.Format = ImageFormat::RGB;
 	image.Height = Height;
 	image.Width = Width;
-	image.PixelData.ReSize(pixelDataLengh);
+	image.PixelData = (unsigned char*)malloc(pixelDataLengh);
 
 	for (unsigned int i = 0; i < ImageData.Size(); )
 	{

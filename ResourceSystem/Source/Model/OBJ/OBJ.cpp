@@ -97,7 +97,7 @@ void StringParse(char* buffer, const char* syntax, ...)
     va_end(args);
 }
 
-void BF::OBJ::Load(char* filePath)
+void BF::OBJ::Load(const char* filePath)
 {
     const char _characterComment = '#';
     const char _characterObjectName = 'o';
@@ -401,7 +401,7 @@ void BF::OBJ::Load(char* filePath)
                         materialFileFolder.Copy(materialPathS);
                     }
 
-                    File file(materialFileFolder);
+                    File file(&materialFileFolder[0]);
                     doesFileExist = file.DoesFileExist();
 
                     if (doesFileExist)
@@ -569,7 +569,7 @@ void BF::OBJ::Load(char* filePath)
     }
 }
 
-void BF::OBJ::Save(char* filePath)
+void BF::OBJ::Save(const char* filePath)
 {
 }
 

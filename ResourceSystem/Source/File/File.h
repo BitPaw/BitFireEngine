@@ -17,25 +17,25 @@ namespace BF
 		unsigned int _currentCursorPosition;
 
 		public:
-		List<unsigned char> Data;
+		unsigned int Size;
+		char* Data;
 
-		AsciiString Path;
-		AsciiString Extension;
+		char* Path;
+		char* Extension;
 
-		File(char* filePath);
-		File(AsciiString& filePath);
+		File(const char* filePath);
 
 		ErrorCode Read();
-		static ErrorCode Read(char* filePath, char** buffer);
-		static ErrorCode Read(char* filePath, char** buffer, unsigned int maxSize);
+		static ErrorCode Read(const char* filePath, char** buffer);
+		static ErrorCode Read(const char* filePath, char** buffer, unsigned int maxSize);
 		ErrorCode Write();
-		static ErrorCode Write(char* filePath, char* content);
+		static ErrorCode Write(const char* filePath, const char* content);
 		ErrorCode ReadNextLineInto(char* exportBuffer);
 
 		ErrorCode ReadAsLines(List<AsciiString>& lineList);
 
 		bool DoesFileExist();
-		static bool DoesFileExist(AsciiString& filePath);
+		static bool DoesFileExist(const char* filePath);
 		static void GetFileExtension(AsciiString& path, AsciiString& extension);
 
 		int CountAmountOfLines();
@@ -43,10 +43,10 @@ namespace BF
 		void CursorToBeginning();
 
 		void Remove();
-		static void Remove(AsciiString& filePath);
-		void ReName(AsciiString& name);
+		static void Remove(const char* filePath);
+		void ReName(const char* name);
 
-		void ExtractAndSave(AsciiString& filePath, unsigned int start, unsigned int length);
-		static void ExtractAndSave(AsciiString& filePath, void* data, unsigned int length);
+		void ExtractAndSave(const char* filePath, unsigned int start, unsigned int length);
+		static void ExtractAndSave(const char* filePath, void* data, unsigned int length);
 	};
 }

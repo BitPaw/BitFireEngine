@@ -478,23 +478,25 @@ void BF::Model::ScaleTexturePoints(Point<float> scale)
     }
 }
 
-BF::ModelType BF::Model::CheckFileExtension(AsciiString& fileExtension)
+BF::ModelType BF::Model::CheckFileExtension(const char* fileExtension)
 {
-    if (fileExtension.CompareIgnoreCase("3ds")) return ModelType::A3DS;
-    if (fileExtension.CompareIgnoreCase("obj")) return ModelType::OBJ;
-    if (fileExtension.CompareIgnoreCase("ply")) return ModelType::PLY;
-    if (fileExtension.CompareIgnoreCase("stl")) return ModelType::STL;
-    if (fileExtension.CompareIgnoreCase("wrl")) return ModelType::WRL;
+    AsciiString extension(fileExtension);
+
+    if (extension.CompareIgnoreCase("3ds")) return ModelType::A3DS;
+    if (extension.CompareIgnoreCase("obj")) return ModelType::OBJ;
+    if (extension.CompareIgnoreCase("ply")) return ModelType::PLY;
+    if (extension.CompareIgnoreCase("stl")) return ModelType::STL;
+    if (extension.CompareIgnoreCase("wrl")) return ModelType::WRL;
 
     return ModelType::UnKown;
 }
 
-BF::ErrorCode BF::Model::Load(AsciiString& filePath)
+BF::ErrorCode BF::Model::Load(const char* filePath)
 {
     File file(filePath);
     ModelType modelType = CheckFileExtension(file.Extension);
 
-    FilePathSet(&filePath[0]);
+    FilePathSet(filePath);
 
     switch (modelType)
     {
@@ -507,7 +509,7 @@ BF::ErrorCode BF::Model::Load(AsciiString& filePath)
         case ModelType::OBJ:
         {
             OBJ obj;
-            obj.Load(&filePath[0]);
+            obj.Load(filePath);
             obj.Convert(*this);
             break;
         }

@@ -40,7 +40,7 @@ namespace BF
 			return WindowsInput.GetValue(_window);
 		}
 
-		bool Create();
+		bool Create(int width, int height, const char* title);
 
 		double GetTime();
 

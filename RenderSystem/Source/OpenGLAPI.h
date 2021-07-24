@@ -27,7 +27,7 @@ namespace BF
 
 		static void VertexArrayUpdate(int vertexArrayID, int size, void* data);
 
-		static void ShaderCompile(ShaderProgram& shaderProgram);
+		static bool ShaderCompile(ShaderProgram& shaderProgram);
 		static unsigned int ShaderCompile(unsigned int type, char* shaderString);
 
 		static void VertexAttributeArrayDefine(int sizeOfElement, int listSize, int* list);
@@ -38,6 +38,8 @@ namespace BF
 
 		static int ShaderGetUniformLocationID(int shaderID, const char* UniformName);
 		static void ShaderSetUniformMatrix4x4(int matrixUniformID, float* matrix);
+
+		static const char* ShaderTypeToString(int type);
 	};
 }
 

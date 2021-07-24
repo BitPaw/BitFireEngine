@@ -2,7 +2,7 @@
 #define ClientIncluded
 
 #include "IOSocket.h"
-#include "Thread.h"
+#include "../Async/Thread.h"
 
 namespace BF
 {

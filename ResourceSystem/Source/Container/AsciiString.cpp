@@ -107,15 +107,15 @@ void BF::AsciiString::SetAsReference(AsciiString& string)
 	SetAsReference(&string[0], string.Size());
 }
 
-void BF::AsciiString::SetAsReference(char* stringAdress)
+void BF::AsciiString::SetAsReference(const char* stringAdress)
 {
 	SetAsReference(stringAdress, -1);
 }
 
-void BF::AsciiString::SetAsReference(char* stringAdress, unsigned int size)
+void BF::AsciiString::SetAsReference(const char* stringAdress, unsigned int size)
 {
 	_isReferenceToOtherString = true;
-	_data = stringAdress;
+	_data = (char*)stringAdress;
 	_size = size;
 }
 
@@ -174,8 +174,7 @@ bool BF::AsciiString::Empty()
 
 void BF::AsciiString::AttachToBack(char character)
 {
-	AsciiString characterCaontainer;
-	characterCaontainer.SetAsReference(&character, 2);
+	AsciiString characterCaontainer(&character, 2);
 	
 	AttachToBack(characterCaontainer);
 }

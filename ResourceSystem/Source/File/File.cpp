@@ -4,7 +4,7 @@
 
 BF::ErrorCode BF::File::CheckFile()
 {
-	if (Path.Empty())
+	if (Path == nullptr)
 	{
 		return ErrorCode::EmptyFileName;
 	}
@@ -17,57 +17,69 @@ BF::ErrorCode BF::File::CheckFile()
 	return ErrorCode::NoError;
 }
 
-BF::File::File(char* filePath)
+BF::File::File(const char* filePath)
 {
-	Path.SetAsReference(filePath);
-
 	_currentCursorPosition = 0;
+	Data = nullptr;
+	Size = 0;
+	Path = nullptr;
+	Extension = nullptr;
 
-	GetFileExtension(Path, Extension);
+	if (filePath == nullptr)
+	{
+		return;
+	}	
+
+	int length = strlen(filePath);
+
+	Path = (char*)malloc(length * sizeof(char));
+	strcpy(Path, filePath);
+
+	for (size_t i = 0; Path[i] != '\0'; i++)
+	{
+		if (Path[i] == '.')
+		{
+			Extension = &Path[i] +1;
+			break;
+		}
+	}
 }
 
-BF::File::File(AsciiString& filePath)
-{
-	Path.SetAsReference(filePath);
-
-	_currentCursorPosition = 0;
-
-	GetFileExtension(filePath, Extension);
-}
 
 BF::ErrorCode BF::File::Read()
 {
-	ErrorCode errorCode = CheckFile();
+	const unsigned int elementSize = sizeof(char);
+	FILE* file = fopen(Path, "r");
 
-	if (errorCode != ErrorCode::NoError)
+	if (file == nullptr)
 	{
-		return errorCode;
+		return ErrorCode::FileNotFound;
 	}
 
-	try
-	{
-		std::ifstream inputFileStream(&Path[0], std::ios::binary | std::ios::ate);
-		unsigned int length = inputFileStream.tellg();
+	fseek(file, 0, SEEK_END);
+	Size = ftell(file);
+	fseek(file, 0, SEEK_SET);
 
-		Data.ReSize(length);
+	Data = (char*)malloc(Size * elementSize);
+	Data[Size * elementSize] = 0;
 
-		inputFileStream.seekg(0, inputFileStream.beg);
-		inputFileStream.read((char*)&Data[0], length);
-	}
-	catch (const std::exception&)
+	if (Data == nullptr)
 	{
-		return ErrorCode::LoadingFailed;
+		return ErrorCode::OutOfMemory;
 	}
+
+	fread(Data, elementSize, Size, file);
+	fclose(file);
 
 	return ErrorCode::NoError;
 }
 
-BF::ErrorCode BF::File::Read(char* filePath, char** buffer)
+BF::ErrorCode BF::File::Read(const char* filePath, char** buffer)
 {
 	return Read(filePath, buffer, -1);
 }
 
-BF::ErrorCode BF::File::Read(char* filePath, char** buffer, unsigned int maxSize)
+BF::ErrorCode BF::File::Read(const char* filePath, char** buffer, unsigned int maxSize)
 {
 	std::ifstream inputFileStream(filePath, std::ios::binary | std::ios::ate);
 	unsigned int length = inputFileStream.tellg();
@@ -105,14 +117,14 @@ BF::ErrorCode BF::File::Write()
 	std::ofstream fout;
 
 	fout.open(&Path[0], std::ios::binary | std::ios::out);
-	fout.write((char*)(&Path[0]), (std::streamsize)Data.Size());
+	fout.write((char*)(&Path[0]), (std::streamsize)Size);
 
 	fout.close();
 
 	return ErrorCode::NoError;
 }
 
-BF::ErrorCode BF::File::Write(char* filePath, char* content)
+BF::ErrorCode BF::File::Write(const char* filePath, const char* content)
 {
 	std::ofstream fout;
 	int length = 0;
@@ -132,7 +144,7 @@ BF::ErrorCode BF::File::ReadNextLineInto(char* exportBuffer)
 {
 	int length = 0;
 	int index = _currentCursorPosition;
-	int maxSize = Data.Size();
+	int maxSize = Size;
 
 	while (Data[index] != '\n' && index < maxSize)
 	{
@@ -161,7 +173,7 @@ BF::ErrorCode BF::File::ReadNextLineInto(char* exportBuffer)
 
 BF::ErrorCode BF::File::ReadAsLines(List<AsciiString>& lineList)
 {
-	if (Data.IsEmpty())
+	if (Data == nullptr)
 	{
 		ErrorCode errorCode = Read();
 
@@ -177,7 +189,7 @@ BF::ErrorCode BF::File::ReadAsLines(List<AsciiString>& lineList)
 	unsigned int indexB = 0;
 	unsigned int length = 0;
 
-	dataString.Copy((char*)&Data[0], Data.Size());
+	dataString.Copy(Data, Size);
 
 	dataString.MergeRepeatingWhiteSpace();
 	dataString.Remove('\r');
@@ -218,9 +230,9 @@ bool BF::File::DoesFileExist()
 	return fileExists;
 }
 
-bool BF::File::DoesFileExist(AsciiString& filePath)
+bool BF::File::DoesFileExist(const char* filePath)
 {
-    std::ifstream file(&filePath[0]);
+    std::ifstream file(filePath);
     bool fileExists = file.good();
 
     file.close();
@@ -263,19 +275,19 @@ void BF::File::CursorToBeginning()
 
 void BF::File::Remove()
 {
-	remove(&Path[0]);
+	remove(Path);
 }
 
-void BF::File::Remove(AsciiString& filePath)
+void BF::File::Remove(const char* filePath)
 {
-	remove(&filePath[0]);
+	remove(filePath);
 }
 
-void BF::File::ReName(AsciiString& name)
+void BF::File::ReName(const char* name)
 {
 }
 
-void BF::File::ExtractAndSave(AsciiString& filePath, unsigned int start, unsigned int length)
+void BF::File::ExtractAndSave(const char* filePath, unsigned int start, unsigned int length)
 {
 	const unsigned int sizeOfChar = sizeof(unsigned char);
 	const char* startAdress = reinterpret_cast<char*>(&Data[0] + start);
@@ -283,13 +295,13 @@ void BF::File::ExtractAndSave(AsciiString& filePath, unsigned int start, unsigne
 	File::ExtractAndSave(filePath, (void*)startAdress, length);
 }
 
-void BF::File::ExtractAndSave(AsciiString& filePath, void* data, unsigned int length)
+void BF::File::ExtractAndSave(const char* filePath, void* data, unsigned int length)
 {
 	const char* startAdress = reinterpret_cast<char*>(data);
 
 	std::fstream stream;
 
-	stream.open(&filePath[0], std::fstream::out); // std::fstream::app
+	stream.open(filePath, std::fstream::out); // std::fstream::app
 
 	stream.write(startAdress, length);
 

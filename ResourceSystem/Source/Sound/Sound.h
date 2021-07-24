@@ -7,6 +7,6 @@ namespace BF
 	class Sound 
 	{
 		public :
-		void Load(AsciiString& filePath);
+		void Load(const char* filePath);
 	};
 }

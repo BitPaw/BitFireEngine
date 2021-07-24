@@ -6,15 +6,15 @@
 #include "../../Container/BitStreamHusk.h"
 #include "../../Container/ByteStreamHusk.h"
 
-void BF::PNG::Load(AsciiString& filePath)
+void BF::PNG::Load(const char* filePath)
 {
     PNGChunk chunk;
     File file(filePath);
     file.Read();
     ByteStreamHusk byteStream
     (
-        reinterpret_cast<unsigned char*>(&file.Data[0]),
-        file.Data.Size()
+        reinterpret_cast<unsigned char*>(file.Data),
+        file.Size
     );      
 
     // Check Header
@@ -266,14 +266,14 @@ void BF::PNG::Load(AsciiString& filePath)
     }
 }
 
-void BF::PNG::Save(AsciiString& filePath)
+void BF::PNG::Save(const char* filePath)
 {
 }
 
 void BF::PNG::Convert(Image& image)
 {
     PrintData();
-    List<unsigned char>& pixelData = image.PixelData;
+    unsigned char* pixelData = image.PixelData;
     auto compressedDataRow = CompressedData[0];
 	unsigned int width = Width;
 	unsigned int height = Height;
@@ -283,8 +283,8 @@ void BF::PNG::Convert(Image& image)
 	image.Resize(width, height);
 	//image.FillRandome();
 
-    AsciiString compressedFilePath("zlibCompressed_TempDump.bin");
-    AsciiString unCompressedFilePath("zlibUncompressed_TempDump.bin");
+    const char* compressedFilePath = "zlibCompressed_TempDump.bin";
+    const char* unCompressedFilePath = "zlibUncompressed_TempDump.bin";
 
     while (compressedDataRow != nullptr)
     {
@@ -299,7 +299,7 @@ void BF::PNG::Convert(Image& image)
         File::Remove(compressedFilePath);
         File::Remove(unCompressedFilePath);    
 
-        for (size_t i = 0; i < zlibDecompressedFile.Data.Size(); )
+        for (size_t i = 0; i < zlibDecompressedFile.Size; )
         {
             i++;
 

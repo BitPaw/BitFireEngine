@@ -324,70 +324,80 @@ BF::Image* BF::Window::TakeScreenShot()
     return nullptr;// image;
 }
 
-bool BF::Window::Create()
+void OnGLFWError(int errorCode, const char* description)
+{
+    printf("[Error][GLFW] <%i> %s\n", errorCode, description);
+}
+
+bool BF::Window::Create(int width, int height, const char* title)
 {
     VideoConfig* videoConfig = new VideoConfig();//&BF::System.Config.Video;
 
     videoConfig->FullScreen = false;
-    videoConfig->ScreenResolution[0] = 1000;
-    videoConfig->ScreenResolution[1] = 1000;
+    videoConfig->ScreenResolution[0] = width;
+    videoConfig->ScreenResolution[1] = height;
     videoConfig->WindowRefreshRateMode == RefreshRateMode::Unlimited;
 
-    printf("Initual GLFW Libary\n");
+    printf("[i][GLFW] Initialize libary... ");
 
-    /* Initialize the library */
-    int glfwErrorCode = glfwInit();
+    int glfwErrorCode = glfwInit(); // Initialize the library
+    const char* message = nullptr;
 
     switch (glfwErrorCode)
     {
         case GLFW_TRUE:
-            // OK
+            message = "OK";
+            break;
+    
+        case GLFW_FALSE:
+            message = "Failed";
+            break;
+
+        case GLFW_PLATFORM_ERROR:
+            message = "Platfrom Error";
             break;
 
         default:
-        case GLFW_FALSE:
-        case GLFW_PLATFORM_ERROR:
-            return false; // Failed
+            message = "Unkown";
+            break;
     }
 
+    printf("[%s]\n", message);
 
+    glfwSetErrorCallback(OnGLFWError);
 
     /* Create a windowed mode window and its OpenGL context */
     {
-        const char* title = "[BFE] <BitFireEngine>";
         int width = videoConfig->ScreenResolution[0];
         int height = videoConfig->ScreenResolution[1];
 
-        printf("Initual GLFW Create Window\n");
+        printf("[i][GLFW] Create Window... ");
      
         _window = glfwCreateWindow(width, height, title, NULL, NULL);
        
-
         if (!_window)
         {
-            printf("Initual GLFW Create Failed!\n");
-
             glfwTerminate();
+            printf("[Failed]\n");         
             return false;
-        }
+        }        
 
-        
+        printf("[OK]\n");
 
         BF::Window::WindowsInput.Add(_window);
-
     }
-
-    printf("Initual GLFW Make Context\n");
 
     glfwMakeContextCurrent(_window);
 
-
-    printf("Initual GLFW init glew\n");
+    printf("[i][GLEW] Initialize... ");
 
     if (glewInit() != GLEW_OK)
     {
+        printf("[Failed]\n");
         return false;
     }
+
+    printf("[OK]\n");
 
     // SetCallBacks
     {

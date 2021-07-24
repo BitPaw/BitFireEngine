@@ -27,7 +27,10 @@ namespace BF
 		ImageWrap WrapHeight;
 		ImageWrap WrapWidth;
 
-		List<unsigned char> PixelData;
+		unsigned int PixelDataSize;
+		unsigned char* PixelData;
+
+
 		Vector4<unsigned char> GetPixel(unsigned int x, unsigned int y);
 
 		Image();
@@ -42,6 +45,6 @@ namespace BF
 		void FillRandome();
 
 		static ImageFileExtension CheckFileExtension(AsciiString& fileExtension);
-		ErrorCode Load(AsciiString& filePath);
+		ErrorCode Load(const char* filePath);
 	};
 }

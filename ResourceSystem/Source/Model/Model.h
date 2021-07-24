@@ -108,8 +108,8 @@ namespace BF
 		void PrintCurrentRotation();
 
 		
-		static ModelType CheckFileExtension(AsciiString& fileExtension);
-		ErrorCode Load(AsciiString& filePath);
+		static ModelType CheckFileExtension(const char* fileExtension);
+		ErrorCode Load(const char* filePath);
 		void ConvertFrom(Shape& shape);
 	};
 }

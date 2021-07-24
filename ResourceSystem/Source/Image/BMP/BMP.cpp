@@ -48,11 +48,11 @@ BF::RGB<unsigned char>* BF::BMP::GetPixel(unsigned int x, unsigned int y)
 	return rgb;
 }*/
 
-void BF::BMP::Load(AsciiString& filePath)
+void BF::BMP::Load(const char* filePath)
 {
     File file(filePath);
     file.Read();
-    ByteStreamHusk byteStream((unsigned char*)&file.Data[0], file.Data.Size());
+    ByteStreamHusk byteStream((unsigned char*)&file.Data[0], file.Size);
     int bitsPerPixel = 0; 
 
     //-- Parsing Header Tag
@@ -237,7 +237,7 @@ void BF::BMP::Load(AsciiString& filePath)
     }
 }
 
-void BF::BMP::Save(AsciiString& filePath)
+void BF::BMP::Save(const char* filePath)
 {
 }
 
@@ -245,16 +245,15 @@ void BF::BMP::Convert(Image& image)
 {
     unsigned int pixelDataSize = PixelData.Size();
     unsigned char* destination = nullptr;
-    unsigned char* source = &PixelData[0];
-
+    unsigned char* source = &PixelData[0];    
+  
     image.Format = ImageFormat::RGB;
     image.Height = Height;
-    image.Width = Width;
-    image.PixelData.ReSize(pixelDataSize);
-    
-    destination = &image.PixelData[0];
-    
-    memcpy(destination, source, pixelDataSize);
+    image.Width = Width;    
+    image.PixelDataSize = Height * Width * 3;
+    image.PixelData = new unsigned char(image.PixelDataSize);
+
+    memcpy(image.PixelData, source, image.PixelDataSize);
 
     image.FlipHorizontal();
     image.RemoveColor(0,0,0);

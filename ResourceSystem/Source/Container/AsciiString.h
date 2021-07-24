@@ -36,8 +36,8 @@ namespace BF
 		bool operator==(const char* string);
 
 		void SetAsReference(AsciiString& string);
-		void SetAsReference(char* stringAdress);
-		void SetAsReference(char* stringAdress, unsigned int size);
+		void SetAsReference(const char* stringAdress);
+		void SetAsReference(const char* stringAdress, unsigned int size);
 		void ReSize(unsigned int size);
 		void Delete();
 		unsigned int Size();

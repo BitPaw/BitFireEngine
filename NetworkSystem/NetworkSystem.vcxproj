@@ -27,23 +27,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\AsyncLock.h" />
     <ClInclude Include="Source\Client.h" />
     <ClInclude Include="Source\IOSocket.h" />
     <ClInclude Include="Source\IPVersion.h" />
-    <ClInclude Include="Source\OSDefine.h" />
     <ClInclude Include="Source\Server.h" />
     <ClInclude Include="Source\SocketError.h" />
-    <ClInclude Include="Source\Thread.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\AsyncLock.cpp" />
     <ClCompile Include="Source\Client.cpp" />
     <ClCompile Include="Source\IOSocket.cpp" />
     <ClCompile Include="Source\IPVersion.cpp" />
     <ClCompile Include="Source\Server.cpp" />
     <ClCompile Include="Source\SocketError.cpp" />
-    <ClCompile Include="Source\Thread.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

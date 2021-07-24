@@ -7,11 +7,11 @@
 #include "WAV/WAV.h"
 #include "../File/File.h"
 
-void BF::Sound::Load(AsciiString& filePath)
+void BF::Sound::Load(const char* filePath)
 {
     SoundFormat soundFormat = SoundFormat::Unkown;
     File file(filePath);
-    AsciiString& fileExtension = file.Extension;
+    AsciiString fileExtension(file.Extension);
 
     bool isMIDI = fileExtension.CompareIgnoreCase("mid");
     bool isMP3 = fileExtension.CompareIgnoreCase("mp3");

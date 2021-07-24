@@ -1,7 +1,7 @@
 #ifndef AsyncLockIncluded
 #define AsyncLockIncluded
 
-#include "OSDefine.h"
+#include "../OSDefine.h"
 
 #ifdef OSUnix
 #include <semaphore.h>

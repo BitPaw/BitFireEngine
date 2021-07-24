@@ -16,8 +16,8 @@ namespace BF
 		List<MTL> Materials;
 		List<OBJElement> ElementList;
 
-		void Load(char* filePath);
-		void Save(char* filePath);
+		void Load(const char* filePath);
+		void Save(const char* filePath);
 		void Convert(Model& model);
 
 		void PrintData();

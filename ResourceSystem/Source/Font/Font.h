@@ -21,10 +21,10 @@ namespace BF
 		//---------------------------------------------------------------------
 
 		//---[ Public-Functions ]----------------------------------------------
-		ErrorCode Load(AsciiString& filePath);
+		ErrorCode Load(const char* filePath);
 
-		static FontFormat ParseFontFormat(AsciiString& fileExtension);
-		static bool IsFontFile(AsciiString& fileExtension);
+		static FontFormat ParseFontFormat(const char* fileExtension);
+		static bool IsFontFile(const char* fileExtension);
 		//---------------------------------------------------------------------
 	};
 }

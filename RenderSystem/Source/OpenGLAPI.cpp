@@ -163,17 +163,20 @@ void BF::OpenGLAPI::VertexArrayUpdate(int vertexArrayID, int size, void* data)
     glBufferSubData(GL_ARRAY_BUFFER, 0, (GLsizeiptr)size, data);
 }
 
-void BF::OpenGLAPI::ShaderCompile(ShaderProgram& shaderProgram)
+bool BF::OpenGLAPI::ShaderCompile(ShaderProgram& shaderProgram)
 {
     unsigned int type;
+    bool isValidShader = false;
     bool isLoaded = shaderProgram.IsLoaded();
 
     if (!isLoaded)
     {
-        return;
+        return false;
     }
 
     shaderProgram.ID = glCreateProgram();
+
+    printf("[i][OpenGL] Create Shader Program...\n");
 
     for (unsigned int i = 0; i < 2; i++)
     {
@@ -211,16 +214,27 @@ void BF::OpenGLAPI::ShaderCompile(ShaderProgram& shaderProgram)
                 break;
         }
 
+        printf("[i][OpenGL] Loading Shader <%s> ...\n", shader.FilePath);
+
         shader.ID = OpenGLAPI::ShaderCompile(type, &shader.Content[0]);
 
-        if (shader.ID != -1)
+        if (shader.ID == -1)
         {
-            glAttachShader(shaderProgram.ID, shader.ID);
+            isValidShader = false;
+            break;
         }
+
+        isValidShader = true;
+
+        glAttachShader(shaderProgram.ID, shader.ID);        
     }
 
-    glLinkProgram(shaderProgram.ID);
-    glValidateProgram(shaderProgram.ID);
+    if (isValidShader)
+    {
+        glLinkProgram(shaderProgram.ID);
+        glValidateProgram(shaderProgram.ID);
+        printf("[i][OpenGL] Shader program created!\n");
+    }
 
     // We used the Shaders above to compile, these elements are not used anymore.
     for (unsigned int i = 0; i < 2; i++)
@@ -232,10 +246,14 @@ void BF::OpenGLAPI::ShaderCompile(ShaderProgram& shaderProgram)
             glDeleteShader(shader->ID);
         }
     }
+
+    return isValidShader;
 }
 
 unsigned int BF::OpenGLAPI::ShaderCompile(unsigned int type, char* shaderString)
 {
+    printf("[i][OpenGL] Create <%s> Shader...\n", ShaderTypeToString(type));
+
     unsigned int id = glCreateShader(type);
 
     glShaderSource(id, 1, &shaderString, nullptr);
@@ -258,9 +276,13 @@ unsigned int BF::OpenGLAPI::ShaderCompile(unsigned int type, char* shaderString)
 
             printf
             (
-                "[OpenGL-Error] Failed to compile Shader ID:%u!\n"
-                "               Reason: %s\n",
-                id,
+                "[x][OpenGL] Failed to compile <%s> Shader!\n"
+                "+-------------------------------------------------------+\n"
+                "| GSGL - Shader compile error log                       |\n"
+                "+-------------------------------------------------------+\n"
+                "%s"
+                "+-------------------------------------------------------+\n",
+                ShaderTypeToString(type),
                 message
             );
 
@@ -329,4 +351,25 @@ int BF::OpenGLAPI::ShaderGetUniformLocationID(int shaderID, const char* UniformN
 void BF::OpenGLAPI::ShaderSetUniformMatrix4x4(int matrixUniformID, float* matrix)
 {
     glUniformMatrix4fv(matrixUniformID, 1, GL_FALSE, matrix);
+}
+
+const char* BF::OpenGLAPI::ShaderTypeToString(int type)
+{
+    switch (type)
+    {
+        case GL_VERTEX_SHADER:
+            return "Vertex";
+
+        case  GL_GEOMETRY_SHADER:
+            return "Geometry";
+
+        case  GL_FRAGMENT_SHADER:
+            return "Fragment";
+
+        case  GL_COMPUTE_SHADER:
+            return "Compute";
+
+        default:
+            return "Unkown";
+    }
 }

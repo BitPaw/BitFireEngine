@@ -45,27 +45,33 @@ void BF::Image::RemoveColor(unsigned char red, unsigned char green, unsigned cha
 
         case ImageFormat::RGB:
         {
-            unsigned int size = (PixelData.Size() / 3) * 4;
+            unsigned int size = (PixelDataSize / 3) * 4;
             unsigned char* newData = new unsigned char[size];
-            unsigned char* oldData = PixelData.SwapBuffer(newData, size);
+            unsigned char* oldData = PixelData;
             unsigned int oldIndex = 0;
 
             for (unsigned int i = 0; i < size; )
             {
-                newData[i++] = oldData[oldIndex++];
-                newData[i++] = oldData[oldIndex++];
-                newData[i++] = oldData[oldIndex++];
+                unsigned char* source = &oldData[oldIndex];
+                unsigned char* destination = &newData[i];
+
+                memcpy(destination, source, 3);
+
+                i += 3;
+                oldIndex += 3;
+
                 newData[i++] = 0xFF;
             }
             Format = ImageFormat::RGBA;
 
+            PixelData = newData;
             delete[] oldData;
 
             // no break;
         }
         case ImageFormat::RGBA:
         {
-            for (size_t i = 0; i < PixelData.Size(); )
+            for (size_t i = 0; i < PixelDataSize; )
             {
                 unsigned char cred = PixelData[i++];
                 unsigned char cgreen = PixelData[i++];
@@ -98,7 +104,7 @@ void BF::Image::FlipHorizontal()
     unsigned int scanLineWidth = width * bytesPerPixel;
     unsigned int scanLinesToSwap = height / 2;
     unsigned char* dataStartAdress = &PixelData[0];
-    unsigned char* copyBufferRow = new unsigned char[scanLineWidth];
+    unsigned char* copyBufferRow = (unsigned char*)malloc(scanLineWidth);
 
     for (unsigned int scanlineIndex = 0; scanlineIndex < scanLinesToSwap; scanlineIndex++)
     {
@@ -110,7 +116,7 @@ void BF::Image::FlipHorizontal()
         memcpy(destination, copyBufferRow, scanLineWidth); // X -> D 'Move SaveCopy to D'
     }
 
-    delete[] copyBufferRow;
+    free(copyBufferRow);
 }
 
 void BF::Image::PrintData()
@@ -154,7 +160,7 @@ void BF::Image::Resize(unsigned int width, unsigned height)
             break;
     }
 
-    PixelData.ReSize(newArraySize * pixelSize);
+    PixelData = (unsigned char*)realloc(PixelData,newArraySize * pixelSize);
 }
 
 void BF::Image::FillRandome()
@@ -192,13 +198,13 @@ BF::ImageFileExtension BF::Image::CheckFileExtension(AsciiString& fileExtension)
     return ImageFileExtension::Unkown;
 }
 
-BF::ErrorCode BF::Image::Load(AsciiString& filePath)
+BF::ErrorCode BF::Image::Load(const char* filePath)
 {
     File file(filePath);
-    AsciiString fileExtension = file.Extension;
+    AsciiString fileExtension(file.Extension);
     ImageFileExtension imageFormat = CheckFileExtension(fileExtension);
 
-    FilePathSet(&filePath[0]);
+    FilePathSet(filePath);
 
     switch (imageFormat)
     {
