@@ -20,9 +20,9 @@ BF::ErrorCode BF::File::CheckFile()
 BF::File::File(const char* filePath)
 {
 	_currentCursorPosition = 0;
+	_overAllocatedBytes = 0;
 	Data = nullptr;
 	Size = 0;
-	Path = nullptr;
 	Extension = nullptr;
 
 	if (filePath == nullptr)
@@ -30,10 +30,12 @@ BF::File::File(const char* filePath)
 		return;
 	}	
 
-	int length = strlen(filePath);
-
-	Path = (char*)malloc(length * sizeof(char));
 	strcpy(Path, filePath);
+
+	AsciiString pp(Path);
+
+	pp.MergeRepeatingCharacters('\\');
+	pp.Replace('\\', '/');
 
 	for (size_t i = 0; Path[i] != '\0'; i++)
 	{
@@ -45,11 +47,17 @@ BF::File::File(const char* filePath)
 	}
 }
 
+BF::File::~File()
+{
+	Clear();
+}
+
 
 BF::ErrorCode BF::File::Read()
 {
 	const unsigned int elementSize = sizeof(char);
-	FILE* file = fopen(Path, "r");
+	FILE* file = fopen(Path, "rb");
+	unsigned int fullSize = -1;
 
 	if (file == nullptr)
 	{
@@ -58,18 +66,33 @@ BF::ErrorCode BF::File::Read()
 
 	fseek(file, 0, SEEK_END);
 	Size = ftell(file);
-	fseek(file, 0, SEEK_SET);
+	rewind(file);
 
-	Data = (char*)malloc(Size * elementSize);
-	Data[Size * elementSize] = 0;
+	//fseek(file, 0, SEEK_SET);
+
+	fullSize = Size * elementSize;
+	Data = (char*)malloc(fullSize);
+	
 
 	if (Data == nullptr)
 	{
 		return ErrorCode::OutOfMemory;
 	}
 
-	fread(Data, elementSize, Size, file);
-	fclose(file);
+	//Data[fullSize - 1] = 0;
+
+	int readBytes = fread(Data, elementSize, Size, file);
+
+	_overAllocatedBytes = Size - readBytes;
+
+	if (readBytes != Size)
+	{
+		memset(&Data[readBytes], 0, Size - readBytes);
+
+		Size = readBytes;
+	}
+
+	int closeResult = fclose(file);
 
 	return ErrorCode::NoError;
 }
@@ -146,7 +169,7 @@ BF::ErrorCode BF::File::ReadNextLineInto(char* exportBuffer)
 	int index = _currentCursorPosition;
 	int maxSize = Size;
 
-	while (Data[index] != '\n' && index < maxSize)
+	while (index < maxSize && Data[index] != '\n' && Data[index] != '\0')
 	{
 		index = _currentCursorPosition + length++;
 	}
@@ -285,6 +308,18 @@ void BF::File::Remove(const char* filePath)
 
 void BF::File::ReName(const char* name)
 {
+}
+
+void BF::File::Clear()
+{
+	if (Data != nullptr)
+	{
+		free(Data);
+	}
+
+	Size = 0;
+	Data = nullptr;
+	Extension = nullptr;
 }
 
 void BF::File::ExtractAndSave(const char* filePath, unsigned int start, unsigned int length)

@@ -9,13 +9,14 @@ namespace BF
 {
 	class Font : public Resource
 	{
-	public:
+		public:
 		//---[ Data ]----------------------------------------------------------
-		AsciiString Name;
+		char Name[30];
 		unsigned short CharacterSize;
 		unsigned short SizeBetweenCharacters;
 		unsigned short SizeBetweenLines;
-		List<AsciiString> AdditionalResourceList;
+		unsigned int AdditionalResourceListSize;
+		char* AdditionalResourceList;
 		Image* Texture;
 		void* BitMapFont;		
 		//---------------------------------------------------------------------

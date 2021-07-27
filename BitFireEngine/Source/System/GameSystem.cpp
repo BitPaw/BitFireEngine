@@ -47,12 +47,12 @@ void BF::GameSystem::Start()
     unsigned int worldShader = Resource.AddShaderProgram("Shader/WS.vert", "Shader/WS.frag");
     unsigned int hudShaderID = Resource.AddShaderProgram("Shader/HUD.vert", "Shader/HUD.frag");
    
-   // Resource.Load("Level/MainMenu.lev");    
+    Resource.Load("Level/MainMenu.lev");    
 
-    text = new UIText("SampleText", *Resource.DefaultFont, -1, -0.8);
-    text->RenderInformation.ShaderProgramID = hudShaderID;
-    text->SetFont(*Resource.DefaultFont);
-    Resource.Add(*text);
+    //text = new UIText("SampleText", *Resource.DefaultFont, -1, -0.8);
+    //text->RenderInformation.ShaderProgramID = hudShaderID;
+    //text->SetFont(*Resource.DefaultFont);
+    //Resource.Add(*text);
 
     _state = SystemState::Running;
 
@@ -75,9 +75,9 @@ void BF::GameSystem::Update()
 
         if(_gameTickData.FramesRendered == 0)
         {
-            sprintf(text->TextContent, "FPS: %4i", (Math::Ceiling(1/ _gameTickData.GetSmoothDeltaTime())));
-            text->SetText(text->TextContent);
-            Resource.Add(*text);
+            //sprintf(text->TextContent, "FPS: %4i", (Math::Ceiling(1/ _gameTickData.GetSmoothDeltaTime())));
+            //text->SetText(text->TextContent);
+            //Resource.Add(*text);
         }    
    
         //---[User-Input]------------------------------------------------------

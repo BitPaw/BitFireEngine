@@ -14,6 +14,15 @@ BF::TGA::TGA()
 	Height = 0;
 	PixelDepth = TGABitsPerPixel::X1;
 	ImageDescriptor = 0;
+
+
+
+	ImageIDSize = 0;
+	ImageID = nullptr; 
+	ColorMapDataSize = 0;
+	ColorMapData = nullptr;
+	ImageDataSize = 0;
+	ImageData = nullptr;
 }
 
 void BF::TGA::Load(const char* filePath)
@@ -21,7 +30,7 @@ void BF::TGA::Load(const char* filePath)
 	File file(filePath);
 	file.Read();
 
-	ByteStreamHusk byteSteam((unsigned char*)file.Data, file.Size -1);
+	ByteStreamHusk byteSteam((unsigned char*)file.Data, file.Size);
 
 	unsigned int footerEntryIndex = 0;
 
@@ -38,9 +47,9 @@ void BF::TGA::Load(const char* filePath)
 		}
 	}
 
-	printf("\n");*/
 
-	byteSteam.CurrentPosition = 0;
+
+	printf("\n");*/
 
 	unsigned char imageIDLengh = 0;
 	unsigned short colorPaletteChunkEntryIndex = 0;
@@ -135,12 +144,12 @@ void BF::TGA::Load(const char* filePath)
 	//---[Parse Image ID]--------------
 	if (imageIDLengh > 0)
 	{
-		ImageID.ReSize(imageIDLengh);
+		ImageID = (unsigned char*)malloc(imageIDLengh);
+		ImageIDSize = imageIDLengh;
 
-		unsigned char* destination = &ImageID[0];
 		unsigned char* source = &byteSteam.StartAdress[byteSteam.CurrentPosition];
 
-		memcpy(destination, source, imageIDLengh);
+		memcpy(ImageID, source, imageIDLengh);
 
 		byteSteam.CurrentPosition += imageIDLengh;
 	}
@@ -155,18 +164,17 @@ void BF::TGA::Load(const char* filePath)
 
 	//---[ ImageData ]------------------
 	{
-		unsigned int pixelDataSize = Width * Height * (pixelDepth / 8);
 		unsigned char* destination = nullptr;
 		unsigned char* source = nullptr;
 
-		ImageData.ReSize(pixelDataSize);
+		ImageDataSize = Width * Height * (pixelDepth / 8);
+		ImageData = (unsigned char*)malloc(ImageDataSize);
 
-		destination = &ImageData[0];
 		source = &byteSteam.StartAdress[byteSteam.CurrentPosition];
 
-		memcpy(destination, source, pixelDataSize);
+		memcpy(ImageData, source, ImageDataSize);
 
-		byteSteam.CurrentPosition += pixelDataSize;
+		byteSteam.CurrentPosition += ImageDataSize;
 	}
 	//-----------------------------------------------------------------
 	
@@ -188,15 +196,13 @@ void BF::TGA::Load(const char* filePath)
 
 		footerEntryIndex = byteSteam.DataLength - compareLength + 1 - 8u;
 
-		isTGAVersionTwo = memcmp(truevisionString, string, compareLength) == 0; // Is this string at this address?;
+		isTGAVersionTwo = memcmp(truevisionString, string, compareLength-1) == 0; // Is this string at this address?;
 
 		if (!isTGAVersionTwo) // Is this a TGA v.1.0 file?
 		{
 			return; // Parsing finished. There should be no more data to parse. End of file.
 		}
 	}
-
-
 	
 	firstFieldAfterHeader = byteSteam.CurrentPosition;
 
@@ -294,12 +300,17 @@ void BF::TGA::Convert(Image& image)
 	image.Height = Height;
 	image.Width = Width;
 	image.PixelData = (unsigned char*)malloc(pixelDataLengh);
+	image.PixelDataSize = pixelDataLengh;
 
-	for (unsigned int i = 0; i < ImageData.Size(); )
+	memset(image.PixelData, 0xFF, pixelDataLengh);
+
+	image.FillRandome();
+
+	for (unsigned int i = 0; i < ImageDataSize; )
 	{
-		unsigned int blue = ImageData[i++];
-		unsigned int green = ImageData[i++];
-		unsigned int red = ImageData[i++];
+		unsigned char blue = ImageData[i++];
+		unsigned char green = ImageData[i++];
+		unsigned char red = ImageData[i++];
 
 		image.PixelData[dIndex++] = red;
 		image.PixelData[dIndex++] = green;

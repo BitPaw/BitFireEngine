@@ -363,34 +363,32 @@ void BF::AsciiString::ReplaceWhiteSpaceInQuotes(char key, bool revert)
 	}
 }
 
-void BF::AsciiString::Remove(char character)
+void BF::AsciiString::Remove(char removerCharacter)
 {
-	unsigned int amoutToRemove = Count(character);
-	unsigned int oldSize = _size;
-	unsigned int newSize = oldSize - amoutToRemove;
-	char* tempText = nullptr;
+	unsigned int size = Size();
+	unsigned int amoutToRemove = Count(removerCharacter);
+	unsigned int dynamicIndex = 0;
+	char resultBuffer[2048];
 
 	if (amoutToRemove == 0)
 	{
 		return;
 	}
 
-	tempText = _data;
+	memset(resultBuffer, 0, 2048);
 
-	_data = new char[newSize];
-	_size = newSize;
-
-	unsigned int dynamicIndex = 0;
-
-	for (unsigned int i = 0; i < oldSize; i++)
+	for (unsigned int i = 0; i < size; i++)
 	{
-		if (tempText[i] != character)
+		char character = _data[i];
+		bool isRemoverKey = character == removerCharacter;
+
+		if (!isRemoverKey)
 		{
-			_data[dynamicIndex++] = tempText[i];
+			resultBuffer[dynamicIndex++] = character;
 		}
 	}
 
-	delete[] tempText;
+	strcpy(_data, resultBuffer);
 }
 
 void BF::AsciiString::RemoveWhiteSpace()
@@ -473,6 +471,8 @@ void BF::AsciiString::MergeRepeatingCharacters(char character)
 		}
 	}
 
+	/*
+	* 
 	for (unsigned int i = size-1; i >= 0; i++)
 	{
 		bool isTarget = _data[i] == character;
@@ -485,7 +485,7 @@ void BF::AsciiString::MergeRepeatingCharacters(char character)
 		{
 			break;
 		}
-	}
+	}*/
 
 	Remove(removerKey);
 }

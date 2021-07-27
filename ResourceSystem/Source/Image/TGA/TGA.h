@@ -25,9 +25,12 @@ namespace BF
 		//---------------------------------
 	
 		//---[Image specification]---------
-		List<unsigned char> ImageID; // Optional field containing identifying information
-		List<unsigned char> ColorMapData; // Look-up table containing color map data
-		List<unsigned char> ImageData; // Stored according to the image descriptor 
+		unsigned int ImageIDSize;
+		unsigned char* ImageID; // Optional field containing identifying information
+		unsigned int ColorMapDataSize;
+		unsigned char* ColorMapData; // Look-up table containing color map data
+		unsigned int ImageDataSize;
+		unsigned char* ImageData; // Stored according to the image descriptor 	
 		//----------------------------------
 
 

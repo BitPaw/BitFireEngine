@@ -15,15 +15,17 @@ namespace BF
 		private:
 		ErrorCode CheckFile();
 		unsigned int _currentCursorPosition;
+		unsigned int _overAllocatedBytes;
 
 		public:
 		unsigned int Size;
 		char* Data;
 
-		char* Path;
+		char Path[255];
 		char* Extension;
 
 		File(const char* filePath);
+		~File();
 
 		ErrorCode Read();
 		static ErrorCode Read(const char* filePath, char** buffer);
@@ -45,6 +47,8 @@ namespace BF
 		void Remove();
 		static void Remove(const char* filePath);
 		void ReName(const char* name);
+
+		void Clear();
 
 		void ExtractAndSave(const char* filePath, unsigned int start, unsigned int length);
 		static void ExtractAndSave(const char* filePath, void* data, unsigned int length);

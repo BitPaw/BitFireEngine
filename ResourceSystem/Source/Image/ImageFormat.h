@@ -8,4 +8,6 @@ namespace BF
 		RGB,
 		RGBA
 	};
+
+	const char* ImageFormatToString(ImageFormat imageFormat);
 }

@@ -122,7 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <LanguageStandard_C>stdc11</LanguageStandard_C>
       <ExceptionHandling>false</ExceptionHandling>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ControlFlowGuard>false</ControlFlowGuard>
@@ -131,7 +131,7 @@
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp14</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -183,7 +183,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <LanguageStandard_C>stdc11</LanguageStandard_C>
       <ExceptionHandling>false</ExceptionHandling>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ControlFlowGuard>false</ControlFlowGuard>
@@ -192,7 +192,7 @@
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp14</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <OmitFramePointers>false</OmitFramePointers>
     </ClCompile>
@@ -321,10 +321,12 @@
     <ClCompile Include="Source\Model\WRL\WRL.cpp" />
     <ClCompile Include="Source\ResouceManager.cpp" />
     <ClCompile Include="Source\Resource.cpp" />
+    <ClCompile Include="Source\ResourceType.cpp" />
     <ClCompile Include="Source\Serialization\INI\INILoader.cpp" />
     <ClCompile Include="Source\Serialization\JSON\JSONLoader.cpp" />
     <ClCompile Include="Source\Serialization\XML\XMLLoader.cpp" />
     <ClCompile Include="Source\Serialization\YAML\YAMLLoader.cpp" />
+    <ClCompile Include="Source\Image\ImageFormat.cpp" />
     <ClCompile Include="Source\Shader\Shader.cpp" />
     <ClCompile Include="Source\Shader\ShaderProgram.cpp" />
     <ClCompile Include="Source\Sound\MID\MID.cpp" />
@@ -469,7 +471,7 @@
     <ClInclude Include="Source\OSDefine.h" />
     <ClInclude Include="Source\ResouceManager.h" />
     <ClInclude Include="Source\Resource.h" />
-    <ClInclude Include="Source\ResourceType.h" />
+    <ClInclude Include="Source\ResourceType.hpp" />
     <ClInclude Include="Source\Serialization\INI\INILoader.h" />
     <ClInclude Include="Source\Serialization\JSON\JSONLoader.h" />
     <ClInclude Include="Source\Serialization\XML\XMLLoader.h" />

@@ -52,7 +52,7 @@ void BF::BMP::Load(const char* filePath)
 {
     File file(filePath);
     file.Read();
-    ByteStreamHusk byteStream((unsigned char*)&file.Data[0], file.Size);
+    ByteStreamHusk byteStream((unsigned char*)file.Data, file.Size);
     int bitsPerPixel = 0; 
 
     //-- Parsing Header Tag
@@ -251,12 +251,12 @@ void BF::BMP::Convert(Image& image)
     image.Height = Height;
     image.Width = Width;    
     image.PixelDataSize = Height * Width * 3;
-    image.PixelData = new unsigned char(image.PixelDataSize);
+    image.PixelData = (unsigned char*)malloc(image.PixelDataSize);
 
     memcpy(image.PixelData, source, image.PixelDataSize);
 
-    image.FlipHorizontal();
-    image.RemoveColor(0,0,0);
+    //image.FlipHorizontal();
+    //image.RemoveColor(0,0,0);
 }
 
 void BF::BMP::PrintContent()

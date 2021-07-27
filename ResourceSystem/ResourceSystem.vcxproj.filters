@@ -300,6 +300,12 @@
     <ClCompile Include="Source\Async\AsyncLock.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ResourceType.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Image\ImageFormat.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Compression\Adler32.h">
@@ -611,9 +617,6 @@
     <ClInclude Include="Source\Resource.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ResourceType.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Serialization\INI\INILoader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -750,6 +753,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\OSDefine.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ResourceType.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

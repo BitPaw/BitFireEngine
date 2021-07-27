@@ -22,7 +22,10 @@ void BF::OpenGLAPI::RegisterImage(Image& image)
             throw "Invalid ImageFormat";
     }
 
-    glGenTextures(1, &imageID);
+    if (imageID == -1)
+    {
+        glGenTextures(1, &imageID);
+    }
 
     glBindTexture(GL_TEXTURE_2D, imageID);    
 
@@ -34,7 +37,7 @@ void BF::OpenGLAPI::RegisterImage(Image& image)
 
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16.0f);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, format, image.Width, image.Height, 0, format, GL_UNSIGNED_BYTE, &image.PixelData[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, format, image.Width, image.Height, 0, format, GL_UNSIGNED_BYTE, image.PixelData);
     //glGenerateMipmap(GL_TEXTURE_2D);
 }
 
@@ -85,7 +88,9 @@ int BF::OpenGLAPI::ImageLayoutToOpenGLFormat(ImageLayout layout)
 
 void BF::OpenGLAPI::TextureBind(int textureID)
 {
-    glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
+    assert(textureID != -1, "[BitFireEngine][OpenGL] TextureSlot -1 was selected. You can't do that.");
+
+    //glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
     glBindTexture(GL_TEXTURE_2D, textureID);
 }
 
@@ -176,7 +181,7 @@ bool BF::OpenGLAPI::ShaderCompile(ShaderProgram& shaderProgram)
 
     shaderProgram.ID = glCreateProgram();
 
-    printf("[i][OpenGL] Create Shader Program...\n");
+    printf("[i][OpenGL][Shader] Create Program...\n");
 
     for (unsigned int i = 0; i < 2; i++)
     {
@@ -214,7 +219,7 @@ bool BF::OpenGLAPI::ShaderCompile(ShaderProgram& shaderProgram)
                 break;
         }
 
-        printf("[i][OpenGL] Loading Shader <%s> ...\n", shader.FilePath);
+        printf("[i][OpenGL][Shader] Loading from <%s>... ", shader.FilePath);
 
         shader.ID = OpenGLAPI::ShaderCompile(type, &shader.Content[0]);
 
@@ -233,7 +238,7 @@ bool BF::OpenGLAPI::ShaderCompile(ShaderProgram& shaderProgram)
     {
         glLinkProgram(shaderProgram.ID);
         glValidateProgram(shaderProgram.ID);
-        printf("[i][OpenGL] Shader program created!\n");
+        printf("[i][OpenGL][Shader] Program sucessfully created!\n");
     }
 
     // We used the Shaders above to compile, these elements are not used anymore.
@@ -252,7 +257,7 @@ bool BF::OpenGLAPI::ShaderCompile(ShaderProgram& shaderProgram)
 
 unsigned int BF::OpenGLAPI::ShaderCompile(unsigned int type, char* shaderString)
 {
-    printf("[i][OpenGL] Create <%s> Shader...\n", ShaderTypeToString(type));
+    printf("Detected: <%s-Shader>\n", ShaderTypeToString(type));
 
     unsigned int id = glCreateShader(type);
 
@@ -276,7 +281,7 @@ unsigned int BF::OpenGLAPI::ShaderCompile(unsigned int type, char* shaderString)
 
             printf
             (
-                "[x][OpenGL] Failed to compile <%s> Shader!\n"
+                "[x][OpenGL][Shader] Failed to compile <%s>!\n"
                 "+-------------------------------------------------------+\n"
                 "| GSGL - Shader compile error log                       |\n"
                 "+-------------------------------------------------------+\n"

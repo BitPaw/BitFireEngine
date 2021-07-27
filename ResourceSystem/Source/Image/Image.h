@@ -44,6 +44,8 @@ namespace BF
 
 		void FillRandome();
 
+		void FormatChange(ImageFormat imageFormat);
+
 		static ImageFileExtension CheckFileExtension(AsciiString& fileExtension);
 		ErrorCode Load(const char* filePath);
 	};

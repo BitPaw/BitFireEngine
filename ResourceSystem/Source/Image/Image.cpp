@@ -3,6 +3,7 @@
 #include "BMP/BMP.h"
 #include "PNG/PNG.h"
 #include "TGA/TGA.h"
+#include <malloc.h>
 
 BF::Vector4<unsigned char> BF::Image::GetPixel(unsigned int x, unsigned int y)
 {
@@ -45,27 +46,7 @@ void BF::Image::RemoveColor(unsigned char red, unsigned char green, unsigned cha
 
         case ImageFormat::RGB:
         {
-            unsigned int size = (PixelDataSize / 3) * 4;
-            unsigned char* newData = new unsigned char[size];
-            unsigned char* oldData = PixelData;
-            unsigned int oldIndex = 0;
-
-            for (unsigned int i = 0; i < size; )
-            {
-                unsigned char* source = &oldData[oldIndex];
-                unsigned char* destination = &newData[i];
-
-                memcpy(destination, source, 3);
-
-                i += 3;
-                oldIndex += 3;
-
-                newData[i++] = 0xFF;
-            }
-            Format = ImageFormat::RGBA;
-
-            PixelData = newData;
-            delete[] oldData;
+            FormatChange(ImageFormat::RGBA);
 
             // no break;
         }
@@ -101,22 +82,19 @@ void BF::Image::FlipHorizontal()
     unsigned int height = Height;
     unsigned int width = Width;
     unsigned int bytesPerPixel = 3;
-    unsigned int scanLineWidth = width * bytesPerPixel;
+    unsigned int scanLineWidthSize = width * bytesPerPixel;
     unsigned int scanLinesToSwap = height / 2;
-    unsigned char* dataStartAdress = &PixelData[0];
-    unsigned char* copyBufferRow = (unsigned char*)malloc(scanLineWidth);
+    unsigned char copyBufferRow[2048];
 
     for (unsigned int scanlineIndex = 0; scanlineIndex < scanLinesToSwap; scanlineIndex++)
     {
-        unsigned char* destination = dataStartAdress + (scanlineIndex * scanLineWidth); // D
-        unsigned char* source = dataStartAdress + ((height - scanlineIndex) * scanLineWidth) - scanLineWidth; // S
+        unsigned char* bufferA = PixelData + (scanlineIndex * scanLineWidthSize);
+        unsigned char* bufferB = PixelData + ((height - scanlineIndex) * scanLineWidthSize) - scanLineWidthSize;
 
-        memcpy(copyBufferRow, source, scanLineWidth); // S -> X 'Save S'
-        memcpy(source, destination, scanLineWidth); // D -> S 'Move D to S(override)'
-        memcpy(destination, copyBufferRow, scanLineWidth); // X -> D 'Move SaveCopy to D'
+        memcpy(copyBufferRow, bufferB, scanLineWidthSize); // A -> Buffer 'Save A'
+        memcpy(bufferB, bufferA, scanLineWidthSize); // B -> A 'Move B to A(override)'
+        memcpy(bufferA, copyBufferRow, scanLineWidthSize); // Buffer -> B 'Move SaveCopy (A) to B'
     }
-
-    free(copyBufferRow);
 }
 
 void BF::Image::PrintData()
@@ -165,16 +143,60 @@ void BF::Image::Resize(unsigned int width, unsigned height)
 
 void BF::Image::FillRandome()
 {
-    for (unsigned int y = 0; y < Width; y++)
+    for (size_t i = 0; i < PixelDataSize; i++)
     {
-        for (unsigned int x = 0; x < Height; x++)
-        {
-            unsigned int index = (x + (y * Width)) * 4;
+        PixelData[i] = Math::RandomeNumber() % 255;
+    }
+}
 
-            PixelData[index + 0] = Math::RandomeNumber() % 255;
-            PixelData[index + 1] = Math::RandomeNumber() % 255;
-            PixelData[index + 2] = Math::RandomeNumber() % 255;
-            PixelData[index + 3] = 0xFF;
+void BF::Image::FormatChange(ImageFormat imageFormat)
+{
+    switch (Format)
+    {
+        case ImageFormat::BlackAndWhite:
+        {
+
+        }
+        case ImageFormat::RGB:
+        {
+            switch (imageFormat)
+            {
+                case ImageFormat::BlackAndWhite:
+                    break;
+                case ImageFormat::RGB:
+                    break;
+                case ImageFormat::RGBA:
+                {
+                    unsigned int newIndex = 0;
+                    unsigned int oldSize = PixelDataSize;
+                    unsigned int newSize = (oldSize / 3) * 4;
+                    unsigned char* newData = (unsigned char*)malloc(newSize * sizeof(char));
+                    unsigned char* oldData = PixelData;
+
+                    memset(newData, 0xFF, newSize);
+
+                    for (unsigned int oldIndex = 0; oldIndex < oldSize; oldIndex += 3)
+                    {
+                        unsigned char* source = &oldData[oldIndex];
+                        unsigned char* destination = &newData[newIndex];
+
+                        memcpy(destination, source, 3);
+
+                        newIndex += 4;
+                    }
+
+                    Format = ImageFormat::RGBA;
+                    PixelData = newData;
+
+                    free(oldData);
+
+                    break;
+                }                 
+            }
+        }
+        case ImageFormat::RGBA:
+        {
+
         }
     }
 }
@@ -204,7 +226,12 @@ BF::ErrorCode BF::Image::Load(const char* filePath)
     AsciiString fileExtension(file.Extension);
     ImageFileExtension imageFormat = CheckFileExtension(fileExtension);
 
-    FilePathSet(filePath);
+    FilePathSet(file.Path);
+
+    if (!file.DoesFileExist())
+    {
+        return ErrorCode::FileNotFound;
+    }
 
     switch (imageFormat)
     {

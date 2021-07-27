@@ -20,23 +20,9 @@ BF::ErrorCode BF::Font::Load(const char* filePath)
     {
     case FontFormat::FNT:
     {
-        FNT* fnt = new FNT();
-        fnt->Load(filePath);
-        fnt->Convert(*this);
-
-        break;
-        /*
-        AsciiString x("copy.fnt");
-
-        FNT* fnt = (FNT*)BitMapFont;   
-
-        fnt->Load(filePath);
-        fnt->Convert(*this);
-
-        filePath.AttachToBack(x);
-
-        fnt->Save(filePath);*/
-
+        FNT fnt;
+        //fnt.Load(filePath);
+        //fnt.Convert(*this);
         break;
     }
 

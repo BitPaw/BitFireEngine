@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ResourceType.h"
+#include "ResourceType.hpp"
 
 #include "Shader/Shader.h"
 #include "Image/Image.h"

@@ -53,42 +53,32 @@ void BF::FNT::Load(const char* filePath)
 {
 	AsciiString dataString;
 	AsciiString referenceSting;
-	FNTPage* currentPage = nullptr; 
-	char fileBuffer[16384];
-	char* bufferAdress = fileBuffer;
-	char* currentCursor = 0;
-	char textCharacter[12];
-
+	FNTPage* currentPage = nullptr;
+	File file(filePath);
+	char currentCursor[1048];
+	char textCharacter[30];
 	int pageCounter = 0;
-	
 
-	File::Read(filePath, &bufferAdress, 16384);
-
-	currentCursor = fileBuffer;	 
-
-	sscanf(currentCursor, "%s", textCharacter);
-
-
+	file.Read();
 
 	char hasCommas = 0;
 	bool stopFlag = false;
-
 	int characterCounter = 0;
-	
-	/*
-	
-	
-	*/
-
+	int dynamicIndex = 0;
 
 	// HARD CODED
 	FontPages.ReSize(1);
-
 	//----
-	int dynamicIndex = 0;	
 
 	while (true)
-	{		
+	{
+		ErrorCode errorCode = file.ReadNextLineInto(currentCursor);
+
+		if (errorCode == ErrorCode::Empty)
+		{
+			break;
+		}
+
 		bool isInfoLine = memcmp(currentCursor, "info", 4) == 0;
 		bool isCommonLine = memcmp(currentCursor, "common", 6) == 0;
 		bool isPageLine = memcmp(currentCursor, "page", 4) == 0;
@@ -97,272 +87,257 @@ void BF::FNT::Load(const char* filePath)
 
 		dataString.SetAsReference(currentCursor);
 
-	if (isInfoLine)
-	{	
-		char textName[20];
-		char textCharSet[10];
-		char size[20];
-		char bold[20];
-		char italic[20];
-		char unicode[20];
-		char stretchH[20];
-		char smooth[20];
-		char aa[20];
-		char padding[20];
-		char spacing[20];		
-		char outlineThickness[20];
-
-		dataString.ReplaceWhiteSpaceInQuotes('\xFE', false);
-
-		memset(Name, 0, 30);
-		memset(CharSet, 0, 10);
-
-		sscanf
-		(
-			currentCursor,
-			"%s %s %s %s %s %s %s %s %s %s %s %s %s",
-			textCharacter,
-			textName,
-			size,
-			bold,
-			italic,
-			textCharSet,
-			unicode,
-			stretchH,
-			smooth,
-			aa,
-			padding,
-			spacing,
-			outlineThickness
-		);
-	
-		AsciiString reData;
-		//AsciiString extrectfileName(); // face="SegoeþScript"
-
-		referenceSting.SetAsReference(textName);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		referenceSting.ReplaceWhiteSpaceInQuotes('\xFE', true);
-	
-		memcpy(Name, &referenceSting[1], referenceSting.Size()-2);
-
-		referenceSting.SetAsReference(textCharSet);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		referenceSting.ReplaceWhiteSpaceInQuotes('\xFE', true);
-	
-		memcpy(CharSet, &referenceSting[1], referenceSting.Size() - 2);
-
-		referenceSting.SetAsReference(size);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		Size = referenceSting.ToInt();
-
-		referenceSting.SetAsReference(bold);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		Bold = referenceSting.ToBool();
-
-		referenceSting.SetAsReference(italic);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		Italic = referenceSting.ToBool();
-
-		referenceSting.SetAsReference(unicode);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		Unicode = referenceSting.ToBool();
-
-		referenceSting.SetAsReference(stretchH);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		StretchH = referenceSting.ToInt();
-
-		referenceSting.SetAsReference(smooth);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		Smooth = referenceSting.ToBool();
-
-		referenceSting.SetAsReference(aa);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		Supersampling = referenceSting.ToBool();
-
-		referenceSting.SetAsReference(outlineThickness);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		OutlineThickness = referenceSting.ToInt();		
-	}
-
-	if (isCommonLine)
-	{
-		char lineHeight[20];
-		char base[20];
-		char scaleW[20];
-		char scaleH[20];
-		char pages[20];
-		char packed[20];
-
-		sscanf
-		(
-			currentCursor, 
-			"%s %s %s %s %s %s %s", 
-			textCharacter, 
-			lineHeight,
-			base,
-			scaleW,
-			scaleH,
-			pages,
-			packed
-		);
-
-		referenceSting.SetAsReference(lineHeight);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		LineHeight = referenceSting.ToInt();
-
-		referenceSting.SetAsReference(base);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		Base = referenceSting.ToInt();
-
-		referenceSting.SetAsReference(scaleW);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		ScaleWidth = referenceSting.ToInt();
-
-		referenceSting.SetAsReference(scaleH);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		ScaleHeight = referenceSting.ToInt();
-
-		referenceSting.SetAsReference(pages);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		AmountOfPages = referenceSting.ToInt();
-
-		referenceSting.SetAsReference(packed);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		Packed = referenceSting.ToInt();
-	}
-
-	if (isPageLine)
-	{
-		char textPageID[12];
-		char imageFileName[30];
-
-		currentPage = &FontPages[pageCounter++];
-
-		dataString.ReplaceWhiteSpaceInQuotes('\xFE', false);
-
-		sscanf(currentCursor, "%s %s %s", textCharacter, textPageID, imageFileName);
-
-		dataString.ReplaceWhiteSpaceInQuotes('\xFE', true);
-
-		referenceSting.SetAsReference(textPageID);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		currentPage->PageID = referenceSting.ToInt();	
-
-
-		AsciiString nameExtract(imageFileName);
-
-		int startIndex = nameExtract.FindFirst('\"') + 1;
-		int endIndex = nameExtract.FindLast('\"');
-		int length = endIndex - startIndex;
-
-		memcpy(currentPage->PageFileName, &imageFileName[startIndex], length);
-		currentPage->PageFileName[length] = '\0';
-	}
-
-	if (isCharacterCountLine)
-	{
-		char count[12];
-		int numberOfChars = 0;
-
-		sscanf(currentCursor, "%s %s", textCharacter, count);
-
-		referenceSting.SetAsReference(count);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		numberOfChars = referenceSting.ToInt();
-
-		currentPage->Characters.ReSize(numberOfChars);
-	}
-
-	if (isCharacterDeclareLine)
-	{
-		FNTCharacter& character = currentPage->Characters[characterCounter++];
-		char textID[20];
-		char textX[20];
-		char textY[20];
-		char textWidth[20];
-		char textHeiht[20];
-		char textXOffset[20];
-		char textYOffset[20];
-		char textXAdvance[20];
-		char textPage[20];
-		char textChanel[20];
-
-		sscanf
-		(
-			currentCursor,
-			"%s %s %s %s %s %s %s %s %s %s %s",
-			textCharacter,
-			textID,
-			textX,
-			textY,
-			textWidth,
-			textHeiht,
-			textXOffset,
-			textYOffset,
-			textXAdvance,
-			textPage,
-			textChanel
-		);
-
-		referenceSting.SetAsReference(textID);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		character.ID = referenceSting.ToInt();
-
-		referenceSting.SetAsReference(textX);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		character.Position[0] = referenceSting.ToFloat();
-
-		referenceSting.SetAsReference(textY);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		character.Position[1] = referenceSting.ToFloat();
-
-		referenceSting.SetAsReference(textWidth);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		character.Size[0] = referenceSting.ToFloat();
-
-		referenceSting.SetAsReference(textHeiht);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		character.Size[1] = referenceSting.ToFloat();
-
-		referenceSting.SetAsReference(textXOffset);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		character.Offset[0] = referenceSting.ToFloat();
-
-		referenceSting.SetAsReference(textYOffset);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		character.Offset[1] = referenceSting.ToFloat();
-
-		referenceSting.SetAsReference(textXAdvance);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		character.XAdvance = referenceSting.ToFloat();
-
-		referenceSting.SetAsReference(textPage);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		character.Page = referenceSting.ToInt();
-
-		referenceSting.SetAsReference(textChanel);
-		referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-		character.Chanal = referenceSting.ToInt();
-
-	}	
-
-
-		char character = *(currentCursor++);
-
-		if (character == '\0')
+		if (isInfoLine)
 		{
-			return;
+			char textName[20];
+			char textCharSet[10];
+			char size[20];
+			char bold[20];
+			char italic[20];
+			char unicode[20];
+			char stretchH[20];
+			char smooth[20];
+			char aa[20];
+			char padding[20];
+			char spacing[20];
+			char outlineThickness[20];
+
+			dataString.ReplaceWhiteSpaceInQuotes('\xFE', false);
+
+			memset(Name, 0, 30);
+			memset(CharSet, 0, 10);
+
+			int scannedObjects = sscanf
+			(
+				currentCursor,
+				"%s %s %s %s %s %s %s %s %s %s %s %s %s",
+				textCharacter,
+				textName,
+				size,
+				bold,
+				italic,
+				textCharSet,
+				unicode,
+				stretchH,
+				smooth,
+				aa,
+				padding,
+				spacing,
+				outlineThickness
+			);
+
+			AsciiString reData;
+			//AsciiString extrectfileName(); // face="SegoeþScript"
+
+			referenceSting.SetAsReference(textName);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			referenceSting.ReplaceWhiteSpaceInQuotes('\xFE', true);
+
+			memcpy(Name, &referenceSting[1], referenceSting.Size() - 2);
+
+			referenceSting.SetAsReference(textCharSet);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			referenceSting.ReplaceWhiteSpaceInQuotes('\xFE', true);
+
+			memcpy(CharSet, &referenceSting[1], referenceSting.Size() - 2);
+
+			referenceSting.SetAsReference(size);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			Size = referenceSting.ToInt();
+
+			referenceSting.SetAsReference(bold);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			Bold = referenceSting.ToBool();
+
+			referenceSting.SetAsReference(italic);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			Italic = referenceSting.ToBool();
+
+			referenceSting.SetAsReference(unicode);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			Unicode = referenceSting.ToBool();
+
+			referenceSting.SetAsReference(stretchH);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			StretchH = referenceSting.ToInt();
+
+			referenceSting.SetAsReference(smooth);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			Smooth = referenceSting.ToBool();
+
+			referenceSting.SetAsReference(aa);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			Supersampling = referenceSting.ToBool();
+
+			if (scannedObjects == 13)
+			{
+				referenceSting.SetAsReference(outlineThickness);
+				referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+				OutlineThickness = referenceSting.ToInt();
+			}
 		}
 
-		while (true)
+		if (isCommonLine)
 		{
-			character = *(currentCursor++);
+			char lineHeight[20];
+			char base[20];
+			char scaleW[20];
+			char scaleH[20];
+			char pages[20];
+			char packed[20];
 
-			if (character == '\n')
-			{
-				break;
-			}
-		}				
+			int scannedObjects = sscanf
+			(
+				currentCursor,
+				"%s %s %s %s %s %s %s",
+				textCharacter,
+				lineHeight,
+				base,
+				scaleW,
+				scaleH,
+				pages,
+				packed
+			);
+
+			referenceSting.SetAsReference(lineHeight);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			LineHeight = referenceSting.ToInt();
+
+			referenceSting.SetAsReference(base);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			Base = referenceSting.ToInt();
+
+			referenceSting.SetAsReference(scaleW);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			ScaleWidth = referenceSting.ToInt();
+
+			referenceSting.SetAsReference(scaleH);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			ScaleHeight = referenceSting.ToInt();
+
+			referenceSting.SetAsReference(pages);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			AmountOfPages = referenceSting.ToInt();
+
+			referenceSting.SetAsReference(packed);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			Packed = referenceSting.ToBool();
+		}
+
+		if (isPageLine)
+		{
+			char textPageID[12];
+			char imageFileName[30];
+
+			currentPage = &FontPages[pageCounter++];
+
+			dataString.ReplaceWhiteSpaceInQuotes('\xFE', false);
+
+			int scannedObjects = sscanf(currentCursor, "%s %s %s", textCharacter, textPageID, imageFileName);
+
+			dataString.ReplaceWhiteSpaceInQuotes('\xFE', true);
+
+			referenceSting.SetAsReference(textPageID);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			currentPage->PageID = referenceSting.ToInt();
+
+
+			AsciiString nameExtract(imageFileName);
+
+			int startIndex = nameExtract.FindFirst('\"') + 1;
+			int endIndex = nameExtract.FindLast('\"');
+			int length = endIndex - startIndex;
+
+			memcpy(currentPage->PageFileName, &imageFileName[startIndex], length);
+			currentPage->PageFileName[length] = '\0';
+		}
+
+		if (isCharacterCountLine)
+		{
+			char count[12];
+			int numberOfChars = 0;
+
+			int scannedObjects = sscanf(currentCursor, "%s %s", textCharacter, count);
+
+			referenceSting.SetAsReference(count);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			numberOfChars = referenceSting.ToInt();
+
+			currentPage->Characters.ReSize(numberOfChars);
+		}
+
+		if (isCharacterDeclareLine)
+		{
+			FNTCharacter& character = currentPage->Characters[characterCounter++];
+			char textID[20];
+			char textX[20];
+			char textY[20];
+			char textWidth[20];
+			char textHeiht[20];
+			char textXOffset[20];
+			char textYOffset[20];
+			char textXAdvance[20];
+			char textPage[20];
+			char textChanel[20];
+
+			int scannedObjects = sscanf
+			(
+				currentCursor,
+				"%s %s %s %s %s %s %s %s %s %s %s",
+				textCharacter,
+				textID,
+				textX,
+				textY,
+				textWidth,
+				textHeiht,
+				textXOffset,
+				textYOffset,
+				textXAdvance,
+				textPage,
+				textChanel
+			);
+
+			referenceSting.SetAsReference(textID);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			character.ID = referenceSting.ToInt();
+
+			referenceSting.SetAsReference(textX);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			character.Position[0] = referenceSting.ToFloat();
+
+			referenceSting.SetAsReference(textY);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			character.Position[1] = referenceSting.ToFloat();
+
+			referenceSting.SetAsReference(textWidth);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			character.Size[0] = referenceSting.ToFloat();
+
+			referenceSting.SetAsReference(textHeiht);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			character.Size[1] = referenceSting.ToFloat();
+
+			referenceSting.SetAsReference(textXOffset);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			character.Offset[0] = referenceSting.ToFloat();
+
+			referenceSting.SetAsReference(textYOffset);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			character.Offset[1] = referenceSting.ToFloat();
+
+			referenceSting.SetAsReference(textXAdvance);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			character.XAdvance = referenceSting.ToFloat();
+
+			referenceSting.SetAsReference(textPage);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			character.Page = referenceSting.ToInt();
+
+			referenceSting.SetAsReference(textChanel);
+			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
+			character.Chanal = referenceSting.ToInt();
+
+		}
 	}
 }
 /*
@@ -764,15 +739,15 @@ void BF::FNT::Save(const char* filePath)
 {
 	char fileBuffer[16384];
 	char* currentCursorIndex = fileBuffer;
-	int characterWritten = 0;	
+	int characterWritten = 0;
 
 	characterWritten = sprintf
 	(
 		currentCursorIndex,
 		"info face=\"%s\" size=%i bold=%i italic=%i charset=%s unicode=%i stretchH=%i smooth=%i aa=%i padding=%i,%i,%i,%i spacing=%i,%i\n",
-		Name, 
+		Name,
 		Size,
-		Bold, 
+		Bold,
 		Italic,
 		CharSet,
 		Unicode,
@@ -785,10 +760,10 @@ void BF::FNT::Save(const char* filePath)
 		CharacterPadding[3],
 		SpacerOffset[0],
 		SpacerOffset[1]
-	);	
+	);
 
 	currentCursorIndex += characterWritten;
-	
+
 
 	characterWritten = sprintf
 	(
@@ -805,7 +780,7 @@ void BF::FNT::Save(const char* filePath)
 	currentCursorIndex += characterWritten;
 
 	for (unsigned int i = 0; i < AmountOfPages; i++)
-	{		
+	{
 		FNTPage& page = FontPages[i];
 		int amountOfCharacters = page.Characters.Size();
 
@@ -816,10 +791,10 @@ void BF::FNT::Save(const char* filePath)
 			"chars count=%i",
 			page.PageID,
 			page.PageFileName,
-			page.Characters			
+			page.Characters
 		);
 
-		currentCursorIndex += characterWritten;	
+		currentCursorIndex += characterWritten;
 
 		for (size_t i = 0; i < amountOfCharacters; i++)
 		{
@@ -837,12 +812,12 @@ void BF::FNT::Save(const char* filePath)
 				character.Offset[0],
 				character.Offset[1],
 				character.XAdvance,
-				character.Page, 
+				character.Page,
 				character.Chanal
 			);
 
 			currentCursorIndex += characterWritten;
-		}		
+		}
 	}
 
 	File::Write(&filePath[0], fileBuffer);
@@ -852,17 +827,20 @@ void BF::FNT::Convert(Font& font)
 {
 	unsigned int amountOfResources = FontPages.Size();
 
-	font.Name.Copy(Name);
+	strcpy(font.Name, Name);
+
+	font.AdditionalResourceListSize = amountOfResources;
 	font.CharacterSize = Size;
 	font.SizeBetweenLines = LineHeight;
-	font.AdditionalResourceList.ReSize(amountOfResources);
+	font.AdditionalResourceList = new char[amountOfResources, 30];
 
 	for (size_t i = 0; i < amountOfResources; i++)
 	{
 		FNTPage& page = FontPages[i];
-		AsciiString& string = font.AdditionalResourceList[i];
+		char* pageFileName = page.PageFileName;
+		char* string = &font.AdditionalResourceList[i];
 
-		string.Copy(page.PageFileName);
+		strcpy(string, pageFileName);
 	}
 }
 

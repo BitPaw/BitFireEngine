@@ -14,12 +14,12 @@ namespace BF
 		AsciiString Name;
 
 		// Physics Container
-		List<Model**> ModelList;
-		List<Image**> ImageList;
-		List<Sound**> SoundList;
-		List<Font**> FontList;
-		List<Shader**> ShaderList;
-		List<Dialog**> DialogList;
+		List<Model*> ModelList;
+		List<Image*> ImageList;
+		List<Sound*> SoundList;
+		List<Font*> FontList;
+		List<Shader*> ShaderList;
+		List<Dialog*> DialogList;
 
 		Level();
 	};

@@ -151,7 +151,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString)
 {
     Resource* resource = nullptr;
     ResourceType resourceType = ResourceType::Unknown;
-    File file((char*)filePathString);
+    File file(filePathString);
     AsciiString fileExtension(&file.Extension[0]);
     bool doesFileExist = file.DoesFileExist();
     ErrorCode errorCode = doesFileExist ? ErrorCode::Undefined : ErrorCode::FileNotFound;
@@ -161,10 +161,10 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString)
     if (doesFileExist)
     {
         {
-            bool isModel = Model::CheckFileExtension(&fileExtension[0]) != ModelType::UnKown;
+            bool isModel = Model::CheckFileExtension(file.Extension) != ModelType::UnKown;
             bool isImage = Image::CheckFileExtension(fileExtension) != ImageFileExtension::Unkown;
             bool isSound = false;
-            bool isFont = Font::IsFontFile(&fileExtension[0]);
+            bool isFont = Font::IsFontFile(file.Extension);
             bool isShader = false;
             bool isDialog = false;
             bool isLevel = fileExtension.CompareIgnoreCase("lev");
@@ -178,10 +178,12 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString)
             if (isLevel) resourceType = ResourceType::Level;
         }
 
+        printf("[i][Resource] Load <%s> from <%s>.\n", ResourceTypeToString(resourceType), filePathString);
+
         switch (resourceType)
         {
             case ResourceType::Dialog:
-            {
+            {             
                 Dialog* dialog = new Dialog();
                 errorCode = Load(*dialog, filePathString);
                 break;
@@ -221,7 +223,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString)
             }
 
             case ResourceType::Model:
-            {
+            {        
                 Model* model = new Model();
                 errorCode = Load(*model, filePathString);
                 
@@ -290,6 +292,8 @@ BF::Resource* BF::ResourceManager::Load(AsciiString& filePath)
 
 BF::ErrorCode BF::ResourceManager::Load(Model& model, const char* filePath)
 {
+    printf("[>][Resource][Model] Loading from <%s>\n", filePath);
+
     ErrorCode errorCode = model.Load(filePath);
 
     if (errorCode == ErrorCode::NoError)
@@ -297,10 +301,9 @@ BF::ErrorCode BF::ResourceManager::Load(Model& model, const char* filePath)
         for (unsigned int i = 0; i < model.MaterialList.Size(); i++)
         {
             Material& material = model.MaterialList[i];
-            AsciiString imageFilePath(material.TextureFilePath);
             Image* image = new Image();
 
-            ErrorCode imageErrorCode = Load(*image, &imageFilePath[0]);
+            ErrorCode imageErrorCode = Load(*image, material.TextureFilePath);
 
             if (imageErrorCode == ErrorCode::NoError)
             {
@@ -316,6 +319,8 @@ BF::ErrorCode BF::ResourceManager::Load(Model& model, const char* filePath)
 
 BF::ErrorCode BF::ResourceManager::Load(Image& image, const char* filePath)
 {
+    printf("[>][Resource][Image] Loading from <%s>\n", filePath);
+
     ErrorCode errorCode = image.Load(filePath);
 
     if (errorCode == ErrorCode::NoError)
@@ -328,80 +333,76 @@ BF::ErrorCode BF::ResourceManager::Load(Image& image, const char* filePath)
 
 BF::ErrorCode BF::ResourceManager::Load(Sound& resource, const char* filePath)
 {
+    printf("[>][Resource][Sound] Loading from <%s>\n", filePath);
+
     return ErrorCode();
 }
 
 BF::ErrorCode BF::ResourceManager::Load(Font& font, const char* filePath)
 {
+    printf("[>][Resource][Font] Loading from <%s>\n", filePath);
+
     ErrorCode errorCode = font.Load(filePath);
 
     if (errorCode == ErrorCode::NoError)
     {
-        for (unsigned int i = 0; i < font.AdditionalResourceList.Size(); i++)
+        for (unsigned int i = 0; i < font.AdditionalResourceListSize; i++)
         {
             AsciiString path(filePath);
-            AsciiString& resourcePath = font.AdditionalResourceList[i];          
-            char textureFilePath[30];
-            memset(textureFilePath, 0, 30);
+            char* resourcePath = &font.AdditionalResourceList[i];          
+            char textureFilePath[50];
+            memset(textureFilePath, 0, 50);
 
+            int resourcePathSize = strlen(resourcePath);
             int startIndex = path.FindLast('/') + 1;
 
             memcpy(textureFilePath, &filePath[0], startIndex);
 
             int length = strlen(textureFilePath);
 
-            memcpy(&textureFilePath[length], &resourcePath[0], resourcePath.Size());
+            memcpy(&textureFilePath[length], &resourcePath[0], resourcePathSize);
             
             // Does file exist?
 
             font.Texture = new Image();
 
+           // errorCode = ErrorCode::FileNotFound;
             errorCode = Load(*font.Texture, textureFilePath);
+
+            if (errorCode != ErrorCode::NoError)
+            {
+                delete font.Texture;
+                font.Texture = nullptr;
+            }
         }
 
         font.ID = _fontList.Size();
         font.FilePathSet(&filePath[0]);   
     }
 
-    /*
-    if (fontFormat == FontFormat::FNT)
-    {
-        FNT* fnt = (FNT*)font;
-        unsigned int amountOfTextures = fnt->FontPages.Size();
-
-        for (unsigned int i = 0; i < amountOfTextures; i++)
-        {
-            FNTPage& fontPage = fnt->FontPages[i];
-            AsciiString& fileName = fontPage.PageFileName;
-            AsciiString path;
-            unsigned int lastDot = filePath.FindLast('/') + 1;
-
-            filePath.Cut(0, lastDot, path);
-
-            path.AttachToBack(fileName);
-
-            Load(path);
-        }
-    }*/
-
     return errorCode;
 }
 
 BF::ErrorCode BF::ResourceManager::Load(ShaderProgram& resource, const char* filePath)
 {
-    return ErrorCode();
+    printf("[>][Resource][ShaderProgram] Loading from <%s>\n", filePath);
+
+    return ErrorCode::NoError;
 }
 
 BF::ErrorCode BF::ResourceManager::Load(Dialog& resource, const char* filePath)
 {
+    printf("[>][Resource][Dialog] Loading from <%s>\n", filePath);
     return ErrorCode::NoError;
 }
 
 BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath)
 {
     List<AsciiString> fileLines;
-    File file((char*)filePath);
+    File file(filePath);
     ErrorCode errorCode = ErrorCode::LoadingFailed;
+
+    printf("[>][Resource][Level] Loading from <%s>\n", filePath);
 
     const char _modelToken = 'O';
     const char _textureToken = 'T';
@@ -484,8 +485,8 @@ BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath)
         AsciiString& line = fileLines[i];
         char* currentLine = &line[0];
         char character = line.GetFirstNonEmpty();
-        char dummyBuffer[10];
-        char path[30];
+        char dummyBuffer[30];
+        char path[120];
 
         switch (character)
         {
@@ -543,7 +544,7 @@ BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath)
                     break;
                 }
 
-                level.ModelList[modelCounter++] = &loadedModel;
+                level.ModelList[modelCounter++] = loadedModel;
                 //-------------------
 
                 //--[Apply Data]-------------
@@ -566,7 +567,7 @@ BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath)
 
                 Add(*image);
 
-                level.ImageList[imageCounter++] = &image;
+                level.ImageList[imageCounter++] = image;
                 break;
             }
             case _musicToken:
@@ -577,7 +578,7 @@ BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath)
                 
                 errorCode = Load(*sound, path);
 
-                level.SoundList[soundCounter++] = &sound;
+                level.SoundList[soundCounter++] = sound;
                 break;
             }
             case _fontToken:
@@ -588,7 +589,7 @@ BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath)
                 
                 errorCode = Load(*font, path);          
 
-                level.FontList[fontCounter++] = &font;
+                level.FontList[fontCounter++] = font;
 
                 Add(*font);
                 break;
@@ -635,12 +636,12 @@ void BF::ResourceManager::Add(Image& image)
         image.LoadedToGPU = true;
     }
 
+    PushToGPU(image);
+
     if (firstImage)
     {
         _defaultTextureID = image.ID;
     }
-
-    PushToGPU(image);
 }
 
 void BF::ResourceManager::Add(Font& font)
@@ -749,7 +750,7 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
                 {
                     textureID = texture->ID;
                 }
-            }
+            }       
 
             // TextureLookup ----------------------------     
             OpenGLAPI::TextureBind(textureID);
@@ -815,7 +816,7 @@ void BF::ResourceManager::PrintContent(bool detailed)
         {
             Image* image = currentImage->Element;
 
-            printf("| ID:%u %s\n", image->ID, &image->FilePath[0]);
+            printf("| ID:%u Fomat:%s %s\n", image->ID, ImageFormatToString(image->Format),image->FilePath);
 
             currentImage = currentImage->Next;
         }
@@ -862,7 +863,7 @@ void BF::ResourceManager::PrintContent(bool detailed)
 
             for (size_t i = 0; i < 2; i++)
             {
-                Shader& shader = shaderProgram->ShaderList[i];
+                Shader& shader = shaderProgram->ShaderList[i];                
 
                 printf("| - Sub-Shader ID:%u Type:%u Source:%s\n", shader.ID, shader.Type, &shader.FilePath[0]);
             }
