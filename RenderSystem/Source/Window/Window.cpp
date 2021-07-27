@@ -413,7 +413,7 @@ bool BF::Window::Create(int width, int height, const char* title)
     SetPositionToCenter();
     SetVideoRefreshRate(videoConfig->WindowRefreshRateMode);
 
-    if (true)
+    if (false)
     {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);

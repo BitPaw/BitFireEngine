@@ -24,6 +24,8 @@
     <None Include="Shader\WorldSpace.frag" />
     <None Include="Shader\WS.vert" />
     <None Include="Shader\WS.frag" />
+    <None Include="Shader\SkyBox.vert" />
+    <None Include="Shader\SkyBox.frag" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Main.h">

@@ -20,7 +20,6 @@ BF::ErrorCode BF::File::CheckFile()
 BF::File::File(const char* filePath)
 {
 	_currentCursorPosition = 0;
-	_overAllocatedBytes = 0;
 	Data = nullptr;
 	Size = 0;
 	Extension = nullptr;
@@ -56,8 +55,8 @@ BF::File::~File()
 BF::ErrorCode BF::File::Read()
 {
 	const unsigned int elementSize = sizeof(char);
-	FILE* file = fopen(Path, "rb");
 	unsigned int fullSize = -1;
+	FILE* file = fopen(Path, "rb");
 
 	if (file == nullptr)
 	{
@@ -67,23 +66,21 @@ BF::ErrorCode BF::File::Read()
 	fseek(file, 0, SEEK_END);
 	Size = ftell(file);
 	rewind(file);
-
 	//fseek(file, 0, SEEK_SET);
 
+
 	fullSize = Size * elementSize;
-	Data = (char*)malloc(fullSize);
-	
+	Data = (char*)malloc(fullSize + 1);	
 
 	if (Data == nullptr)
 	{
 		return ErrorCode::OutOfMemory;
 	}
 
-	//Data[fullSize - 1] = 0;
+	Data[fullSize] = '\0';
 
 	int readBytes = fread(Data, elementSize, Size, file);
-
-	_overAllocatedBytes = Size - readBytes;
+	int overAllocatedBytes = Size - readBytes; // if overAllocatedBytes > 0 there was a reading error.	
 
 	if (readBytes != Size)
 	{

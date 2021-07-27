@@ -20,9 +20,9 @@ BF::ErrorCode BF::Font::Load(const char* filePath)
     {
     case FontFormat::FNT:
     {
-        FNT fnt;
-        //fnt.Load(filePath);
-        //fnt.Convert(*this);
+        FNT* fnt = new FNT();
+        fnt->Load(filePath);
+        fnt->Convert(*this);
         break;
     }
 

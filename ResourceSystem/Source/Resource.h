@@ -31,6 +31,8 @@ namespace BF
 		*/
 		unsigned int SharedCounter;
 
+		bool ShouldBeRendered;
+
 		/*
 		Path from where the resource was loaded from.
 		Can be used to prevent double loading.

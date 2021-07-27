@@ -147,7 +147,7 @@ void BF::ResourceManager::PushToGPU(Image& image)
     OpenGLAPI::RegisterImage(image);
 }
 
-BF::Resource* BF::ResourceManager::Load(const char* filePathString)
+BF::Resource* BF::ResourceManager::Load(const char* filePathString, ResourceLoadMode resourceLoadMode)
 {
     Resource* resource = nullptr;
     ResourceType resourceType = ResourceType::Unknown;
@@ -285,12 +285,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString)
     return resource;
 }
 
-BF::Resource* BF::ResourceManager::Load(AsciiString& filePath)
-{
-    return Load(&filePath[0]);
-}
-
-BF::ErrorCode BF::ResourceManager::Load(Model& model, const char* filePath)
+BF::ErrorCode BF::ResourceManager::Load(Model& model, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
     printf("[>][Resource][Model] Loading from <%s>\n", filePath);
 
@@ -317,7 +312,7 @@ BF::ErrorCode BF::ResourceManager::Load(Model& model, const char* filePath)
     return errorCode;
 }
 
-BF::ErrorCode BF::ResourceManager::Load(Image& image, const char* filePath)
+BF::ErrorCode BF::ResourceManager::Load(Image& image, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
     printf("[>][Resource][Image] Loading from <%s>\n", filePath);
 
@@ -331,14 +326,14 @@ BF::ErrorCode BF::ResourceManager::Load(Image& image, const char* filePath)
     return errorCode;
 }
 
-BF::ErrorCode BF::ResourceManager::Load(Sound& resource, const char* filePath)
+BF::ErrorCode BF::ResourceManager::Load(Sound& resource, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
     printf("[>][Resource][Sound] Loading from <%s>\n", filePath);
 
     return ErrorCode();
 }
 
-BF::ErrorCode BF::ResourceManager::Load(Font& font, const char* filePath)
+BF::ErrorCode BF::ResourceManager::Load(Font& font, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
     printf("[>][Resource][Font] Loading from <%s>\n", filePath);
 
@@ -383,20 +378,20 @@ BF::ErrorCode BF::ResourceManager::Load(Font& font, const char* filePath)
     return errorCode;
 }
 
-BF::ErrorCode BF::ResourceManager::Load(ShaderProgram& resource, const char* filePath)
+BF::ErrorCode BF::ResourceManager::Load(ShaderProgram& resource, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
     printf("[>][Resource][ShaderProgram] Loading from <%s>\n", filePath);
 
     return ErrorCode::NoError;
 }
 
-BF::ErrorCode BF::ResourceManager::Load(Dialog& resource, const char* filePath)
+BF::ErrorCode BF::ResourceManager::Load(Dialog& resource, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
     printf("[>][Resource][Dialog] Loading from <%s>\n", filePath);
     return ErrorCode::NoError;
 }
 
-BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath)
+BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
     List<AsciiString> fileLines;
     File file(filePath);
@@ -591,6 +586,11 @@ BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath)
 
                 level.FontList[fontCounter++] = font;
 
+                for (size_t i = 0; i < font->AdditionalResourceListSize; i++)
+                {
+                    font->AdditionalResourceList[i];
+                }
+
                 Add(*font);
                 break;
             }
@@ -611,6 +611,21 @@ BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath)
     }
 
     return errorCode;
+}
+
+BF::ErrorCode BF::ResourceManager::Load(ShaderProgram& shaderProgram, const char* vertexShader, const char* fragmentShader, ResourceLoadMode ResourceLoadMode)
+{
+    shaderProgram.AddShader((char*)vertexShader, (char*)fragmentShader);
+    shaderProgram.Load();
+
+    bool validShader = OpenGLAPI::ShaderCompile(shaderProgram);
+
+    if (validShader)
+    {
+        Add(shaderProgram);
+    }
+
+    return ErrorCode::NoError;
 }
 
 void BF::ResourceManager::Add(Model& model)
@@ -661,32 +676,28 @@ void BF::ResourceManager::Add(Font& font)
     }
 }
 
-
-
-unsigned int BF::ResourceManager::AddShaderProgram(AsciiString& vertexShader, AsciiString& fragmentShader)
+void BF::ResourceManager::Add(ShaderProgram& shaderProgram)
 {
-    return AddShaderProgram(&vertexShader[0], &fragmentShader[0]);
-}
-
-unsigned int BF::ResourceManager::AddShaderProgram(const char* vertexShader, const char* fragmentShader)
-{
-    ShaderProgram* shaderProgram = new ShaderProgram();
     bool firstShaderProgram = _shaderProgramList.Size() == 0;
 
-    shaderProgram->AddShader((char*)vertexShader, (char*)fragmentShader);
-    shaderProgram->Load();
+    _shaderProgramList.Add(&shaderProgram);
 
-    _shaderProgramList.Add(shaderProgram);
-
-    bool validShader = OpenGLAPI::ShaderCompile(*shaderProgram);
-
-    if (firstShaderProgram && validShader)
+    if (firstShaderProgram)
     {
-        _defaultShaderID = shaderProgram->ID;
+        _defaultShaderID = shaderProgram.ID;
+
         MainCamera.FetchGPUReferences(_defaultShaderID);
     }
+}
 
-    return shaderProgram->ID;
+void BF::ResourceManager::Add(SkyBox& skyBox)
+{
+    
+
+    OpenGLAPI::SkyBoxSet(skyBox);
+   // OpenGLAPI::SkyBoxUse(skyBox);
+
+    DefaultSkyBox = &skyBox;
 }
 
 void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
@@ -694,6 +705,27 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
     LinkedListNode<Model*>* currentModel = _modelList.GetFirst();
 
     OpenGLAPI::RenderClear();
+
+    // Render Skybox first, if it is used
+    {
+        bool hasSkyBox = DefaultSkyBox != NULL;
+
+        if (hasSkyBox)
+        {
+            OpenGLAPI::DepthMaskEnable(false);            
+            OpenGLAPI::UseShaderProgram(DefaultSkyBox->Shader.ID);
+
+            MainCamera.FetchGPUReferences(DefaultSkyBox->Shader.ID);
+            MainCamera.Update(gameTickData);
+
+            OpenGLAPI::SkyBoxSet(*DefaultSkyBox);
+            OpenGLAPI::SkyBoxUse(*DefaultSkyBox);  
+            
+            OpenGLAPI::Render(RenderMode::Triangle, 0, 36);
+
+            OpenGLAPI::DepthMaskEnable(true);
+        }
+    }
 
     while (currentModel != nullptr)
     {
@@ -703,13 +735,20 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
         bool useDefaultShader = shaderProgramID == -1;
         bool changeShader = shaderProgramID != _lastUsedShaderProgram;
 
+        currentModel = currentModel->Next;
+
+        if (!model->ShouldBeRendered)
+        {
+            continue;
+        }
+
         if (useDefaultShader)
         {
             shaderProgramID = _defaultShaderID;
             changeShader = shaderProgramID != _lastUsedShaderProgram;
         }
 
-        currentModel = currentModel->Next;
+      
 
         OpenGLAPI::VertexArrayBind(renderInfo.VertexArrayID);
 
@@ -753,7 +792,7 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
             }       
 
             // TextureLookup ----------------------------     
-            OpenGLAPI::TextureBind(textureID);
+            OpenGLAPI::TextureUse(textureID);
             //-------------------------------------------------
 
                  //---RenderStyle-------------------------

@@ -86,7 +86,61 @@ int BF::OpenGLAPI::ImageLayoutToOpenGLFormat(ImageLayout layout)
     }
 }
 
-void BF::OpenGLAPI::TextureBind(int textureID)
+void BF::OpenGLAPI::SkyBoxUse(SkyBox& skybox)
+{
+    glBindVertexArray(skybox.VAOID); // skybox
+
+    glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.ID);
+}
+
+void BF::OpenGLAPI::SkyBoxSet(SkyBox& skybox)
+{
+    if (skybox.ID == -1)
+    {
+        glGenTextures(1, &skybox.ID);
+    }
+
+    glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.ID);
+
+    for (unsigned int i = 0; i < 6; i++)
+    {   
+        Image& image = skybox.Faces[i];        
+
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, image.Width, image.Height, 0, GL_RGB, GL_UNSIGNED_BYTE, image.PixelData);
+    }
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);   
+
+  
+    
+
+    int vertexstuff[1] = { 3 };
+    
+
+    OpenGLAPI::VertexArrayDefine(&skybox.VAOID);
+    OpenGLAPI::VertexAttributeArrayDefine(sizeof(float), 1, vertexstuff);
+    OpenGLAPI::VertexArrayUpdate(skybox.VAOID, 108, skybox.SkyboxVertices);
+    OpenGLAPI::IndexDataDefine(&skybox.IndexID, 36, skybox.IndexData);
+
+}
+
+void BF::OpenGLAPI::DepthMaskEnable(bool enable)
+{
+    if (enable)
+    {
+        glDepthMask(GL_TRUE);
+    }
+    else
+    {
+        glDepthMask(GL_FALSE);
+    }
+}
+
+void BF::OpenGLAPI::TextureUse(int textureID)
 {
     assert(textureID != -1, "[BitFireEngine][OpenGL] TextureSlot -1 was selected. You can't do that.");
 

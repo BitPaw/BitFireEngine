@@ -2,6 +2,7 @@
 #include "../../ResourceSystem/Source/Image/Image.h"
 #include "RenderMode.h"
 #include "../../ResourceSystem/Source/Shader/ShaderProgram.h"
+#include "../../ResourceSystem/Source/SkyBox.h"
 
 namespace BF
 {
@@ -12,8 +13,12 @@ namespace BF
 		static int ImageWrapToOpenGLFormat(ImageWrap imageWrap);
         static int ImageLayoutToOpenGLFormat(ImageLayout layout);
 
+		static void SkyBoxUse(SkyBox& skybox);
+		static void SkyBoxSet(SkyBox& skybox);
 
-		static void TextureBind(int textureID);
+		static void DepthMaskEnable(bool enable);
+
+		static void TextureUse(int textureID);
 
 		static char UseShaderProgram(int shaderProgramID);
 		static void VertexArrayBind(int vertexArrayID);

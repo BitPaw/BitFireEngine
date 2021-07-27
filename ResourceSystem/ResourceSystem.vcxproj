@@ -329,6 +329,7 @@
     <ClCompile Include="Source\Image\ImageFormat.cpp" />
     <ClCompile Include="Source\Shader\Shader.cpp" />
     <ClCompile Include="Source\Shader\ShaderProgram.cpp" />
+    <ClCompile Include="Source\SkyBox.cpp" />
     <ClCompile Include="Source\Sound\MID\MID.cpp" />
     <ClCompile Include="Source\Sound\MP3\MP3.cpp" />
     <ClCompile Include="Source\Sound\OGG\OGG.cpp" />
@@ -339,6 +340,7 @@
     <ClCompile Include="Source\Types\Word.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\SkyBox.h" />
     <ClInclude Include="Source\Async\AsyncLock.h" />
     <ClInclude Include="Source\Async\Thread.h" />
     <ClInclude Include="Source\Compression\Adler32.h" />
@@ -471,6 +473,7 @@
     <ClInclude Include="Source\OSDefine.h" />
     <ClInclude Include="Source\ResouceManager.h" />
     <ClInclude Include="Source\Resource.h" />
+    <ClInclude Include="Source\ResourceLoadMode.h" />
     <ClInclude Include="Source\ResourceType.hpp" />
     <ClInclude Include="Source\Serialization\INI\INILoader.h" />
     <ClInclude Include="Source\Serialization\JSON\JSONLoader.h" />

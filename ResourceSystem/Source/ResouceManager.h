@@ -14,6 +14,8 @@
 
 #include "Container/LinkedList.hpp"
 #include "../../BitFireEngine/Source/Graphics/Camera/FirstPersonCamera.h"
+#include "ResourceLoadMode.h"
+#include "SkyBox.h"
 
 namespace BF
 {
@@ -45,6 +47,7 @@ namespace BF
         public:
         FirstPersonCamera MainCamera;
         Font* DefaultFont;
+        SkyBox* DefaultSkyBox;
 
         ResourceManager();
         ~ResourceManager();
@@ -56,24 +59,26 @@ namespace BF
         //void Add(Sound& sound);
         //void RegisterGPU(Font& font);
 
+     
 
-        Resource* Load(const char* filePathString);
-        Resource* Load(AsciiString& filePath);
+        Resource* Load(const char* filePathString, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);
 
-        ErrorCode Load(Model& model, const char* filePath);
-        ErrorCode Load(Image& image, const char* filePath);
-        ErrorCode Load(Sound& sound, const char* filePath);
-        ErrorCode Load(Font& font, const char* filePath);
-        ErrorCode Load(ShaderProgram& shaderProgram, const char* filePath);
-        ErrorCode Load(Dialog& dialog, const char* filePath);
-        ErrorCode Load(Level& level, const char* filePath);
+        ErrorCode Load(Model& model, const char* filePath, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);
+        ErrorCode Load(Image& image, const char* filePath, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);
+        ErrorCode Load(Sound& sound, const char* filePath, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);
+        ErrorCode Load(Font& font, const char* filePath, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);
+        ErrorCode Load(ShaderProgram& shaderProgram, const char* filePath, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);
+        ErrorCode Load(Dialog& dialog, const char* filePath, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);
+        ErrorCode Load(Level& level, const char* filePath, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);
+
+        ErrorCode Load(ShaderProgram& shaderProgram, const char* vertexShader, const char* fragmentShader, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);
 
         void Add(Model& model);
         void Add(Image& image);
         void Add(Font& font);
-
-        unsigned int AddShaderProgram(const char* vertexShader, const char* fragmentShader);
-        unsigned int AddShaderProgram(AsciiString& vertexShader, AsciiString& fragmentShader);
+        void Add(ShaderProgram& shaderProgram);
+        void Add(SkyBox& skyBox);
+       
 
         void RenderModels(GameTickData& gameTickData);
 

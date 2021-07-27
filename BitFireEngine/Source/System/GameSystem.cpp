@@ -13,6 +13,11 @@ BF::GameSystem* BF::GameSystem::_instance = nullptr;
 BF::UIText* text;
 //BF::Model* sphere;
 
+BF::SkyBox* skybox;
+
+BF::ShaderProgram worldShader;
+BF::ShaderProgram hudShaderID;
+
 void BF::GameSystem::Start()
 {    
     printf
@@ -44,15 +49,35 @@ void BF::GameSystem::Start()
 
     stopwatch.Start();
 
-    unsigned int worldShader = Resource.AddShaderProgram("Shader/WS.vert", "Shader/WS.frag");
-    unsigned int hudShaderID = Resource.AddShaderProgram("Shader/HUD.vert", "Shader/HUD.frag");
+
+
+
+
+    Resource.Load(worldShader, "Shader/WS.vert", "Shader/WS.frag");
+    Resource.Load(hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
    
     Resource.Load("Level/MainMenu.lev");    
 
-    //text = new UIText("SampleText", *Resource.DefaultFont, -1, -0.8);
-    //text->RenderInformation.ShaderProgramID = hudShaderID;
+    skybox = new SkyBox();
+    Resource.Load(skybox->Faces[0], "Texture/SkyBox/Right.bmp"); // Right
+    Resource.Load(skybox->Faces[1], "Texture/SkyBox/Left.bmp"); // Left
+    Resource.Load(skybox->Faces[2], "Texture/SkyBox/Top.bmp"); // Top
+    Resource.Load(skybox->Faces[3], "Texture/SkyBox/Bottom.bmp"); // Bottom
+    Resource.Load(skybox->Faces[4], "Texture/SkyBox/Back.bmp"); // Back
+    Resource.Load(skybox->Faces[5], "Texture/SkyBox/Front.bmp"); // Front
+    
+    Resource.Load(skybox->Shader, "Shader/SkyBox.vert", "Shader/SkyBox.frag");
+    //Resource.Load(skybox->CubeModel, "Model/Cube.obj");
+
+    skybox->ShouldBeRendered = false;
+
+    //Resource.Add(skybox->CubeModel);
+   // Resource.Add(*skybox);
+
+    text = new UIText("SampleText", *Resource.DefaultFont, -1, -0.8);
+    text->RenderInformation.ShaderProgramID = hudShaderID.ID;
     //text->SetFont(*Resource.DefaultFont);
-    //Resource.Add(*text);
+    Resource.Add(*text);
 
     _state = SystemState::Running;
 
@@ -75,9 +100,9 @@ void BF::GameSystem::Update()
 
         if(_gameTickData.FramesRendered == 0)
         {
-            //sprintf(text->TextContent, "FPS: %4i", (Math::Ceiling(1/ _gameTickData.GetSmoothDeltaTime())));
-            //text->SetText(text->TextContent);
-            //Resource.Add(*text);
+            sprintf(text->TextContent, "FPS: %4i", (Math::Ceiling(1/ _gameTickData.GetSmoothDeltaTime())));
+            text->SetText(text->TextContent);
+            Resource.Add(*text);
         }    
    
         //---[User-Input]------------------------------------------------------

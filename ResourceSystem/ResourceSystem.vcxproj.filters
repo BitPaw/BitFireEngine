@@ -306,6 +306,9 @@
     <ClCompile Include="Source\Image\ImageFormat.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\SkyBox.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Compression\Adler32.h">
@@ -756,6 +759,12 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\ResourceType.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ResourceLoadMode.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SkyBox.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

@@ -15,7 +15,6 @@ namespace BF
 		private:
 		ErrorCode CheckFile();
 		unsigned int _currentCursorPosition;
-		unsigned int _overAllocatedBytes;
 
 		public:
 		unsigned int Size;

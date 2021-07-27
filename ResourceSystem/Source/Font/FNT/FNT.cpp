@@ -55,8 +55,8 @@ void BF::FNT::Load(const char* filePath)
 	AsciiString referenceSting;
 	FNTPage* currentPage = nullptr;
 	File file(filePath);
-	char currentCursor[1048];
-	char textCharacter[30];
+	char currentCursor[2048];
+	char textCharacter[120];
 	int pageCounter = 0;
 
 	file.Read();
@@ -226,8 +226,8 @@ void BF::FNT::Load(const char* filePath)
 
 		if (isPageLine)
 		{
-			char textPageID[12];
-			char imageFileName[30];
+			char textPageID[30];
+			char imageFileName[40];
 
 			currentPage = &FontPages[pageCounter++];
 
@@ -829,6 +829,7 @@ void BF::FNT::Convert(Font& font)
 
 	strcpy(font.Name, Name);
 
+	font.BitMapFont = this;
 	font.AdditionalResourceListSize = amountOfResources;
 	font.CharacterSize = Size;
 	font.SizeBetweenLines = LineHeight;

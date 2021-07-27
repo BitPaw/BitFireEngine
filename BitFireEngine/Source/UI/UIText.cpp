@@ -65,6 +65,11 @@ void BF::UIText::SetText(AsciiString& text)
 		return;
 	}
 
+	if(_font->CharacterSize == 0)
+	{
+		return;
+	}
+
 	AsciiString currentText(TextContent);
 
 	FNT& bitmapFont = *((FNT*)(_font->BitMapFont));
@@ -75,7 +80,7 @@ void BF::UIText::SetText(AsciiString& text)
 	strcpy(TextContent, &text[0]);
 
 	Mesh* mesh = &MeshList[0];
-	unsigned int textSize = currentText.Size();
+	unsigned int textSize = strlen(TextContent);//currentText.Size();
 	unsigned int amountOfVertices = 4 * textSize;
 	mesh->MeshMaterial->Texture = _font->Texture;
 

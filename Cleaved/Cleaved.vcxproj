@@ -41,6 +41,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shader\SkyBox.frag" />
+    <None Include="Shader\SkyBox.vert" />
     <None Include="Shader\WorldSpace.frag" />
     <None Include="Shader\WorldSpace.vert" />
     <None Include="Shader\WS.frag" />

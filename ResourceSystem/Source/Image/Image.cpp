@@ -71,10 +71,6 @@ void BF::Image::RemoveColor(unsigned char red, unsigned char green, unsigned cha
             break;
         }
     }
-
-
-
-
 }
 
 void BF::Image::FlipHorizontal()
@@ -187,6 +183,7 @@ void BF::Image::FormatChange(ImageFormat imageFormat)
 
                     Format = ImageFormat::RGBA;
                     PixelData = newData;
+                    PixelDataSize = newSize;
 
                     free(oldData);
 

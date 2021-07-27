@@ -255,7 +255,7 @@ void BF::BMP::Convert(Image& image)
 
     memcpy(image.PixelData, source, image.PixelDataSize);
 
-    //image.FlipHorizontal();
+    image.FlipHorizontal();
     //image.RemoveColor(0,0,0);
 }
 
