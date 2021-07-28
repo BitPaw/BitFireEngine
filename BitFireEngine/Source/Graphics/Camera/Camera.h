@@ -16,6 +16,11 @@ namespace BF
 		float _walkSpeed;
 		float _viewSpeed;
 
+		
+
+
+
+		public:
 		int _matrixModelID;
 		int _matrixViewID;
 		int _matrixProjectionID;
@@ -23,8 +28,6 @@ namespace BF
 
 		Matrix4x4<float> MatrixProjection;
 		Matrix4x4<float> MatrixView;
-
-		public:
 		Matrix4x4<float> MatrixModel;
 
 		CameraSettings* Settings;

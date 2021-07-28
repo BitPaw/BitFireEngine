@@ -56,6 +56,10 @@ void BF::GameSystem::Start()
     Resource.Load(worldShader, "Shader/WS.vert", "Shader/WS.frag");
     Resource.Load(hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
    
+    
+    Image* image = (Image*)Resource.Load("Texture/SkyBox/Right.bmp"); // Right
+    Resource.Add(*image);
+
     Resource.Load("Level/MainMenu.lev");    
 
     skybox = new SkyBox();
@@ -70,9 +74,7 @@ void BF::GameSystem::Start()
     //Resource.Load(skybox->CubeModel, "Model/Cube.obj");
 
     skybox->ShouldBeRendered = false;
-
-    //Resource.Add(skybox->CubeModel);
-   // Resource.Add(*skybox);
+    Resource.Add(*skybox);
 
     text = new UIText("SampleText", *Resource.DefaultFont, -1, -0.8);
     text->RenderInformation.ShaderProgramID = hudShaderID.ID;

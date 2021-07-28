@@ -14,6 +14,9 @@ void BF::FirstPersonCamera::FetchGPUReferences(unsigned int shaderID)
 	_matrixProjectionID = OpenGLAPI::ShaderGetUniformLocationID(shaderID, "MatrixProjection");
 	_materialTextureID = OpenGLAPI::ShaderGetUniformLocationID(shaderID, "MaterialTexture");
 
+	ValidShader = true;
+
+	/*
 	if (_matrixModelID == -1 || _matrixViewID == -1 || _matrixProjectionID == -1)
 	{
 		_matrixModelID = old_modelViewProjectionID;
@@ -25,7 +28,7 @@ void BF::FirstPersonCamera::FetchGPUReferences(unsigned int shaderID)
 	else
 	{
 		ValidShader = true;
-	}
+	}*/
 }
 
 void BF::FirstPersonCamera::Rotate(float x, float y)

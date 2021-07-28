@@ -6,6 +6,17 @@ void BF::OpenGLAPI::RegisterImage(Image& image)
 {
     unsigned int& imageID = image.ID;
     unsigned int format;
+    bool validFormat = image.Type == ImageType::Texture2D || image.Type == ImageType::Texture3D;
+
+    if (image.PixelData == nullptr)
+    {
+        return;
+    }
+
+    if (!validFormat)
+    {
+        return;
+    }
 
     switch (image.Format)
     {
@@ -88,44 +99,113 @@ int BF::OpenGLAPI::ImageLayoutToOpenGLFormat(ImageLayout layout)
 
 void BF::OpenGLAPI::SkyBoxUse(SkyBox& skybox)
 {
-    glBindVertexArray(skybox.VAOID); // skybox
+    OpenGLAPI::VertexArrayBind(skybox.VAOID);
+    OpenGLAPI::TextureUse(ImageType::TextureCubeContainer, skybox.ID);
+}
 
-    glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.ID);
+unsigned int  BF::OpenGLAPI::FromImageType(ImageType imageType)
+{
+    switch (imageType)
+    {
+        case ImageType::Texture2D:
+            return GL_TEXTURE_2D;
+
+        case ImageType::Texture3D:
+            return GL_TEXTURE_3D;
+
+        case ImageType::TextureCubeContainer:
+            return GL_TEXTURE_CUBE_MAP;
+
+        case ImageType::TextureCubeRight:
+            return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+
+        case ImageType::TextureCubeLeft:
+            return GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
+
+        case ImageType::TextureCubeTop:
+            return GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
+
+        case ImageType::TextureCubeDown:
+            return GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
+
+        case ImageType::TextureCubeBack:
+            return GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
+
+        case ImageType::TextureCubeFront:
+            return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+
+        default:
+            return -1;
+    }
+}
+
+BF::ImageType BF::OpenGLAPI::ToImageType(unsigned int token)
+{
+    switch (token)
+    {
+        case GL_TEXTURE_2D:
+            return ImageType::Texture2D;
+
+        case GL_TEXTURE_3D:
+            return ImageType::Texture3D;
+
+        case GL_TEXTURE_CUBE_MAP:
+            return ImageType::TextureCubeContainer;
+
+        case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+            return ImageType::TextureCubeRight;
+
+        case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+            return ImageType::TextureCubeLeft;
+
+        case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+            return ImageType::TextureCubeTop;
+
+        case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+            return ImageType::TextureCubeDown;
+
+        case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+            return ImageType::TextureCubeBack;
+
+        case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+            return ImageType::TextureCubeFront;
+
+        default:
+            return ImageType::TextureUnkown;
+    }
 }
 
 void BF::OpenGLAPI::SkyBoxSet(SkyBox& skybox)
 {
-    if (skybox.ID == -1)
-    {
-        glGenTextures(1, &skybox.ID);
-    }
-
+    glGenTextures(1, &skybox.ID);
     glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.ID);
-
-    for (unsigned int i = 0; i < 6; i++)
-    {   
-        Image& image = skybox.Faces[i];        
-
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, image.Width, image.Height, 0, GL_RGB, GL_UNSIGNED_BYTE, image.PixelData);
-    }
-
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);   
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-  
-    
+    for (unsigned int i = 0; i < 6; i++)
+    {   
+        Image& image = skybox.Faces[i];        
+        unsigned int textureTypeID = GL_TEXTURE_CUBE_MAP_POSITIVE_X + i;
 
-    int vertexstuff[1] = { 3 };
-    
+        image.Type = ToImageType(textureTypeID);
+
+        glTexImage2D(textureTypeID, 0, GL_RGB, image.Width, image.Height, 0, GL_RGB, GL_UNSIGNED_BYTE, image.PixelData);
+    }    
+
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
     OpenGLAPI::VertexArrayDefine(&skybox.VAOID);
-    OpenGLAPI::VertexAttributeArrayDefine(sizeof(float), 1, vertexstuff);
-    OpenGLAPI::VertexArrayUpdate(skybox.VAOID, 108, skybox.SkyboxVertices);
-    OpenGLAPI::IndexDataDefine(&skybox.IndexID, 36, skybox.IndexData);
+    OpenGLAPI::VertexArrayBind(skybox.VAOID);
 
+    OpenGLAPI::VertexDataDefine(&skybox.VBOID, sizeof(float) * 24, skybox.SkyboxVertices);
+
+    int vertexstuff[1] = { 3 };
+
+    OpenGLAPI::VertexAttributeArrayDefine(sizeof(float), 1, vertexstuff);
+    OpenGLAPI::IndexDataDefine(&skybox.IndexID, 36 * 4, skybox.IndexData);
 }
 
 void BF::OpenGLAPI::DepthMaskEnable(bool enable)
@@ -140,12 +220,15 @@ void BF::OpenGLAPI::DepthMaskEnable(bool enable)
     }
 }
 
-void BF::OpenGLAPI::TextureUse(int textureID)
+void BF::OpenGLAPI::TextureUse(ImageType imageType, int textureID)
 {
     assert(textureID != -1, "[BitFireEngine][OpenGL] TextureSlot -1 was selected. You can't do that.");
 
-    //glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
-    glBindTexture(GL_TEXTURE_2D, textureID);
+    glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
+
+    unsigned int imageTypeID = FromImageType(imageType);    
+
+    glBindTexture(imageTypeID, textureID);
 }
 
 char BF::OpenGLAPI::UseShaderProgram(int shaderProgramID)
@@ -409,7 +492,10 @@ int BF::OpenGLAPI::ShaderGetUniformLocationID(int shaderID, const char* UniformN
 
 void BF::OpenGLAPI::ShaderSetUniformMatrix4x4(int matrixUniformID, float* matrix)
 {
-    glUniformMatrix4fv(matrixUniformID, 1, GL_FALSE, matrix);
+    if (matrixUniformID != -1)
+    {
+        glUniformMatrix4fv(matrixUniformID, 1, GL_FALSE, matrix);
+    }
 }
 
 const char* BF::OpenGLAPI::ShaderTypeToString(int type)

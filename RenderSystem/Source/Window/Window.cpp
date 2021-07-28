@@ -419,12 +419,12 @@ bool BF::Window::Create(int width, int height, const char* title)
         glCullFace(GL_BACK);
     }
 
-    if (true)
+    if (true) // X-RAY
     {
         glEnable(GL_DEPTH_TEST);
     }
 
-    if (true)
+    if (false)
     {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

@@ -306,6 +306,9 @@
     <ClCompile Include="Source\Image\ImageFormat.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Image\ImageType.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
     <ClCompile Include="Source\SkyBox.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -765,6 +768,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\SkyBox.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Image\ImageType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

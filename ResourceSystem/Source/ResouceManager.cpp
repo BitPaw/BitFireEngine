@@ -197,6 +197,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString, ResourceLoad
                 if (errorCode == ErrorCode::NoError)
                 {
                     Add(*font);
+                    resource = font;
                 }
 
                 break;
@@ -210,6 +211,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString, ResourceLoad
                 if (errorCode == ErrorCode::NoError)
                 {
                     Add(*image);
+                    resource = image;
                 }
 
                 break;
@@ -230,6 +232,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString, ResourceLoad
                 if (errorCode == ErrorCode::NoError)
                 {
                     Add(*model);
+                    resource = model;
                 }
 
                 break;
@@ -243,6 +246,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString, ResourceLoad
             {
                 Sound* sound = new Sound();
                 errorCode = Load(*sound, filePathString);
+
                 break;
             }
         }
@@ -560,7 +564,14 @@ BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath, Reso
 
                 errorCode = Load(*image, path);
 
-                Add(*image);
+                if (errorCode == ErrorCode::NoError)
+                {
+                    Add(*image);
+                }
+                else
+                {
+                    delete image;
+                }         
 
                 level.ImageList[imageCounter++] = image;
                 break;
@@ -713,14 +724,25 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
         if (hasSkyBox)
         {
             OpenGLAPI::DepthMaskEnable(false);            
+           
             OpenGLAPI::UseShaderProgram(DefaultSkyBox->Shader.ID);
 
             MainCamera.FetchGPUReferences(DefaultSkyBox->Shader.ID);
             MainCamera.Update(gameTickData);
 
-            OpenGLAPI::SkyBoxSet(*DefaultSkyBox);
-            OpenGLAPI::SkyBoxUse(*DefaultSkyBox);  
-            
+
+            Matrix4x4<float> viewTri(MainCamera.MatrixView);
+
+            viewTri.ResetForthAxis();
+
+            OpenGLAPI::ShaderSetUniformMatrix4x4(MainCamera._matrixViewID, viewTri.Data);
+
+
+            //OpenGLAPI::SkyBoxSet(*DefaultSkyBox);
+            OpenGLAPI::SkyBoxUse(*DefaultSkyBox);              
+
+         
+
             OpenGLAPI::Render(RenderMode::Triangle, 0, 36);
 
             OpenGLAPI::DepthMaskEnable(true);
@@ -747,8 +769,6 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
             shaderProgramID = _defaultShaderID;
             changeShader = shaderProgramID != _lastUsedShaderProgram;
         }
-
-      
 
         OpenGLAPI::VertexArrayBind(renderInfo.VertexArrayID);
 
@@ -788,12 +808,13 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
                 if (hasTexture)
                 {
                     textureID = texture->ID;
-                }
-            }       
 
-            // TextureLookup ----------------------------     
-            OpenGLAPI::TextureUse(textureID);
-            //-------------------------------------------------
+                    // TextureLookup ----------------------------     
+                    OpenGLAPI::TextureUse(texture->Type, textureID);
+                    //-------------------------------------------------
+                }              
+            }    
+                     
 
                  //---RenderStyle-------------------------
             if (renderInfo.RenderType != RenderMode::Unkown)
@@ -854,8 +875,18 @@ void BF::ResourceManager::PrintContent(bool detailed)
         while (currentImage != nullptr)
         {
             Image* image = currentImage->Element;
+            char buffer[30];
 
-            printf("| ID:%u Fomat:%s %s\n", image->ID, ImageFormatToString(image->Format),image->FilePath);
+            if (image->ID == -1)
+            {
+                sprintf(buffer, "-");
+            }
+            else
+            {
+                sprintf(buffer, "%u", image->ID);
+            }       
+
+            printf("| ID:%s Fomat:%s Type:%s %s\n", buffer, ImageFormatToString(image->Format), ImageTypeToString(image->Type), image->FilePath);
 
             currentImage = currentImage->Next;
         }

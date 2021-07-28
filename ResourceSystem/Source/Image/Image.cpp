@@ -25,6 +25,8 @@ BF::Image::Image()
     Width = 0;
     Height = 0;
 
+    Type = ImageType::Texture2D;
+
     Format = ImageFormat::RGB;
     Filter = ImageFilter::NoFilter;
 

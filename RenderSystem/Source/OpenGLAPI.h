@@ -18,7 +18,7 @@ namespace BF
 
 		static void DepthMaskEnable(bool enable);
 
-		static void TextureUse(int textureID);
+		static void TextureUse(ImageType imageType, int textureID);
 
 		static char UseShaderProgram(int shaderProgramID);
 		static void VertexArrayBind(int vertexArrayID);
@@ -45,6 +45,10 @@ namespace BF
 		static void ShaderSetUniformMatrix4x4(int matrixUniformID, float* matrix);
 
 		static const char* ShaderTypeToString(int type);
+
+
+		static ImageType ToImageType(unsigned int token);
+		static unsigned int  FromImageType(ImageType imageType);
 	};
 }
 

@@ -129,6 +129,16 @@ namespace BF
 			resultP = m * D + n * H + o * L + p * P;
 		}
 		
+		void ResetForthAxis()
+		{
+			this->Data[3] = 0;
+			this->Data[7] = 0;
+			this->Data[11] = 0;
+			this->Data[12] = 0;
+			this->Data[13] = 0;
+			this->Data[14] = 0;
+			this->Data[15] = 1;
+		}
 
 		void Add(Matrix4x4<NumberType>& matrixB)
 		{

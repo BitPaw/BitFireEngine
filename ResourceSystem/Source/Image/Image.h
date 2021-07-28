@@ -11,6 +11,7 @@
 
 #include "../Container/AsciiString.h"
 #include "../Math/Geometry/Vector4.hpp"
+#include "ImageType.h"
 
 namespace BF
 {
@@ -20,6 +21,7 @@ namespace BF
 		unsigned int Width;
 		unsigned int Height;
 
+		ImageType Type;
 		ImageFormat Format;
 		ImageFilter Filter;
 		ImageLayout LayoutNear;
