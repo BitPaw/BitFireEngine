@@ -6,16 +6,25 @@
 
 BF::BMP::BMP()
 {
+    Height = 0;
+    Width = 0;
+
+    Type = BMPType::UnkownOrInavlid;
+    SizeOfFile = -1;
+    ReservedBlock = -1;
+    DataOffset = -1;
+
 	InformationHeaderType = BMPInformationHeaderType::UnkownOrInvalid;
-	InformationHeader = nullptr;
+	InformationHeader = 0;
+
+    PixelDataSize = 0;
+    PixelData = 0;
 }
 
 BF::BMP::~BMP()
 {
-	if (InformationHeader != nullptr)
-	{
-		delete InformationHeader;
-	}
+    delete InformationHeader;
+    delete[] PixelData;	
 }
 
 /*
@@ -209,31 +218,22 @@ void BF::BMP::Load(const char* filePath)
 
     unsigned int paddingSize = pixelDataRowSize % 4;
     unsigned int rowSize = pixelDataRowSize + paddingSize;
-    unsigned int rowIndex = 0;
 
-    PixelData.ReSize(pixelDataSize);
+    unsigned char* cursorEndOfFile = byteStream.StartAdress + byteStream.DataLength;
+    unsigned char* cursorInputData = byteStream.StartAdress + byteStream.CurrentPosition;
+    unsigned char* cursorOutPutData = 0;
 
-    while (!byteStream.IsAtEnd())
+    PixelDataSize = pixelDataSize;
+    PixelData = (unsigned char*)malloc(pixelDataSize);
+
+    cursorOutPutData = PixelData;
+
+    while (cursorInputData < cursorEndOfFile)
     {
-        bool isPixelData = rowIndex < pixelDataRowSize;
+        memcpy(cursorOutPutData, cursorInputData, pixelDataRowSize); // Copy row to data buffer
 
-        if (isPixelData)
-        {
-            unsigned char blue = byteStream.ExtractByteAndMove();
-            unsigned char green = byteStream.ExtractByteAndMove();
-            unsigned char red = byteStream.ExtractByteAndMove();
-
-            rowIndex += 3;
-
-            PixelData[pixelIndex++] = red;
-            PixelData[pixelIndex++] = green;
-            PixelData[pixelIndex++] = blue;
-        }
-        else
-        {
-            byteStream.CurrentPosition += paddingSize;
-            rowIndex = 0;        
-        }
+        cursorOutPutData += pixelDataRowSize; // Move to next row
+        cursorInputData += pixelDataRowSize + paddingSize; // Move data, row + padding(padding can be 0)
     }
 }
 
@@ -243,11 +243,11 @@ void BF::BMP::Save(const char* filePath)
 
 void BF::BMP::Convert(Image& image)
 {
-    unsigned int pixelDataSize = PixelData.Size();
+    unsigned int pixelDataSize = PixelDataSize;
     unsigned char* destination = nullptr;
     unsigned char* source = &PixelData[0];    
   
-    image.Format = ImageFormat::RGB;
+    image.Format = ImageFormat::BGR;
     image.Height = Height;
     image.Width = Width;    
     image.PixelDataSize = Height * Width * 3;

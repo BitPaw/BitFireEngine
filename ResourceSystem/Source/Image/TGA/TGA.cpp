@@ -15,14 +15,19 @@ BF::TGA::TGA()
 	PixelDepth = TGABitsPerPixel::X1;
 	ImageDescriptor = 0;
 
-
-
 	ImageIDSize = 0;
 	ImageID = nullptr; 
 	ColorMapDataSize = 0;
 	ColorMapData = nullptr;
 	ImageDataSize = 0;
 	ImageData = nullptr;
+}
+
+BF::TGA::~TGA()
+{
+	delete[] ImageID;
+	delete[] ColorMapData; 
+	delete[] ImageData; 	
 }
 
 void BF::TGA::Load(const char* filePath)
@@ -33,24 +38,6 @@ void BF::TGA::Load(const char* filePath)
 	ByteStreamHusk byteSteam((unsigned char*)file.Data, file.Size);
 
 	unsigned int footerEntryIndex = 0;
-
-	/*
-	for (size_t i = 0; !byteSteam.IsAtEnd(); i++)
-	{
-		unsigned char x = byteSteam.ExtractByteAndMove();
-
-		printf("%2X ", x);
-
-		if ((i%32)==0) 
-		{
-			printf("\n");
-		}
-	}
-
-
-
-	printf("\n");*/
-
 	unsigned char imageIDLengh = 0;
 	unsigned short colorPaletteChunkEntryIndex = 0;
 	unsigned short colorPaletteChunkSize = 0;
@@ -115,28 +102,31 @@ void BF::TGA::Load(const char* filePath)
 	switch (pixelDepth)
 	{
 		case 1:
-			TGABitsPerPixel::X1;
+			PixelDepth = TGABitsPerPixel::X1;
 			break;
 
 		case 8:
-			TGABitsPerPixel::X8;
+			PixelDepth = TGABitsPerPixel::X8;
 			break;
 
 		case 15:
-			TGABitsPerPixel::X15;
+			PixelDepth = TGABitsPerPixel::X15;
 			break;
 
 		case 16:
-			TGABitsPerPixel::X16;
+			PixelDepth = TGABitsPerPixel::X16;
 			break;
 
 		case 24:
-			TGABitsPerPixel::X24;
+			PixelDepth = TGABitsPerPixel::X24;
 			break;
 
 		case 32:
-			TGABitsPerPixel::X32;
+			PixelDepth = TGABitsPerPixel::X32;
 			break;
+
+		default:
+			PixelDepth = TGABitsPerPixel::Invalid;
 	}
 
 	//----------------------------------------------------
@@ -293,27 +283,60 @@ void BF::TGA::Save(const char* filePath)
 
 void BF::TGA::Convert(Image& image)
 {	
-	unsigned int pixelDataLengh = Width * Height * 3;
-	unsigned int dIndex = 0;
+	ImageFormat imageFormat = ImageFormat::Unkown;
+	unsigned int pixelDataLengh = -1;
+	unsigned int bytesPerPixel = -1;
+	unsigned char* newImageData = nullptr;
 
-	image.Format = ImageFormat::RGB;
+	switch (PixelDepth)
+	{
+		case TGABitsPerPixel::X1:
+		{
+			imageFormat = ImageFormat::AlphaMaskBinary;			
+			break;
+		}
+		case TGABitsPerPixel::X8:
+		{
+			imageFormat = ImageFormat::AlphaMaskBinary;
+			bytesPerPixel = 1;
+			break;
+		}
+		case TGABitsPerPixel::X15:
+		{
+			break;
+		}
+		case TGABitsPerPixel::X16:
+		{
+			break;
+		}
+		case TGABitsPerPixel::X24:
+		{
+			imageFormat = ImageFormat::BGR;
+			bytesPerPixel = 3;
+			break;
+		}
+		case TGABitsPerPixel::X32:
+		{
+			imageFormat = ImageFormat::BGRA;
+			bytesPerPixel = 4;
+			break;
+		}
+	}
+
+	pixelDataLengh = Width * Height * bytesPerPixel;
+	newImageData = (unsigned char*)malloc(pixelDataLengh);
+
+	if (newImageData == nullptr)
+	{
+		return;
+	}	
+
+	image.Type = ImageType::Texture2D;
+	image.Format = imageFormat;
 	image.Height = Height;
 	image.Width = Width;
-	image.PixelData = (unsigned char*)malloc(pixelDataLengh);
+	image.PixelData = newImageData;
 	image.PixelDataSize = pixelDataLengh;
 
-	memset(image.PixelData, 0xFF, pixelDataLengh);
-
-	image.FillRandome();
-
-	for (unsigned int i = 0; i < ImageDataSize; )
-	{
-		unsigned char blue = ImageData[i++];
-		unsigned char green = ImageData[i++];
-		unsigned char red = ImageData[i++];
-
-		image.PixelData[dIndex++] = red;
-		image.PixelData[dIndex++] = green;
-		image.PixelData[dIndex++] = blue;
-	}
+	memcpy(newImageData, ImageData, pixelDataLengh);
 }

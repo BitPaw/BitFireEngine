@@ -27,7 +27,8 @@ namespace BF
 		BMPInformationHeaderType InformationHeaderType;
 		IBMPInformationHeader* InformationHeader;
 
-		List<unsigned char> PixelData;
+		unsigned int PixelDataSize;
+		unsigned char* PixelData;
 
 		BMP();
 		~BMP();

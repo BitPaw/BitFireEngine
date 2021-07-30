@@ -30,7 +30,7 @@ BF::Image::Image()
     Format = ImageFormat::RGB;
     Filter = ImageFilter::NoFilter;
 
-    LayoutNear = ImageLayout::Linear;
+    LayoutNear = ImageLayout::Nearest;
     LayoutFar = ImageLayout::Nearest;
 
     WrapHeight = ImageWrap::Repeat;
@@ -41,7 +41,7 @@ void BF::Image::RemoveColor(unsigned char red, unsigned char green, unsigned cha
 {
     switch (Format)
     {
-        case ImageFormat::BlackAndWhite:
+        case ImageFormat::AlphaMask:
         {
             break;
         }
@@ -123,7 +123,7 @@ void BF::Image::Resize(unsigned int width, unsigned height)
 
     switch (Format)
     {
-        case ImageFormat::BlackAndWhite:
+        case ImageFormat::AlphaMask:
             pixelSize = 2;
             break;
 
@@ -151,15 +151,41 @@ void BF::Image::FormatChange(ImageFormat imageFormat)
 {
     switch (Format)
     {
-        case ImageFormat::BlackAndWhite:
+        case ImageFormat::AlphaMask:
         {
 
         }
+        case ImageFormat::BGR:
+        {
+            switch (imageFormat)
+            {
+                case ImageFormat::RGB:
+                {
+                    unsigned int dIndex = 0;
+                    unsigned int index = 0;
+
+                    while (index < PixelDataSize)
+                    {
+                        unsigned char& blue = PixelData[index++];
+                        unsigned char& green = PixelData[index++];
+                        unsigned char& red = PixelData[index++];
+
+                        PixelData[dIndex++] = red;
+                        PixelData[dIndex++] = green;
+                        PixelData[dIndex++] = blue;
+                    }
+                }
+
+                default:
+                    break;
+            }
+        }
+
         case ImageFormat::RGB:
         {
             switch (imageFormat)
             {
-                case ImageFormat::BlackAndWhite:
+                case ImageFormat::AlphaMask:
                     break;
                 case ImageFormat::RGB:
                     break;
@@ -190,7 +216,23 @@ void BF::Image::FormatChange(ImageFormat imageFormat)
                     free(oldData);
 
                     break;
-                }                 
+                }          
+                case ImageFormat::BGR:
+                {
+                    unsigned int dIndex = 0;
+                    unsigned int index = 0;
+
+                    while (index < PixelDataSize)
+                    {
+                        unsigned char& blue = PixelData[index++];
+                        unsigned char& green = PixelData[index++];
+                        unsigned char& red = PixelData[index++];
+
+                        PixelData[dIndex++] = red;
+                        PixelData[dIndex++] = green;
+                        PixelData[dIndex++] = blue;
+                    }
+                }
             }
         }
         case ImageFormat::RGBA:

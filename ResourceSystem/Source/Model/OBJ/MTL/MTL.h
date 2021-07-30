@@ -11,6 +11,9 @@ namespace BF
 		unsigned int MaterialListSize;
 		MTLMaterial* MaterialList;
 
+		MTL();
+		~MTL();
+
 		void Load(char* filePath);
 
 		void PrintContent();

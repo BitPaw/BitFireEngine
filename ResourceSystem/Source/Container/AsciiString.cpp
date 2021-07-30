@@ -53,7 +53,10 @@ BF::AsciiString::AsciiString(AsciiString& string) : AsciiString()
 
 BF::AsciiString::~AsciiString()
 {
-	Delete();
+	if (!_isReferenceToOtherString)
+	{
+		delete[] _data;
+	}
 }
 
 char& BF::AsciiString::operator[](unsigned int value)
@@ -89,17 +92,9 @@ BF::AsciiString& BF::AsciiString::operator=(std::string& string)
 	return *this;
 }
 
-bool BF::AsciiString::operator==(const char* string)
+char BF::AsciiString::operator==(const char* string)
 {
-	for (int i = 0 ; _data[i] == string[i] ; i++)
-	{
-		if (_data[i] == '\0' || string[i] == '\0')
-		{
-			return _data[i] == '\0' && string[i] == '\0';
-		}
-	}
-
-	return false;
+	return strcmp(_data, string);
 }
 
 void BF::AsciiString::SetAsReference(AsciiString& string)

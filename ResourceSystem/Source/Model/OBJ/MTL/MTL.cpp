@@ -2,6 +2,17 @@
 
 #include "../../../File/File.h"
 
+BF::MTL::MTL()
+{
+	MaterialListSize = 0;
+	MaterialList = 0;
+}
+
+BF::MTL::~MTL()
+{
+	delete[] MaterialList;
+}
+
 void BF::MTL::Load(char* filePath)
 {
 	unsigned int materialIndex = 0;
@@ -230,8 +241,8 @@ void BF::MTL::PrintContent()
 			"| Dissolved : %f\n"
 			"| Density   : %f\n",
 			i,
-			&material.Name[0],
-			&material.TextureFilePath[0],
+			material.Name,
+			material.TextureFilePath,
 			material.Weight,
 			material.Ambient[0],
 			material.Ambient[1],

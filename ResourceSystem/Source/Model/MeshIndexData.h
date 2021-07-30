@@ -5,9 +5,9 @@ namespace BF
 	struct MeshIndexData
 	{
 		public:
-		int VertexPositionID;
-		int TexturePointID;
-		int NormalVectorID;
+		unsigned int VertexPositionID;
+		unsigned int TexturePointID;
+		unsigned int NormalVectorID;
 
 		MeshIndexData();
 		MeshIndexData(const unsigned int vertexPositionID, const unsigned int texturePointID, const unsigned int normalVectorID);

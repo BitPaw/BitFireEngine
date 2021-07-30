@@ -33,7 +33,7 @@ namespace BF
 		AsciiString& operator=(std::string& string);
 		//void operator=(String string);
 	
-		bool operator==(const char* string);
+		char operator==(const char* string);
 
 		void SetAsReference(AsciiString& string);
 		void SetAsReference(const char* stringAdress);

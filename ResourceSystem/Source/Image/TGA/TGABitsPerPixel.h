@@ -4,6 +4,8 @@ namespace BF
 {
 	enum class TGABitsPerPixel
 	{
+		Invalid,
+
 		X1,
 		X8,
 		X15,

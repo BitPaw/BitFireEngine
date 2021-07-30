@@ -2,9 +2,6 @@
 #include "Font/FNT/FNTPage.h"
 #include "File/File.h"
 #include "../../RenderSystem/Source/OpenGLAPI.h"
-#include "Async/Thread.h"
-#include "Async/AsyncLock.h"
-#include <thread>
 
 void BF::ResourceManager::UpdateVBOData(Model& model)
 {
@@ -26,6 +23,8 @@ void BF::ResourceManager::UpdateVBOData(Model& model)
 
     for (unsigned int i = 0; i < mesh.IndexList.Size(); i++)
     {
+        assert(i <= mesh.IndexList.Size(), "[x][ResourceManager][UpdateVBOData] illegal MeshIndexData index.");
+
         //renderInformation->IndexData[indiceIndex++] = i;// +renderInformation->IndexOffset;
         MeshIndexData* indexList = mesh.IndexList[i];
 
@@ -34,7 +33,7 @@ void BF::ResourceManager::UpdateVBOData(Model& model)
         Position<float> normalPosition;
 
         Vertex* vertex = nullptr;
-        Vector4<float>* color = nullptr;
+        Vector4<float>* color = &defaultColor;
         Position<float>* position = nullptr;
         Position<float>* normal = nullptr;
         Point<float>* texture = nullptr;
@@ -42,6 +41,11 @@ void BF::ResourceManager::UpdateVBOData(Model& model)
         unsigned int vertexIndex = indexList->VertexPositionID;
         unsigned int textureIndex = indexList->TexturePointID;
         unsigned int normalIndex = indexList->NormalVectorID;
+
+        if (vertexIndex > 5000000)
+        {
+            return;
+        }
 
         if (vertexIndex == -1)
         {
@@ -53,10 +57,27 @@ void BF::ResourceManager::UpdateVBOData(Model& model)
         bool hasColor = !model.ColorList.IsEmpty() && vertex->ColorID != -1;
         bool hasNormal = !mesh.NormalPointList.IsEmpty();
         bool hasTexture = !mesh.TexturePointList.IsEmpty();
+        
+        if (hasColor)
+        {
+            assert(vertex->ColorID < model.ColorList.Size(), "[x][] Invalid Index.");
 
-        color = hasColor ? &model.ColorList[vertex->ColorID] : &defaultColor;
-        normal = hasNormal ? model.GlobalMesh.NormalPointList[normalIndex] : &normalPosition;
-        texture = hasTexture ? model.GlobalMesh.TexturePointList[textureIndex] : &defaultTexturepoint;
+            color = &model.ColorList[vertex->ColorID];
+        }
+
+        if (hasNormal)
+        {
+            assert(normalIndex < model.GlobalMesh.NormalPointList.Size(), "[x][] Invalid Index.");
+
+            normal = model.GlobalMesh.NormalPointList[normalIndex];
+        }
+
+        if (hasTexture)
+        {
+            assert(textureIndex < model.GlobalMesh.TexturePointList.Size(), "[x][] Invalid Index.");
+
+            texture = model.GlobalMesh.TexturePointList[textureIndex];
+        }        
 
         position = &vertex->CurrentPosition;
 
@@ -397,7 +418,6 @@ BF::ErrorCode BF::ResourceManager::Load(Dialog& resource, const char* filePath, 
 
 BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
-    List<AsciiString> fileLines;
     File file(filePath);
     ErrorCode errorCode = ErrorCode::LoadingFailed;
 
@@ -419,15 +439,18 @@ BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath, Reso
     unsigned int dialogCounter = 0;
     unsigned int amountOfLines;
 
-    file.ReadAsLines(fileLines);
+    file.Read();
 
-    amountOfLines = fileLines.Size();
+    char currentLineBuffer[200];
+
+    amountOfLines = file.CountAmountOfLines();
 
     // Step I - Count objects
     for (unsigned int i = 0; i < amountOfLines; i++)
     {
-        AsciiString& line = fileLines[i];
-        char character = line.GetFirstNonEmpty();
+        file.ReadNextLineInto(currentLineBuffer);
+
+        char character = currentLineBuffer[0];
 
         switch (character)
         {
@@ -478,12 +501,14 @@ BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath, Reso
     shaderCounter = 0;
     dialogCounter = 0;
 
+    file.CursorToBeginning();
+
     // Step II - Parse and Load
     for (unsigned int i = 0; i < amountOfLines; i++)
     {
-        AsciiString& line = fileLines[i];
-        char* currentLine = &line[0];
-        char character = line.GetFirstNonEmpty();
+        file.ReadNextLineInto(currentLineBuffer);
+
+        char character = currentLineBuffer[0];
         char dummyBuffer[30];
         char path[120];
 
@@ -498,7 +523,7 @@ BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath, Reso
                 Position<float> rotation;
                 Position<float> scale;
 
-                sscanf(currentLine, "%s %s %s %s %s", dummyBuffer, path, positionText, rotationText, scaleText);                
+                sscanf(currentLineBuffer, "%s %s %s %s %s", dummyBuffer, path, positionText, rotationText, scaleText);
 
                 // Get raw Data-------------------------                         
 
@@ -558,7 +583,7 @@ BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath, Reso
             }
             case _textureToken:
             {
-                sscanf(currentLine, "%s %s", dummyBuffer, path);
+                sscanf(currentLineBuffer, "%s %s", dummyBuffer, path);
 
                 Image* image = new Image();
 
@@ -578,7 +603,7 @@ BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath, Reso
             }
             case _musicToken:
             {
-                sscanf(currentLine, "%s %s", dummyBuffer, path);
+                sscanf(currentLineBuffer, "%s %s", dummyBuffer, path);
 
                 Sound* sound = new Sound();
                 
@@ -589,7 +614,7 @@ BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath, Reso
             }
             case _fontToken:
             {
-                sscanf(currentLine, "%s %s", dummyBuffer, path);
+                sscanf(currentLineBuffer, "%s %s", dummyBuffer, path);
 
                 Font* font = new Font();
                 
@@ -872,6 +897,8 @@ void BF::ResourceManager::PrintContent(bool detailed)
 
         LinkedListNode<Image*>* currentImage = _imageList.GetFirst();
 
+        printf("| ID | Format-Type     | Path\n");
+
         while (currentImage != nullptr)
         {
             Image* image = currentImage->Element;
@@ -885,8 +912,8 @@ void BF::ResourceManager::PrintContent(bool detailed)
             {
                 sprintf(buffer, "%u", image->ID);
             }       
-
-            printf("| ID:%s Fomat:%s Type:%s %s\n", buffer, ImageFormatToString(image->Format), ImageTypeToString(image->Type), image->FilePath);
+     
+            printf("| %2s | %s-%-11s | %s\n", buffer, ImageFormatToString(image->Format), ImageTypeToString(image->Type), image->FilePath);
 
             currentImage = currentImage->Next;
         }

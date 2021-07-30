@@ -5,32 +5,13 @@
 void BF::OpenGLAPI::RegisterImage(Image& image)
 {
     unsigned int& imageID = image.ID;
-    unsigned int format;
-    bool validFormat = image.Type == ImageType::Texture2D || image.Type == ImageType::Texture3D;
+    unsigned int format = ToImageFormat(image.Format);
+    unsigned int textureType = ToImageType(image.Type);
+   // bool validFormat = image.Type == ImageType::Texture2D || image.Type == ImageType::Texture3D;
 
     if (image.PixelData == nullptr)
     {
         return;
-    }
-
-    if (!validFormat)
-    {
-        return;
-    }
-
-    switch (image.Format)
-    {
-        case ImageFormat::RGB:
-            format = GL_RGB;
-            break;
-
-        case ImageFormat::RGBA:
-            format = GL_RGBA;
-            break;
-
-        case ImageFormat::BlackAndWhite:
-        default:
-            throw "Invalid ImageFormat";
     }
 
     if (imageID == -1)
@@ -38,63 +19,21 @@ void BF::OpenGLAPI::RegisterImage(Image& image)
         glGenTextures(1, &imageID);
     }
 
-    glBindTexture(GL_TEXTURE_2D, imageID);    
+    glBindTexture(textureType, imageID);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, ImageWrapToOpenGLFormat(image.WrapWidth));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, ImageWrapToOpenGLFormat(image.WrapHeight));
+    glTexParameteri(textureType, GL_TEXTURE_WRAP_S, ImageWrapToOpenGLFormat(image.WrapWidth));
+    glTexParameteri(textureType, GL_TEXTURE_WRAP_T, ImageWrapToOpenGLFormat(image.WrapHeight));
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, ImageLayoutToOpenGLFormat(image.LayoutNear));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, ImageLayoutToOpenGLFormat(image.LayoutFar));
+    glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, ImageLayoutToOpenGLFormat(image.LayoutNear));
+    glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, ImageLayoutToOpenGLFormat(image.LayoutFar));
 
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16.0f);
+    glTexParameterf(textureType, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16.0f);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, format, image.Width, image.Height, 0, format, GL_UNSIGNED_BYTE, image.PixelData);
-    //glGenerateMipmap(GL_TEXTURE_2D);
-}
+    glTexImage2D(textureType, 0, GL_RGB, image.Width, image.Height, 0, format, GL_UNSIGNED_BYTE, image.PixelData);
 
-int BF::OpenGLAPI::ImageWrapToOpenGLFormat(ImageWrap imageWrap)
-{
-    switch (imageWrap)
-    {
-        case ImageWrap::NoModification:
-            return GL_CLAMP_TO_BORDER;
+    glGenerateMipmap(textureType);
 
-        case ImageWrap::StrechEdges:
-            return GL_CLAMP_TO_EDGE;
-
-        case ImageWrap::StrechEdgesAndMirror:
-            return GL_MIRROR_CLAMP_TO_EDGE;
-
-        case ImageWrap::Repeat:
-            return GL_REPEAT;
-
-        case ImageWrap::RepeatAndMirror:
-            return GL_MIRRORED_REPEAT;
-    }
-}
-
-int BF::OpenGLAPI::ImageLayoutToOpenGLFormat(ImageLayout layout)
-{
-    switch (layout)
-    {
-        case ImageLayout::Nearest:
-            return GL_NEAREST;
-
-        case ImageLayout::Linear:
-            return GL_LINEAR;
-
-        case ImageLayout::MipMapNearestNearest:
-            return GL_NEAREST_MIPMAP_NEAREST;
-
-        case ImageLayout::MipMapLinearNearest:
-            return GL_LINEAR_MIPMAP_NEAREST;
-
-        case ImageLayout::MipMapNNearestLinear:
-            return GL_NEAREST_MIPMAP_LINEAR;
-
-        case ImageLayout::MipMapLinearLinear:
-            return GL_LINEAR_MIPMAP_LINEAR;
-    }
+    glBindTexture(textureType, 0);
 }
 
 void BF::OpenGLAPI::SkyBoxUse(SkyBox& skybox)
@@ -103,77 +42,6 @@ void BF::OpenGLAPI::SkyBoxUse(SkyBox& skybox)
     OpenGLAPI::TextureUse(ImageType::TextureCubeContainer, skybox.ID);
 }
 
-unsigned int  BF::OpenGLAPI::FromImageType(ImageType imageType)
-{
-    switch (imageType)
-    {
-        case ImageType::Texture2D:
-            return GL_TEXTURE_2D;
-
-        case ImageType::Texture3D:
-            return GL_TEXTURE_3D;
-
-        case ImageType::TextureCubeContainer:
-            return GL_TEXTURE_CUBE_MAP;
-
-        case ImageType::TextureCubeRight:
-            return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-
-        case ImageType::TextureCubeLeft:
-            return GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
-
-        case ImageType::TextureCubeTop:
-            return GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
-
-        case ImageType::TextureCubeDown:
-            return GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
-
-        case ImageType::TextureCubeBack:
-            return GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
-
-        case ImageType::TextureCubeFront:
-            return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
-
-        default:
-            return -1;
-    }
-}
-
-BF::ImageType BF::OpenGLAPI::ToImageType(unsigned int token)
-{
-    switch (token)
-    {
-        case GL_TEXTURE_2D:
-            return ImageType::Texture2D;
-
-        case GL_TEXTURE_3D:
-            return ImageType::Texture3D;
-
-        case GL_TEXTURE_CUBE_MAP:
-            return ImageType::TextureCubeContainer;
-
-        case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-            return ImageType::TextureCubeRight;
-
-        case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-            return ImageType::TextureCubeLeft;
-
-        case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-            return ImageType::TextureCubeTop;
-
-        case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-            return ImageType::TextureCubeDown;
-
-        case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-            return ImageType::TextureCubeBack;
-
-        case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-            return ImageType::TextureCubeFront;
-
-        default:
-            return ImageType::TextureUnkown;
-    }
-}
 
 void BF::OpenGLAPI::SkyBoxSet(SkyBox& skybox)
 {
@@ -226,7 +94,7 @@ void BF::OpenGLAPI::TextureUse(ImageType imageType, int textureID)
 
     glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
 
-    unsigned int imageTypeID = FromImageType(imageType);    
+    unsigned int imageTypeID = ToImageType(imageType);    
 
     glBindTexture(imageTypeID, textureID);
 }
@@ -307,7 +175,6 @@ void BF::OpenGLAPI::VertexArrayUpdate(int vertexArrayID, int size, void* data)
 
 bool BF::OpenGLAPI::ShaderCompile(ShaderProgram& shaderProgram)
 {
-    unsigned int type;
     bool isValidShader = false;
     bool isLoaded = shaderProgram.IsLoaded();
 
@@ -323,47 +190,21 @@ bool BF::OpenGLAPI::ShaderCompile(ShaderProgram& shaderProgram)
     for (unsigned int i = 0; i < 2; i++)
     {
         Shader& shader = shaderProgram.ShaderList[i];
-
-        switch (shader.Type)
-        {
-            case ShaderType::Vertex:
-                type = GL_VERTEX_SHADER;
-                break;
-
-            case   ShaderType::TessellationControl:
-                type = -1; // ???
-                break;
-
-            case   ShaderType::TessellationEvaluation:
-                type = -1; // ???
-                break;
-
-            case   ShaderType::Geometry:
-                type = GL_GEOMETRY_SHADER;
-                break;
-
-            case   ShaderType::Fragment:
-                type = GL_FRAGMENT_SHADER;
-                break;
-
-            case  ShaderType::Compute:
-                type = GL_COMPUTE_SHADER;
-                break;
-
-            case ShaderType::Unkown:
-            default:
-                type = -1;
-                break;
-        }
-
-        printf("[i][OpenGL][Shader] Loading from <%s>... ", shader.FilePath);
+        unsigned int type = ToShaderType(shader.Type);
+     
+        printf("[i][OpenGL][Shader] Loading from <%s>... Detected:<%s>... ", shader.FilePath, ShaderTypeToString(type));
 
         shader.ID = OpenGLAPI::ShaderCompile(type, &shader.Content[0]);
 
         if (shader.ID == -1)
         {
             isValidShader = false;
+            printf("[Error]\n");
             break;
+        }
+        else
+        {
+            printf("[OK]\n");
         }
 
         isValidShader = true;
@@ -394,8 +235,6 @@ bool BF::OpenGLAPI::ShaderCompile(ShaderProgram& shaderProgram)
 
 unsigned int BF::OpenGLAPI::ShaderCompile(unsigned int type, char* shaderString)
 {
-    printf("Detected: <%s-Shader>\n", ShaderTypeToString(type));
-
     unsigned int id = glCreateShader(type);
 
     glShaderSource(id, 1, &shaderString, nullptr);
@@ -498,6 +337,146 @@ void BF::OpenGLAPI::ShaderSetUniformMatrix4x4(int matrixUniformID, float* matrix
     }
 }
 
+
+
+
+
+
+
+
+BF::ShaderType BF::OpenGLAPI::ToShaderType(unsigned int token)
+{
+    return ShaderType();
+}
+
+unsigned int BF::OpenGLAPI::ToShaderType(ShaderType shaderType)
+{
+    switch (shaderType)
+    {
+        case ShaderType::Vertex:
+            return GL_VERTEX_SHADER;
+
+        case   ShaderType::TessellationControl:
+            return -1; // ???
+
+        case   ShaderType::TessellationEvaluation:
+            return -1; // ???
+
+        case   ShaderType::Geometry:
+            return GL_GEOMETRY_SHADER;
+
+        case   ShaderType::Fragment:
+            return GL_FRAGMENT_SHADER;
+
+        case  ShaderType::Compute:
+            return GL_COMPUTE_SHADER;
+
+        case ShaderType::Unkown:
+        default:
+            return -1;
+    }
+}
+
+BF::ImageFormat BF::OpenGLAPI::ToImageFormat(unsigned int token)
+{
+    return ImageFormat();
+}
+
+unsigned int BF::OpenGLAPI::ToImageFormat(ImageFormat imageFormat)
+{
+    switch (imageFormat)
+    {
+        case ImageFormat::BGR:
+            return GL_BGR;
+
+        case ImageFormat::BGRA:
+            return GL_BGRA;
+
+        case ImageFormat::RGB:
+            return GL_RGB;
+
+        case ImageFormat::RGBA:
+            return GL_RGBA;
+
+        case ImageFormat::AlphaMask:
+        default:
+            return -1;
+    }
+}
+
+unsigned int  BF::OpenGLAPI::ToImageType(ImageType imageType)
+{
+    switch (imageType)
+    {
+        case ImageType::Texture2D:
+            return GL_TEXTURE_2D;
+
+        case ImageType::Texture3D:
+            return GL_TEXTURE_3D;
+
+        case ImageType::TextureCubeContainer:
+            return GL_TEXTURE_CUBE_MAP;
+
+        case ImageType::TextureCubeRight:
+            return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+
+        case ImageType::TextureCubeLeft:
+            return GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
+
+        case ImageType::TextureCubeTop:
+            return GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
+
+        case ImageType::TextureCubeDown:
+            return GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
+
+        case ImageType::TextureCubeBack:
+            return GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
+
+        case ImageType::TextureCubeFront:
+            return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+
+        default:
+            return -1;
+    }
+}
+
+BF::ImageType BF::OpenGLAPI::ToImageType(unsigned int token)
+{
+    switch (token)
+    {
+        case GL_TEXTURE_2D:
+            return ImageType::Texture2D;
+
+        case GL_TEXTURE_3D:
+            return ImageType::Texture3D;
+
+        case GL_TEXTURE_CUBE_MAP:
+            return ImageType::TextureCubeContainer;
+
+        case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+            return ImageType::TextureCubeRight;
+
+        case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+            return ImageType::TextureCubeLeft;
+
+        case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+            return ImageType::TextureCubeTop;
+
+        case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+            return ImageType::TextureCubeDown;
+
+        case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+            return ImageType::TextureCubeBack;
+
+        case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+            return ImageType::TextureCubeFront;
+
+        default:
+            return ImageType::TextureUnkown;
+    }
+}
+
+
 const char* BF::OpenGLAPI::ShaderTypeToString(int type)
 {
     switch (type)
@@ -518,3 +497,72 @@ const char* BF::OpenGLAPI::ShaderTypeToString(int type)
             return "Unkown";
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int BF::OpenGLAPI::ImageWrapToOpenGLFormat(ImageWrap imageWrap)
+{
+    switch (imageWrap)
+    {
+        case ImageWrap::NoModification:
+            return GL_CLAMP_TO_BORDER;
+
+        case ImageWrap::StrechEdges:
+            return GL_CLAMP_TO_EDGE;
+
+        case ImageWrap::StrechEdgesAndMirror:
+            return GL_MIRROR_CLAMP_TO_EDGE;
+
+        case ImageWrap::Repeat:
+            return GL_REPEAT;
+
+        case ImageWrap::RepeatAndMirror:
+            return GL_MIRRORED_REPEAT;
+    }
+}
+
+int BF::OpenGLAPI::ImageLayoutToOpenGLFormat(ImageLayout layout)
+{
+    switch (layout)
+    {
+        case ImageLayout::Nearest:
+            return GL_NEAREST;
+
+        case ImageLayout::Linear:
+            return GL_LINEAR;
+
+        case ImageLayout::MipMapNearestNearest:
+            return GL_NEAREST_MIPMAP_NEAREST;
+
+        case ImageLayout::MipMapLinearNearest:
+            return GL_LINEAR_MIPMAP_NEAREST;
+
+        case ImageLayout::MipMapNNearestLinear:
+            return GL_NEAREST_MIPMAP_LINEAR;
+
+        case ImageLayout::MipMapLinearLinear:
+            return GL_LINEAR_MIPMAP_LINEAR;
+    }
+}
+

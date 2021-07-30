@@ -89,7 +89,7 @@ void BF::UIText::SetText(AsciiString& text)
 		return; // Text has not changed. No update needed
 	}
 
-	if (isDifferentSize)
+	if (isDifferentSize || true)
 	{
 		mesh->VertexList.DeleteAll();
 		mesh->TexturePointList.DeleteAll();

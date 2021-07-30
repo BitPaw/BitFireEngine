@@ -47,8 +47,16 @@ namespace BF
 		static const char* ShaderTypeToString(int type);
 
 
+		// Converter
+		private:
+		static ShaderType ToShaderType(unsigned int token);
+		static unsigned int ToShaderType(ShaderType shaderType);
+
+		static ImageFormat ToImageFormat(unsigned int token);
+		static unsigned int ToImageFormat(ImageFormat imageFormat);
+
 		static ImageType ToImageType(unsigned int token);
-		static unsigned int  FromImageType(ImageType imageType);
+		static unsigned int ToImageType(ImageType imageType);
 	};
 }
 

@@ -25,7 +25,10 @@ namespace BF
 
 		~List()
 		{
-			DeleteAll();
+			if (_content != nullptr)
+			{
+				delete[] _content;
+			}
 		}
 
 		bool IsEmpty()
@@ -101,7 +104,7 @@ namespace BF
 		{
 			if (_content != nullptr && _size != 0)
 			{			
-				//delete[] _content; // Todo
+				delete[] _content; // Todo
 
 				_size = 0;
 				_content = nullptr;			

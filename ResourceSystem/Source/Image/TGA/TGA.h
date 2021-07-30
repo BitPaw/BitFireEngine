@@ -66,6 +66,7 @@ namespace BF
 		//-------------------------------
 
 		TGA();
+		~TGA();
 
 		void Load(const char* filePath);
 		void Save(const char* filePath);

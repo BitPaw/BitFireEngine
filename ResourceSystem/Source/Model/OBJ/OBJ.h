@@ -13,12 +13,20 @@ namespace BF
 		public:
 		char Name[20];
 		unsigned char VertexStructureSize;
-		List<MTL> Materials;
-		List<OBJElement> ElementList;
+
+		unsigned int MaterialListSize;
+		MTL* MaterialList;
+
+		unsigned int ElementListSize;
+		OBJElement* ElementList;
+
+		OBJ();
+		~OBJ();
 
 		void Load(const char* filePath);
 		void Save(const char* filePath);
 		void Convert(Model& model);
+		void Clear();
 
 		void PrintData();
 	};

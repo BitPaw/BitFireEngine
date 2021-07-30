@@ -4,10 +4,19 @@ namespace BF
 {
 	enum class ImageFormat
 	{
-		BlackAndWhite,
+		Unkown,
+
+		AlphaMaskBinary,
+		AlphaMask,
 		RGB,
-		RGBA
+		RGBA,
+
+
+		// Blue Green Red 
+		BGR,
+		BGRA
 	};
 
 	const char* ImageFormatToString(ImageFormat imageFormat);
+	unsigned int BytesPerPixel(ImageFormat imageFormat);
 }

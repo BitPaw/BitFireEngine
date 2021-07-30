@@ -413,14 +413,20 @@ void BF::Model::UpdateGlobalMesh()
     unsigned int colorIndex = 0;
     unsigned int indexIndex = 0;
 
+    /*
+    if (GlobalMesh.VertexList.Size() > 0)
+    {
+        return;
+    }*/
+
     for (unsigned int i = 0; i < length; i++)
     {
-        Mesh* mesh = &MeshList[i];
+        Mesh& mesh = MeshList[i];
 
-        vertexListLength += mesh->VertexList.Size();
-        texturePointListLength += mesh->TexturePointList.Size();
-        normalPointListLength += mesh->NormalPointList.Size();
-        indexListLength += mesh->IndexList.Size();
+        vertexListLength += mesh.VertexList.Size();
+        texturePointListLength += mesh.TexturePointList.Size();
+        normalPointListLength += mesh.NormalPointList.Size();
+        indexListLength += mesh.IndexList.Size();
     }
 
     GlobalMesh.VertexList.ReSize(vertexListLength);
@@ -431,26 +437,26 @@ void BF::Model::UpdateGlobalMesh()
 
     for (unsigned int i = 0; i < length; i++)
     {
-        Mesh* mesh = &MeshList[i];        
+        Mesh& mesh = MeshList[i];
 
-        vertexListLength = mesh->VertexList.Size();
-        texturePointListLength = mesh->TexturePointList.Size();
-        normalPointListLength = mesh->NormalPointList.Size();
-        indexListLength = mesh->IndexList.Size();
+        vertexListLength = mesh.VertexList.Size();
+        texturePointListLength = mesh.TexturePointList.Size();
+        normalPointListLength = mesh.NormalPointList.Size();
+        indexListLength = mesh.IndexList.Size();
 
         for (unsigned int i = 0; i < vertexListLength; i++)
         {
-            GlobalMesh.VertexList[vertexIndex++] = &mesh->VertexList[i];
+            GlobalMesh.VertexList[vertexIndex++] = &mesh.VertexList[i];
         }
 
         for (unsigned int i = 0; i < texturePointListLength; i++)
         {
-            GlobalMesh.TexturePointList[textureIndex++] = &mesh->TexturePointList[i];
+            GlobalMesh.TexturePointList[textureIndex++] = &mesh.TexturePointList[i];
         }
 
         for (unsigned int i = 0; i < normalPointListLength; i++)
         {
-            GlobalMesh.NormalPointList[normalIndex++] = &mesh->NormalPointList[i];
+            GlobalMesh.NormalPointList[normalIndex++] = &mesh.NormalPointList[i];
         }
 
         for (unsigned int i = 0; i < colorListLength; i++)
@@ -460,7 +466,7 @@ void BF::Model::UpdateGlobalMesh()
 
         for (unsigned int i = 0; i < indexListLength; i++)
         {
-            GlobalMesh.IndexList[indexIndex++] = &mesh->IndexList[i];
+            GlobalMesh.IndexList[indexIndex++] = &mesh.IndexList[i];
         }
     }
 }

@@ -79,22 +79,33 @@ void StringParse(char* buffer, const char* syntax, ...)
                     break;
             }
 
-        }
-
-      
-
-
-      
-        
-
-        
+        }      
       
             
-            startIndex = stopIndex;
+       startIndex = stopIndex;
         
     }
 
     va_end(args);
+}
+
+BF::OBJ::OBJ()
+{
+    strcpy(Name, "[N/A]");
+
+    VertexStructureSize = -1;
+
+    MaterialListSize = 0;
+    MaterialList = 0;
+
+    ElementListSize = 0;
+    ElementList = 0;
+}
+
+BF::OBJ::~OBJ()
+{
+    delete[] MaterialList;
+    delete[] ElementList;
 }
 
 void BF::OBJ::Load(const char* filePath)
@@ -223,7 +234,8 @@ void BF::OBJ::Load(const char* filePath)
             }
         }
 
-        ElementList.ReSize(elementListSize - 1);
+        ElementListSize = elementListSize - 1;
+        ElementList = new OBJElement[elementListSize - 1];
     }
 
     // Space lookup
@@ -315,7 +327,7 @@ void BF::OBJ::Load(const char* filePath)
 
             }
 
-            if (newMeshKey && (elementIndex <= ElementList.Size()))
+            if (newMeshKey && (elementIndex <= ElementListSize))
             {
                 newMeshKey = false;
 
@@ -343,7 +355,8 @@ void BF::OBJ::Load(const char* filePath)
             elemtent->VertexParameterList.ReSize(vertexParameterListSize);
             elemtent->FaceElementList.ReSize(faceElementListSize);
 
-            Materials.ReSize(materialsCounter);
+            MaterialListSize = materialsCounter;
+            MaterialList = new MTL[materialsCounter];
         }
     }
 
@@ -365,7 +378,7 @@ void BF::OBJ::Load(const char* filePath)
 
         Position<float>* currentVectorValue;
 
-        char dummyBuffer[20];
+        char dummyBuffer[50];
         
         file.CursorToBeginning();
 
@@ -406,10 +419,9 @@ void BF::OBJ::Load(const char* filePath)
 
                     if (doesFileExist)
                     {
-                        MTL& material = Materials[materialIndex++];
-                        char* fileP = &file.Path[0];
-
-                        material.Load(fileP);
+                        MTL& material = MaterialList[materialIndex++];
+                   
+                        material.Load(file.Path);
 
                         //material.PrintContent();
                     }
@@ -433,9 +445,9 @@ void BF::OBJ::Load(const char* filePath)
 
                     sscanf(currentLineBuffer, "%s %s", dummyBuffer, usedMaterialName);            
 
-                    for (unsigned int i = 0; i < Materials.Size(); i++)
+                    for (unsigned int i = 0; i < MaterialListSize; i++)
                     {
-                        MTL& mtl = Materials[i];
+                        MTL& mtl = MaterialList[i];
                         unsigned int materialListSize = mtl.MaterialListSize;
 
                         for (unsigned int j = 0; j < materialListSize; j++)
@@ -576,7 +588,6 @@ void BF::OBJ::Save(const char* filePath)
 void BF::OBJ::Convert(Model& model)
 {
     bool usedNormals = false;
-    unsigned int materialSize = Materials.Size();
 
     switch (VertexStructureSize)
     {
@@ -593,19 +604,18 @@ void BF::OBJ::Convert(Model& model)
         }
     }
 
-    model.MeshList.ReSize(ElementList.Size());
-
+    model.MeshList.ReSize(ElementListSize);
 
     // Convert Materials
-    if (materialSize > 0)
+    if (MaterialListSize > 0)
     {
-        unsigned int mtlMaterialListSize = Materials[0].MaterialListSize;
+        unsigned int mtlMaterialListSize = MaterialList[0].MaterialListSize;
 
         model.MaterialList.ReSize(mtlMaterialListSize);
 
-        for (unsigned int mtlIndex = 0; mtlIndex < materialSize; mtlIndex++)
+        for (unsigned int mtlIndex = 0; mtlIndex < MaterialListSize; mtlIndex++)
         {
-            MTL& mtl = Materials[mtlIndex];
+            MTL& mtl = MaterialList[mtlIndex];
 
             for (unsigned int mtlMaterialIndex = 0; mtlMaterialIndex < mtlMaterialListSize; mtlMaterialIndex++)
             {
@@ -688,6 +698,18 @@ void BF::OBJ::Convert(Model& model)
     model.UpdateGlobalMesh();
 }
 
+void BF::OBJ::Clear()
+{
+    delete[] MaterialList;
+    delete[] ElementList;
+
+    VertexStructureSize = -1;
+    MaterialListSize = 0;
+    MaterialList = 0;
+    ElementListSize = 0;
+    ElementList = 0;
+}
+
 void BF::OBJ::PrintData()
 {
     printf(" +-------+-------+-------+-------+-------+-------\n");
@@ -696,7 +718,7 @@ void BF::OBJ::PrintData()
     printf(" | %5s | %5s | %5s | %5s | %5s | %s\n", "Vert", "Norm", "Text", "Para", "Face", "Name");
     printf(" +-------+-------+-------+-------+-------+-------\n");
 
-    for (unsigned int i = 0; i < ElementList.Size(); i++)
+    for (unsigned int i = 0; i < ElementListSize; i++)
     {
         OBJElement* waveFrontElement = &ElementList[i];
 
@@ -711,9 +733,9 @@ void BF::OBJ::PrintData()
 
     printf(" +-------+-------+-------+-------+-------+-------\n");
 
-    for (unsigned int i = 0; i < Materials.Size(); i++)
+    for (unsigned int i = 0; i < MaterialListSize; i++)
     {
-        MTL& mtl = Materials[i];
+        MTL& mtl = MaterialList[i];
 
         for (unsigned int j = 0; j < mtl.MaterialListSize; j++)
         {
