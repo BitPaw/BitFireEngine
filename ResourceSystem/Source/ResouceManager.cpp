@@ -25,14 +25,12 @@ void BF::ResourceManager::UpdateVBOData(Model& model)
     {
         assert(i <= mesh.IndexList.Size(), "[x][ResourceManager][UpdateVBOData] illegal MeshIndexData index.");
 
-        //renderInformation->IndexData[indiceIndex++] = i;// +renderInformation->IndexOffset;
         MeshIndexData* indexList = mesh.IndexList[i];
 
         Vector4<float> defaultColor(1, 1, 1, 1);
         Point<float> defaultTexturepoint;
         Position<float> normalPosition;
 
-        Vertex* vertex = nullptr;
         Vector4<float>* color = &defaultColor;
         Position<float>* position = nullptr;
         Position<float>* normal = nullptr;
@@ -42,44 +40,36 @@ void BF::ResourceManager::UpdateVBOData(Model& model)
         unsigned int textureIndex = indexList->TexturePointID;
         unsigned int normalIndex = indexList->NormalVectorID;
 
-        if (vertexIndex > 5000000)
-        {
-            return;
-        }
+        assert(vertexIndex < mesh.VertexList.Size(), "[x][] Invalid Index.");
 
-        if (vertexIndex == -1)
-        {
-            throw "Invalid Vertex";
-        }
-
-        vertex = mesh.VertexList[vertexIndex];
+        Vertex* vertex = mesh.VertexList[vertexIndex];
 
         bool hasColor = !model.ColorList.IsEmpty() && vertex->ColorID != -1;
         bool hasNormal = !mesh.NormalPointList.IsEmpty();
         bool hasTexture = !mesh.TexturePointList.IsEmpty();
         
+        position = &vertex->CurrentPosition;
+
         if (hasColor)
         {
-            assert(vertex->ColorID < model.ColorList.Size(), "[x][] Invalid Index.");
+            assert(vertex->ColorID <= model.ColorList.Size(), "[x][] Invalid Index.");
 
             color = &model.ColorList[vertex->ColorID];
         }
 
         if (hasNormal)
         {
-            assert(normalIndex < model.GlobalMesh.NormalPointList.Size(), "[x][] Invalid Index.");
+            assert(normalIndex <= model.GlobalMesh.NormalPointList.Size(), "[x][] Invalid Index.");
 
             normal = model.GlobalMesh.NormalPointList[normalIndex];
         }
 
         if (hasTexture)
         {
-            assert(textureIndex < model.GlobalMesh.TexturePointList.Size(), "[x][] Invalid Index.");
+            assert(textureIndex <= model.GlobalMesh.TexturePointList.Size(), "[x][] Invalid Index.");
 
             texture = model.GlobalMesh.TexturePointList[textureIndex];
-        }        
-
-        position = &vertex->CurrentPosition;
+        }       
 
         indexData[i] = i;
 
@@ -666,11 +656,11 @@ BF::ErrorCode BF::ResourceManager::Load(ShaderProgram& shaderProgram, const char
 
 void BF::ResourceManager::Add(Model& model)
 {
-    if (!model.LoadedToGPU)
+    bool isRegistered = model.ID != -1;
+
+    if (!isRegistered)
     {
         _modelList.Add(&model);
-
-        model.LoadedToGPU = true;
     }
 
     PushToGPU(model);
@@ -679,31 +669,29 @@ void BF::ResourceManager::Add(Model& model)
 void BF::ResourceManager::Add(Image& image)
 {
     bool firstImage = _imageList.Size() == 0;
+    bool isRegistered = image.ID != -1;
 
-    if (!image.LoadedToGPU)
+    if (!isRegistered)
     {
         _imageList.Add(&image);
-
-        image.LoadedToGPU = true;
     }
-
-    PushToGPU(image);
 
     if (firstImage)
     {
         _defaultTextureID = image.ID;
     }
+
+    PushToGPU(image);
 }
 
 void BF::ResourceManager::Add(Font& font)
 {
     bool firstImage = _fontList.Size() == 0;
+    bool isRegistered = font.ID != -1;
 
-    if (!font.LoadedToGPU)
+    if (!isRegistered)
     {
         _fontList.Add(&font);
-
-        font.LoadedToGPU = true;
     }
 
     if (firstImage)
@@ -715,8 +703,12 @@ void BF::ResourceManager::Add(Font& font)
 void BF::ResourceManager::Add(ShaderProgram& shaderProgram)
 {
     bool firstShaderProgram = _shaderProgramList.Size() == 0;
+    bool isRegistered = shaderProgram.ID != -1;
 
-    _shaderProgramList.Add(&shaderProgram);
+    if (isRegistered)
+    {
+        _shaderProgramList.Add(&shaderProgram);
+    }
 
     if (firstShaderProgram)
     {
@@ -731,7 +723,7 @@ void BF::ResourceManager::Add(SkyBox& skyBox)
     
 
     OpenGLAPI::SkyBoxSet(skyBox);
-   // OpenGLAPI::SkyBoxUse(skyBox);
+  // OpenGLAPI::SkyBoxUse(skyBox);
 
     DefaultSkyBox = &skyBox;
 }
@@ -764,11 +756,11 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
 
 
             //OpenGLAPI::SkyBoxSet(*DefaultSkyBox);
-            OpenGLAPI::SkyBoxUse(*DefaultSkyBox);              
+            OpenGLAPI::SkyBoxUse(*DefaultSkyBox);      
 
-         
-
-            OpenGLAPI::Render(RenderMode::Triangle, 0, 36);
+            OpenGLAPI::Render(RenderMode::Square, 0, 24);         
+            OpenGLAPI::Render(RenderMode::LineStripAdjacency, 0, 24);
+            OpenGLAPI::Render(RenderMode::Point, 0, 24);
 
             OpenGLAPI::DepthMaskEnable(true);
         }
@@ -784,7 +776,7 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
 
         currentModel = currentModel->Next;
 
-        if (!model->ShouldBeRendered)
+        if (!renderInfo.ShouldItBeRendered)
         {
             continue;
         }

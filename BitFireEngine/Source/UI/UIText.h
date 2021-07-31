@@ -14,15 +14,14 @@ namespace BF
 		Font* _font;
 
 		public:
-		unsigned int FontID;
-
-		void Setup(AsciiString& text, Font& font, float x, float y);
-
-		char TextContent[255];		
 		Point<float> AncerPosition;
+		unsigned int FontID;
+		char TextContent[255];
 
 		UIText(const char* text, Font& font, float x, float y);
-		UIText(AsciiString& text, Font& font, float x, float y);		
+		UIText(AsciiString& text, Font& font, float x, float y);
+
+		void Setup(AsciiString& text, Font& font, float x, float y);
 
 		void SetFont(Font& font);
 		void SetTextPosition(float x, float y);

@@ -7,9 +7,9 @@ namespace BF
 {
 	struct ModelRenderInformation
 	{
-	public:
+		public:
 		unsigned int RenderID = -1;
-		bool ShouldItBeRendered = false;
+		bool ShouldItBeRendered = true;
 		unsigned int VertexArrayID = -1;
 		unsigned int IndexBufferID = -1;
 		unsigned int VertexBufferID = -1;

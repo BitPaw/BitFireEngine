@@ -71,9 +71,6 @@ void BF::GameSystem::Start()
     Resource.Load(skybox->Faces[5], "Texture/SkyBox/Front.bmp"); // Front
     
     Resource.Load(skybox->Shader, "Shader/SkyBox.vert", "Shader/SkyBox.frag");
-    //Resource.Load(skybox->CubeModel, "Model/Cube.obj");
-
-    skybox->ShouldBeRendered = false;
     Resource.Add(*skybox);
 
     text = new UIText("SampleText", *Resource.DefaultFont, -1, -0.8);

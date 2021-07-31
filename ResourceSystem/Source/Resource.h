@@ -14,24 +14,10 @@ namespace BF
 		Resource(); // Prevent that this can be an instance on its own (abstract class)
 
 		public:
-
-		/*
-		Is the resource currently loaded to the GPU?
-		*/
-		bool LoadedToGPU;
-
 		/*
 		Resource index. This Value shall be used as key for dictionarys. Faster lookup.
 		*/
 		unsigned int ID;
-
-		/*
-		Value that represents how many dependencies this resource has.
-		If the Value is '0' this resource shall be unloaded.
-		*/
-		unsigned int SharedCounter;
-
-		bool ShouldBeRendered;
 
 		/*
 		Path from where the resource was loaded from.

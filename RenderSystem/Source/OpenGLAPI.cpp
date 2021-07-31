@@ -27,7 +27,7 @@ void BF::OpenGLAPI::RegisterImage(Image& image)
     glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, ImageLayoutToOpenGLFormat(image.LayoutNear));
     glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, ImageLayoutToOpenGLFormat(image.LayoutFar));
 
-    glTexParameterf(textureType, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16.0f);
+    //glTexParameterf(textureType, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16.0f);
 
     glTexImage2D(textureType, 0, GL_RGB, image.Width, image.Height, 0, format, GL_UNSIGNED_BYTE, image.PixelData);
 
@@ -47,21 +47,25 @@ void BF::OpenGLAPI::SkyBoxSet(SkyBox& skybox)
 {
     glGenTextures(1, &skybox.ID);
     glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.ID);
+
+    for (unsigned int i = 0; i < 6; i++)
+    {   
+        Image& image = skybox.Faces[i];        
+        unsigned int textureTypeID = (unsigned int)GL_TEXTURE_CUBE_MAP_POSITIVE_X + i;
+        unsigned int imageID = ToImageFormat(image.Format);
+
+        image.Type = ToImageType(textureTypeID);        
+
+        //glActiveTexture(GL_TEXTURE0 + i);
+
+        glTexImage2D(textureTypeID, 0, GL_RGB, image.Width, image.Height, 0, imageID, GL_UNSIGNED_BYTE, image.PixelData);
+    }    
+
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-    for (unsigned int i = 0; i < 6; i++)
-    {   
-        Image& image = skybox.Faces[i];        
-        unsigned int textureTypeID = GL_TEXTURE_CUBE_MAP_POSITIVE_X + i;
-
-        image.Type = ToImageType(textureTypeID);
-
-        glTexImage2D(textureTypeID, 0, GL_RGB, image.Width, image.Height, 0, GL_RGB, GL_UNSIGNED_BYTE, image.PixelData);
-    }    
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
@@ -73,7 +77,8 @@ void BF::OpenGLAPI::SkyBoxSet(SkyBox& skybox)
     int vertexstuff[1] = { 3 };
 
     OpenGLAPI::VertexAttributeArrayDefine(sizeof(float), 1, vertexstuff);
-    OpenGLAPI::IndexDataDefine(&skybox.IndexID, 36 * 4, skybox.IndexData);
+
+    OpenGLAPI::IndexDataDefine(&skybox.IndexID, 24*4, skybox.IndexData);
 }
 
 void BF::OpenGLAPI::DepthMaskEnable(bool enable)
@@ -92,7 +97,7 @@ void BF::OpenGLAPI::TextureUse(ImageType imageType, int textureID)
 {
     assert(textureID != -1, "[BitFireEngine][OpenGL] TextureSlot -1 was selected. You can't do that.");
 
-    glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
+   // glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
 
     unsigned int imageTypeID = ToImageType(imageType);    
 
@@ -115,24 +120,64 @@ void BF::OpenGLAPI::Render(RenderMode renderMode, int startIndex, int amount)
 {
     unsigned int mode = -1;
 
+    glPointSize(40);
+    glLineWidth(5);
+
     switch (renderMode)
     {
-        case RenderMode::Point:
+        case RenderMode::Point:      
             mode = GL_POINTS;
             break;
 
-        case RenderMode::Line:
+        case RenderMode::Line:           
+            mode = GL_LINES;
+            break;        
+
+        case RenderMode::LineAdjacency:
+            mode = GL_LINES_ADJACENCY;
+            break;
+
+        case RenderMode::LineStripAdjacency:
+            mode = GL_LINE_STRIP_ADJACENCY;
+            break;
+
+        case RenderMode::LineLoop:
             mode = GL_LINE_LOOP;
+            break;
+
+        case RenderMode::LineStrip:
+            mode = GL_LINE_STRIP;
             break;
 
         case RenderMode::Triangle:
             mode = GL_TRIANGLES;
             break;
 
+        case RenderMode::TriangleAdjacency:
+            mode = GL_TRIANGLES_ADJACENCY;
+            break;
+
+        case RenderMode::TriangleFAN:
+            mode = GL_TRIANGLE_FAN;
+            break;
+
+        case RenderMode::TriangleStrip:
+            mode = GL_TRIANGLE_STRIP;
+            break;
+
+        case RenderMode::TriangleStripAdjacency:
+            mode = GL_TRIANGLE_STRIP_ADJACENCY;
+            break;
+
         case RenderMode::Square:
             mode = GL_QUADS;
             break;
-    }
+
+        case RenderMode::Patches:
+            mode = GL_PATCHES;
+            break;
+    } 
+
 
     glDrawArrays(mode, startIndex, amount);
 }

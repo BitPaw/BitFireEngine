@@ -9,14 +9,19 @@ void BF::UIText::Setup(AsciiString& text, Font& font, float x, float y)
 	Height = 0;
 	RenderInformation.RenderType = RenderMode::Square;
 
+	strcpy(ModelName, "<Text>");
 	strcpy(FilePath, "<Local Text>");
 
 	MeshList.ReSize(1); // textSize
 
-	Mesh* mesh = &MeshList[0];
-	mesh->NormalPointList.ReSize(1);
-	mesh->NormalPointList[0].Set(0, 0, -1);
-	mesh->MeshMaterial = new Material();
+	Mesh& mesh = MeshList[0];
+	mesh.NormalPointList.ReSize(1);
+	mesh.NormalPointList[0].Set(0, 0, -1);
+	mesh.MeshMaterial = new Material();
+
+	strcpy(mesh.Name, "<Text>");
+	strcpy(mesh.MeshMaterial->Name, "<Text Content>");	
+	strcpy(mesh.MeshMaterial->TextureFilePath, "<Internal>");
 
 	SetFont(font);
 	SetText(text);
@@ -79,25 +84,25 @@ void BF::UIText::SetText(AsciiString& text)
 
 	strcpy(TextContent, &text[0]);
 
-	Mesh* mesh = &MeshList[0];
+	Mesh& mesh = MeshList[0];
 	unsigned int textSize = strlen(TextContent);//currentText.Size();
 	unsigned int amountOfVertices = 4 * textSize;
-	mesh->MeshMaterial->Texture = _font->Texture;
+	mesh.MeshMaterial->Texture = _font->Texture;
 
 	if (!hasTextChanged)
 	{
 		return; // Text has not changed. No update needed
 	}
 
-	if (isDifferentSize || true)
+	if (isDifferentSize)
 	{
-		mesh->VertexList.DeleteAll();
-		mesh->TexturePointList.DeleteAll();
-		mesh->IndexList.DeleteAll();
+		mesh.VertexList.DeleteAll();
+		mesh.TexturePointList.DeleteAll();
+		mesh.IndexList.DeleteAll();
 
-		mesh->VertexList.ReSize(amountOfVertices);
-		mesh->TexturePointList.ReSize(amountOfVertices);
-		mesh->IndexList.ReSize(amountOfVertices);
+		mesh.VertexList.ReSize(amountOfVertices);
+		mesh.TexturePointList.ReSize(amountOfVertices);
+		mesh.IndexList.ReSize(amountOfVertices);
 	}
 
 	// Put Data
@@ -118,9 +123,8 @@ void BF::UIText::SetText(AsciiString& text)
 		}
 
 		FNTCharacter* fntCharacter = bitmapFont.GetCharacterPosition(character);
-		Point<float> xPos = Point<float>(fntCharacter->Position[0], fntCharacter->Position[1]);
-		//Point<float> charOffset = fntCharacter->Offset; // unsused?
-		Point<float> charSize = Point<float>(fntCharacter->Size[0], fntCharacter->Size[1]);
+		Point<float> xPos(fntCharacter->Position[0], fntCharacter->Position[1]);
+		Point<float> charSize(fntCharacter->Size[0], fntCharacter->Size[1]);
 
 		Point<float> interpulatedTexturePointXY
 		(
@@ -168,21 +172,21 @@ void BF::UIText::SetText(AsciiString& text)
 		//-------------------------------------
 
 		// Vertex data (no change do to not pointer?)
-		mesh->IndexList[faceIndex++].Set(vertexIndex, textureIndex, 0);
-		mesh->VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointA);
-		mesh->TexturePointList[textureIndex++].Set(texturePosition.PointD);// 00
+		mesh.IndexList[faceIndex++].Set(vertexIndex, textureIndex, 0);
+		mesh.VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointA);
+		mesh.TexturePointList[textureIndex++].Set(texturePosition.PointD);// 00
 
-		mesh->IndexList[faceIndex++].Set(vertexIndex, textureIndex, 0);
-		mesh->VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointB);
-		mesh->TexturePointList[textureIndex++].Set(texturePosition.PointC);
+		mesh.IndexList[faceIndex++].Set(vertexIndex, textureIndex, 0);
+		mesh.VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointB);
+		mesh.TexturePointList[textureIndex++].Set(texturePosition.PointC);
 
-		mesh->IndexList[faceIndex++].Set(vertexIndex, textureIndex, 0);
-		mesh->VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointC);
-		mesh->TexturePointList[textureIndex++].Set(texturePosition.PointB); // 11
+		mesh.IndexList[faceIndex++].Set(vertexIndex, textureIndex, 0);
+		mesh.VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointC);
+		mesh.TexturePointList[textureIndex++].Set(texturePosition.PointB); // 11
 
-		mesh->IndexList[faceIndex++].Set(vertexIndex, textureIndex, 0);
-		mesh->VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointD);
-		mesh->TexturePointList[textureIndex++].Set(texturePosition.PointA);
+		mesh.IndexList[faceIndex++].Set(vertexIndex, textureIndex, 0);
+		mesh.VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointD);
+		mesh.TexturePointList[textureIndex++].Set(texturePosition.PointA);
 	}
 
 	UpdateGlobalMesh();

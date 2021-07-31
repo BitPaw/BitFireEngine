@@ -65,7 +65,7 @@ namespace BF
 		{
 			T* oldData = _content;
 			int oldSize = _size;
-			bool reallocate = oldSize < size || (oldSize - size) > 128 ;
+			bool reallocate = true;// oldSize < size || (oldSize - size) > 128;
 			// 200 < 100 && 200 - 128 > 100
 
 			if (!reallocate)

@@ -7,7 +7,6 @@ namespace BF
 	struct Material
 	{
 		public:
-
 		char Name[20];
 		char TextureFilePath[50];		
 

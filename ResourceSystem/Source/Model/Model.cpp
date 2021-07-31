@@ -12,9 +12,10 @@ BF::Model::Model()
 }
 
 BF::Model::Model(AsciiString& name)
-{   
-    RenderInformation.RenderType = RenderMode::Unkown; 
-    ModelName.Copy(name);
+{
+    RenderInformation.RenderType = RenderMode::Unkown;
+
+    strcpy(ModelName, &name[0]);
 }
 
 void BF::Model::Move(float x, float y, float z)
@@ -56,7 +57,7 @@ void BF::Model::MoveTo(Position<float> position)
             vertex->CurrentPosition.Add(position);
         }
 
-       // _currentPosition = position;
+        // _currentPosition = position;
     }
 
     ModelMatrix.MoveTo(position.X, position.Y, position.Z);
@@ -71,7 +72,6 @@ void BF::Model::Rotate(Position<float> rotation)
 {
     if (DirectMorth)
     {
-        
         for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
         {
             Vertex* vertex = GlobalMesh.VertexList[i];
@@ -136,7 +136,7 @@ void BF::Model::Orbit(Position<float> rotation)
 
 void BF::Model::Orbit(Position<float> rotation, Position<float> ancerPosition)
 {
-   // ModelMatrix.Orbit();
+    // ModelMatrix.Orbit();
 }
 
 void BF::Model::Scale(float x, float y, float z)
@@ -185,8 +185,9 @@ void BF::Model::CalculateNormalVectors()
                 // There are only 2 points, you cant render something like this. Or can it?
                 break;
 
-            case 3:                
-            default:     
+            case 3:
+            default:
+            {
                 switch (RenderInformation.RenderType)
                 {
                     case RenderMode::Triangle:
@@ -245,8 +246,8 @@ void BF::Model::CalculateNormalVectors()
 
                             mesh->NormalPointList[normalPointIndex++] = triangle.NormalDirection();
                         }
-                }
-                        break;
+                    }
+                    break;
 
                     case RenderMode::Square:
                     {
@@ -289,55 +290,15 @@ void BF::Model::CalculateNormalVectors()
                         {
                             printf("Error");
                         }
-
-
-
-              
-
-                    }
                         break;
+                    }
 
 
+                    break;
                 }
-                break;
+            }  
         }
-
-
-
-        /*
-
-                for (unsigned int i = 0; i < size; i += 3)
-                {
-                    unsigned int indexA = (*indexList)[i].VertexPositionID;
-                    unsigned int indexB = (*indexList)[i + 1].VertexPositionID;
-                    unsigned int indexC = (*indexList)[i + 2].VertexPositionID;
-
-                    Vertex* vertexA = &(*vertexList)[indexA];
-                    Vertex* vertexB = &(*vertexList)[indexB];
-                    Vertex* vertexC = &(*vertexList)[indexC];
-
-                    Position<float>* aPos = &vertexA->CurrentPosition;
-                    Position<float>* bPos = &vertexB->CurrentPosition;
-                    Position<float>* cPos = &vertexC->CurrentPosition;
-
-                    // BAd code, this memory waste
-                    (*indexList)[i].NormalVectorID = normalPointIndex;
-                    mesh->NormalPointList[normalPointIndex++] = aPos->CrossProduct(*bPos);
-
-                    (*indexList)[i + 1].NormalVectorID = normalPointIndex;
-                    mesh->NormalPointList[normalPointIndex++] = bPos->CrossProduct(*cPos);
-
-                    (*indexList)[i + 2].NormalVectorID = normalPointIndex;
-                    mesh->NormalPointList[normalPointIndex++] = cPos->CrossProduct(*aPos);
-                }
-
-                */
-                
-        
-
-
-
-    }   
+    }
 }
 
 void BF::Model::UseTexturePointAsColor()
@@ -345,7 +306,7 @@ void BF::Model::UseTexturePointAsColor()
     unsigned int indexListLength = GlobalMesh.IndexList.Size();
 
     ColorList.ReSize(indexListLength);
-        
+
     for (unsigned int i = 0; i < indexListLength; i++)
     {
         MeshIndexData& meshIndexData = MeshList[0].IndexList[i];
@@ -369,7 +330,7 @@ void BF::Model::PrintModelData()
     {
         Mesh& mesh = MeshList[i];
 
-        printf("Material <%u>: %5u %5u %5u",i,  mesh.VertexList.Size(), mesh.NormalPointList.Size(), mesh.TexturePointList.Size());
+        printf("Material <%u>: %5u %5u %5u", i, mesh.VertexList.Size(), mesh.NormalPointList.Size(), mesh.TexturePointList.Size());
 
         if (mesh.MeshMaterial == nullptr)
         {
@@ -383,15 +344,12 @@ void BF::Model::PrintModelData()
             if (texture == nullptr)
             {
                 printf(" - <NoImage> Path %s", &mesh.MeshMaterial->Name[0]);
-              
+
             }
             else
             {
                 printf(" - ImageID:%u Path %s", texture->ID, &mesh.MeshMaterial->Name[0]);
             }
-
-
-           
         }
 
         printf("\n");
@@ -412,12 +370,11 @@ void BF::Model::UpdateGlobalMesh()
     unsigned int normalIndex = 0;
     unsigned int colorIndex = 0;
     unsigned int indexIndex = 0;
-
-    /*
-    if (GlobalMesh.VertexList.Size() > 0)
+    
+    if (length == 0)
     {
         return;
-    }*/
+    }
 
     for (unsigned int i = 0; i < length; i++)
     {
@@ -433,7 +390,7 @@ void BF::Model::UpdateGlobalMesh()
     GlobalMesh.TexturePointList.ReSize(texturePointListLength);
     GlobalMesh.NormalPointList.ReSize(normalPointListLength);
     GlobalMesh.ColorList.ReSize(colorListLength);
-    GlobalMesh.IndexList.ReSize(indexListLength); 
+    GlobalMesh.IndexList.ReSize(indexListLength);
 
     for (unsigned int i = 0; i < length; i++)
     {

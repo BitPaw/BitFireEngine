@@ -22,7 +22,7 @@ namespace BF
 		public:
 		ModelRenderInformation RenderInformation;
 
-		AsciiString ModelName;
+		char ModelName[30];
 
 		Matrix4x4<float> ModelMatrix;
 
