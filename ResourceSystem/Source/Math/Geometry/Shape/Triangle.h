@@ -44,7 +44,5 @@ namespace BF
 
 		void Set(float xA, float yA, float xB, float yB, float xC, float yC);
 		void Set(Point<float> a, Point<float> b, Point<float> c);
-
-		List<Point<float>>* DrawPointList() override;
 	};
 }

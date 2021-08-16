@@ -336,6 +336,7 @@
     <ClCompile Include="Source\Sound\OGG\OGG.cpp" />
     <ClCompile Include="Source\Sound\Sound.cpp" />
     <ClCompile Include="Source\Sound\WAV\WAV.cpp" />
+    <ClCompile Include="Source\Time\StopWatch.cpp" />
     <ClCompile Include="Source\Types\DoubleWord.cpp" />
     <ClCompile Include="Source\Types\UUID.cpp" />
     <ClCompile Include="Source\Types\Word.cpp" />
@@ -490,15 +491,11 @@
     <ClInclude Include="Source\Sound\Sound.h" />
     <ClInclude Include="Source\Sound\SoundFormat.h" />
     <ClInclude Include="Source\Sound\WAV\WAV.h" />
+    <ClInclude Include="Source\Time\StopWatch.h" />
     <ClInclude Include="Source\Types\DoubleWord.h" />
     <ClInclude Include="Source\Types\Endian.h" />
     <ClInclude Include="Source\Types\UUID.h" />
     <ClInclude Include="Source\Types\Word.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MemoryManager\MemoryManager.vcxproj">
-      <Project>{2e3e50f7-6147-4fe7-87bc-10aea9bd36eb}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

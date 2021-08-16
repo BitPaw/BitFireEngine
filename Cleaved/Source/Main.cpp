@@ -6,15 +6,11 @@ int main(int amountOFParameters, char** parameter)
 {   
     try
     {
-        FileOpen();
-
         printf("[i][Core] Working Directory <%s>\n", parameter[0]);
 
         BF::GameSystem system;
 
         system.Start();
-
-        FileClose();
 
         while (system.IsRunning())
         {

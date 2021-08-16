@@ -758,9 +758,9 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
             //OpenGLAPI::SkyBoxSet(*DefaultSkyBox);
             OpenGLAPI::SkyBoxUse(*DefaultSkyBox);      
 
-            OpenGLAPI::Render(RenderMode::Square, 0, 24);         
-            OpenGLAPI::Render(RenderMode::LineStripAdjacency, 0, 24);
-            OpenGLAPI::Render(RenderMode::Point, 0, 24);
+            OpenGLAPI::Render(RenderMode::Triangle, 0, 36);         
+            OpenGLAPI::Render(RenderMode::LineStripAdjacency, 0, 36);
+            OpenGLAPI::Render(RenderMode::Point, 0, 36);
 
             OpenGLAPI::DepthMaskEnable(true);
         }

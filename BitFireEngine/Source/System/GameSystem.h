@@ -15,8 +15,8 @@
 
 #include "../Graphics/Camera/FirstPersonCamera.h"
 
-#include "../Time/StopWatch.h"
 #include "../../../RenderSystem/Source/Window/Window.h"
+#include "../../../ResourceSystem/Source/Time/StopWatch.h"
 #include "../../../ResourceSystem/Source/ResouceManager.h"
 
 namespace BF

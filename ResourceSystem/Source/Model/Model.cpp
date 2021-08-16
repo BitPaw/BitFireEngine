@@ -496,6 +496,7 @@ BF::ErrorCode BF::Model::Load(const char* filePath)
 
 void BF::Model::ConvertFrom(Shape& shape)
 {
+    /*
     const unsigned int meshSize = 1;
     List<Point<float>>* vertexData = shape.DrawPointList();
     unsigned int vertexListSize = vertexData->Size();
@@ -533,5 +534,5 @@ void BF::Model::ConvertFrom(Shape& shape)
 
     CalculateNormalVectors();
 
-    UpdateGlobalMesh();
+    UpdateGlobalMesh();*/
 }

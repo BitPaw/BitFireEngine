@@ -4,7 +4,7 @@
 #include "../../../ResourceSystem/Source/Model/Model.h"
 #include "../../../RenderSystem/Source/OpenGLAPI.h"
 #include "../../../RenderSystem/Source/Device/InputContainer.h"
-#include "../Time/StopWatch.h"
+#include "../../../ResourceSystem/Source/Time/StopWatch.h"
 #include "../UI/UIText.h"
 #include "../../../ResourceSystem/Source/File/File.h"
 

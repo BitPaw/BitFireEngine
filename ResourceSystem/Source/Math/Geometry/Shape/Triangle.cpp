@@ -87,14 +87,3 @@ void BF::Triangle::Set(Point<float> a, Point<float> b, Point<float> c)
 	PointB.Set(b);
 	PointC.Set(c);
 }
-
-BF::List<BF::Point<float>>* BF::Triangle::DrawPointList()
-{
-	List<Point<float>>* drawPointList = new List<Point<float>>(3);
-
-	(*drawPointList)[0].Set(PointA);
-	(*drawPointList)[1].Set(PointB);
-	(*drawPointList)[2].Set(PointC);
-
-	return drawPointList;
-}

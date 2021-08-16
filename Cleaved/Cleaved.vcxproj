@@ -33,9 +33,6 @@
     <ProjectReference Include="..\BitFireEngine\BitFireEngine.vcxproj">
       <Project>{1420d6d2-264b-4789-9adf-2fd0093760ad}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\MemoryManager\MemoryManager.vcxproj">
-      <Project>{2e3e50f7-6147-4fe7-87bc-10aea9bd36eb}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\ResourceSystem\ResourceSystem.vcxproj">
       <Project>{398c5630-9092-486f-920c-c9992f8b7f6c}</Project>
     </ProjectReference>

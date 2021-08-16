@@ -1,5 +1,4 @@
 #include "AsciiString.h"
-#include "../../../MemoryManager/Memory.h"
 
 BF::AsciiString::AsciiString()
 {
@@ -117,11 +116,11 @@ void BF::AsciiString::SetAsReference(const char* stringAdress, unsigned int size
 void BF::AsciiString::ReSize(unsigned int size)
 {
 	_size = size + 1;
-	_data = (char*)MemoryResize(_data, _size);
+	_data = (char*)realloc(_data, _size);
 
 	if (_data != nullptr)
 	{
-		MemorySet(_data, '\0', _size * sizeof(char));
+		memset(_data, '\0', _size * sizeof(char));
 	}	
 }
 
@@ -197,19 +196,19 @@ void BF::AsciiString::AttachToBack(AsciiString& string)
 	if (_isReferenceToOtherString) // If the String is just a reference, create a new string to manipulate
 	{
 		startA = new char[stringCLengh+1]; // create space
-		MemoryCopy(startA, _data, _size); // Copy old referenced string to new location
+		memcpy(startA, _data, _size); // Copy old referenced string to new location
 		_isReferenceToOtherString = false; // its no longer a reference
 
 		_data = startA;
 	}
 	else
 	{
-		_data = (char*)MemoryResize(_data, byteLenghC);
+		_data = (char*)realloc(_data, byteLenghC);
 	}	
 	
 	insertionPoint = _data + byteLenghA; // Move to the next insertion point (After A).
 	
-	MemoryCopy(insertionPoint, startB, byteLenghB); // Attach content from B after the A part.
+	memcpy(insertionPoint, startB, byteLenghB); // Attach content from B after the A part.
 
 	_data[stringCLengh - 1] = '\0'; // Add c-string style endmarker.	
 	_size = stringCLengh; // Update new size.
@@ -663,7 +662,7 @@ void BF::AsciiString::Cut(unsigned int startPosition, unsigned int endPosition, 
 
 	cuttedString.ReSize(cuttedStringSize);	 
 
-	MemoryCopy(&cuttedString[0], startAdress, cuttedStringByteSize);
+	memcpy(&cuttedString[0], startAdress, cuttedStringByteSize);
 }
 
 unsigned int BF::AsciiString::FindFirst(char character)
@@ -768,7 +767,7 @@ void BF::AsciiString::Copy(const char* string, unsigned int lengh)
 {
 	ReSize(lengh);
 
-	MemoryCopy(_data, (void*)string, lengh);
+	memcpy(_data, (void*)string, lengh);
 }
 
 void BF::AsciiString::Copy(std::string& stdstring)

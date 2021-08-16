@@ -45,7 +45,7 @@ void BF::MTL::Load(char* filePath)
 			}
 		}
 
-		MaterialList = reinterpret_cast<MTLMaterial*>(MemoryAllocateCleared(MaterialListSize, sizeof(MTLMaterial)));
+		MaterialList = reinterpret_cast<MTLMaterial*>(calloc(MaterialListSize, sizeof(MTLMaterial)));
 	}
 
 	// Raw Parse

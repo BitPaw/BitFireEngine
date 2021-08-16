@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../MemoryManager/Memory.h"
+#include <malloc.h>
 
 namespace BF
 {
@@ -25,10 +25,7 @@ namespace BF
 
 		~List()
 		{
-			if (_content != nullptr)
-			{
-				delete[] _content;
-			}
+			delete[] _content;
 		}
 
 		bool IsEmpty()
@@ -79,7 +76,7 @@ namespace BF
 			}
 
 			//---[Create new DataAraay]---
-			_content = (T*)MemoryResize(_content, size * sizeof(T));
+			_content = (T*)realloc(_content, size * sizeof(T));
 			_size = size;
 
 			for (unsigned int i = 0; i < _size; i++)
@@ -102,13 +99,10 @@ namespace BF
 		// Delete all elements
 		void DeleteAll()
 		{
-			if (_content != nullptr && _size != 0)
-			{			
-				delete[] _content; // Todo
+			delete[] _content; // Todo
 
-				_size = 0;
-				_content = nullptr;			
-			}
+			_size = 0;
+			_content = nullptr;
 		}
 
 		inline T& operator[](unsigned int value)

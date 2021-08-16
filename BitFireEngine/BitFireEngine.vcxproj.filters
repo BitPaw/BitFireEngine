@@ -30,9 +30,6 @@
     <ClCompile Include="Source\Player\Player.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Render\HUD.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\System\GameSystem.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -40,9 +37,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\System\GameTickEvent.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Time\StopWatch.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\UI\DialogBox\CloseEvent.cpp">
@@ -98,12 +92,6 @@
     <ClInclude Include="Source\Player\Player.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Render\HUD.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Render\RenderSpace.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\System\GameSystem.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -114,9 +102,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\System\SystemState.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Time\StopWatch.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\UI\DialogBox\CloseEvent.h">

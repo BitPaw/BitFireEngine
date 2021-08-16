@@ -106,15 +106,3 @@ void BF::Rectangle::Set(Point<float> a, Point<float> b, Point<float> c, Point<fl
 	PointC.Set(c);
 	PointD.Set(d);
 }
-
-BF::List<BF::Point<float>>* BF::Rectangle::DrawPointList()
-{
-	List<Point<float>>* drawPointList = new List<Point<float>>(4);
-
-	(*drawPointList)[0].Set(PointA);
-	(*drawPointList)[1].Set(PointB);
-	(*drawPointList)[2].Set(PointC);
-	(*drawPointList)[3].Set(PointD);
-
-	return drawPointList;
-}

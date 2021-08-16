@@ -622,12 +622,12 @@ void BF::OBJ::Convert(Model& model)
                 MTLMaterial& mtlMaterial = mtl.MaterialList[mtlMaterialIndex];
                 Material& material = model.MaterialList[mtlMaterialIndex];
 
-                MemoryCopy(material.Name, mtlMaterial.Name, 20);
-                MemoryCopy(material.TextureFilePath, mtlMaterial.TextureFilePath, 50);
-                MemoryCopy(material.Ambient, mtlMaterial.Ambient, 3 * sizeof(float));
-                MemoryCopy(material.Diffuse, mtlMaterial.Diffuse, 3 * sizeof(float));
-                MemoryCopy(material.Specular, mtlMaterial.Specular, 3 * sizeof(float));
-                MemoryCopy(material.Emission, mtlMaterial.Emission, 3 * sizeof(float));
+                strcpy(material.Name, mtlMaterial.Name);
+                strcpy(material.TextureFilePath, mtlMaterial.TextureFilePath);
+                memcpy(material.Ambient, mtlMaterial.Ambient, 3 * sizeof(float));
+                memcpy(material.Diffuse, mtlMaterial.Diffuse, 3 * sizeof(float));
+                memcpy(material.Specular, mtlMaterial.Specular, 3 * sizeof(float));
+                memcpy(material.Emission, mtlMaterial.Emission, 3 * sizeof(float));
             }
         }
     }
