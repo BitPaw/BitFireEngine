@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Resource.h"
-#include "Image/Image.h"
-#include "Shader/ShaderProgram.h"
+#include "../../../ResourceSystem/Source/Resource.h"
+#include "../../../ResourceSystem/Source/Image/Image.h"
+#include "../../../ResourceSystem/Source/Shader/ShaderProgram.h"
 
 namespace BF
 {

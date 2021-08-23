@@ -1,5 +1,9 @@
 #pragma once
-class EML
-{
-};
 
+namespace BF
+{
+	struct EML	
+	{
+
+	};
+}

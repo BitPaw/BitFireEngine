@@ -27,7 +27,7 @@ BF::StopWatch::~StopWatch()
 
 double BF::StopWatch::CalulateDeltaTimeTime()
 {
-	const TimeSpampType current = std::chrono::high_resolution_clock::now();
+	const TimeSpanType current = std::chrono::high_resolution_clock::now();
 	const std::chrono::duration<double> elapsed = current - _lastTimeStamp;
 
 	return elapsed.count();

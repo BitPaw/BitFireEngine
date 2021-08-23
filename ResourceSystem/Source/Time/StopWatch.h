@@ -1,21 +1,20 @@
 #pragma once
 
 #include <chrono>
+#include "../OSDefine.h"
 
-#if defined(_WIN32)
-#define TimeSpampType std::chrono::steady_clock::time_point
-#endif
-
-#if defined(__linux__)
-#define TimeSpampType std::chrono::_V2::system_clock::time_point  
-#endif
+#ifdef OSUnix
+#define TimeSpanType std::chrono::_V2::system_clock::time_point  
+#elif defined(OSWindows)
+#define TimeSpanType std::chrono::steady_clock::time_point
+#endif 
 
 namespace BF
 {
 	class StopWatch
 	{
-	private:
-	TimeSpampType _lastTimeStamp;
+		private:
+		TimeSpanType _lastTimeStamp;
 
 		double Duration;
 
@@ -25,7 +24,7 @@ namespace BF
 
 		double CalulateDeltaTimeTime();
 
-	public:
+		public:
 		StopWatch();
 		StopWatch(const unsigned int amountOfTimeStamps);
 

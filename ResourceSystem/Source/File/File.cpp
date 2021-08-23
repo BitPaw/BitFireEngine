@@ -280,10 +280,12 @@ int BF::File::CountAmountOfLines()
 {
 	int lineCounter = 0;
 
-	while (Data[lineCounter++] != '\0')
+	if (Data == nullptr)
 	{
-
+		return 0;
 	}
+
+	while (Data[lineCounter++] != '\0');
 
 	return lineCounter;
 }

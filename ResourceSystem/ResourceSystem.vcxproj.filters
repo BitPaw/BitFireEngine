@@ -195,9 +195,6 @@
     <ClCompile Include="Source\Types\Word.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ResouceManager.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Resource.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -307,9 +304,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Image\ImageType.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\SkyBox.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Time\StopWatch.cpp">
@@ -620,9 +614,6 @@
     <ClInclude Include="Source\ErrorCode.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ResouceManager.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Resource.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -765,12 +756,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\ResourceType.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ResourceLoadMode.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SkyBox.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Image\ImageType.h">

@@ -1,7 +1,7 @@
 #include "ResouceManager.h"
-#include "Font/FNT/FNTPage.h"
-#include "File/File.h"
-#include "../../RenderSystem/Source/OpenGLAPI.h"
+#include "../../../ResourceSystem/Source/Font/FNT/FNTPage.h"
+#include "../../../ResourceSystem/Source/File/File.h"
+#include "../../../RenderSystem/Source/OpenGLAPI.h"
 
 void BF::ResourceManager::UpdateVBOData(Model& model)
 {

@@ -141,7 +141,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -151,6 +151,12 @@
       <SmallerTypeCheck>false</SmallerTypeCheck>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -203,7 +209,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -213,6 +219,12 @@
       <SmallerTypeCheck>false</SmallerTypeCheck>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -320,7 +332,6 @@
     <ClCompile Include="Source\Model\STL\STL.cpp" />
     <ClCompile Include="Source\Model\Vertex.cpp" />
     <ClCompile Include="Source\Model\WRL\WRL.cpp" />
-    <ClCompile Include="Source\ResouceManager.cpp" />
     <ClCompile Include="Source\Resource.cpp" />
     <ClCompile Include="Source\ResourceType.cpp" />
     <ClCompile Include="Source\Serialization\INI\INILoader.cpp" />
@@ -330,7 +341,6 @@
     <ClCompile Include="Source\Image\ImageFormat.cpp" />
     <ClCompile Include="Source\Shader\Shader.cpp" />
     <ClCompile Include="Source\Shader\ShaderProgram.cpp" />
-    <ClCompile Include="Source\SkyBox.cpp" />
     <ClCompile Include="Source\Sound\MID\MID.cpp" />
     <ClCompile Include="Source\Sound\MP3\MP3.cpp" />
     <ClCompile Include="Source\Sound\OGG\OGG.cpp" />
@@ -343,7 +353,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Image\ImageType.h" />
-    <ClInclude Include="Source\SkyBox.h" />
     <ClInclude Include="Source\Async\AsyncLock.h" />
     <ClInclude Include="Source\Async\Thread.h" />
     <ClInclude Include="Source\Compression\Adler32.h" />
@@ -474,9 +483,7 @@
     <ClInclude Include="Source\Model\Vertex.h" />
     <ClInclude Include="Source\Model\WRL\WRL.h" />
     <ClInclude Include="Source\OSDefine.h" />
-    <ClInclude Include="Source\ResouceManager.h" />
     <ClInclude Include="Source\Resource.h" />
-    <ClInclude Include="Source\ResourceLoadMode.h" />
     <ClInclude Include="Source\ResourceType.hpp" />
     <ClInclude Include="Source\Serialization\INI\INILoader.h" />
     <ClInclude Include="Source\Serialization\JSON\JSONLoader.h" />

@@ -66,6 +66,12 @@
     <ClCompile Include="Source\UI\UIText.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Resource\ResouceManager.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Resource\SkyBox.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Configuration\ConfigContainer.h">
@@ -129,6 +135,15 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\UI\UIText.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Resource\ResourceLoadMode.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Resource\ResouceManager.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Resource\SkyBox.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

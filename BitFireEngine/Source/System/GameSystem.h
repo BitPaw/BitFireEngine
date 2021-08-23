@@ -17,7 +17,7 @@
 
 #include "../../../RenderSystem/Source/Window/Window.h"
 #include "../../../ResourceSystem/Source/Time/StopWatch.h"
-#include "../../../ResourceSystem/Source/ResouceManager.h"
+#include "../../../BitFireEngine/Source/Resource/ResouceManager.h"
 
 namespace BF
 {
@@ -45,6 +45,7 @@ namespace BF
 		void Start();
 		void Update(); // private ??
 		void UpdateInput(InputContainer* input);
+		void UpdateUI();
 		void Stop();
 
 		static GameSystem& Instance() { return *(_instance == nullptr ? new GameSystem() : _instance); }

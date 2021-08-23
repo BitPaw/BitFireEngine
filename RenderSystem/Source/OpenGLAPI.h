@@ -2,7 +2,8 @@
 #include "../../ResourceSystem/Source/Image/Image.h"
 #include "RenderMode.h"
 #include "../../ResourceSystem/Source/Shader/ShaderProgram.h"
-#include "../../ResourceSystem/Source/SkyBox.h"
+#include "../../BitFireEngine/Source/Resource/SkyBox.h"
+
 
 namespace BF
 {

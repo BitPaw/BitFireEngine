@@ -85,6 +85,8 @@ void BF::GameSystem::Start()
     printf("[Info] Loading took %.2fs\n", stopwatch.Stop());
 }
 
+float _lastUIUpdate = 0;
+
 void BF::GameSystem::Update()
 {
     if (_mainWindow.ShouldCloseWindow)
@@ -94,16 +96,19 @@ void BF::GameSystem::Update()
     else
     {
         //---[Variable Reset]--------------------------------------------------
-        _gameTickData.ActiveTime = _mainWindow.ActiveTime;
-        _gameTickData.CalcualteFramesPerSecounds(_stopWatch.Reset());
+        float deltaTime = _stopWatch.Reset();
 
-        if(_gameTickData.FramesRendered == 0)
+        _gameTickData.ActiveTime = _mainWindow.ActiveTime;
+        _gameTickData.CalcualteFramesPerSecounds(deltaTime);
+
+        _lastUIUpdate += deltaTime;
+
+        if (_lastUIUpdate >= .20f)
         {
-            sprintf(text->TextContent, "FPS: %4i", (Math::Ceiling(1/ _gameTickData.GetSmoothDeltaTime())));
-            text->SetText(text->TextContent);
-            Resource.Add(*text);
-        }    
-   
+            _lastUIUpdate = 0;
+            UpdateUI();
+        }
+
         //---[User-Input]------------------------------------------------------
         UpdateInput(_mainWindow.GetInput());
 
@@ -115,6 +120,13 @@ void BF::GameSystem::Update()
 
         //sphere->Orbit(BF::Position<float>(10.0f,0.0f,0.0f));
     }
+}
+
+void BF::GameSystem::UpdateUI()
+{
+    sprintf(text->TextContent, "FPS: %4i", (Math::Ceiling(1 / _gameTickData.GetSmoothDeltaTime())));
+    text->SetText(text->TextContent);
+    Resource.Add(*text);
 }
 
 void BF::GameSystem::UpdateInput(InputContainer* input)

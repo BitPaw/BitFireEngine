@@ -1,19 +1,19 @@
 #pragma once
 
-#include "ResourceType.hpp"
+#include "../../../ResourceSystem/Source/ResourceType.hpp"
 
-#include "Shader/Shader.h"
-#include "Image/Image.h"
-#include "Image/ImageWrap.h"
-#include "Model/Model.h"
-#include "Sound/Sound.h"
-#include "Font/Font.h"
-#include "Dialog/Dialog.h"
-#include "Font/FNT/FNT.h"
-#include "Level/Level.h"
+#include "../../../ResourceSystem/Source/Shader/Shader.h"
+#include "../../../ResourceSystem/Source/Image/Image.h"
+#include "../../../ResourceSystem/Source/Image/ImageWrap.h"
+#include "../../../ResourceSystem/Source/Model/Model.h"
+#include "../../../ResourceSystem/Source/Sound/Sound.h"
+#include "../../../ResourceSystem/Source/Font/Font.h"
+#include "../../../ResourceSystem/Source/Dialog/Dialog.h"
+#include "../../../ResourceSystem/Source/Font/FNT/FNT.h"
+#include "../../../ResourceSystem/Source/Level/Level.h"
 
-#include "Container/LinkedList.hpp"
-#include "../../BitFireEngine/Source/Graphics/Camera/FirstPersonCamera.h"
+#include "../../../ResourceSystem/Source/Container/LinkedList.hpp"
+#include "../Graphics/Camera/FirstPersonCamera.h"
 #include "ResourceLoadMode.h"
 #include "SkyBox.h"
 
