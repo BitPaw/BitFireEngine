@@ -1,61 +1,61 @@
 #include "SocketError.h"
 
-const char* SocketErrorToString(SocketError socketError)
+const char* BF::SocketErrorToString(SocketError socketError)
 {
 	switch (socketError)
 	{
-		case SocketNoError:
+		case SocketError::SocketNoError:
 			return "no error";
 
-		case	SocketInavlidAdressFamily:
+		case	SocketError::SocketInavlidAdressFamily:
 			return "socket inavlid adressfamily";
 
-		case	SocketCreationFailure:
+		case	SocketError::SocketCreationFailure:
 			return "Socket creation failure";
 
-		case	SocketOptionFailure:
+		case	SocketError::SocketOptionFailure:
 			return "Socket option failure";
 
-		case	SocketBindingFailure:
+		case	SocketError::SocketBindingFailure:
 			return "Socket binding failure";
 
-		case	SocketListeningFailure:
+		case	SocketError::SocketListeningFailure:
 			return "socket listening failure";
 
-		case	SocketSendFailure:
+		case	SocketError::SocketSendFailure:
 			return "socket send failure";
 
-		case	SocketRecieveFailure:
+		case	SocketError::SocketRecieveFailure:
 			return "socket recieve failure";
 
-		case SocketRecieveConnectionClosed:
+		case SocketError::SocketRecieveConnectionClosed:
 			return "Socket Recieve Connection Closed";
 
-		case	SocketConnectionFailure:
+		case	SocketError::SocketConnectionFailure:
 			return "Socket Connection Failure";
 
-		case	SubSystemNotReady:
+		case	SocketError::SubSystemNotReady:
 			return "Windows: Sub System NotR eady";
 
-		case	VersionNotSupported:
+		case	SocketError::VersionNotSupported:
 			return "Windows: VersionNotSupported";
 
-		case	BlockedByOtherOperation:
+		case	SocketError::BlockedByOtherOperation:
 			return "Windows: BlockedByOtherOperation";
 
-		case	LimitReached:
+		case	SocketError::LimitReached:
 			return "Windows: LimitReached";
 
-		case	InvalidParameter:
+		case	SocketError::InvalidParameter:
 			return "Windows: InvalidParameter";
 
-		case	SubSystemNotInitialised:
+		case	SocketError::SubSystemNotInitialised:
 			return "Windows: SubSystemNotInitialised";
 
-		case	SubSystemNetworkFailed:
+		case	SocketError::SubSystemNetworkFailed:
 			return "Windows: SubSystemNetworkFailed";
 
-		case	SocketIsBlocking:
+		case	SocketError::SocketIsBlocking:
 			return "Windows: SocketIsBlocking";
 		default:
 			return "Illegeal command";

@@ -11,7 +11,7 @@
   4 - Too long (>15)
   5 - Too many Octets (more that 4)
 */
-char IsValidIPv4(char* ipAdress)
+char BF::IsValidIPv4(char* ipAdress)
 {
     const unsigned char resultIPv4OK = 0;
     const unsigned char resultIPv4NullPointer = 1;
@@ -84,7 +84,7 @@ char IsValidIPv4(char* ipAdress)
 }
 
 // todo : Comple this function.
-char IsValidIPv6(char* ipAdress)
+char BF::IsValidIPv6(char* ipAdress)
 {
     const char validIPv6Adress = 0;
     const char invalidAmountOfSeperators = 1;
@@ -114,7 +114,7 @@ char IsValidIPv6(char* ipAdress)
     return validIPv6Adress;
 }
 
-IPVersion AnalyseIPVersion(char* ip)
+BF::IPVersion BF::AnalyseIPVersion(char* ip)
 {
     IPVersion ipVersion = IPVersion::IPVersionInvalid;
 
@@ -179,7 +179,7 @@ IPVersion AnalyseIPVersion(char* ip)
     return IPVersion::IPVersionInvalid;
 }
 
-char IsValidIP(char* ipAdress)
+char BF::IsValidIP(char* ipAdress)
 {
     IPVersion ipVersion = AnalyseIPVersion(ipAdress);
 

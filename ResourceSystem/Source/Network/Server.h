@@ -6,8 +6,7 @@
 
 namespace BF
 {
-
-    class Server : IOSocket
+    class Server
     {
         public:
         IOSocket Socket;
@@ -15,7 +14,6 @@ namespace BF
         Client* ClientList;
         unsigned int NumberOfConnectedClients;
         unsigned int NumberOfMaximalClients;
-
 
         private:
         Client* GetNextClient();
@@ -32,7 +30,6 @@ namespace BF
         SocketError BroadcastToClients(char* message);
         void RegisterClient(Client* client);
         void UnRegisterClient(Client* client);
-
     };
 }
 #endif

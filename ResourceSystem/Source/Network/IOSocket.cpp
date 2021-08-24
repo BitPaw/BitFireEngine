@@ -28,7 +28,7 @@ BF::IOSocket::IOSocket()
 #endif
 }
 
-char BF::IOSocket::SetupAdress(IPVersion ipVersion, char* ip, unsigned short port)
+BF::SocketError BF::IOSocket::SetupAdress(IPVersion ipVersion, char* ip, unsigned short port)
 {  
     int adressFamily = GetAdressFamily(ipVersion);
 
@@ -78,7 +78,7 @@ char BF::IOSocket::SetupAdress(IPVersion ipVersion, char* ip, unsigned short por
             switch (result)
             {
                 case 0:
-                    return SocketNoError;
+                    return SocketError::SocketNoError;
 
                 case EAI_AGAIN: 	// A temporary failure in name resolution occurred.
                 {
@@ -118,15 +118,15 @@ char BF::IOSocket::SetupAdress(IPVersion ipVersion, char* ip, unsigned short por
         }
     }
 
-    return SocketNoError; // Delete this
+    return SocketError::SocketNoError; // Delete this
 }
 
-SocketError BF::IOSocket::Open(IPVersion ipVersion, unsigned short port)
+BF::SocketError BF::IOSocket::Open(IPVersion ipVersion, unsigned short port)
 {    
 #ifdef OSWindows
     SocketError errorCode = WindowsSocketAgentStartup();
 
-    if (errorCode != SocketNoError)
+    if (errorCode != SocketError::SocketNoError)
     {
         return errorCode;
     }
@@ -170,7 +170,7 @@ SocketError BF::IOSocket::Open(IPVersion ipVersion, unsigned short port)
 
         if (ID == -1)
         {
-            return SocketCreationFailure;
+            return SocketError::SocketCreationFailure;
         }
     }
 
@@ -188,7 +188,7 @@ SocketError BF::IOSocket::Open(IPVersion ipVersion, unsigned short port)
 
         if (optionsocketResult == 1)
         {
-            return SocketOptionFailure;
+            return SocketError::SocketOptionFailure;
         }
     }
        
@@ -218,7 +218,7 @@ SocketError BF::IOSocket::Open(IPVersion ipVersion, unsigned short port)
 
         if (bindingResult == -1)
         {
-            return SocketBindingFailure;
+            return SocketError::SocketBindingFailure;
         }
     }
 
@@ -229,11 +229,11 @@ SocketError BF::IOSocket::Open(IPVersion ipVersion, unsigned short port)
 
         if (listeningResult == -1)
         {
-            return SocketListeningFailure;
+            return SocketError::SocketListeningFailure;
         }
     }
 
-    return SocketNoError;
+    return SocketError::SocketNoError;
 }
 
 void BF::IOSocket::Close()
@@ -283,12 +283,12 @@ void BF::IOSocket::AwaitConnection(IOSocket* clientSocket)
     }
 }
 
-SocketError BF::IOSocket::Connect(IOSocket* serverSocket, char* ipAdress, unsigned short port)
+BF::SocketError BF::IOSocket::Connect(IOSocket* serverSocket, char* ipAdress, unsigned short port)
 {
 #ifdef OSWindows
     SocketError errorCode = WindowsSocketAgentStartup();
 
-    if (errorCode != SocketNoError)
+    if (errorCode != SocketError::SocketNoError)
     {
         return errorCode;
     }
@@ -327,7 +327,7 @@ SocketError BF::IOSocket::Connect(IOSocket* serverSocket, char* ipAdress, unsign
             }
             default:
             {
-                return SocketCreationFailure;
+                return SocketError::SocketCreationFailure;
             }
         }
 
@@ -335,7 +335,7 @@ SocketError BF::IOSocket::Connect(IOSocket* serverSocket, char* ipAdress, unsign
 
         if (ID == -1)
         {
-            return SocketCreationFailure;
+            return SocketError::SocketCreationFailure;
         }
     }
 
@@ -365,14 +365,14 @@ SocketError BF::IOSocket::Connect(IOSocket* serverSocket, char* ipAdress, unsign
 
         if (serverSocket->ID == -1)
         {
-            return SocketConnectionFailure;
+            return SocketError::SocketConnectionFailure;
         }
     }
 
-    return SocketNoError;
+    return SocketError::SocketNoError;
 }
 
-SocketError BF::IOSocket::Read()
+BF::SocketError BF::IOSocket::Read()
 {
     unsigned int byteRead = 0;
 
@@ -386,18 +386,18 @@ SocketError BF::IOSocket::Read()
 
     if (byteRead == -1)
     {
-        return SocketRecieveFailure;
+        return SocketError::SocketRecieveFailure;
     }
 
     if (byteRead == 0) // endOfFile
     {
-        return SocketRecieveConnectionClosed;
+        return SocketError::SocketRecieveConnectionClosed;
     }
 
-    return SocketNoError;
+    return SocketError::SocketNoError;
 }
 
-SocketError BF::IOSocket::Write(char* message)
+BF::SocketError BF::IOSocket::Write(char* message)
 {
     int messageLengh = 0;
     unsigned int writtenBytes = 0;
@@ -410,7 +410,7 @@ SocketError BF::IOSocket::Write(char* message)
 
     if (messageLengh == 0)
     {
-        return SocketNoError; // Just send nothing if the message is empty
+        return SocketError::SocketNoError; // Just send nothing if the message is empty
     }
 
 #ifdef OSUnix
@@ -421,10 +421,10 @@ SocketError BF::IOSocket::Write(char* message)
 
     if (writtenBytes == -1)
     {        
-        return SocketSendFailure;
+        return SocketError::SocketSendFailure;
     }
 
-    return SocketNoError;
+    return SocketError::SocketNoError;
 }
 
 #ifdef OSUnix
@@ -439,7 +439,7 @@ unsigned long BF::IOSocket::ReadAsync()
         SocketError errorCode = Read();
         char* message = &Message[0];
 
-        if (errorCode == SocketNoError)
+        if (errorCode == SocketError::SocketNoError)
         {
             char hasCallBack = OnMessage != 0;
 
@@ -477,7 +477,7 @@ int BF::IOSocket::GetAdressFamily(IPVersion ipVersion)
 }
 
 #ifdef OSWindows
-SocketError BF::IOSocket::WindowsSocketAgentStartup()
+BF::SocketError BF::IOSocket::WindowsSocketAgentStartup()
 {
     WORD wVersionRequested = MAKEWORD(2, 2);
     WSADATA wsaData;
@@ -490,26 +490,26 @@ SocketError BF::IOSocket::WindowsSocketAgentStartup()
     switch (result)
     {
         case WSASYSNOTREADY:
-            return SubSystemNotReady;
+            return SocketError::SubSystemNotReady;
 
         case WSAVERNOTSUPPORTED:
-            return VersionNotSupported;
+            return SocketError::VersionNotSupported;
 
         case WSAEINPROGRESS:
-            return BlockedByOtherOperation;
+            return SocketError::BlockedByOtherOperation;
 
         case WSAEPROCLIM:
-            return LimitReached;
+            return SocketError::LimitReached;
 
         case WSAEFAULT:
-            return InvalidParameter;
+            return SocketError::InvalidParameter;
 
         case 0:
         default:
-            return SocketNoError;
+            return SocketError::SocketNoError;
     }
 }
-int BF::IOSocket::WindowsSocketAgentShutdown()
+BF::SocketError BF::IOSocket::WindowsSocketAgentShutdown()
 {
     int result = WSACleanup();
 
@@ -517,19 +517,19 @@ int BF::IOSocket::WindowsSocketAgentShutdown()
     {
         case WSANOTINITIALISED:
         {
-            return SubSystemNotInitialised;
+            return SocketError::SubSystemNotInitialised;
         }
         case WSAENETDOWN:
         {
-            return SubSystemNetworkFailed;
+            return SocketError::SubSystemNetworkFailed;
         }
         case WSAEINPROGRESS:
         {
-            return SocketIsBlocking;
+            return SocketError::SocketIsBlocking;
         }   
         case 0:
         default:
-            return SocketNoError;
+            return SocketError::SocketNoError;
     }
 }
 #endif

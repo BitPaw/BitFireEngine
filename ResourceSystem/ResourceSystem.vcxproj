@@ -332,6 +332,11 @@
     <ClCompile Include="Source\Model\STL\STL.cpp" />
     <ClCompile Include="Source\Model\Vertex.cpp" />
     <ClCompile Include="Source\Model\WRL\WRL.cpp" />
+    <ClCompile Include="Source\Network\Client.cpp" />
+    <ClCompile Include="Source\Network\IOSocket.cpp" />
+    <ClCompile Include="Source\Network\IPVersion.cpp" />
+    <ClCompile Include="Source\Network\Server.cpp" />
+    <ClCompile Include="Source\Network\SocketError.cpp" />
     <ClCompile Include="Source\Resource.cpp" />
     <ClCompile Include="Source\ResourceType.cpp" />
     <ClCompile Include="Source\Serialization\INI\INILoader.cpp" />
@@ -482,6 +487,11 @@
     <ClInclude Include="Source\Model\STL\STL.h" />
     <ClInclude Include="Source\Model\Vertex.h" />
     <ClInclude Include="Source\Model\WRL\WRL.h" />
+    <ClInclude Include="Source\Network\Client.h" />
+    <ClInclude Include="Source\Network\IOSocket.h" />
+    <ClInclude Include="Source\Network\IPVersion.h" />
+    <ClInclude Include="Source\Network\Server.h" />
+    <ClInclude Include="Source\Network\SocketError.h" />
     <ClInclude Include="Source\OSDefine.h" />
     <ClInclude Include="Source\Resource.h" />
     <ClInclude Include="Source\ResourceType.hpp" />

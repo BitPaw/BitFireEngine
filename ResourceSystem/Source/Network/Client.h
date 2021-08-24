@@ -6,7 +6,7 @@
 
 namespace BF
 {
-    class Client : IOSocket
+    class Client
     {
         public:
         char* IP;

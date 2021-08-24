@@ -19,7 +19,7 @@ BF::Client* BF::Server::GetNextClient()
     for (unsigned int i = 0; i < NumberOfMaximalClients; i++)
     {
         Client* client = &ClientList[i];
-        char isUsed = IsCurrentlyUsed();
+        char isUsed = Socket.IsCurrentlyUsed();
 
         if (!isUsed)
         {
@@ -32,18 +32,18 @@ BF::Client* BF::Server::GetNextClient()
 
 char BF::Server::Start(IPVersion ipVersion, unsigned short port)
 {
-    SocketError errorCode = Open(ipVersion, port);
+    SocketError errorCode = Socket.Open(ipVersion, port);
     
-    return errorCode == SocketNoError;
+    return errorCode == SocketError::SocketNoError;
 }
 
 void BF::Server::Stop()
 {
-    char isRunning = IsCurrentlyUsed();
+    char isRunning = Socket.IsCurrentlyUsed();
 
     if (isRunning)
     {        
-        Close();
+        Socket.Close();
     }
 }
 
@@ -59,7 +59,7 @@ BF::Client* BF::Server::WaitForClient()
     char hasCallBack = Socket.OnConnected != 0;
     Client* client = GetNextClient();
     
-    AwaitConnection(&client->Socket);
+    Socket.AwaitConnection(&client->Socket);
       
     if(client->Socket.ID == -1)
     {
@@ -95,7 +95,7 @@ BF::Client* BF::Server::GetClientViaID(int socketID)
     return 0;
 }
 
-SocketError BF::Server::SendToClient(int clientID, char* message)
+BF::SocketError BF::Server::SendToClient(int clientID, char* message)
 {
     // Client LookUp
     Client* client = GetClientViaID(clientID);
@@ -103,16 +103,16 @@ SocketError BF::Server::SendToClient(int clientID, char* message)
     if (client == 0)
     {
         // Error: No client with this ID.
-        return SocketSendFailure;
+        return SocketError::SocketSendFailure;
     }
 
     // Sent to Client;
-    return Write(message);
+    return Socket.Write(message);
 }
 
-SocketError BF::Server::BroadcastToClients(char* message)
+BF::SocketError BF::Server::BroadcastToClients(char* message)
 {
-    SocketError errorCode = SocketNoError;
+    SocketError errorCode = SocketError::SocketNoError;
 
     for (size_t i = 0; i < NumberOfMaximalClients; i++)
     {
@@ -120,9 +120,9 @@ SocketError BF::Server::BroadcastToClients(char* message)
 
         if (client->Socket.ID != -1)
         {
-            SocketError currentCrrorCode = Write(message);
+            SocketError currentCrrorCode = Socket.Write(message);
 
-            if (currentCrrorCode != SocketNoError)
+            if (currentCrrorCode != SocketError::SocketNoError)
             {
                 errorCode = currentCrrorCode;
             }

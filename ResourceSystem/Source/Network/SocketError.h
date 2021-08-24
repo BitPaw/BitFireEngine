@@ -1,38 +1,39 @@
 #ifndef SocketErrorInclude
 #define SocketErrorInclude
 
-typedef enum SocketError_
+namespace BF
 {
-	SocketNoError,
+	enum class SocketError
+	{
+		SocketNoError,
 
-	SocketInavlidAdressFamily,
-	SocketCreationFailure,
-	SocketOptionFailure,
-	SocketBindingFailure,
-	SocketListeningFailure,
+		SocketInavlidAdressFamily,
+		SocketCreationFailure,
+		SocketOptionFailure,
+		SocketBindingFailure,
+		SocketListeningFailure,
 
-	SocketSendFailure,
-	SocketRecieveFailure,
-	SocketRecieveConnectionClosed,
+		SocketSendFailure,
+		SocketRecieveFailure,
+		SocketRecieveConnectionClosed,
 
-	// Client
-	SocketConnectionFailure,
-
-
-	//---[ Windows Only (WindowsSocketAgent) ]-------
-	SubSystemNotReady,
-	VersionNotSupported,
-	BlockedByOtherOperation,
-	LimitReached,
-	InvalidParameter,
-	SubSystemNotInitialised,
-	SubSystemNetworkFailed,
-	SocketIsBlocking
-	//----------------------------------------
+		// Client
+		SocketConnectionFailure,
 
 
-}SocketError;
+		//---[ Windows Only (WindowsSocketAgent) ]-------
+		SubSystemNotReady,
+		VersionNotSupported,
+		BlockedByOtherOperation,
+		LimitReached,
+		InvalidParameter,
+		SubSystemNotInitialised,
+		SubSystemNetworkFailed,
+		SocketIsBlocking
+		//----------------------------------------
+	};
 
-const char* SocketErrorToString(SocketError socketError);
+	const char* SocketErrorToString(SocketError socketError);
+}
 
 #endif

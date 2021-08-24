@@ -24,7 +24,6 @@
 
 namespace BF
 {
-
 	class IOSocket
 	{
 		public:
@@ -60,14 +59,14 @@ namespace BF
 
 		// Private
 		int GetAdressFamily(IPVersion ipVersion);
-		char SetupAdress(IPVersion ipVersion, char* ip, unsigned short port);
+		SocketError SetupAdress(IPVersion ipVersion, char* ip, unsigned short port);
 
 #ifdef OSUnix
 		void* ReadAsync(IOSocket* socket);
 #elif defined(OSWindows)
 		unsigned long ReadAsync();
 		SocketError WindowsSocketAgentStartup();
-		int WindowsSocketAgentShutdown();
+		SocketError WindowsSocketAgentShutdown();
 #endif
 
 
