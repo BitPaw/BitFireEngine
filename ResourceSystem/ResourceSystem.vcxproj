@@ -339,10 +339,6 @@
     <ClCompile Include="Source\Network\SocketError.cpp" />
     <ClCompile Include="Source\Resource.cpp" />
     <ClCompile Include="Source\ResourceType.cpp" />
-    <ClCompile Include="Source\Serialization\INI\INILoader.cpp" />
-    <ClCompile Include="Source\Serialization\JSON\JSONLoader.cpp" />
-    <ClCompile Include="Source\Serialization\XML\XMLLoader.cpp" />
-    <ClCompile Include="Source\Serialization\YAML\YAMLLoader.cpp" />
     <ClCompile Include="Source\Image\ImageFormat.cpp" />
     <ClCompile Include="Source\Shader\Shader.cpp" />
     <ClCompile Include="Source\Shader\ShaderProgram.cpp" />
@@ -495,10 +491,6 @@
     <ClInclude Include="Source\OSDefine.h" />
     <ClInclude Include="Source\Resource.h" />
     <ClInclude Include="Source\ResourceType.hpp" />
-    <ClInclude Include="Source\Serialization\INI\INILoader.h" />
-    <ClInclude Include="Source\Serialization\JSON\JSONLoader.h" />
-    <ClInclude Include="Source\Serialization\XML\XMLLoader.h" />
-    <ClInclude Include="Source\Serialization\YAML\YAMLLoader.h" />
     <ClInclude Include="Source\Shader\Shader.h" />
     <ClInclude Include="Source\Shader\ShaderProgram.h" />
     <ClInclude Include="Source\Shader\ShaderType.h" />
