@@ -2,6 +2,7 @@
 #include "../../../ResourceSystem/Source/Font/FNT/FNTPage.h"
 #include "../../../ResourceSystem/Source/File/File.h"
 #include "../../../RenderSystem/Source/OpenGLAPI.h"
+#include "../../../ResourceSystem/Source/Time/StopWatch.h"
 
 void BF::ResourceManager::UpdateVBOData(Model& model)
 {
@@ -165,8 +166,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString, ResourceLoad
     File file(filePathString);
     AsciiString fileExtension(&file.Extension[0]);
     bool doesFileExist = file.DoesFileExist();
-    ErrorCode errorCode = doesFileExist ? ErrorCode::Undefined : ErrorCode::FileNotFound;
-
+    ResourceLoadingResult errorCode;
     AsciiString filePath(filePathString);
 
     if (doesFileExist)
@@ -189,7 +189,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString, ResourceLoad
             if (isLevel) resourceType = ResourceType::Level;
         }
 
-        printf("[i][Resource] Load <%s> from <%s>.\n", ResourceTypeToString(resourceType), filePathString);
+        printf("[i][Resource] Load from <%s>.\n", filePathString);
 
         switch (resourceType)
         {
@@ -205,7 +205,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString, ResourceLoad
                 Font* font = new Font();
                 errorCode = Load(*font, filePathString);
 
-                if (errorCode == ErrorCode::NoError)
+                if (errorCode == ResourceLoadingResult::Successful)
                 {
                     Add(*font);
                     resource = font;
@@ -219,7 +219,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString, ResourceLoad
                 Image* image = new Image();
                 errorCode = Load(*image, filePathString);
 
-                if (errorCode == ErrorCode::NoError)
+                if (errorCode == ResourceLoadingResult::Successful)
                 {
                     Add(*image);
                     resource = image;
@@ -240,7 +240,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString, ResourceLoad
                 Model* model = new Model();
                 errorCode = Load(*model, filePathString);
                 
-                if (errorCode == ErrorCode::NoError)
+                if (errorCode == ResourceLoadingResult::Successful)
                 {
                     Add(*model);
                     resource = model;
@@ -262,29 +262,18 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString, ResourceLoad
             }
         }
     }
+    else
+    {
+        errorCode = ResourceLoadingResult::FileNotFound;
+    }
 
     switch (errorCode)
     {
-        case ErrorCode::NoError:
+        case ResourceLoadingResult::Successful:
         {
             break;
         }
-        case ErrorCode::FileNotFound:
-        {
-            printf("[Error] File is missing at path <%s>\n", &filePath[0]);
-            break;
-        }
-        case ErrorCode::LoadingFailed:
-        {
-            printf("[Error] Loading file failed at path <%s>\n", &filePath[0]);
-            break;
-        }
-        case ErrorCode::SavingFailed:
-        {
-            printf("[Error] File saving failed at path <%s>\n", &filePath[0]);
-            break;
-        }
-        case ErrorCode::Undefined:
+        case ResourceLoadingResult::FormatNotSupported:
         {
             printf
             (
@@ -295,27 +284,67 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString, ResourceLoad
             );
             break;
         }
+        case ResourceLoadingResult::FileNotFound:
+        {
+            printf("[Error] File is missing at path <%s>\n", &filePath[0]);
+            break;
+        }
+        case ResourceLoadingResult::OutOfMemory:
+        {
+            printf("[Error] System is out of memory! File couldn't load at path <%s>\n", &filePath[0]);
+            break;
+        }
     }
 
     return resource;
 }
 
-BF::ErrorCode BF::ResourceManager::Load(Model& model, const char* filePath, ResourceLoadMode resourceLoadMode)
+BF::ResourceLoadingResult BF::ResourceManager::Load(Model& model, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
-    printf("[>][Resource][Model] Loading from <%s>\n", filePath);
+    printf("[>][Resource][Model] Loading from <%s> - ", filePath);
 
-    ErrorCode errorCode = model.Load(filePath);
+    StopWatch stopWatch;
+    stopWatch.Start();
 
-    if (errorCode == ErrorCode::NoError)
+    ResourceLoadingResult errorCode = model.Load(filePath);
+
+    double time = stopWatch.Stop();
+
+    if (errorCode == ResourceLoadingResult::Successful)
     {
+        printf("[OK] - ");
+    }
+    else
+    {
+        printf("[Failed] - ");
+    }
+
+    if (time < 1)
+    {
+        if (time > 0.1)
+        {
+            printf("%.1fms\n", time * 1000);
+        }
+        else
+        {
+            printf("%.1fus\n", (time * 1000) * 1000);
+        }
+    }
+    else
+    {
+        printf("%.1fs\n", time);
+    }
+
+    if (errorCode == ResourceLoadingResult::Successful)
+    {    
         for (unsigned int i = 0; i < model.MaterialList.Size(); i++)
         {
             Material& material = model.MaterialList[i];
             Image* image = new Image();
 
-            ErrorCode imageErrorCode = Load(*image, material.TextureFilePath);
+            ResourceLoadingResult imageErrorCode = Load(*image, material.TextureFilePath);
 
-            if (imageErrorCode == ErrorCode::NoError)
+            if (imageErrorCode == ResourceLoadingResult::Successful)
             {
                 material.Texture = image;
 
@@ -327,34 +356,60 @@ BF::ErrorCode BF::ResourceManager::Load(Model& model, const char* filePath, Reso
     return errorCode;
 }
 
-BF::ErrorCode BF::ResourceManager::Load(Image& image, const char* filePath, ResourceLoadMode resourceLoadMode)
+BF::ResourceLoadingResult BF::ResourceManager::Load(Image& image, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
-    printf("[>][Resource][Image] Loading from <%s>\n", filePath);
+    printf("[>][Resource][Image] Loading from <%s> - ", filePath);
 
-    ErrorCode errorCode = image.Load(filePath);
+    StopWatch stopWatch;
+    stopWatch.Start();
 
-    if (errorCode == ErrorCode::NoError)
-    {    
+    ResourceLoadingResult errorCode = image.Load(filePath);
+
+    double time = stopWatch.Stop();
+
+    if (errorCode == ResourceLoadingResult::Successful)
+    {
+        printf("[OK] - ");
         Add(image);
+    }
+    else
+    {
+        printf("[Failed] - ");
+    }
+
+    if (time < 1)
+    {
+        if (time >= 0.001)
+        {
+            printf("%.1fms\n", time * 1000);
+        }
+        else
+        {
+            printf("%.1fus\n", (time * 1000) * 1000);
+        }
+    }
+    else
+    {
+        printf("%.1fs\n", time);
     }
 
     return errorCode;
 }
 
-BF::ErrorCode BF::ResourceManager::Load(Sound& resource, const char* filePath, ResourceLoadMode resourceLoadMode)
+BF::ResourceLoadingResult BF::ResourceManager::Load(Sound& resource, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
     printf("[>][Resource][Sound] Loading from <%s>\n", filePath);
 
-    return ErrorCode();
+    return ResourceLoadingResult::Successful;
 }
 
-BF::ErrorCode BF::ResourceManager::Load(Font& font, const char* filePath, ResourceLoadMode resourceLoadMode)
+BF::ResourceLoadingResult BF::ResourceManager::Load(Font& font, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
     printf("[>][Resource][Font] Loading from <%s>\n", filePath);
 
-    ErrorCode errorCode = font.Load(filePath);
+    ResourceLoadingResult errorCode = font.Load(filePath);
 
-    if (errorCode == ErrorCode::NoError)
+    if (errorCode == ResourceLoadingResult::Successful)
     {
         for (unsigned int i = 0; i < font.AdditionalResourceListSize; i++)
         {
@@ -379,7 +434,7 @@ BF::ErrorCode BF::ResourceManager::Load(Font& font, const char* filePath, Resour
            // errorCode = ErrorCode::FileNotFound;
             errorCode = Load(*font.Texture, textureFilePath);
 
-            if (errorCode != ErrorCode::NoError)
+            if (errorCode != ResourceLoadingResult::Successful)
             {
                 delete font.Texture;
                 font.Texture = nullptr;
@@ -387,29 +442,30 @@ BF::ErrorCode BF::ResourceManager::Load(Font& font, const char* filePath, Resour
         }
 
         font.ID = _fontList.Size();
-        font.FilePathSet(&filePath[0]);   
+
+        strcpy(font.FilePath, filePath);
     }
 
     return errorCode;
 }
 
-BF::ErrorCode BF::ResourceManager::Load(ShaderProgram& resource, const char* filePath, ResourceLoadMode resourceLoadMode)
+BF::ResourceLoadingResult BF::ResourceManager::Load(ShaderProgram& resource, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
     printf("[>][Resource][ShaderProgram] Loading from <%s>\n", filePath);
 
-    return ErrorCode::NoError;
+    return ResourceLoadingResult::Successful;
 }
 
-BF::ErrorCode BF::ResourceManager::Load(Dialog& resource, const char* filePath, ResourceLoadMode resourceLoadMode)
+BF::ResourceLoadingResult BF::ResourceManager::Load(Dialog& resource, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
     printf("[>][Resource][Dialog] Loading from <%s>\n", filePath);
-    return ErrorCode::NoError;
+    return ResourceLoadingResult::Successful;
 }
 
-BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath, ResourceLoadMode resourceLoadMode)
+BF::ResourceLoadingResult BF::ResourceManager::Load(Level& level, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
     File file(filePath);
-    ErrorCode errorCode = ErrorCode::LoadingFailed;
+    ResourceLoadingResult errorCode;
 
     printf("[>][Resource][Level] Loading from <%s>\n", filePath);
 
@@ -427,7 +483,7 @@ BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath, Reso
     unsigned int fontCounter = 0;
     unsigned int shaderCounter = 0;
     unsigned int dialogCounter = 0;
-    unsigned int amountOfLines;
+    unsigned int amountOfLines = 0;
 
     file.Read();
 
@@ -579,7 +635,7 @@ BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath, Reso
 
                 errorCode = Load(*image, path);
 
-                if (errorCode == ErrorCode::NoError)
+                if (errorCode == ResourceLoadingResult::Successful)
                 {
                     Add(*image);
                 }
@@ -639,7 +695,7 @@ BF::ErrorCode BF::ResourceManager::Load(Level& level, const char* filePath, Reso
     return errorCode;
 }
 
-BF::ErrorCode BF::ResourceManager::Load(ShaderProgram& shaderProgram, const char* vertexShader, const char* fragmentShader, ResourceLoadMode ResourceLoadMode)
+BF::ResourceLoadingResult BF::ResourceManager::Load(ShaderProgram& shaderProgram, const char* vertexShader, const char* fragmentShader, ResourceLoadMode ResourceLoadMode)
 {
     shaderProgram.AddShader((char*)vertexShader, (char*)fragmentShader);
     shaderProgram.Load();
@@ -651,7 +707,7 @@ BF::ErrorCode BF::ResourceManager::Load(ShaderProgram& shaderProgram, const char
         Add(shaderProgram);
     }
 
-    return ErrorCode::NoError;
+    return ResourceLoadingResult::Successful;
 }
 
 void BF::ResourceManager::Add(Model& model)

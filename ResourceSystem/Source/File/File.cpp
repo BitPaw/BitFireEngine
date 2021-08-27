@@ -2,19 +2,14 @@
 
 #include "../Container/AsciiString.h"
 
-BF::ErrorCode BF::File::CheckFile()
+BF::ResourceLoadingResult BF::File::CheckFile()
 {
-	if (Path == nullptr)
-	{
-		return ErrorCode::EmptyFileName;
-	}
-
 	if (!DoesFileExist(Path))
 	{
-		return ErrorCode::FileNotFound;
+		return ResourceLoadingResult::FileNotFound;
 	}
 
-	return ErrorCode::NoError;
+	return ResourceLoadingResult::Successful;
 }
 
 BF::File::File(const char* filePath)
@@ -52,7 +47,7 @@ BF::File::~File()
 }
 
 
-BF::ErrorCode BF::File::Read()
+BF::ResourceLoadingResult BF::File::Read()
 {
 	const unsigned int elementSize = sizeof(char);
 	unsigned int fullSize = -1;
@@ -60,7 +55,7 @@ BF::ErrorCode BF::File::Read()
 
 	if (file == nullptr)
 	{
-		return ErrorCode::FileNotFound;
+		return ResourceLoadingResult::FileNotFound;
 	}
 
 	fseek(file, 0, SEEK_END);
@@ -72,9 +67,9 @@ BF::ErrorCode BF::File::Read()
 	fullSize = Size * elementSize;
 	Data = (char*)malloc(fullSize + 1);	
 
-	if (Data == nullptr)
+	if (!Data)
 	{
-		return ErrorCode::OutOfMemory;
+		return ResourceLoadingResult::OutOfMemory;
 	}
 
 	Data[fullSize] = '\0';
@@ -91,27 +86,27 @@ BF::ErrorCode BF::File::Read()
 
 	int closeResult = fclose(file);
 
-	return ErrorCode::NoError;
+	return ResourceLoadingResult::Successful;
 }
 
-BF::ErrorCode BF::File::Read(const char* filePath, char** buffer)
+BF::ResourceLoadingResult BF::File::Read(const char* filePath, char** buffer)
 {
 	return Read(filePath, buffer, -1);
 }
 
-BF::ErrorCode BF::File::Read(const char* filePath, char** buffer, unsigned int maxSize)
+BF::ResourceLoadingResult BF::File::Read(const char* filePath, char** buffer, unsigned int maxSize)
 {
 	std::ifstream inputFileStream(filePath, std::ios::binary | std::ios::ate);
 	unsigned int length = inputFileStream.tellg();
 
 	if (length == -1)
 	{
-		return ErrorCode::FileNotFound;
+		return ResourceLoadingResult::FileNotFound;
 	}
 
 	if (length > maxSize && maxSize != -1)
 	{
-		return ErrorCode::OutOfMemory;
+		return ResourceLoadingResult::OutOfMemory;
 	}
 
 	if ((*buffer) == nullptr)
@@ -120,7 +115,7 @@ BF::ErrorCode BF::File::Read(const char* filePath, char** buffer, unsigned int m
 
 		if ((*buffer) == 0)
 		{
-			return ErrorCode::OutOfMemory;
+			return ResourceLoadingResult::OutOfMemory;
 		}
 	}
 
@@ -129,10 +124,10 @@ BF::ErrorCode BF::File::Read(const char* filePath, char** buffer, unsigned int m
 
 	(*buffer)[length] = 0;
 
-	return ErrorCode::NoError;
+	return ResourceLoadingResult::Successful;
 }
 
-BF::ErrorCode BF::File::Write()
+BF::ResourceLoadingResult BF::File::Write()
 {
 	std::ofstream fout;
 
@@ -141,10 +136,10 @@ BF::ErrorCode BF::File::Write()
 
 	fout.close();
 
-	return ErrorCode::NoError;
+	return ResourceLoadingResult::Successful;
 }
 
-BF::ErrorCode BF::File::Write(const char* filePath, const char* content)
+BF::ResourceLoadingResult BF::File::Write(const char* filePath, const char* content)
 {
 	std::ofstream fout;
 	int length = 0;
@@ -157,10 +152,10 @@ BF::ErrorCode BF::File::Write(const char* filePath, const char* content)
 
 	fclose(file);
 
-	return ErrorCode::NoError;
+	return ResourceLoadingResult::Successful;
 }
 
-BF::ErrorCode BF::File::ReadNextLineInto(char* exportBuffer)
+bool BF::File::ReadNextLineInto(char* exportBuffer)
 {
 	int length = 0;
 	int index = _currentCursorPosition;
@@ -171,10 +166,9 @@ BF::ErrorCode BF::File::ReadNextLineInto(char* exportBuffer)
 		index = _currentCursorPosition + length++;
 	}
 
-
 	if (length <= 1)
 	{
-		return ErrorCode::Empty;
+		return false;
 	}
 
 	memcpy(exportBuffer, &Data[0] + _currentCursorPosition, length);
@@ -187,17 +181,16 @@ BF::ErrorCode BF::File::ReadNextLineInto(char* exportBuffer)
 		_currentCursorPosition++;
 	}
 
-
-	return ErrorCode::NoError;
+	return true;
 }
 
-BF::ErrorCode BF::File::ReadAsLines(List<AsciiString>& lineList)
+BF::ResourceLoadingResult BF::File::ReadAsLines(List<AsciiString>& lineList)
 {
 	if (Data == nullptr)
 	{
-		ErrorCode errorCode = Read();
+		ResourceLoadingResult errorCode = Read();
 
-		if (errorCode != ErrorCode::NoError)
+		if (errorCode != ResourceLoadingResult::Successful)
 		{
 			return errorCode;
 		}
@@ -237,7 +230,7 @@ BF::ErrorCode BF::File::ReadAsLines(List<AsciiString>& lineList)
 		indexA = indexB+1;
 	}
 
-	return ErrorCode::NoError;
+	return ResourceLoadingResult::Successful;
 }
 
 bool BF::File::DoesFileExist()
@@ -252,6 +245,11 @@ bool BF::File::DoesFileExist()
 
 bool BF::File::DoesFileExist(const char* filePath)
 {
+	if (!filePath)
+	{
+		return false;
+	}
+
     std::ifstream file(filePath);
     bool fileExists = file.good();
 

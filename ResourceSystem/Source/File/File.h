@@ -5,7 +5,7 @@
 #include <fstream>
 #include <sstream>
 
-#include "../ErrorCode.h"
+#include "../ResourceLoadingResult.hpp"
 #include "../Container/AsciiString.h"
 
 namespace BF
@@ -13,7 +13,7 @@ namespace BF
 	struct File
 	{
 		private:
-		ErrorCode CheckFile();
+		ResourceLoadingResult CheckFile();
 		unsigned int _currentCursorPosition;
 
 		public:
@@ -26,14 +26,14 @@ namespace BF
 		File(const char* filePath);
 		~File();
 
-		ErrorCode Read();
-		static ErrorCode Read(const char* filePath, char** buffer);
-		static ErrorCode Read(const char* filePath, char** buffer, unsigned int maxSize);
-		ErrorCode Write();
-		static ErrorCode Write(const char* filePath, const char* content);
-		ErrorCode ReadNextLineInto(char* exportBuffer);
+		ResourceLoadingResult Read();
+		static ResourceLoadingResult Read(const char* filePath, char** buffer);
+		static ResourceLoadingResult Read(const char* filePath, char** buffer, unsigned int maxSize);
+		ResourceLoadingResult Write();
+		static ResourceLoadingResult Write(const char* filePath, const char* content);
+		bool ReadNextLineInto(char* exportBuffer);
 
-		ErrorCode ReadAsLines(List<AsciiString>& lineList);
+		ResourceLoadingResult ReadAsLines(List<AsciiString>& lineList);
 
 		bool DoesFileExist();
 		static bool DoesFileExist(const char* filePath);

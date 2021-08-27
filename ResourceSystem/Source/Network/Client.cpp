@@ -10,11 +10,9 @@ BF::Client::Client()
 	ConnectedServerID = -1;
 }
 
-char BF::Client::ConnectToServer(char* ip, unsigned short port)
+BF::SocketError BF::Client::ConnectToServer(char* ip, unsigned short port)
 {
-	SocketError errorCode = Socket.Connect(&ConnectedServerData, ip, port);
-
-	return errorCode == SocketError::SocketNoError;
+	return Socket.Connect(&ConnectedServerData, ip, port);
 }
 
 void BF::Client::SendCommand()

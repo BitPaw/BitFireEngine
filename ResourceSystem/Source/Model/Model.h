@@ -22,8 +22,6 @@ namespace BF
 		public:
 		ModelRenderInformation RenderInformation;
 
-		char ModelName[30];
-
 		Matrix4x4<float> ModelMatrix;
 
 		LinkedMesh GlobalMesh;
@@ -32,7 +30,7 @@ namespace BF
 		List<Material> MaterialList;
 
 		Model();
-		Model(AsciiString& name);
+		Model(const char* modelName);
 
 		bool DirectMorth = true;
 
@@ -109,7 +107,7 @@ namespace BF
 
 		
 		static ModelType CheckFileExtension(const char* fileExtension);
-		ErrorCode Load(const char* filePath);
+		ResourceLoadingResult Load(const char* filePath);
 		void ConvertFrom(Shape& shape);
 	};
 }

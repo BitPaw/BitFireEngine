@@ -4,12 +4,12 @@
 
 BF::FNTCharacter* BF::FNT::GetCharacterPosition(unsigned char character)
 {
-	FNTPage* page = &FontPages[0];
-	unsigned int size = page->Characters.Size();
+	FNTPage& page = FontPages[0];
+	unsigned int size = page.Characters.Size();
 
 	for (unsigned int i = 0; i < size; i++)
 	{
-		FNTCharacter* bitMapFontCharacter = &page->Characters[i];
+		FNTCharacter* bitMapFontCharacter = &page.Characters[i];
 		unsigned char target = bitMapFontCharacter->ID;
 
 		bool isSameCharacter = target == character;
@@ -72,9 +72,9 @@ void BF::FNT::Load(const char* filePath)
 
 	while (true)
 	{
-		ErrorCode errorCode = file.ReadNextLineInto(currentCursor);
+		bool hasLine = file.ReadNextLineInto(currentCursor);
 
-		if (errorCode == ErrorCode::Empty)
+		if (!hasLine)
 		{
 			break;
 		}

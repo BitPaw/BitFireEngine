@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Resource.h"
-#include "../ErrorCode.h"
+#include "../ResourceLoadingResult.hpp"
 #include "FontFormat.h"
 #include "../Image/Image.h"
 
@@ -11,7 +11,6 @@ namespace BF
 	{
 		public:
 		//---[ Data ]----------------------------------------------------------
-		char Name[30];
 		unsigned short CharacterSize;
 		unsigned short SizeBetweenCharacters;
 		unsigned short SizeBetweenLines;
@@ -22,7 +21,7 @@ namespace BF
 		//---------------------------------------------------------------------
 
 		//---[ Public-Functions ]----------------------------------------------
-		ErrorCode Load(const char* filePath);
+		ResourceLoadingResult Load(const char* filePath);
 
 		static FontFormat ParseFontFormat(const char* fileExtension);
 		static bool IsFontFile(const char* fileExtension);

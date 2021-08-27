@@ -18,7 +18,7 @@ namespace BF
         Thread CommunicationThread;
 
         Client();
-        char ConnectToServer(char* ip, unsigned short port);
+        SocketError ConnectToServer(char* ip, unsigned short port);
         void SendCommand();
         void Disconnect();
     }; 

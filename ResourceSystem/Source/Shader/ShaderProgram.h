@@ -14,7 +14,7 @@ namespace BF
 		unsigned int ID;
 		Shader ShaderList[2];
 
-		void AddShader(char* vertexShaderPath, char* fragmentShaderFilePath);
+		void AddShader(const char* vertexShaderPath, const char* fragmentShaderFilePath);
 		void Load();
 
 		bool IsLoaded();

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Container/AsciiString.h"
+#define ResourceNameSize 30u
+#define ResourceFilePathSize 60u
 
 namespace BF
 {
@@ -19,15 +20,13 @@ namespace BF
 		*/
 		unsigned int ID;
 
+		// Name
+		char Name[ResourceNameSize];
+
 		/*
 		Path from where the resource was loaded from.
 		Can be used to prevent double loading.
 		*/
-		char FilePath[255];
-
-		void FilePathSet(const char* filePath)
-		{
-			strcpy_s(FilePath, 255, filePath);
-		}
+		char FilePath[ResourceFilePathSize];
 	};
 }

@@ -1,8 +1,10 @@
 #include "Resource.h"
+#include <string>
 
 BF::Resource::Resource()
 {
 	ID = -1;
 
-	strcpy(FilePath, "<Unnamed>");
+	strcpy(Name, "<Unnamed>");
+	strcpy(FilePath, "<Internal Origin>");
 }

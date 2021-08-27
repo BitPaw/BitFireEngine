@@ -428,7 +428,7 @@ BF::SocketError BF::IOSocket::Write(char* message)
 }
 
 #ifdef OSUnix
-void* SocketReadAsync(IOSocket* socket)
+void* SocketReadAsync()
 #elif defined(OSWindows)
 unsigned long BF::IOSocket::ReadAsync()
 #endif
@@ -437,7 +437,7 @@ unsigned long BF::IOSocket::ReadAsync()
     while (1)
     {
         SocketError errorCode = Read();
-        char* message = &Message[0];
+        char* message = Message;
 
         if (errorCode == SocketError::SocketNoError)
         {

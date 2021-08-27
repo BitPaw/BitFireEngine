@@ -12,7 +12,7 @@ namespace BF
 		char* Content;
 
 		Shader();
-		Shader(ShaderType type, char* content);
+		Shader(ShaderType type, const char* content);
 
 		void Load();
 	};

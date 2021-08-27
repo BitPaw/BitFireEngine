@@ -558,8 +558,10 @@ bool BF::AsciiString::CompareIgnoreCase(const char* string)
 
 bool BF::AsciiString::CompareIgnoreCase(AsciiString& string)
 {
-	const unsigned int targetSize = strlen(&string[0]);
-	const unsigned int sourceSize = strlen(&this->operator[](0));
+	char* sourceText = &this->operator[](0);
+	char* targetText = &string[0];
+	const unsigned int targetSize = strlen(targetText);
+	const unsigned int sourceSize = strlen(sourceText);
 
 	bool isDifferent = targetSize != sourceSize;
 

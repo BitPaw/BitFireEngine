@@ -15,9 +15,11 @@
 #elif defined(OSWindows)
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #define WIN32_LEAN_AND_MEAN
-#include <winsock2.h>
 #include <windows.h>
-#include <WS2tcpip.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <iphlpapi.h>
+#include <stdio.h>
 #endif
 
 #define SocketBufferSize 2048u
@@ -62,7 +64,7 @@ namespace BF
 		SocketError SetupAdress(IPVersion ipVersion, char* ip, unsigned short port);
 
 #ifdef OSUnix
-		void* ReadAsync(IOSocket* socket);
+		void* ReadAsync();
 #elif defined(OSWindows)
 		unsigned long ReadAsync();
 		SocketError WindowsSocketAgentStartup();

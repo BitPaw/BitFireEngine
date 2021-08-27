@@ -6,19 +6,13 @@ namespace BF
 	{
 		Unknown,
 
-			Dialog,
-			Font,
-			Image,
-			Model,
-			Shader,
-			Sound,
+		Dialog,
+		Font,
+		Image,
+		Model,
+		Shader,
+		Sound,
 
-
-			Level
-		
-
-	
+		Level
 	};
-
-	const char* ResourceTypeToString(ResourceType resourceType);
 }

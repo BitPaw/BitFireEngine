@@ -7,7 +7,7 @@
 #include "ImageFileExtension.h"
 
 #include "../Resource.h"
-#include "../ErrorCode.h"
+#include "../ResourceLoadingResult.hpp"
 
 #include "../Container/AsciiString.h"
 #include "../Math/Geometry/Vector4.hpp"
@@ -49,6 +49,6 @@ namespace BF
 		void FormatChange(ImageFormat imageFormat);
 
 		static ImageFileExtension CheckFileExtension(AsciiString& fileExtension);
-		ErrorCode Load(const char* filePath);
+		ResourceLoadingResult Load(const char* filePath);
 	};
 }

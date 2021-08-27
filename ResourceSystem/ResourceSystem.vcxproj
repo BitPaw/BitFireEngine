@@ -338,7 +338,6 @@
     <ClCompile Include="Source\Network\Server.cpp" />
     <ClCompile Include="Source\Network\SocketError.cpp" />
     <ClCompile Include="Source\Resource.cpp" />
-    <ClCompile Include="Source\ResourceType.cpp" />
     <ClCompile Include="Source\Image\ImageFormat.cpp" />
     <ClCompile Include="Source\Shader\Shader.cpp" />
     <ClCompile Include="Source\Shader\ShaderProgram.cpp" />
@@ -389,7 +388,7 @@
     <ClInclude Include="Source\Container\Table.hpp" />
     <ClInclude Include="Source\Dialog\Dialog.h" />
     <ClInclude Include="Source\Email\EML.h" />
-    <ClInclude Include="Source\ErrorCode.h" />
+    <ClInclude Include="Source\ResourceLoadingResult.hpp" />
     <ClInclude Include="Source\File\File.h" />
     <ClInclude Include="Source\Font\FNT\FNT.h" />
     <ClInclude Include="Source\Font\FNT\FNTChanalMode.h" />

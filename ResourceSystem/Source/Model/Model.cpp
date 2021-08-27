@@ -11,11 +11,11 @@ BF::Model::Model()
     RenderInformation.RenderType = RenderMode::Unkown;
 }
 
-BF::Model::Model(AsciiString& name)
+BF::Model::Model(const char* modelName)
 {
     RenderInformation.RenderType = RenderMode::Unkown;
 
-    strcpy(ModelName, &name[0]);
+    strcpy(Name, modelName);
 }
 
 void BF::Model::Move(float x, float y, float z)
@@ -454,12 +454,12 @@ BF::ModelType BF::Model::CheckFileExtension(const char* fileExtension)
     return ModelType::UnKown;
 }
 
-BF::ErrorCode BF::Model::Load(const char* filePath)
+BF::ResourceLoadingResult BF::Model::Load(const char* filePath)
 {
     File file(filePath);
     ModelType modelType = CheckFileExtension(file.Extension);
 
-    FilePathSet(filePath);
+    strcpy(FilePath, filePath);
 
     switch (modelType)
     {
@@ -488,10 +488,10 @@ BF::ErrorCode BF::Model::Load(const char* filePath)
 
         case ModelType::UnKown:
         default:
-            return ErrorCode::NotSupported;
+            return ResourceLoadingResult::FormatNotSupported;
     }
 
-    return ErrorCode::NoError;
+    return ResourceLoadingResult::Successful;
 }
 
 void BF::Model::ConvertFrom(Shape& shape)

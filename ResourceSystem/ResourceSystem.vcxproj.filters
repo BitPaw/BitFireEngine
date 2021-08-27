@@ -285,9 +285,6 @@
     <ClCompile Include="Source\Async\AsyncLock.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ResourceType.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Image\ImageFormat.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -614,9 +611,6 @@
     <ClInclude Include="Source\Types\Word.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ErrorCode.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Resource.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -768,6 +762,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Network\Server.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ResourceLoadingResult.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

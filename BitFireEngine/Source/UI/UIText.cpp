@@ -9,8 +9,7 @@ void BF::UIText::Setup(AsciiString& text, Font& font, float x, float y)
 	Height = 0;
 	RenderInformation.RenderType = RenderMode::Square;
 
-	strcpy(ModelName, "<Text>");
-	strcpy(FilePath, "<Local Text>");
+	strcpy(Name, "<Internal Text>");
 
 	MeshList.ReSize(1); // textSize
 
@@ -19,7 +18,7 @@ void BF::UIText::Setup(AsciiString& text, Font& font, float x, float y)
 	mesh.NormalPointList[0].Set(0, 0, -1);
 	mesh.MeshMaterial = new Material();
 
-	strcpy(mesh.Name, "<Text>");
+	strcpy(mesh.Name, "<Text-Mesh>");
 	strcpy(mesh.MeshMaterial->Name, "<Text Content>");	
 	strcpy(mesh.MeshMaterial->TextureFilePath, "<Internal>");
 
@@ -123,20 +122,45 @@ void BF::UIText::SetText(AsciiString& text)
 		}
 
 		FNTCharacter* fntCharacter = bitmapFont.GetCharacterPosition(character);
-		Point<float> xPos(fntCharacter->Position[0], fntCharacter->Position[1]);
-		Point<float> charSize(fntCharacter->Size[0], fntCharacter->Size[1]);
 
-		Point<float> interpulatedTexturePointXY
-		(
-			Interpolate::Normalize(0, 512, fntCharacter->Position[0]),
-			Interpolate::Normalize(0, 512, fntCharacter->Position[1])
-		);
+		Point<float> xPos;
+		Point<float> charSize;
+		Point<float> interpulatedTexturePointXY;
+		Point<float> interpulatedTexturePoinWidthHeight;
 
-		Point<float> interpulatedTexturePoinWidthHeight
-		(
-			Interpolate::Normalize(0, 512, fntCharacter->Size[0]),
-			Interpolate::Normalize(0, 512, fntCharacter->Size[1])
-		);
+		if (fntCharacter == nullptr)
+		{
+			xPos.Set(0, 0);
+			charSize.Set(50, 75);
+			interpulatedTexturePointXY.Set(0, 0);
+			interpulatedTexturePoinWidthHeight.Set(1, 1);
+		}
+		else
+		{
+			xPos.Set
+			(
+				fntCharacter->Position[0], 
+				fntCharacter->Position[1]			
+			);
+
+			charSize.Set
+			(				
+				fntCharacter->Size[0],
+				fntCharacter->Size[1]
+			);
+			
+			interpulatedTexturePointXY.Set
+			(
+				Interpolate::Normalize(0, 512, fntCharacter->Position[0]),
+				Interpolate::Normalize(0, 512, fntCharacter->Position[1])
+			);
+
+			interpulatedTexturePoinWidthHeight.Set
+			(
+				Interpolate::Normalize(0, 512, fntCharacter->Size[0]),
+				Interpolate::Normalize(0, 512, fntCharacter->Size[1])
+			);
+		}
 
 		Rectangle objectPosition
 		(
@@ -155,7 +179,7 @@ void BF::UIText::SetText(AsciiString& text)
 			interpulatedTexturePoinWidthHeight.Y + interpulatedTexturePointXY.Y  // Left Upper
 		);
 
-		lastPosition += fntCharacter->Size[0] + characterSpacingOffset;// +(fntCharacter->XAdvance);
+		lastPosition += charSize.X + characterSpacingOffset;// +(fntCharacter->XAdvance);
 
 		if (character == ' ')
 		{
@@ -165,9 +189,9 @@ void BF::UIText::SetText(AsciiString& text)
 		//---[Calculate Max-Width and Max-Height]--
 		Width += lastPosition;
 
-		if (Height < fntCharacter->Size[1])
+		if (Height < charSize.Y)
 		{
-			Height = fntCharacter->Size[1];
+			Height = charSize.Y;
 		}
 		//-------------------------------------
 

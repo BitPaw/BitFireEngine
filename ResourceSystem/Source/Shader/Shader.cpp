@@ -8,12 +8,13 @@ BF::Shader::Shader()
 	Content = 0;
 }
 
-BF::Shader::Shader(ShaderType type, char* filePath)
+BF::Shader::Shader(ShaderType type, const char* filePath)
 {
     ID = -1;
     Type = type;
     Content = 0;
-    strcpy_s(FilePath, 255, filePath);
+
+    strcpy(FilePath, filePath);
 }
 
 void BF::Shader::Load()

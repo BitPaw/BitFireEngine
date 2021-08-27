@@ -47,7 +47,7 @@ namespace BF
 
 		Matrix4x4()
 		{
-			memset(Data, 0, sizeof(float) * 16);
+			memset(Data, 0, sizeof(NumberType) * 16);
 
 			Data[0] = 1;
 			Data[5] = 1;
@@ -428,11 +428,20 @@ namespace BF
 
 		}
 
-		void Orthographic(NumberType left, NumberType rigth, NumberType bottom, NumberType top, NumberType near, NumberType far)
+		void Orthographic(NumberType left, NumberType right, NumberType bottom, NumberType top, NumberType near, NumberType far)
 		{
-			glm::mat4 matrix = glm::ortho(left, rigth, bottom, top, near, far);
+			glm::mat4 matrix = glm::ortho(left, right, bottom, top, near, far);
 
 			Set(matrix);
+
+			/*
+			Data[0] = 2 / (right - left);
+			Data[3] = -(right + left) / (right - left);
+			Data[5] = 2 / (top - bottom);
+			Data[7] = -(top + bottom) / (top - bottom);
+			Data[10] = -2 / (far - near);
+			Data[11] = -(far + near) / (far - near);
+			*/
 		}
 
 		void Perspective(NumberType fielfOfView, NumberType aspectRatio, NumberType near, NumberType far)
@@ -440,9 +449,20 @@ namespace BF
 			glm::mat4 matrix = glm::perspective(glm::radians(fielfOfView), aspectRatio, near, far);
 
 			Set(matrix);
+
+			/*
+			NumberType fielfOfViewRadians = Math::DegreeToRadians(fielfOfView);
+			NumberType tanHalfFovy = Math::Tangens(fielfOfView / 2.0f);
+
+			memset(Data, 0, 16 * sizeof(float));
+
+			Data[0] = 1 / (aspectRatio * tanHalfFovy);
+			Data[5] = 1 / (tanHalfFovy);
+			Data[10] = -(far + near) / (far - near);
+			Data[11] = (-2 * far * near) / (far - near);
+			Data[14] = -1;			
+			*/
 		}
-
-
 
 		Vector4<NumberType> CurrentPosition()
 		{

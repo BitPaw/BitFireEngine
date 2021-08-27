@@ -244,6 +244,11 @@ void BF::Image::FormatChange(ImageFormat imageFormat)
 
 BF::ImageFileExtension BF::Image::CheckFileExtension(AsciiString& fileExtension)
 {
+    if (fileExtension.Size() == 0)
+    {
+        return ImageFileExtension::Unkown;
+    }
+
     bool isBMP = fileExtension.CompareIgnoreCase("bmp");
     bool isGIF = fileExtension.CompareIgnoreCase("gif");
     bool isJPEG = fileExtension.CompareIgnoreCase("jpeg");
@@ -261,18 +266,20 @@ BF::ImageFileExtension BF::Image::CheckFileExtension(AsciiString& fileExtension)
     return ImageFileExtension::Unkown;
 }
 
-BF::ErrorCode BF::Image::Load(const char* filePath)
+BF::ResourceLoadingResult BF::Image::Load(const char* filePath)
 {
     File file(filePath);
+    
+    if (!file.DoesFileExist())
+    {
+        return ResourceLoadingResult::FileNotFound;
+    }
+
     AsciiString fileExtension(file.Extension);
     ImageFileExtension imageFormat = CheckFileExtension(fileExtension);
 
-    FilePathSet(file.Path);
-
-    if (!file.DoesFileExist())
-    {
-        return ErrorCode::FileNotFound;
-    }
+    //strcpy(Name, filePath);
+    strcpy(FilePath, file.Path);
 
     switch (imageFormat)
     {
@@ -312,8 +319,8 @@ BF::ErrorCode BF::Image::Load(const char* filePath)
 
         case ImageFileExtension::Unkown:
         default:
-            return ErrorCode::NotSupported;
+            return ResourceLoadingResult::FormatNotSupported;
     }
 
-    return ErrorCode::NoError;
+    return ResourceLoadingResult::Successful;
 }

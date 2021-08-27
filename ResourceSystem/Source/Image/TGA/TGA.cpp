@@ -25,9 +25,9 @@ BF::TGA::TGA()
 
 BF::TGA::~TGA()
 {
-	delete[] ImageID;
-	delete[] ColorMapData; 
-	delete[] ImageData; 	
+	free(ImageID);
+	free(ColorMapData);
+	free(ImageData);
 }
 
 void BF::TGA::Load(const char* filePath)

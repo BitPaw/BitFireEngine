@@ -18,8 +18,6 @@ namespace BF
 	typedef unsigned long (*ThreadFunction)(void* data);
 #endif
 
-
-
 	class Thread
 	{
 		private:
