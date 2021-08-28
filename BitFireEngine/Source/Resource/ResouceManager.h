@@ -11,11 +11,10 @@
 #include "../../../ResourceSystem/Source/Dialog/Dialog.h"
 #include "../../../ResourceSystem/Source/Font/FNT/FNT.h"
 #include "../../../ResourceSystem/Source/Level/Level.h"
+#include "../../../ResourceSystem/Source/Game/SkyBox.h"
 
 #include "../../../ResourceSystem/Source/Container/LinkedList.hpp"
-#include "../Graphics/Camera/FirstPersonCamera.h"
 #include "ResourceLoadMode.h"
-#include "SkyBox.h"
 
 namespace BF
 {
@@ -38,14 +37,11 @@ namespace BF
         unsigned int _defaultShaderID;
         unsigned int _defaultTextureID;
 
-        int ImageWrapToOpenGLFormat(ImageWrap imageWrap);
-        int ImageLayoutToOpenGLFormat(ImageLayout layout);
-
         void UpdateVBOData(Model& model);
 
 
         public:
-        FirstPersonCamera MainCamera;
+        Camera MainCamera;
         Font* DefaultFont;
         SkyBox* DefaultSkyBox;
 
@@ -80,7 +76,7 @@ namespace BF
         void Add(SkyBox& skyBox);
        
 
-        void RenderModels(GameTickData& gameTickData);
+        void RenderModels(float deltaTime);
 
         void PrintContent(bool detailed);
     };

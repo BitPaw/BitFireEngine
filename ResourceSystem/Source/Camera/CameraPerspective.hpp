@@ -2,9 +2,9 @@
 
 namespace BF
 {
-	enum class CameraMode
+	enum class CameraPerspective
 	{
 		Orthographic,
-		Perspectdive
+		Perspective
 	};
 }

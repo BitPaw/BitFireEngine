@@ -252,6 +252,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Camera\Camera.cpp" />
+    <ClCompile Include="Source\Game\SkyBox.cpp" />
     <ClCompile Include="Source\Image\ImageType.cpp" />
     <ClCompile Include="Source\Async\AsyncLock.cpp" />
     <ClCompile Include="Source\Async\Thread.cpp" />
@@ -352,6 +354,9 @@
     <ClCompile Include="Source\Types\Word.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Camera\Camera.h" />
+    <ClInclude Include="Source\Camera\CameraPerspective.hpp" />
+    <ClInclude Include="Source\Game\SkyBox.h" />
     <ClInclude Include="Source\Image\ImageType.h" />
     <ClInclude Include="Source\Async\AsyncLock.h" />
     <ClInclude Include="Source\Async\Thread.h" />

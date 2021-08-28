@@ -3,6 +3,34 @@
 #include "../../../ResourceSystem/Source/File/File.h"
 #include "../../../RenderSystem/Source/OpenGLAPI.h"
 #include "../../../ResourceSystem/Source/Time/StopWatch.h"
+#include "../../../ResourceSystem/Source/Game/SkyBox.h"
+#include "../System/GameTickData.h"
+
+
+
+int _matrixModelID;
+int _matrixViewID;
+int _matrixProjectionID;
+int _materialTextureID;
+BF::RefreshRateMode RefreshRate;
+
+void CameraDataGet(unsigned int shaderID)
+{
+    _matrixModelID = BF::OpenGLAPI::ShaderGetUniformLocationID(shaderID, "MatrixModel");
+    _matrixViewID = BF::OpenGLAPI::ShaderGetUniformLocationID(shaderID, "MatrixView");
+    _matrixProjectionID = BF::OpenGLAPI::ShaderGetUniformLocationID(shaderID, "MatrixProjection");
+    _materialTextureID = BF::OpenGLAPI::ShaderGetUniformLocationID(shaderID, "MaterialTexture");
+}
+
+void CameraDataUpdate(BF::Camera& camera)
+{
+    BF::OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, camera.MatrixModel.Data);
+    BF::OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixViewID, camera.MatrixView.Data);
+    BF::OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixProjectionID, camera.MatrixProjection.Data);
+}
+
+
+
 
 void BF::ResourceManager::UpdateVBOData(Model& model)
 {
@@ -770,7 +798,7 @@ void BF::ResourceManager::Add(ShaderProgram& shaderProgram)
     {
         _defaultShaderID = shaderProgram.ID;
 
-        MainCamera.FetchGPUReferences(_defaultShaderID);
+        CameraDataGet(_defaultShaderID);
     }
 }
 
@@ -784,7 +812,7 @@ void BF::ResourceManager::Add(SkyBox& skyBox)
     DefaultSkyBox = &skyBox;
 }
 
-void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
+void BF::ResourceManager::RenderModels(float deltaTime)
 {
     LinkedListNode<Model*>* currentModel = _modelList.GetFirst();
 
@@ -797,28 +825,33 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
         if (hasSkyBox)
         {
             OpenGLAPI::DepthMaskEnable(false);            
+            OpenGLAPI::DrawOrder(true);
            
-            OpenGLAPI::UseShaderProgram(DefaultSkyBox->Shader.ID);
+            unsigned int shaderID = DefaultSkyBox->Shader.ID;
 
-            MainCamera.FetchGPUReferences(DefaultSkyBox->Shader.ID);
-            MainCamera.Update(gameTickData);
+            OpenGLAPI::UseShaderProgram(shaderID);
 
+            CameraDataGet(shaderID);
+
+            MainCamera.Update(deltaTime);
+            CameraDataUpdate(MainCamera);
 
             Matrix4x4<float> viewTri(MainCamera.MatrixView);
 
             viewTri.ResetForthAxis();
 
-            OpenGLAPI::ShaderSetUniformMatrix4x4(MainCamera._matrixViewID, viewTri.Data);
+            OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixViewID, viewTri.Data);
 
 
             //OpenGLAPI::SkyBoxSet(*DefaultSkyBox);
             OpenGLAPI::SkyBoxUse(*DefaultSkyBox);      
 
-            OpenGLAPI::Render(RenderMode::Triangle, 0, 36);         
-            OpenGLAPI::Render(RenderMode::LineStripAdjacency, 0, 36);
-            OpenGLAPI::Render(RenderMode::Point, 0, 36);
+            OpenGLAPI::Render(RenderMode::Triangle, 0, 108);         
+            //OpenGLAPI::Render(RenderMode::LineStripAdjacency, 0, 108);
+            //OpenGLAPI::Render(RenderMode::Point, 0, 108);
 
             OpenGLAPI::DepthMaskEnable(true);
+            OpenGLAPI::DrawOrder(false);
         }
     }
 
@@ -852,13 +885,14 @@ void BF::ResourceManager::RenderModels(GameTickData& gameTickData)
 
             _lastUsedShaderProgram = shaderProgramID;
 
-            MainCamera.FetchGPUReferences(shaderProgramID);
+            CameraDataGet(shaderProgramID);
 
-            OpenGLAPI::ShaderSetUniformMatrix4x4(MainCamera.GetModelMatrixID(), model->ModelMatrix.Data);
+            OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, model->ModelMatrix.Data);
         }
 
         //---[Change Shader Data?
-        MainCamera.Update(gameTickData);
+        MainCamera.Update(deltaTime);
+        CameraDataUpdate(MainCamera);
         //-----------------------------------------------------------------------------------------
 
         //model->PrintModelData();

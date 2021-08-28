@@ -1,9 +1,10 @@
 #pragma once
-#include "../../ResourceSystem/Source/Image/Image.h"
-#include "RenderMode.h"
-#include "../../ResourceSystem/Source/Shader/ShaderProgram.h"
-#include "../../BitFireEngine/Source/Resource/SkyBox.h"
 
+#include "RenderMode.h"
+
+#include "../../ResourceSystem/Source/Image/Image.h"
+#include "../../ResourceSystem/Source/Shader/ShaderProgram.h"
+#include "../../ResourceSystem/Source/Game/SkyBox.h"
 
 namespace BF
 {
@@ -11,42 +12,43 @@ namespace BF
 	{
 		public:
 		static void RegisterImage(Image& image);
-		static int ImageWrapToOpenGLFormat(ImageWrap imageWrap);
-        static int ImageLayoutToOpenGLFormat(ImageLayout layout);
 
 		static void SkyBoxUse(SkyBox& skybox);
 		static void SkyBoxSet(SkyBox& skybox);
 
 		static void DepthMaskEnable(bool enable);
+		static void DrawOrder(bool clockwise);
 
 		static void TextureUse(ImageType imageType, int textureID);
 
-		static char UseShaderProgram(int shaderProgramID);
-		static void VertexArrayBind(int vertexArrayID);
-
+	
+		// Render
 		static void Render(RenderMode renderMode, int startIndex, int amount);
 		static void RenderClear();
 
-		static int TextureMaxSlots();
-		static int TextureMaxLoaded();
-		static const char* VersionName();
-
-		static void VertexArrayUpdate(int vertexArrayID, int size, void* data);
-
-		static bool ShaderCompile(ShaderProgram& shaderProgram);
-		static unsigned int ShaderCompile(unsigned int type, char* shaderString);
-
+		// Data
 		static void VertexAttributeArrayDefine(int sizeOfElement, int listSize, int* list);
 
 		static void VertexArrayDefine(unsigned int* vertexArrayID);
 		static void VertexDataDefine(unsigned int* vertexID, int size, void* data);
 		static void IndexDataDefine(unsigned int* indexID, int size, void* data);
 
+		static void VertexArrayUpdate(int vertexArrayID, int size, void* data);
+	
+		// Getter
+		static int TextureMaxSlots();
+		static int TextureMaxLoaded();
+		static const char* VersionName();
+
+		// Shader
+		static bool ShaderCompile(ShaderProgram& shaderProgram);
+		static unsigned int ShaderCompile(unsigned int type, char* shaderString);
+
 		static int ShaderGetUniformLocationID(int shaderID, const char* UniformName);
 		static void ShaderSetUniformMatrix4x4(int matrixUniformID, float* matrix);
 
-		static const char* ShaderTypeToString(int type);
-
+		static char UseShaderProgram(int shaderProgramID);
+		static void VertexArrayBind(int vertexArrayID);
 
 		// Converter
 		private:
@@ -58,6 +60,11 @@ namespace BF
 
 		static ImageType ToImageType(unsigned int token);
 		static unsigned int ToImageType(ImageType imageType);
+
+		static int ImageWrapToOpenGLFormat(ImageWrap imageWrap);
+		static int ImageLayoutToOpenGLFormat(ImageLayout layout);
+
+		static const char* ShaderTypeToString(int type);
 	};
 }
 

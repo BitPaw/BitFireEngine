@@ -5,14 +5,13 @@
 #include "../Font/Font.h"
 #include "../Sound/Sound.h"
 #include "../Dialog/Dialog.h"
+#include "../Camera/Camera.h"
 
 namespace BF
 {
 	class Level : public Resource
 	{
 		public:
-		AsciiString Name;
-
 		// Physics Container
 		List<Model*> ModelList;
 		List<Image*> ImageList;
@@ -20,6 +19,7 @@ namespace BF
 		List<Font*> FontList;
 		List<Shader*> ShaderList;
 		List<Dialog*> DialogList;
+		List<Camera*> CameraList;
 
 		Level();
 	};

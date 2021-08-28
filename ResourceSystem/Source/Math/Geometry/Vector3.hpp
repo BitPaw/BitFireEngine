@@ -74,6 +74,13 @@ namespace BF
 			return Vector3<NumberType>(rx, ry, rz);
 		}
 
+		void Multiply(NumberType x, NumberType y, NumberType z)
+		{
+			this->Data[0] *= x;
+			this->Data[1] *= y;
+			this->Data[2] *= z;
+		}
+
 
 		void Set(NumberType x, NumberType y, NumberType z)
 		{

@@ -1,19 +1,10 @@
-#ifndef GAMESYSTEM_H
-#define GAMESYSTEM_H
-
-#ifdef _MSC_VER
 #pragma once
-#endif  // _MSC_VER
 
 #include "SystemState.h"
-#include "GameTickEvent.h"
 #include "GameTickData.h"
-
 
 #include "../Player/Player.h"
 #include "../Configuration/ConfigContainer.h"
-
-#include "../Graphics/Camera/FirstPersonCamera.h"
 
 #include "../../../RenderSystem/Source/Window/Window.h"
 #include "../../../ResourceSystem/Source/Time/StopWatch.h"
@@ -23,7 +14,7 @@ namespace BF
 {
 	class GameSystem
 	{
-	private:
+		private:
 		static GameSystem* _instance;
 
 		SystemState _state;
@@ -34,9 +25,9 @@ namespace BF
 		Window _mainWindow;
 		//----------------------------------------------
 
-	public:
+		public:
 		ConfigContainer Config;
-		GameTickEvent OnGameTick;
+		//GameTickEvent OnGameTick;
 		//LevelManager Level;
 		ResourceManager Resource;
 
@@ -50,10 +41,8 @@ namespace BF
 
 		static GameSystem& Instance() { return *(_instance == nullptr ? new GameSystem() : _instance); }
 
-	
+
 		GameSystem();
 
 	};
 }
-
-#endif // !GAMESYSTEM_H

@@ -1,10 +1,5 @@
 #pragma once
 
-#include "OpenEvent.h"
-#include "CloseEvent.h"
-#include "NewCharacterEvent.h"
-#include "NewPageEvent.h"
-
 #include "../../../../ResourceSystem/Source/Container/Queue.hpp"
 #include "../../../../ResourceSystem/Source/Dialog/Dialog.h"
 
@@ -19,9 +14,9 @@ namespace BF
 		void SetActiveState(bool state);
 
 		public:
-		OpenEvent OnOpen;
-		CloseEvent OnClose;
-		NewPageEvent OnNewPage;
+		//OpenEvent OnOpen;
+		//CloseEvent OnClose;
+		//NewPageEvent OnNewPage;
 		
 
 		void Open();

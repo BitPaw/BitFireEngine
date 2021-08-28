@@ -72,7 +72,7 @@ void BF::OpenGLAPI::SkyBoxSet(SkyBox& skybox)
     OpenGLAPI::VertexArrayDefine(&skybox.VAOID);
     OpenGLAPI::VertexArrayBind(skybox.VAOID);
 
-    OpenGLAPI::VertexDataDefine(&skybox.VBOID, sizeof(float) * 24u, skybox.SkyboxVertices);
+    OpenGLAPI::VertexDataDefine(&skybox.VBOID, sizeof(float) * 108u, skybox.SkyboxVertices);
 
     int vertexstuff[1] = { 3 };
 
@@ -90,6 +90,18 @@ void BF::OpenGLAPI::DepthMaskEnable(bool enable)
     else
     {
         glDepthMask(GL_FALSE);
+    }
+}
+
+void BF::OpenGLAPI::DrawOrder(bool clockwise)
+{
+    if (clockwise)
+    {
+        glFrontFace(GL_CW);
+    }
+    else
+    {
+        glFrontFace(GL_CCW);
     }
 }
 
@@ -180,7 +192,7 @@ void BF::OpenGLAPI::Render(RenderMode renderMode, int startIndex, int amount)
 
 
 
-    glDrawElements(mode, amount, GL_UNSIGNED_INT, 0);
+    //glDrawElements(mode, amount, GL_UNSIGNED_INT, 0);
     glDrawArrays(mode, startIndex, amount);
 }
 

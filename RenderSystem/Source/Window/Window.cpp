@@ -10,15 +10,12 @@ BF::Dictionary<GLFWwindow*, BF::InputContainer> BF::Window::WindowsInput;
 
 BF::Window::Window()
 {
-    /*
-    bool successful = Create();
+    _window = nullptr;
+    _cursor = nullptr;
+    _montor = nullptr;
 
+    ActiveTime = 0;
     ShouldCloseWindow = false;
-
-    if (!successful)
-    {
-        printf("Error loading window\n");
-    }*/
 }
 
 BF::Window::~Window()
@@ -26,7 +23,7 @@ BF::Window::~Window()
     glfwTerminate();
 }
 
-void OnKeyPressed(GLFWwindow* window, int key, int scancode, int action, int mods)
+void BF::Window::OnKeyPressed(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     BF::KeyBoard* keyBoard = &BF::Window::WindowsInput.GetValue(window)->KeyBoardInput;
 
@@ -89,7 +86,7 @@ void OnKeyPressed(GLFWwindow* window, int key, int scancode, int action, int mod
 
 }
 
-void OnMouseButton(GLFWwindow* window, int button, int action, int mods)
+void BF::Window::OnMouseButton(GLFWwindow* window, int button, int action, int mods)
 {
     BF::Mouse* mouse = &BF::Window::WindowsInput.GetValue(window)->MouseInput;
     /*
@@ -139,7 +136,7 @@ void OnMouseButton(GLFWwindow* window, int button, int action, int mods)
     }
 }
 
-void OnMousePosition(GLFWwindow* window, double xpos, double ypos)
+void BF::Window::OnMousePosition(GLFWwindow* window, double xpos, double ypos)
 {
     BF::Mouse* mouse = &BF::Window::WindowsInput.GetValue(window)->MouseInput;
 
@@ -160,7 +157,7 @@ void OnMousePosition(GLFWwindow* window, double xpos, double ypos)
     }
 }
 
-void OnWindowSizeChanged(GLFWwindow* window, int _width, int _height)
+void BF::Window::OnWindowSizeChanged(GLFWwindow* window, int _width, int _height)
 {
 
     glViewport(0, 0, _width, _height);
@@ -205,12 +202,7 @@ void BF::Window::Resize(const unsigned int width, const unsigned int height)
 
 void BF::Window::SetCursorTexture(Image* image)
 {
-    GLFWimage flfwImage
-    {
-        image->Width,
-        image->Height,
-        &image->PixelData[0]
-    };
+    GLFWimage flfwImage{ image->Width, image->Height, image->PixelData };
 
     _cursor = glfwCreateCursor(&flfwImage, 0, 0);
 
@@ -293,12 +285,7 @@ void BF::Window::SetIcon(Image* image)
 
     //image->FlipHorizontal();
 
-    GLFWimage flfwImage
-    {
-        image->Width,
-        image->Height,
-        &image->PixelData[0]
-    };
+    GLFWimage flfwImage{ image->Width, image->Height, image->PixelData };
 
     glfwSetWindowIcon(_window, numberOfImages, &flfwImage);
 }
@@ -324,7 +311,7 @@ BF::Image* BF::Window::TakeScreenShot()
     return nullptr;// image;
 }
 
-void OnGLFWError(int errorCode, const char* description)
+void BF::Window::OnGLFWError(int errorCode, const char* description)
 {
     printf("[Error][GLFW] <%i> %s\n", errorCode, description);
 }
@@ -413,7 +400,7 @@ bool BF::Window::Create(int width, int height, const char* title)
     SetPositionToCenter();
     SetVideoRefreshRate(videoConfig->WindowRefreshRateMode);
 
-    if (false)
+    if (true)
     {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
@@ -424,7 +411,7 @@ bool BF::Window::Create(int width, int height, const char* title)
         glEnable(GL_DEPTH_TEST);
     }
 
-    if (false)
+    if (true)
     {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

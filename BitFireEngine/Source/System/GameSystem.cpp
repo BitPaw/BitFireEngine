@@ -68,8 +68,8 @@ void BF::GameSystem::Start()
     Resource.Load(skybox->Faces[2], "Texture/SkyBox/Top.bmp"); // Top
     Resource.Load(skybox->Faces[3], "Texture/SkyBox/Bottom.bmp"); // Bottom
     Resource.Load(skybox->Faces[4], "Texture/SkyBox/Back.bmp"); // Back
-    Resource.Load(skybox->Faces[5], "Texture/SkyBox/Front.bmp"); // Front
-    
+    Resource.Load(skybox->Faces[5], "Texture/SkyBox/Front.bmp"); // Front       
+
     Resource.Load(skybox->Shader, "Shader/SkyBox.vert", "Shader/SkyBox.frag");
     Resource.Add(*skybox);
 
@@ -113,10 +113,10 @@ void BF::GameSystem::Update()
         UpdateInput(_mainWindow.GetInput());
 
         //---[Game-Logic]------------------------------------------------------
-        OnGameTick.Trigger(_gameTickData);    
+       // OnGameTick.Trigger(_gameTickData);    
 
         //---[Render World]----------------------------------------------------
-        Resource.RenderModels(_gameTickData);
+        Resource.RenderModels(_gameTickData.GetSmoothDeltaTime());
 
         //sphere->Orbit(BF::Position<float>(10.0f,0.0f,0.0f));
     }
@@ -133,7 +133,7 @@ void BF::GameSystem::UpdateInput(InputContainer* input)
 {
     KeyBoard& keyboard = input->KeyBoardInput;
     Mouse& mouse = input->MouseInput;    
-    FirstPersonCamera& camera = Resource.MainCamera;
+    Camera& camera = Resource.MainCamera;
 
     _mainWindow.Update(); // Pull inputs from window
 
@@ -173,7 +173,7 @@ void BF::GameSystem::UpdateInput(InputContainer* input)
 
     camera.Rotate(mouse.InputAxis[0], mouse.InputAxis[1]);
 
-    camera.Update(_gameTickData);
+    camera.Update(_gameTickData.GetSmoothDeltaTime());
     keyboard.IncrementButtonTick();
     mouse.ResetAxis();
 }

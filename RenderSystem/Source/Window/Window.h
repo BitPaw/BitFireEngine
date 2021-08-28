@@ -20,8 +20,7 @@ namespace BF
 		private:
 		GLFWwindow* _window;
 		GLFWcursor* _cursor;
-		GLFWmonitor* _montor;
-	
+		GLFWmonitor* _montor;	
 
 		public:
 		float ActiveTime;
@@ -34,6 +33,12 @@ namespace BF
 		~Window();		
 
 		static Dictionary<GLFWwindow*, InputContainer> WindowsInput;
+
+		static void OnKeyPressed(GLFWwindow* window, int key, int scancode, int action, int mods);
+		static void OnMouseButton(GLFWwindow* window, int button, int action, int mods);
+		static void OnMousePosition(GLFWwindow* window, double xpos, double ypos);
+		static void OnWindowSizeChanged(GLFWwindow* window, int _width, int _height);
+		static void OnGLFWError(int errorCode, const char* description);
 
 		InputContainer* GetInput()
 		{
