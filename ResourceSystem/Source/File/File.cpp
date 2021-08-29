@@ -141,16 +141,20 @@ BF::ResourceLoadingResult BF::File::Write()
 
 BF::ResourceLoadingResult BF::File::Write(const char* filePath, const char* content)
 {
-	std::ofstream fout;
 	int length = 0;
 
-	for ( ; content[length] != '\0'; length++){}
+	for (; content[length] != '\0'; length++);
 
-	FILE* file = fopen(filePath, "w");
+	return Write(filePath, content, length);
+}
 
-	fwrite(content, sizeof(char), length, file);
+BF::ResourceLoadingResult BF::File::Write(const char* filePath, const char* content, unsigned int length)
+{
+	FILE* file = fopen(filePath, "wb");
 
-	fclose(file);
+	unsigned int resultwrittenBytes = fwrite(content, sizeof(char), length, file);
+
+	int resultCloseResult = fclose(file);
 
 	return ResourceLoadingResult::Successful;
 }

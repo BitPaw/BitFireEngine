@@ -159,11 +159,7 @@ void BF::Window::OnMousePosition(GLFWwindow* window, double xpos, double ypos)
 
 void BF::Window::OnWindowSizeChanged(GLFWwindow* window, int _width, int _height)
 {
-
-    glViewport(0, 0, _width, _height);
-      
-
-    
+   glViewport(0, 0, _width, _height);   
 
    //currentWindow->Resize(_width, _height);
 }
@@ -290,25 +286,29 @@ void BF::Window::SetIcon(Image* image)
     glfwSetWindowIcon(_window, numberOfImages, &flfwImage);
 }
 
-BF::Image* BF::Window::TakeScreenShot()
+void BF::Window::TakeScreenShot(Image& image)
 {
-    /*
-    Image* image = new Image();
-    VideoConfig* videoConfig = &BF::System.Config.Video;
-    int width = videoConfig->ScreenResolution.X;
-    int height = videoConfig->ScreenResolution.Y;
-    unsigned int size = width * height * 4;
+    int width = 0;
+    int height = 0;
 
-   image->Width = width;
-    image->Height = height;
-    image->PixelData.ReSize(size);
+    glfwGetWindowSize(_window, &width, &height);
+
+    unsigned int size = width * height * 3;
+
+    if (image.PixelDataSize != size)
+    {
+        free(image.PixelData);
+        image.PixelData = (unsigned char*)malloc(size);
+        image.PixelDataSize = size;
+    } 
+
+    image.Width = width;
+    image.Height = height;
+    image.Format = ImageFormat::BGR;  
 
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
     glReadBuffer(GL_FRONT);
-    glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, &image->PixelData[0]);
-    */
-
-    return nullptr;// image;
+    glReadPixels(0, 0, width, height, GL_BGR, GL_UNSIGNED_BYTE, image.PixelData);   
 }
 
 void BF::Window::OnGLFWError(int errorCode, const char* description)
@@ -387,7 +387,7 @@ bool BF::Window::Create(int width, int height, const char* title)
     printf("[OK]\n");
 
     // SetCallBacks
-    {
+    {        
         glfwSetKeyCallback(_window, OnKeyPressed);
         glfwSetMouseButtonCallback(_window, OnMouseButton);
         glfwSetCursorPosCallback(_window, OnMousePosition);

@@ -39,7 +39,8 @@ namespace BF
 
 		void Load(const char* filePath);
 		void Save(const char* filePath);
-		void Convert(Image& image);
+		void ConvertFrom(Image& image);
+		void ConvertTo(Image& image);
 		void PrintContent();
 	};
 }

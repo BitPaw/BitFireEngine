@@ -7,6 +7,7 @@
 #include "../../../ResourceSystem/Source/Time/StopWatch.h"
 #include "../UI/UIText.h"
 #include "../../../ResourceSystem/Source/File/File.h"
+#include "../../../ResourceSystem/Source/Image/BMP/BMP.h"
 
 BF::GameSystem* BF::GameSystem::_instance = nullptr;
 
@@ -161,8 +162,13 @@ void BF::GameSystem::UpdateInput(InputContainer* input)
 
     if (keyboard.K.IsShortPressed())
     {
-        // PixelArray px = TakeScreenShot();
-       //  PixelArrayLoader::SaveToFile("C:/_WorkSpace/C++/image.hex",px);
+        Image image;
+        BMP bitmap;
+
+        _mainWindow.TakeScreenShot(image);
+
+        bitmap.ConvertFrom(image);
+        bitmap.Save("ScreenShot.bmp");
     }
 
     /*

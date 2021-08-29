@@ -116,7 +116,7 @@ namespace BF
 
 		@return Image of the current scene.
 		*/
-		Image* TakeScreenShot();
+		void TakeScreenShot(Image& image);
 
 		//bool ShouldExit();
 

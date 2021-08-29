@@ -19,6 +19,10 @@ namespace BF
 		unsigned short ExtractShortAndMove(Endian Endian);
 		unsigned int ExtractIntegerAndMove(Endian Endian);
 
+		void InsertShortAndMove(Endian Endian, unsigned short value);
+		void InsertIngegerAndMove(Endian Endian, unsigned int value);
+		void InsertArrayAndMove(void* data, unsigned int length);
+
 		DoubleWord ExtractDoubleWord();
 		Word ExtractWord();
 

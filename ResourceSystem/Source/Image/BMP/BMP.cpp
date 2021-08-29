@@ -11,7 +11,7 @@ BF::BMP::BMP()
 
     Type = BMPType::UnkownOrInavlid;
     SizeOfFile = -1;
-    ReservedBlock = -1;
+    ReservedBlock = 0;
     DataOffset = -1;
 
 	InformationHeaderType = BMPInformationHeaderType::UnkownOrInvalid;
@@ -239,13 +239,75 @@ void BF::BMP::Load(const char* filePath)
 
 void BF::BMP::Save(const char* filePath)
 {
+    unsigned int paddingSize = 0;
+    unsigned int fileSize = DataOffset + PixelDataSize + paddingSize;
+    unsigned char* fileData = (unsigned char*)malloc(fileSize);
+    char Header[3] = "BM";
+
+    ByteStreamHusk bytestream(fileData, fileSize);
+
+    bytestream.InsertArrayAndMove(Header, 2);
+    bytestream.InsertIngegerAndMove(Endian::Little, SizeOfFile);
+    bytestream.InsertIngegerAndMove(Endian::Little, ReservedBlock);
+    bytestream.InsertIngegerAndMove(Endian::Little, DataOffset);
+
+    //------<Windows-Header>-----------
+    BMPInfoHeader* bitMapInfoHeader = (BMPInfoHeader*)InformationHeader;
+
+    bytestream.InsertIngegerAndMove(Endian::Little, bitMapInfoHeader->HeaderSize);
+    bytestream.InsertIngegerAndMove(Endian::Little, bitMapInfoHeader->Width);
+    bytestream.InsertIngegerAndMove(Endian::Little, bitMapInfoHeader->Height);
+    bytestream.InsertShortAndMove(Endian::Little, bitMapInfoHeader->NumberOfColorPlanes);
+    bytestream.InsertShortAndMove(Endian::Little, bitMapInfoHeader->NumberOfBitsPerPixel);
+    bytestream.InsertIngegerAndMove(Endian::Little, bitMapInfoHeader->CompressionMethod);
+    bytestream.InsertIngegerAndMove(Endian::Little, bitMapInfoHeader->ImageSize);
+    bytestream.InsertIngegerAndMove(Endian::Little, bitMapInfoHeader->HorizontalResolution);
+    bytestream.InsertIngegerAndMove(Endian::Little, bitMapInfoHeader->VerticalResolution);
+    bytestream.InsertIngegerAndMove(Endian::Little, bitMapInfoHeader->NumberOfColorsInTheColorPalette);
+    bytestream.InsertIngegerAndMove(Endian::Little, bitMapInfoHeader->NumberOfImportantColorsUsed);
+
+    bytestream.InsertArrayAndMove(PixelData, PixelDataSize);
+
+    File::Write(filePath, (char*)fileData, fileSize);
+
+    free(fileData);
 }
 
-void BF::BMP::Convert(Image& image)
+void BF::BMP::ConvertFrom(Image& image)
+{
+    Height = image.Height;
+    Width = image.Width;
+
+    PixelData = (unsigned char*)malloc(image.PixelDataSize);
+    PixelDataSize = image.PixelDataSize;
+
+    DataOffset = 54u;
+    SizeOfFile = PixelDataSize + DataOffset;  
+
+    BMPInfoHeader* bitMapInfoHeader = new BMPInfoHeader();
+    InformationHeader = bitMapInfoHeader;
+
+    bitMapInfoHeader->HeaderSize = 40u;
+
+    bitMapInfoHeader->Width = Width;
+    bitMapInfoHeader->Height = Height;
+    bitMapInfoHeader->NumberOfColorPlanes = 1u;
+    bitMapInfoHeader->NumberOfBitsPerPixel = 24u;
+    bitMapInfoHeader->CompressionMethod = 0u; // None
+    bitMapInfoHeader->ImageSize = PixelDataSize;
+    bitMapInfoHeader->HorizontalResolution = 1u;
+    bitMapInfoHeader->VerticalResolution = 1u;
+    bitMapInfoHeader->NumberOfColorsInTheColorPalette = 0u;
+    bitMapInfoHeader->NumberOfImportantColorsUsed = 0u;
+
+    memcpy(PixelData, image.PixelData, PixelDataSize);
+}
+
+void BF::BMP::ConvertTo(Image& image)
 {
     unsigned int pixelDataSize = PixelDataSize;
     unsigned char* destination = nullptr;
-    unsigned char* source = &PixelData[0];    
+    unsigned char* source = PixelData;    
   
     image.Format = ImageFormat::BGR;
     image.Height = Height;

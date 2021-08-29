@@ -287,7 +287,7 @@ BF::ResourceLoadingResult BF::Image::Load(const char* filePath)
         {
             BMP bitmap;
             bitmap.Load(filePath);
-            bitmap.Convert(*this);
+            bitmap.ConvertTo(*this);
             break;
         }
         case ImageFileExtension::GIF:

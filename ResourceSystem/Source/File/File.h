@@ -31,6 +31,7 @@ namespace BF
 		static ResourceLoadingResult Read(const char* filePath, char** buffer, unsigned int maxSize);
 		ResourceLoadingResult Write();
 		static ResourceLoadingResult Write(const char* filePath, const char* content);
+		static ResourceLoadingResult Write(const char* filePath, const char* content, unsigned int length);
 		bool ReadNextLineInto(char* exportBuffer);
 
 		ResourceLoadingResult ReadAsLines(List<AsciiString>& lineList);
