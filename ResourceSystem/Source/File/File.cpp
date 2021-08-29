@@ -164,8 +164,9 @@ bool BF::File::ReadNextLineInto(char* exportBuffer)
 	int length = 0;
 	int index = _currentCursorPosition;
 	int maxSize = Size;
+	
 
-	while (index < maxSize && Data[index] != '\n' && Data[index] != '\0')
+	while (index < maxSize && Data[index] != '\n' && Data[index] != '\0' && index < maxSize)
 	{
 		index = _currentCursorPosition + length++;
 	}

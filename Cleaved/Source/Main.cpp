@@ -27,7 +27,7 @@ int main(int amountOFParameters, char** parameter)
 
         system.Start();
 
-        while (system.IsRunning())
+        while (system.IsRunning)
         {
             system.Update();
         }

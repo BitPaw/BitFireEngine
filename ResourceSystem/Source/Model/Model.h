@@ -13,15 +13,17 @@
 #include "../Math/Geometry/Position.hpp"
 #include "../Math/Geometry/Shape/Shape.h"
 #include "../Math/Geometry/Matrix4x4.hpp"
+#include "../Math/Physic/PhysicalBody.h"
 
 namespace BF
 {
 	// Renderable Object used as core element for the rendersystem.
-	class Model : public Resource
+	class Model : public Resource, public PhysicalBody
 	{
 		public:
 		ModelRenderInformation RenderInformation;
 
+		
 		Matrix4x4<float> ModelMatrix;
 
 		LinkedMesh GlobalMesh;

@@ -39,6 +39,8 @@ namespace BF
 		static int TextureMaxSlots();
 		static int TextureMaxLoaded();
 		static const char* VersionName();
+		static const char* GPUVendorName();
+		static const char* GPUModel();
 
 		// Shader
 		static bool ShaderCompile(ShaderProgram& shaderProgram);

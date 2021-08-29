@@ -5,10 +5,12 @@
 #T A:/earth.tga
 #T A:/_WorkSpace/BitFireEngine/Texture/TestImage.bmp
 
-F Font/segoe.fnt
 T Texture/MissingTexture.bmp
 
+F Font/segoe.fnt
+
+
 #O A:/_WorkSpace/BitFireEngine/Model/desert_city.obj -200|-100|0 0|0|0 0.5|0.5|0.5
-O Model/D/DustII.obj -250|-400|0 -90|0|0 0.05|0.05|0.05
-O Model/Cube.obj 0|10|0 0|0|0 10|10|10
+O Model/D/DustII.obj -250|-400|0 -75|0|0 0.05|0.05|0.05
+#O Model/Cube.obj 0|10|0 0|0|0 10|10|10
 

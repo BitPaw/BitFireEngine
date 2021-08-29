@@ -26,9 +26,9 @@ namespace BF
 #define ZAxisZ 10
 #define ZAxisW 14
 
-#define TransformX 3
-#define TransformY 7 
-#define TransformZ 11
+#define TransformX 12
+#define TransformY 13 
+#define TransformZ 14
 #define TransformW 15
 
 	template<class NumberType>	
@@ -235,15 +235,15 @@ namespace BF
 
 		void Move(NumberType x, NumberType y, NumberType z)
 		{
-			this->Data[12] += x;
-			this->Data[13] += y;
-			this->Data[14] += z;
+			this->Data[TransformX] += x;
+			this->Data[TransformY] += y;
+			this->Data[TransformZ] += z;
 		}
 		void Move(Vector3<NumberType> vector3)
 		{
-			this->Data[12] += vector3.Data[0];
-			this->Data[13] += vector3.Data[1];
-			this->Data[14] += vector3.Data[2];
+			this->Data[TransformX] += vector3.Data[0];
+			this->Data[TransformY] += vector3.Data[1];
+			this->Data[TransformZ] += vector3.Data[2];
 		}
 		void MoveTo(NumberType x, NumberType y, NumberType z)
 		{
@@ -303,6 +303,12 @@ namespace BF
 		{
 
 		}
+		void Scale(NumberType scalar)
+		{
+			this->Data[0] *= scalar;
+			this->Data[5] *= scalar;
+			this->Data[10] *= scalar;
+		}
 		void Scale(NumberType x, NumberType y, NumberType z)
 		{
 			this->Data[0] *= x;
@@ -330,6 +336,23 @@ namespace BF
 			 glm::mat4 view = glm::lookAt(eyeEE, centerEE, upEE);
 
 			 Set(view);
+		}
+
+		void Motion(Vector3<NumberType>& force, Vector3<NumberType>& velocity, NumberType mass, Vector3<NumberType>& gravity, NumberType deltaTime)
+		{
+			Vector3<NumberType> moveDirection;
+
+			force += (gravity * mass);
+
+			moveDirection = (force / mass);
+			
+			velocity += moveDirection;
+
+			moveDirection = velocity * deltaTime;
+
+			force.Set(0, 0, 0);
+
+			Move(moveDirection);
 		}
 
 		// Flip matrix diagonally
@@ -483,10 +506,10 @@ namespace BF
 
 		void Print()
 		{
-			printf("\n\n%2.2f %2.2f %2.2f %2.2f\n", this->Data[0], this->Data[1], this->Data[2], this->Data[3]);
-			printf("%2.2f %2.2f %2.2f %2.2f\n", this->Data[4], this->Data[5], this->Data[6], this->Data[7]);
-			printf("%2.2f %2.2f %2.2f %2.2f\n", this->Data[8], this->Data[9], this->Data[10], this->Data[11]);
-			printf("%2.2f %2.2f %2.2f %2.2f\n\n", this->Data[12], this->Data[13], this->Data[14], this->Data[15]);
+			printf("\n\n%7.2f %7.2f %7.2f %7.2f\n", this->Data[0], this->Data[1], this->Data[2], this->Data[3]);
+			printf("%7.2f %7.2f %7.2f %7.2f\n", this->Data[4], this->Data[5], this->Data[6], this->Data[7]);
+			printf("%7.2f %7.2f %7.2f %7.2f\n", this->Data[8], this->Data[9], this->Data[10], this->Data[11]);
+			printf("%7.2f %7.2f %7.2f %7.2f\n\n", this->Data[12], this->Data[13], this->Data[14], this->Data[15]);
 		}
 
 

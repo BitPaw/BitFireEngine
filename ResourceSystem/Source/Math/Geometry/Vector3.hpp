@@ -26,7 +26,14 @@ namespace BF
 			this->Data[2] = z;
 		}
 
-		void operator+=(Vector3<NumberType>& vector3)
+		void operator+=(NumberType scalar)
+		{
+			this->Data[0] += scalar;
+			this->Data[1] += scalar;
+			this->Data[2] += scalar;
+		}
+
+		void operator+=(Vector3<NumberType> vector3)
 		{
 			this->Data[0] += vector3.Data[0];
 			this->Data[1] += vector3.Data[1];
@@ -56,7 +63,7 @@ namespace BF
 			this->Data[2] *= scalar;
 		}
 
-		Vector3 operator*(NumberType scalar)
+		Vector3<NumberType> operator*(NumberType scalar)
 		{
 			NumberType rx = this->Data[0] * scalar;
 			NumberType ry = this->Data[1] * scalar;
@@ -65,11 +72,20 @@ namespace BF
 			return Vector3<NumberType>(rx, ry, rz);
 		}
 
-		Vector3 operator*(Vector3<NumberType> vector3)
+		Vector3<NumberType> operator*(Vector3<NumberType> vector3)
 		{
 			NumberType rx = this->Data[0] * vector3.Data[0];
 			NumberType ry = this->Data[1] * vector3.Data[1];
 			NumberType rz = this->Data[2] * vector3.Data[2];
+
+			return Vector3<NumberType>(rx, ry, rz);
+		}
+
+		Vector3<NumberType> operator/(NumberType scalar)
+		{
+			NumberType rx = this->Data[0] / scalar;
+			NumberType ry = this->Data[1] / scalar;
+			NumberType rz = this->Data[2] / scalar;
 
 			return Vector3<NumberType>(rx, ry, rz);
 		}

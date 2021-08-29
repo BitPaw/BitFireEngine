@@ -17,8 +17,6 @@ namespace BF
 		private:
 		static GameSystem* _instance;
 
-		SystemState _state;
-
 		//---[Elements}---------------------------------
 		StopWatch _stopWatch;
 		GameTickData _gameTickData;
@@ -31,7 +29,7 @@ namespace BF
 		//LevelManager Level;
 		ResourceManager Resource;
 
-		bool IsRunning() { return _state == SystemState::Running; }
+		bool IsRunning;
 
 		void Start();
 		void Update(); // private ??

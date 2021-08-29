@@ -70,6 +70,10 @@ void BF::Model::Rotate(float x, float y, float z)
 
 void BF::Model::Rotate(Position<float> rotation)
 {
+    float xRadians = Math::DegreeToRadians(rotation.X);
+    float yRadians = Math::DegreeToRadians(rotation.Y);
+    float zRadians = Math::DegreeToRadians(rotation.Z);
+
     if (DirectMorth)
     {
         for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
@@ -104,7 +108,7 @@ void BF::Model::Rotate(Position<float> rotation)
         }*/
     }
 
-    ModelMatrix.Rotate(rotation.X, rotation.Y, rotation.Z);
+    ModelMatrix.Rotate(xRadians, yRadians, zRadians);
 }
 
 void BF::Model::RotateTo(float x, float y, float z)
@@ -456,6 +460,11 @@ BF::ModelType BF::Model::CheckFileExtension(const char* fileExtension)
 
 BF::ResourceLoadingResult BF::Model::Load(const char* filePath)
 {
+    if (filePath == nullptr)
+    {
+        return ResourceLoadingResult::FileNotFound;
+    }
+
     File file(filePath);
     ModelType modelType = CheckFileExtension(file.Extension);
 

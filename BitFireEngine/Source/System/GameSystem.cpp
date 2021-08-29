@@ -15,6 +15,7 @@ BF::UIText* text;
 //BF::Model* sphere;
 
 BF::SkyBox* skybox;
+BF::Model cube;
 
 BF::ShaderProgram worldShader;
 BF::ShaderProgram hudShaderID;
@@ -27,8 +28,8 @@ void BF::GameSystem::Start()
         "| __________ .__   __  ___________.__                  |\n"
         "| \\______   \\|__|_/  |_\\_   _____/|__|_______   ____   |\n"
         "|  |    |  _/|  |\\   __\\|   __)   |  |\\_  __ \\_/ __ \\  |\n"
-        "|  |    |   \\|  | |  |  |    |    |  | |  | \\/\\  ___/  |\n"
-        "|  |________/|__| |__|  \\____|    |__| |__|    \\_____> |\n"
+        "|  |    |   \\|  | |  |  |   |     |  | |  | \\/\\  ___/  |\n"
+        "|  |________/|__| |__|  \\___|     |__| |__|    \\_____> |\n"
         "+------------------------------------------------------+\n"
     );
 
@@ -37,31 +38,37 @@ void BF::GameSystem::Start()
     printf
     (
         "+------------------------------------------------------+\n"
-        "| OpenGL Version   : %s\n"
-        "| Texture Slots    : %u\n"
-        "| Maximal Textures : %u\n"
+        "| Graphics Card - Information                          |\n"
+        "+------------------------------------------------------+\n"
+        "| Vendor           : %-33s |\n"
+        "| Model            : %-33s |\n"
+        "| OpenGL Version   : %-33s |\n"
+        "| Texture Slots    : %-33u |\n"
+        "| Maximal Textures : %-33u |\n"
         "+------------------------------------------------------+\n",
+        OpenGLAPI::GPUVendorName(),
+        OpenGLAPI::GPUModel(),
         OpenGLAPI::VersionName(),
         OpenGLAPI::TextureMaxSlots(),
         OpenGLAPI::TextureMaxLoaded()
     );
 
-    BF::StopWatch stopwatch;
+
+    //---<TEST>---
+
+    StopWatch stopwatch;
 
     stopwatch.Start();
-
-
-
-
 
     Resource.Load(worldShader, "Shader/WS.vert", "Shader/WS.frag");
     Resource.Load(hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
    
-    
-    Image* image = (Image*)Resource.Load("Texture/SkyBox/Right.bmp"); // Right
-    Resource.Add(*image);
-
     Resource.Load("Level/MainMenu.lev");    
+    Resource.Load(cube, "Model/Cube.obj");
+
+    cube.ModelMatrix.Scale(10.0f);
+    cube.Enable = true;
+    Resource.Add(cube);
 
     skybox = new SkyBox();
     Resource.Load(skybox->Faces[0], "Texture/SkyBox/Right.bmp"); // Right
@@ -79,11 +86,15 @@ void BF::GameSystem::Start()
     //text->SetFont(*Resource.DefaultFont);
     Resource.Add(*text);
 
-    _state = SystemState::Running;
+
+    //------------------------------------------------------------------------------------
 
     Resource.PrintContent(true);
     
-    printf("[Info] Loading took %.2fs\n", stopwatch.Stop());
+    printf("[i][Info] Loading took %.2fs\n", stopwatch.Stop());
+
+    IsRunning = true;
+
 }
 
 float _lastUIUpdate = 0;
@@ -92,7 +103,7 @@ void BF::GameSystem::Update()
 {
     if (_mainWindow.ShouldCloseWindow)
     {
-        _state = SystemState::Stopping;
+        IsRunning = false;
     }
     else
     {
@@ -108,6 +119,7 @@ void BF::GameSystem::Update()
         {
             _lastUIUpdate = 0;
             UpdateUI();
+          
         }
 
         //---[User-Input]------------------------------------------------------
@@ -115,9 +127,18 @@ void BF::GameSystem::Update()
 
         //---[Game-Logic]------------------------------------------------------
        // OnGameTick.Trigger(_gameTickData);    
+        Resource.ModelsPhysicsApply(_gameTickData.GetSmoothDeltaTime());
+
+        float tcap = 120;
+
+        if (cube.ModelMatrix.CurrentPosition().Date[1] < -tcap)
+        {
+            cube.ModelMatrix.Move(0, tcap, 0);
+            cube.Velocity.Set(0, 0, 0);
+        }
 
         //---[Render World]----------------------------------------------------
-        Resource.RenderModels(_gameTickData.GetSmoothDeltaTime());
+        Resource.ModelsRender(_gameTickData.GetSmoothDeltaTime());
 
         //sphere->Orbit(BF::Position<float>(10.0f,0.0f,0.0f));
     }
@@ -186,13 +207,12 @@ void BF::GameSystem::UpdateInput(InputContainer* input)
 
 void BF::GameSystem::Stop()
 {
-    _state = SystemState::Stopped;
+    IsRunning = false;
 }
 
 BF::GameSystem::GameSystem()
 {
     _instance = this;
-    _state = SystemState::UnInitialized;   
 
-    _state = SystemState::Ready;
+    IsRunning = false;
 }

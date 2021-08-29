@@ -24,8 +24,18 @@ void CameraDataGet(unsigned int shaderID)
 
 void CameraDataUpdate(BF::Camera& camera)
 {
-    BF::OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, camera.MatrixModel.Data);
-    BF::OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixViewID, camera.MatrixView.Data);
+    //BF::OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, camera.MatrixModel.Data);
+   BF::Matrix4x4<float> viewModel = BF::Matrix4x4<float>(camera.MatrixModel);
+
+   //auto pos = camera.MatrixModel.CurrentPosition();
+
+   //viewModel.Multiply(camera.MatrixModel);
+
+   //viewModel.Move(camera.MatrixModel.Data[11], camera.MatrixModel.Data[12], camera.MatrixModel.Data[13]);
+
+   //viewModel.Print();
+
+   BF::OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixViewID, camera.MatrixView.Data);
     BF::OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixProjectionID, camera.MatrixProjection.Data);
 }
 
@@ -578,10 +588,8 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(Level& level, const char* fi
     file.CursorToBeginning();
 
     // Step II - Parse and Load
-    for (unsigned int i = 0; i < amountOfLines; i++)
+    while (file.ReadNextLineInto(currentLineBuffer))
     {
-        file.ReadNextLineInto(currentLineBuffer);
-
         char character = currentLineBuffer[0];
         char dummyBuffer[30];
         char path[120];
@@ -812,7 +820,38 @@ void BF::ResourceManager::Add(SkyBox& skyBox)
     DefaultSkyBox = &skyBox;
 }
 
-void BF::ResourceManager::RenderModels(float deltaTime)
+void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
+{
+    LinkedListNode<Model*>* currentModel = _modelList.GetFirst();
+
+    if (deltaTime > 1)
+    {
+        return;
+    }
+
+    for ( ; currentModel != nullptr ; currentModel = currentModel->Next)
+    {
+        Model* model = currentModel->Element;
+        auto& force = model->Force;
+        auto& velocity = model->Velocity;
+        auto mass = model->Mass;
+        Vector3<float> gravity(0.f, -0.981, 0.f);
+
+        if (model->Enable)
+        {
+            model->ModelMatrix.Motion(force, velocity, mass, gravity, deltaTime);
+        }
+
+       
+
+        //auto positio = model->ModelMatrix.CurrentPosition();
+
+        //model->ModelMatrix.Print();
+       // printf("Moved to %.2f|%.2f|%.2f\n", positio.Date[0], positio.Date[1], positio.Date[2]);
+    }
+}
+
+void BF::ResourceManager::ModelsRender(float deltaTime)
 {
     LinkedListNode<Model*>* currentModel = _modelList.GetFirst();
 
@@ -824,9 +863,9 @@ void BF::ResourceManager::RenderModels(float deltaTime)
 
         if (hasSkyBox)
         {
-            OpenGLAPI::DepthMaskEnable(false);            
+            OpenGLAPI::DepthMaskEnable(false);
             OpenGLAPI::DrawOrder(true);
-           
+
             unsigned int shaderID = DefaultSkyBox->Shader.ID;
 
             OpenGLAPI::UseShaderProgram(shaderID);
@@ -844,9 +883,9 @@ void BF::ResourceManager::RenderModels(float deltaTime)
 
 
             //OpenGLAPI::SkyBoxSet(*DefaultSkyBox);
-            OpenGLAPI::SkyBoxUse(*DefaultSkyBox);      
+            OpenGLAPI::SkyBoxUse(*DefaultSkyBox);
 
-            OpenGLAPI::Render(RenderMode::Triangle, 0, 108);         
+            OpenGLAPI::Render(RenderMode::Triangle, 0, 108);
             //OpenGLAPI::Render(RenderMode::LineStripAdjacency, 0, 108);
             //OpenGLAPI::Render(RenderMode::Point, 0, 108);
 
@@ -885,9 +924,7 @@ void BF::ResourceManager::RenderModels(float deltaTime)
 
             _lastUsedShaderProgram = shaderProgramID;
 
-            CameraDataGet(shaderProgramID);
-
-            OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, model->ModelMatrix.Data);
+            CameraDataGet(shaderProgramID);  
         }
 
         //---[Change Shader Data?
@@ -919,11 +956,12 @@ void BF::ResourceManager::RenderModels(float deltaTime)
                     // TextureLookup ----------------------------     
                     OpenGLAPI::TextureUse(texture->Type, textureID);
                     //-------------------------------------------------
-                }              
-            }    
-                     
+                }
+            }
 
-                 //---RenderStyle-------------------------
+            OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, model->ModelMatrix.Data);
+
+            //---RenderStyle-------------------------
             if (renderInfo.RenderType != RenderMode::Unkown)
             {
                 amountToRender = mesh.IndexList.Size();

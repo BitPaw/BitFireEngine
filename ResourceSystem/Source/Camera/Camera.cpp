@@ -102,7 +102,7 @@ void BF::Camera::Move(Direcion direction)
 			break;
 	}
 
-	movement *= -movementSpeed;
+	movement *= movementSpeed;
 
 	MatrixModel.Move(movement);
 	//MatrixView.Move(movement);

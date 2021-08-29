@@ -225,6 +225,16 @@ const char* BF::OpenGLAPI::VersionName()
     return (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
 }
 
+const char* BF::OpenGLAPI::GPUVendorName()
+{
+    return (const char*)glGetString(GL_VENDOR);;
+}
+
+const char* BF::OpenGLAPI::GPUModel()
+{
+    return (const char*)glGetString(GL_RENDERER);;
+}
+
 void BF::OpenGLAPI::VertexArrayUpdate(int vertexArrayID, int size, void* data)
 {
     glBindVertexArray(vertexArrayID);

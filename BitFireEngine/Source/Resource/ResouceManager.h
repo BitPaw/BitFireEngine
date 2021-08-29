@@ -75,8 +75,8 @@ namespace BF
         void Add(ShaderProgram& shaderProgram);
         void Add(SkyBox& skyBox);
        
-
-        void RenderModels(float deltaTime);
+        void ModelsPhysicsApply(float deltaTime);
+        void ModelsRender(float deltaTime);
 
         void PrintContent(bool detailed);
     };
