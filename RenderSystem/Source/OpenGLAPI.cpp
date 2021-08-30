@@ -133,7 +133,7 @@ void BF::OpenGLAPI::Render(RenderMode renderMode, int startIndex, int amount)
     unsigned int mode = -1;
 
     glPointSize(40);
-    glLineWidth(5);
+    glLineWidth(30);
 
     switch (renderMode)
     {
@@ -194,6 +194,21 @@ void BF::OpenGLAPI::Render(RenderMode renderMode, int startIndex, int amount)
 
     //glDrawElements(mode, amount, GL_UNSIGNED_INT, 0);
     glDrawArrays(mode, startIndex, amount);
+
+    /*
+    bool wireFrame = true;
+    if (wireFrame)
+    {
+        glPolygonMode(GL_FRONT, GL_LINE);
+        glPolygonMode(GL_BACK, GL_LINE);
+
+        glDrawArrays(GL_POLYGON, startIndex, amount);
+
+        glPolygonMode(GL_FRONT, GL_FILL);
+        glPolygonMode(GL_BACK, GL_FILL);
+    }
+    */
+
 }
 
 void BF::OpenGLAPI::RenderClear()

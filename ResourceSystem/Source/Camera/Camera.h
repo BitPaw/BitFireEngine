@@ -4,11 +4,12 @@
 #include "../Math/Geometry/Direction.h"
 #include "../Math/Geometry/Vector3.hpp"
 #include "../Math/Geometry/Matrix4x4.hpp"
+#include "../Math/Physic/PhysicalBody.hpp"
 #include "../../../RenderSystem/Source/RefreshRateMode.h"
 
 namespace BF
 {
-	class Camera
+	class Camera : public PhysicalBody<float>
 	{
 		private:
 		Vector3<float> _up;
@@ -22,6 +23,7 @@ namespace BF
 		Matrix4x4<float> MatrixModel;
 		Matrix4x4<float> MatrixView;
 		Matrix4x4<float> MatrixProjection;		
+
 
 		CameraPerspective Perspective;
 

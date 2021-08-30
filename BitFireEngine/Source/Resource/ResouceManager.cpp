@@ -837,7 +837,7 @@ void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
         auto mass = model->Mass;
         Vector3<float> gravity(0.f, -0.981, 0.f);
 
-        if (model->Enable)
+        if (model->EnablePhysics)
         {
             model->ModelMatrix.Motion(force, velocity, mass, gravity, deltaTime);
         }
@@ -857,6 +857,8 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
 
     OpenGLAPI::RenderClear();
 
+    MainCamera.Update(deltaTime);
+
     // Render Skybox first, if it is used
     {
         bool hasSkyBox = DefaultSkyBox != NULL;
@@ -870,9 +872,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
 
             OpenGLAPI::UseShaderProgram(shaderID);
 
-            CameraDataGet(shaderID);
-
-            MainCamera.Update(deltaTime);
+            CameraDataGet(shaderID);        
             CameraDataUpdate(MainCamera);
 
             Matrix4x4<float> viewTri(MainCamera.MatrixView);
@@ -881,8 +881,6 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
 
             OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixViewID, viewTri.Data);
 
-
-            //OpenGLAPI::SkyBoxSet(*DefaultSkyBox);
             OpenGLAPI::SkyBoxUse(*DefaultSkyBox);
 
             OpenGLAPI::Render(RenderMode::Triangle, 0, 108);
@@ -928,7 +926,6 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
         }
 
         //---[Change Shader Data?
-        MainCamera.Update(deltaTime);
         CameraDataUpdate(MainCamera);
         //-----------------------------------------------------------------------------------------
 
@@ -939,10 +936,10 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
         for (unsigned int i = 0; i < model->MeshList.Size(); i++)
         {
             Mesh& mesh = model->MeshList[i];
-            Material* material = mesh.MeshMaterial;
-            bool hasMaterial = material != nullptr;
+            Material* material = mesh.MeshMaterial;           
             unsigned int textureID = _defaultTextureID;
-            unsigned int amountToRender;
+            unsigned int amountToRender = 0; 
+            bool hasMaterial = material != nullptr;
 
             if (hasMaterial)
             {
@@ -953,9 +950,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
                 {
                     textureID = texture->ID;
 
-                    // TextureLookup ----------------------------     
                     OpenGLAPI::TextureUse(texture->Type, textureID);
-                    //-------------------------------------------------
                 }
             }
 
@@ -966,7 +961,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
             {
                 amountToRender = mesh.IndexList.Size();
 
-                OpenGLAPI::Render(renderInfo.RenderType, currentIndex, amountToRender);
+                OpenGLAPI::Render(renderInfo.RenderType, currentIndex, amountToRender);      
 
                 currentIndex += amountToRender;
             }

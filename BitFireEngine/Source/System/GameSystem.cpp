@@ -67,7 +67,7 @@ void BF::GameSystem::Start()
     Resource.Load(cube, "Model/Cube.obj");
 
     cube.ModelMatrix.Scale(10.0f);
-    cube.Enable = true;
+    cube.EnablePhysics = true;
     Resource.Add(cube);
 
     skybox = new SkyBox();
@@ -129,12 +129,10 @@ void BF::GameSystem::Update()
        // OnGameTick.Trigger(_gameTickData);    
         Resource.ModelsPhysicsApply(_gameTickData.GetSmoothDeltaTime());
 
-        float tcap = 120;
-
-        if (cube.ModelMatrix.CurrentPosition().Date[1] < -tcap)
+        if (cube.ModelMatrix.CurrentPosition().Date[1] <= 0)
         {
-            cube.ModelMatrix.Move(0, tcap, 0);
-            cube.Velocity.Set(0, 0, 0);
+            //cube.ModelMatrix.Move(0, tcap, 0);
+            cube.Velocity.Set(0, 90, 0);
         }
 
         //---[Render World]----------------------------------------------------
@@ -163,7 +161,12 @@ void BF::GameSystem::UpdateInput(InputContainer* input)
     if (keyboard.A.IsPressed()) { camera.Move(Direcion::Left); }
     if (keyboard.S.IsPressed()) { camera.Move(Direcion::Backward); }
     if (keyboard.D.IsPressed()) { camera.Move(Direcion::Right); }
-    if (keyboard.SpaceBar.IsPressed()) { camera.Move(Direcion::Up); }
+    if (keyboard.SpaceBar.IsPressed()) 
+    {
+        camera.Velocity.Set(0.0f, 6.0f, .0f);
+
+        camera.Move(Direcion::Up); 
+    }
     if (keyboard.ShitftLeft.IsPressed()) { camera.Move(Direcion::Down); }
 
     if (keyboard.R.IsShortPressed())    

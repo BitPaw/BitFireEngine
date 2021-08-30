@@ -353,6 +353,11 @@ namespace BF
 			force.Set(0, 0, 0);
 
 			Move(moveDirection);
+
+			if (Data[TransformY] < 0)
+			{
+				Data[TransformY] = 0;
+			}
 		}
 
 		// Flip matrix diagonally

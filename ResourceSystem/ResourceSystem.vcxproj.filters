@@ -315,9 +315,6 @@
     <ClCompile Include="Source\Game\SkyBox.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Math\Physic\PhysicalBody.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Compression\Adler32.h">
@@ -785,7 +782,7 @@
     <ClInclude Include="Source\Game\SkyBox.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Physic\PhysicalBody.h">
+    <ClInclude Include="Source\Math\Physic\PhysicalBody.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

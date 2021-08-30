@@ -118,5 +118,9 @@ void BF::Camera::Update(float deltaTime)
 
 	MatrixView.LookAt(currentPosition, currentPosition + _lookAt, _up);
 
+	Vector3<float> gravity = Vector3<float>(0.f, -0.918f, 0.f);
+
+	MatrixModel.Motion(Force, Velocity, 1, gravity, deltaTime);
+
 	//printf("CurrentPosition <%2.2f %2.2f %2.2f>\n", currentPosition.Data[0], currentPosition.Data[1], currentPosition.Data[2]);
 }

@@ -252,7 +252,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Math\Physic\PhysicalBody.cpp" />
     <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\Game\SkyBox.cpp" />
     <ClCompile Include="Source\Image\ImageType.cpp" />
@@ -355,7 +354,7 @@
     <ClCompile Include="Source\Types\Word.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Math\Physic\PhysicalBody.h" />
+    <ClInclude Include="Source\Math\Physic\PhysicalBody.hpp" />
     <ClInclude Include="Source\Camera\Camera.h" />
     <ClInclude Include="Source\Camera\CameraPerspective.hpp" />
     <ClInclude Include="Source\Game\SkyBox.h" />

@@ -20,6 +20,8 @@ namespace BF
 		TriangleStrip,
 		TriangleStripAdjacency,
 
+		WireFrame,
+
 		Square,
 
 		Patches

@@ -13,12 +13,12 @@
 #include "../Math/Geometry/Position.hpp"
 #include "../Math/Geometry/Shape/Shape.h"
 #include "../Math/Geometry/Matrix4x4.hpp"
-#include "../Math/Physic/PhysicalBody.h"
+#include "../Math/Physic/PhysicalBody.hpp"
 
 namespace BF
 {
 	// Renderable Object used as core element for the rendersystem.
-	class Model : public Resource, public PhysicalBody
+	class Model : public Resource, public PhysicalBody<float>
 	{
 		public:
 		ModelRenderInformation RenderInformation;

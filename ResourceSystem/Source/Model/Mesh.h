@@ -4,8 +4,6 @@
 #include "Material.h"
 #include "MeshIndexData.h"
 
-#include "../Container/AsciiString.h"
-
 #include "../Math/Geometry/Point.hpp"
 
 namespace BF
