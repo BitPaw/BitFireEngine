@@ -241,9 +241,9 @@ namespace BF
 		}
 		void Move(Vector3<NumberType> vector3)
 		{
-			this->Data[TransformX] += vector3.Data[0];
-			this->Data[TransformY] += vector3.Data[1];
-			this->Data[TransformZ] += vector3.Data[2];
+			this->Data[TransformX] += vector3.X;
+			this->Data[TransformY] += vector3.Y;
+			this->Data[TransformZ] += vector3.Z;
 		}
 		void MoveTo(NumberType x, NumberType y, NumberType z)
 		{
@@ -329,9 +329,9 @@ namespace BF
 
 		void LookAt(Vector3<NumberType> eye, Vector3<NumberType> center, Vector3<NumberType> up)
 		{
-			glm::vec3 eyeEE(eye.Data[0], eye.Data[1], eye.Data[2]);
-			glm::vec3 centerEE(center.Data[0], center.Data[1], center.Data[2]);
-			glm::vec3 upEE(up.Data[0], up.Data[1], up.Data[2]);
+			glm::vec3 eyeEE(eye.X, eye.Y, eye.Z);
+			glm::vec3 centerEE(center.X, center.Y, center.Z);
+			glm::vec3 upEE(up.X, up.Y, up.Z);
 
 			 glm::mat4 view = glm::lookAt(eyeEE, centerEE, upEE);
 

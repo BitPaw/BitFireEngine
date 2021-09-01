@@ -1,8 +1,5 @@
 #pragma once
 
-#include "../Point.hpp"
-#include "../../../Container/List.hpp"
-
 namespace BF
 {
 	class Shape

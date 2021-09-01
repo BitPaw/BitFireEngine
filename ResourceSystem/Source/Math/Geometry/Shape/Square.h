@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Shape.h"
+#include "../Vector2.hpp"
 
 namespace BF
 {
@@ -9,10 +10,10 @@ namespace BF
 		public:
 		Square();
 		Square(float sideLength);
-		Square(Point<float> size);
+		Square(Vector2<float> size);
 
-		Point<float> PointA;
-		Point<float> PointB;
+		Vector2<float> PointA;
+		Vector2<float> PointB;
 
 		float SideLength();
 
@@ -29,6 +30,6 @@ namespace BF
 		virtual float Perimeter() override;
 
 		void Set(float sideLength);
-		void Set(Point<float> size);
+		void Set(Vector2<float> size);
 	};
 }

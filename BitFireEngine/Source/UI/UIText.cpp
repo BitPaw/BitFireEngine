@@ -123,10 +123,10 @@ void BF::UIText::SetText(AsciiString& text)
 
 		FNTCharacter* fntCharacter = bitmapFont.GetCharacterPosition(character);
 
-		Point<float> xPos;
-		Point<float> charSize;
-		Point<float> interpulatedTexturePointXY;
-		Point<float> interpulatedTexturePoinWidthHeight;
+		Vector2<float> xPos;
+		Vector2<float> charSize;
+		Vector2<float> interpulatedTexturePointXY;
+		Vector2<float> interpulatedTexturePoinWidthHeight;
 
 		if (fntCharacter == nullptr)
 		{
@@ -196,20 +196,22 @@ void BF::UIText::SetText(AsciiString& text)
 		//-------------------------------------
 
 		// Vertex data (no change do to not pointer?)
+		float z = 0;
+
 		mesh.IndexList[faceIndex++].Set(vertexIndex, textureIndex, 0);
-		mesh.VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointA);
+		mesh.VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointA.X, objectPosition.PointA.Y, z);
 		mesh.TexturePointList[textureIndex++].Set(texturePosition.PointD);// 00
 
 		mesh.IndexList[faceIndex++].Set(vertexIndex, textureIndex, 0);
-		mesh.VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointB);
+		mesh.VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointB.X, objectPosition.PointB.Y, z);
 		mesh.TexturePointList[textureIndex++].Set(texturePosition.PointC);
 
 		mesh.IndexList[faceIndex++].Set(vertexIndex, textureIndex, 0);
-		mesh.VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointC);
+		mesh.VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointC.X, objectPosition.PointC.Y, z);
 		mesh.TexturePointList[textureIndex++].Set(texturePosition.PointB); // 11
 
 		mesh.IndexList[faceIndex++].Set(vertexIndex, textureIndex, 0);
-		mesh.VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointD);
+		mesh.VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointD.X, objectPosition.PointD.Y, z);
 		mesh.TexturePointList[textureIndex++].Set(texturePosition.PointA);
 	}
 
@@ -232,6 +234,7 @@ void BF::UIText::PrintObjectData()
 
 	for (unsigned int i = 0; TextContent[i] != '\0'; i++)
 	{
+		/*
 		Rectangle vertexRectangle
 		(
 			mesh.VertexList[vertexIndex++].CurrentPosition,
@@ -252,6 +255,6 @@ void BF::UIText::PrintObjectData()
 		printf("B| %5.1f | %5.1f | %1.5f | %1.5f |\n", vertexRectangle.PointB.X, vertexRectangle.PointB.Y, textureRectangle.PointB.X, textureRectangle.PointB.Y);
 		printf("C| %5.1f | %5.1f | %1.5f | %1.5f |\n", vertexRectangle.PointC.X, vertexRectangle.PointC.Y, textureRectangle.PointC.X, textureRectangle.PointC.Y);
 		printf("D| %5.1f | %5.1f | %1.5f | %1.5f |\n", vertexRectangle.PointD.X, vertexRectangle.PointD.Y, textureRectangle.PointD.X, textureRectangle.PointD.Y);
-		printf(" | \n");
+		printf(" | \n");*/
 	}
 }

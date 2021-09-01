@@ -686,9 +686,6 @@
     <ClInclude Include="Source\Math\Geometry\Shape\Triangle.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Geometry\Direction.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Math\Geometry\Matrix2x2.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -699,12 +696,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Math\Geometry\Padding.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Math\Geometry\Point.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Math\Geometry\Position.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Math\Geometry\Vector2.hpp">

@@ -15,12 +15,12 @@ BF::Rectangle::Rectangle(float x, float y, float width, float height)
 	Set(x, y, width, height);
 }
 
-BF::Rectangle::Rectangle(Point<float> a, Point<float> b)
+BF::Rectangle::Rectangle(Vector2<float> a, Vector2<float> b)
 {
 	Set(a, b);
 }
 
-BF::Rectangle::Rectangle(Point<float> a, Point<float> b, Point<float> c, Point<float> d)
+BF::Rectangle::Rectangle(Vector2<float> a, Vector2<float> b, Vector2<float> c, Vector2<float> d)
 {
 	Set(a, b, c, d);
 }
@@ -65,17 +65,20 @@ bool BF::Rectangle::IsColliding(Rectangle* rectangle)
 			r1Y + r1Height > r2Y;
 }
 
-BF::Position<float> BF::Rectangle::NormalDirection()
+BF::Vector3<float> BF::Rectangle::NormalDirection()
 {
-	Position<float> u = PointB - PointA;
-	Position<float> v = PointC - PointA;
-	Position<float> normal = u.CrossProduct(v);
+	/*
+	Vector3<float> u = PointB - PointA;
+	Vector3<float> v = PointC - PointA;
+	Vector3<float> normal = u.CrossProduct(v);
 
 	u = PointC - PointB;
 	v = PointD - PointB;
 	normal *= u.CrossProduct(v);
 
-	return normal;
+	return normal;*/
+
+	return Vector3<float>();
 }
 
 void BF::Rectangle::Set(float width, float height)
@@ -91,7 +94,7 @@ void BF::Rectangle::Set(float x, float y, float width, float height)
 	PointD.Set(x, height);
 }
 
-void BF::Rectangle::Set(Point<float> a, Point<float> b)
+void BF::Rectangle::Set(Vector2<float> a, Vector2<float> b)
 {
 	PointA.Set(a);
 	PointB.Set(b.X, a.Y);
@@ -99,7 +102,7 @@ void BF::Rectangle::Set(Point<float> a, Point<float> b)
 	PointD.Set(a.X, b.Y);
 }
 
-void BF::Rectangle::Set(Point<float> a, Point<float> b, Point<float> c, Point<float> d)
+void BF::Rectangle::Set(Vector2<float> a, Vector2<float> b, Vector2<float> c, Vector2<float> d)
 {
 	PointA.Set(a);
 	PointB.Set(b);

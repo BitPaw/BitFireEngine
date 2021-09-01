@@ -20,10 +20,10 @@ BF::Model::Model(const char* modelName)
 
 void BF::Model::Move(float x, float y, float z)
 {
-    Move(Position<float>(x, y, z));
+    Move(Vector3<float>(x, y, z));
 }
 
-void BF::Model::Move(Position<float> position)
+void BF::Model::Move(Vector3<float> position)
 {
     if (DirectMorth)
     {
@@ -40,10 +40,10 @@ void BF::Model::Move(Position<float> position)
 
 void BF::Model::MoveTo(float x, float y, float z)
 {
-    MoveTo(Position<float>(x, y, z));
+    MoveTo(Vector3<float>(x, y, z));
 }
 
-void BF::Model::MoveTo(Position<float> position)
+void BF::Model::MoveTo(Vector3<float> position)
 {
     if (DirectMorth)
     {
@@ -53,8 +53,8 @@ void BF::Model::MoveTo(Position<float> position)
 
             auto x = ModelMatrix.CurrentPosition();
 
-            vertex->CurrentPosition.Substract(x.Date[0], x.Date[1], x.Date[2]);
-            vertex->CurrentPosition.Add(position);
+            vertex->CurrentPosition -= Vector3(x.X, x.Y, x.Z);
+            vertex->CurrentPosition += position;
         }
 
         // _currentPosition = position;
@@ -65,10 +65,10 @@ void BF::Model::MoveTo(Position<float> position)
 
 void BF::Model::Rotate(float x, float y, float z)
 {
-    Rotate(Position<float>(x, y, z));
+    Rotate(Vector3<float>(x, y, z));
 }
 
-void BF::Model::Rotate(Position<float> rotation)
+void BF::Model::Rotate(Vector3<float> rotation)
 {
     float xRadians = Math::DegreeToRadians(rotation.X);
     float yRadians = Math::DegreeToRadians(rotation.Y);
@@ -79,14 +79,14 @@ void BF::Model::Rotate(Position<float> rotation)
         for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
         {
             Vertex* vertex = GlobalMesh.VertexList[i];
-            Position<float>* currentPosition = &vertex->CurrentPosition;
+            Vector3<float>& currentPosition = vertex->CurrentPosition;
 
             auto x = ModelMatrix.CurrentRotation();
-            Position<float> position(x.Date[0], x.Date[1], x.Date[2]);
+            Vector3<float> position(x.X, x.Y, x.Z);
 
-            currentPosition->Substract(position);
-            currentPosition->Rotate(rotation);
-            currentPosition->Add(position);
+            currentPosition -= position;
+            currentPosition.Rotate(rotation);
+            currentPosition += position;
         }
 
         /*
@@ -116,7 +116,7 @@ void BF::Model::RotateTo(float x, float y, float z)
     ModelMatrix.RotateTo(x, y, z);
 }
 
-void BF::Model::RotateTo(Position<float> rotation)
+void BF::Model::RotateTo(Vector3<float> rotation)
 {
     ModelMatrix.RotateTo(rotation.X, rotation.Y, rotation.Z);
 }
@@ -125,10 +125,10 @@ void BF::Model::RotateTo(Position<float> rotation)
 
 void BF::Model::Orbit(float x, float y, float z)
 {
-    Orbit(Position<float>(x, y, z));
+    Orbit(Vector3<float>(x, y, z));
 }
 
-void BF::Model::Orbit(Position<float> rotation)
+void BF::Model::Orbit(Vector3<float> rotation)
 {
     for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
     {
@@ -138,17 +138,17 @@ void BF::Model::Orbit(Position<float> rotation)
     }
 }
 
-void BF::Model::Orbit(Position<float> rotation, Position<float> ancerPosition)
+void BF::Model::Orbit(Vector3<float> rotation, Vector3<float> ancerPosition)
 {
     // ModelMatrix.Orbit();
 }
 
 void BF::Model::Scale(float x, float y, float z)
 {
-    Scale(Position<float>(x, y, z));
+    Scale(Vector3<float>(x, y, z));
 }
 
-void BF::Model::Scale(Position<float> scaleFactor)
+void BF::Model::Scale(Vector3<float> scaleFactor)
 {
     if (DirectMorth)
     {
@@ -156,7 +156,7 @@ void BF::Model::Scale(Position<float> scaleFactor)
         {
             Vertex* vertex = GlobalMesh.VertexList[i];
 
-            vertex->CurrentPosition.Multiply(scaleFactor);
+            vertex->CurrentPosition *= scaleFactor;
         }
     }
     else
@@ -167,6 +167,7 @@ void BF::Model::Scale(Position<float> scaleFactor)
 
 void BF::Model::CalculateNormalVectors()
 {
+    /*
     for (unsigned int i = 0; i < MeshList.Size(); i++)
     {
         Mesh* mesh = &MeshList[i];
@@ -303,6 +304,7 @@ void BF::Model::CalculateNormalVectors()
             }  
         }
     }
+    */
 }
 
 void BF::Model::UseTexturePointAsColor()
@@ -316,7 +318,7 @@ void BF::Model::UseTexturePointAsColor()
         MeshIndexData& meshIndexData = MeshList[0].IndexList[i];
 
         Vertex& vertex = MeshList[0].VertexList[meshIndexData.VertexPositionID];
-        Point<float>& texturepoint = MeshList[0].TexturePointList[meshIndexData.TexturePointID];
+        Vector2<float>& texturepoint = MeshList[0].TexturePointList[meshIndexData.TexturePointID];
 
         vertex.ColorID = i;
 
@@ -434,10 +436,10 @@ void BF::Model::UpdateGlobalMesh()
 
 void BF::Model::ScaleTexturePoints(float x, float y)
 {
-    ScaleTexturePoints(Point<float>(x, y));
+    ScaleTexturePoints(Vector2<float>(x, y));
 }
 
-void BF::Model::ScaleTexturePoints(Point<float> scale)
+void BF::Model::ScaleTexturePoints(Vector2<float> scale)
 {
     for (unsigned int i = 0; i < GlobalMesh.TexturePointList.Size(); i++)
     {

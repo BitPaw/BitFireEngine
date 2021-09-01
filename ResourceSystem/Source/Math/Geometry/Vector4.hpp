@@ -1,29 +1,30 @@
 #pragma once
 
-#include "Vector3.hpp"
-
 namespace BF
 {
 	template<class NumberType>
 	struct Vector4 
 	{
 		public:
-		NumberType Date[4];
+		NumberType X;
+		NumberType Y;
+		NumberType Z;
+		NumberType W;
 
 		Vector4()
 		{
-			Date[0] = 0;
-			Date[1] = 0;
-			Date[2] = 0;
-			Date[3] = 0;
+			X = 0;
+			Y = 0;
+			Z = 0;
+			W = 0;
 		}
 
 		Vector4(NumberType x, NumberType y, NumberType z, NumberType w)
 		{
-			Date[0] = x;
-			Date[1] = y;
-			Date[2] = z;
-			Date[3] = w;
+			X = x;
+			Y = y;
+			Z = z;
+			W = w;
 		}
 
 		Vector4<NumberType> operator+(Vector4<NumberType> vector4)
@@ -37,24 +38,23 @@ namespace BF
 
 		void Add(NumberType x, NumberType y, NumberType z, NumberType w)
 		{
-			Date[0] += x;
-			Date[1] += y;
-			Date[2] += z;
-			Date[3] += w;
+			X += x;
+			Y += y;
+			Z += z;
+			W += w;
 		}
 
-
-		void Add(Vector4<NumberType>& vector4)
+		void Add(Vector4<NumberType> vector4)
 		{
-			Add(vector4.Date[0], vector4.Date[1], vector4.Date[2], vector4.Date[3]);
+			Add(vector4.X, vector4.Y, vector4.Z, vector4.W);
 		}
 
 		void Set(NumberType x, NumberType y, NumberType z, NumberType w)
 		{
-			Date[0] = x;
-			Date[1] = y;
-			Date[2] = z;
-			Date[3] = w;
+			X = x;
+			Y = y;
+			Z = z;
+			W = w;
 		}
 	};
 }

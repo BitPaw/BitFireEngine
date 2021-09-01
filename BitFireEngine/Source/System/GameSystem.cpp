@@ -129,7 +129,7 @@ void BF::GameSystem::Update()
        // OnGameTick.Trigger(_gameTickData);    
         Resource.ModelsPhysicsApply(_gameTickData.GetSmoothDeltaTime());
 
-        if (cube.ModelMatrix.CurrentPosition().Date[1] <= 0)
+        if (cube.ModelMatrix.CurrentPosition().Y <= 0)
         {
             //cube.ModelMatrix.Move(0, tcap, 0);
             cube.Velocity.Set(0, 90, 0);

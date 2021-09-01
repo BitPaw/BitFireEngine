@@ -436,7 +436,6 @@
     <ClInclude Include="Source\Math\Encryption\ICypher.h" />
     <ClInclude Include="Source\Math\Encryption\ISBN.h" />
     <ClInclude Include="Source\Math\Encryption\RSA.h" />
-    <ClInclude Include="Source\Math\Geometry\Direction.h" />
     <ClInclude Include="Source\Math\Geometry\Form\Cone.h" />
     <ClInclude Include="Source\Math\Geometry\Form\Cube.h" />
     <ClInclude Include="Source\Math\Geometry\Form\Cuboid.h" />
@@ -449,8 +448,6 @@
     <ClInclude Include="Source\Math\Geometry\Matrix3x3.hpp" />
     <ClInclude Include="Source\Math\Geometry\Matrix4x4.hpp" />
     <ClInclude Include="Source\Math\Geometry\Padding.hpp" />
-    <ClInclude Include="Source\Math\Geometry\Point.hpp" />
-    <ClInclude Include="Source\Math\Geometry\Position.hpp" />
     <ClInclude Include="Source\Math\Geometry\Shape\Circle.h" />
     <ClInclude Include="Source\Math\Geometry\Shape\Hexagon.h" />
     <ClInclude Include="Source\Math\Geometry\Shape\Pentagon.h" />

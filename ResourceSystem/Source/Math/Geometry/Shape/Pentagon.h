@@ -2,7 +2,7 @@
 
 #include "Shape.h"
 
-#include "../Point.hpp"
+#include "../Vector2.hpp"
 
 namespace BF
 {
@@ -11,6 +11,6 @@ namespace BF
 		public:
 
 		Pentagon();
-		Pentagon(Point<float> a, Point<float> b, Point<float> c, Point<float> d, Point<float> e);
+		Pentagon(Vector2<float> a, Vector2<float> b, Vector2<float> c, Vector2<float> d, Vector2<float> e);
 	};
 }

@@ -376,7 +376,7 @@ void BF::OBJ::Load(const char* filePath)
         OBJElement* elemtent = &ElementList[elementIndex++];
         //List<Position<unsigned int>> indexPositionCache(waveFront->VertexStructureSize); // 36 Byte alloc
 
-        Position<float>* currentVectorValue;
+        Vector3<float>* currentVectorValue;
 
         char dummyBuffer[50];
         
@@ -512,7 +512,7 @@ void BF::OBJ::Load(const char* filePath)
 
                 case OBJLineCommand::VertexTexture:
                 {
-                    Point<float>& point = elemtent->TextureCoordinateList[currentTextureElement++];
+                    Vector2<float>& point = elemtent->TextureCoordinateList[currentTextureElement++];
 
                     sscanf(currentLineBuffer, "%s %f %f", dummyBuffer, &point.X, &point.Y);
 
@@ -541,9 +541,9 @@ void BF::OBJ::Load(const char* filePath)
                          usedFacesBefore = true;
                     }*/                   
 
-                    Position<unsigned int>& vectorA = elemtent->FaceElementList[currentFaceElement++];
-                    Position<unsigned int>& vectorB = elemtent->FaceElementList[currentFaceElement++];
-                    Position<unsigned int>& vectorC = elemtent->FaceElementList[currentFaceElement++];
+                    Vector3<unsigned int>& vectorA = elemtent->FaceElementList[currentFaceElement++];
+                    Vector3<unsigned int>& vectorB = elemtent->FaceElementList[currentFaceElement++];
+                    Vector3<unsigned int>& vectorC = elemtent->FaceElementList[currentFaceElement++];
 
                     // sscanf(currentLineBuffer, "%s %s %s %s", dummyBuffer, cacheA, cacheB, cacheC);
                     StringParse
@@ -680,7 +680,7 @@ void BF::OBJ::Convert(Model& model)
         mesh.IndexList.ReSize(faceElementListSize);
         for (unsigned int i = 0; i < faceElementListSize; i++)
         {
-            Position<unsigned int>& indexPosition = element.FaceElementList[i];
+            Vector3<unsigned int>& indexPosition = element.FaceElementList[i];
             MeshIndexData& meshData = mesh.IndexList[i];
             meshData.VertexPositionID = indexPosition.X - 1;
             meshData.TexturePointID = indexPosition.Y - 1;

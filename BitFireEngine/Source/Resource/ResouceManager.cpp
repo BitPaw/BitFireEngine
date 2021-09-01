@@ -67,13 +67,13 @@ void BF::ResourceManager::UpdateVBOData(Model& model)
         MeshIndexData* indexList = mesh.IndexList[i];
 
         Vector4<float> defaultColor(1, 1, 1, 1);
-        Point<float> defaultTexturepoint;
-        Position<float> normalPosition;
+        Vector2<float> defaultTexturepoint;
+        Vector3<float> normalPosition;
 
         Vector4<float>* color = &defaultColor;
-        Position<float>* position = nullptr;
-        Position<float>* normal = nullptr;
-        Point<float>* texture = nullptr;
+        Vector3<float>* position = nullptr;
+        Vector3<float>* normal = nullptr;
+        Vector2<float>* texture = nullptr;
 
         unsigned int vertexIndex = indexList->VertexPositionID;
         unsigned int textureIndex = indexList->TexturePointID;
@@ -601,9 +601,9 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(Level& level, const char* fi
                 char positionText[30];
                 char rotationText[30];
                 char scaleText[30];
-                Position<float> position;
-                Position<float> rotation;
-                Position<float> scale;
+                Vector3<float> position;
+                Vector3<float> rotation;
+                Vector3<float> scale;
 
                 sscanf(currentLineBuffer, "%s %s %s %s %s", dummyBuffer, path, positionText, rotationText, scaleText);
 

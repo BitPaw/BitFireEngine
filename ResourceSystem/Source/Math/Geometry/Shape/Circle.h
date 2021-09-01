@@ -2,6 +2,7 @@
 
 #include "Shape.h"
 #include "../../Math.h"
+#include "../Vector2.hpp"
 
 namespace BF
 {
@@ -11,10 +12,10 @@ namespace BF
 		Circle();
 		Circle(float radius);
 		Circle(float midPointx, float midPointy, float cornerPointx, float cornerPointy);
-		Circle(Point<float> midPoint, Point<float> cornerPoint);
+		Circle(Vector2<float> midPoint, Vector2<float> cornerPoint);
 
-		Point<float> MiddlePoint;
-		Point<float> CornerPoint;
+		Vector2<float> MiddlePoint;
+		Vector2<float> CornerPoint;
 
 		/// <summary>
 		/// Half distance of the diameter.
@@ -42,6 +43,6 @@ namespace BF
 
 		void Set(float radius);
 		void Set(float midPointx, float midPointy, float cornerPointx, float cornerPointy);
-		void Set(Point<float> midPoint, Point<float> cornerPoint);
+		void Set(Vector2<float> midPoint, Vector2<float> cornerPoint);
 	};
 }

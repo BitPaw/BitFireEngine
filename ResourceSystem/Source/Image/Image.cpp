@@ -4,6 +4,7 @@
 #include "PNG/PNG.h"
 #include "TGA/TGA.h"
 #include <malloc.h>
+#include "../Math/Math.h"
 
 BF::Vector4<unsigned char> BF::Image::GetPixel(unsigned int x, unsigned int y)
 {

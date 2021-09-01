@@ -2,8 +2,6 @@
 
 #include "Form.h"
 
-#include "../Position.hpp"
-
 namespace BF
 {
 	class Cube : public Form

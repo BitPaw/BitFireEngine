@@ -1,14 +1,12 @@
 #pragma once
 
-#include "../../Utility/Table.hpp"
-
 namespace BF
 {
 	template<class Numbertype>
 	class Matrix2x2
 	{
 		private:
-		Table<Numbertype> _matrixData;
+		Numbertype _matrixData[4];
 
 		public:
 		Matrix2x2()

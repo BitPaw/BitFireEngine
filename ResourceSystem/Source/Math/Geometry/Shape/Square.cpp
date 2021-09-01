@@ -10,7 +10,7 @@ BF::Square::Square(float sideLength)
 	Set(sideLength);
 }
 
-BF::Square::Square(Point<float> size) 
+BF::Square::Square(Vector2<float> size)
 {
 	Set(size);
 }
@@ -36,7 +36,7 @@ void BF::Square::Set(float sideLength)
 	PointB.Set(sideLength, sideLength);
 }
 
-void BF::Square::Set(Point<float> size)
+void BF::Square::Set(Vector2<float> size)
 {
 	PointA.Set(0,0);
 	PointB.Set(size);

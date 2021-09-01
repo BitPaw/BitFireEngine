@@ -7,7 +7,7 @@ namespace BF
 {
 	class Collider
 	{
-		virtual bool IsColliding(Point<float> position) = 0;
-		virtual bool IsColliding(Position<float> position) = 0;
+		virtual bool IsColliding(Vector2<float> position) = 0;
+		virtual bool IsColliding(Vector3<float> position) = 0;
 	};
 }

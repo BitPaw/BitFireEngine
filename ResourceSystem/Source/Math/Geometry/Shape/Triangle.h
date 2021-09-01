@@ -2,7 +2,8 @@
 
 #include "Shape.h"
 
-#include "../Position.hpp"
+#include "../Vector2.hpp"
+#include "../Vector3.hpp"
 
 namespace BF
 {
@@ -11,11 +12,11 @@ namespace BF
 		public:	
 		Triangle();
 		Triangle(float xA, float yA, float xB, float yB, float xC, float yC);
-		Triangle(Point<float> a, Point<float> b, Point<float> c);
+		Triangle(Vector2<float> a, Vector2<float> b, Vector2<float> c);
 
-		Point<float> PointA;
-		Point<float> PointB;
-		Point<float> PointC;
+		Vector2<float> PointA;
+		Vector2<float> PointB;
+		Vector2<float> PointC;
 
 		float Height();
 		float Width();	
@@ -24,7 +25,7 @@ namespace BF
 		float LengthOfSideB();
 		float LengthOfSideC();
 
-		Position<float> NormalDirection();
+		Vector3<float> NormalDirection();
 
 		float DegreeAlpha();
 		float DegreeBeta();
@@ -43,6 +44,6 @@ namespace BF
 		virtual float Perimeter() override;
 
 		void Set(float xA, float yA, float xB, float yB, float xC, float yC);
-		void Set(Point<float> a, Point<float> b, Point<float> c);
+		void Set(Vector2<float> a, Vector2<float> b, Vector2<float> c);
 	};
 }

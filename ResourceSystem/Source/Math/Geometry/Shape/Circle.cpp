@@ -15,7 +15,7 @@ BF::Circle::Circle(float midPointx, float midPointy, float cornerPointx, float c
 	Set(midPointx, midPointy, cornerPointx, cornerPointy);
 }
 
-BF::Circle::Circle(Point<float> midPoint, Point<float> cornerPoint)
+BF::Circle::Circle(Vector2<float> midPoint, Vector2<float> cornerPoint)
 {
 	Set(midPoint, cornerPoint);
 }
@@ -54,7 +54,7 @@ void BF::Circle::Set(float midPointx, float midPointy, float cornerPointx, float
 	CornerPoint.Set(cornerPointx, cornerPointy);
 }
 
-void BF::Circle::Set(Point<float> midPoint, Point<float> cornerPoint)
+void BF::Circle::Set(Vector2<float> midPoint, Vector2<float> cornerPoint)
 {
 	MiddlePoint.Set(midPoint);
 	CornerPoint.Set(cornerPoint);

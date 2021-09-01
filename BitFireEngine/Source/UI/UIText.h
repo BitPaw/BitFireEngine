@@ -14,7 +14,7 @@ namespace BF
 		Font* _font;
 
 		public:
-		Point<float> AncerPosition;
+		Vector2<float> AncerPosition;
 		unsigned int FontID;
 		char TextContent[255];
 

@@ -7,11 +7,11 @@ namespace BF
 	class Vertex
 	{
 		public:
-		Position<float> CurrentPosition;
+		Vector3<float> CurrentPosition;
 		unsigned int ColorID;
 
 		Vertex();
-		Vertex(Position<float> currentPosition);
-		Vertex(Position<float> currentPosition, const unsigned int colorID);
+		Vertex(Vector3<float> currentPosition);
+		Vertex(Vector3<float> currentPosition, const unsigned int colorID);
 	};
 }

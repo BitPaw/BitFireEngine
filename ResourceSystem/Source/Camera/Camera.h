@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CameraPerspective.hpp"
-#include "../Math/Geometry/Direction.h"
 #include "../Math/Geometry/Vector3.hpp"
 #include "../Math/Geometry/Matrix4x4.hpp"
 #include "../Math/Physic/PhysicalBody.hpp"
@@ -24,7 +23,7 @@ namespace BF
 
 		CameraPerspective Perspective;
 
-		Position<float> CurrentRotation;
+		Vector3<float> CurrentRotation;
 
 		float FieldOfView;
 		unsigned int Height;

@@ -1,18 +1,12 @@
 #pragma once
 
 #include <math.h>
-
-
-#include "Point.hpp"
 #include "../Math.h"
-
-
-// scalar is just the Magnitude
 
 namespace BF
 {
 	template<class NumberType>
-	struct Vector2 : public Point<NumberType>
+	struct Vector2
 	{
 		protected:
 		virtual void CalculateX()
@@ -38,11 +32,14 @@ namespace BF
 
 		public:
 
+		NumberType X;
+		NumberType Y;
+
 		// Lengh
-		float Magnitude;
+		NumberType Magnitude;
 
 		// Degrees
-		float Angle;
+		NumberType Angle;
 
 		//---------------------------------------------------------------------
 		// Addition //
@@ -95,9 +92,106 @@ namespace BF
 			FromCartesianCoordinates(x, y);
 		}
 
+		void Set(Vector2<NumberType> vector)
+		{
+			Set(vector.X, vector.Y);
+		}
+
+		void Set(NumberType x, NumberType y)
+		{
+			X = x;
+			Y = y;
+		}
+
+
+
+
+
+
+
+		void Add(NumberType x, NumberType y)
+		{
+			X += x;
+			Y += y;
+		}
+
+		void Add(Vector2<NumberType> point)
+		{
+			Add(point.X, point.Y);
+		}
+
+		void Substract(NumberType x, NumberType y)
+		{
+			X -= x;
+			Y -= y;
+		}
+
+		void Substract(Vector2<NumberType> point)
+		{
+			Substract(point.X, point.Y);
+		}
+
+		void Multiply(NumberType x, NumberType y)
+		{
+			X *= x;
+			Y *= y;
+		}
+
+		void Multiply(Vector2<NumberType> point)
+		{
+			Multiply(point.X, point.Y);
+		}
+
+		void Divide(NumberType x, NumberType y)
+		{
+			if (x == 0 || y == 0)
+			{
+				throw "Divide by Zero";
+			}
+
+			X /= x;
+			Y /= y;
+		}
+
+		void Divide(Vector2<NumberType> point)
+		{
+			Divide(point.X, point.Y);
+		}
+
+		void Rotate(Vector2<NumberType> rotate)
+		{
+
+		}
+
+
+
+
+
+
+
+
+
+
+
+		/// <summary>
+	/// The point between pojnt a and b.
+	/// </summary>
+	/// <param name="point">Point in 2D Space</param>
+	/// <returns>DotProduct of a and b</returns>
+		NumberType DotProduct(Vector2<NumberType> point)
+		{
+			// a · b = ax × bx + ay × by
+			return X * point.X + Y * point.Y;
+		}
+
+		NumberType DistanceTo(Vector2<NumberType> point)
+		{
+			// d = Root((x2?x1)^2 + (y2?y1)^2)
+			return Math::SquareRoot(Math::PowerOfTwo(point.X - X) + Math::PowerOfTwo(point.Y - Y));
+		}
 
 		// a x b
-		virtual Vector2 CrossProduct(Vector2 vector)
+		Vector2 CrossProduct(Vector2 vector)
 		{
 			Vector2 crossProduct;
 			float length = Magnitude * vector.Magnitude;
@@ -110,7 +204,7 @@ namespace BF
 			return crossProduct;
 		}
 
-		virtual void FromPolarCoordinates(NumberType magnitute, NumberType direction)
+		void FromPolarCoordinates(NumberType magnitute, NumberType direction)
 		{
 			Angle = direction;
 			Magnitude = magnitute;
@@ -118,7 +212,7 @@ namespace BF
 			CalculateX();
 			CalculateY();
 		}
-		virtual void FromCartesianCoordinates(NumberType x, NumberType y)
+		void FromCartesianCoordinates(NumberType x, NumberType y)
 		{
 			this->X = x;
 			this->Y = y;

@@ -4,7 +4,8 @@
 #include "Material.h"
 #include "MeshIndexData.h"
 
-#include "../Math/Geometry/Point.hpp"
+#include "../Math/Geometry/Vector2.hpp"
+#include "../Math/Geometry/Vector3.hpp"
 
 namespace BF
 {
@@ -17,8 +18,8 @@ namespace BF
 		Material* MeshMaterial;
 
 		List<Vertex> VertexList;
-		List<Position<float>> NormalPointList;
-		List<Point<float>> TexturePointList;
+		List<Vector3<float>> NormalPointList;
+		List<Vector2<float>> TexturePointList;
 		//List<RGBA> ColorList;
 		List<MeshIndexData> IndexList;
 

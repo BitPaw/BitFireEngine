@@ -5,7 +5,7 @@ BF::Pentagon::Pentagon()
 
 }
 
-BF::Pentagon::Pentagon(Point<float> a, Point<float> b, Point<float> c, Point<float> d, Point<float> e) 
+BF::Pentagon::Pentagon(Vector2<float> a, Vector2<float> b, Vector2<float> c, Vector2<float> d, Vector2<float> e)
 {
 
 }

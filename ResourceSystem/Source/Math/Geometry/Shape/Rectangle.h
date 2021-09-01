@@ -2,8 +2,8 @@
 
 #include "Shape.h"
 
-#include "../Point.hpp"
-#include "../Position.hpp"
+#include "../Vector2.hpp"
+#include "../Vector3.hpp"
 
 namespace BF
 {
@@ -13,28 +13,28 @@ namespace BF
 		Rectangle();
 		Rectangle(float width, float height);
 		Rectangle(float x, float y, float width, float height);
-		Rectangle(Point<float> a, Point<float> b);
-		Rectangle(Point<float> a, Point<float> b, Point<float> c, Point<float> d);
+		Rectangle(Vector2<float> a, Vector2<float> b);
+		Rectangle(Vector2<float> a, Vector2<float> b, Vector2<float> c, Vector2<float> d);
 
 		/// <summary>
 		/// Left-Lower
 		/// </summary>
-		Point<float> PointA;
+		Vector2<float> PointA;
 
 		/// <summary>
 		/// Right-Lower
 		/// </summary>
-		Point<float> PointB;
+		Vector2<float> PointB;
 
 		/// <summary>
 		/// Right-Upper
 		/// </summary>
-		Point<float> PointC;
+		Vector2<float> PointC;
 
 		/// <summary>
 		/// Left-Upper
 		/// </summary>
-		Point<float> PointD;
+		Vector2<float> PointD;
 
 		/// <summary>
 		/// Width of the Rectangle
@@ -62,11 +62,11 @@ namespace BF
 
 		bool IsColliding(Rectangle* rectangle);
 
-		Position<float> NormalDirection();
+		Vector3<float> NormalDirection();
 
 		void Set(float width, float height);
 		void Set(float x, float y, float width, float height);
-		void Set(Point<float> a, Point<float> b);
-		void Set(Point<float> a, Point<float> b, Point<float> c, Point<float> d);
+		void Set(Vector2<float> a, Vector2<float> b);
+		void Set(Vector2<float> a, Vector2<float> b, Vector2<float> c, Vector2<float> d);
 	};
 }

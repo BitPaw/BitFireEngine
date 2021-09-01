@@ -1,6 +1,7 @@
 #include "OpenGLAPI.h"
 
 #include <GL/glew.h>
+#include <cassert>
 
 void BF::OpenGLAPI::RegisterImage(Image& image)
 {

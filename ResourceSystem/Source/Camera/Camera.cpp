@@ -72,9 +72,9 @@ void BF::Camera::Rotate(float x, float y)
 
 void BF::Camera::Move(Vector3<float> movement)
 {
-	float xAxisMovement = movement.Data[0];
-	float yAxisMovement = movement.Data[1];
-	float zAxisMovement = movement.Data[2];
+	float xAxisMovement = movement.X;
+	float yAxisMovement = movement.Y;
+	float zAxisMovement = movement.Z;
 	Vector3<float> yAxis(0, yAxisMovement, 0);
 	Vector3<float> xAxis;
 	Vector3<float> zAxis(zAxisMovement, 0, zAxisMovement);
@@ -94,7 +94,7 @@ void BF::Camera::Move(Vector3<float> movement)
 void BF::Camera::Update(float deltaTime)
 {
 	Vector4<float> currentPositionx4 = MatrixModel.CurrentPosition();
-	Vector3<float> currentPosition = Vector3<float>(currentPositionx4.Date[0], currentPositionx4.Date[1], currentPositionx4.Date[2]);
+	Vector3<float> currentPosition = Vector3<float>(currentPositionx4.X, currentPositionx4.Y, currentPositionx4.Z);
 
 	float walkSpeedSmoothed = deltaTime * _walkSpeed;
 	float viewSpeedSmoothed = deltaTime * _viewSpeed;

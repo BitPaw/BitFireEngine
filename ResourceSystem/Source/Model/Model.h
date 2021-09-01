@@ -10,7 +10,6 @@
 
 #include "../Math/Geometry/Vector3.hpp"
 #include "../Math/Geometry/Vector4.hpp"
-#include "../Math/Geometry/Position.hpp"
 #include "../Math/Geometry/Shape/Shape.h"
 #include "../Math/Geometry/Matrix4x4.hpp"
 #include "../Math/Physic/PhysicalBody.hpp"
@@ -41,55 +40,55 @@ namespace BF
 	@param Direction in which this object should be moved in.
 */
 		void Move(float x, float y, float z);
-		void Move(Position<float> position);
+		void Move(Vector3<float> position);
 
 		/**
 		Move to specific location in this worldspace.
 		@param Position where this object should be moved to.
 	*/
 		void MoveTo(float x, float y, float z);
-		void MoveTo(Position<float> position);
+		void MoveTo(Vector3<float> position);
 
 		/**
 			Rotate the object around itself.
 			@param Rotation, how much each axis should be rotated.
 		*/
 		void Rotate(float x, float y, float z);
-		void Rotate(Position<float> rotation);
+		void Rotate(Vector3<float> rotation);
 		void RotateTo(float x, float y, float z);
-		void RotateTo(Position<float> rotation);
+		void RotateTo(Vector3<float> rotation);
 
 		/**
 	Rotate the object around the worldspace.
 	@param Rotation, how much each axis should be rotated.
 */
 		void Orbit(float x, float y, float z);
-		void Orbit(Position<float> rotation);
+		void Orbit(Vector3<float> rotation);
 
 		/**
 			Rotate the object around the worldspace.
 			@param Rotation, how much each axis should be rotated.
 		*/
-		void Orbit(Position<float> rotation, Position<float> ancerPosition);
+		void Orbit(Vector3<float> rotation, Vector3<float> ancerPosition);
 
 		/**
 		Change the size of this object in this worldspace.
 		@param Scalefactor, how much each axis should be Scaled. 1 => no change.
 		*/
 		void Scale(float x, float y, float z);
-		void Scale(Position<float> scaleFactor);
+		void Scale(Vector3<float> scaleFactor);
 
 		// Image
 		void ScaleTexturePoints(float x, float y);
-		void ScaleTexturePoints(Point<float> scale);
+		void ScaleTexturePoints(Vector2<float> scale);
 
 		/**
 			Get the current position of this object in this worldspace.
 			@return Current position.
 		*/
-		Position<float> CurrentPosition();
+		Vector3<float> CurrentPosition();
 
-		Position<float> CurrentRotation();
+		Vector3<float> CurrentRotation();
 
 		void UseTexturePointAsColor();
 

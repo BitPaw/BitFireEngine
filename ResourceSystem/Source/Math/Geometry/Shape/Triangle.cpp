@@ -10,7 +10,7 @@ BF::Triangle::Triangle(float xA, float yA, float xB, float yB, float xC, float y
 	Set(xA, yA, xB, yB, xC, yC);
 }
 
-BF::Triangle::Triangle(Point<float> a, Point<float> b, Point<float> c)
+BF::Triangle::Triangle(Vector2<float> a, Vector2<float> b, Vector2<float> c)
 {
 	Set(a, b, c);
 }
@@ -40,11 +40,13 @@ float BF::Triangle::LengthOfSideC()
 	return PointA.DistanceTo(PointB);
 }
 
-BF::Position<float> BF::Triangle::NormalDirection()
+BF::Vector3<float> BF::Triangle::NormalDirection()
 {
-	Position<float> u = PointB - PointA;
-	Position<float> v = PointC - PointA;
-	Position<float> normal = u.CrossProduct(v);
+	Vector2<float> u2 = PointB - PointA;
+	Vector2<float> v2 = PointC - PointA;
+	Vector3<float> u(u2.X, u2.Y, 0);
+	Vector3<float> v(v2.X, v2.Y, 0);
+	Vector3<float> normal = u.CrossProduct(v);
 
 	return normal;
 }
@@ -81,7 +83,7 @@ void BF::Triangle::Set(float xA, float yA, float xB, float yB, float xC, float y
 	PointC.Set(xC, yC);
 }
 
-void BF::Triangle::Set(Point<float> a, Point<float> b, Point<float> c)
+void BF::Triangle::Set(Vector2<float> a, Vector2<float> b, Vector2<float> c)
 {
 	PointA.Set(a);
 	PointB.Set(b);
