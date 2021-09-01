@@ -396,39 +396,11 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(Model& model, const char* fi
 
 BF::ResourceLoadingResult BF::ResourceManager::Load(Image& image, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
-    printf("[>][Resource][Image] Loading from <%s> - ", filePath);
-
-    StopWatch stopWatch;
-    stopWatch.Start();
-
     ResourceLoadingResult errorCode = image.Load(filePath);
-
-    double time = stopWatch.Stop();
 
     if (errorCode == ResourceLoadingResult::Successful)
     {
-        printf("[OK] - ");
         Add(image);
-    }
-    else
-    {
-        printf("[Failed] - ");
-    }
-
-    if (time < 1)
-    {
-        if (time >= 0.001)
-        {
-            printf("%.1fms\n", time * 1000);
-        }
-        else
-        {
-            printf("%.1fus\n", (time * 1000) * 1000);
-        }
-    }
-    else
-    {
-        printf("%.1fs\n", time);
     }
 
     return errorCode;
@@ -436,15 +408,11 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(Image& image, const char* fi
 
 BF::ResourceLoadingResult BF::ResourceManager::Load(Sound& resource, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
-    printf("[>][Resource][Sound] Loading from <%s>\n", filePath);
-
     return ResourceLoadingResult::Successful;
 }
 
 BF::ResourceLoadingResult BF::ResourceManager::Load(Font& font, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
-    printf("[>][Resource][Font] Loading from <%s>\n", filePath);
-
     ResourceLoadingResult errorCode = font.Load(filePath);
 
     if (errorCode == ResourceLoadingResult::Successful)
@@ -489,14 +457,11 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(Font& font, const char* file
 
 BF::ResourceLoadingResult BF::ResourceManager::Load(ShaderProgram& resource, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
-    printf("[>][Resource][ShaderProgram] Loading from <%s>\n", filePath);
-
     return ResourceLoadingResult::Successful;
 }
 
 BF::ResourceLoadingResult BF::ResourceManager::Load(Dialog& resource, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
-    printf("[>][Resource][Dialog] Loading from <%s>\n", filePath);
     return ResourceLoadingResult::Successful;
 }
 
@@ -504,8 +469,6 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(Level& level, const char* fi
 {
     File file(filePath);
     ResourceLoadingResult errorCode;
-
-    printf("[>][Resource][Level] Loading from <%s>\n", filePath);
 
     const char _modelToken = 'O';
     const char _textureToken = 'T';
@@ -530,10 +493,8 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(Level& level, const char* fi
     amountOfLines = file.CountAmountOfLines();
 
     // Step I - Count objects
-    for (unsigned int i = 0; i < amountOfLines; i++)
+    while (file.ReadNextLineInto(currentLineBuffer))
     {
-        file.ReadNextLineInto(currentLineBuffer);
-
         char character = currentLineBuffer[0];
 
         switch (character)
@@ -861,31 +822,28 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
 
     // Render Skybox first, if it is used
     {
-        bool hasSkyBox = DefaultSkyBox != NULL;
+        bool hasSkyBox = DefaultSkyBox != nullptr;
 
         if (hasSkyBox)
         {
-            OpenGLAPI::DepthMaskEnable(false);
-            OpenGLAPI::DrawOrder(true);
-
             unsigned int shaderID = DefaultSkyBox->Shader.ID;
+            Matrix4x4<float> viewTri(MainCamera.MatrixView);
+
+            viewTri.ResetForthAxis();
+
+            OpenGLAPI::DepthMaskEnable(false);
+            OpenGLAPI::DrawOrder(true);          
 
             OpenGLAPI::UseShaderProgram(shaderID);
 
             CameraDataGet(shaderID);        
-            CameraDataUpdate(MainCamera);
-
-            Matrix4x4<float> viewTri(MainCamera.MatrixView);
-
-            viewTri.ResetForthAxis();
+            CameraDataUpdate(MainCamera);                               
 
             OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixViewID, viewTri.Data);
 
             OpenGLAPI::SkyBoxUse(*DefaultSkyBox);
 
-            OpenGLAPI::Render(RenderMode::Triangle, 0, 108);
-            //OpenGLAPI::Render(RenderMode::LineStripAdjacency, 0, 108);
-            //OpenGLAPI::Render(RenderMode::Point, 0, 108);
+            OpenGLAPI::Render(RenderMode::Triangle, 0, DefaultSkyBox->VertexListSize);
 
             OpenGLAPI::DepthMaskEnable(true);
             OpenGLAPI::DrawOrder(false);

@@ -27,6 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\CleavedGameSystem.cpp" />
     <ClCompile Include="Source\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -46,6 +47,9 @@
     <None Include="Shader\WorldSpace.vert" />
     <None Include="Shader\WS.frag" />
     <None Include="Shader\WS.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\CleavedGameSystem.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

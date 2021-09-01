@@ -18,6 +18,9 @@
     <ClCompile Include="Source\Main.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\CleavedGameSystem.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\WorldSpace.vert" />
@@ -28,5 +31,10 @@
     <None Include="Shader\SkyBox.frag" />
     <None Include="Shader\HUD.vert" />
     <None Include="Shader\HUD.frag" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\CleavedGameSystem.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

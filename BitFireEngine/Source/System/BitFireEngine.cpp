@@ -1,4 +1,4 @@
-#include "GameSystem.h"
+#include "BitFireEngine.h"
 
 #include <future>
 #include "../../../ResourceSystem/Source/Model/Model.h"
@@ -9,18 +9,18 @@
 #include "../../../ResourceSystem/Source/File/File.h"
 #include "../../../ResourceSystem/Source/Image/BMP/BMP.h"
 
-BF::GameSystem* BF::GameSystem::_instance = nullptr;
+BF::BitFireEngine::BitFireEngine()
+{
+    _callbackListener = nullptr;
+    IsRunning = false;
+}
 
-BF::UIText* text;
-//BF::Model* sphere;
+void BF::BitFireEngine::SetCallBack(IBitFireEngineListener* callbackListener)
+{
+    _callbackListener = callbackListener;
+}
 
-BF::SkyBox* skybox;
-BF::Model cube;
-
-BF::ShaderProgram worldShader;
-BF::ShaderProgram hudShaderID;
-
-void BF::GameSystem::Start()
+void BF::BitFireEngine::Start()
 {    
     printf
     (
@@ -54,102 +54,48 @@ void BF::GameSystem::Start()
     );
 
 
-    //---<TEST>---
-
-    StopWatch stopwatch;
-
-    stopwatch.Start();
-
-    Resource.Load(worldShader, "Shader/WS.vert", "Shader/WS.frag");
-    Resource.Load(hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
-   
-    Resource.Load("Level/MainMenu.lev");    
-    Resource.Load(cube, "Model/Cube.obj");
-
-    cube.ModelMatrix.Scale(10.0f);
-    cube.EnablePhysics = true;
-    Resource.Add(cube);
-
-    skybox = new SkyBox();
-    Resource.Load(skybox->Faces[0], "Texture/SkyBox/Right.bmp"); // Right
-    Resource.Load(skybox->Faces[1], "Texture/SkyBox/Left.bmp"); // Left
-    Resource.Load(skybox->Faces[2], "Texture/SkyBox/Top.bmp"); // Top
-    Resource.Load(skybox->Faces[3], "Texture/SkyBox/Bottom.bmp"); // Bottom
-    Resource.Load(skybox->Faces[4], "Texture/SkyBox/Back.bmp"); // Back
-    Resource.Load(skybox->Faces[5], "Texture/SkyBox/Front.bmp"); // Front       
-
-    Resource.Load(skybox->Shader, "Shader/SkyBox.vert", "Shader/SkyBox.frag");
-    Resource.Add(*skybox);
-
-    text = new UIText("SampleText", *Resource.DefaultFont, -1, -0.8);
-    text->RenderInformation.ShaderProgramID = hudShaderID.ID;
-    //text->SetFont(*Resource.DefaultFont);
-    Resource.Add(*text);
-
-
-    //------------------------------------------------------------------------------------
+    _callbackListener->OnStartUp();
 
     Resource.PrintContent(true);
-    
-    printf("[i][Info] Loading took %.2fs\n", stopwatch.Stop());
-
+   
     IsRunning = true;
-
 }
 
 float _lastUIUpdate = 0;
 
-void BF::GameSystem::Update()
+void BF::BitFireEngine::Update()
 {
-    if (_mainWindow.ShouldCloseWindow)
+    //---[Variable Reset]--------------------------------------------------
+    float deltaTime = _stopWatch.Reset();
+
+    _gameTickData.ActiveTime = _mainWindow.ActiveTime;
+    _gameTickData.CalcualteFramesPerSecounds(deltaTime);
+
+    _lastUIUpdate += deltaTime;
+
+    if (_lastUIUpdate >= .20f)
     {
-        IsRunning = false;
+        _lastUIUpdate = 0;
+        _callbackListener->OnUpdateUI();
     }
-    else
-    {
-        //---[Variable Reset]--------------------------------------------------
-        float deltaTime = _stopWatch.Reset();
 
-        _gameTickData.ActiveTime = _mainWindow.ActiveTime;
-        _gameTickData.CalcualteFramesPerSecounds(deltaTime);
+    float smoothedDelteTime = _gameTickData.GetSmoothDeltaTime();
 
-        _lastUIUpdate += deltaTime;
+    //---[User-Input]------------------------------------------------------
+    UpdateInput(_mainWindow.GetInput());
 
-        if (_lastUIUpdate >= .20f)
-        {
-            _lastUIUpdate = 0;
-            UpdateUI();
-          
-        }
+    //---[Game-Logic]------------------------------------------------------
+    Resource.ModelsPhysicsApply(smoothedDelteTime);
 
-        //---[User-Input]------------------------------------------------------
-        UpdateInput(_mainWindow.GetInput());
+    _callbackListener->OnUpdateGameLogic(smoothedDelteTime);
 
-        //---[Game-Logic]------------------------------------------------------
-       // OnGameTick.Trigger(_gameTickData);    
-        Resource.ModelsPhysicsApply(_gameTickData.GetSmoothDeltaTime());
+    //---[Render World]----------------------------------------------------
+    Resource.ModelsRender(smoothedDelteTime);
 
-        if (cube.ModelMatrix.CurrentPosition().Y <= 0)
-        {
-            //cube.ModelMatrix.Move(0, tcap, 0);
-            cube.Velocity.Set(0, 90, 0);
-        }
-
-        //---[Render World]----------------------------------------------------
-        Resource.ModelsRender(_gameTickData.GetSmoothDeltaTime());
-
-        //sphere->Orbit(BF::Position<float>(10.0f,0.0f,0.0f));
-    }
+    IsRunning = !_mainWindow.ShouldCloseWindow;
 }
 
-void BF::GameSystem::UpdateUI()
-{
-    sprintf(text->TextContent, "FPS: %4i", (Math::Ceiling(1 / _gameTickData.GetSmoothDeltaTime())));
-    text->SetText(text->TextContent);
-    Resource.Add(*text);
-}
-
-void BF::GameSystem::UpdateInput(InputContainer* input)
+void BF::BitFireEngine::UpdateInput(InputContainer* input)
 {
     KeyBoard& keyboard = input->KeyBoardInput;
     Mouse& mouse = input->MouseInput;    
@@ -220,14 +166,7 @@ void BF::GameSystem::UpdateInput(InputContainer* input)
     mouse.ResetAxis();
 }
 
-void BF::GameSystem::Stop()
+void BF::BitFireEngine::Stop()
 {
-    IsRunning = false;
-}
-
-BF::GameSystem::GameSystem()
-{
-    _instance = this;
-
     IsRunning = false;
 }

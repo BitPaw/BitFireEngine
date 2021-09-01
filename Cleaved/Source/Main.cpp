@@ -1,38 +1,33 @@
 //-----------------------------------------------------------------------------
 //#include "../../ResourceSystem/Source/Network/Client.h"
 
-#include "../../BitFireEngine/Source/System/GameSystem.h"
+#include "../../BitFireEngine/Source/System/BitFireEngine.h"
 #include "../../ResourceSystem/Source/OSDefine.h"
 #include <stdio.h>
-#include <windows.h>
+#include "CleavedGameSystem.h"
 //-----------------------------------------------------------------------------
 
 #if !defined(_DEBUG) && defined(OSWindowsE)
+#include <windows.h>
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int nShowCmd)
 #else
 int main(int amountOFParameters, char** parameter)
 #endif  
 {
-   // BF::Client client;
-
-   // BF::SocketError socketError = client.ConnectToServer((char*)"127.0.0.1", 80);
-
-    
-
     try
     {
-        // printf("[i][Core] Working Directory <%s>\n", parameter[0]);
+        //printf("[i][Core] Working Directory <%s>\n", parameter[0]);
 
-        BF::GameSystem system;
+        Cleaved::CleavedGameSystem cleavedGameSystem;       
 
-        system.Start();
+        cleavedGameSystem.GameSystem.Start();
 
-        while (system.IsRunning)
+        while (cleavedGameSystem.GameSystem.IsRunning)
         {
-            system.Update();
+            cleavedGameSystem.GameSystem.Update();
         }
 
-        system.Stop();
+        cleavedGameSystem.GameSystem.Stop();
     }
     catch (const std::exception& exception)
     {

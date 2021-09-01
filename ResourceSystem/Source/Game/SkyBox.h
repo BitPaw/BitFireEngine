@@ -47,7 +47,7 @@ namespace BF
             5,2,6
         };
 #endif
-
+		unsigned int VertexListSize = 108;
         float SkyboxVertices[108] =
         {
 	  -1.0f,-1.0f,-1.0f, // triangle 1 : begin

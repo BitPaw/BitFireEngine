@@ -354,6 +354,7 @@
     <ClCompile Include="Source\Types\Word.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Event\Event.hpp" />
     <ClInclude Include="Source\Math\Physic\PhysicalBody.hpp" />
     <ClInclude Include="Source\Camera\Camera.h" />
     <ClInclude Include="Source\Camera\CameraPerspective.hpp" />

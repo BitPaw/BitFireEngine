@@ -776,5 +776,8 @@
     <ClInclude Include="Source\Math\Physic\PhysicalBody.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Event\Event.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

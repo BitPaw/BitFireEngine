@@ -53,7 +53,7 @@ void BF::Model::MoveTo(Vector3<float> position)
 
             auto x = ModelMatrix.CurrentPosition();
 
-            vertex->CurrentPosition -= Vector3(x.X, x.Y, x.Z);
+            vertex->CurrentPosition -= Vector3<float>(x.X, x.Y, x.Z);
             vertex->CurrentPosition += position;
         }
 

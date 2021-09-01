@@ -21,9 +21,6 @@
     <ClCompile Include="Source\Player\Player.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\System\GameSystem.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\System\GameTickData.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -45,15 +42,15 @@
     <ClCompile Include="Source\Resource\ResouceManager.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\System\BitFireEngine.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Configuration\ConfigContainer.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Player\Player.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\GameSystem.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\System\GameTickData.h">
@@ -81,6 +78,12 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Resource\ResouceManager.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\BitFireEngine.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\IBitFireEngineListener.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
