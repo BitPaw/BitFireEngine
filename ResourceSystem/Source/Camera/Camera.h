@@ -11,15 +11,12 @@ namespace BF
 {
 	class Camera : public PhysicalBody<float>
 	{
-		private:
-		Vector3<float> _up;
-		Vector3<float> _lookAt;
-
 		protected:
 		float _walkSpeed;
 		float _viewSpeed;		
 
 		public:
+		Vector3<float> LookAtPosition;
 		Matrix4x4<float> MatrixModel;
 		Matrix4x4<float> MatrixView;
 		Matrix4x4<float> MatrixProjection;		
@@ -38,8 +35,9 @@ namespace BF
 		Camera();
 
 		void Rotate(float x, float y);
-		void Move(Direcion direction);
+		void Move(Vector3<float> movement);
 		void Update(float deltaTime);
 		float GetAspectRatio();
+		void PerspectiveChange(CameraPerspective cmeraPerspective);
 	};
 }

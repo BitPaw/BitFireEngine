@@ -154,20 +154,22 @@ void BF::GameSystem::UpdateInput(InputContainer* input)
     KeyBoard& keyboard = input->KeyBoardInput;
     Mouse& mouse = input->MouseInput;    
     Camera& camera = Resource.MainCamera;
+    Vector3<float> movement;
 
     _mainWindow.Update(); // Pull inputs from window
 
-    if (keyboard.W.IsPressed()) { camera.Move(Direcion::Forward); }
-    if (keyboard.A.IsPressed()) { camera.Move(Direcion::Left); }
-    if (keyboard.S.IsPressed()) { camera.Move(Direcion::Backward); }
-    if (keyboard.D.IsPressed()) { camera.Move(Direcion::Right); }
+    if (keyboard.ShitftLeft.IsPressed()) { movement.Add(0, -1, 0); }
+    if (keyboard.W.IsPressed()) { movement.Add(0, 0, 1); }
+    if (keyboard.A.IsPressed()) { movement.Add(-1, 0, 0); }
+    if (keyboard.S.IsPressed()) { movement.Add(0, 0, -1); }
+    if (keyboard.D.IsPressed()) { movement.Add(1, 0, 0); }
     if (keyboard.SpaceBar.IsPressed()) 
     {
         camera.Velocity.Set(0.0f, 6.0f, .0f);
 
-        camera.Move(Direcion::Up); 
+        movement.Add(0, 1, 0);
     }
-    if (keyboard.ShitftLeft.IsPressed()) { camera.Move(Direcion::Down); }
+   
 
     if (keyboard.R.IsShortPressed())    
     {
@@ -195,11 +197,21 @@ void BF::GameSystem::UpdateInput(InputContainer* input)
         bitmap.Save("ScreenShot.bmp");
     }
 
-    /*
-    if (window->KeyBoardInput->Letter.F)
+    if (keyboard.F.IsLongPressed())
     {
-        camera->Settings->Mode = camera->Settings->Mode == CameraMode::Perspectdive ? CameraMode::Orthographic : CameraMode::Perspectdive;
-    }*/
+        switch (camera.Perspective)
+        {
+            case CameraPerspective::Orthographic:
+                camera.PerspectiveChange(CameraPerspective::Perspective);
+                break;
+
+            case CameraPerspective::Perspective:
+                camera.PerspectiveChange(CameraPerspective::Orthographic);
+                break;
+        }
+    }
+
+    camera.Move(movement);
 
     camera.Rotate(mouse.InputAxis[0], mouse.InputAxis[1]);
 

@@ -90,6 +90,13 @@ namespace BF
 			return Vector3<NumberType>(rx, ry, rz);
 		}
 
+		void Add(NumberType x, NumberType y, NumberType z)
+		{
+			this->Data[0] += x;
+			this->Data[1] += y;
+			this->Data[2] += z;
+		}
+
 		void Multiply(NumberType x, NumberType y, NumberType z)
 		{
 			this->Data[0] *= x;
@@ -109,9 +116,12 @@ namespace BF
 		{
 			NumberType length = Length();
 
-			Data[0] /= length;
-			Data[1] /= length;
-			Data[2] /= length;
+			if (length != 0)
+			{
+				Data[0] /= length;
+				Data[1] /= length;
+				Data[2] /= length;
+			}			
 		}
 
 		NumberType Length()

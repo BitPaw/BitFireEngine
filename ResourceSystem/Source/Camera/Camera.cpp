@@ -6,6 +6,22 @@ float BF::Camera::GetAspectRatio()
 	return Width / Height;
 }
 
+void BF::Camera::PerspectiveChange(CameraPerspective cmeraPerspective)
+{
+	Perspective = cmeraPerspective;
+
+	switch (Perspective)
+	{
+		case CameraPerspective::Orthographic:
+			MatrixProjection.Orthographic(-10.0f, 10.0f, -10.0f, 10.0f, Near, Far);
+			break;
+
+		case CameraPerspective::Perspective:
+			MatrixProjection.Perspective(FieldOfView, GetAspectRatio(), Near, Far);
+			break;
+	}
+}
+
 BF::Camera::Camera()
 {
 	_walkSpeed = 0.3;
@@ -15,23 +31,11 @@ BF::Camera::Camera()
 	Height = 1000;
 	Width = 1000;
 	Near = 0.01;
-	Far = -1;
-
-	Perspective = CameraPerspective::Perspective;
+	Far = 10000;
 
 	CurrentRotation.Set(0, 0, 0);
-	_up.Set(0.0f, 1.0f, 0.0f);
 
-	switch (Perspective)
-	{
-		case CameraPerspective::Orthographic:
-			MatrixProjection.Orthographic(-1.0f, 1.0f, -1.0f, 1.0f, Near, Far);
-			break;
-
-		case CameraPerspective::Perspective:
-			MatrixProjection.Perspective(FieldOfView, GetAspectRatio(), Near, Far);
-			break;
-	}
+	PerspectiveChange(CameraPerspective::Perspective);
 }
 
 void BF::Camera::Rotate(float x, float y)
@@ -62,50 +66,29 @@ void BF::Camera::Rotate(float x, float y)
 	float ry = sin(pitchRAD);
 	float rz = cos(pitchRAD) * sin(yawRAD);
 
-	_lookAt.Set(rx, ry, rz);
-	_lookAt.Normalize();
+	LookAtPosition.Set(rx, ry, rz);
+	LookAtPosition.Normalize();
 }
 
-void BF::Camera::Move(Direcion direction)
+void BF::Camera::Move(Vector3<float> movement)
 {
-	Vector3<float> movement;
-	float movementSpeed = _walkSpeed;
+	float xAxisMovement = movement.Data[0];
+	float yAxisMovement = movement.Data[1];
+	float zAxisMovement = movement.Data[2];
+	Vector3<float> yAxis(0, yAxisMovement, 0);
+	Vector3<float> xAxis;
+	Vector3<float> zAxis(zAxisMovement, 0, zAxisMovement);
+	Vector3<float> targetedMovement;	
 
-	switch (direction)
-	{
-		case Direcion::Up:
-			movement.Set(0, 1, 0);
-			break;
+	xAxis.CrossProduct(LookAtPosition, Vector3<float>(0, 1, 0));
+	xAxis.Multiply(xAxisMovement, 0, xAxisMovement);
+	xAxis.Normalize();
 
-		case Direcion::Down:
-			movement.Set(0, -1, 0);
-			break;
+	zAxis *= LookAtPosition;
 
-		case Direcion::Left:
-			movement.CrossProduct(_lookAt, _up);
-			movement.Multiply(-1, 0, -1);
-			movement.Normalize();
-			break;
+	targetedMovement = (xAxis + yAxis + zAxis) *_walkSpeed;
 
-		case Direcion::Right:
-			movement.CrossProduct(_lookAt, _up);
-			movement.Multiply(1, 0, 1);
-			movement.Normalize();
-			break;
-
-		case Direcion::Forward:
-			movement = _lookAt * Vector3<float>(1, 0, 1); // Remove Y movement
-			break;
-
-		case Direcion::Backward:
-			movement = _lookAt * Vector3<float>(-1, 0, -1);
-			break;
-	}
-
-	movement *= movementSpeed;
-
-	MatrixModel.Move(movement);
-	//MatrixView.Move(movement);
+	MatrixModel.Move(targetedMovement);
 }
 
 void BF::Camera::Update(float deltaTime)
@@ -116,7 +99,7 @@ void BF::Camera::Update(float deltaTime)
 	float walkSpeedSmoothed = deltaTime * _walkSpeed;
 	float viewSpeedSmoothed = deltaTime * _viewSpeed;
 
-	MatrixView.LookAt(currentPosition, currentPosition + _lookAt, _up);
+	MatrixView.LookAt(currentPosition, currentPosition + LookAtPosition, Vector3<float>(0,1,0));
 
 	Vector3<float> gravity = Vector3<float>(0.f, -0.918f, 0.f);
 
