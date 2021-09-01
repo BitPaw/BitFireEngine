@@ -1,9 +1,10 @@
 #include "Camera.h"
 #include <stdio.h>
+#include "../../../RenderSystem/Source/Window/Window.h"
 
 float BF::Camera::GetAspectRatio()
 {
-	return Width / Height;
+	return (float)Width / (float)Height;
 }
 
 void BF::Camera::PerspectiveChange(CameraPerspective cmeraPerspective)
@@ -106,4 +107,9 @@ void BF::Camera::Update(float deltaTime)
 	MatrixModel.Motion(Force, Velocity, 1, gravity, deltaTime);
 
 	//printf("CurrentPosition <%2.2f %2.2f %2.2f>\n", currentPosition.Data[0], currentPosition.Data[1], currentPosition.Data[2]);
+
+	Width = Window::Width;
+	Height = Window::Height;
+
+	PerspectiveChange(Perspective);
 }

@@ -5,7 +5,7 @@ namespace BF
 	{
 	private:
 		unsigned int _deltaTimeIndex = 0;
-		static const unsigned int _deltaTimeValues = 30;
+		static const unsigned int _deltaTimeValues = 1;
 
 		public:
 		float DeltaTime[_deltaTimeValues];

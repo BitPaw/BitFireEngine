@@ -782,15 +782,8 @@ void BF::ResourceManager::Add(SkyBox& skyBox)
 }
 
 void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
-{
-    LinkedListNode<Model*>* currentModel = _modelList.GetFirst();
-
-    if (deltaTime > 1)
-    {
-        return;
-    }
-
-    for ( ; currentModel != nullptr ; currentModel = currentModel->Next)
+{   
+    for (LinkedListNode<Model*>* currentModel = _modelList.GetFirst() ; currentModel != nullptr ; currentModel = currentModel->Next)
     {
         Model* model = currentModel->Element;
         auto& force = model->Force;
@@ -802,13 +795,6 @@ void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
         {
             model->ModelMatrix.Motion(force, velocity, mass, gravity, deltaTime);
         }
-
-       
-
-        //auto positio = model->ModelMatrix.CurrentPosition();
-
-        //model->ModelMatrix.Print();
-       // printf("Moved to %.2f|%.2f|%.2f\n", positio.Date[0], positio.Date[1], positio.Date[2]);
     }
 }
 
@@ -883,11 +869,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
             CameraDataGet(shaderProgramID);  
         }
 
-        //---[Change Shader Data?
         CameraDataUpdate(MainCamera);
-        //-----------------------------------------------------------------------------------------
-
-        //model->PrintModelData();
 
         unsigned int currentIndex = 0;
 
@@ -939,17 +921,19 @@ void BF::ResourceManager::PrintContent(bool detailed)
 
     if (detailed)
     {
-        const char* empty = "|                                                                                                  |\n";
-
         const char* message =
-            "+--------------------------------------------------------------------------------------------------+\n"
-            "|   Loaded Resources                                                                               |\n"
-            "+---<Models <%u>>-----------------------------------------------------------------------------------+\n";
+            "+---------------------------------------------------------------------------------------------------+\n"
+            "|   %-95s |\n"
+            "+-----+-----------------------+------------------------------------------------------------+--------+\n"
+            "|  ID | Name                  | Source - FilePath                                          | Size   |\n"
+            "+-----+-----------------------+------------------------------------------------------------+--------+\n";
 
+        const char* endLine = "+-----+-----------------------+------------------------------------------------------------+--------+\n\n";
 
-        printf(message, modelListSize);
-        printf(empty);
+        const char* line = "| %3i | %-21s | %-58s | %4i B |\n";
 
+    
+        printf(message, "Models");
 
         LinkedListNode<Model*>* currentModel = _modelList.GetFirst();
 
@@ -957,20 +941,15 @@ void BF::ResourceManager::PrintContent(bool detailed)
         {
             Model* model = currentModel->Element;
 
-            printf("| ID:%u %s\n", model->ID, &model->FilePath[0]);
+            printf(line, model->ID, model->Name, model->FilePath, sizeof(*model));
 
             currentModel = currentModel->Next;
         }
 
-
-        printf(empty);
-        printf("+---<Image <%u>>------------------------------------------------------------------------------------+\n", imageListSize);
-        printf(empty);
-
+        printf(endLine);
+        printf(message, "Images");
 
         LinkedListNode<Image*>* currentImage = _imageList.GetFirst();
-
-        printf("| ID | Format-Type     | Path\n");
 
         while (currentImage != nullptr)
         {
@@ -979,31 +958,30 @@ void BF::ResourceManager::PrintContent(bool detailed)
 
             if (image->ID == -1)
             {
-                sprintf(buffer, "-");
+              //  sprintf(buffer, "-");
             }
             else
             {
-                sprintf(buffer, "%u", image->ID);
+               // sprintf(buffer, "%u", image->ID);
             }       
+
+            printf(line, image->ID, image->Name, image->FilePath, sizeof(*image));
      
-            printf("| %2s | %s-%-11s | %s\n", buffer, ImageFormatToString(image->Format), ImageTypeToString(image->Type), image->FilePath);
+            //printf("| %2s | %s-%-11s | %s\n", buffer, ImageFormatToString(image->Format), ImageTypeToString(image->Type), image->FilePath);
 
             currentImage = currentImage->Next;
         }
 
-
-        printf(empty);
-        printf("+---<Sound <%u>>------------------------------------------------------------------------------------+\n", soundListSize);
-        printf(empty);
+        printf(endLine);
+        printf(message, "Sounds");
 
         for (size_t i = 0; i < soundListSize; i++)
         {
 
         }
 
-        printf(empty);
-        printf("+---<Font <%u>>-------------------------------------------------------------------------------------+\n", fontListSize);
-        printf(empty);
+        printf(endLine);
+        printf(message, "Font");
 
 
         LinkedListNode<Font*>* currentFont = _fontList.GetFirst();
@@ -1017,11 +995,8 @@ void BF::ResourceManager::PrintContent(bool detailed)
             currentFont = currentFont->Next;
         }
 
-
-        printf(empty);
-        printf("+---<Shader <%u>>-----------------------------------------------------------------------------------+\n", shaderListSize);
-        printf(empty);
-
+        printf(endLine);
+        printf(message, "Shader");
 
         LinkedListNode<ShaderProgram*>* currentChaderProgram = _shaderProgramList.GetFirst();
 
@@ -1041,18 +1016,15 @@ void BF::ResourceManager::PrintContent(bool detailed)
             currentChaderProgram = currentChaderProgram->Next;
         }
 
-
-        printf(empty);
-        printf("+---<Dialog <%u>>-----------------------------------------------------------------------------------+\n", dialogListSize);
-        printf(empty);
+        printf(endLine);
+        printf(message, "Dialog");
 
         for (size_t i = 0; i < dialogListSize; i++)
         {
 
         }
-
-        printf(empty);
-        printf("+--------------------------------------------------------------------------------------------------+\n");
+   
+        printf(endLine);
     }
     else
     {

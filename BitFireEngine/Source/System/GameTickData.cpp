@@ -4,7 +4,7 @@ BF::GameTickData::GameTickData()
 {
 	for (unsigned int i = 0; i < _deltaTimeValues; i++)
 	{
-		DeltaTime[_deltaTimeIndex] = 0;
+		DeltaTime[_deltaTimeIndex] = 0.0001;
 	}
 
 	ActiveTime = 0;

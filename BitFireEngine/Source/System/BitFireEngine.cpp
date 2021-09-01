@@ -13,6 +13,7 @@ BF::BitFireEngine::BitFireEngine()
 {
     _callbackListener = nullptr;
     IsRunning = false;
+    _deltaTime = 0;
 }
 
 void BF::BitFireEngine::SetCallBack(IBitFireEngineListener* callbackListener)
@@ -67,9 +68,7 @@ void BF::BitFireEngine::Update()
 {
     //---[Variable Reset]--------------------------------------------------
     float deltaTime = _stopWatch.Reset();
-
-    _gameTickData.ActiveTime = _mainWindow.ActiveTime;
-    _gameTickData.CalcualteFramesPerSecounds(deltaTime);
+    _deltaTime = deltaTime;
 
     _lastUIUpdate += deltaTime;
 
@@ -79,18 +78,16 @@ void BF::BitFireEngine::Update()
         _callbackListener->OnUpdateUI();
     }
 
-    float smoothedDelteTime = _gameTickData.GetSmoothDeltaTime();
-
     //---[User-Input]------------------------------------------------------
     UpdateInput(_mainWindow.GetInput());
 
     //---[Game-Logic]------------------------------------------------------
-    Resource.ModelsPhysicsApply(smoothedDelteTime);
+    Resource.ModelsPhysicsApply(deltaTime);
 
-    _callbackListener->OnUpdateGameLogic(smoothedDelteTime);
+    _callbackListener->OnUpdateGameLogic(deltaTime);
 
     //---[Render World]----------------------------------------------------
-    Resource.ModelsRender(smoothedDelteTime);
+    Resource.ModelsRender(deltaTime);
 
     IsRunning = !_mainWindow.ShouldCloseWindow;
 }
@@ -161,7 +158,7 @@ void BF::BitFireEngine::UpdateInput(InputContainer* input)
 
     camera.Rotate(mouse.InputAxis[0], mouse.InputAxis[1]);
 
-    camera.Update(_gameTickData.GetSmoothDeltaTime());
+    camera.Update(_deltaTime);
     keyboard.IncrementButtonTick();
     mouse.ResetAxis();
 }

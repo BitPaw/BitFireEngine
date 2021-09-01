@@ -46,7 +46,6 @@
     <ClInclude Include="Source\System\BitFireEngine.h" />
     <ClInclude Include="Source\System\GameTickData.h" />
     <ClInclude Include="Source\System\IBitFireEngineListener.hpp" />
-    <ClInclude Include="Source\System\SystemState.h" />
     <ClInclude Include="Source\UI\DialogBox\UIDialogBox.h" />
     <ClInclude Include="Source\UI\UIButton.h" />
     <ClInclude Include="Source\UI\UIElement.h" />

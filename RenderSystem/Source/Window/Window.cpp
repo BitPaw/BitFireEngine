@@ -7,6 +7,8 @@
 
 BF::Dictionary<GLFWwindow*, BF::InputContainer> BF::Window::WindowsInput;
 
+int BF::Window::Width = 0;
+int BF::Window::Height = 0;
 
 BF::Window::Window()
 {
@@ -157,11 +159,12 @@ void BF::Window::OnMousePosition(GLFWwindow* window, double xpos, double ypos)
     }
 }
 
-void BF::Window::OnWindowSizeChanged(GLFWwindow* window, int _width, int _height)
+void BF::Window::OnWindowSizeChanged(GLFWwindow* window, int width, int height)
 {
-   glViewport(0, 0, _width, _height);   
+    glViewport(0, 0, width, height); // Change rendering Image to size of screen
 
-   //currentWindow->Resize(_width, _height);
+    Width = width;
+    Height = height;
 }
 
 double BF::Window::GetTime()
@@ -319,6 +322,9 @@ void BF::Window::OnGLFWError(int errorCode, const char* description)
 bool BF::Window::Create(int width, int height, const char* title)
 {
     VideoConfig* videoConfig = new VideoConfig();//&BF::System.Config.Video;
+
+    Width = width;
+    Height = height;
 
     videoConfig->FullScreen = false;
     videoConfig->ScreenResolution[0] = width;

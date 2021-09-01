@@ -26,6 +26,9 @@ namespace BF
 		float ActiveTime;
 		bool ShouldCloseWindow;
 
+		static int Width;
+		static int Height;
+
 		// Events
 		//OnWindowCloseEvent OnWindowClose;
 

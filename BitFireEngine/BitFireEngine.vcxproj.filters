@@ -56,9 +56,6 @@
     <ClInclude Include="Source\System\GameTickData.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\System\SystemState.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\UI\DialogBox\UIDialogBox.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>

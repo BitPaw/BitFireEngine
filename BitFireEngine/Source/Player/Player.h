@@ -4,5 +4,6 @@ namespace BF
 {
 	class Player
 	{
+
 	};
 }

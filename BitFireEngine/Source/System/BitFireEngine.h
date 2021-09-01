@@ -1,8 +1,5 @@
 #pragma once
 
-#include "SystemState.h"
-#include "GameTickData.h"
-
 #include "../Player/Player.h"
 #include "../Configuration/ConfigContainer.h"
 
@@ -19,8 +16,8 @@ namespace BF
 		private:
 		//---[Elements}---------------------------------
 		StopWatch _stopWatch;
-		GameTickData _gameTickData;
 		Window _mainWindow;
+		float _deltaTime;
 		//----------------------------------------------
 
 		void UpdateInput(InputContainer* input);
