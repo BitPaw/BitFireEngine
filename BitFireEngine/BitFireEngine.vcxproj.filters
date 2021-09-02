@@ -21,9 +21,6 @@
     <ClCompile Include="Source\Player\Player.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\System\GameTickData.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\UI\DialogBox\UIDialogBox.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -51,9 +48,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Player\Player.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\GameTickData.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\UI\DialogBox\UIDialogBox.h">

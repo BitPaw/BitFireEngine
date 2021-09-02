@@ -31,7 +31,6 @@
     <ClCompile Include="Source\Player\Player.cpp" />
     <ClCompile Include="Source\Resource\ResouceManager.cpp" />
     <ClCompile Include="Source\System\BitFireEngine.cpp" />
-    <ClCompile Include="Source\System\GameTickData.cpp" />
     <ClCompile Include="Source\UI\DialogBox\UIDialogBox.cpp" />
     <ClCompile Include="Source\UI\UIButton.cpp" />
     <ClCompile Include="Source\UI\UIElement.cpp" />
@@ -44,7 +43,6 @@
     <ClInclude Include="Source\Resource\ResouceManager.h" />
     <ClInclude Include="Source\Resource\ResourceLoadMode.h" />
     <ClInclude Include="Source\System\BitFireEngine.h" />
-    <ClInclude Include="Source\System\GameTickData.h" />
     <ClInclude Include="Source\System\IBitFireEngineListener.hpp" />
     <ClInclude Include="Source\UI\DialogBox\UIDialogBox.h" />
     <ClInclude Include="Source\UI\UIButton.h" />

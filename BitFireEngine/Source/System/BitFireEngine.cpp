@@ -23,16 +23,24 @@ void BF::BitFireEngine::SetCallBack(IBitFireEngineListener* callbackListener)
 
 void BF::BitFireEngine::Start()
 {    
+    unsigned int versionMajor = 0;
+    unsigned int versionMinor = 0;
+    unsigned int versionPatch = 1;
+
     printf
     (
-        "+------------------------------------------------------+\n"
-        "| __________ .__   __  ___________.__                  |\n"
-        "| \\______   \\|__|_/  |_\\_   _____/|__|_______   ____   |\n"
-        "|  |    |  _/|  |\\   __\\|   __)   |  |\\_  __ \\_/ __ \\  |\n"
-        "|  |    |   \\|  | |  |  |   |     |  | |  | \\/\\  ___/  |\n"
-        "|  |________/|__| |__|  \\___|     |__| |__|    \\_____> |\n"
-        "+------------------------------------------------------+\n"
-    );
+        "+------------------------------------------------------+----------------------+\n"
+        "| __________ .__   __  ___________.__                  | Version    v.%i.%i.%03i |\n"
+        "| \\______   \\|__|_/  |_\\_   _____/|__|_______   ____   | Date     02 Sep 2021 |\n"
+        "|  |    |  _/|  |\\   __\\|   __)   |  |\\_  __ \\_/ __ \\  |                      |\n"
+        "|  |    |   \\|  | |  |  |   |     |  | |  | \\/\\  ___/  |                      |\n"
+        "|  |________/|__| |__|  \\___|     |__| |__|    \\_____> |                      |\n"
+        "+------------------------------------------------------+----------------------+\n"
+    ,
+        versionMajor,
+        versionMinor,
+        versionPatch
+        );
 
     _mainWindow.Create(1000, 1000, "[BFE] <BitFireEngine>");
 
@@ -54,10 +62,7 @@ void BF::BitFireEngine::Start()
         OpenGLAPI::TextureMaxLoaded()
     );
 
-
     _callbackListener->OnStartUp();
-
-    Resource.PrintContent(true);
    
     IsRunning = true;
 }

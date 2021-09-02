@@ -270,26 +270,17 @@ bool BF::OpenGLAPI::ShaderCompile(ShaderProgram& shaderProgram)
 
     shaderProgram.ID = glCreateProgram();
 
-    printf("[i][OpenGL][Shader] Create Program...\n");
-
     for (unsigned int i = 0; i < 2; i++)
     {
         Shader& shader = shaderProgram.ShaderList[i];
         unsigned int type = ToShaderType(shader.Type);
      
-        printf("[i][OpenGL][Shader] Loading from <%s>... Detected:<%s>... ", shader.FilePath, ShaderTypeToString(type));
-
         shader.ID = OpenGLAPI::ShaderCompile(type, &shader.Content[0]);
 
         if (shader.ID == -1)
         {
             isValidShader = false;
-            printf("[Error]\n");
             break;
-        }
-        else
-        {
-            printf("[OK]\n");
         }
 
         isValidShader = true;
@@ -301,7 +292,6 @@ bool BF::OpenGLAPI::ShaderCompile(ShaderProgram& shaderProgram)
     {
         glLinkProgram(shaderProgram.ID);
         glValidateProgram(shaderProgram.ID);
-        printf("[i][OpenGL][Shader] Program sucessfully created!\n");
     }
 
     // We used the Shaders above to compile, these elements are not used anymore.

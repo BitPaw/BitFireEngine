@@ -15,4 +15,4 @@ void main()
     TexturePosition = position;
 
    gl_Position = pos;
-};
+}

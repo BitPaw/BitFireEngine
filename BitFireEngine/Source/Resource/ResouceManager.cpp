@@ -4,8 +4,6 @@
 #include "../../../RenderSystem/Source/OpenGLAPI.h"
 #include "../../../ResourceSystem/Source/Time/StopWatch.h"
 #include "../../../ResourceSystem/Source/Game/SkyBox.h"
-#include "../System/GameTickData.h"
-
 
 
 int _matrixModelID;
@@ -227,8 +225,6 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString, ResourceLoad
             if (isLevel) resourceType = ResourceType::Level;
         }
 
-        printf("[i][Resource] Load from <%s>.\n", filePathString);
-
         switch (resourceType)
         {
             case ResourceType::Dialog:
@@ -339,39 +335,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString, ResourceLoad
 
 BF::ResourceLoadingResult BF::ResourceManager::Load(Model& model, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
-    printf("[>][Resource][Model] Loading from <%s> - ", filePath);
-
-    StopWatch stopWatch;
-    stopWatch.Start();
-
     ResourceLoadingResult errorCode = model.Load(filePath);
-
-    double time = stopWatch.Stop();
-
-    if (errorCode == ResourceLoadingResult::Successful)
-    {
-        printf("[OK] - ");
-    }
-    else
-    {
-        printf("[Failed] - ");
-    }
-
-    if (time < 1)
-    {
-        if (time > 0.1)
-        {
-            printf("%.1fms\n", time * 1000);
-        }
-        else
-        {
-            printf("%.1fus\n", (time * 1000) * 1000);
-        }
-    }
-    else
-    {
-        printf("%.1fs\n", time);
-    }
 
     if (errorCode == ResourceLoadingResult::Successful)
     {    
@@ -922,15 +886,15 @@ void BF::ResourceManager::PrintContent(bool detailed)
     if (detailed)
     {
         const char* message =
-            "+---------------------------------------------------------------------------------------------------+\n"
-            "|   %-95s |\n"
-            "+-----+-----------------------+------------------------------------------------------------+--------+\n"
-            "|  ID | Name                  | Source - FilePath                                          | Size   |\n"
-            "+-----+-----------------------+------------------------------------------------------------+--------+\n";
+            "+-----------------------------------------------------------------------------+\r\n"
+            "|   %-73s |\n"
+            "+-----+-----------------------+--------------------------------------+--------+\n"
+            "|  ID | Name                  | Source - FilePath                    | Size   |\n"
+            "+-----+-----------------------+--------------------------------------+--------+\n";
 
-        const char* endLine = "+-----+-----------------------+------------------------------------------------------------+--------+\n\n";
+        const char* endLine = "+-----+-----------------------+--------------------------------------+--------+\n\n";
 
-        const char* line = "| %3i | %-21s | %-58s | %4i B |\n";
+        const char* line = "| %3i | %-21s | %-36s | %4i B |\n";
 
     
         printf(message, "Models");

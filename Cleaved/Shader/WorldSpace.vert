@@ -1,4 +1,4 @@
-#version 300 es
+#version 330
 
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
@@ -25,4 +25,4 @@ void main()
     vertex.TexturePosition = texturePosition;
 
     gl_Position = (ModelViewProjection * vec4(position, 1.0f));
-};
+}

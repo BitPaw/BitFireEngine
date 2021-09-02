@@ -382,7 +382,7 @@ bool BF::Window::Create(int width, int height, const char* title)
 
     glfwMakeContextCurrent(_window);
 
-    printf("[i][GLEW] Initialize... ");
+    printf("[i][GLEW] Initialize OpenGL context... ");
 
     if (glewInit() != GLEW_OK)
     {

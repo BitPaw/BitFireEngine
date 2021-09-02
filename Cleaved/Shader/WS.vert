@@ -28,4 +28,4 @@ void main()
     vertex.TexturePosition = texturePosition; //* tcMultiplier
 
     gl_Position = matrixModelViewProjection;
-};
+}

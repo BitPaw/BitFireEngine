@@ -57,6 +57,8 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     GameSystem.Resource.Add(*text);
 
     printf("[i][Info] Loading took %.2fs\n", stopwatch.Stop());
+
+    GameSystem.Resource.PrintContent(true);
 }
 
 void Cleaved::CleavedGameSystem::OnShutDown()
