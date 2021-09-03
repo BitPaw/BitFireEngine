@@ -1,13 +1,13 @@
 #include "BitFireEngine.h"
 
 #include <future>
-#include "../../../ResourceSystem/Source/Model/Model.h"
-#include "../../../RenderSystem/Source/OpenGLAPI.h"
-#include "../../../RenderSystem/Source/Device/InputContainer.h"
-#include "../../../ResourceSystem/Source/Time/StopWatch.h"
 #include "../UI/UIText.h"
-#include "../../../ResourceSystem/Source/File/File.h"
-#include "../../../ResourceSystem/Source/Image/BMP/BMP.h"
+#include "../../../SystemResource/Source/Model/Model.h"
+#include "../../../SystemResource/Source/Time/StopWatch.h"
+#include "../../../SystemResource/Source/File/File.h"
+#include "../../../SystemResource/Source/Image/BMP/BMP.h"
+#include "../../../SystemRender/Source/OpenGLAPI.h"
+#include "../../../SystemRender/Source/Device/InputContainer.h"
 
 BF::BitFireEngine::BitFireEngine()
 {

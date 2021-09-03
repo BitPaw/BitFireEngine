@@ -1,19 +1,19 @@
 #pragma once
 
-#include "../../../ResourceSystem/Source/ResourceType.hpp"
+#include "../../../SystemResource/Source/ResourceType.hpp"
 
-#include "../../../ResourceSystem/Source/Shader/Shader.h"
-#include "../../../ResourceSystem/Source/Image/Image.h"
-#include "../../../ResourceSystem/Source/Image/ImageWrap.h"
-#include "../../../ResourceSystem/Source/Model/Model.h"
-#include "../../../ResourceSystem/Source/Sound/Sound.h"
-#include "../../../ResourceSystem/Source/Font/Font.h"
-#include "../../../ResourceSystem/Source/Dialog/Dialog.h"
-#include "../../../ResourceSystem/Source/Font/FNT/FNT.h"
-#include "../../../ResourceSystem/Source/Level/Level.h"
-#include "../../../ResourceSystem/Source/Game/SkyBox.h"
+#include "../../../SystemResource/Source/Shader/Shader.h"
+#include "../../../SystemResource/Source/Image/Image.h"
+#include "../../../SystemResource/Source/Image/ImageWrap.h"
+#include "../../../SystemResource/Source/Model/Model.h"
+#include "../../../SystemResource/Source/Sound/Sound.h"
+#include "../../../SystemResource/Source/Font/Font.h"
+#include "../../../SystemResource/Source/Dialog/Dialog.h"
+#include "../../../SystemResource/Source/Font/FNT/FNT.h"
+#include "../../../SystemResource/Source/Level/Level.h"
+#include "../../../SystemResource/Source/Game/SkyBox.h"
+#include "../../../SystemResource/Source/Container/LinkedList.hpp"
 
-#include "../../../ResourceSystem/Source/Container/LinkedList.hpp"
 #include "ResourceLoadMode.h"
 
 namespace BF

@@ -1,11 +1,10 @@
 #pragma once
 
 #include "../Player/Player.h"
-#include "../Configuration/ConfigContainer.h"
 
-#include "../../../RenderSystem/Source/Window/Window.h"
-#include "../../../ResourceSystem/Source/Time/StopWatch.h"
-#include "../../../ResourceSystem/Source/Event/Event.hpp"
+#include "../../../SystemRender/Source/Window/Window.h"
+#include "../../../SystemResource/Source/Time/StopWatch.h"
+#include "../../../SystemResource/Source/Event/Event.hpp"
 #include "../../../BitFireEngine/Source/Resource/ResouceManager.h"
 #include "IBitFireEngineListener.hpp"
 
@@ -23,7 +22,6 @@ namespace BF
 		void UpdateInput(InputContainer* input);
 
 		public:
-		ConfigContainer Config;
 		//GameTickEvent OnGameTick;
 		//LevelManager Level;
 		ResourceManager Resource;

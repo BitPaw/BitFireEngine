@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../../../ResourceSystem/Source/Container/Queue.hpp"
-#include "../../../../ResourceSystem/Source/Dialog/Dialog.h"
+#include "../../../../SystemResource/Source/Container/Queue.hpp"
+#include "../../../../SystemResource/Source/Dialog/Dialog.h"
 
 namespace BF
 {

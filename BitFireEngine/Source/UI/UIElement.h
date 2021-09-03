@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../ResourceSystem/Source/Model/Model.h"
+#include "../../../SystemResource/Source/Model/Model.h"
 
 namespace BF
 {

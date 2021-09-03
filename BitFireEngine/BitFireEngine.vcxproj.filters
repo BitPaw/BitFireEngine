@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Configuration\ConfigContainer.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Player\Player.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -44,9 +41,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Configuration\ConfigContainer.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Player\Player.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>

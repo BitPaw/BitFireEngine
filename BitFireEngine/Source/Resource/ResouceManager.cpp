@@ -1,9 +1,9 @@
 #include "ResouceManager.h"
-#include "../../../ResourceSystem/Source/Font/FNT/FNTPage.h"
-#include "../../../ResourceSystem/Source/File/File.h"
-#include "../../../RenderSystem/Source/OpenGLAPI.h"
-#include "../../../ResourceSystem/Source/Time/StopWatch.h"
-#include "../../../ResourceSystem/Source/Game/SkyBox.h"
+#include "../../../SystemResource/Source/Font/FNT/FNTPage.h"
+#include "../../../SystemResource/Source/File/File.h"
+#include "../../../SystemResource/Source/Time/StopWatch.h"
+#include "../../../SystemResource/Source/Game/SkyBox.h"
+#include "../../../SystemRender/Source/OpenGLAPI.h"
 
 
 int _matrixModelID;
@@ -693,12 +693,12 @@ void BF::ResourceManager::Add(Image& image)
         _imageList.Add(&image);
     }
 
+    PushToGPU(image);
+
     if (firstImage)
     {
         _defaultTextureID = image.ID;
     }
-
-    PushToGPU(image);
 }
 
 void BF::ResourceManager::Add(Font& font)
@@ -840,7 +840,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
         for (unsigned int i = 0; i < model->MeshList.Size(); i++)
         {
             Mesh& mesh = model->MeshList[i];
-            Material* material = mesh.MeshMaterial;           
+            Material* material = mesh.MeshMaterial;    
             unsigned int textureID = _defaultTextureID;
             unsigned int amountToRender = 0; 
             bool hasMaterial = material != nullptr;
@@ -852,11 +852,15 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
 
                 if (hasTexture)
                 {
-                    textureID = texture->ID;
+                    textureID = texture->ID;      
 
                     OpenGLAPI::TextureUse(texture->Type, textureID);
                 }
             }
+            else
+            {
+                OpenGLAPI::TextureUse(ImageType::Texture2D, textureID);
+            }     
 
             OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, model->ModelMatrix.Data);
 
