@@ -3,7 +3,7 @@
 
 BF::Resource::Resource()
 {
-	ID = ResourceIDUnused;
+	ID = ResourceIDUndefined;
 
 	strcpy(Name, "<Unnamed>");
 	strcpy(FilePath, "<Internal Origin>");

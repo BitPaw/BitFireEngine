@@ -280,7 +280,7 @@ BF::ResourceLoadingResult BF::Image::Load(const char* filePath)
     AsciiString fileExtension(file.Extension);
     ImageFileExtension imageFormat = CheckFileExtension(fileExtension);
 
-    ID = ResourceIDCurrentlyLoading;
+    ID = ResourceIDLoading;
 
     //strcpy(Name, filePath);
     strcpy(FilePath, file.Path);
@@ -326,7 +326,7 @@ BF::ResourceLoadingResult BF::Image::Load(const char* filePath)
             return ResourceLoadingResult::FormatNotSupported;
     }
 
-    ID = ResourceIDReadyToBeCached;
+    ID = ResourceIDLoaded;
 
     return ResourceLoadingResult::Successful;
 }

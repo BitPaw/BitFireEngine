@@ -38,9 +38,6 @@ void ZEE::ZEEGameSystem::OnStartUp()
     GameSystem.Resource.Load("Level/MainMenu.lev");
     GameSystem.Resource.Load(cube, "Model/Cube.obj");
 
-  
-
-    
     cube.ModelMatrix.Scale(10.0f);
     cube.EnablePhysics = true;
    // GameSystem.Resource.Add(cube);
@@ -67,6 +64,7 @@ void ZEE::ZEEGameSystem::OnStartUp()
     text = new BF::UIText("SampleText", *GameSystem.Resource.DefaultFont, -1, -0.8);
     text->RenderInformation.ShaderProgramID = hudShaderID.ID;
     //text->SetFont(*Resource.DefaultFont);
+    text->SetText(text->TextContent);
     GameSystem.Resource.Add(*text);
     
 
@@ -84,16 +82,14 @@ BF::Vector3<float> rot(0.0349066,0,0);
 
 void ZEE::ZEEGameSystem::OnUpdateGameLogic(float deltaTime)
 {
-    /*
+    
     if (cube.ModelMatrix.CurrentPosition().Y <= 0)
     {
         //cube.ModelMatrix.Move(0, tcap, 0);
         cube.Velocity.Set(0, 90, 0);
-    }*/
+    }
 
     _deltaTime = deltaTime;
-
-
 }
 
 

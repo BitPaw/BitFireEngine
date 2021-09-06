@@ -179,10 +179,10 @@ void BF::ResourceManager::PushToGPU(Model& model)
 {
     unsigned int& modelID = model.ID;
     bool isAlreadyLinked = (int)modelID > 0;
-    bool isUsable = modelID == ResourceIDReadyToUpload || isAlreadyLinked;
+    bool isUsable = modelID == ResourceIDLoaded || isAlreadyLinked;
     ModelRenderInformation& renderInfo = model.RenderInformation;
 
-    modelID = ResourceIDCurrentlyLoading;
+    modelID = ResourceIDLoading;
 
     if (!isUsable)
     {
@@ -223,7 +223,7 @@ void BF::ResourceManager::PushToGPU(Model& model)
 
 void BF::ResourceManager::PushToGPU(Image& image)
 {
-    if (image.ID == ResourceIDReadyToUpload)
+    if (image.ID == ResourceIDLoaded)
     {
         OpenGLAPI::RegisterImage(image);
 
@@ -240,7 +240,7 @@ void BF::ResourceManager::CheckUncachedData()
     {
         Model* model = node->Element;
 
-        if (model->ID == ResourceIDReadyToUpload)
+        if (model->ID == ResourceIDLoaded)
         {
             PushToGPU(*model);
         }    
@@ -250,7 +250,7 @@ void BF::ResourceManager::CheckUncachedData()
     {
         Image* image = node->Element;
 
-        if (image->ID == ResourceIDReadyToUpload)
+        if (image->ID == ResourceIDLoaded)
         {
             PushToGPU(*image);
         }
@@ -397,24 +397,15 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString, ResourceLoad
 
 static int inmageID = 0;
 
-void BF::ResourceManager::LoadAsync(const char* filePath)
-{
-    Image* image = new Image();
-    ResourceLoadingResult errorCode = image->Load(filePath);
-
-    sprintf(image->Name, "Image Nr.%i", ++inmageID);
-
-    if (errorCode == ResourceLoadingResult::Successful)
-    {
-        Add(*image);
-    }
-}
-
 BF::ResourceLoadingResult BF::ResourceManager::Load(Model& model, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
     strcpy(model.FilePath, filePath);
 
-    std::thread* modelLoaderThread = new std::thread([](ResourceManager* resourceManager, Model* model, const char* filePath)
+    model.ID = ResourceIDLoading;
+
+    Add(model);
+
+    std::thread* modelLoaderThread = new std::thread([](ResourceManager* resourceManager, Model* model)
     {
         ResourceLoadingResult errorCode = model->Load();
 
@@ -427,6 +418,11 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(Model& model, const char* fi
                 std::thread* asy = new std::thread([](ResourceManager* resourceManager, Material* material)
                 {
                     Image* image = new Image();
+
+                    image->ID = ResourceIDLoading;
+
+                    resourceManager->Add(*image);
+
                     ResourceLoadingResult errorCode = image->Load(material->TextureFilePath);
 
                     sprintf(image->Name, "Image Nr.%i", ++inmageID);
@@ -436,15 +432,13 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(Model& model, const char* fi
                         material->Texture = image;
                     }
 
-                    resourceManager->Add(*image);
-
                 }, resourceManager, &modelMaterial);
             }
         }
 
-       resourceManager->Add(*model);
+       model->ID = ResourceIDLoaded;  
 
-    }, this, &model, filePath);
+    }, this, &model);
 
     return ResourceLoadingResult::Successful;
 }
@@ -769,32 +763,16 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(ShaderProgram& shaderProgram
 
 void BF::ResourceManager::Add(Model& model)
 {
-    bool readyToCache = model.ID == ResourceIDReadyToBeCached;
-
-    if (readyToCache)
-    {
-        model.ID = ResourceIDReadyToUpload;
-        _modelAdd.Lock();
-        _modelList.Add(&model);
-        _modelAdd.Release();
-    }
-
-   // PushToGPU(model);
+    _modelAdd.Lock();
+    _modelList.Add(&model);
+    _modelAdd.Release();
 }
 
 void BF::ResourceManager::Add(Image& image)
-{
-  
-    bool readyToCache = image.ID == ResourceIDReadyToBeCached;
-
-    if (readyToCache)
-    {
-        image.ID = ResourceIDReadyToUpload;
-
-        _imageAdd.Lock();
-        _imageList.Add(&image);
-        _imageAdd.Release();
-    }
+{  
+    _imageAdd.Lock();
+    _imageList.Add(&image);
+    _imageAdd.Release();
 }
 
 void BF::ResourceManager::Add(Font& font)
@@ -904,13 +882,17 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
         unsigned int shaderProgramID = renderInfo.ShaderProgramID;
         bool useDefaultShader = shaderProgramID == -1;
         bool changeShader = shaderProgramID != _lastUsedShaderProgram;
+        bool isRegistered = ((int)model->ID) >= 0;
+        bool skipRendering = !(renderInfo.ShouldItBeRendered && isRegistered);
 
         currentModel = currentModel->Next;
 
-        if (!renderInfo.ShouldItBeRendered && (int)model->ID < 0)
+        if (skipRendering)
         {
             continue;
         }
+
+        assert(isRegistered);
 
         if (useDefaultShader)
         {

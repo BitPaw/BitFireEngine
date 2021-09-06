@@ -42,7 +42,6 @@ BF::UIText::UIText(AsciiString& text, Font& font, float x, float y)
 void BF::UIText::SetFont(Font& font)
 {
 	_font = &font;
-
 }
 
 void BF::UIText::SetTextPosition(float x, float y)
@@ -73,6 +72,8 @@ void BF::UIText::SetText(AsciiString& text)
 	{
 		return;
 	}
+
+	ID = ResourceIDLoading;
 
 	AsciiString currentText(TextContent);
 
@@ -216,6 +217,8 @@ void BF::UIText::SetText(AsciiString& text)
 	}
 
 	UpdateGlobalMesh();
+
+	ID = ResourceIDLoaded;
 }
 
 void BF::UIText::UpdateText()
