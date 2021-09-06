@@ -13,8 +13,11 @@
 #include "../../../SystemResource/Source/Level/Level.h"
 #include "../../../SystemResource/Source/Game/SkyBox.h"
 #include "../../../SystemResource/Source/Container/LinkedList.hpp"
+#include "../../../SystemResource/Source/Async/AsyncLock.h"
 
 #include "ResourceLoadMode.h"
+
+#include <thread>
 
 namespace BF
 {
@@ -39,6 +42,9 @@ namespace BF
 
         void UpdateVBOData(Model& model);
 
+        // Async Locks
+        AsyncLock _imageAdd;
+        AsyncLock _modelAdd;
 
         public:
         Camera MainCamera;
@@ -48,6 +54,8 @@ namespace BF
         ResourceManager();
         ~ResourceManager();
 
+        Model* GetModel(unsigned int index);
+
         void UnloadAll();
 
         void PushToGPU(Model& model);
@@ -55,9 +63,11 @@ namespace BF
         //void Add(Sound& sound);
         //void RegisterGPU(Font& font);
 
-     
+        void CheckUncachedData();
 
         Resource* Load(const char* filePathString, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);
+
+        void LoadAsync(const char* filePath);
 
         ResourceLoadingResult Load(Model& model, const char* filePath, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);
         ResourceLoadingResult Load(Image& image, const char* filePath, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);

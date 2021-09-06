@@ -460,6 +460,11 @@ BF::ModelType BF::Model::CheckFileExtension(const char* fileExtension)
     return ModelType::UnKown;
 }
 
+BF::ResourceLoadingResult BF::Model::Load()
+{
+    return Load(FilePath);
+}
+
 BF::ResourceLoadingResult BF::Model::Load(const char* filePath)
 {
     if (filePath == nullptr)
@@ -470,6 +475,7 @@ BF::ResourceLoadingResult BF::Model::Load(const char* filePath)
     File file(filePath);
     ModelType modelType = CheckFileExtension(file.Extension);
 
+    ID = ResourceIDCurrentlyLoading;
     strcpy(FilePath, filePath);
 
     switch (modelType)
@@ -501,6 +507,8 @@ BF::ResourceLoadingResult BF::Model::Load(const char* filePath)
         default:
             return ResourceLoadingResult::FormatNotSupported;
     }
+
+    ID = ResourceIDReadyToBeCached;
 
     return ResourceLoadingResult::Successful;
 }

@@ -273,11 +273,14 @@ BF::ResourceLoadingResult BF::Image::Load(const char* filePath)
     
     if (!file.DoesFileExist())
     {
+        ID = ResourceIDFileNotFound;
         return ResourceLoadingResult::FileNotFound;
     }
 
     AsciiString fileExtension(file.Extension);
     ImageFileExtension imageFormat = CheckFileExtension(fileExtension);
+
+    ID = ResourceIDCurrentlyLoading;
 
     //strcpy(Name, filePath);
     strcpy(FilePath, file.Path);
@@ -322,6 +325,8 @@ BF::ResourceLoadingResult BF::Image::Load(const char* filePath)
         default:
             return ResourceLoadingResult::FormatNotSupported;
     }
+
+    ID = ResourceIDReadyToBeCached;
 
     return ResourceLoadingResult::Successful;
 }

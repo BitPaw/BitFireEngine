@@ -4,6 +4,7 @@
 #include "../../../SystemResource/Source/Time/StopWatch.h"
 #include "../../../SystemResource/Source/Game/SkyBox.h"
 #include "../../../SystemRender/Source/OpenGLAPI.h"
+#include <thread>
 
 
 int _matrixModelID;
@@ -136,15 +137,37 @@ void BF::ResourceManager::UpdateVBOData(Model& model)
 BF::ResourceManager::ResourceManager()
 {
     _lastUsedShaderProgram = -1;
-    _defaultShaderID = 0;
-    _defaultTextureID = 0;
+    _defaultShaderID = -1;
+    _defaultTextureID = -1;
 
     DefaultFont = nullptr;
+
+    _imageAdd.Create();
+    _modelAdd.Create();
 }
 
 BF::ResourceManager::~ResourceManager()
 {
+    _imageAdd.Delete();
+    _modelAdd.Delete();
     UnloadAll();
+}
+
+BF::Model* BF::ResourceManager::GetModel(unsigned int index)
+{
+    unsigned int currentIndex = 0;
+
+    for (LinkedListNode<Model*>* node = _modelList.GetFirst(); node != nullptr; node = node->Next)
+    {
+        Model* model = node->Element;
+
+        if (index == currentIndex++)
+        {
+            return model;
+        }
+    }
+
+    return nullptr;
 }
 
 void BF::ResourceManager::UnloadAll()
@@ -155,8 +178,16 @@ void BF::ResourceManager::UnloadAll()
 void BF::ResourceManager::PushToGPU(Model& model)
 {
     unsigned int& modelID = model.ID;
-    bool isAlreadyLinked = modelID != -1;
+    bool isAlreadyLinked = (int)modelID > 0;
+    bool isUsable = modelID == ResourceIDReadyToUpload || isAlreadyLinked;
     ModelRenderInformation& renderInfo = model.RenderInformation;
+
+    modelID = ResourceIDCurrentlyLoading;
+
+    if (!isUsable)
+    {
+        return;
+    }
 
     if (isAlreadyLinked)
     {
@@ -192,7 +223,38 @@ void BF::ResourceManager::PushToGPU(Model& model)
 
 void BF::ResourceManager::PushToGPU(Image& image)
 {
-    OpenGLAPI::RegisterImage(image);
+    if (image.ID == ResourceIDReadyToUpload)
+    {
+        OpenGLAPI::RegisterImage(image);
+
+        if (_defaultTextureID == -1)
+        {
+            _defaultTextureID = image.ID;
+        }
+    }   
+}
+
+void BF::ResourceManager::CheckUncachedData()
+{  
+    for (LinkedListNode<Model*>* node = _modelList.GetFirst(); node != nullptr; node = node->Next)
+    {
+        Model* model = node->Element;
+
+        if (model->ID == ResourceIDReadyToUpload)
+        {
+            PushToGPU(*model);
+        }    
+    }
+
+    for (LinkedListNode<Image*>* node = _imageList.GetFirst() ; node != nullptr ; node = node->Next)
+    {
+        Image* image = node->Element;
+
+        if (image->ID == ResourceIDReadyToUpload)
+        {
+            PushToGPU(*image);
+        }
+    }
 }
 
 BF::Resource* BF::ResourceManager::Load(const char* filePathString, ResourceLoadMode resourceLoadMode)
@@ -333,40 +395,69 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString, ResourceLoad
     return resource;
 }
 
-BF::ResourceLoadingResult BF::ResourceManager::Load(Model& model, const char* filePath, ResourceLoadMode resourceLoadMode)
+static int inmageID = 0;
+
+void BF::ResourceManager::LoadAsync(const char* filePath)
 {
-    ResourceLoadingResult errorCode = model.Load(filePath);
+    Image* image = new Image();
+    ResourceLoadingResult errorCode = image->Load(filePath);
+
+    sprintf(image->Name, "Image Nr.%i", ++inmageID);
 
     if (errorCode == ResourceLoadingResult::Successful)
-    {    
-        for (unsigned int i = 0; i < model.MaterialList.Size(); i++)
+    {
+        Add(*image);
+    }
+}
+
+BF::ResourceLoadingResult BF::ResourceManager::Load(Model& model, const char* filePath, ResourceLoadMode resourceLoadMode)
+{
+    strcpy(model.FilePath, filePath);
+
+    std::thread* modelLoaderThread = new std::thread([](ResourceManager* resourceManager, Model* model, const char* filePath)
+    {
+        ResourceLoadingResult errorCode = model->Load();
+
+        if (errorCode == ResourceLoadingResult::Successful)
         {
-            Material& material = model.MaterialList[i];
-            Image* image = new Image();
-
-            ResourceLoadingResult imageErrorCode = Load(*image, material.TextureFilePath);
-
-            if (imageErrorCode == ResourceLoadingResult::Successful)
+            for (unsigned int i = 0; i < model->MaterialList.Size(); i++)
             {
-                material.Texture = image;
+                Material& modelMaterial = model->MaterialList[i];
 
-                Add(*image);
+                std::thread* asy = new std::thread([](ResourceManager* resourceManager, Material* material)
+                {
+                    Image* image = new Image();
+                    ResourceLoadingResult errorCode = image->Load(material->TextureFilePath);
+
+                    sprintf(image->Name, "Image Nr.%i", ++inmageID);
+
+                    if (errorCode == ResourceLoadingResult::Successful)
+                    {
+                        material->Texture = image;
+                    }
+
+                    resourceManager->Add(*image);
+
+                }, resourceManager, &modelMaterial);
             }
         }
-    }
 
-    return errorCode;
+       resourceManager->Add(*model);
+
+    }, this, &model, filePath);
+
+    return ResourceLoadingResult::Successful;
 }
 
 BF::ResourceLoadingResult BF::ResourceManager::Load(Image& image, const char* filePath, ResourceLoadMode resourceLoadMode)
 {
     ResourceLoadingResult errorCode = image.Load(filePath);
-
+    
     if (errorCode == ResourceLoadingResult::Successful)
     {
         Add(image);
     }
-
+  
     return errorCode;
 }
 
@@ -578,13 +669,18 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(Level& level, const char* fi
                 level.ModelList[modelCounter++] = loadedModel;
                 //-------------------
 
-                //--[Apply Data]-------------
-                loadedModel->MoveTo(position);
-                loadedModel->Rotate(rotation);
-                loadedModel->Scale(scale);
-                loadedModel->UpdateGlobalMesh();
+                rotation.X = Math::DegreeToRadians(rotation.X);
+                rotation.Y = Math::DegreeToRadians(rotation.Y);
+                rotation.Z = Math::DegreeToRadians(rotation.Z);
 
-                Add(*loadedModel);
+                //--[Apply Data]-------------
+                //loadedModel->DirectMorth = false;
+                //loadedModel->ModelMatrix.Move(position);
+                //loadedModel->ModelMatrix.Rotate(rotation);
+                loadedModel->ModelMatrix.Scale(scale);
+                //loadedModel->UpdateGlobalMesh();
+
+                //Add(*loadedModel);
                 //-----------------------
                 break;
             }
@@ -658,7 +754,7 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(Level& level, const char* fi
 
 BF::ResourceLoadingResult BF::ResourceManager::Load(ShaderProgram& shaderProgram, const char* vertexShader, const char* fragmentShader, ResourceLoadMode ResourceLoadMode)
 {
-    shaderProgram.AddShader((char*)vertexShader, (char*)fragmentShader);
+    shaderProgram.AddShader(vertexShader, fragmentShader);
     shaderProgram.Load();
 
     bool validShader = OpenGLAPI::ShaderCompile(shaderProgram);
@@ -673,31 +769,31 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(ShaderProgram& shaderProgram
 
 void BF::ResourceManager::Add(Model& model)
 {
-    bool isRegistered = model.ID != -1;
+    bool readyToCache = model.ID == ResourceIDReadyToBeCached;
 
-    if (!isRegistered)
+    if (readyToCache)
     {
+        model.ID = ResourceIDReadyToUpload;
+        _modelAdd.Lock();
         _modelList.Add(&model);
+        _modelAdd.Release();
     }
 
-    PushToGPU(model);
+   // PushToGPU(model);
 }
 
 void BF::ResourceManager::Add(Image& image)
 {
-    bool firstImage = _imageList.Size() == 0;
-    bool isRegistered = image.ID != -1;
+  
+    bool readyToCache = image.ID == ResourceIDReadyToBeCached;
 
-    if (!isRegistered)
+    if (readyToCache)
     {
+        image.ID = ResourceIDReadyToUpload;
+
+        _imageAdd.Lock();
         _imageList.Add(&image);
-    }
-
-    PushToGPU(image);
-
-    if (firstImage)
-    {
-        _defaultTextureID = image.ID;
+        _imageAdd.Release();
     }
 }
 
@@ -785,6 +881,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
             OpenGLAPI::DrawOrder(true);          
 
             OpenGLAPI::UseShaderProgram(shaderID);
+            _lastUsedShaderProgram = shaderID;
 
             CameraDataGet(shaderID);        
             CameraDataUpdate(MainCamera);                               
@@ -810,7 +907,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
 
         currentModel = currentModel->Next;
 
-        if (!renderInfo.ShouldItBeRendered)
+        if (!renderInfo.ShouldItBeRendered && (int)model->ID < 0)
         {
             continue;
         }

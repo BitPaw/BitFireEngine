@@ -3,6 +3,13 @@
 #define ResourceNameSize 30u
 #define ResourceFilePathSize 60u
 
+#define ResourceIDUndefined -1
+#define ResourceIDFileNotFound -2
+#define ResourceIDCurrentlyLoading -3
+#define ResourceIDReadyToBeCached -4
+#define ResourceIDReadyToUpload -6
+#define ResourceIDUnused -5
+
 namespace BF
 {
 	/*

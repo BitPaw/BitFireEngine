@@ -80,6 +80,9 @@ void BF::BitFireEngine::Update()
     if (_lastUIUpdate >= .20f)
     {
         _lastUIUpdate = 0;
+
+        Resource.CheckUncachedData();
+
         _callbackListener->OnUpdateUI();
     }
 
@@ -118,6 +121,11 @@ void BF::BitFireEngine::UpdateInput(InputContainer* input)
         movement.Add(0, 1, 0);
     }
    
+    if (keyboard.J.IsShortPressed())
+    {
+        Resource.PrintContent(true);        
+    }
+
 
     if (keyboard.R.IsShortPressed())    
     {

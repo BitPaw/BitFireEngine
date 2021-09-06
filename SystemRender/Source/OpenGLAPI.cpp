@@ -15,10 +15,7 @@ void BF::OpenGLAPI::RegisterImage(Image& image)
         return;
     }
 
-    if (imageID == -1)
-    {
-        glGenTextures(1, &imageID);
-    }
+    glGenTextures(1, &imageID);
 
     glBindTexture(textureType, imageID);
 

@@ -1,0 +1,35 @@
+###########################################################
+# LevelFile                                               #
+###########################################################
+Skybox:
+  Shader:
+    Vertex: 'Shader/SkyBox.vert'
+    Fragment: 'Shader/SkyBox.frag'
+  Texture:
+    Right: 'Texture/SkyBox/Right.bmp'
+    Left: 'Texture/SkyBox/Left.bmp'
+    Top: 'Texture/SkyBox/Top.bmp'
+    Bottom: 'Texture/SkyBox/Bottom.bmp'
+    Back: 'Texture/SkyBox/Back.bmp'
+    Front: 'Texture/SkyBox/Front.bmp'
+###########################################################
+Texture:
+  Path: 'Texture/MissingTexture.bmp'
+###########################################################
+Model:
+  Path: 'Model/D/DustII.obj'
+  Position: -50,-10,0
+  Rotation: -74,0,0 
+  Size: 0.05,0.05,0.05
+###########################################################
+Font:
+  Path: 'Font/segoe.fnt'
+###########################################################
+Dialog: 
+###########################################################
+UI:
+  Type: 'Text'
+  Content: 'Hello'
+  Position: -50,-10,0
+  Size: 0.05,0.05,0.05
+###########################################################

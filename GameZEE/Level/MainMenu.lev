@@ -11,6 +11,6 @@ F Font/segoe.fnt
 
 
 #O A:/_WorkSpace/BitFireEngine/Model/desert_city.obj -200|-100|0 0|0|0 0.5|0.5|0.5
-O Model/D/DustII.obj -50|-10|0 -74|0|0 0.05|0.05|0.05
+O Model/DustII.obj 0|0|0 0|0|0 5|5|5
 #O Model/Cube.obj 0|10|0 0|0|0 10|10|10
 

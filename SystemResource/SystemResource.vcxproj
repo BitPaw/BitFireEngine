@@ -356,6 +356,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Event\Event.hpp" />
+    <ClInclude Include="Source\Math\Geometry\AngleDegree.hpp" />
+    <ClInclude Include="Source\Math\Geometry\AngleRadians.hpp" />
     <ClInclude Include="Source\Math\Physic\PhysicalBody.hpp" />
     <ClInclude Include="Source\Camera\Camera.h" />
     <ClInclude Include="Source\Camera\CameraPerspective.hpp" />

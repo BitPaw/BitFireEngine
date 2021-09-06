@@ -108,6 +108,7 @@ namespace BF
 
 		
 		static ModelType CheckFileExtension(const char* fileExtension);
+		ResourceLoadingResult Load();
 		ResourceLoadingResult Load(const char* filePath);
 		void ConvertFrom(Shape& shape);
 	};

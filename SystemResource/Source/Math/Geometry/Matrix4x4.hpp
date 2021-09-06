@@ -3,6 +3,8 @@
 #include "Vector3.hpp"
 #include "Vector4.hpp"
 
+#include "AngleRadians.hpp"
+
 #include "../../../Dependencies/include/glm/ext/matrix_transform.hpp"
 #include "../../../Dependencies/include/glm/glm.hpp"
 #include "../../../Dependencies/include/glm/ext.hpp"
@@ -25,6 +27,11 @@ namespace BF
 #define ZAxisY 6
 #define ZAxisZ 10
 #define ZAxisW 14
+
+#define ScaleX 0
+#define ScaleY 5
+#define ScaleZ 10
+#define ScaleW 15
 
 #define TransformX 12
 #define TransformY 13 
@@ -235,27 +242,48 @@ namespace BF
 
 		void Move(NumberType x, NumberType y, NumberType z)
 		{
-			this->Data[TransformX] += x;
-			this->Data[TransformY] += y;
-			this->Data[TransformZ] += z;
+			Data[TransformX] += x;
+			Data[TransformY] += y;
+			Data[TransformZ] += z;
 		}
 		void Move(Vector3<NumberType> vector3)
 		{
-			this->Data[TransformX] += vector3.X;
-			this->Data[TransformY] += vector3.Y;
-			this->Data[TransformZ] += vector3.Z;
+			Data[TransformX] += vector3.X;
+			Data[TransformY] += vector3.Y;
+			Data[TransformZ] += vector3.Z;
+		}
+		void MoveTo(Vector3<NumberType> vector)
+		{
+			Data[TransformX] = vector.X;
+			Data[TransformY] = vector.Y;
+			Data[TransformZ] = vector.Z;
 		}
 		void MoveTo(NumberType x, NumberType y, NumberType z)
 		{
-			this->Data[12] = x;
-			this->Data[13] = y;
-			this->Data[14] = z;
+			Data[TransformX] = x;
+			Data[TransformY] = y;
+			Data[TransformZ] = z;
 		}
+
+		void Rotate(Vector3<NumberType> vector)
+		{
+			Rotate(vector.X, vector.Y, vector.Z);
+		}
+
 		void Rotate(NumberType x, NumberType y, NumberType z)
 		{
+
+			Matrix4x4<NumberType> result;
+
+
+			Matrix4x4<NumberType> xRotation;
+			Matrix4x4<NumberType> yRotation;
+			Matrix4x4<NumberType> zRotation;
+	
+
 			//-----<X ROT>-----
 			{
-				 Matrix4x4<NumberType> xRotation;
+		
 				float cosResult = Math::Cosinus(x);
 				float sinResult = Math::Sinus(x);
 
@@ -263,37 +291,36 @@ namespace BF
 				xRotation.Data[6] = sinResult;
 				xRotation.Data[9] = -sinResult;
 				xRotation.Data[10] = cosResult;
-
-				Add(xRotation);
+			
 			}
 
 			//-----<X ROT>-----
 			{
-				Matrix4x4<NumberType> yRotation;
+			
 				float cosResult = Math::Cosinus(y);
 				float sinResult = Math::Sinus(y);
 
 				yRotation.Data[0] = cosResult;
 				yRotation.Data[2] = -sinResult;
 				yRotation.Data[8] = sinResult;
-				yRotation.Data[10] = cosResult;
-
-				Add(yRotation);
+				yRotation.Data[10] = cosResult;	
 			}
-		
+
 			//-----<X ROT>-----
 			{
-				Matrix4x4<NumberType> zRotation;
+			
 				float cosResult = Math::Cosinus(z);
 				float sinResult = Math::Sinus(z);
 
 				zRotation.Data[0] = cosResult;
 				zRotation.Data[1] = -sinResult;
 				zRotation.Data[4] = sinResult;
-				zRotation.Data[5] = cosResult;
+				zRotation.Data[5] = cosResult;	
+			}
 
-				Add(zRotation);
-			}		
+			result = xRotation;// *yRotation* zRotation;
+
+			Multiply(xRotation);
 		}
 		void RotateTo(NumberType x, NumberType y, NumberType z)
 		{
@@ -305,21 +332,21 @@ namespace BF
 		}
 		void Scale(NumberType scalar)
 		{
-			this->Data[0] *= scalar;
-			this->Data[5] *= scalar;
-			this->Data[10] *= scalar;
+			Data[ScaleX] *= scalar;
+			Data[ScaleY] *= scalar;
+			Data[ScaleZ] *= scalar;
 		}
 		void Scale(NumberType x, NumberType y, NumberType z)
 		{
-			this->Data[0] *= x;
-			this->Data[5] *= y;
-			this->Data[10] *= z;
+			Data[ScaleX] *= x;
+			Data[ScaleY] *= y;
+			Data[ScaleZ] *= z;
 		}
-		void Scale(Vector3<NumberType> vector3)
+		void Scale(Vector3<NumberType> vector)
 		{
-			this->Data[0] *= vector3.Data[0];
-			this->Data[5] *= vector3.Data[1];
-			this->Data[10] *= vector3.Data[2];
+			Data[ScaleX] *= vector.X;
+			Data[ScaleY] *= vector.Y;
+			Data[ScaleZ] *= vector.Z;
 		}
 
 		void LookAt(NumberType x, NumberType y, NumberType z)

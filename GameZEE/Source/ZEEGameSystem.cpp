@@ -23,6 +23,7 @@ ZEE::ZEEGameSystem::ZEEGameSystem()
 }
 
 float _deltaTime = 0;
+BF::Model* model;
 
 void ZEE::ZEEGameSystem::OnStartUp()
 {
@@ -37,9 +38,14 @@ void ZEE::ZEEGameSystem::OnStartUp()
     GameSystem.Resource.Load("Level/MainMenu.lev");
     GameSystem.Resource.Load(cube, "Model/Cube.obj");
 
+  
+
+    
     cube.ModelMatrix.Scale(10.0f);
     cube.EnablePhysics = true;
-    GameSystem.Resource.Add(cube);
+   // GameSystem.Resource.Add(cube);
+
+    
 
     skybox = new BF::SkyBox();
     GameSystem.Resource.Load(skybox->Faces[0], "Texture/SkyBox/Right.bmp"); // Right
@@ -50,12 +56,19 @@ void ZEE::ZEEGameSystem::OnStartUp()
     GameSystem.Resource.Load(skybox->Faces[5], "Texture/SkyBox/Front.bmp"); // Front       
 
     GameSystem.Resource.Load(skybox->Shader, "Shader/SkyBox.vert", "Shader/SkyBox.frag");
+    
+    
     GameSystem.Resource.Add(*skybox);
+    
+
+
+
 
     text = new BF::UIText("SampleText", *GameSystem.Resource.DefaultFont, -1, -0.8);
     text->RenderInformation.ShaderProgramID = hudShaderID.ID;
     //text->SetFont(*Resource.DefaultFont);
     GameSystem.Resource.Add(*text);
+    
 
     printf("[i][Info] Loading took %.2fs\n", stopwatch.Stop());
 
@@ -67,19 +80,35 @@ void ZEE::ZEEGameSystem::OnShutDown()
 
 }
 
+BF::Vector3<float> rot(0.0349066,0,0);
+
 void ZEE::ZEEGameSystem::OnUpdateGameLogic(float deltaTime)
 {
+    /*
     if (cube.ModelMatrix.CurrentPosition().Y <= 0)
     {
         //cube.ModelMatrix.Move(0, tcap, 0);
         cube.Velocity.Set(0, 90, 0);
-    }
+    }*/
 
     _deltaTime = deltaTime;
+
+
 }
+
+
 
 void ZEE::ZEEGameSystem::OnUpdateUI()
 {
-    sprintf_s(text->TextContent, "FPS: %4i", (BF::Math::Ceiling(1 / _deltaTime)));
-    text->SetText(text->TextContent);
+    //sprintf_s(text->TextContent, "FPS: %4i", (BF::Math::Ceiling(1 / _deltaTime)));
+    //text->SetText(text->TextContent);
+
+    if (model == nullptr)
+    {
+       // model = GameSystem.Resource.GetModel(0);
+    }
+    else
+    {
+       // model->ModelMatrix.Rotate(rot);
+    }
 }
