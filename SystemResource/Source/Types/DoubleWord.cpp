@@ -1,4 +1,5 @@
 #include "DoubleWord.h"
+#include "QuadWord.h"
 
 BF::DoubleWord::DoubleWord()
 {

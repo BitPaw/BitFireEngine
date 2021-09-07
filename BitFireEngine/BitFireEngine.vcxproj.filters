@@ -71,5 +71,11 @@
     <ClInclude Include="Source\System\IBitFireEngineListener.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="Source\System\IBitFireEngineRenderListener.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\IBitFireEngineSoundListener.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

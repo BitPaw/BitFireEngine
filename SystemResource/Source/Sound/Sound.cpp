@@ -1,66 +1,116 @@
 #include "Sound.h"
 
-#include "SoundFormat.h"
+#include "AAC/AAC.h"
+#include "M4A/M4A.h"
+#include "FLAC/FLAC.h"
 #include "MID/MID.h"
 #include "MP3/MP3.h"
 #include "OGG/OGG.h"
 #include "WAV/WAV.h"
+#include "WMA/WMA.h"
+
 #include "../File/File.h"
 
-void BF::Sound::Load(const char* filePath)
+BF::Sound::Sound()
 {
-    SoundFormat soundFormat = SoundFormat::Unkown;
+    NumerOfChannels = 0;
+    BitsPerSample = 0;
+    SampleRate = 0;
+
+    PlayStyle = SoundPlayStyle::Loop;
+
+    DataSize = 0;
+    Data = nullptr;
+}
+
+BF::SoundFormat BF::Sound::PeekFileFomat(const char* filePath)
+{
     File file(filePath);
     AsciiString fileExtension(file.Extension);
 
-    bool isMIDI = fileExtension.CompareIgnoreCase("mid");
-    bool isMP3 = fileExtension.CompareIgnoreCase("mp3");
-    bool isOGG = fileExtension.CompareIgnoreCase("ogg");
-    bool isWAV = fileExtension.CompareIgnoreCase("wav");
+    if (fileExtension.CompareIgnoreCase("aac")) return SoundFormat::AAC;
+    if (fileExtension.CompareIgnoreCase("flac")) return SoundFormat::FLAC;
+    if (fileExtension.CompareIgnoreCase("m4a")) return SoundFormat::M4A;
+    if (fileExtension.CompareIgnoreCase("mid")) return SoundFormat::MID;
+    if (fileExtension.CompareIgnoreCase("mp3")) return SoundFormat::MP3;
+    if (fileExtension.CompareIgnoreCase("ogg")) return SoundFormat::OGG;
+    if (fileExtension.CompareIgnoreCase("wav")) return SoundFormat::WAV;
+    if (fileExtension.CompareIgnoreCase("wma")) return SoundFormat::WMA;   
 
-    if (isMIDI) soundFormat = SoundFormat::MID;
-    if (isMP3) soundFormat = SoundFormat::MP3;
-    if (isOGG) soundFormat = SoundFormat::OGG;
-    if (isWAV) soundFormat = SoundFormat::WAV;
+    return SoundFormat::Unkown;
+}
+
+void BF::Sound::Load(const char* filePath)
+{   
+    SoundFormat soundFormat = PeekFileFomat(filePath);
+
+    ID = ResourceIDLoading;
 
     switch (soundFormat)
     {
+        case SoundFormat::AAC:
+        {
+            AAC aac;
+            aac.Load(filePath);
+            aac.ConvertTo(*this);
+            break;
+        }
+        case SoundFormat::FLAC:
+        {
+            FLAC flac;
+            flac.Load(filePath);
+            flac.ConvertTo(*this);
+            break;
+        }
+        case SoundFormat::M4A:
+        {
+            M4A m4a;
+            m4a.Load(filePath);
+            m4a.ConvertTo(*this);
+            break;
+        }
         case SoundFormat::MID:
         {
             MID mid;
-
-            //sound = mid;
-
+            mid.Load(filePath);
+            mid.ConvertTo(*this);
             break;
         }
         case SoundFormat::MP3:
         {
             MP3 mp3;
-
-            //sound = mp3;
-
+            mp3.Load(filePath);
+            mp3.ConvertTo(*this);
             break;
         }
         case SoundFormat::OGG:
         {
-            OGG ogg;
-
-            // sound = ogg;
-
+            OGG ogg;            
+            ogg.Load(filePath);
+            ogg.ConvertTo(*this);
             break;
         }
         case SoundFormat::WAV:
         {
             WAV wav;
-
-            //sound = wav;
-
+            wav.Load(filePath);
+            wav.ConvertTo(*this);
+            break;
+        }
+        case SoundFormat::WMA:
+        {
+            WMA wma;
+            wma.Load(filePath);
+            wma.ConvertTo(*this);
             break;
         }
         case SoundFormat::Unkown:
         default:
         {
-            throw "Unsuported Type/File";
-        }         
+            ID = ResourceIDUnsuportedFormat;
+            return;
+        }        
     }
+
+    ID = ResourceIDLoaded;
 }

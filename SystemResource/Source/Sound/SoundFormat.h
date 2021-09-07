@@ -6,9 +6,13 @@ namespace BF
 	{
 		Unkown,
 
+		AAC,
+		FLAC,
+		M4A,
 		MID,
 		MP3,
 		OGG,
-		WAV
+		WAV,
+		WMA
 	};
 }

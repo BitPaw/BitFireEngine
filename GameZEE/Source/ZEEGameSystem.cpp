@@ -7,6 +7,7 @@
 #include "../../SystemResource/Source/Game/SkyBox.h"
 #include "../../SystemResource/Source/Model/Model.h"
 #include "../../SystemResource/Source/Math/Math.h"
+#include "../../SystemResource/Source/Sound/WAV/WAV.h"
 
 BF::UIText* text;
 //BF::Model* sphere;
@@ -16,6 +17,9 @@ BF::Model cube;
 
 BF::ShaderProgram worldShader;
 BF::ShaderProgram hudShaderID;
+
+BF::AudioSource audioSource;
+BF::Sound sound;
 
 ZEE::ZEEGameSystem::ZEEGameSystem()
 {
@@ -71,6 +75,18 @@ void ZEE::ZEEGameSystem::OnStartUp()
     printf("[i][Info] Loading took %.2fs\n", stopwatch.Stop());
 
     GameSystem.Resource.PrintContent(true);
+
+    BF::WAV wav;
+
+    wav.Load("Sound/What's Up.wav");
+    wav.ConvertTo(sound);
+
+    GameSystem.SoundPlayer.Register(audioSource);
+    GameSystem.SoundPlayer.Register(sound);
+
+    
+
+    GameSystem.SoundPlayer.Play(audioSource, sound);
 }
 
 void ZEE::ZEEGameSystem::OnShutDown()

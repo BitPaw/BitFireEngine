@@ -5,10 +5,12 @@
 
 #define ResourceIDUndefined -1
 
-#define ResourceIDFileNotFound -2
-#define ResourceIDOutOfMemory -3
-#define ResourceIDLoading -4
-#define ResourceIDLoaded -5
+#define ResourceIDLoading -2
+#define ResourceIDLoaded -3
+
+#define ResourceIDFileNotFound -10
+#define ResourceIDOutOfMemory -20
+#define ResourceIDUnsuportedFormat -30
 
 namespace BF
 {

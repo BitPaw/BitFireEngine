@@ -103,11 +103,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(ProjectDir)Dependencies\lib32\GLFW;$(ProjectDir)Dependencies\lib32\GL;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)Dependencies\lib32\GLFW;$(ProjectDir)Dependencies\lib32\AL\Deb;$(ProjectDir)Dependencies\lib32\GL;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(ProjectDir)Dependencies\lib32\GLFW;$(ProjectDir)Dependencies\lib32\GL;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)Dependencies\lib32\GLFW;$(ProjectDir)Dependencies\lib32\AL;$(ProjectDir)Dependencies\lib32\GL;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -127,7 +127,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

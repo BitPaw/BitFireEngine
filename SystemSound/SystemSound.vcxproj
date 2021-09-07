@@ -101,17 +101,17 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(ProjectDir)Dependencies\lib32\AL\Deb;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)Dependencies\lib32\AL;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)Dependencies\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(ProjectDir)Dependencies\lib32\AL\Deb;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)Dependencies\lib32\AL;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)Dependencies\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(ProjectDir)Dependencies\lib32\AL\Deb;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)Dependencies\lib32\AL;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)Dependencies\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -236,10 +236,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\AudioSource.h" />
     <ClInclude Include="Source\AudioConfig.h" />
+    <ClInclude Include="Source\SystemSound.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\AudioSource.cpp" />
     <ClCompile Include="Source\AudioConfig.cpp" />
+    <ClCompile Include="Source\SystemSound.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

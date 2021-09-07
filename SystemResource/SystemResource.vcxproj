@@ -253,6 +253,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Types\QuadWord.cpp" />
+    <ClCompile Include="Source\Sound\M4A\M4A.cpp" />
+    <ClCompile Include="Source\Sound\FLAC\FLAC.cpp" />
+    <ClCompile Include="Source\Sound\AAC\AAC.cpp" />
+    <ClCompile Include="Source\Video\AVI\AVI.cpp" />
+    <ClCompile Include="Source\Sound\WAV\FMT.cpp" />
+    <ClCompile Include="Source\Sound\WAV\RIFF.cpp" />
     <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\Game\SkyBox.cpp" />
     <ClCompile Include="Source\Image\ImageType.cpp" />
@@ -353,8 +360,17 @@
     <ClCompile Include="Source\Types\DoubleWord.cpp" />
     <ClCompile Include="Source\Types\UUID.cpp" />
     <ClCompile Include="Source\Types\Word.cpp" />
+    <ClCompile Include="Source\Video\Video.cpp" />
+    <ClCompile Include="Source\Sound\WMA\WMA.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Types\QuadWord.h" />
+    <ClInclude Include="Source\Sound\M4A\M4A.h" />
+    <ClInclude Include="Source\Sound\FLAC\FLAC.h" />
+    <ClInclude Include="Source\Sound\AAC\AAC.h" />
+    <ClInclude Include="Source\Video\AVI\AVI.h" />
+    <ClInclude Include="Source\Sound\WAV\FMT.h" />
+    <ClInclude Include="Source\Sound\WAV\RIFF.h" />
     <ClInclude Include="Source\Event\Event.hpp" />
     <ClInclude Include="Source\Math\Geometry\AngleDegree.hpp" />
     <ClInclude Include="Source\Math\Geometry\AngleRadians.hpp" />
@@ -505,12 +521,15 @@
     <ClInclude Include="Source\Sound\OGG\OGG.h" />
     <ClInclude Include="Source\Sound\Sound.h" />
     <ClInclude Include="Source\Sound\SoundFormat.h" />
+    <ClInclude Include="Source\Sound\SoundPlayStyle.hpp" />
     <ClInclude Include="Source\Sound\WAV\WAV.h" />
     <ClInclude Include="Source\Time\StopWatch.h" />
     <ClInclude Include="Source\Types\DoubleWord.h" />
     <ClInclude Include="Source\Types\Endian.h" />
     <ClInclude Include="Source\Types\UUID.h" />
     <ClInclude Include="Source\Types\Word.h" />
+    <ClInclude Include="Source\Video\Video.h" />
+    <ClInclude Include="Source\Sound\WMA\WMA.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

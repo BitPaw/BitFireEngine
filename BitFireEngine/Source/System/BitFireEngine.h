@@ -7,6 +7,7 @@
 #include "../../../SystemResource/Source/Event/Event.hpp"
 #include "../../../BitFireEngine/Source/Resource/ResouceManager.h"
 #include "IBitFireEngineListener.hpp"
+#include "../../../SystemSound/Source/SystemSound.h"
 
 namespace BF
 {
@@ -27,6 +28,7 @@ namespace BF
 		ResourceManager Resource;
 		bool IsRunning;
 		IBitFireEngineListener* _callbackListener;
+		SystemSound SoundPlayer;
 
 		BitFireEngine();
 

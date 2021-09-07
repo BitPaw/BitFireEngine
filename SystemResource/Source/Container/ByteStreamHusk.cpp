@@ -1,6 +1,6 @@
 #include "ByteStreamHusk.h"
 
-#include <vcruntime_string.h>
+#include <string.h>
 
 BF::ByteStreamHusk::ByteStreamHusk(unsigned char* startAdress, unsigned int dataLengh)
 {
@@ -14,18 +14,26 @@ unsigned char BF::ByteStreamHusk::ExtractByteAndMove()
 	return StartAdress[CurrentPosition++];
 }
 
-unsigned short BF::ByteStreamHusk::ExtractShortAndMove(Endian Endian)
+unsigned short BF::ByteStreamHusk::ExtractShortAndMove(Endian endian)
 {
 	Word word = ExtractWord();
-	unsigned int result = word.ExtractInt(Endian);
+	unsigned int result = word.ExtractInt(endian);
 
 	return result;
 }
 
-unsigned int BF::ByteStreamHusk::ExtractIntegerAndMove(Endian Endian)
+unsigned int BF::ByteStreamHusk::ExtractIntegerAndMove(Endian endian)
 {
 	DoubleWord dWord = ExtractDoubleWord();
-	unsigned int result = dWord.ExtractInt(Endian);
+	unsigned int result = dWord.ExtractInt(endian);
+
+	return result;
+}
+
+unsigned long long BF::ByteStreamHusk::ExtractLongLongAndMove(Endian endian)
+{
+	QuadWord qword = ExtractQuadWord();
+	unsigned long long result = qword.ExtractLongLong(endian);
 
 	return result;
 }
@@ -94,14 +102,28 @@ void BF::ByteStreamHusk::InsertArrayAndMove(void* data, unsigned int length)
 
 BF::DoubleWord BF::ByteStreamHusk::ExtractDoubleWord()
 {
+	unsigned char* extractionPoint = StartAdress + CurrentPosition;
+	const unsigned int length = 4u;
 	DoubleWord dWord;
 
-	dWord.ByteData[0] = ExtractByteAndMove();
-	dWord.ByteData[1] = ExtractByteAndMove();
-	dWord.ByteData[2] = ExtractByteAndMove();
-	dWord.ByteData[3] = ExtractByteAndMove();
+	memcpy(dWord.ByteData, extractionPoint, length);
+
+	CurrentPosition += length;
 
 	return dWord;
+}
+
+BF::QuadWord BF::ByteStreamHusk::ExtractQuadWord()
+{
+	unsigned char* extractionPoint = StartAdress + CurrentPosition;
+	const unsigned int length = 8u;
+	QuadWord qword;
+
+	memcpy(qword.ByteData, extractionPoint, length);
+
+	CurrentPosition += length;
+
+	return qword;
 }
 
 BF::Word BF::ByteStreamHusk::ExtractWord()
@@ -112,6 +134,14 @@ BF::Word BF::ByteStreamHusk::ExtractWord()
 	word.ByteData[1] = ExtractByteAndMove();
 
 	return word;
+}
+
+char BF::ByteStreamHusk::CompareBytesAndMove(void* data, unsigned int size)
+{
+	unsigned char* target = &StartAdress[CurrentPosition];
+	int result = memcmp(data, target, size);
+
+	return result;
 }
 
 void BF::ByteStreamHusk::CopyBytesAndMove(char* destination, unsigned int size)
