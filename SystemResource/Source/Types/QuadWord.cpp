@@ -38,30 +38,39 @@ void BF::QuadWord::Set(unsigned char byteA, unsigned char byteB, unsigned char b
 
 unsigned long long BF::QuadWord::ExtractLongLong(Endian endian)
 {
+	unsigned long long a = ByteData[0];
+	unsigned long long b = ByteData[1];
+	unsigned long long c = ByteData[2];
+	unsigned long long d = ByteData[3];
+	unsigned long long e = ByteData[4];
+	unsigned long long f = ByteData[5];
+	unsigned long long g = ByteData[6];
+	unsigned long long h = ByteData[7];
+
 	switch (endian)
 	{
 		case Endian::Big:
 			return
-				(ByteData[0] << 56LL) |
-				(ByteData[1] << 48LL) |
-				(ByteData[2] << 40LL) |
-				(ByteData[3] << 32LL) |
-				(ByteData[4] << 24LL) |
-				(ByteData[5] << 16LL) |
-				(ByteData[6] << 8LL) |
-				(ByteData[7]);
+				(a << 56LL) |
+				(b << 48LL) |
+				(c << 40LL) |
+				(d << 32LL) |
+				(e << 24LL) |
+				(f << 16LL) |
+				(g << 8LL) |
+				(h);
 
 		default:
 		case Endian::Little:
 			return
-				(ByteData[0]) |
-				(ByteData[1] << 8LL) |
-				(ByteData[2] << 16LL) |
-				(ByteData[3] << 24LL) |
-				(ByteData[4] << 32LL) |
-				(ByteData[5] << 40LL) |
-				(ByteData[6] << 48LL) |
-				(ByteData[7] << 56LL);
+				(a) |
+				(b << 8LL) |
+				(c << 16LL) |
+				(d << 24LL) |
+				(e << 32LL) |
+				(f << 40LL) |
+				(g << 48LL) |
+				(h << 56LL);
 	}
 }
 

@@ -253,6 +253,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Sound\MP3\MPEGAudioTag.cpp" />
+    <ClCompile Include="Source\Sound\MP3\MP3Header.cpp" />
+    <ClCompile Include="Source\Sound\MP3\MPEGGenre.cpp" />
     <ClCompile Include="Source\Types\QuadWord.cpp" />
     <ClCompile Include="Source\Sound\M4A\M4A.cpp" />
     <ClCompile Include="Source\Sound\FLAC\FLAC.cpp" />
@@ -364,6 +367,13 @@
     <ClCompile Include="Source\Sound\WMA\WMA.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Sound\MP3\MPEGAudioTag.h" />
+    <ClInclude Include="Source\Sound\MP3\MP3ChannelMode.hpp" />
+    <ClInclude Include="Source\Sound\MP3\MP3Emphasis.hpp" />
+    <ClInclude Include="Source\Sound\MP3\MP3Header.h" />
+    <ClInclude Include="Source\Sound\MP3\MP3Layer.hpp" />
+    <ClInclude Include="Source\Sound\MP3\MP3MPEGVersion.hpp" />
+    <ClInclude Include="Source\Sound\MP3\MPEGGenre.hpp" />
     <ClInclude Include="Source\Types\QuadWord.h" />
     <ClInclude Include="Source\Sound\M4A\M4A.h" />
     <ClInclude Include="Source\Sound\FLAC\FLAC.h" />

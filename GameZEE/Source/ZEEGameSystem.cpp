@@ -76,17 +76,19 @@ void ZEE::ZEEGameSystem::OnStartUp()
 
     GameSystem.Resource.PrintContent(true);
 
-    BF::WAV wav;
+ 
 
-    wav.Load("Sound/What's Up.wav");
-    wav.ConvertTo(sound);
+#if 0 // Sound Enable
+    //sound.Load("Sound/Our.mp3");
+    sound.Load("Sound/What's Up.wav");
 
     GameSystem.SoundPlayer.Register(audioSource);
     GameSystem.SoundPlayer.Register(sound);
 
-    
+
 
     GameSystem.SoundPlayer.Play(audioSource, sound);
+#endif // Sound Enable
 }
 
 void ZEE::ZEEGameSystem::OnShutDown()
