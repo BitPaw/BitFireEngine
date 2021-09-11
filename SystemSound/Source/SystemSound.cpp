@@ -63,16 +63,7 @@ void BF::SystemSound::Register(AudioSource& audioSource)
 	alGenSources(numberOfBuffers, &audioSource.ID);
 	// check for errors
 
-	alSourcef(sourceID, AL_PITCH, audioSource.Pitch);
-	// check for errors
-	alSourcef(sourceID, AL_GAIN, audioSource.Volume);
-	// check for errors
-	alSource3f(sourceID, AL_POSITION, audioSource.Position[0], audioSource.Position[1], audioSource.Position[2]);
-	// check for errors
-	alSource3f(sourceID, AL_VELOCITY, audioSource.Velocity[0], audioSource.Velocity[1], audioSource.Velocity[2]);
-	// check for errors
-	alSourcei(sourceID, AL_LOOPING, audioSource.Looping);
-	// check for errros
+	Update(audioSource);
 }
 
 void BF::SystemSound::Register(Sound& sound)
@@ -90,6 +81,19 @@ void BF::SystemSound::UnRegister(AudioSource& audioSource)
 void BF::SystemSound::UnRegister(Sound& sound)
 {
 	alDeleteBuffers(1, &sound.ID);
+}
+
+void BF::SystemSound::Update(AudioSource& audioSource)
+{
+	alSourcef(audioSource.ID, AL_PITCH, audioSource.Pitch);
+	// check for errors
+	alSourcef(audioSource.ID, AL_GAIN, audioSource.Volume);
+	// check for errors
+	alSource3f(audioSource.ID, AL_POSITION, audioSource.Position[0], audioSource.Position[1], audioSource.Position[2]);
+	// check for errors
+	alSource3f(audioSource.ID, AL_VELOCITY, audioSource.Velocity[0], audioSource.Velocity[1], audioSource.Velocity[2]);
+	// check for errors
+	alSourcei(audioSource.ID, AL_LOOPING, audioSource.Looping);
 }
 
 void BF::SystemSound::Play(AudioSource& audioSource, Sound& sound)

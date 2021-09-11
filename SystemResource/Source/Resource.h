@@ -37,5 +37,7 @@ namespace BF
 		Can be used to prevent double loading.
 		*/
 		char FilePath[ResourceFilePathSize];
+
+		void MarkAsLoading(const char* name, const char* filePath);
 	};
 }

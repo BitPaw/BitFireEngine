@@ -243,47 +243,34 @@ void BF::Image::FormatChange(ImageFormat imageFormat)
     }
 }
 
-BF::ImageFileExtension BF::Image::CheckFileExtension(AsciiString& fileExtension)
+BF::ImageFileExtension BF::Image::FileFormatPeek(const char* filePath)
 {
-    if (fileExtension.Size() == 0)
-    {
-        return ImageFileExtension::Unkown;
-    }
+    File file(filePath);
+    AsciiString fileExtension(file.Extension);
 
-    bool isBMP = fileExtension.CompareIgnoreCase("bmp");
-    bool isGIF = fileExtension.CompareIgnoreCase("gif");
-    bool isJPEG = fileExtension.CompareIgnoreCase("jpeg");
-    bool isPNG = fileExtension.CompareIgnoreCase("png");
-    bool isTGA = fileExtension.CompareIgnoreCase("tga");
-    bool isTIFF = fileExtension.CompareIgnoreCase("tiff");
-
-    if (isBMP) return ImageFileExtension::BMP;
-    if (isGIF) return ImageFileExtension::GIF;
-    if (isJPEG) return ImageFileExtension::JPEG;
-    if (isPNG) return ImageFileExtension::PNG;
-    if (isTGA) return ImageFileExtension::TGA;
-    if (isTIFF) return ImageFileExtension::TIFF;
+    if (fileExtension.CompareIgnoreCase("bmp")) return ImageFileExtension::BMP;
+    if (fileExtension.CompareIgnoreCase("gif")) return ImageFileExtension::GIF;
+    if (fileExtension.CompareIgnoreCase("jpeg")) return ImageFileExtension::JPEG;
+    if (fileExtension.CompareIgnoreCase("png")) return ImageFileExtension::PNG;
+    if (fileExtension.CompareIgnoreCase("tga")) return ImageFileExtension::TGA;
+    if (fileExtension.CompareIgnoreCase("tiff")) return ImageFileExtension::TIFF;
 
     return ImageFileExtension::Unkown;
 }
 
 BF::ResourceLoadingResult BF::Image::Load(const char* filePath)
 {
-    File file(filePath);
-    
-    if (!file.DoesFileExist())
+    ID = ResourceIDLoading;
+
+    if (!File::DoesFileExist(filePath))
     {
         ID = ResourceIDFileNotFound;
         return ResourceLoadingResult::FileNotFound;
-    }
+    } 
 
-    AsciiString fileExtension(file.Extension);
-    ImageFileExtension imageFormat = CheckFileExtension(fileExtension);
+    ImageFileExtension imageFormat = FileFormatPeek(filePath);
 
-    ID = ResourceIDLoading;
-
-    //strcpy(Name, filePath);
-    strcpy(FilePath, file.Path);
+    strcpy(FilePath, filePath);
 
     switch (imageFormat)
     {
@@ -320,10 +307,13 @@ BF::ResourceLoadingResult BF::Image::Load(const char* filePath)
         {
             break;
         }
-
         case ImageFileExtension::Unkown:
         default:
+        {
+            ID = ResourceIDUnsuportedFormat;
+
             return ResourceLoadingResult::FormatNotSupported;
+        }       
     }
 
     ID = ResourceIDLoaded;

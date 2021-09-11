@@ -48,7 +48,7 @@ namespace BF
 
 		void FormatChange(ImageFormat imageFormat);
 
-		static ImageFileExtension CheckFileExtension(AsciiString& fileExtension);
+		static ImageFileExtension FileFormatPeek(const char* filePath);
 		ResourceLoadingResult Load(const char* filePath);
 	};
 }

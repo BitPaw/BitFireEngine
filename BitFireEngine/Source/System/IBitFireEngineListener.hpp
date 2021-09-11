@@ -10,5 +10,6 @@ namespace BF
 
 		virtual void OnUpdateGameLogic(float deltaTime) = 0;
 		virtual void OnUpdateUI() = 0;
+		virtual void OnUpdateInput(InputContainer& input) = 0;
 	};
 }

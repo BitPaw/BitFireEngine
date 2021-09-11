@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -20,8 +21,11 @@ namespace BF
 		unsigned int Size;
 		char* Data;
 
-		char Path[255];
-		char* Extension;
+		char Path[_MAX_PATH];
+		char Drive[_MAX_DRIVE];
+		char Directory[_MAX_DIR];
+		char FileName[_MAX_FNAME];
+		char Extension[_MAX_EXT];
 
 		File(const char* filePath);
 		~File();

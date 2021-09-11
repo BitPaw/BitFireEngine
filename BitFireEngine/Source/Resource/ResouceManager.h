@@ -65,17 +65,28 @@ namespace BF
 
         void CheckUncachedData();
 
-        Resource* Load(const char* filePathString, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);
+        Resource* Load(const char* filePathString);
 
-        ResourceLoadingResult Load(Model& model, const char* filePath, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);
-        ResourceLoadingResult Load(Image& image, const char* filePath, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);
-        ResourceLoadingResult Load(Sound& sound, const char* filePath, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);
-        ResourceLoadingResult Load(Font& font, const char* filePath, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);
-        ResourceLoadingResult Load(ShaderProgram& shaderProgram, const char* filePath, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);
-        ResourceLoadingResult Load(Dialog& dialog, const char* filePath, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);
-        ResourceLoadingResult Load(Level& level, const char* filePath, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);
-
-        ResourceLoadingResult Load(ShaderProgram& shaderProgram, const char* vertexShader, const char* fragmentShader, ResourceLoadMode ResourceLoadMode = ResourceLoadMode::LoadToCacheAndUse);
+        void Load(Model& model, const char* filePath);
+        void Load(Image& image, const char* filePath);
+        void Load(Sound& sound, const char* filePath);
+        void Load(Font& font, const char* filePath);
+        void Load(ShaderProgram& shaderProgram, const char* filePath);
+        void Load(Dialog& dialog, const char* filePath);
+        void Load(Level& level, const char* filePath);
+        void Load(ShaderProgram& shaderProgram, const char* vertexShader, const char* fragmentShader);
+        void Load
+        (
+            SkyBox& skyBox, 
+            const char* shaderVertex, 
+            const char* shaderFragment,
+            const char* textureRight,
+            const char* textureLeft,
+            const char* textureTop,
+            const char* textureBottom,
+            const char* textureBack,
+            const char* textureFront
+         );
 
         void Add(Model& model);
         void Add(Image& image);

@@ -107,7 +107,7 @@ namespace BF
 		void PrintCurrentRotation();
 
 		
-		static ModelType CheckFileExtension(const char* fileExtension);
+		static ModelType FileFormatPeek(const char* filePath);
 		ResourceLoadingResult Load();
 		ResourceLoadingResult Load(const char* filePath);
 		void ConvertFrom(Shape& shape);

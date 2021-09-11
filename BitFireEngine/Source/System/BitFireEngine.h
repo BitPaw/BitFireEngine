@@ -20,7 +20,7 @@ namespace BF
 		float _deltaTime;
 		//----------------------------------------------
 
-		void UpdateInput(InputContainer* input);
+		void UpdateInput(InputContainer& input);
 
 		public:
 		//GameTickEvent OnGameTick;

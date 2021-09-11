@@ -9,7 +9,7 @@
 BF::ResourceLoadingResult BF::Font::Load(const char* filePath)
 {
     File file(filePath);
-    FontFormat fontFormat = ParseFontFormat(file.Extension);
+    FontFormat fontFormat = FileFormatPeek(filePath);
 
     if (!file.DoesFileExist())
     {
@@ -47,9 +47,10 @@ BF::ResourceLoadingResult BF::Font::Load(const char* filePath)
     return ResourceLoadingResult::Successful;
 }
 
-BF::FontFormat BF::Font::ParseFontFormat(const char* fileExtension)
+BF::FontFormat BF::Font::FileFormatPeek(const char* filePath)
 {
-    AsciiString fileExtensionAS(fileExtension);
+    File file(filePath);
+    AsciiString fileExtensionAS(file.Extension);
 
     bool isFNT = fileExtensionAS.CompareIgnoreCase("fnt");
     bool isOTF = fileExtensionAS.CompareIgnoreCase("otf");
@@ -60,9 +61,4 @@ BF::FontFormat BF::Font::ParseFontFormat(const char* fileExtension)
     if (isTTF) return FontFormat::TTF;
 
     return FontFormat::Unkown;
-}
-
-bool BF::Font::IsFontFile(const char* fileExtension)
-{
-    return ParseFontFormat(fileExtension) != FontFormat::Unkown;
 }

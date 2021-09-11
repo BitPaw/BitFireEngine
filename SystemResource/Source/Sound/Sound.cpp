@@ -23,7 +23,7 @@ BF::Sound::Sound()
     Data = nullptr;
 }
 
-BF::SoundFormat BF::Sound::PeekFileFomat(const char* filePath)
+BF::SoundFormat BF::Sound::FileFormatPeek(const char* filePath)
 {
     File file(filePath);
     AsciiString fileExtension(file.Extension);
@@ -42,7 +42,7 @@ BF::SoundFormat BF::Sound::PeekFileFomat(const char* filePath)
 
 void BF::Sound::Load(const char* filePath)
 {   
-    SoundFormat soundFormat = PeekFileFomat(filePath);
+    SoundFormat soundFormat = FileFormatPeek(filePath);
 
     ID = ResourceIDLoading;
 

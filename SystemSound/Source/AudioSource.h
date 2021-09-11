@@ -6,6 +6,7 @@ namespace BF
 	{
 		public:
 		unsigned int ID;
+		// [0.5 - 2.0]
 		float Pitch;
 		float Volume;
 		float Position[3];

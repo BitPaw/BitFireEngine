@@ -21,10 +21,8 @@ namespace BF
 		//---------------------------------------------------------------------
 
 		//---[ Public-Functions ]----------------------------------------------
-		ResourceLoadingResult Load(const char* filePath);
-
-		static FontFormat ParseFontFormat(const char* fileExtension);
-		static bool IsFontFile(const char* fileExtension);
+		static FontFormat FileFormatPeek(const char* filePath);
+		ResourceLoadingResult Load(const char* filePath);	
 		//---------------------------------------------------------------------
 	};
 }

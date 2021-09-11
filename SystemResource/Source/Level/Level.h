@@ -22,5 +22,7 @@ namespace BF
 		List<Camera*> CameraList;
 
 		Level();
+
+		static bool IsLevelFile(const char* filePath);
 	};
 }

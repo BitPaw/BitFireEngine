@@ -141,7 +141,7 @@ void BF::OBJ::Load(const char* filePath)
 
         for (unsigned int lineIndex = 0; lineIndex < numberOfLines; lineIndex++)
         {
-            OBJLineCommand* currentCommand = &commandList[lineIndex];
+            OBJLineCommand& currentCommand = commandList[lineIndex];
 
             file.ReadNextLineInto(currentLineBuffer);
 
@@ -150,11 +150,11 @@ void BF::OBJ::Load(const char* filePath)
             switch (functionChar)
             {
                 case 'm':
-                    *currentCommand = OBJLineCommand::MaterialLibraryInclude;
+                    currentCommand = OBJLineCommand::MaterialLibraryInclude;
                     break;
 
                 case 'u':
-                    *currentCommand = OBJLineCommand::MaterialLibraryUse;
+                    currentCommand = OBJLineCommand::MaterialLibraryUse;
 
                     if (usedFacesBefore)
                     {
@@ -164,21 +164,21 @@ void BF::OBJ::Load(const char* filePath)
 
                     break;
 
-                case _characterComment:
-                    *currentCommand = OBJLineCommand::Comment;
+                case '#':
+                    currentCommand = OBJLineCommand::Comment;
                     break;
 
-                case _characterObjectName:
-                    *currentCommand = OBJLineCommand::ObjectName;
+                case 'o':
+                    currentCommand = OBJLineCommand::ObjectName;
                     newMeshKey = true;
                     break;
 
-                case _characterSmoothShading:
-                    *currentCommand = OBJLineCommand::SmoothShading;
+                case 's':
+                    currentCommand = OBJLineCommand::SmoothShading;
                     break;
 
-                case _characterFace:
-                    *currentCommand = OBJLineCommand::FaceElement;
+                case 'f':
+                    currentCommand = OBJLineCommand::FaceElement;
                     usedFacesBefore = true;
 
                     if (!checkedRenderType)
@@ -188,42 +188,42 @@ void BF::OBJ::Load(const char* filePath)
 
                     break;
 
-                case _characterVertex:
+                case 'v':
                 {
                     functionChar = (currentLineBuffer)[1]; //  Potential error
 
                     switch (functionChar)
                     {
-                        case _characterNone:
-                            *currentCommand = OBJLineCommand::VertexGeometric;
+                        case ' ':
+                            currentCommand = OBJLineCommand::VertexGeometric;
                             break;
 
-                        case _characterVertexTexture:
-                            *currentCommand = OBJLineCommand::VertexTexture;
+                        case 't':
+                            currentCommand = OBJLineCommand::VertexTexture;
                             break;
 
-                        case _characterVertexNormal:
-                            *currentCommand = OBJLineCommand::VertexNormal;
+                        case 'n':
+                            currentCommand = OBJLineCommand::VertexNormal;
                             break;
 
-                        case _characterParameter:
-                            *currentCommand = OBJLineCommand::VertexParameter;
+                        case 'p':
+                            currentCommand = OBJLineCommand::VertexParameter;
                             break;
 
                         default:
-                            *currentCommand = OBJLineCommand::Invalid;
+                            currentCommand = OBJLineCommand::Invalid;
                             break;
                     }
 
                     break;
                 }
 
-                case _characterNone:
-                    *currentCommand = OBJLineCommand::None;
+                case ' ':
+                    currentCommand = OBJLineCommand::None;
                     break;
 
                 default:
-                    *currentCommand = OBJLineCommand::Invalid;
+                    currentCommand = OBJLineCommand::Invalid;
                     break;
             }
 

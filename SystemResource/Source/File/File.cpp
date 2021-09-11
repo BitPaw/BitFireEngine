@@ -17,28 +17,29 @@ BF::File::File(const char* filePath)
 	_currentCursorPosition = 0;
 	Data = nullptr;
 	Size = 0;
-	Extension = nullptr;
 
 	if (filePath == nullptr)
 	{
 		return;
 	}	
 
-	strcpy(Path, filePath);
+	strcpy_s(Path, _MAX_PATH, filePath);
+	
+	_splitpath_s
+	(
+		filePath,
+		Drive, _MAX_DRIVE,
+		Directory, _MAX_DIR,
+		FileName, _MAX_FNAME,
+		Extension, _MAX_EXT
+	);
 
-	AsciiString pp(Path);
+	// Fix stuff
+	AsciiString fileName(Extension);
+	AsciiString extension(Extension);
 
-	pp.MergeRepeatingCharacters('\\');
-	pp.Replace('\\', '/');
-
-	for (size_t i = 0; Path[i] != '\0'; i++)
-	{
-		if (Path[i] == '.')
-		{
-			Extension = &Path[i] +1;
-			break;
-		}
-	}
+	extension.Remove('.');
+	fileName.Remove('/');
 }
 
 BF::File::~File()
@@ -321,7 +322,6 @@ void BF::File::Clear()
 
 	Size = 0;
 	Data = nullptr;
-	Extension = nullptr;
 }
 
 void BF::File::ExtractAndSave(const char* filePath, unsigned int start, unsigned int length)

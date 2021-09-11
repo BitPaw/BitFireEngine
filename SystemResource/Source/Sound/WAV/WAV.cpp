@@ -70,6 +70,15 @@ void BF::WAV::Load(const char* filePath)
 	char dataText[4];
 
 	byteSteam.CopyBytesAndMove(dataText, 4);
+
+	bool isRIFFListChunk = memcmp("LIST", dataText, 4) == 0;
+
+	if (isRIFFListChunk)
+	{
+		byteSteam.CurrentPosition  += 30u;
+	}
+
+	byteSteam.CopyBytesAndMove(dataText, 4);
 	unsigned int wavChunkSize = byteSteam.ExtractIntegerAndMove(endian);
 
 	AudioFormat = fmtChunk.AudioFormat;
@@ -79,8 +88,8 @@ void BF::WAV::Load(const char* filePath)
 	BlockAllign = fmtChunk.BlockAllign;
 	BitsPerSample = fmtChunk.BitsPerSample;
 
-	SoundDataSize = wavChunkSize;
-	SoundData = (unsigned char*)malloc(wavChunkSize);
+	SoundDataSize = wavChunkSize + BlockAllign;
+	SoundData = (unsigned char*)calloc(SoundDataSize, sizeof(char));
 	
 	byteSteam.CopyBytesAndMove(SoundData, wavChunkSize);
 }

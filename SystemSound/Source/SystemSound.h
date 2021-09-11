@@ -22,6 +22,8 @@ namespace BF
 		void UnRegister(AudioSource& audioSource);
 		void UnRegister(Sound& sound);
 
+		void Update(AudioSource& audioSource);
+
 		void Play(AudioSource& audioSource, Sound& sound);
 
 		static ALenum ToChannalFormat(unsigned short numerOfChannels, unsigned short bitsPerSample);

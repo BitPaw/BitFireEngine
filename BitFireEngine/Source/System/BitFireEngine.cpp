@@ -87,7 +87,13 @@ void BF::BitFireEngine::Update()
     }
 
     //---[User-Input]------------------------------------------------------
-    UpdateInput(_mainWindow.GetInput());
+    _mainWindow.Update(); // Pull inputs from window
+    auto inputPool = _mainWindow.GetInput();
+    auto& eeeeee = *inputPool;
+
+    UpdateInput(eeeeee);
+
+    _callbackListener->OnUpdateInput(eeeeee);
 
     //---[Game-Logic]------------------------------------------------------
     Resource.ModelsPhysicsApply(deltaTime);
@@ -100,14 +106,12 @@ void BF::BitFireEngine::Update()
     IsRunning = !_mainWindow.ShouldCloseWindow;
 }
 
-void BF::BitFireEngine::UpdateInput(InputContainer* input)
+void BF::BitFireEngine::UpdateInput(InputContainer& input)
 {
-    KeyBoard& keyboard = input->KeyBoardInput;
-    Mouse& mouse = input->MouseInput;    
+    KeyBoard& keyboard = input.KeyBoardInput;
+    Mouse& mouse = input.MouseInput;    
     Camera& camera = Resource.MainCamera;
-    Vector3<float> movement;
-
-    _mainWindow.Update(); // Pull inputs from window
+    Vector3<float> movement;  
 
     if (keyboard.ShitftLeft.IsPressed()) { movement.Add(0, -1, 0); }
     if (keyboard.W.IsPressed()) { movement.Add(0, 0, 1); }

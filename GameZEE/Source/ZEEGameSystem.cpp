@@ -14,7 +14,7 @@
 BF::UIText* text;
 //BF::Model* sphere;
 
-BF::SkyBox* skybox;
+BF::SkyBox skybox;
 BF::Model cube;
 
 BF::ShaderProgram worldShader;
@@ -45,24 +45,20 @@ void ZEE::ZEEGameSystem::OnStartUp()
     GameSystem.Resource.Load(cube, "Model/Cube.obj");
 
     cube.ModelMatrix.Scale(10.0f);
-    cube.EnablePhysics = true;
-   // GameSystem.Resource.Add(cube);
+    cube.EnablePhysics = true;       
 
-    
-
-    skybox = new BF::SkyBox();
-    GameSystem.Resource.Load(skybox->Faces[0], "Texture/SkyBox/Right.bmp"); // Right
-    GameSystem.Resource.Load(skybox->Faces[1], "Texture/SkyBox/Left.bmp"); // Left
-    GameSystem.Resource.Load(skybox->Faces[2], "Texture/SkyBox/Top.bmp"); // Top
-    GameSystem.Resource.Load(skybox->Faces[3], "Texture/SkyBox/Bottom.bmp"); // Bottom
-    GameSystem.Resource.Load(skybox->Faces[4], "Texture/SkyBox/Back.bmp"); // Back
-    GameSystem.Resource.Load(skybox->Faces[5], "Texture/SkyBox/Front.bmp"); // Front       
-
-    GameSystem.Resource.Load(skybox->Shader, "Shader/SkyBox.vert", "Shader/SkyBox.frag");
-    
-    
-    GameSystem.Resource.Add(*skybox);
-    
+    GameSystem.Resource.Load
+    (
+        skybox,
+        "Shader/SkyBox.vert",
+        "Shader/SkyBox.frag",
+        "Texture/SkyBox/Right.bmp",
+        "Texture/SkyBox/Left.bmp",
+        "Texture/SkyBox/Top.bmp",
+        "Texture/SkyBox/Bottom.bmp",
+        "Texture/SkyBox/Back.bmp",
+        "Texture/SkyBox/Front.bmp"
+    );           
 
     text = new BF::UIText("SampleText", *GameSystem.Resource.DefaultFont, -1, -0.8);
     text->RenderInformation.ShaderProgramID = hudShaderID.ID;
@@ -79,12 +75,12 @@ void ZEE::ZEEGameSystem::OnStartUp()
  
 
 #if 0 // Sound Enable
-    BF::MID midi;
-    midi.Load("Sound/CaveStory.mid");
-    midi.Save("Sound/CaveStory_NEW.mid");
+    //BF::MID midi;
+    //midi.Load("Sound/CaveStory.mid");
+    //midi.Save("Sound/CaveStory_NEW.mid");
 
     //sound.Load("Sound/Our.mp3");
-    sound.Load("Sound/What's Up.wav");
+    sound.Load("Sound/CatFeet.wav");
     //sound.Load("Sound/CaveStory.mid");
 
     GameSystem.SoundPlayer.Register(audioSource);
@@ -115,7 +111,43 @@ void ZEE::ZEEGameSystem::OnUpdateGameLogic(float deltaTime)
     _deltaTime = deltaTime;
 }
 
+void ZEE::ZEEGameSystem::OnUpdateInput(BF::InputContainer& input)
+{
+#if 0
+    bool changed = false;
 
+    if (input.KeyBoardInput.O.IsPressed())
+    {
+        audioSource.Pitch += 0.01;
+
+        if (audioSource.Pitch > 2.5)
+        {
+            audioSource.Pitch = 2.5;
+        }
+
+
+      
+        changed = true;
+    }
+
+    if (input.KeyBoardInput.L.IsPressed())
+    {
+        audioSource.Pitch -= 0.01;
+
+        if (audioSource.Pitch < 0.4)
+        {
+            audioSource.Pitch = 0.4;
+        }
+
+        changed = true;
+    }
+
+    if (changed)
+    {
+        GameSystem.SoundPlayer.Update(audioSource);
+    }
+#endif
+}
 
 void ZEE::ZEEGameSystem::OnUpdateUI()
 {

@@ -1,8 +1,10 @@
 #pragma once
 
+#include "../Resource.h"
+
 namespace BF
 {
-	class Dialog
+	class Dialog : public Resource
 	{
 		public:
 		char* Message;		

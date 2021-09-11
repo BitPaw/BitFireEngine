@@ -257,137 +257,97 @@ void BF::ResourceManager::CheckUncachedData()
     }
 }
 
-BF::Resource* BF::ResourceManager::Load(const char* filePathString, ResourceLoadMode resourceLoadMode)
+BF::Resource* BF::ResourceManager::Load(const char* filePath)
 {
     Resource* resource = nullptr;
     ResourceType resourceType = ResourceType::Unknown;
-    File file(filePathString);
-    AsciiString fileExtension(&file.Extension[0]);
-    bool doesFileExist = file.DoesFileExist();
-    ResourceLoadingResult errorCode;
-    AsciiString filePath(filePathString);
 
-    if (doesFileExist)
     {
-        {
-            bool isModel = Model::CheckFileExtension(file.Extension) != ModelType::UnKown;
-            bool isImage = Image::CheckFileExtension(fileExtension) != ImageFileExtension::Unkown;
-            bool isSound = false;
-            bool isFont = Font::IsFontFile(file.Extension);
-            bool isShader = false;
-            bool isDialog = false;
-            bool isLevel = fileExtension.CompareIgnoreCase("lev");
+        bool isModel = Model::FileFormatPeek(filePath) != ModelType::UnKown;
+        bool isImage = Image::FileFormatPeek(filePath) != ImageFileExtension::Unkown;
+        bool isSound = Sound::FileFormatPeek(filePath) != SoundFormat::Unkown;
+        bool isFont = Font::FileFormatPeek(filePath) != FontFormat::Unkown;
+        bool isShader = false;
+        bool isDialog = false;
+        bool isLevel = Level::IsLevelFile(filePath);
 
-            if (isModel) resourceType = ResourceType::Model;
-            if (isImage) resourceType = ResourceType::Image;
-            if (isSound) resourceType = ResourceType::Sound;
-            if (isFont) resourceType = ResourceType::Font;
-            if (isShader) resourceType = ResourceType::Shader;
-            if (isDialog) resourceType = ResourceType::Dialog;
-            if (isLevel) resourceType = ResourceType::Level;
-        }
-
-        switch (resourceType)
-        {
-            case ResourceType::Dialog:
-            {             
-                Dialog* dialog = new Dialog();
-                errorCode = Load(*dialog, filePathString);
-                break;
-            }            
-
-            case ResourceType::Font:
-            {
-                Font* font = new Font();
-                errorCode = Load(*font, filePathString);
-
-                if (errorCode == ResourceLoadingResult::Successful)
-                {
-                    Add(*font);
-                    resource = font;
-                }
-
-                break;
-            }
-
-            case ResourceType::Image:
-            {
-                Image* image = new Image();
-                errorCode = Load(*image, filePathString);
-
-                if (errorCode == ResourceLoadingResult::Successful)
-                {
-                    Add(*image);
-                    resource = image;
-                }
-
-                break;
-            }
-
-            case ResourceType::Level:
-            {        
-                Level* level = new Level();
-                errorCode = Load(*level, filePathString);
-                break;
-            }
-
-            case ResourceType::Model:
-            {        
-                Model* model = new Model();
-                errorCode = Load(*model, filePathString);
-                
-                if (errorCode == ResourceLoadingResult::Successful)
-                {
-                    Add(*model);
-                    resource = model;
-                }
-
-                break;
-            }
-            case ResourceType::Shader:
-            {
-       
-                break;
-            }
-            case ResourceType::Sound:
-            {
-                Sound* sound = new Sound();
-                errorCode = Load(*sound, filePathString);
-
-                break;
-            }
-        }
-    }
-    else
-    {
-        errorCode = ResourceLoadingResult::FileNotFound;
+        if (isModel) resourceType = ResourceType::Model;
+        if (isImage) resourceType = ResourceType::Image;
+        if (isSound) resourceType = ResourceType::Sound;
+        if (isFont) resourceType = ResourceType::Font;
+        if (isShader) resourceType = ResourceType::Shader;
+        if (isDialog) resourceType = ResourceType::Dialog;
+        if (isLevel) resourceType = ResourceType::Level;
     }
 
-    switch (errorCode)
+    switch (resourceType)
     {
-        case ResourceLoadingResult::Successful:
+        case ResourceType::Dialog:
+        {
+            Dialog* dialog = new Dialog();
+
+            Load(*dialog, filePath);
+
+            resource = dialog;
+
+            break;
+        }
+
+        case ResourceType::Font:
+        {
+            Font* font = new Font();
+
+            Load(*font, filePath);
+
+            resource = font;
+
+            break;
+        }
+
+        case ResourceType::Image:
+        {
+            Image* image = new Image();
+
+            Load(*image, filePath);
+
+            resource = image;
+
+            break;
+        }
+
+        case ResourceType::Level:
+        {
+            Level* level = new Level();
+
+            Load(*level, filePath);
+
+            resource = level;
+
+            break;
+        }
+
+        case ResourceType::Model:
+        {
+            Model* model = new Model();
+
+            Load(*model, filePath);
+
+            resource = model;
+
+            break;
+        }
+        case ResourceType::Shader:
         {
             break;
         }
-        case ResourceLoadingResult::FormatNotSupported:
+        case ResourceType::Sound:
         {
-            printf
-            (
-                "[Warning] Fileextension <%s> is not supported or reconised by the system!\n"
-                "          Resource at path <%s> could not be loaded\n",
-                &fileExtension[0],
-                &filePath[0]
-            );
-            break;
-        }
-        case ResourceLoadingResult::FileNotFound:
-        {
-            printf("[Error] File is missing at path <%s>\n", &filePath[0]);
-            break;
-        }
-        case ResourceLoadingResult::OutOfMemory:
-        {
-            printf("[Error] System is out of memory! File couldn't load at path <%s>\n", &filePath[0]);
+            Sound* sound = new Sound();
+
+            Load(*sound, filePath);
+
+            resource = sound;
+
             break;
         }
     }
@@ -395,13 +355,9 @@ BF::Resource* BF::ResourceManager::Load(const char* filePathString, ResourceLoad
     return resource;
 }
 
-static int inmageID = 0;
-
-BF::ResourceLoadingResult BF::ResourceManager::Load(Model& model, const char* filePath, ResourceLoadMode resourceLoadMode)
+void BF::ResourceManager::Load(Model& model, const char* filePath)
 {
-    strcpy(model.FilePath, filePath);
-
-    model.ID = ResourceIDLoading;
+    model.MarkAsLoading("<Unnamed-Model>", filePath);
 
     Add(model);
 
@@ -420,12 +376,10 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(Model& model, const char* fi
                     Image* image = new Image();
 
                     image->ID = ResourceIDLoading;
-
+  
                     resourceManager->Add(*image);
 
-                    ResourceLoadingResult errorCode = image->Load(material->TextureFilePath);
-
-                    sprintf(image->Name, "Image Nr.%i", ++inmageID);
+                    ResourceLoadingResult errorCode = image->Load(material->TextureFilePath);                    
 
                     if (errorCode == ResourceLoadingResult::Successful)
                     {
@@ -439,29 +393,24 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(Model& model, const char* fi
        model->ID = ResourceIDLoaded;  
 
     }, this, &model);
-
-    return ResourceLoadingResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::ResourceManager::Load(Image& image, const char* filePath, ResourceLoadMode resourceLoadMode)
+void BF::ResourceManager::Load(Image& image, const char* filePath)
 {
-    ResourceLoadingResult errorCode = image.Load(filePath);
-    
-    if (errorCode == ResourceLoadingResult::Successful)
-    {
-        Add(image);
-    }
-  
-    return errorCode;
+    Add(image);
+
+   image.Load(filePath);   
 }
 
-BF::ResourceLoadingResult BF::ResourceManager::Load(Sound& resource, const char* filePath, ResourceLoadMode resourceLoadMode)
+void BF::ResourceManager::Load(Sound& sound, const char* filePath)
 {
-    return ResourceLoadingResult::Successful;
+    //Add(sound);
 }
 
-BF::ResourceLoadingResult BF::ResourceManager::Load(Font& font, const char* filePath, ResourceLoadMode resourceLoadMode)
+void BF::ResourceManager::Load(Font& font, const char* filePath)
 {
+    Add(font);
+
     ResourceLoadingResult errorCode = font.Load(filePath);
 
     if (errorCode == ResourceLoadingResult::Successful)
@@ -487,7 +436,7 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(Font& font, const char* file
             font.Texture = new Image();
 
            // errorCode = ErrorCode::FileNotFound;
-            errorCode = Load(*font.Texture, textureFilePath);
+            Load(*font.Texture, textureFilePath);
 
             if (errorCode != ResourceLoadingResult::Successful)
             {
@@ -500,21 +449,19 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(Font& font, const char* file
 
         strcpy(font.FilePath, filePath);
     }
-
-    return errorCode;
 }
 
-BF::ResourceLoadingResult BF::ResourceManager::Load(ShaderProgram& resource, const char* filePath, ResourceLoadMode resourceLoadMode)
+void BF::ResourceManager::Load(ShaderProgram& resource, const char* filePath)
 {
-    return ResourceLoadingResult::Successful;
+
 }
 
-BF::ResourceLoadingResult BF::ResourceManager::Load(Dialog& resource, const char* filePath, ResourceLoadMode resourceLoadMode)
+void BF::ResourceManager::Load(Dialog& resource, const char* filePath)
 {
-    return ResourceLoadingResult::Successful;
+
 }
 
-BF::ResourceLoadingResult BF::ResourceManager::Load(Level& level, const char* filePath, ResourceLoadMode resourceLoadMode)
+void BF::ResourceManager::Load(Level& level, const char* filePath)
 {
     File file(filePath);
     ResourceLoadingResult errorCode;
@@ -652,7 +599,7 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(Level& level, const char* fi
                 // Load Model----------------
                 Model* loadedModel = new Model(); 
 
-                errorCode = Load(*loadedModel, path);
+                Load(*loadedModel, path);
 
                 if (loadedModel == nullptr)
                 {
@@ -684,16 +631,9 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(Level& level, const char* fi
 
                 Image* image = new Image();
 
-                errorCode = Load(*image, path);
+                Add(*image);
 
-                if (errorCode == ResourceLoadingResult::Successful)
-                {
-                    Add(*image);
-                }
-                else
-                {
-                    delete image;
-                }         
+                Load(*image, path);      
 
                 level.ImageList[imageCounter++] = image;
                 break;
@@ -704,7 +644,7 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(Level& level, const char* fi
 
                 Sound* sound = new Sound();
                 
-                errorCode = Load(*sound, path);
+                Load(*sound, path);
 
                 level.SoundList[soundCounter++] = sound;
                 break;
@@ -715,7 +655,7 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(Level& level, const char* fi
 
                 Font* font = new Font();
                 
-                errorCode = Load(*font, path);          
+                Load(*font, path);          
 
                 level.FontList[fontCounter++] = font;
 
@@ -742,11 +682,9 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(Level& level, const char* fi
                 break;
         }
     }
-
-    return errorCode;
 }
 
-BF::ResourceLoadingResult BF::ResourceManager::Load(ShaderProgram& shaderProgram, const char* vertexShader, const char* fragmentShader, ResourceLoadMode ResourceLoadMode)
+void BF::ResourceManager::Load(ShaderProgram& shaderProgram, const char* vertexShader, const char* fragmentShader)
 {
     shaderProgram.AddShader(vertexShader, fragmentShader);
     shaderProgram.Load();
@@ -757,8 +695,30 @@ BF::ResourceLoadingResult BF::ResourceManager::Load(ShaderProgram& shaderProgram
     {
         Add(shaderProgram);
     }
+}
 
-    return ResourceLoadingResult::Successful;
+void BF::ResourceManager::Load
+(
+    SkyBox& skyBox, 
+    const char* shaderVertex,
+    const char* shaderFragment,
+    const char* textureRight,
+    const char* textureLeft, 
+    const char* textureTop, 
+    const char* textureBottom, 
+    const char* textureBack, 
+    const char* textureFront)
+{
+    Load(skyBox.Faces[0], textureRight);
+    Load(skyBox.Faces[1], textureLeft);
+    Load(skyBox.Faces[2], textureTop);
+    Load(skyBox.Faces[3], textureBottom);
+    Load(skyBox.Faces[4], textureBack);
+    Load(skyBox.Faces[5], textureFront);
+
+    Load(skyBox.Shader, shaderVertex, shaderFragment);
+
+    Add(skyBox);
 }
 
 void BF::ResourceManager::Add(Model& model)

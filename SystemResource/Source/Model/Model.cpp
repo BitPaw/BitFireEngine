@@ -447,9 +447,10 @@ void BF::Model::ScaleTexturePoints(Vector2<float> scale)
     }
 }
 
-BF::ModelType BF::Model::CheckFileExtension(const char* fileExtension)
+BF::ModelType BF::Model::FileFormatPeek(const char* fileExtension)
 {
-    AsciiString extension(fileExtension);
+    File file(fileExtension);
+    AsciiString extension(file.Extension);
 
     if (extension.CompareIgnoreCase("3ds")) return ModelType::A3DS;
     if (extension.CompareIgnoreCase("obj")) return ModelType::OBJ;
@@ -467,15 +468,16 @@ BF::ResourceLoadingResult BF::Model::Load()
 
 BF::ResourceLoadingResult BF::Model::Load(const char* filePath)
 {
-    if (filePath == nullptr)
+    if (!File::DoesFileExist(filePath))
     {
+        ID = ResourceIDFileNotFound;
         return ResourceLoadingResult::FileNotFound;
     }
 
-    File file(filePath);
-    ModelType modelType = CheckFileExtension(file.Extension);
+    ModelType modelType = FileFormatPeek(filePath);
 
     ID = ResourceIDLoading;
+
     strcpy(FilePath, filePath);
 
     switch (modelType)
