@@ -61,3 +61,7 @@ void BF::MP3::ConvertTo(Sound& sound)
 {
 
 }
+
+void BF::MP3::ConvertFrom(Sound& sound)
+{
+}

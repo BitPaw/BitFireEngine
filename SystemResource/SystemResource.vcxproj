@@ -253,6 +253,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Sound\MID\MIDITrack.cpp" />
+    <ClCompile Include="Source\Sound\MID\MIDICommandExtended.cpp" />
+    <ClCompile Include="Source\Sound\MID\MIDICommand.cpp" />
+    <ClCompile Include="Source\Sound\MID\MIDINote.cpp" />
+    <ClCompile Include="Source\Sound\MID\MIDITrackHeader.cpp" />
     <ClCompile Include="Source\Sound\MP3\MPEGAudioTag.cpp" />
     <ClCompile Include="Source\Sound\MP3\MP3Header.cpp" />
     <ClCompile Include="Source\Sound\MP3\MPEGGenre.cpp" />
@@ -367,6 +372,12 @@
     <ClCompile Include="Source\Sound\WMA\WMA.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Math\Geometry\Matrix.hpp" />
+    <ClInclude Include="Source\Sound\MID\MIDITrack.h" />
+    <ClInclude Include="Source\Sound\MID\MIDICommandExtended.h" />
+    <ClInclude Include="Source\Sound\MID\MIDICommand.h" />
+    <ClInclude Include="Source\Sound\MID\MIDINote.h" />
+    <ClInclude Include="Source\Sound\MID\MIDITrackHeader.h" />
     <ClInclude Include="Source\Sound\MP3\MPEGAudioTag.h" />
     <ClInclude Include="Source\Sound\MP3\MP3ChannelMode.hpp" />
     <ClInclude Include="Source\Sound\MP3\MP3Emphasis.hpp" />

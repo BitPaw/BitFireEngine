@@ -32,8 +32,7 @@ void BF::WAV::Load(const char* filePath)
 
 	RIFF riffChunk;
 	FMT fmtChunk;
-	Endian endian;
-	
+	Endian endian;	
 
 	byteSteam.CopyBytesAndMove(riffChunk.ChunkID, 4);
 
@@ -100,4 +99,9 @@ void BF::WAV::ConvertTo(Sound& sound)
 	sound.Data = (unsigned char*)malloc(SoundDataSize);
 
 	memcpy(sound.Data, SoundData, SoundDataSize);
+}
+
+void BF::WAV::ConvertFrom(Sound& sound)
+{
+
 }

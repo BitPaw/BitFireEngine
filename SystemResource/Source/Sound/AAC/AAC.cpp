@@ -11,3 +11,7 @@ void BF::AAC::Save(const char* filePath)
 void BF::AAC::ConvertTo(Sound& sound)
 {
 }
+
+void BF::AAC::ConvertFrom(Sound& sound)
+{
+}

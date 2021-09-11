@@ -141,6 +141,8 @@ char BF::ByteStreamHusk::CompareBytesAndMove(void* data, unsigned int size)
 	unsigned char* target = &StartAdress[CurrentPosition];
 	int result = memcmp(data, target, size) == 0;
 
+	CurrentPosition += size;
+
 	return result;
 }
 

@@ -8,6 +8,8 @@
 #include "../../SystemResource/Source/Model/Model.h"
 #include "../../SystemResource/Source/Math/Math.h"
 #include "../../SystemResource/Source/Sound/WAV/WAV.h"
+#include "../../SystemResource/Source/Sound/MID/MID.h"
+#include "../../SystemResource/Source/Math/Geometry/Matrix.hpp"
 
 BF::UIText* text;
 //BF::Model* sphere;
@@ -62,9 +64,6 @@ void ZEE::ZEEGameSystem::OnStartUp()
     GameSystem.Resource.Add(*skybox);
     
 
-
-
-
     text = new BF::UIText("SampleText", *GameSystem.Resource.DefaultFont, -1, -0.8);
     text->RenderInformation.ShaderProgramID = hudShaderID.ID;
     //text->SetFont(*Resource.DefaultFont);
@@ -77,10 +76,16 @@ void ZEE::ZEEGameSystem::OnStartUp()
     GameSystem.Resource.PrintContent(true);
 
  
+ 
 
 #if 0 // Sound Enable
+    BF::MID midi;
+    midi.Load("Sound/CaveStory.mid");
+    midi.Save("Sound/CaveStory_NEW.mid");
+
     //sound.Load("Sound/Our.mp3");
     sound.Load("Sound/What's Up.wav");
+    //sound.Load("Sound/CaveStory.mid");
 
     GameSystem.SoundPlayer.Register(audioSource);
     GameSystem.SoundPlayer.Register(sound);

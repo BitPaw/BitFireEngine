@@ -114,3 +114,71 @@ void BF::Sound::Load(const char* filePath)
 
     ID = ResourceIDLoaded;
 }
+
+void BF::Sound::Save(const char* filePath, SoundFormat soundFormat)
+{
+    switch (soundFormat)
+    {
+        default:
+        case SoundFormat::Unkown:
+            // Error
+            break;
+
+        case SoundFormat::AAC:
+        {
+            AAC aac;
+            aac.ConvertFrom(*this);
+            aac.Save(FilePath);
+            break;
+        }     
+        case SoundFormat::FLAC:
+        {
+            FLAC flac;
+            flac.ConvertFrom(*this);
+            flac.Save(FilePath);
+            break;
+        }
+        case SoundFormat::M4A:
+        {
+            M4A m4a;
+            m4a.ConvertFrom(*this);
+            m4a.Save(FilePath);
+            break;
+        }
+        case SoundFormat::MID:
+        {
+            MID mid;
+            mid.ConvertFrom(*this);
+            mid.Save(FilePath);
+            break;
+        }
+        case SoundFormat::MP3:
+        {
+            MP3 mp3;
+            mp3.ConvertFrom(*this);
+            mp3.Save(FilePath);
+            break;
+        }
+        case SoundFormat::OGG:
+        {
+            OGG ogg;
+            ogg.ConvertFrom(*this);
+            ogg.Save(FilePath);
+            break;
+        }
+        case SoundFormat::WAV:
+        {
+            WAV wav;
+            wav.ConvertFrom(*this);
+            wav.Save(FilePath);
+            break;
+        }
+        case SoundFormat::WMA:
+        {
+            WMA wma;
+            wma.ConvertFrom(*this);
+            wma.Save(FilePath);
+            break;
+        }
+    }
+}

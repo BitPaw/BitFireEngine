@@ -11,3 +11,7 @@ void BF::M4A::Save(const char* filePath)
 void BF::M4A::ConvertTo(Sound& sound)
 {
 }
+
+void BF::M4A::ConvertFrom(Sound& sound)
+{
+}

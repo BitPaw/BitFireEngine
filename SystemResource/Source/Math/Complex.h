@@ -2,10 +2,11 @@
 
 namespace BF
 {
+	template<typename NumberType>
 	class Complex
 	{
 		public:
-		double RealElement;
-		double ImaginaryElement;
+		NumberType ElementReal;
+		NumberType ElementImaginary;
 	};
 }

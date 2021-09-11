@@ -31,3 +31,7 @@ void BF::OGG::Save(const char* filePath)
 void BF::OGG::ConvertTo(Sound& sound)
 {
 }
+
+void BF::OGG::ConvertFrom(Sound& sound)
+{
+}

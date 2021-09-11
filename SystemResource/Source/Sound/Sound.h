@@ -22,5 +22,6 @@ namespace BF
 
 		SoundFormat PeekFileFomat(const char* filePath);
 		void Load(const char* filePath);
+		void Save(const char* filePath, SoundFormat soundFormat);
 	};
 }
