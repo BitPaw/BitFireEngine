@@ -2,6 +2,13 @@
 
 #include <string.h>
 
+BF::ByteStreamHusk::ByteStreamHusk(char* startAdress, unsigned int dataLengh)
+{
+	StartAdress = (unsigned char*)startAdress;
+	DataLength = dataLengh;
+	CurrentPosition = 0;
+}
+
 BF::ByteStreamHusk::ByteStreamHusk(unsigned char* startAdress, unsigned int dataLengh)
 {
 	StartAdress = startAdress;

@@ -13,7 +13,8 @@ namespace BF
 		unsigned int DataLength;
 
 		unsigned int CurrentPosition;		
-
+	
+		ByteStreamHusk(char* startAdress, unsigned int dataLengh);
 		ByteStreamHusk(unsigned char* startAdress, unsigned int dataLengh);
 
 		Word ExtractWord();

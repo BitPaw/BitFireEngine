@@ -268,6 +268,17 @@ void BF::PNG::Load(const char* filePath)
 
 void BF::PNG::Save(const char* filePath)
 {
+    unsigned int fileLength = 500;
+    char* data = (char*)malloc(fileLength * sizeof(char));
+    ByteStreamHusk byteStreamHusk(data, fileLength);
+
+    const unsigned char pngFileHeader[8] = { 137u, 'P', 'N', 'G', '\r', '\n', 26u, '\n' };
+
+    byteStreamHusk.InsertArrayAndMove((void*)pngFileHeader, 8);
+
+    // Data Stuff
+
+    File::Write(filePath, data, fileLength);
 }
 
 void BF::PNG::Convert(Image& image)

@@ -205,8 +205,7 @@ void BF::OBJ::Load(const char* filePath)
 
     //---<Cound needed Space and allocate>----------------------------------
     {
-        bool isInMesh = false;
-        bool checkedRenderType = false;     
+        bool isInMesh = false;  
 
         unsigned int vertexPositionListSize = 0;
         unsigned int vertexTextureCoordinateListSize = 0;
@@ -664,7 +663,7 @@ void BF::OBJ::Convert(Model& model)
         for (unsigned int i = 0; i < vertexListSize; i++)
         {
             Vertex& vertex = mesh.VertexList[i];
-            vertex.ColorID = -1;
+            vertex.ColorID = (unsigned int)-1;
             vertex.CurrentPosition = element.VertexPositionList[i];
 
             //printf("V: <%f|%f|%f> C:%u\n", vertex->CurrentPosition.X, vertex->CurrentPosition.Y, vertex->CurrentPosition.Z, vertex->ColorID);
@@ -715,7 +714,7 @@ void BF::OBJ::Clear()
     free(MaterialList);
     free(ElementList);
 
-    VertexStructureSize = -1;
+    VertexStructureSize = 0xFF;
     MaterialListSize = 0;
     MaterialList = 0;
     ElementListSize = 0;

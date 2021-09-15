@@ -49,7 +49,7 @@ void BF::ResourceManager::UpdateVBOData(Model& model)
     unsigned int indexDataSize = mesh.IndexList.Size();
     bool validCall = model.RenderInformation.IndexDataSize > 0 && model.RenderInformation.VertexDataSize > 0;
 
-    assert(validCall, "[x][RenderSystem] Could not UpdateVBOData(), index data empty or not set.]");
+    assert(validCall);
     assert(indexDataSize > 0);
 
     for (unsigned int i = 0; i < indexDataSize; i++)
@@ -59,7 +59,7 @@ void BF::ResourceManager::UpdateVBOData(Model& model)
         unsigned int textureIndex = indexList->TexturePointID;
         unsigned int normalIndex = indexList->NormalVectorID;
 
-        assert(vertexIndex < mesh.VertexList.Size(), "[x][] Invalid Index.");
+        assert(vertexIndex < mesh.VertexList.Size());
         assert(textureIndex < mesh.TexturePointList.Size());
 
         Vertex* vertex = mesh.VertexList[vertexIndex];
@@ -81,14 +81,14 @@ void BF::ResourceManager::UpdateVBOData(Model& model)
 
         if (hasColor)
         {
-            assert(vertex->ColorID <= model.ColorList.Size(), "[x][] Invalid Index.");
+            assert(vertex->ColorID <= model.ColorList.Size());
 
             color = &model.ColorList[vertex->ColorID];
         }
 
         if (hasNormal)
         {
-            assert(normalIndex <= model.GlobalMesh.NormalPointList.Size(), "[x][] Invalid Index.");
+            assert(normalIndex <= model.GlobalMesh.NormalPointList.Size());
 
             normal = model.GlobalMesh.NormalPointList[normalIndex];
         }
@@ -98,6 +98,11 @@ void BF::ResourceManager::UpdateVBOData(Model& model)
 
         const unsigned int sizeOfAll = (3+3+4+2);
         const unsigned int sizeOfAllFloat = sizeOfAll * sizeof(float);
+
+        assert(position != nullptr);
+        assert(normal != nullptr);
+        assert(color != nullptr);
+        assert(texture != nullptr);
 
         float data[sizeOfAll]
         {
@@ -430,7 +435,7 @@ void BF::ResourceManager::Load(Font& font, const char* filePath)
             int resourcePathSize = strlen(resourcePath);
             int startIndex = path.FindLast('/') + 1;
 
-            memcpy(textureFilePath, &filePath[0], startIndex);
+            memcpy(textureFilePath, filePath, startIndex);
 
             int length = strlen(textureFilePath);
 
@@ -468,8 +473,7 @@ void BF::ResourceManager::Load(Dialog& resource, const char* filePath)
 
 void BF::ResourceManager::Load(Level& level, const char* filePath)
 {
-    File file(filePath);
-    ResourceLoadingResult errorCode;
+    File file(filePath, true);
 
     const char _modelToken = 'O';
     const char _textureToken = 'T';
@@ -486,8 +490,6 @@ void BF::ResourceManager::Load(Level& level, const char* filePath)
     unsigned int shaderCounter = 0;
     unsigned int dialogCounter = 0;
     unsigned int amountOfLines = 0;
-
-    file.Read();
 
     char currentLineBuffer[200];
 

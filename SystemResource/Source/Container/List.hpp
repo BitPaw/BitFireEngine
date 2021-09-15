@@ -81,7 +81,7 @@ namespace BF
 
 			if (_content == nullptr)
 			{
-				return; // Failed allocation
+				return;
 			}
 
 			for (unsigned int i = 0; i < _size; i++)

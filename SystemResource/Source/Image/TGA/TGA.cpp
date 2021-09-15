@@ -279,6 +279,18 @@ void BF::TGA::Load(const char* filePath)
 void BF::TGA::Save(const char* filePath)
 {
 	const char footer[18] = "TRUEVISION-XFILE.";
+
+
+	unsigned int fileLength = 500;
+	char* data = (char*)malloc(fileLength * sizeof(char));
+	ByteStreamHusk byteStreamHusk(data, fileLength);
+
+
+	byteStreamHusk.InsertArrayAndMove((void*)footer, 8);
+
+	// Data Stuff
+
+	File::Write(filePath, data, fileLength);
 }
 
 void BF::TGA::Convert(Image& image)

@@ -7,6 +7,6 @@ namespace BF
 	class Dialog : public Resource
 	{
 		public:
-		char* Message;		
+		char Message[300];		
 	};
 }
