@@ -159,9 +159,6 @@
     <ClCompile Include="Source\Model\Model.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Model\ModelRenderInformation.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Model\Vertex.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -364,6 +361,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Sound\MID\MIDITrack.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Model\ModelRenderInformation.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -618,9 +618,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Model\Model.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Model\ModelRenderInformation.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Model\ModelType.h">
@@ -903,6 +900,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Math\Geometry\Matrix.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Model\ModelRenderInformation.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

@@ -10,7 +10,7 @@ BF::MTL::MTL()
 
 BF::MTL::~MTL()
 {
-	delete[] MaterialList;
+	free(MaterialList);
 }
 
 void BF::MTL::Load(char* filePath)
@@ -26,10 +26,13 @@ void BF::MTL::Load(char* filePath)
 	const char _weightCharacter = 's';
 	//static const char _newMaterialCharacter = 'i';
 
+
 	File file(filePath);
 	file.Read();
 	unsigned int amountOfLines = file.CountAmountOfLines();
 	char currentLineBuffer[200];
+
+
 
 	// Count How many materials are needed
 	{
@@ -48,13 +51,15 @@ void BF::MTL::Load(char* filePath)
 		MaterialList = reinterpret_cast<MTLMaterial*>(calloc(MaterialListSize, sizeof(MTLMaterial)));
 	}
 
+
+
 	// Raw Parse
 	MTLMaterial* material = nullptr; // current material, has to be here, its state dependend
 	char dummyBuffer[20];
 
 	file.CursorToBeginning();
 
-	for (unsigned int line = 0; line < amountOfLines; line++)
+	for (unsigned int line = 0; line <= amountOfLines; line++)
 	{
 		file.ReadNextLineInto(currentLineBuffer);
 		char commandChar = currentLineBuffer[0];
@@ -71,6 +76,8 @@ void BF::MTL::Load(char* filePath)
 			case 'n':
 			{
 				material = &MaterialList[materialIndex++];
+
+				strcpy(material->TextureFilePath, "<internal>");
 
 				sscanf(currentLineBuffer, "%s %s", dummyBuffer, material->Name);
 

@@ -77,6 +77,10 @@ void Cleaved::CleavedGameSystem::OnUpdateGameLogic(float deltaTime)
     _deltaTime = deltaTime;
 }
 
+void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
+{
+}
+
 void Cleaved::CleavedGameSystem::OnUpdateUI()
 {
     sprintf_s(text->TextContent, "FPS: %4i", (BF::Math::Ceiling(1 / _deltaTime)));

@@ -1,4 +1,5 @@
 #include "AsciiString.h"
+#include <cassert>
 
 BF::AsciiString::AsciiString()
 {
@@ -216,51 +217,128 @@ void BF::AsciiString::AttachToBack(AsciiString& string)
 
 float BF::AsciiString::ToFloat()
 {
-	return std::strtof(&_data[0], 0);
+	return AsciiString::ToFloat(_data);
+}
+
+float BF::AsciiString::ToFloat(const char* string)
+{	
+	int number = 0;
+	unsigned int digitsAfterDot = 1;
+	bool isWholeNumberChunk = true;
+
+	float scalefactor = 1;
+
+	unsigned int index = 0;
+	bool isNegative = false;
+
+	if (string[0] == '-')
+	{
+		index++;
+		isNegative = true;
+	}
+
+	for ( ; string[index] != '\0'; index++)
+	{
+		char character = string[index];
+		bool isDot = character == '.';
+		bool isValidCharacter = (character >= '0' && character <= '9') || isDot;
+		int numberElement = character - '0';
+
+		if (!isValidCharacter)
+		{
+			break;
+		}
+
+		// Trigger when we switch to after dot
+		if (isDot && isWholeNumberChunk)
+		{
+			isWholeNumberChunk = false;
+			continue;
+		}
+
+		number *= 10; // "Shft number to left" Example 12 -> 120
+		number += numberElement; // ASCII character to actual number.
+
+		if (!isWholeNumberChunk)
+		{
+			digitsAfterDot *= 10;		
+		}		
+	}
+
+	if (isNegative)
+	{
+		number *= -1;
+	}
+
+	//double stdResult = std::strtof(string, 0); // STD Method
+	float result = number / (float)digitsAfterDot;
+
+	return  result;
 }
 
 int BF::AsciiString::ToInt()
 {
-	// atoi()
-	//std::strtol(&_data[0], 0, 10);
-
 	return AsciiString::ToInt(_data);	
 }
 
-int BF::AsciiString::ToInt(char* string)
-{
-	int value = -1;
-
-	AsciiString::ToInt(string, &value);
-
-	return value;
-}
-
-void BF::AsciiString::ToInt(char* string, int* target)
+int BF::AsciiString::ToInt(const char* string)
 {
 	int number = 0;
+	unsigned int index = 0;
+	bool isNegative = false;
 
-	for (unsigned int i = 0; string[i] != '\0'; i++)
+	if (string[0] == '-')
 	{
-		char character = string[i];
+		index++;
+		isNegative = true;
+	}
+
+	for (; string[index] != '\0'; index++)
+	{
+		char character = string[index];
 		char isValidCharacter = (character >= '0' && character <= '9');
+		int numberElement = character - '0';
 
 		if (!isValidCharacter)
 		{
-			*target = number;
-			return;
+			break;
 		}
 
 		number *= 10; // "Shft number to left" Example 12 -> 120
-		number += (character - '0'); // ASCII character to actual number.
+		number += numberElement; // ASCII character to actual number.
 	}
 
-	*target = number;
+	if (isNegative)
+	{
+		number *= -1;
+	}
+
+	// atoi()
+	//std::strtol(&_data[0], 0, 10); // STD Method
+
+	return number;
 }
 
 bool BF::AsciiString::ToBool()
 {
-	return !(_data[0] == '0');
+	return AsciiString::ToBool(_data);
+}
+
+int BF::AsciiString::ToBool(const char* string)
+{
+	switch (string[0])
+	{
+		default:
+		case '0':
+		case 'F':
+		case 'f':
+			return false;
+
+		case '1':
+		case 'T':
+		case 't':
+			return true;
+	}
 }
 
 unsigned int BF::AsciiString::Count(char character)

@@ -47,11 +47,15 @@ namespace BF
 		void AttachToBack(char character);
 		void AttachToBack(AsciiString& string);
 
+		//---<Convert>---
 		float ToFloat();
+		static float ToFloat(const char* string);
 		int ToInt();
-		static int ToInt(char* string);
-		static void ToInt(char* string, int* target);
+		static int ToInt(const char* string);
 		bool ToBool();
+		static int ToBool(const char* string);
+		//---------------
+
 		unsigned int Count(char character);
 		unsigned int CountUnique(char character);
 

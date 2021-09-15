@@ -323,7 +323,7 @@ unsigned int BF::OpenGLAPI::ShaderCompile(unsigned int type, char* shaderString)
             int lengh;
 
             glGetShaderiv(id, GL_INFO_LOG_LENGTH, &lengh);
-            char* message = new char[lengh];
+            char* message = (char*)malloc(lengh * sizeof(char));
 
             glGetShaderInfoLog(id, lengh, &lengh, message);
 
@@ -339,7 +339,7 @@ unsigned int BF::OpenGLAPI::ShaderCompile(unsigned int type, char* shaderString)
                 message
             );
 
-            delete[] message;
+            free(message);
 
             glDeleteShader(id);
 

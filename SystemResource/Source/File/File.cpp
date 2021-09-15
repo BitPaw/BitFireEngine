@@ -12,7 +12,7 @@ BF::ResourceLoadingResult BF::File::CheckFile()
 	return ResourceLoadingResult::Successful;
 }
 
-BF::File::File(const char* filePath)
+BF::File::File(const char* filePath, bool readInstandly)
 {
 	_currentCursorPosition = 0;
 	Data = nullptr;
@@ -20,6 +20,11 @@ BF::File::File(const char* filePath)
 
 	if (filePath == nullptr)
 	{
+		Path[0] = '\0';
+		Drive[0] = '\0';
+		Directory[0] = '\0';
+		FileName[0] = '\0';
+		Extension[0] = '\0';
 		return;
 	}	
 
@@ -40,6 +45,11 @@ BF::File::File(const char* filePath)
 
 	extension.Remove('.');
 	fileName.Remove('/');
+
+	if (readInstandly)
+	{
+		Read();
+	}
 }
 
 BF::File::~File()
@@ -51,7 +61,7 @@ BF::File::~File()
 BF::ResourceLoadingResult BF::File::Read()
 {
 	const unsigned int elementSize = sizeof(char);
-	unsigned int fullSize = -1;
+	size_t fullSize = -1;
 	FILE* file = fopen(Path, "rb");
 
 	if (file == nullptr)
@@ -75,8 +85,8 @@ BF::ResourceLoadingResult BF::File::Read()
 
 	Data[fullSize] = '\0';
 
-	int readBytes = fread(Data, elementSize, Size, file);
-	int overAllocatedBytes = Size - readBytes; // if overAllocatedBytes > 0 there was a reading error.	
+	size_t readBytes = fread(Data, elementSize, Size, file);
+	size_t overAllocatedBytes = Size - readBytes; // if overAllocatedBytes > 0 there was a reading error.	
 
 	if (readBytes != Size)
 	{
@@ -98,7 +108,7 @@ BF::ResourceLoadingResult BF::File::Read(const char* filePath, char** buffer)
 BF::ResourceLoadingResult BF::File::Read(const char* filePath, char** buffer, unsigned int maxSize)
 {
 	std::ifstream inputFileStream(filePath, std::ios::binary | std::ios::ate);
-	unsigned int length = inputFileStream.tellg();
+	size_t length = inputFileStream.tellg();
 
 	if (length == -1)
 	{
@@ -160,34 +170,32 @@ BF::ResourceLoadingResult BF::File::Write(const char* filePath, const char* cont
 	return ResourceLoadingResult::Successful;
 }
 
-bool BF::File::ReadNextLineInto(char* exportBuffer)
+unsigned int BF::File::ReadNextLineInto(char* exportBuffer)
 {
 	int length = 0;
 	int index = _currentCursorPosition;
-	int maxSize = Size;
-	
 
-	while (index < maxSize && Data[index] != '\n' && Data[index] != '\0' && index < maxSize)
+	while (index < Size && Data[index] != '\n' && Data[index] != '\0')
 	{
 		index = _currentCursorPosition + length++;
 	}
 
 	if (length <= 1)
 	{
-		return false;
-	}
+		return 0;
+	}	
 
-	memcpy(exportBuffer, &Data[0] + _currentCursorPosition, length);
+	memcpy(exportBuffer, Data + _currentCursorPosition, length);
 	exportBuffer[length-1] = '\0';
 
 	_currentCursorPosition += length;
 
-	while (Data[_currentCursorPosition] == '\n' && _currentCursorPosition < maxSize)
+	while (Data[_currentCursorPosition] == '\n' && _currentCursorPosition < Size)
 	{
 		_currentCursorPosition++;
 	}
 
-	return true;
+	return length;
 }
 
 BF::ResourceLoadingResult BF::File::ReadAsLines(List<AsciiString>& lineList)
@@ -283,13 +291,27 @@ void BF::File::GetFileExtension(AsciiString& path, AsciiString& extension)
 int BF::File::CountAmountOfLines()
 {
 	int lineCounter = 0;
+	int index = 0;
 
 	if (Data == nullptr)
 	{
 		return 0;
 	}
 
-	while (Data[lineCounter++] != '\0');
+	while (index < Size)
+	{
+		char character = Data[index++];
+
+		if (character == '\n')
+		{
+			++lineCounter;
+
+			while (Data[index] == '\n')
+			{
+				++index;
+			}
+		}		
+	}
 
 	return lineCounter;
 }

@@ -7,10 +7,11 @@
 
 namespace BF
 {
+#define OBJElementNameLength 50u
 	struct OBJElement
 	{
 		public:
-		char Name[20];
+		char Name[OBJElementNameLength];
 		unsigned int MaterialListIndex;
 		float Smoothing;
 

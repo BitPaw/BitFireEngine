@@ -79,6 +79,11 @@ namespace BF
 			_content = (T*)realloc(_content, size * sizeof(T));
 			_size = size;
 
+			if (_content == nullptr)
+			{
+				return; // Failed allocation
+			}
+
 			for (unsigned int i = 0; i < _size; i++)
 			{
 				_content[i] = T();

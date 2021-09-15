@@ -1,6 +1,5 @@
 #include "OBJ.h"
 #include "../../File/File.h"
-#include "OBJLineCommand.h"
 #include <cstdarg>
 #include "../../Container/AsciiString.h"
 
@@ -50,7 +49,7 @@ void StringParse(char* buffer, const char* syntax, ...)
                     unsigned int* i = va_arg(args, unsigned int*);
                     char* source = &buffer[startIndex];
 
-                    BF::AsciiString::ToInt(source, (int*)i);
+                    *i = BF::AsciiString::ToInt(source);
 
                     break;
                 }
@@ -62,7 +61,7 @@ void StringParse(char* buffer, const char* syntax, ...)
                     float* number = va_arg(args, float*);
                     char* source = &buffer[startIndex];
 
-                    (*number) = strtof(source, 0);
+                    (*number) = BF::AsciiString::ToFloat(source);
 
                     break;
                 }
@@ -91,9 +90,9 @@ void StringParse(char* buffer, const char* syntax, ...)
 
 BF::OBJ::OBJ()
 {
-    strcpy(Name, "[N/A]");
+    strcpy_s(Name, OBJNameSize, "[N/A]");
 
-    VertexStructureSize = -1;
+    VertexStructureSize = 0;
 
     MaterialListSize = 0;
     MaterialList = 0;
@@ -104,267 +103,232 @@ BF::OBJ::OBJ()
 
 BF::OBJ::~OBJ()
 {
-    delete[] MaterialList;
-    delete[] ElementList;
+   // free(MaterialList);
+   // free(ElementList);
 }
 
-void BF::OBJ::Load(const char* filePath)
+bool BF::OBJ::ShouldCreateNewMesh(OBJLineCommand objLineCommand, bool isCurrentlyInFaces)
 {
-    const char _characterComment = '#';
-    const char _characterObjectName = 'o';
-    const char _characterSmoothShading = 's';
-    const char _characterFace = 'f';
-    const char _characterNone = ' ';
-    const char _characterVertex = 'v';
-    const char _characterVertexTexture = 't';
-    const char _characterVertexNormal = 'n';
-    const char _characterParameter = 'p';
-
-    bool isFirstVertex = true;
-    File file(filePath);
-    file.Read();
-
-    unsigned int numberOfLines = file.CountAmountOfLines();
-    List<OBJLineCommand> commandList;
-    char currentLineBuffer[100];
-
-    commandList.ReSize(numberOfLines);
-
-    strcpy(Name, filePath);
-
-    // Translate to enum commands
+    if (!isCurrentlyInFaces)
     {
-        bool usedFacesBefore = false;
-        bool newMeshKey = false;
-        bool checkedRenderType = false;
-        unsigned int elementListSize = 1; // We will have at least one mesh.
+        return false;
+    }
 
-        for (unsigned int lineIndex = 0; lineIndex < numberOfLines; lineIndex++)
+    switch (objLineCommand)
+    {
+        default:
+        case BF::OBJLineCommand::Invalid:
+        case BF::OBJLineCommand::None:;
+        case BF::OBJLineCommand::Comment:
+        case BF::OBJLineCommand::MaterialLibraryInclude:
+        case BF::OBJLineCommand::FaceElement:
+            return false;
+
+        case BF::OBJLineCommand::MaterialLibraryUse:
+        case BF::OBJLineCommand::VertexGeometric:
+        case BF::OBJLineCommand::VertexTexture:
+        case BF::OBJLineCommand::VertexNormal:
+        case BF::OBJLineCommand::VertexParameter:
+        case BF::OBJLineCommand::SmoothShading:
+        case BF::OBJLineCommand::ObjectName:
+            return true;
+    }
+}
+
+BF::OBJLineCommand BF::OBJ::PeekCommandLine(const char* commandLine)
+{
+    unsigned char functionChar = commandLine[0];
+
+    switch (functionChar)
+    {
+        case 'v':
         {
-            OBJLineCommand& currentCommand = commandList[lineIndex];
-
-            file.ReadNextLineInto(currentLineBuffer);
-
-            unsigned char functionChar = currentLineBuffer[0];
+            functionChar = commandLine[1];
 
             switch (functionChar)
             {
-                case 'm':
-                    currentCommand = OBJLineCommand::MaterialLibraryInclude;
-                    break;
-
-                case 'u':
-                    currentCommand = OBJLineCommand::MaterialLibraryUse;
-
-                    if (usedFacesBefore)
-                    {
-                        newMeshKey = true;
-                        usedFacesBefore = false;
-                    }
-
-                    break;
-
-                case '#':
-                    currentCommand = OBJLineCommand::Comment;
-                    break;
-
-                case 'o':
-                    currentCommand = OBJLineCommand::ObjectName;
-                    newMeshKey = true;
-                    break;
-
-                case 's':
-                    currentCommand = OBJLineCommand::SmoothShading;
-                    break;
-
-                case 'f':
-                    currentCommand = OBJLineCommand::FaceElement;
-                    usedFacesBefore = true;
-
-                    if (!checkedRenderType)
-                    {
-                        checkedRenderType = true;
-                    }
-
-                    break;
-
-                case 'v':
-                {
-                    functionChar = (currentLineBuffer)[1]; //  Potential error
-
-                    switch (functionChar)
-                    {
-                        case ' ':
-                            currentCommand = OBJLineCommand::VertexGeometric;
-                            break;
-
-                        case 't':
-                            currentCommand = OBJLineCommand::VertexTexture;
-                            break;
-
-                        case 'n':
-                            currentCommand = OBJLineCommand::VertexNormal;
-                            break;
-
-                        case 'p':
-                            currentCommand = OBJLineCommand::VertexParameter;
-                            break;
-
-                        default:
-                            currentCommand = OBJLineCommand::Invalid;
-                            break;
-                    }
-
-                    break;
-                }
-
                 case ' ':
-                    currentCommand = OBJLineCommand::None;
-                    break;
+                    return OBJLineCommand::VertexGeometric;
+
+                case 't':
+                    return OBJLineCommand::VertexTexture;
+
+                case 'n':
+                    return OBJLineCommand::VertexNormal;
+
+                case 'p':
+                    return OBJLineCommand::VertexParameter;
 
                 default:
-                    currentCommand = OBJLineCommand::Invalid;
-                    break;
+                    return OBJLineCommand::Invalid;
             }
 
-            if (newMeshKey)
-            {
-                newMeshKey = false;
-                elementListSize++;
-            }
+            break;
         }
 
-        ElementListSize = elementListSize - 1;
-        ElementList = new OBJElement[elementListSize - 1];
+        case 'f':    
+            return OBJLineCommand::FaceElement;
+
+        case 'm':
+            return OBJLineCommand::MaterialLibraryInclude;
+
+        case 'u':
+            return OBJLineCommand::MaterialLibraryUse;
+
+        case '#':
+            return OBJLineCommand::Comment;
+
+        case 'o':
+            return OBJLineCommand::ObjectName;
+
+        case 's':
+            return OBJLineCommand::SmoothShading;
+
+        case ' ': 
+            return OBJLineCommand::None;
+
+        default:
+            return OBJLineCommand::Invalid;
     }
+}
 
-    // Space lookup
+
+
+void BF::OBJ::Load(const char* filePath)
+{
+    bool isFirstVertex = true;
+    char currentLineBuffer[FileLineBufferSize];
+    File file(filePath, true); 
+    unsigned int numberOfLines = file.CountAmountOfLines();
+
+    strcpy(Name, filePath);
+
+    //---<Cound needed Space and allocate>----------------------------------
     {
-        bool usedFacesBefore = false;
-        bool newMeshKey = false;
-
-        unsigned int elementIndex = 0;
-        unsigned int materialsCounter = 0;
+        bool isInMesh = false;
+        bool checkedRenderType = false;     
 
         unsigned int vertexPositionListSize = 0;
-        unsigned int textureCoordinateListSize = 0;
+        unsigned int vertexTextureCoordinateListSize = 0;
         unsigned int vertexNormalPositionListSize = 0;
         unsigned int vertexParameterListSize = 0;
         unsigned int faceElementListSize = 0;
 
-        OBJElement* elemtent = &ElementList[elementIndex++];
+        ElementListSize = 1;
+        ElementList = new OBJElement();
 
-        VertexStructureSize = 0;
-
-        // How many data do i need?
-        for (unsigned int i = 0; i < numberOfLines; i++)
+        for (size_t lineIndex = 0; lineIndex <= numberOfLines; lineIndex++)
         {
-            OBJLineCommand& command = commandList[i];
+            unsigned int writtenBytes = file.ReadNextLineInto(currentLineBuffer);                       
+            OBJLineCommand command = PeekCommandLine(currentLineBuffer);
 
             switch (command)
             {
+                default:
                 case OBJLineCommand::Invalid:
-                    break;
-
                 case OBJLineCommand::None:
-                    break;
-
                 case OBJLineCommand::Comment:
                     break;
 
                 case OBJLineCommand::MaterialLibraryInclude:
-                    materialsCounter++;
+                    ++MaterialListSize;
                     break;
 
                 case OBJLineCommand::MaterialLibraryUse:
-                    if (usedFacesBefore)
-                    {
-                        usedFacesBefore = false;
-                        newMeshKey = true;
-                    }
-
                     break;
-
                 case OBJLineCommand::ObjectName:
-                    if (usedFacesBefore)
-                    {
-                        usedFacesBefore = false;
-                        newMeshKey = true;
-                    }
-
                     break;
-
                 case OBJLineCommand::VertexGeometric:
-                    vertexPositionListSize++;
+                    ++vertexPositionListSize;
                     break;
 
                 case OBJLineCommand::VertexTexture:
-                    textureCoordinateListSize++;
+                    ++vertexTextureCoordinateListSize;
                     break;
 
                 case OBJLineCommand::VertexNormal:
-                    vertexNormalPositionListSize++;
+                    ++vertexNormalPositionListSize;
                     break;
 
                 case OBJLineCommand::VertexParameter:
-                    vertexParameterListSize++;
+                    ++vertexParameterListSize;
                     break;
 
                 case OBJLineCommand::SmoothShading:
                     break;
-
                 case OBJLineCommand::FaceElement:
                 {
-                    unsigned int amount = 3;//lineList[i].Count(' ');
+                    AsciiString characters(currentLineBuffer);
+                    unsigned char amount = static_cast<char>(characters.Count('/')) / 2;
 
                     faceElementListSize += amount;
 
-                    if (VertexStructureSize < amount)  VertexStructureSize = amount;
+                    isInMesh = true;
 
-                    usedFacesBefore = true;
+                    if (VertexStructureSize < amount)
+                        VertexStructureSize = amount;
+
                     break;
                 }
+            }  
 
+            bool fetchNextMesh = ShouldCreateNewMesh(command, isInMesh);
+
+            if (!(lineIndex < numberOfLines))
+            {
+                OBJElement& element = ElementList[ElementListSize - 1];
+
+                element.VertexPositionList.ReSize(vertexPositionListSize);
+                element.TextureCoordinateList.ReSize(vertexTextureCoordinateListSize);
+                element.VertexNormalPositionList.ReSize(vertexNormalPositionListSize);
+                element.VertexParameterList.ReSize(vertexParameterListSize);
+                element.FaceElementList.ReSize(faceElementListSize);
             }
 
-            if (newMeshKey && (elementIndex <= ElementListSize))
+            if (fetchNextMesh)
             {
-                newMeshKey = false;
+                OBJElement* newelementList = (OBJElement*)realloc(ElementList, ++ElementListSize * sizeof(OBJElement));
 
-                elemtent->VertexPositionList.ReSize(vertexPositionListSize);
-                elemtent->TextureCoordinateList.ReSize(textureCoordinateListSize);
-                elemtent->VertexNormalPositionList.ReSize(vertexNormalPositionListSize);
-                elemtent->VertexParameterList.ReSize(vertexParameterListSize);
-                elemtent->FaceElementList.ReSize(faceElementListSize);
+                if (!newelementList)
+                {
+                    // Out of memory
+                    return;
+                }
 
-                elemtent = &ElementList[elementIndex++];
+                ElementList = newelementList;
+
+                OBJElement& oldElement = newelementList[ElementListSize - 2];
+                OBJElement& newElement = newelementList[ElementListSize - 1];
+
+                newElement = OBJElement();
+
+                oldElement.VertexPositionList.ReSize(vertexPositionListSize);
+                oldElement.TextureCoordinateList.ReSize(vertexTextureCoordinateListSize);
+                oldElement.VertexNormalPositionList.ReSize(vertexNormalPositionListSize);
+                oldElement.VertexParameterList.ReSize(vertexParameterListSize);
+                oldElement.FaceElementList.ReSize(faceElementListSize);
 
                 vertexPositionListSize = 0;
-                textureCoordinateListSize = 0;
+                vertexTextureCoordinateListSize = 0;
                 vertexNormalPositionListSize = 0;
                 vertexParameterListSize = 0;
-                faceElementListSize = 0;
+                faceElementListSize = 0;              
+
+                isInMesh = false;
             }
-        }
-
-        // Register Memory
+        }                
+   
+        if (MaterialListSize > 0)
         {
-            elemtent->VertexPositionList.ReSize(vertexPositionListSize);
-            elemtent->TextureCoordinateList.ReSize(textureCoordinateListSize);
-            elemtent->VertexNormalPositionList.ReSize(vertexNormalPositionListSize);
-            elemtent->VertexParameterList.ReSize(vertexParameterListSize);
-            elemtent->FaceElementList.ReSize(faceElementListSize);
-
-            MaterialListSize = materialsCounter;
-            MaterialList = new MTL[materialsCounter];
+            MaterialList = new MTL[MaterialListSize];
         }
-    }
+     }
+     //--------------------------------------------------------------------
+
+    assert(VertexStructureSize == 3 || VertexStructureSize == 4);
 
     // Exact Parse
-    {
-        bool usedFacesBefore = false;
-        bool newMeshKey = false;
-
+    {    
         unsigned int elementIndex = 0;
         unsigned int currentPositionElement = 0;
         unsigned int currentTextureElement = 0;
@@ -373,29 +337,46 @@ void BF::OBJ::Load(const char* filePath)
         unsigned int currentFaceElement = 0;
         unsigned int materialIndex = 0;
         unsigned int materialIDCounter = 0;
+
         OBJElement* elemtent = &ElementList[elementIndex++];
-        //List<Position<unsigned int>> indexPositionCache(waveFront->VertexStructureSize); // 36 Byte alloc
+        bool isInMesh = false;      
 
-        Vector3<float>* currentVectorValue;
-
-        char dummyBuffer[50];
+        char dummyBuffer[FileLineBufferSize];
         
         file.CursorToBeginning();
 
         // Parse
-        for (unsigned int lineIndex = 0; lineIndex < numberOfLines; lineIndex++)
+        for (unsigned int lineIndex = 0; lineIndex <= numberOfLines; lineIndex++)
         {
-            file.ReadNextLineInto(currentLineBuffer);
+            unsigned int writtenBytes = file.ReadNextLineInto(currentLineBuffer);
+            OBJLineCommand command = PeekCommandLine(currentLineBuffer);
+            bool fetchNextMesh = ShouldCreateNewMesh(command, isInMesh);
+                      
+            if (fetchNextMesh)
+            {
+                elemtent = &ElementList[elementIndex++];    
 
-            OBJLineCommand command = commandList[lineIndex];
+                currentPositionElement = 0;
+                currentTextureElement = 0;
+                currentNormalElement = 0;
+                currentParameterElement = 0;
+                currentFaceElement = 0;
+            }
 
             switch (command)
             {
                 case OBJLineCommand::MaterialLibraryInclude:
                 {
-                    char materialFilePath[30];
+                    char materialFilePath[_MAX_PATH];
 
-                    sscanf(currentLineBuffer, "%s %s", dummyBuffer, materialFilePath);
+                    //sscanf(currentLineBuffer, "%s %s", dummyBuffer, materialFilePath);
+
+                    StringParse
+                    (
+                        currentLineBuffer,
+                        "§s",
+                        materialFilePath
+                    );
 
                     AsciiString materialFileFolder;
                     AsciiString filePathS(filePath);
@@ -433,17 +414,17 @@ void BF::OBJ::Load(const char* filePath)
                 }
                 case OBJLineCommand::MaterialLibraryUse:
                 {
-                    if (usedFacesBefore)
-                    {
-                        usedFacesBefore = false;
-                        elemtent = &ElementList[elementIndex++];
-                        newMeshKey = true;
-                    }
-
-                    char usedMaterialName[20];
+                    char usedMaterialName[MTLNameSize];
                     unsigned int materialID = -1;
+                 
+                    //sscanf(currentLineBuffer, "%s %s", dummyBuffer, usedMaterialName);    
 
-                    sscanf(currentLineBuffer, "%s %s", dummyBuffer, usedMaterialName);            
+                    StringParse
+                    (
+                        currentLineBuffer,
+                        "§s",
+                        usedMaterialName
+                    );
 
                     for (unsigned int i = 0; i < MaterialListSize; i++)
                     {
@@ -452,8 +433,8 @@ void BF::OBJ::Load(const char* filePath)
 
                         for (unsigned int j = 0; j < materialListSize; j++)
                         {
-                            MTLMaterial& material = mtl.MaterialList[j];
-                            bool isSameName = strcmp(material.Name, usedMaterialName) == 0;
+                            MTLMaterial& material = mtl.MaterialList[j];                            
+                            bool isSameName = strncmp(material.Name, usedMaterialName, MTLNameSize) == 0;
 
                             if (isSameName)
                             {
@@ -471,15 +452,7 @@ void BF::OBJ::Load(const char* filePath)
 
                 case OBJLineCommand::ObjectName:
                 {
-                    if (usedFacesBefore)
-                    {
-                        usedFacesBefore = false;
-                        elemtent = &ElementList[elementIndex++];
-                        newMeshKey = true;
-                    }
-
-                    strcpy(elemtent->Name, currentLineBuffer + 2);
-
+                    strcpy_s(elemtent->Name, OBJElementNameLength, currentLineBuffer + 2);
                     break;
                 }
 
@@ -487,6 +460,8 @@ void BF::OBJ::Load(const char* filePath)
                 case OBJLineCommand::VertexNormal:
                 case OBJLineCommand::VertexGeometric:
                 {
+                    Vector3<float>* currentVectorValue;
+
                     switch (command)
                     {
                         case OBJLineCommand::VertexParameter:
@@ -506,15 +481,31 @@ void BF::OBJ::Load(const char* filePath)
                     }
 
 
-                    sscanf(currentLineBuffer, "%s %f %f %f", dummyBuffer, &currentVectorValue->X, &currentVectorValue->Y, &currentVectorValue->Z);
-                }
-                break;
+                    //sscanf(currentLineBuffer, "%s %f %f %f", dummyBuffer, &currentVectorValue->X, &currentVectorValue->Y, &currentVectorValue->Z);
+
+                    StringParse
+                    (
+                        currentLineBuffer,
+                        "§fff",
+                        &currentVectorValue->X, 
+                        &currentVectorValue->Y,
+                        &currentVectorValue->Z
+                    );
+                    break;
+                }          
 
                 case OBJLineCommand::VertexTexture:
                 {
                     Vector2<float>& point = elemtent->TextureCoordinateList[currentTextureElement++];
 
-                    sscanf(currentLineBuffer, "%s %f %f", dummyBuffer, &point.X, &point.Y);
+                    StringParse
+                    (
+                        currentLineBuffer,
+                        "§ff",
+                        &point.X, &point.Y 
+                    );
+
+                   // sscanf(currentLineBuffer, "%s %f %f", dummyBuffer, &point.X, &point.Y);
 
                     break;
                 }        
@@ -541,21 +532,53 @@ void BF::OBJ::Load(const char* filePath)
                          usedFacesBefore = true;
                     }*/                   
 
+                    assert(currentFaceElement < elemtent->FaceElementList.Size());
+
                     Vector3<unsigned int>& vectorA = elemtent->FaceElementList[currentFaceElement++];
                     Vector3<unsigned int>& vectorB = elemtent->FaceElementList[currentFaceElement++];
                     Vector3<unsigned int>& vectorC = elemtent->FaceElementList[currentFaceElement++];
 
-                    // sscanf(currentLineBuffer, "%s %s %s %s", dummyBuffer, cacheA, cacheB, cacheC);
-                    StringParse
-                    (
-                        currentLineBuffer, 
-                        "§uuuuuuuuu",
-                        &vectorA.X, &vectorA.Y, &vectorA.Z,
-                        &vectorB.X, &vectorB.Y, &vectorB.Z,
-                        &vectorC.X, &vectorC.Y, &vectorC.Z
-                    );
 
-                    usedFacesBefore = true;
+                    switch (VertexStructureSize)
+                    {
+                        case 3:
+                        {
+                            StringParse
+                            (
+                                currentLineBuffer,
+                                "§uuuuuuuuu",
+                                &vectorA.X, &vectorA.Y, &vectorA.Z,
+                                &vectorB.X, &vectorB.Y, &vectorB.Z,
+                                &vectorC.X, &vectorC.Y, &vectorC.Z
+                            );
+                            break;
+                        }
+                        case 4:
+                        {
+                            Vector3<unsigned int>& vectorD = elemtent->FaceElementList[currentFaceElement++];
+
+                            StringParse
+                            (
+                                currentLineBuffer,
+                                "§uuuuuuuuuuuu",
+                                &vectorA.X, &vectorA.Y, &vectorA.Z,
+                                &vectorB.X, &vectorB.Y, &vectorB.Z,
+                                &vectorC.X, &vectorC.Y, &vectorC.Z,
+                                &vectorD.X, &vectorD.Y, &vectorD.Z
+                            );
+                            break;
+                        }
+
+                        default:
+                            break;
+                    }
+
+       
+
+                    // sscanf(currentLineBuffer, "%s %s %s %s", dummyBuffer, cacheA, cacheB, cacheC);
+                   
+
+                    isInMesh = true;
 
                     break;
                 }
@@ -565,17 +588,6 @@ void BF::OBJ::Load(const char* filePath)
                 case OBJLineCommand::Comment:
                 default:
                     break;
-            }
-
-            if (newMeshKey)
-            {
-                newMeshKey = false;
-
-                currentPositionElement = 0;
-                currentTextureElement = 0;
-                currentNormalElement = 0;
-                currentParameterElement = 0;
-                currentFaceElement = 0;
             }
         }
     }
@@ -700,8 +712,8 @@ void BF::OBJ::Convert(Model& model)
 
 void BF::OBJ::Clear()
 {
-    delete[] MaterialList;
-    delete[] ElementList;
+    free(MaterialList);
+    free(ElementList);
 
     VertexStructureSize = -1;
     MaterialListSize = 0;
@@ -713,7 +725,7 @@ void BF::OBJ::Clear()
 void BF::OBJ::PrintData()
 {
     printf(" +-------+-------+-------+-------+-------+-------\n");
-    printf(" | Object: %s\n", &Name[0]);
+    printf(" | Object: %-30s |\n", Name);
     printf(" +-------+-------+-------+-------+-------+-------\n");
     printf(" | %5s | %5s | %5s | %5s | %5s | %s\n", "Vert", "Norm", "Text", "Para", "Face", "Name");
     printf(" +-------+-------+-------+-------+-------+-------\n");
@@ -732,6 +744,12 @@ void BF::OBJ::PrintData()
     }
 
     printf(" +-------+-------+-------+-------+-------+-------\n");
+
+    if (MaterialListSize == 0)
+    {
+        printf(" +-------+-------+-------+-------+-------+-------\n");
+        printf(" | No Materials  |\n");
+    }
 
     for (unsigned int i = 0; i < MaterialListSize; i++)
     {

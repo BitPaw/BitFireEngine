@@ -33,10 +33,10 @@
     <ClCompile Include="Source\UI\UIText.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Resource\ResouceManager.cpp">
+    <ClCompile Include="Source\System\BitFireEngine.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\System\BitFireEngine.cpp">
+    <ClCompile Include="Source\Resource\ResouceManager.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

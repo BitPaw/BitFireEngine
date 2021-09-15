@@ -6,6 +6,7 @@ namespace BF
 {
 	class UIImage : public UIElement
 	{
-
+		public:
+		void SetBorder(const int borderSize);
 	};
 }

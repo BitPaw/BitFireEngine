@@ -31,6 +31,8 @@ ZEE::ZEEGameSystem::ZEEGameSystem()
 float _deltaTime = 0;
 BF::Model* model;
 
+BF::Model textureBix;
+
 void ZEE::ZEEGameSystem::OnStartUp()
 {
     BF::StopWatch stopwatch;
@@ -40,9 +42,18 @@ void ZEE::ZEEGameSystem::OnStartUp()
     GameSystem.Resource.Load(worldShader, "Shader/WS.vert", "Shader/WS.frag");
     GameSystem.Resource.Load(hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
 
+    GameSystem.Resource.Load(textureBix, "Model/Dialog/DialogBox.obj");
+
     GameSystem.Resource.Load("Texture/Block.bmp");
+    GameSystem.Resource.Load("Model/Triangle.obj");
+
+
     GameSystem.Resource.Load("Level/MainMenu.lev");
     GameSystem.Resource.Load(cube, "Model/Cube.obj");
+
+
+
+    textureBix.ModelMatrix.Scale(10, 2, 1);
 
     cube.ModelMatrix.Scale(10.0f);
     cube.EnablePhysics = true;       

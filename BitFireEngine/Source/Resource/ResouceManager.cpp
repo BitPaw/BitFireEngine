@@ -44,26 +44,25 @@ void CameraDataUpdate(BF::Camera& camera)
 void BF::ResourceManager::UpdateVBOData(Model& model)
 {
     LinkedMesh& mesh = model.GlobalMesh;
-    List<float>& vertexData = model.RenderInformation.VertexData;
-    List<unsigned int>& indexData = model.RenderInformation.IndexData;
+    float* vertexData = model.RenderInformation.VertexData;
+    unsigned int* indexData = model.RenderInformation.IndexData;
+    unsigned int indexDataSize = mesh.IndexList.Size();
+    bool validCall = model.RenderInformation.IndexDataSize > 0 && model.RenderInformation.VertexDataSize > 0;
 
-    unsigned int dataIndex = 0;// renderInformation->VertexDataPosition;
-    //unsigned int indiceIndex = renderInformation->IndiceIndex;
+    assert(validCall, "[x][RenderSystem] Could not UpdateVBOData(), index data empty or not set.]");
+    assert(indexDataSize > 0);
 
-   // printf("Update: <%p> <%.2u> %s\n", renderInformation, renderInformation->RenderID, &(renderInformation->RenderModel->ModelName[0]));
-
-    if (model.RenderInformation.IndexData.Size() == 0)
+    for (unsigned int i = 0; i < indexDataSize; i++)
     {
-
-        printf("[Could not UpdateVBOData(), index data empty or not set.]\n");
-        return;
-    }
-
-    for (unsigned int i = 0; i < mesh.IndexList.Size(); i++)
-    {
-        assert(i <= mesh.IndexList.Size(), "[x][ResourceManager][UpdateVBOData] illegal MeshIndexData index.");
-
         MeshIndexData* indexList = mesh.IndexList[i];
+        unsigned int vertexIndex = indexList->VertexPositionID;
+        unsigned int textureIndex = indexList->TexturePointID;
+        unsigned int normalIndex = indexList->NormalVectorID;
+
+        assert(vertexIndex < mesh.VertexList.Size(), "[x][] Invalid Index.");
+        assert(textureIndex < mesh.TexturePointList.Size());
+
+        Vertex* vertex = mesh.VertexList[vertexIndex];
 
         Vector4<float> defaultColor(1, 1, 1, 1);
         Vector2<float> defaultTexturepoint;
@@ -72,15 +71,7 @@ void BF::ResourceManager::UpdateVBOData(Model& model)
         Vector4<float>* color = &defaultColor;
         Vector3<float>* position = nullptr;
         Vector3<float>* normal = nullptr;
-        Vector2<float>* texture = nullptr;
-
-        unsigned int vertexIndex = indexList->VertexPositionID;
-        unsigned int textureIndex = indexList->TexturePointID;
-        unsigned int normalIndex = indexList->NormalVectorID;
-
-        assert(vertexIndex < mesh.VertexList.Size(), "[x][] Invalid Index.");
-
-        Vertex* vertex = mesh.VertexList[vertexIndex];
+        Vector2<float>* texture = nullptr;          
 
         bool hasColor = !model.ColorList.IsEmpty() && vertex->ColorID != -1;
         bool hasNormal = !mesh.NormalPointList.IsEmpty();
@@ -102,32 +93,33 @@ void BF::ResourceManager::UpdateVBOData(Model& model)
             normal = model.GlobalMesh.NormalPointList[normalIndex];
         }
 
-        if (hasTexture)
-        {
-            assert(textureIndex <= model.GlobalMesh.TexturePointList.Size(), "[x][] Invalid Index.");
-
-            texture = model.GlobalMesh.TexturePointList[textureIndex];
-        }       
-
+        texture = model.GlobalMesh.TexturePointList[textureIndex];
         indexData[i] = i;
 
-        vertexData[dataIndex++] = position->X;
-        vertexData[dataIndex++] = position->Y;
-        vertexData[dataIndex++] = position->Z;
+        const unsigned int sizeOfAll = (3+3+4+2);
+        const unsigned int sizeOfAllFloat = sizeOfAll * sizeof(float);
 
-        vertexData[dataIndex++] = normal->X;
-        vertexData[dataIndex++] = normal->Y;
-        vertexData[dataIndex++] = normal->Z;
+        float data[sizeOfAll]
+        {
+            position->X,
+            position->Y,
+            position->Z,
 
-        void* destination = &vertexData[dataIndex++];
-        void* source = color;
+            normal->X,
+            normal->Y,
+            normal->Z,
 
-        memcpy(destination, source, 4 * sizeof(float));
+            color->X,
+            color->Y,
+            color->Z,
+            color->W,
 
-        dataIndex += 3;
+            texture->X,
+            texture->Y,
+        };
 
-        vertexData[dataIndex++] = texture->X;
-        vertexData[dataIndex++] = texture->Y;
+        memcpy(vertexData, data, sizeOfAllFloat);
+        vertexData += sizeOfAll;
     }
 
     //renderInformation->VertexDataLength = dataIndex - renderInformation->VertexDataPosition -1;
@@ -193,31 +185,40 @@ void BF::ResourceManager::PushToGPU(Model& model)
     {
         UpdateVBOData(model);
 
-        if (renderInfo.VertexData.Size() != 0)
+        if (renderInfo.VertexDataSize > 0)
         {
-            OpenGLAPI::VertexArrayUpdate(renderInfo.VertexBufferID, renderInfo.VertexData.SizeInBytes(), &renderInfo.VertexData[0]);
+            OpenGLAPI::VertexArrayUpdate(renderInfo.VertexBufferID, renderInfo.VertexDataSize * sizeof(float), renderInfo.VertexData);
         }
     }
     else
     {
         modelID = _modelList.Size();
 
-        renderInfo.VertexData.ReSize(model.GlobalMesh.IndexList.Size() * (3 + 3 + 4 + 2));
-        renderInfo.IndexData.ReSize(model.GlobalMesh.IndexList.Size());
+        unsigned int vertexDataSize = 3 + 3 + 4 + 2;
+
+        renderInfo.Allocate(vertexDataSize, model.GlobalMesh.IndexList.Size());        
+
+        //printf("\n\nBEFORE\n\n");
+
+        //renderInfo.PrintGPUData();
 
         UpdateVBOData(model);
+
+        //printf("\n\nAFTER\n\n");
+
+        //renderInfo.PrintGPUData();
 
         // Allocate GPU Buffer
         OpenGLAPI::VertexArrayDefine(&renderInfo.VertexArrayID);
         OpenGLAPI::VertexArrayBind(renderInfo.VertexArrayID);
 
-        OpenGLAPI::VertexDataDefine(&renderInfo.VertexBufferID, sizeof(float) * renderInfo.VertexData.Size(), &renderInfo.VertexData[0]);
+        OpenGLAPI::VertexDataDefine(&renderInfo.VertexBufferID, renderInfo.VertexDataSize * sizeof(float), renderInfo.VertexData);
 
         int sizeList[4] = { 3,3,4,2 };
 
         OpenGLAPI::VertexAttributeArrayDefine(sizeof(float), 4, sizeList);
 
-        OpenGLAPI::IndexDataDefine(&renderInfo.IndexBufferID, renderInfo.IndexData.SizeInBytes(), &renderInfo.IndexData[0]);
+        OpenGLAPI::IndexDataDefine(&renderInfo.IndexBufferID, renderInfo.IndexDataSize * sizeof(unsigned int), renderInfo.IndexData);
     }
 }
 
@@ -243,6 +244,8 @@ void BF::ResourceManager::CheckUncachedData()
         if (model->ID == ResourceIDLoaded)
         {
             PushToGPU(*model);
+
+            //model->PrintModelData();
         }    
     }
 
@@ -253,6 +256,8 @@ void BF::ResourceManager::CheckUncachedData()
         if (image->ID == ResourceIDLoaded)
         {
             PushToGPU(*image);
+
+            //image->PrintData();
         }
     }
 }
@@ -798,8 +803,6 @@ void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
 
 void BF::ResourceManager::ModelsRender(float deltaTime)
 {
-    LinkedListNode<Model*>* currentModel = _modelList.GetFirst();
-
     OpenGLAPI::RenderClear();
 
     MainCamera.Update(deltaTime);
@@ -835,7 +838,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
         }
     }
 
-    while (currentModel != nullptr)
+    for (LinkedListNode<Model*>* currentModel = _modelList.GetFirst() ; currentModel != nullptr ; currentModel = currentModel->Next)
     {
         Model* model = currentModel->Element;
         ModelRenderInformation& renderInfo = model->RenderInformation;
@@ -844,9 +847,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
         bool changeShader = shaderProgramID != _lastUsedShaderProgram;
         bool isRegistered = ((int)model->ID) >= 0;
         bool skipRendering = !(renderInfo.ShouldItBeRendered && isRegistered);
-
-        currentModel = currentModel->Next;
-
+       
         if (skipRendering)
         {
             continue;

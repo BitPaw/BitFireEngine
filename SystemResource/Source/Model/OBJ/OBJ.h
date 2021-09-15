@@ -2,16 +2,23 @@
 
 #include "OBJElement.h"
 #include "MTL/MTL.h"
+#include "OBJLineCommand.h"
 
 #include "../Model.h"
 
 namespace BF
 {
+#define OBJNameSize 50u
+
 	// [.OBJ] Wavefront - 3D model format
 	struct OBJ
 	{
+		private:
+		bool ShouldCreateNewMesh(OBJLineCommand objLineCommand, bool isCurrentlyInFaces);
+		OBJLineCommand PeekCommandLine(const char* commandLine);
+
 		public:
-		char Name[20];
+		char Name[OBJNameSize];
 		unsigned char VertexStructureSize;
 
 		unsigned int MaterialListSize;

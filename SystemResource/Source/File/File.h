@@ -11,6 +11,8 @@
 
 namespace BF
 {
+#define FileLineBufferSize 255u
+
 	struct File
 	{
 		private:
@@ -18,7 +20,7 @@ namespace BF
 		unsigned int _currentCursorPosition;
 
 		public:
-		unsigned int Size;
+		size_t Size;
 		char* Data;
 
 		char Path[_MAX_PATH];
@@ -27,7 +29,7 @@ namespace BF
 		char FileName[_MAX_FNAME];
 		char Extension[_MAX_EXT];
 
-		File(const char* filePath);
+		File(const char* filePath, bool readInstandly = false);
 		~File();
 
 		ResourceLoadingResult Read();
@@ -36,7 +38,7 @@ namespace BF
 		ResourceLoadingResult Write();
 		static ResourceLoadingResult Write(const char* filePath, const char* content);
 		static ResourceLoadingResult Write(const char* filePath, const char* content, unsigned int length);
-		bool ReadNextLineInto(char* exportBuffer);
+		unsigned int ReadNextLineInto(char* exportBuffer);
 
 		ResourceLoadingResult ReadAsLines(List<AsciiString>& lineList);
 

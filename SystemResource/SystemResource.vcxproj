@@ -253,6 +253,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Model\ModelRenderInformation.cpp" />
     <ClCompile Include="Source\Sound\MID\MIDITrack.cpp" />
     <ClCompile Include="Source\Sound\MID\MIDICommandExtended.cpp" />
     <ClCompile Include="Source\Sound\MID\MIDICommand.cpp" />
@@ -342,7 +343,6 @@
     <ClCompile Include="Source\Model\Mesh.cpp" />
     <ClCompile Include="Source\Model\MeshIndexData.cpp" />
     <ClCompile Include="Source\Model\Model.cpp" />
-    <ClCompile Include="Source\Model\ModelRenderInformation.cpp" />
     <ClCompile Include="Source\Model\OBJ\MTL\MTL.cpp" />
     <ClCompile Include="Source\Model\OBJ\OBJ.cpp" />
     <ClCompile Include="Source\Model\OBJ\OBJElement.cpp" />
@@ -373,6 +373,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Math\Geometry\Matrix.hpp" />
+    <ClInclude Include="Source\Model\ModelRenderInformation.h" />
     <ClInclude Include="Source\Sound\MID\MIDITrack.h" />
     <ClInclude Include="Source\Sound\MID\MIDICommandExtended.h" />
     <ClInclude Include="Source\Sound\MID\MIDICommand.h" />
@@ -513,7 +514,6 @@
     <ClInclude Include="Source\Model\Mesh.h" />
     <ClInclude Include="Source\Model\MeshIndexData.h" />
     <ClInclude Include="Source\Model\Model.h" />
-    <ClInclude Include="Source\Model\ModelRenderInformation.h" />
     <ClInclude Include="Source\Model\ModelType.h" />
     <ClInclude Include="Source\Model\OBJ\MTL\IlluminationMode.h" />
     <ClInclude Include="Source\Model\OBJ\MTL\MTL.h" />
