@@ -1,5 +1,6 @@
 #include "AsciiString.h"
 #include <cassert>
+#include <cstdarg>
 
 BF::AsciiString::AsciiString()
 {
@@ -92,7 +93,7 @@ BF::AsciiString& BF::AsciiString::operator=(std::string& string)
 	return *this;
 }
 
-char BF::AsciiString::operator==(const char* string)
+int BF::AsciiString::operator==(const char* string)
 {
 	return strcmp(_data, string);
 }
@@ -116,13 +117,25 @@ void BF::AsciiString::SetAsReference(const char* stringAdress, unsigned int size
 
 void BF::AsciiString::ReSize(unsigned int size)
 {
-	_size = size + 1;
-	_data = (char*)realloc(_data, _size);
+	size_t newSize = size + 1;
+	char* newData = (char*)realloc(_data, newSize);
 
-	if (_data != nullptr)
+	if (!newData)
 	{
-		memset(_data, '\0', _size * sizeof(char));
-	}	
+		return;
+	}
+
+	if (_data == nullptr)
+	{
+		memset(newData, '\0', newSize * sizeof(char));
+	}
+	else
+	{
+		newData[size] = '\0';
+	}
+
+	_data = newData;
+	_size = newSize;
 }
 
 void BF::AsciiString::Delete()
@@ -196,7 +209,7 @@ void BF::AsciiString::AttachToBack(AsciiString& string)
 
 	if (_isReferenceToOtherString) // If the String is just a reference, create a new string to manipulate
 	{
-		startA = new char[stringCLengh+1]; // create space
+		startA = (char*)malloc(stringCLengh+1 * sizeof(char)); // create space
 		memcpy(startA, _data, _size); // Copy old referenced string to new location
 		_isReferenceToOtherString = false; // its no longer a reference
 
@@ -204,7 +217,15 @@ void BF::AsciiString::AttachToBack(AsciiString& string)
 	}
 	else
 	{
-		_data = (char*)realloc(_data, byteLenghC);
+		char* newData = (char*)realloc(_data, byteLenghC);
+
+		if (!newData)
+		{
+			// Error
+			return;
+		}
+
+		_data = newData;
 	}	
 	
 	insertionPoint = _data + byteLenghA; // Move to the next insertion point (After A).
@@ -225,8 +246,6 @@ float BF::AsciiString::ToFloat(const char* string)
 	int number = 0;
 	unsigned int digitsAfterDot = 1;
 	bool isWholeNumberChunk = true;
-
-	float scalefactor = 1;
 
 	unsigned int index = 0;
 	bool isNegative = false;
@@ -500,7 +519,7 @@ bool BF::AsciiString::IsCharacterInBetween(char target, char curroundedChar, uns
 char BF::AsciiString::GetFirstNonEmpty()
 {
 	unsigned int size = Size();
-	unsigned char emptyCharacter = ' ';
+	char emptyCharacter = ' ';
 
 	for (unsigned int i = 0; i < size; i++)
 	{
@@ -789,7 +808,7 @@ unsigned int BF::AsciiString::FindFirst(AsciiString& string, unsigned int beginI
 
 	if (searchIndex == -1)
 	{
-		return -1;
+		return (unsigned int)-1;
 	}
 
 	if (searchIndex + tokenSize <= searchPoolStringSize)
@@ -803,7 +822,7 @@ unsigned int BF::AsciiString::FindFirst(AsciiString& string, unsigned int beginI
 		}
 	}
 
-	return -1;
+	return (unsigned int)-1;
 }
 
 unsigned int BF::AsciiString::FindLast(char character)
@@ -865,4 +884,80 @@ void BF::AsciiString::Copy(char character)
 void BF::AsciiString::Copy(AsciiString& string)
 {
 	Copy(&string[0], string.Size());
+}
+
+void BF::AsciiString::Parse(char* buffer, const char* syntax, ...)
+{
+	va_list args;
+	va_start(args, syntax);
+
+	int startIndex = 0;
+	int stopIndex = 0;
+	int command = 0;
+	bool finished = false;
+
+	while (!finished)
+	{
+		char commandKey = syntax[command++];
+		bool commandIsNumber = commandKey == 'i' || commandKey == 'f' || commandKey == 'u';
+
+		while (true)
+		{
+			char current = buffer[stopIndex++];
+			finished = current == '\0';
+
+			if (commandIsNumber && current == '/' || current == ' ' || finished)
+			{
+				break;
+			}
+		}
+
+		switch (commandKey)
+		{
+			case 's':
+			{
+				char* destination = va_arg(args, char*);
+				char* source = &buffer[startIndex];
+				unsigned int length = stopIndex - startIndex - 1;
+
+				memcpy(destination, source, length);
+				destination[length] = '\0';
+				break;
+			}
+			case 'i':
+			case 'd':
+			case 'u':
+			{
+				int* i = va_arg(args, int*);
+				char* source = &buffer[startIndex];
+
+				*i = BF::AsciiString::ToInt(source);
+
+				break;
+			}
+			case 'f':
+			{
+				float* number = va_arg(args, float*);
+				char* source = &buffer[startIndex];
+
+				(*number) = AsciiString::ToFloat(source);
+
+				break;
+			}
+			case 'c':
+			{
+				char* character = va_arg(args, char*);
+
+				*character = buffer[startIndex];
+
+				break;
+			}
+			default:
+				break;
+		}
+
+		startIndex = stopIndex;
+	}
+
+	va_end(args);
 }

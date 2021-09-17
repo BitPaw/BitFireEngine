@@ -107,6 +107,7 @@ void BF::FNT::Load(const char* filePath)
 			memset(Name, 0, 30);
 			memset(CharSet, 0, 10);
 
+			//AsciiString::Parse
 			int scannedObjects = sscanf
 			(
 				currentCursor,
@@ -127,7 +128,6 @@ void BF::FNT::Load(const char* filePath)
 			);
 
 			AsciiString reData;
-			//AsciiString extrectfileName(); // face="SegoeþScript"
 
 			referenceSting.SetAsReference(textName);
 			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
@@ -737,13 +737,13 @@ void BF::FNT::Load(AsciiString& filePath)
 
 void BF::FNT::Save(const char* filePath)
 {
-	char fileBuffer[16384];
-	char* currentCursorIndex = fileBuffer;
 	int characterWritten = 0;
 
-	characterWritten = sprintf
+	FILE* file = fopen(filePath, "wb");
+
+	characterWritten = fprintf
 	(
-		currentCursorIndex,
+		file,
 		"info face=\"%s\" size=%i bold=%i italic=%i charset=%s unicode=%i stretchH=%i smooth=%i aa=%i padding=%i,%i,%i,%i spacing=%i,%i\n",
 		Name,
 		Size,
@@ -762,12 +762,9 @@ void BF::FNT::Save(const char* filePath)
 		SpacerOffset[1]
 	);
 
-	currentCursorIndex += characterWritten;
-
-
-	characterWritten = sprintf
+	characterWritten = fprintf
 	(
-		currentCursorIndex,
+		file,
 		"common lineHeight=%i base=%i scaleW=%i scaleH=%i pages=%i packed=%i\n",
 		LineHeight,
 		Base,
@@ -777,16 +774,14 @@ void BF::FNT::Save(const char* filePath)
 		Packed
 	);
 
-	currentCursorIndex += characterWritten;
-
 	for (unsigned int i = 0; i < AmountOfPages; i++)
 	{
 		FNTPage& page = FontPages[i];
 		int amountOfCharacters = page.Characters.Size();
 
-		characterWritten = sprintf
+		characterWritten = fprintf
 		(
-			currentCursorIndex,
+			file,
 			"page id=%i file=\"%s\"\n"
 			"chars count=%i",
 			page.PageID,
@@ -794,16 +789,14 @@ void BF::FNT::Save(const char* filePath)
 			page.Characters
 		);
 
-		currentCursorIndex += characterWritten;
-
 		for (size_t i = 0; i < amountOfCharacters; i++)
 		{
 			FNTCharacter& character = page.Characters[i];
 
-			characterWritten = sprintf
+			characterWritten = fprintf
 			(
-				currentCursorIndex,
-				"char id=%i x=%i y=%i width=%i height=%i xoffset=%i yoffset=%i xadvance=%i page=%i chnl=%i\n",
+				file,
+				"char id=%i x=%f y=%f width=%f height=%f xoffset=%f yoffset=%f xadvance=%i page=%i chnl=%i\n",
 				character.ID,
 				character.Position[0],
 				character.Position[1],
@@ -815,12 +808,10 @@ void BF::FNT::Save(const char* filePath)
 				character.Page,
 				character.Chanal
 			);
-
-			currentCursorIndex += characterWritten;
 		}
 	}
 
-	File::Write(&filePath[0], fileBuffer);
+	int closingResult = fclose(file);
 }
 
 void BF::FNT::Convert(Font& font)

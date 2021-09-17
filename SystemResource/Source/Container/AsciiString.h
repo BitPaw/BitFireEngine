@@ -33,7 +33,7 @@ namespace BF
 		AsciiString& operator=(std::string& string);
 		//void operator=(String string);
 	
-		char operator==(const char* string);
+		int operator==(const char* string);
 
 		void SetAsReference(AsciiString& string);
 		void SetAsReference(const char* stringAdress);
@@ -104,5 +104,7 @@ namespace BF
 		void Copy(std::string& stdstring);
 		void Copy(char character);
 		void Copy(AsciiString& string);
+
+		static void Parse(char* buffer, const char* syntax, ...);
 	};
 }

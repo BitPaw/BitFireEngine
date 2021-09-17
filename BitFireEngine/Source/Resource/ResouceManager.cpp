@@ -219,7 +219,7 @@ void BF::ResourceManager::PushToGPU(Model& model)
 
         OpenGLAPI::VertexDataDefine(&renderInfo.VertexBufferID, renderInfo.VertexDataSize * sizeof(float), renderInfo.VertexData);
 
-        int sizeList[4] = { 3,3,4,2 };
+        unsigned int sizeList[4] = { 3,3,4,2 };
 
         OpenGLAPI::VertexAttributeArrayDefine(sizeof(float), 4, sizeList);
 
@@ -571,10 +571,13 @@ void BF::ResourceManager::Load(Level& level, const char* filePath)
 
                 sscanf(currentLineBuffer, "%s %s %s %s %s", dummyBuffer, path, positionText, rotationText, scaleText);
 
+
+                
+
                 // Get raw Data-------------------------                         
 
                 // Replace 0|0|0 -> 0 0 0 
-                for (size_t i = 0; i < positionText[i] != '\0'; i++)
+                for (size_t i = 0; positionText[i] != '\0'; i++)
                 {
                     if (positionText[i] == '|')
                     {
@@ -582,7 +585,7 @@ void BF::ResourceManager::Load(Level& level, const char* filePath)
                     }
                 }
 
-                for (size_t i = 0; i < rotationText[i] != '\0'; i++)
+                for (size_t i = 0; rotationText[i] != '\0'; i++)
                 {
                     if (rotationText[i] == '|')
                     {
@@ -590,7 +593,7 @@ void BF::ResourceManager::Load(Level& level, const char* filePath)
                     }
                 }
 
-                for (size_t i = 0; i < scaleText[i] != '\0'; i++)
+                for (size_t i = 0; scaleText[i] != '\0'; i++)
                 {
                     if (scaleText[i] == '|')
                     {
@@ -964,16 +967,6 @@ void BF::ResourceManager::PrintContent(bool detailed)
         while (currentImage != nullptr)
         {
             Image* image = currentImage->Element;
-            char buffer[30];
-
-            if (image->ID == -1)
-            {
-              //  sprintf(buffer, "-");
-            }
-            else
-            {
-               // sprintf(buffer, "%u", image->ID);
-            }       
 
             printf(line, image->ID, image->Name, image->FilePath, sizeof(*image));
      

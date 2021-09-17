@@ -3,91 +3,6 @@
 #include <cstdarg>
 #include "../../Container/AsciiString.h"
 
-void StringParse(char* buffer, const char* syntax, ...)
-{
-    va_list args;
-    va_start(args, syntax);
-
-    int startIndex = 0;
-    int stopIndex = 0;
-    int command = 0;
-    bool finished = false;
-
-    while (!finished)
-    {
-        char commandKey = syntax[command++];
-
-        {
-            while (true)
-            {
-                char current = buffer[stopIndex++];
-                finished = current == '\0';
-
-                if (current == ' ' || finished || current == '/')
-                {
-                    break;
-                }
-            }
-
-
-            switch (commandKey)
-            {
-                case 's':
-                {
-                    char* destination = va_arg(args, char*);
-                    char* source = &buffer[startIndex];
-                    unsigned int length = stopIndex - startIndex - 1;
-
-                    memcpy(destination, source, length);
-                    destination[length] = '\0';
-                    break;
-                }
-
-
-                case 'u':
-                {
-                    unsigned int* i = va_arg(args, unsigned int*);
-                    char* source = &buffer[startIndex];
-
-                    *i = BF::AsciiString::ToInt(source);
-
-                    break;
-                }
-
-
-                case 'f':
-                {
-
-                    float* number = va_arg(args, float*);
-                    char* source = &buffer[startIndex];
-
-                    (*number) = BF::AsciiString::ToFloat(source);
-
-                    break;
-                }
-
-                case 'c':
-                {
-                    int c = va_arg(args, int);
-                    std::cout << static_cast<char>(c) << '\n';
-                    break;
-                }
-
-
-                default:
-                    break;
-            }
-
-        }      
-      
-            
-       startIndex = stopIndex;
-        
-    }
-
-    va_end(args);
-}
-
 BF::OBJ::OBJ()
 {
     strcpy_s(Name, OBJNameSize, "[N/A]");
@@ -339,8 +254,6 @@ void BF::OBJ::Load(const char* filePath)
 
         OBJElement* elemtent = &ElementList[elementIndex++];
         bool isInMesh = false;      
-
-        char dummyBuffer[FileLineBufferSize];
         
         file.CursorToBeginning();
 
@@ -365,12 +278,10 @@ void BF::OBJ::Load(const char* filePath)
             switch (command)
             {
                 case OBJLineCommand::MaterialLibraryInclude:
-                {
+                { 
                     char materialFilePath[_MAX_PATH];
 
-                    //sscanf(currentLineBuffer, "%s %s", dummyBuffer, materialFilePath);
-
-                    StringParse
+                    AsciiString::Parse
                     (
                         currentLineBuffer,
                         "§s",
@@ -416,9 +327,7 @@ void BF::OBJ::Load(const char* filePath)
                     char usedMaterialName[MTLNameSize];
                     unsigned int materialID = -1;
                  
-                    //sscanf(currentLineBuffer, "%s %s", dummyBuffer, usedMaterialName);    
-
-                    StringParse
+                    AsciiString::Parse
                     (
                         currentLineBuffer,
                         "§s",
@@ -479,10 +388,7 @@ void BF::OBJ::Load(const char* filePath)
                             throw "Error";
                     }
 
-
-                    //sscanf(currentLineBuffer, "%s %f %f %f", dummyBuffer, &currentVectorValue->X, &currentVectorValue->Y, &currentVectorValue->Z);
-
-                    StringParse
+                    AsciiString::Parse
                     (
                         currentLineBuffer,
                         "§fff",
@@ -497,14 +403,12 @@ void BF::OBJ::Load(const char* filePath)
                 {
                     Vector2<float>& point = elemtent->TextureCoordinateList[currentTextureElement++];
 
-                    StringParse
+                    AsciiString::Parse
                     (
                         currentLineBuffer,
                         "§ff",
                         &point.X, &point.Y 
                     );
-
-                   // sscanf(currentLineBuffer, "%s %f %f", dummyBuffer, &point.X, &point.Y);
 
                     break;
                 }        
@@ -542,7 +446,7 @@ void BF::OBJ::Load(const char* filePath)
                     {
                         case 3:
                         {
-                            StringParse
+                            AsciiString::Parse
                             (
                                 currentLineBuffer,
                                 "§uuuuuuuuu",
@@ -556,7 +460,7 @@ void BF::OBJ::Load(const char* filePath)
                         {
                             Vector3<unsigned int>& vectorD = elemtent->FaceElementList[currentFaceElement++];
 
-                            StringParse
+                            AsciiString::Parse
                             (
                                 currentLineBuffer,
                                 "§uuuuuuuuuuuu",
@@ -570,12 +474,7 @@ void BF::OBJ::Load(const char* filePath)
 
                         default:
                             break;
-                    }
-
-       
-
-                    // sscanf(currentLineBuffer, "%s %s %s %s", dummyBuffer, cacheA, cacheB, cacheC);
-                   
+                    }                   
 
                     isInMesh = true;
 
@@ -652,7 +551,7 @@ void BF::OBJ::Convert(Model& model)
         unsigned int normalListSize = element.VertexNormalPositionList.Size();
         unsigned int textureCoordinateListSize = element.TextureCoordinateList.Size();
 
-        strcpy(mesh.Name, element.Name);
+        strncpy(mesh.Name, element.Name, MeshNameSize);
 
         mesh.MeshMaterial = element.MaterialListIndex == -1 ? nullptr : &model.MaterialList[element.MaterialListIndex];
 

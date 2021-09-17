@@ -5,12 +5,13 @@
 namespace BF
 {
 #define MTLNameSize 50u
+#define MTLFilePath 60u
 
 	struct MTLMaterial
 	{
 		public:
 		char Name[MTLNameSize];
-		char TextureFilePath[60];
+		char TextureFilePath[MTLFilePath];
 
 		// Ranges between 0 and 1000
 		float Weight;

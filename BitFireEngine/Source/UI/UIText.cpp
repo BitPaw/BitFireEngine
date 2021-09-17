@@ -180,7 +180,7 @@ void BF::UIText::SetText(AsciiString& text)
 			interpulatedTexturePoinWidthHeight.Y + interpulatedTexturePointXY.Y  // Left Upper
 		);
 
-		lastPosition += (float)(charSize.X + characterSpacingOffset);// +(fntCharacter->XAdvance);
+		lastPosition += charSize.X + (float)characterSpacingOffset;// +(fntCharacter->XAdvance);
 
 		if (character == ' ')
 		{
