@@ -48,5 +48,5 @@ void BF::Shader::Load()
     return ShaderType::Unkown;
 	*/
 
-	File::Read(FilePath, &Content);
+	File::ReadFromDisk(FilePath, &Content);
 }

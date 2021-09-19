@@ -5,10 +5,8 @@
 void BF::OGG::Load(const char* filePath)
 {
 	File file(filePath);
-
-	file.Read();
-
-	ByteStreamHusk byteStream((unsigned char*)&file.Data[0], file.Size);;
+	file.ReadFromDisk();
+	ByteStreamHusk byteStream(file.Data, file.DataSize);
 
 	const char syncPattern[4] = { 'O','g','g','S' };
 	char buffer[4];

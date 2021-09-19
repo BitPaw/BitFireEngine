@@ -10,12 +10,8 @@ void BF::PNG::Load(const char* filePath)
 {
     PNGChunk chunk;
     File file(filePath);
-    file.Read();
-    ByteStreamHusk byteStream
-    (
-        reinterpret_cast<unsigned char*>(file.Data),
-        file.Size
-    );      
+    file.ReadFromDisk();
+    ByteStreamHusk byteStream(file.Data, file.DataSize);
 
     // Check Header
     {
@@ -278,7 +274,7 @@ void BF::PNG::Save(const char* filePath)
 
     // Data Stuff
 
-    File::Write(filePath, data, fileLength);
+    File::WriteToDisk(filePath, data, fileLength);
 }
 
 void BF::PNG::Convert(Image& image)
@@ -300,17 +296,17 @@ void BF::PNG::Convert(Image& image)
     while (compressedDataRow != nullptr)
     {
         List<unsigned char>* data = compressedDataRow->Element;
-        File::ExtractAndSave(compressedFilePath, &(*data)[0], data->Size());
+        //File::ExtractAndSave(compressedFilePath, &(*data)[0], data->Size());
 
         ZLib::Decompress(&compressedFilePath[0], &unCompressedFilePath[0]);
 
         File zlibDecompressedFile(unCompressedFilePath);
-        zlibDecompressedFile.Read();
+        zlibDecompressedFile.ReadFromDisk();
 
         File::Remove(compressedFilePath);
         File::Remove(unCompressedFilePath);    
 
-        for (size_t i = 0; i < zlibDecompressedFile.Size; )
+        for (size_t i = 0; i < zlibDecompressedFile.DataSize; )
         {
             i++;
 

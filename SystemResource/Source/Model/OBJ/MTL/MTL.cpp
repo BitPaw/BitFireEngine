@@ -28,7 +28,7 @@ void BF::MTL::Load(char* filePath)
 
 
 	File file(filePath);
-	file.Read();
+	file.ReadFromDisk();
 	unsigned int amountOfLines = file.CountAmountOfLines();
 	char currentLineBuffer[200];
 

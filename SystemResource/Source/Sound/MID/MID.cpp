@@ -8,9 +8,8 @@ void BF::MID::Load(const char* filePath)
 	const char midiTrackEndIndicator[5] = "\x00\xFF\x2F\x00";
 
 	File file(filePath);
-
-	file.Read();
-	ByteStreamHusk byteStreamHusk((unsigned char*)&file.Data[0], file.Size);
+	file.ReadFromDisk();
+	ByteStreamHusk byteStreamHusk(file.Data, file.DataSize);
 
 	// Pasre Chunk header
 	{
@@ -66,7 +65,7 @@ void BF::MID::Save(const char* filePath)
 		byteStreamHusk.InsertArrayAndMove(track.EventData, track.EventDataSize);
 	}	
 
-	File::Write(filePath, data, fileSize);
+	File::WriteToDisk(filePath, data, fileSize);
 
 	free(data);
 }

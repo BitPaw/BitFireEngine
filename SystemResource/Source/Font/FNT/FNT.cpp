@@ -59,7 +59,7 @@ void BF::FNT::Load(const char* filePath)
 	char textCharacter[120];
 	int pageCounter = 0;
 
-	file.Read();
+	file.ReadFromDisk();
 
 	char hasCommas = 0;
 	bool stopFlag = false;

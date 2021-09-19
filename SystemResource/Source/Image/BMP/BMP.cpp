@@ -60,8 +60,8 @@ BF::RGB<unsigned char>* BF::BMP::GetPixel(unsigned int x, unsigned int y)
 void BF::BMP::Load(const char* filePath)
 {
     File file(filePath);
-    file.Read();
-    ByteStreamHusk byteStream((unsigned char*)file.Data, file.Size);
+    file.ReadFromDisk();
+    ByteStreamHusk byteStream(file.Data, file.DataSize);
     int bitsPerPixel = 0; 
 
     //-- Parsing Header Tag
@@ -268,7 +268,7 @@ void BF::BMP::Save(const char* filePath)
 
     bytestream.InsertArrayAndMove(PixelData, PixelDataSize);
 
-    File::Write(filePath, (char*)fileData, fileSize);
+    File::WriteToDisk(filePath, (char*)fileData, fileSize);
 
     free(fileData);
 }
