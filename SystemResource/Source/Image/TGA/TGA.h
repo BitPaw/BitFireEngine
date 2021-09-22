@@ -11,6 +11,14 @@ namespace BF
 	// Truevision Advanced Raster Graphics Array
 	struct TGA
 	{
+		private:
+		static inline TGAImageDataType ConvertImageDataType(unsigned char id);
+		static inline unsigned char ConvertImageDataType(TGAImageDataType imageDataType);
+
+		static inline TGABitsPerPixel ConvertPixelDepth(unsigned char pixelDepth);
+		static inline unsigned char ConvertPixelDepth(TGABitsPerPixel bitsPerPixel);
+
+
 		public:	
 		//---[Header]----------------------	
 		unsigned char ColorPaletteType;
@@ -25,8 +33,8 @@ namespace BF
 		//---------------------------------
 	
 		//---[Image specification]---------
-		unsigned int ImageIDSize;
-		unsigned char* ImageID; // Optional field containing identifying information
+		unsigned int ImageInformationSize;
+		unsigned char* ImageInformation; // Optional field containing identifying information
 		unsigned int ColorMapDataSize;
 		unsigned char* ColorMapData; // Look-up table containing color map data
 		unsigned int ImageDataSize;
@@ -64,15 +72,13 @@ namespace BF
 		unsigned int ScanlineOffset; // Number of bytes from the beginning of the file to the scan lines table if present 
 		unsigned char AttributesType; // Specifies the alpha channel
 		//-------------------------------
+		
 
 		TGA();
 		~TGA();
 
-		void Load(const char* filePath);
-		void Save(const char* filePath);
+		ResourceLoadingResult Load(const char* filePath);
+		ResourceLoadingResult Save(const char* filePath);
 		void Convert(Image& image);
 	};
 }
-
-
-

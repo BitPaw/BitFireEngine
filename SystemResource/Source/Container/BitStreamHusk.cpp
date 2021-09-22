@@ -8,9 +8,11 @@ BF::BitStreamHusk::BitStreamHusk()
 	BlockSizeInBytes = 0;
 	BlockSizeInBits = 0;
 	CurrentBitOffset = 0;
+
+	_leftToRight = true;
 }
 
-BF::BitStreamHusk::BitStreamHusk(unsigned char* startAdress, unsigned int dataLengh)
+BF::BitStreamHusk::BitStreamHusk(unsigned char* startAdress, unsigned int dataLengh, bool leftToRight = true)
 {
 	RePosition(startAdress, dataLengh);
 }
@@ -22,15 +24,34 @@ void BF::BitStreamHusk::RePosition(unsigned char* startAdress, unsigned int data
 	CurrentPosition = 0;
 	BlockSizeInBytes = sizeof(unsigned char);
 	BlockSizeInBits = BlockSizeInBytes * 8;
-	CurrentBitOffset = 0;
+
+	if (_leftToRight)
+	{
+		CurrentBitOffset = 0;
+	}
+	else
+	{
+		CurrentBitOffset = 8u - 1u;
+	}	
 }
 
 void BF::BitStreamHusk::SkipBitsToNextByte()
 {
-	if(CurrentBitOffset != 0)
+	if (_leftToRight)
 	{
-		CurrentPosition++;
-		CurrentBitOffset = 0;
+		if (CurrentBitOffset != 0)
+		{
+			CurrentPosition++;
+			CurrentBitOffset = 0;
+		}
+	}
+	else
+	{
+		if (CurrentBitOffset != 7u)
+		{
+			CurrentPosition--;
+			CurrentBitOffset = 7;
+		}
 	}	
 }
 

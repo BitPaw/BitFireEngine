@@ -10,16 +10,17 @@ BF::OBJ::OBJ()
     VertexStructureSize = 0;
 
     MaterialListSize = 0;
-    MaterialList = 0;
+    MaterialList = nullptr;
 
     ElementListSize = 0;
-    ElementList = 0;
+    ElementList = nullptr;
 }
 
 BF::OBJ::~OBJ()
 {
-   // free(MaterialList);
-   // free(ElementList);
+    // TODO : Delete results in programm termination
+    //delete[] MaterialList;
+    //delete[] ElementList;
 }
 
 bool BF::OBJ::ShouldCreateNewMesh(OBJLineCommand objLineCommand, bool isCurrentlyInFaces)
@@ -109,14 +110,20 @@ BF::OBJLineCommand BF::OBJ::PeekCommandLine(const char* commandLine)
 
 
 
-void BF::OBJ::Load(const char* filePath)
+BF::ResourceLoadingResult BF::OBJ::Load(const char* filePath)
 {
     bool isFirstVertex = true;
     char currentLineBuffer[FileLineBufferSize];
-    File file(filePath, true); 
+    File file(filePath); 
+    ResourceLoadingResult resourceLoadingResult = file.ReadFromDisk();
     unsigned int numberOfLines = file.CountAmountOfLines();
 
-    strcpy(Name, filePath);
+    strncpy(Name, filePath, OBJNameSize);
+
+    if (resourceLoadingResult != ResourceLoadingResult::Successful)
+    {
+        return resourceLoadingResult;
+    }   
 
     //---<Cound needed Space and allocate>----------------------------------
     {
@@ -205,8 +212,7 @@ void BF::OBJ::Load(const char* filePath)
 
                 if (!newelementList)
                 {
-                    // Out of memory
-                    return;
+                    return ResourceLoadingResult::OutOfMemory;
                 }
 
                 ElementList = newelementList;
@@ -491,8 +497,9 @@ void BF::OBJ::Load(const char* filePath)
     }
 }
 
-void BF::OBJ::Save(const char* filePath)
+BF::ResourceLoadingResult BF::OBJ::Save(const char* filePath)
 {
+    return ResourceLoadingResult::Successful;
 }
 
 void BF::OBJ::Convert(Model& model)
@@ -532,8 +539,8 @@ void BF::OBJ::Convert(Model& model)
                 MTLMaterial& mtlMaterial = mtl.MaterialList[mtlMaterialIndex];
                 Material& material = model.MaterialList[mtlMaterialIndex];
 
-                strcpy(material.Name, mtlMaterial.Name);
-                strcpy(material.TextureFilePath, mtlMaterial.TextureFilePath);
+                strncpy(material.Name, mtlMaterial.Name, MTLNameSize);
+                strncpy(material.TextureFilePath, mtlMaterial.TextureFilePath, MTLFilePath);
                 memcpy(material.Ambient, mtlMaterial.Ambient, 3 * sizeof(float));
                 memcpy(material.Diffuse, mtlMaterial.Diffuse, 3 * sizeof(float));
                 memcpy(material.Specular, mtlMaterial.Specular, 3 * sizeof(float));

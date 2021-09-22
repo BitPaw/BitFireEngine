@@ -14,8 +14,8 @@ namespace BF
 	struct OBJ
 	{
 		private:
-		bool ShouldCreateNewMesh(OBJLineCommand objLineCommand, bool isCurrentlyInFaces);
-		OBJLineCommand PeekCommandLine(const char* commandLine);
+		static inline bool ShouldCreateNewMesh(OBJLineCommand objLineCommand, bool isCurrentlyInFaces);
+		static inline OBJLineCommand PeekCommandLine(const char* commandLine);
 
 		public:
 		char Name[OBJNameSize];
@@ -30,8 +30,8 @@ namespace BF
 		OBJ();
 		~OBJ();
 
-		void Load(const char* filePath);
-		void Save(const char* filePath);
+		ResourceLoadingResult Load(const char* filePath);
+		ResourceLoadingResult Save(const char* filePath);
 		void Convert(Model& model);
 		void Clear();
 

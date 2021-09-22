@@ -13,51 +13,28 @@ BF::ResourceLoadingResult BF::File::CheckFile()
 	return BF::ResourceLoadingResult::Successful;
 }
 
-BF::File::File(const char* filePath, bool readInstandly)
+BF::File::File(const char* filePath, size_t dataSize)
+{
+	Data = (char*)malloc(dataSize * sizeof(char));
+	DataSize = dataSize;
+	DataCursorPosition = 0;
+
+	SetFilePath(filePath);
+}
+
+BF::File::File(const char* filePath)
 {
 	Data = 0;
 	DataSize = 0;
 	DataCursorPosition = 0;
 
-	if (filePath == nullptr)
-	{
-		Path[0] = '\0';
-		Drive[0] = '\0';
-		Directory[0] = '\0';
-		FileName[0] = '\0';
-		Extension[0] = '\0';
-		return;
-	}	
-
-	strcpy_s(Path, _MAX_PATH, filePath);
-	
-	_splitpath_s
-	(
-		filePath,
-		Drive, _MAX_DRIVE,
-		Directory, _MAX_DIR,
-		FileName, _MAX_FNAME,
-		Extension, _MAX_EXT
-	);
-
-	// Fix stuff
-	AsciiString fileName(Extension);
-	AsciiString extension(Extension);
-
-	extension.Remove('.');
-	fileName.Remove('/');
-
-	if (readInstandly)
-	{
-		BF::ResourceLoadingResult ResourceLoadingResult = ReadFromDisk();		
-	}
+	SetFilePath(filePath);
 }
 
 BF::File::~File()
 {
 	Clear();
 }
-
 
 void BF::File::CursorToBeginning()
 {
@@ -81,14 +58,42 @@ void BF::File::ReName(const char* name)
 
 void BF::File::Clear()
 {
-	if (Data != nullptr)
-	{
-		free(Data);
-	}
+	free(Data);
 
 	DataCursorPosition = 0;
 	DataSize = 0;
 	Data = nullptr;
+}
+
+void BF::File::SetFilePath(const char* filePath)
+{
+	if (filePath == nullptr)
+	{
+		Path[0] = '\0';
+		Drive[0] = '\0';
+		Directory[0] = '\0';
+		FileName[0] = '\0';
+		Extension[0] = '\0';
+		return;
+	}
+
+	strcpy_s(Path, _MAX_PATH, filePath);
+
+	_splitpath_s
+	(
+		filePath,
+		Drive, _MAX_DRIVE,
+		Directory, _MAX_DIR,
+		FileName, _MAX_FNAME,
+		Extension, _MAX_EXT
+	);
+
+	// Fix stuff
+	AsciiString fileName(Extension);
+	AsciiString extension(Extension);
+
+	extension.Remove('.');
+	fileName.Remove('/');
 }
 
 BF::ResourceLoadingResult BF::File::ReadFromDisk()
@@ -261,55 +266,6 @@ unsigned int BF::File::ReadNextLineInto(char* exportBuffer)
 	return length;
 }
 
-BF::ResourceLoadingResult BF::File::ReadAsLines(List<AsciiString>& lineList)
-{
-	if (Data == nullptr)
-	{
-		BF::ResourceLoadingResult errorCode = ReadFromDisk();
-
-		if (errorCode != BF::ResourceLoadingResult::Successful)
-		{
-			return errorCode;
-		}
-	}
-
-	AsciiString dataString; 
-	unsigned int numberOfLines;
-	unsigned int indexA = 0;
-	unsigned int indexB = 0;
-	unsigned int length = 0;
-
-	dataString.Copy(Data, DataSize);
-
-	dataString.MergeRepeatingWhiteSpace();
-	dataString.Remove('\r');
-	dataString.MergeRepeatingCharacters('\n');	
-
-	numberOfLines = dataString.Count('\n') + 1;
-	
-	lineList.ReSize(numberOfLines);
-
-	for (size_t i = 0; i < numberOfLines; i++)
-	{
-		AsciiString& string = lineList[i];
-
-		indexB = dataString.FindFirst('\n', indexA);
-
-		if (indexB == -1)
-		{
-			indexB = dataString.Size();
-		}
-
-		length = indexB - indexA;
-
-		string.Copy(&dataString[indexA], length);
-
-		indexA = indexB+1;
-	}
-
-	return BF::ResourceLoadingResult::Successful;
-}
-
 void BF::File::Read(bool& value)
 {
 	char byte = Data[DataCursorPosition++];
@@ -435,7 +391,7 @@ void BF::File::Write(void* value, size_t length)
 
 bool BF::File::DoesFileExist()
 {
-	std::ifstream file(&Path[0]);
+	std::ifstream file(Path);
 	bool fileExists = file.good();
 
 	file.close();
@@ -458,22 +414,19 @@ bool BF::File::DoesFileExist(const char* filePath)
     return fileExists;
 }
 
-void BF::File::GetFileExtension(AsciiString& path, AsciiString& extension)
+void BF::File::GetFileExtension(const char* filePath, const char* fileExtension)
 {
-    if (!path.Empty())
-    {
-        int position = path.FindLast('.');
+	char dummyBuffer[_MAX_PATH];
 
-        if (position != -1)
-        {
-			char* adress = &path[position + 1];
-			unsigned int size = path.Size() + 1 - (position);
-		
-			extension.SetAsReference(adress, size);
-        }
-    }
+	_splitpath_s
+	(
+		filePath,
+		dummyBuffer, _MAX_DRIVE,
+		dummyBuffer, _MAX_DIR,
+		dummyBuffer, _MAX_FNAME,
+		(char*)fileExtension, _MAX_EXT
+	);
 }
-
 int BF::File::CountAmountOfLines()
 {
 	int lineCounter = 0;

@@ -253,6 +253,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Image\PNG\DeflateEncodingMethod.cpp" />
+    <ClCompile Include="Source\Image\PNG\DeflateBlock.cpp" />
     <ClCompile Include="Source\Model\ModelRenderInformation.cpp" />
     <ClCompile Include="Source\Sound\MID\MIDITrack.cpp" />
     <ClCompile Include="Source\Sound\MID\MIDICommandExtended.cpp" />
@@ -370,8 +372,13 @@
     <ClCompile Include="Source\Types\Word.cpp" />
     <ClCompile Include="Source\Video\Video.cpp" />
     <ClCompile Include="Source\Sound\WMA\WMA.cpp" />
+    <ClCompile Include="Source\Image\PNG\ZLIBHeader.cpp" />
+    <ClCompile Include="Source\Image\PNG\ZLIBCompressionLevel.cpp" />
+    <ClCompile Include="Source\Image\PNG\ZLIBCompressionMethod.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Image\PNG\DeflateEncodingMethod.h" />
+    <ClInclude Include="Source\Image\PNG\DeflateBlock.h" />
     <ClInclude Include="Source\Math\Geometry\Matrix.hpp" />
     <ClInclude Include="Source\Model\ModelRenderInformation.h" />
     <ClInclude Include="Source\Sound\MID\MIDITrack.h" />
@@ -551,6 +558,9 @@
     <ClInclude Include="Source\Types\Word.h" />
     <ClInclude Include="Source\Video\Video.h" />
     <ClInclude Include="Source\Sound\WMA\WMA.h" />
+    <ClInclude Include="Source\Image\PNG\ZLIBHeader.h" />
+    <ClInclude Include="Source\Image\PNG\ZLIBCompressionLevel.h" />
+    <ClInclude Include="Source\Image\PNG\ZLIBCompressionMethod.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

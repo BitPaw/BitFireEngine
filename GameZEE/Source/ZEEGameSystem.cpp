@@ -10,6 +10,7 @@
 #include "../../SystemResource/Source/Sound/WAV/WAV.h"
 #include "../../SystemResource/Source/Sound/MID/MID.h"
 #include "../../SystemResource/Source/Math/Geometry/Matrix.hpp"
+#include "../../SystemResource/Source/Image/PNG/PNG.h"
 
 BF::UIText* text;
 //BF::Model* sphere;
@@ -34,7 +35,13 @@ BF::Model* model;
 BF::Model textureBix;
 
 void ZEE::ZEEGameSystem::OnStartUp()
-{
+{   
+    BF::PNG png;
+
+    png.Load("i.png");
+
+
+
     BF::StopWatch stopwatch;
 
     stopwatch.Start();
@@ -80,10 +87,8 @@ void ZEE::ZEEGameSystem::OnStartUp()
 
     printf("[i][Info] Loading took %.2fs\n", stopwatch.Stop());
 
-    GameSystem.Resource.PrintContent(true);
+    GameSystem.Resource.PrintContent(true);    
 
- 
- 
 
 #if 0 // Sound Enable
     //BF::MID midi;

@@ -11,6 +11,11 @@ namespace BF
 {
 	struct PNG
 	{
+		private: 
+		static inline PNGColorType ConvertColorType(unsigned int colorType);
+		static inline unsigned int ConvertColorType(PNGColorType colorType);
+
+
 		public:
 		//---[ IHDR - Image Header ]----------------------------------------------
 		unsigned int Width;

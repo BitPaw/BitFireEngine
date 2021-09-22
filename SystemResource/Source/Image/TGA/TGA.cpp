@@ -4,6 +4,122 @@
 #include "../../Container/ByteStreamHusk.h"
 #include <cassert>
 
+BF::TGAImageDataType BF::TGA::ConvertImageDataType(unsigned char id)
+{
+	switch (id)
+	{
+		case 0u:
+			return TGAImageDataType::NoImageDataIsPresent;
+
+		case 1u:
+			return TGAImageDataType::UncompressedColorMapped;
+
+		case 2u:
+			return TGAImageDataType::UncompressedTrueColor;
+
+		case 3u:
+			return TGAImageDataType::UncompressedBlackAndWhite;
+
+		case 9u:
+			return TGAImageDataType::RunLengthEncodedColorMapped;
+
+		case 10u:
+			return TGAImageDataType::RunLengthEncodedTrueColor;
+
+		case 11u:
+			return TGAImageDataType::RunLengthEncodedBlackAndWhite;
+
+		default:
+			return TGAImageDataType::UnkownImageDataType;
+	}
+}
+
+unsigned char BF::TGA::ConvertImageDataType(TGAImageDataType imageDataType)
+{
+	switch (imageDataType)
+	{
+		default:
+		case BF::TGAImageDataType::UnkownImageDataType:
+			return -1;
+
+		case BF::TGAImageDataType::NoImageDataIsPresent:
+			return 0;
+
+		case BF::TGAImageDataType::UncompressedColorMapped:
+			return 1u;
+
+		case BF::TGAImageDataType::UncompressedTrueColor:
+			return 2u;
+
+		case BF::TGAImageDataType::UncompressedBlackAndWhite:
+			return 3u;
+
+		case BF::TGAImageDataType::RunLengthEncodedColorMapped:
+			return 9u;
+
+		case BF::TGAImageDataType::RunLengthEncodedTrueColor:
+			return 10u;
+
+		case BF::TGAImageDataType::RunLengthEncodedBlackAndWhite:
+			return 11u;
+	}
+}
+
+BF::TGABitsPerPixel BF::TGA::ConvertPixelDepth(unsigned char pixelDepth)
+{
+	switch (pixelDepth)
+	{
+		case 1u:
+			return TGABitsPerPixel::X1;
+
+		case 8u:
+			return TGABitsPerPixel::X8;
+
+		case 15u:
+			return TGABitsPerPixel::X15;
+
+		case 16u:
+			return TGABitsPerPixel::X16;
+
+		case 24u:
+			return TGABitsPerPixel::X24;
+
+		case 32u:
+			return TGABitsPerPixel::X32;
+
+		default:
+			return TGABitsPerPixel::Invalid;
+	}
+}
+
+unsigned char BF::TGA::ConvertPixelDepth(TGABitsPerPixel bitsPerPixel)
+{
+	switch (bitsPerPixel)
+	{
+		default:
+		case BF::TGABitsPerPixel::Invalid:
+			return -1;
+
+		case BF::TGABitsPerPixel::X1:
+			return 1u;
+
+		case BF::TGABitsPerPixel::X8:
+			return 8u;
+
+		case BF::TGABitsPerPixel::X15:
+			return 15u;
+
+		case BF::TGABitsPerPixel::X16:
+			return 16u;
+
+		case BF::TGABitsPerPixel::X24:
+			return 24u;
+
+		case BF::TGABitsPerPixel::X32:
+			return 32u;
+	}
+}
+
 BF::TGA::TGA()
 {
 	ColorPaletteType = 0;
@@ -16,8 +132,8 @@ BF::TGA::TGA()
 	PixelDepth = TGABitsPerPixel::X1;
 	ImageDescriptor = 0;
 
-	ImageIDSize = 0;
-	ImageID = nullptr; 
+	ImageInformationSize = 0;
+	ImageInformation = nullptr;
 	ColorMapDataSize = 0;
 	ColorMapData = nullptr;
 	ImageDataSize = 0;
@@ -26,12 +142,12 @@ BF::TGA::TGA()
 
 BF::TGA::~TGA()
 {
-	free(ImageID);
+	free(ImageInformation);
 	free(ColorMapData);
 	free(ImageData);
 }
 
-void BF::TGA::Load(const char* filePath)
+BF::ResourceLoadingResult BF::TGA::Load(const char* filePath)
 {
 	unsigned int footerEntryIndex = 0;
 	unsigned char imageIDLengh = 0;
@@ -48,7 +164,7 @@ void BF::TGA::Load(const char* filePath)
 
 	if (loadingResult != ResourceLoadingResult::Successful)
 	{
-		return;
+		return loadingResult;
 	}
 
 	//---[ Parse Header ]-------------------------------
@@ -67,79 +183,17 @@ void BF::TGA::Load(const char* filePath)
 	file.Read(pixelDepth);
 	file.Read(ImageDescriptor);
 
-	switch (imageTypeValue)
-	{
-		case 0:
-			ImageDataType = TGAImageDataType::NoImageDataIsPresent;
-			break;
-
-		case 1:
-			ImageDataType = TGAImageDataType::UncompressedColorMapped;
-			break;
-
-		case 2:
-			ImageDataType = TGAImageDataType::UncompressedTrueColor;
-			break;
-
-		case 3:
-			ImageDataType = TGAImageDataType::UncompressedBlackAndWhite;
-			break;
-
-		case 9:
-			ImageDataType = TGAImageDataType::RunLengthEncodedColorMapped;
-			break;
-
-		case 10:
-			ImageDataType = TGAImageDataType::RunLengthEncodedTrueColor;
-			break;
-
-		case 11:
-			ImageDataType = TGAImageDataType::RunLengthEncodedBlackAndWhite;
-			break;
-
-		default:
-			throw "Invalid image Type";
-	}
-
-	switch (pixelDepth)
-	{
-		case 1:
-			PixelDepth = TGABitsPerPixel::X1;
-			break;
-
-		case 8:
-			PixelDepth = TGABitsPerPixel::X8;
-			break;
-
-		case 15:
-			PixelDepth = TGABitsPerPixel::X15;
-			break;
-
-		case 16:
-			PixelDepth = TGABitsPerPixel::X16;
-			break;
-
-		case 24:
-			PixelDepth = TGABitsPerPixel::X24;
-			break;
-
-		case 32:
-			PixelDepth = TGABitsPerPixel::X32;
-			break;
-
-		default:
-			PixelDepth = TGABitsPerPixel::Invalid;
-	}
-
+	ImageDataType = ConvertImageDataType(imageTypeValue);
+	PixelDepth = ConvertPixelDepth(pixelDepth);	
 	//----------------------------------------------------
 
 	//---[Parse Image ID]--------------
 	if (imageIDLengh > 0)
 	{
-		ImageIDSize = imageIDLengh;
-		ImageID = (unsigned char*)malloc(ImageIDSize);
+		ImageInformationSize = imageIDLengh;
+		ImageInformation = (unsigned char*)malloc(imageIDLengh);
 
-		file.Read(ImageID, ImageIDSize);
+		file.Read(ImageInformation, ImageInformationSize);
 	}
 	//----------------------------------
 
@@ -174,13 +228,13 @@ void BF::TGA::Load(const char* filePath)
 			string++;
 		}
 
-		footerEntryIndex = file.DataSize - 26u;
+		footerEntryIndex = file.DataSize - (26u -1u);
 
 		isTGAVersionTwo = memcmp("TRUEVISION-XFILE.", string, compareLength-1) == 0; // Is this string at this address?;
 
 		if (!isTGAVersionTwo) // Is this a TGA v.1.0 file?
 		{
-			return; // Parsing finished. There should be no more data to parse. End of file.
+			return ResourceLoadingResult::Successful; // Parsing finished. There should be no more data to parse. End of file.
 		}
 	}
 	
@@ -203,7 +257,7 @@ void BF::TGA::Load(const char* filePath)
 	//---------------------------------------------------------------------------
 
 	//---[ Extension Area ]--------------------------------------------------------
-	if (extensionOffset > 0 && false) // TODO: Disabled -> some wierd errors 
+	if (extensionOffset > 0)
 	{
 		unsigned short extensionSize = 0;
 
@@ -267,23 +321,22 @@ void BF::TGA::Load(const char* filePath)
 	}*/
 	}
 	//-----------------------------------------------------------		
+
+	return ResourceLoadingResult::Successful;
 }
 
-void BF::TGA::Save(const char* filePath)
+BF::ResourceLoadingResult BF::TGA::Save(const char* filePath)
 {
 	const char footer[18] = "TRUEVISION-XFILE.";
-	File file(filePath, 500);
-
 	unsigned int fileLength = 500;
-	char* data = (char*)malloc(fileLength * sizeof(char));
-	ByteStreamHusk byteStreamHusk(data, fileLength);
+	File file(filePath, fileLength);
 
-
-	byteStreamHusk.InsertArrayAndMove((void*)footer, 8);
 
 	// Data Stuff
 
 	file.WriteToDisk();
+
+	return ResourceLoadingResult::Successful;
 }
 
 void BF::TGA::Convert(Image& image)

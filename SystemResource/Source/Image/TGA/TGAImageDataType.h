@@ -4,6 +4,8 @@ namespace BF
 {
 	enum class TGAImageDataType
 	{
+		UnkownImageDataType,
+
 		NoImageDataIsPresent, // 0
 		UncompressedColorMapped, // 1
 		UncompressedTrueColor, // 2

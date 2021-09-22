@@ -23,6 +23,6 @@ namespace BF
 
 		void Validate();
 
-		PNGChunk();
+		PNGChunk();	
 	};
 }

@@ -473,7 +473,7 @@ void BF::ResourceManager::Load(Dialog& resource, const char* filePath)
 
 void BF::ResourceManager::Load(Level& level, const char* filePath)
 {
-    File file(filePath, true);
+    File file(filePath);
 
     const char _modelToken = 'O';
     const char _textureToken = 'T';
@@ -489,11 +489,15 @@ void BF::ResourceManager::Load(Level& level, const char* filePath)
     unsigned int fontCounter = 0;
     unsigned int shaderCounter = 0;
     unsigned int dialogCounter = 0;
-    unsigned int amountOfLines = 0;
 
+    ResourceLoadingResult resourceLoadingResult = file.ReadFromDisk();
+    unsigned int amountOfLines = file.CountAmountOfLines();
     char currentLineBuffer[200];
 
-    amountOfLines = file.CountAmountOfLines();
+    if (resourceLoadingResult != ResourceLoadingResult::Successful)
+    {
+        return;
+    }
 
     // Step I - Count objects
     while (file.ReadNextLineInto(currentLineBuffer))

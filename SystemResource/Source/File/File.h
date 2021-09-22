@@ -30,14 +30,15 @@ namespace BF
 		char FileName[_MAX_FNAME];
 		char Extension[_MAX_EXT];
 
-		File(const char* filePath, bool readInstandly = false);
+		File(const char* filePath);
+		File(const char* filePath, size_t dataSize);	
 		~File();
 
 		//---<Utility>--
 		bool DoesFileExist();
 		int CountAmountOfLines();
 		static bool DoesFileExist(const char* filePath);
-		static void GetFileExtension(AsciiString& path, AsciiString& extension);
+		static void GetFileExtension(const char* filePath, const char* fileExtension);
 		void CursorToBeginning();
 
 		void Remove();
@@ -45,6 +46,8 @@ namespace BF
 		void ReName(const char* name);
 
 		void Clear();
+
+		void SetFilePath(const char* filePath);
 		//---------------------------------------------------------------------
 
 		//---<Cursor>---
@@ -52,7 +55,6 @@ namespace BF
 
 		//---<Read>------------------------------------------------------------		
 		unsigned int ReadNextLineInto(char* exportBuffer);
-		ResourceLoadingResult ReadAsLines(List<AsciiString>& lineList);
 
 		void Read(bool& value);
 		void Read(char& value);
