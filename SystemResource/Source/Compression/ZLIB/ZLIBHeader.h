@@ -8,11 +8,7 @@ namespace BF
 	struct ZLIBHeader
 	{
 		private:
-		static inline ZLIBCompressionLevel ConvertCompressionLevel(unsigned char compressionLevel);
-		static inline unsigned char ConvertCompressionLevel(ZLIBCompressionLevel compressionLevel);
-
-		static inline ZLIBCompressionMethod ConvertCompressionMethod(unsigned char compressionMethod);
-		static inline unsigned char ConvertCompressionMethod(ZLIBCompressionMethod compressionMethod);
+	
 
 		public:
 		ZLIBCompressionMethod CompressionMethod; // 4 Bits

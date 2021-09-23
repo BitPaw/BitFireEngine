@@ -38,7 +38,7 @@ void ZEE::ZEEGameSystem::OnStartUp()
 {   
     BF::PNG png;
 
-    png.Load("i.png");
+    png.Load("Wb.png");
 
 
 

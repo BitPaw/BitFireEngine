@@ -1,89 +1,19 @@
 #include "ZLIBHeader.h"
 
 #include "../../Math/Math.h"
-#include "DeflateBlock.h"
 #include "../../Container/BitStreamHusk.h"
+
+#include "../DEFLATE/DeflateBlock.h"
+#include "../HUFFMAN/HuffmanSymbol.h"
+
 #include <cassert>
-
-BF::ZLIBCompressionLevel BF::ZLIBHeader::ConvertCompressionLevel(unsigned char compressionLevel)
-{
-    switch (compressionLevel)
-    {
-        case 0u:
-            return BF::ZLIBCompressionLevel::Fastest;
-
-        case 1u:
-            return BF::ZLIBCompressionLevel::Fast;
-
-        case 2u:
-            return BF::ZLIBCompressionLevel::Default;
-
-        case 3u:
-            return BF::ZLIBCompressionLevel::Slowest;
-
-        default:
-            return BF::ZLIBCompressionLevel::InvalidCompressionLevel;
-    }
-}
-
-unsigned char BF::ZLIBHeader::ConvertCompressionLevel(ZLIBCompressionLevel compressionLevel)
-{
-    switch (compressionLevel)
-    {
-        default:
-        case BF::ZLIBCompressionLevel::InvalidCompressionLevel:
-            return -1;
-
-        case BF::ZLIBCompressionLevel::Default:
-            return 2u;
-
-        case BF::ZLIBCompressionLevel::Slowest:
-            return 3u;
-
-        case BF::ZLIBCompressionLevel::Fast:
-            return 1u;
-
-        case BF::ZLIBCompressionLevel::Fastest:
-            return 0u;
-    }
-}
-
-BF::ZLIBCompressionMethod BF::ZLIBHeader::ConvertCompressionMethod(unsigned char compressionMethod)
-{
-    switch (compressionMethod)
-    {
-        case 8u:
-            return BF::ZLIBCompressionMethod::Deflate;
-
-        case 15u:
-            return BF::ZLIBCompressionMethod::Reserved;
-
-        default:
-            return BF::ZLIBCompressionMethod::Invalid;
-    }
-}
-
-unsigned char BF::ZLIBHeader::ConvertCompressionMethod(ZLIBCompressionMethod compressionMethod)
-{
-    switch (compressionMethod)
-    {
-        default:
-        case BF::ZLIBCompressionMethod::Invalid:
-            return -1;
-
-        case BF::ZLIBCompressionMethod::Deflate:
-            return 8u;
-
-        case BF::ZLIBCompressionMethod::Reserved:
-            return 15u;
-    }
-}
 
 BF::ZLIBHeader::ZLIBHeader()
 {
     CompressionMethod = ZLIBCompressionMethod::Invalid;
     CompressionInfo = 0;
 
+    WindowSize = 0;
     CheckFlag = 0;
     DicttionaryPresent = false;
     CompressionLevel = ZLIBCompressionLevel::InvalidCompressionLevel;
@@ -138,11 +68,6 @@ void BF::ZLIBHeader::Parse(unsigned char* data, unsigned int length)
     //---<Decompress DataBlock>------------------------------------------------
     switch (CompressionMethod)
     {
-        default:
-        case BF::ZLIBCompressionMethod::Invalid:
-        {
-            break;
-        }
         case BF::ZLIBCompressionMethod::Deflate:
         {
             DeflateBlock deflateBlock;
@@ -165,14 +90,75 @@ void BF::ZLIBHeader::Parse(unsigned char* data, unsigned int length)
                 deflateBlock.Set(deflateBlockValue); // Convert raw blob into unserstandable container.
 
                 // Parse Huffman stuff...
+                switch (deflateBlock.EncodingMethod)
+                {
+                    default:
+                    case DeflateEncodingMethod::Reserverd:
+                    case DeflateEncodingMethod::Invalid:
+                    {
+                        return;
+                    }
+                    case DeflateEncodingMethod::LiteralRaw:
+                    {
+                        // Skip remaining Bytes
+                        unsigned short length = subBlockStart[1] << 8 | subBlockStart[2];
+                        unsigned short lengthInverse = subBlockStart[3] << 8 | subBlockStart[4];
 
+                        assert(length == !lengthInverse);
 
+                        //memcpy(0000,0000, length);
+
+                        break;
+                    }
+                    case DeflateEncodingMethod::HuffmanDynamic:
+                    case DeflateEncodingMethod::HuffmanStatic:
+                    {
+                        if (deflateBlock.EncodingMethod == DeflateEncodingMethod::HuffmanDynamic)
+                        {
+                            // read representation of code trees
+                        }
+
+                        while (false) // TODO
+                        {
+                            // Get Next ??? what
+                            unsigned short value = (subBlockStart[1] & 0b00000111) | subBlockStart[0] & 0b11111000 >> 3;
+
+                            if (value < 256)
+                            {
+                                // Copy 'value' into outputSteam
+                            }
+                            else
+                            {
+                                bool isEndofBlock = value == HuffmanSymbolEndOfBlock;
+                                bool isValidCode = value >= 257 && value <= 285;
+
+                                if (isEndofBlock)
+                                {
+                                    break;
+                                }
+
+                                if(isValidCode)
+                                {
+                                    // decode distance from input stream
+
+                                    // move backwards distance bytes in the output
+                                    // stream, and copy length bytes from this
+                                    // position to the output stream.
+                                }
+                            }
+                        }                     
+
+                        break;
+                    }
+                }
             }
             while (!deflateBlock.IsLastBlock);
 
             break;
         }
+        default:
         case BF::ZLIBCompressionMethod::Reserved:
+        case BF::ZLIBCompressionMethod::Invalid:
         {
             break;
         }

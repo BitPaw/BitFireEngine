@@ -1,11 +1,7 @@
 #include "PNG.h"
 
 #include "../../File/File.h"
-
-#include "../../Compression/ZLib.h"
-#include "../../Container/BitStreamHusk.h"
-#include "../../Container/ByteStreamHusk.h"
-#include "ZLIBHeader.h"
+#include "../../Compression/ZLIB/ZLIBHeader.h"
 
 BF::PNGColorType BF::PNG::ConvertColorType(unsigned int colorType)
 {
@@ -56,115 +52,84 @@ unsigned int BF::PNG::ConvertColorType(PNGColorType colorType)
     }
 }
 
-void BF::PNG::Load(const char* filePath)
-{
-    PNGChunk chunk;
+BF::ResourceLoadingResult BF::PNG::Load(const char* filePath)
+{   
     File file(filePath);
-    ResourceLoadingResult resourceLoadingResult = file.ReadFromDisk();
-    ByteStreamHusk byteStream(file.Data, file.DataSize);
+    ResourceLoadingResult resourceLoadingResult = file.ReadFromDisk(); 
+    bool parseFinished = false;
 
     if (resourceLoadingResult != ResourceLoadingResult::Successful)
     {
-        return;// resourceLoadingResult;
+        return resourceLoadingResult;
     }
 
     // Check Header
     {
         const unsigned char pngFileHeader[8] = { 137u, 'P', 'N', 'G', '\r', '\n', 26u, '\n' }; //  137, 80, 78, 71, 13, 10, 26, 10
+        unsigned char expectedHeader[8];
 
-        bool isValidHeader = memcmp(pngFileHeader, &byteStream.StartAdress[0], 8) == 0;
+        file.Read(expectedHeader, 8u);
 
-        byteStream.CurrentPosition += 8u;
+        bool isValidHeader = memcmp(pngFileHeader, expectedHeader, 8u) == 0;
 
         if (!isValidHeader)
         {
-            throw std::exception("Inavlid Header / PNG File");
+            return ResourceLoadingResult::FormatNotSupported;
         }
     }
  
+    ZLIBHeaderListSize = 0;
+
     // Fetch data
-    while (!byteStream.IsAtEnd())
+    while (!parseFinished)
     {
+        PNGChunk chunk;
         unsigned char chunkTypeBuffer[4];
 
-        chunk.Lengh = byteStream.ExtractIntegerAndMove(Endian::Big);
+        file.Read(chunk.Lengh, Endian::Big);
+        file.Read(chunkTypeBuffer, 4u);
 
-        byteStream.CopyBytesAndMove(chunkTypeBuffer, 4u);
-
-        chunk.ChunkTypeBlock.Set(chunkTypeBuffer);
-        
+        chunk.ChunkTypeBlock.Set(chunkTypeBuffer);        
      
         //---Get Chunk Data------------------------------------------
         switch (chunk.ChunkTypeBlock.Type)
         {
             case PNGChunkType::ImageHeader:
             {
-                unsigned int colorType;
+                unsigned char colorType = 0;
 
-                /*
-                    Width 	4 bytes
-                    Height 	4 bytes
-                    Bit depth 	1 byte
-                    Colour type 	1 byte
-                    Compression method 	1 byte
-                    Filter method 	1 byte
-                    Interlace method 	1 byte
-                */
+                file.Read(Width, Endian::Big); // 4 Bytes
+                file.Read(Height, Endian::Big); // 4 Bytes
 
-                Width = byteStream.ExtractIntegerAndMove(Endian::Big);
-                Height = byteStream.ExtractIntegerAndMove(Endian::Big);
-
-                BitDepth = byteStream.ExtractByteAndMove();
-                colorType = byteStream.ExtractByteAndMove();
-                CompressionMethod = byteStream.ExtractByteAndMove();
-                FilterMethod = byteStream.ExtractByteAndMove();
-                InterlaceMethod = byteStream.ExtractByteAndMove();
-
+                file.Read(BitDepth); // 1 Byte
+                file.Read(colorType); // 1 Byte
+                file.Read(CompressionMethod); // 1 Byte
+                file.Read(FilterMethod); // 1 Byte
+                file.Read(InterlaceMethod); // 1 Byte
+    
                 ColorType = ConvertColorType(colorType);
 
                 break;
             }
             case PNGChunkType::Palette:
             {
-                /*
-                Red 	1 byte
-                Green 	1 byte
-                Blue 	1 byte
-                */
-                Palette[0] = byteStream.ExtractByteAndMove();
-                Palette[1] = byteStream.ExtractByteAndMove();
-                Palette[2] = byteStream.ExtractByteAndMove();
+                file.Read(Palette[0]); // Red 	1 byte
+                file.Read(Palette[1]); // Green 1 byte
+                file.Read(Palette[2]); // Blue 	1 byte
 
                 break;
             }
             case PNGChunkType::ImageData:
-            {
-                unsigned char imageDataBuffer[8512];
-                unsigned char compressedData[32768];
-
-                byteStream.CopyBytesAndMove(imageDataBuffer, chunk.Lengh);
+            {                
+                ++ZLIBHeaderListSize;
                 
-               // unsigned char adresssss = compressedBytes[0];
+                file.DataCursorPosition += chunk.Lengh;
 
-               // BitStreamHusk bitStreamHusk(, chunk.Lengh);
-
-
-                // ZLIB
-
-                unsigned char cmfTag = imageDataBuffer[0];
-                ZLIBHeader zlibHedare;
-       
-                zlibHedare.Parse(imageDataBuffer, chunk.Lengh);
-
-               
-
-                //CompressedData.Add(compressedBytes);           
-                
                 break;
             }
             case PNGChunkType::ImageEnd:
             {
-                // Empty, no data
+                parseFinished = true;
                 break;
             }
             case PNGChunkType::Transparency:
@@ -175,26 +140,27 @@ void BF::PNG::Load(const char* filePath)
             }
             case PNGChunkType::ImageGamma:
             {
-                // sample = lightoutgamma ???
-                Gamma = byteStream.ExtractIntegerAndMove(Endian::Big);
+                file.Read(Gamma, Endian::Big);
 
                 break;
             }
             case PNGChunkType::PrimaryChromaticities:
             {
-                CromaWhite[0] = byteStream.ExtractIntegerAndMove(Endian::Big);
-                CromaWhite[1] = byteStream.ExtractIntegerAndMove(Endian::Big);
-                CromaRed[0] = byteStream.ExtractIntegerAndMove(Endian::Big);
-                CromaRed[1] = byteStream.ExtractIntegerAndMove(Endian::Big);
-                CromaGreen[0] = byteStream.ExtractIntegerAndMove(Endian::Big);
-                CromaGreen[1] = byteStream.ExtractIntegerAndMove(Endian::Big);
-                CromaBlue[0] = byteStream.ExtractIntegerAndMove(Endian::Big);
-                CromaBlue[1] = byteStream.ExtractIntegerAndMove(Endian::Big);
+                file.Read(CromaWhite[0], Endian::Big);
+                file.Read(CromaWhite[1], Endian::Big);
+                file.Read(CromaRed[0], Endian::Big);
+                file.Read(CromaRed[1], Endian::Big);
+                file.Read(CromaGreen[0], Endian::Big);
+                file.Read(CromaGreen[1], Endian::Big);
+                file.Read(CromaBlue[0], Endian::Big);
+                file.Read(CromaBlue[1], Endian::Big);
+
                 break;
             }
             case PNGChunkType::StandardRGBColorSpace:
             {
-                RenderingIntent = byteStream.ExtractByteAndMove();
+                file.Read(RenderingIntent);
+
                 break;
             }
             case PNGChunkType::EmbeddedICCProfile:
@@ -204,9 +170,9 @@ void BF::PNG::Load(const char* filePath)
             case PNGChunkType::BackgroundColor:
             case PNGChunkType::PhysicalPixelDimensions:
             {
-                PixelsPerUnit[0] = byteStream.ExtractIntegerAndMove(Endian::Big);
-                PixelsPerUnit[1] = byteStream.ExtractIntegerAndMove(Endian::Big);
-                UnitSpecifier = byteStream.ExtractByteAndMove();
+                file.Read(PixelsPerUnit[0], Endian::Big);
+                file.Read(PixelsPerUnit[1], Endian::Big);
+                file.Read(UnitSpecifier);
 
                 break;
             }
@@ -237,7 +203,11 @@ void BF::PNG::Load(const char* filePath)
 
                 for (unsigned int i = 0; i < byteLength; i++)
                 {
-                    result = (result << (i * 8)) | byteStream.ExtractByteAndMove();
+                    char calcbyte;
+
+                    file.Read(calcbyte);
+
+                    result = (result << (i * 8)) | calcbyte;
                 }
 
                 SignificantBits = result;
@@ -250,18 +220,73 @@ void BF::PNG::Load(const char* filePath)
             case PNGChunkType::Custom:
             default:
             {
-                byteStream.CurrentPosition += chunk.Lengh;
+                file.DataCursorPosition += chunk.Lengh;
                 break;
             }
         }
         //---------------------------------------------------------------
 
-        chunk.CRC = byteStream.ExtractIntegerAndMove(Endian::Big);
+        file.Read(chunk.CRC, Endian::Big); // 4 Bytes
+    }
+
+   
+
+    size_t imageDataIndex = 0;
+    ZLIBHeaderList = new ZLIBHeader[ZLIBHeaderListSize];
+
+    if (!ZLIBHeaderList)
+    {
+        ZLIBHeaderListSize = 0;
+        return ResourceLoadingResult::OutOfMemory;
+    }
+
+    file.DataCursorPosition = 8u;
+
+    parseFinished = false;
+
+    // Fetch data
+    while (!parseFinished)
+    {
+        PNGChunk chunk;
+        unsigned char chunkTypeBuffer[4];
+
+        file.Read(chunk.Lengh, Endian::Big);
+        file.Read(chunkTypeBuffer, 4u);
+
+        chunk.ChunkTypeBlock.Set(chunkTypeBuffer);
+
+        //---Get Chunk Data------------------------------------------
+        switch (chunk.ChunkTypeBlock.Type)
+        {
+            default:
+            {
+                file.DataCursorPosition += chunk.Lengh;
+                break;
+            }
+            case PNGChunkType::ImageData:
+            {
+                ZLIBHeader& ZLIBHeader = ZLIBHeaderList[imageDataIndex++];
+
+                ZLIBHeader.Parse((unsigned char*)file.Data + file.DataCursorPosition, chunk.Lengh);
+
+                file.DataCursorPosition += chunk.Lengh;
+
+                break;
+            }
+            case PNGChunkType::ImageEnd:
+            {
+                parseFinished = true;
+                break;
+            }
+        }
+
+        file.DataCursorPosition += 4u;
     }
 }
 
-void BF::PNG::Save(const char* filePath)
+BF::ResourceLoadingResult BF::PNG::Save(const char* filePath)
 {
+    /*
     unsigned int fileLength = 500;
     char* data = (char*)malloc(fileLength * sizeof(char));
     ByteStreamHusk byteStreamHusk(data, fileLength);
@@ -272,54 +297,26 @@ void BF::PNG::Save(const char* filePath)
 
     // Data Stuff
 
-    File::WriteToDisk(filePath, data, fileLength);
+    File::WriteToDisk(filePath, data, fileLength);*/
+
+    return ResourceLoadingResult::Successful;
 }
 
 void BF::PNG::Convert(Image& image)
 {
-    PrintData();
     unsigned char* pixelData = image.PixelData;
-    auto compressedDataRow = CompressedData[0];
-	unsigned int width = Width;
+    unsigned int width = Width;
 	unsigned int height = Height;
     unsigned int pIndex = 0;
 
 	image.Format = ImageFormat::RGBA;
 	image.Resize(width, height);
-	//image.FillRandome();
+	
 
-    const char* compressedFilePath = "zlibCompressed_TempDump.bin";
-    const char* unCompressedFilePath = "zlibUncompressed_TempDump.bin";
-
-    while (compressedDataRow != nullptr)
+    for (size_t i = 0; i < ZLIBHeaderListSize; i++)
     {
-        List<unsigned char>* data = compressedDataRow->Element;
-        //File::ExtractAndSave(compressedFilePath, &(*data)[0], data->Size());
-
-        ZLib::Decompress(&compressedFilePath[0], &unCompressedFilePath[0]);
-
-        File zlibDecompressedFile(unCompressedFilePath);
-        zlibDecompressedFile.ReadFromDisk();
-
-        File::Remove(compressedFilePath);
-        File::Remove(unCompressedFilePath);    
-
-        for (size_t i = 0; i < zlibDecompressedFile.DataSize; )
-        {
-            i++;
-
-            for (size_t w = 0; w < Width; w++)
-            {
-                pixelData[pIndex++] = zlibDecompressedFile.Data[i++];
-                pixelData[pIndex++] = zlibDecompressedFile.Data[i++];
-                pixelData[pIndex++] = zlibDecompressedFile.Data[i++];
-                pixelData[pIndex++] = zlibDecompressedFile.Data[i++];
-                //printf("%2x %2x %2x %2x\n", UncompressedPixelData[pIndex - 4], UncompressedPixelData[pIndex - 3], UncompressedPixelData[pIndex - 2], UncompressedPixelData[pIndex - 1]);
-            }
-        }
-
-        compressedDataRow = compressedDataRow->Next;
-    }     
+        ZLIBHeader& zlibHeader = ZLIBHeaderList[i];
+    }
 }
 
 void BF::PNG::PrintData()
