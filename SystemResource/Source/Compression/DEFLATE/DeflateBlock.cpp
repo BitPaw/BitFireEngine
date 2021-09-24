@@ -6,37 +6,27 @@ BF::DeflateBlock::DeflateBlock()
 	EncodingMethod = DeflateEncodingMethod::Invalid;
 }
 
-BF::DeflateBlock::DeflateBlock(unsigned char value)
+unsigned char BF::DeflateBlock::HuffmanFixedCodeLength(unsigned short literalValue)
 {
-	Set(value);
-}
-
-void BF::DeflateBlock::Set(unsigned char value)
-{
-	unsigned char encodingMethodValue = (value & 0b110) >> 1;
-
-	IsLastBlock = value & 0b001;
-
-	switch (encodingMethodValue)
+	if (literalValue <= 143u)
 	{
-		case 0b00:
-			EncodingMethod = DeflateEncodingMethod::LiteralRaw;
-			break;
-
-		case 0b01:
-			EncodingMethod = DeflateEncodingMethod::HuffmanStatic;
-			break;
-
-		case 0b10:
-			EncodingMethod = DeflateEncodingMethod::HuffmanDynamic;
-			break;
-
-		case 0b11:
-			EncodingMethod = DeflateEncodingMethod::Reserverd;
-			break;
-
-		default:
-			EncodingMethod = DeflateEncodingMethod::Invalid;
-			break;
+		return 8u;
 	}
+
+	if (literalValue <= 255u)
+	{
+		return 9u;
+	}
+
+	if(literalValue <= 279u)
+	{
+		return 7u;
+	}
+
+	if(literalValue <= 287u)
+	{
+		return 8u;
+	}
+
+	return 0;
 }

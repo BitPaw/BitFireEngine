@@ -286,18 +286,44 @@ BF::ResourceLoadingResult BF::PNG::Load(const char* filePath)
 
 BF::ResourceLoadingResult BF::PNG::Save(const char* filePath)
 {
-    /*
-    unsigned int fileLength = 500;
-    char* data = (char*)malloc(fileLength * sizeof(char));
-    ByteStreamHusk byteStreamHusk(data, fileLength);
+    size_t fileLength = 500;
+    File file(filePath, fileLength);
 
-    const unsigned char pngFileHeader[8] = { 137u, 'P', 'N', 'G', '\r', '\n', 26u, '\n' };
+    // Write Header
+    {
+        const unsigned char pngFileHeader[8] = { 137u, 'P', 'N', 'G', '\r', '\n', 26u, '\n' };
 
-    byteStreamHusk.InsertArrayAndMove((void*)pngFileHeader, 8);
+        file.Write((void*)pngFileHeader, 8u);
+    }
 
-    // Data Stuff
+    // Header
+    {
+        unsigned char colorType = ConvertColorType(ColorType);
 
-    File::WriteToDisk(filePath, data, fileLength);*/
+        file.Write(13u, Endian::Big);
+        file.Write((void*)"IHDR", 4u);       
+
+        file.Write(Width, Endian::Big);
+        file.Write(Height, Endian::Big);
+
+        file.Write(BitDepth);
+        file.Write(colorType);
+        file.Write(CompressionMethod);
+        file.Write(FilterMethod);
+        file.Write(InterlaceMethod);   
+
+        file.Write(0u, Endian::Big);
+    }
+
+
+    //---<>---
+    {   
+        file.Write(0u, Endian::Big);
+        file.Write((void*)"IEND", 4u);
+        file.Write(2923585666u, Endian::Big);
+    }
+
+    file.WriteToDisk();
 
     return ResourceLoadingResult::Successful;
 }

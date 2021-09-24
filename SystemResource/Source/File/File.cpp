@@ -366,27 +366,91 @@ void BF::File::Read(void* value, size_t length)
 
 void BF::File::Write(bool value)
 {
-	
+	Data[DataCursorPosition++] = value;
 }
 
 void BF::File::Write(char value)
 {
-	
+	Data[DataCursorPosition++] = value;
+}
+
+void BF::File::Write(unsigned char value)
+{
+	Data[DataCursorPosition++] = value;
 }
 
 void BF::File::Write(short value, Endian endian)
 {
-	
+	Write((unsigned short)value, endian);
+}
+
+void BF::File::Write(unsigned short value, Endian endian)
+{
+	unsigned char valueData[2];
+
+	switch (endian)
+	{
+		case Endian::Big:
+		{
+			valueData[0] = (value >> 8);
+			valueData[1] = value;
+			break;
+		}
+		default:
+		case Endian::Little:
+		{
+			valueData[0] = (value >> 8);
+			valueData[1] = value;
+			break;
+		}
+	}
+
+	Write(valueData, 2u);
 }
 
 void BF::File::Write(int value, Endian endian)
 {
-	
+	Write((unsigned int)value, endian);
+}
+
+void BF::File::Write(unsigned int value, Endian endian)
+{
+	unsigned char valueData[4];	
+
+	switch (endian)
+	{
+		case Endian::Big:
+		{
+			valueData[0] = (value & 0xFF000000) >> 24;
+			valueData[1] = (value & 0x00FF0000) >> 16;
+			valueData[2] = (value & 0x0000FF00) >> 8;
+			valueData[3] =  value & 0x000000FF;
+			break;
+		}
+		default:
+		case Endian::Little:
+		{
+			valueData[0] =  value & 0x000000FF;
+			valueData[1] = (value & 0x0000FF00) >> 8;
+			valueData[2] = (value & 0x00FF0000) >> 16;
+			valueData[3] = (value & 0xFF000000) >> 24;
+			break;
+		}
+	}
+
+	Write(valueData, 4u);
+}
+
+void BF::File::Write(const char* string, size_t length)
+{
+	Write(string, length);	
 }
 
 void BF::File::Write(void* value, size_t length)
 {
+	memcpy(Data + DataCursorPosition, value, length);
 
+	DataCursorPosition += length;
 }
 
 bool BF::File::DoesFileExist()

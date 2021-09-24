@@ -5,8 +5,10 @@
 
 #include "../DEFLATE/DeflateBlock.h"
 #include "../HUFFMAN/HuffmanSymbol.h"
+#include "../HUFFMAN/HuffmanCodeBlock.h"
 
 #include <cassert>
+#include <string>
 
 BF::ZLIBHeader::ZLIBHeader()
 {
@@ -17,6 +19,9 @@ BF::ZLIBHeader::ZLIBHeader()
     CheckFlag = 0;
     DicttionaryPresent = false;
     CompressionLevel = ZLIBCompressionLevel::InvalidCompressionLevel;
+
+    DataSize = 0;
+    Data[0] = 0;
 }
 
 void BF::ZLIBHeader::Parse(unsigned char* data, unsigned int length)
@@ -66,6 +71,8 @@ void BF::ZLIBHeader::Parse(unsigned char* data, unsigned int length)
     //-------------------------------------------------------------------------
 
     //---<Decompress DataBlock>------------------------------------------------
+    unsigned int dataCursor = 0;
+    
     switch (CompressionMethod)
     {
         case BF::ZLIBCompressionMethod::Deflate:
@@ -82,14 +89,19 @@ void BF::ZLIBHeader::Parse(unsigned char* data, unsigned int length)
                 ~~Watch out while skipping Bits like a broken record~~
             */
 
+            BitStreamHusk bitStream(subBlockStart, subBlockSize, false);
+
             // Loop until the last marked DeflateBlock.
             do
-            {
-                unsigned char deflateBlockValue = subBlockStart[0] & 0b00000111; // Get the next 3 Bits
-                
-                deflateBlock.Set(deflateBlockValue); // Convert raw blob into unserstandable container.
+            {   //---<Parse Header>---
+                {
+                    unsigned char isLastBlockValue = bitStream.ExtractBitsAndMove(1);
+                    unsigned char encodingMethodValue = bitStream.ExtractBitsAndMove(2);
 
-                // Parse Huffman stuff...
+                    deflateBlock.IsLastBlock = isLastBlockValue == 1;
+                    deflateBlock.EncodingMethod = ConvertDeflateEncodingMethod(encodingMethodValue);
+                }            
+                
                 switch (deflateBlock.EncodingMethod)
                 {
                     default:
@@ -103,29 +115,62 @@ void BF::ZLIBHeader::Parse(unsigned char* data, unsigned int length)
                         // Skip remaining Bytes
                         unsigned short length = subBlockStart[1] << 8 | subBlockStart[2];
                         unsigned short lengthInverse = subBlockStart[3] << 8 | subBlockStart[4];
+                        unsigned char* sourceAdress = subBlockStart + 5u;
 
                         assert(length == !lengthInverse);
 
-                        //memcpy(0000,0000, length);
+                        DataSize += length;
+
+                        memcpy(Data, sourceAdress, length);
 
                         break;
                     }
                     case DeflateEncodingMethod::HuffmanDynamic:
                     case DeflateEncodingMethod::HuffmanStatic:
-                    {
+                    {                               
                         if (deflateBlock.EncodingMethod == DeflateEncodingMethod::HuffmanDynamic)
                         {
                             // read representation of code trees
+                            const unsigned char fixedCodes[] = { 16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15 };
+
+                            HuffmanCodeBlock huffmanCodeBlock;
+
+                            huffmanCodeBlock.NumberOfLiteralValues = (subBlockStart[0] & 0b11111000 >> 3) + 257u; // 5-Bits
+                            huffmanCodeBlock.NumberOfDistanceCodes = (subBlockStart[1] & 0b00011111) - 1u; // 5-Bits
+                            huffmanCodeBlock.NumberOfCodeLengthCodes = ((subBlockStart[2] & 0b11100000) >> 5) - 1u;
+
+                            unsigned int lengthsOfPrefixCodes = huffmanCodeBlock.NumberOfCodeLengthCodes * 3;
+                            unsigned int lengthsOfTheCodes = huffmanCodeBlock.NumberOfLiteralValues + huffmanCodeBlock.NumberOfDistanceCodes;
+                            unsigned int compressedDataLength = 0;
                         }
 
-                        while (false) // TODO
+#if 0 // TEST
+                        for (int i = 0; bitStream.CurrentPosition < bitStream.DataLengh; )
                         {
-                            // Get Next ??? what
-                            unsigned short value = (subBlockStart[1] & 0b00000111) | subBlockStart[0] & 0b11111000 >> 3;
+                            unsigned short codeA = bitStream.ExtractBitsAndMove(5); // 5-Bits     
+                            unsigned short codeB = bitStream.ExtractBitsAndMove(codeA); // 5-Bits    
+
+                            printf("A:%i B:%i =:%i\n", codeA, codeB, codeA + codeB);
+
+                            i += codeA + codeB;
+
+                            if (((i) % 8+1) == 8)
+                            {
+                                printf("\n");
+                            }
+                        }
+#endif
+
+                        while (true) // loop(until end of block code recognized)
+                        {
+                            // TODO
+                            // Start at compressedDataBlock 
+                            //unsigned short value = bitStream.ExtractBitsAndMove(5) + 257u; // 5-Bits     
+                            unsigned short value = HuffmanSymbolEndOfBlock;
 
                             if (value < 256)
                             {
-                                // Copy 'value' into outputSteam
+                                Data[dataCursor++] = value; // Copy 'value' into outputSteam                        
                             }
                             else
                             {
@@ -140,12 +185,17 @@ void BF::ZLIBHeader::Parse(unsigned char* data, unsigned int length)
                                 if(isValidCode)
                                 {
                                     // decode distance from input stream
+                                    unsigned char bitLength = DeflateBlock::HuffmanFixedCodeLength(value);
+
+                                    assert(bitLength != 0);
+
+                                    unsigned char distance = subBlockStart[1];
 
                                     // move backwards distance bytes in the output
                                     // stream, and copy length bytes from this
                                     // position to the output stream.
                                 }
-                            }
+                            }                            
                         }                     
 
                         break;

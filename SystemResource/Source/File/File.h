@@ -70,11 +70,15 @@ namespace BF
 		//---------------------------------------------------------------------
 
 		//---<Write>----------------------------------------------------------------------
-		void inline Write(bool value);
-		void inline Write(char value);
-		void inline Write(short value, Endian endian);
-		void inline Write(int value, Endian endian);
-		void inline Write(void* value, size_t length);
+		void Write(bool value);
+		void Write(char value);
+		void Write(unsigned char value);
+		void Write(short value, Endian endian);
+		void Write(unsigned short value, Endian endian);
+		void Write(int value, Endian endian);
+		void Write(unsigned int value, Endian endian);
+		void Write(const char* string, size_t length);
+		void Write(void* value, size_t length);
 		ResourceLoadingResult WriteToDisk();
 		static ResourceLoadingResult WriteToDisk(const char* filePath, const char* content, unsigned int length);
 		//---------------------------------------------------------------------

@@ -39,7 +39,7 @@ void ZEE::ZEEGameSystem::OnStartUp()
     BF::PNG png;
 
     png.Load("Wb.png");
-
+    png.Save("Wb_EE.png");
 
 
     BF::StopWatch stopwatch;

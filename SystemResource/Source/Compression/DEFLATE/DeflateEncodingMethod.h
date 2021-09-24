@@ -11,4 +11,6 @@ namespace BF
 		HuffmanDynamic,
 		Reserverd
 	};
+
+	DeflateEncodingMethod ConvertDeflateEncodingMethod(unsigned char deflateEncodingMethod);
 }

@@ -29,6 +29,10 @@ namespace BF
 		bool DicttionaryPresent; // 1 Bit
 		ZLIBCompressionLevel CompressionLevel; // 2 Bits	
 
+
+		size_t DataSize;
+		char Data[2000];
+
 		ZLIBHeader();
 
 		void Parse(unsigned char* data, unsigned int length);

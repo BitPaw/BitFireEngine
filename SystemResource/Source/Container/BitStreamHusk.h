@@ -9,6 +9,9 @@ namespace BF
 		private:
 		bool _leftToRight;
 
+		unsigned int GetFromLeftCurrentPosition(unsigned char amountOfBits);
+		unsigned int GetFromRightCurrentPosition(unsigned char amountOfBits);
+
 		public:
 		unsigned char* StartAdress;
 
@@ -17,7 +20,7 @@ namespace BF
 
 		unsigned int BlockSizeInBytes;
 		unsigned int BlockSizeInBits;
-		unsigned int CurrentBitOffset;
+		int CurrentBitOffset;
 
 		BitStreamHusk();
 		BitStreamHusk(unsigned char* startAdress, unsigned int dataLengh, bool leftToRight);
@@ -25,6 +28,6 @@ namespace BF
 		void RePosition(unsigned char* startAdress, unsigned int dataLengh);
 		void SkipBitsToNextByte();
 		unsigned int ExtractBitsAndMove(unsigned char amountOfBits);
-		unsigned int GetFromCurrentPosition(unsigned char amountOfBits);	
+
 	};
 }

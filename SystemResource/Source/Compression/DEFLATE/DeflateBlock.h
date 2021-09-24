@@ -11,8 +11,8 @@ namespace BF
 		DeflateEncodingMethod EncodingMethod;
 
 		DeflateBlock();
-		DeflateBlock(unsigned char value);
 
-		void Set(unsigned char value);
+		static unsigned char HuffmanFixedCodeLength(unsigned short literalValue);
+		//static unsigned short
 	};
 }
