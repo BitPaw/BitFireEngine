@@ -3,7 +3,7 @@
 namespace BF
 {
 	// DIB header (bitmap information header) - Type / Version
-	enum class BMPInformationHeaderType
+	enum class BMPInfoHeaderType
 	{
 		UnkownOrInvalid,
 
@@ -31,4 +31,7 @@ namespace BF
 		// [124-Bytes] Windows NT 5.0, 98 or later 
 		BitMapV5Header
 	};
+
+	BMPInfoHeaderType ConvertBMPInfoHeaderType(unsigned int infoHeaderType);
+	unsigned int ConvertBMPInfoHeaderType(BMPInfoHeaderType infoHeaderType);
 }

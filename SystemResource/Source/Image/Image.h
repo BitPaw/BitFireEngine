@@ -36,6 +36,7 @@ namespace BF
 		Vector4<unsigned char> GetPixel(unsigned int x, unsigned int y);
 
 		Image();
+		~Image();
 
 		void RemoveColor(unsigned char red, unsigned char green, unsigned char blue);
 

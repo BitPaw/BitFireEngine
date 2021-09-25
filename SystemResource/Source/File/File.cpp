@@ -392,15 +392,15 @@ void BF::File::Write(unsigned short value, Endian endian)
 	{
 		case Endian::Big:
 		{
-			valueData[0] = (value >> 8);
-			valueData[1] = value;
+			valueData[0] = (value & 0xFF00) >> 8;
+			valueData[1] = (value & 0x00FF);
 			break;
 		}
 		default:
 		case Endian::Little:
 		{
-			valueData[0] = (value >> 8);
-			valueData[1] = value;
+			valueData[0] = (value & 0x00FF);	
+			valueData[1] = (value & 0xFF00) >> 8;
 			break;
 		}
 	}
@@ -443,7 +443,7 @@ void BF::File::Write(unsigned int value, Endian endian)
 
 void BF::File::Write(const char* string, size_t length)
 {
-	Write(string, length);	
+	Write((void*)string, length);	
 }
 
 void BF::File::Write(void* value, size_t length)

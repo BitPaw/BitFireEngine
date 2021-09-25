@@ -257,6 +257,9 @@
     <ClCompile Include="Source\Compression\HUFFMAN\HuffmanSymbol.cpp" />
     <ClCompile Include="Source\Compression\DEFLATE\DeflateEncodingMethod.cpp" />
     <ClCompile Include="Source\Compression\DEFLATE\DeflateBlock.cpp" />
+    <ClCompile Include="Source\Image\BMP\BMPInfoHeader.cpp" />
+    <ClCompile Include="Source\Image\BMP\BMPInfoHeaderType.cpp" />
+    <ClCompile Include="Source\Image\BMP\BMPType.cpp" />
     <ClCompile Include="Source\Model\ModelRenderInformation.cpp" />
     <ClCompile Include="Source\Sound\MID\MIDITrack.cpp" />
     <ClCompile Include="Source\Sound\MID\MIDICommandExtended.cpp" />
@@ -293,7 +296,6 @@
     <ClCompile Include="Source\Font\OTF\OTF.cpp" />
     <ClCompile Include="Source\Font\TTF\TTF.cpp" />
     <ClCompile Include="Source\Image\BMP\BMP.cpp" />
-    <ClCompile Include="Source\Image\BMP\Chunk\Header\BMPInfoHeader.cpp" />
     <ClCompile Include="Source\Image\GIF\GIF.cpp" />
     <ClCompile Include="Source\Image\Image.cpp" />
     <ClCompile Include="Source\Image\JPEG\JPEG.cpp" />
@@ -436,9 +438,8 @@
     <ClInclude Include="Source\Font\TTF\TTF.h" />
     <ClInclude Include="Source\Image\BMP\BMP.h" />
     <ClInclude Include="Source\Image\BMP\BMPType.h" />
-    <ClInclude Include="Source\Image\BMP\Chunk\Header\BMPInfoHeader.h" />
-    <ClInclude Include="Source\Image\BMP\Chunk\Header\BMPInformationHeaderType.h" />
-    <ClInclude Include="Source\Image\BMP\Chunk\Header\IBMPInformationHeader.h" />
+    <ClInclude Include="Source\Image\BMP\BMPInfoHeaderType.h" />
+    <ClInclude Include="Source\Image\BMP\BMPInfoHeader.h" />
     <ClInclude Include="Source\Image\GIF\GIF.h" />
     <ClInclude Include="Source\Image\Image.h" />
     <ClInclude Include="Source\Image\ImageFileExtension.h" />

@@ -24,4 +24,7 @@ namespace BF
         // [PT] OS/2 pointer
         OS2Pointer
     };
+
+    BMPType ConvertBMPType(unsigned char typeTag[2]);
+    void ConvertBMPType(unsigned char typeTag[2], BMPType type);
 }

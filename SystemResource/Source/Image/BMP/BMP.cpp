@@ -1,21 +1,15 @@
 #include "BMP.h"
 
 #include "../../File/File.h"
-#include "../../Container/AsciiString.h"
-#include "../../Container/ByteStreamHusk.h"
 
 BF::BMP::BMP()
 {
-    Height = 0;
-    Width = 0;
-
     Type = BMPType::UnkownOrInavlid;
     SizeOfFile = -1;
     ReservedBlock = 0;
     DataOffset = -1;
 
-	InformationHeaderType = BMPInformationHeaderType::UnkownOrInvalid;
-	InformationHeader = 0;
+	InfoHeaderType = BMPInfoHeaderType::UnkownOrInvalid;
 
     PixelDataSize = 0;
     PixelData = 0;
@@ -23,330 +17,186 @@ BF::BMP::BMP()
 
 BF::BMP::~BMP()
 {
-    delete InformationHeader;
-    delete[] PixelData;	
+    free(PixelData);	
 }
 
-/*
-BF::RGB<unsigned char>* BF::BMP::GetPixel(unsigned int x, unsigned int y)
+BF::ResourceLoadingResult BF::BMP::Load(const char* filePath)
 {
-	int width = InformationHeader->Width;
-	int height = InformationHeader->Height;
-	unsigned int index;
-	RGB<unsigned char>* rgb;
+    File file(filePath); 
+    ResourceLoadingResult resourceLoadingResult = file.ReadFromDisk();
 
-	bool flipY = false; // flipüx
-	bool flipX = false;
-
-	if (flipX)
-	{
-		x = width - 1 - x;
-	}
-
-	if (flipY)
-	{
-		y = height - 1 - y;
-	}
-
-	index = x * width + y;
-
-	// printf("%u | %u = %u\n", x,y, index);
-
-	rgb = &Pixel[index];
-
-	return rgb;
-}*/
-
-void BF::BMP::Load(const char* filePath)
-{
-    File file(filePath);
-    file.ReadFromDisk();
-    ByteStreamHusk byteStream(file.Data, file.DataSize);
-    int bitsPerPixel = 0; 
+    if (resourceLoadingResult != ResourceLoadingResult::Successful)
+    {
+        return resourceLoadingResult;
+    }
 
     //-- Parsing Header Tag
     {
-        Word headerTag;
+        unsigned char type[2];
 
-        headerTag.ByteData[0] = byteStream.ExtractByteAndMove();
-        headerTag.ByteData[1] = byteStream.ExtractByteAndMove();
+        file.Read(type, 2u);
 
-        switch (headerTag.ByteData[0])
-        {
-            case 'B':
-                switch (headerTag.ByteData[1])
-                {
-                    case 'A':
-                        Type = BMPType::OS2StructBitmapArray;
-                        break;
-
-                    case 'M':
-                        Type = BMPType::Windows;
-                        break;
-                }
-                break;
-
-            case 'C':
-                switch (headerTag.ByteData[1])
-                {
-                    case 'I':
-                        Type = BMPType::OS2StructColorIcon;
-                        break;
-
-                    case 'P':
-                        Type = BMPType::OS2ConstColorPointer;
-                        break;
-                }
-                break;
-
-            case 'I':
-                if ('C' == headerTag.ByteData[1])
-                {
-                    Type = BMPType::OS2StructIcon;
-                }
-                break;
-
-            case 'P':
-                if ('C' == headerTag.ByteData[1])
-                {
-                    Type = BMPType::OS2Pointer;
-                }
-                break;
-            default:
-                Type = BMPType::UnkownOrInavlid;
-                break;
-        }
+        Type = ConvertBMPType(type);
     }
 
     //---[ Parsing Header ]----------------------------------------------------
-    SizeOfFile = byteStream.ExtractIntegerAndMove(Endian::Little);
-    ReservedBlock = byteStream.ExtractIntegerAndMove(Endian::Little);
-    DataOffset = byteStream.ExtractIntegerAndMove(Endian::Little);
+    file.Read(SizeOfFile, Endian::Little);
+    file.Read(ReservedBlock, Endian::Little);
+    file.Read(DataOffset, Endian::Little);
     //-------------------------------------------------------------------------
 
-    //---[ DIP ]---------------------------------------------------------------
-    unsigned char result = byteStream.ExtractIntegerAndMove(Endian::Little);
-
-    // Get Header Version
+    //---[ DIP ]---------------------------------------------------------------    
     {
+        file.Read(InfoHeader.HeaderSize, Endian::Little);
 
-        //const unsigned char bitMapCoreHeaderSize = 12;
-        //const unsigned char os21XBitMapHeaderSize = 12;
-        //const unsigned char os22XBitMapHeaderSizeTypeA = 16;
-        //const unsigned char os22XBitMapHeaderSizeTypeB = 16;
-        const unsigned char bitMapInfoHeaderSize = 40;
-        const unsigned char bitMapV2InfoHeaderSize = 52;
-        const unsigned char bitMapV3InfoHeaderSize = 56;
-        const unsigned char bitMapV4HeaderSize = 108;
-        const unsigned char bitMapV5HeaderSize = 124;
+        InfoHeaderType = ConvertBMPInfoHeaderType(InfoHeader.HeaderSize);
 
-        switch (result)
+        switch (InfoHeaderType)
         {
-            case 12:
-                //type = BitMapInformationHeaderType::BitMapV5Header;
-                break;
+            case BMPInfoHeaderType::BitMapInfoHeader:
+            {
+                file.Read(InfoHeader.Width, Endian::Little);
+                file.Read(InfoHeader.Height, Endian::Little);
+                file.Read(InfoHeader.NumberOfColorPlanes, Endian::Little);
+                file.Read(InfoHeader.NumberOfBitsPerPixel, Endian::Little);
+                file.Read(InfoHeader.CompressionMethod, Endian::Little);
+                file.Read(InfoHeader.ImageSize, Endian::Little);
+                file.Read(InfoHeader.HorizontalResolution, Endian::Little);
+                file.Read(InfoHeader.VerticalResolution, Endian::Little);
+                file.Read(InfoHeader.NumberOfColorsInTheColorPalette, Endian::Little);
+                file.Read(InfoHeader.NumberOfImportantColorsUsed, Endian::Little);
 
-            case 16:
-                //type = BitMapInformationHeaderType::BitMapV5Header;
                 break;
+            }
 
-            case bitMapInfoHeaderSize:
-                InformationHeaderType = BMPInformationHeaderType::BitMapInfoHeader;
+            case BMPInfoHeaderType::OS21XBitMapHeader:
+            case BMPInfoHeaderType::OS22XBitMapHeader:
+            {
+                file.Read((unsigned short&)InfoHeader.Width, Endian::Little);
+                file.Read((unsigned short&)InfoHeader.Height, Endian::Little);
+                file.Read(InfoHeader.NumberOfColorPlanes, Endian::Little);
+                file.Read(InfoHeader.NumberOfBitsPerPixel, Endian::Little);
+
+                if (InfoHeaderType == BMPInfoHeaderType::OS22XBitMapHeader)
+                {               
+                    unsigned short paddingBytes = 0; // Padding.Ignored and should be zero                    
+
+                    file.Read(InfoHeader.HorizontalandVerticalResolutions, Endian::Little);
+                    file.Read(paddingBytes, Endian::Little);
+                    file.Read(InfoHeader.DirectionOfBits, Endian::Little);
+                    file.Read(InfoHeader.halftoningAlgorithm, Endian::Little);
+
+                    file.Read(InfoHeader.HalftoningParameterA, Endian::Little);
+                    file.Read(InfoHeader.HalftoningParameterB, Endian::Little);
+                    file.Read(InfoHeader.ColorEncoding, Endian::Little);
+                    file.Read(InfoHeader.ApplicationDefinedByte, Endian::Little);
+                }    
+
                 break;
-
-            case bitMapV2InfoHeaderSize:
-                InformationHeaderType = BMPInformationHeaderType::BitMapV2InfoHeader;
-                break;
-
-            case bitMapV3InfoHeaderSize:
-                InformationHeaderType = BMPInformationHeaderType::BitMapV3InfoHeader;
-                break;
-
-            case bitMapV4HeaderSize:
-                InformationHeaderType = BMPInformationHeaderType::BitMapV4Header;
-                break;
-
-            case bitMapV5HeaderSize:
-                InformationHeaderType = BMPInformationHeaderType::BitMapV5Header;
-                break;
-
+            }
             default:
-                InformationHeaderType = BMPInformationHeaderType::UnkownOrInvalid;
-                break;
+            {
+                // Unkown Header 
+                return ResourceLoadingResult::FormatNotSupported;
+            }
         }
-
-    }
-
-    switch (InformationHeaderType)
-    {
-        case BMPInformationHeaderType::BitMapInfoHeader:
-        {
-            BMPInfoHeader* bitMapInfoHeader = new BMPInfoHeader();
-
-            bitMapInfoHeader->HeaderSize = result;
-            bitMapInfoHeader->Width = byteStream.ExtractIntegerAndMove(Endian::Little);
-            bitMapInfoHeader->Height = byteStream.ExtractIntegerAndMove(Endian::Little);
-            bitMapInfoHeader->NumberOfColorPlanes = byteStream.ExtractShortAndMove(Endian::Little);
-            bitMapInfoHeader->NumberOfBitsPerPixel = byteStream.ExtractShortAndMove(Endian::Little);
-            bitMapInfoHeader->CompressionMethod = byteStream.ExtractIntegerAndMove(Endian::Little);
-            bitMapInfoHeader->ImageSize = byteStream.ExtractIntegerAndMove(Endian::Little);
-            bitMapInfoHeader->HorizontalResolution = byteStream.ExtractIntegerAndMove(Endian::Little);
-            bitMapInfoHeader->VerticalResolution = byteStream.ExtractIntegerAndMove(Endian::Little);
-            bitMapInfoHeader->NumberOfColorsInTheColorPalette = byteStream.ExtractIntegerAndMove(Endian::Little);
-            bitMapInfoHeader->NumberOfImportantColorsUsed = byteStream.ExtractIntegerAndMove(Endian::Little);
-
-            InformationHeader = bitMapInfoHeader;
-
-
-            // Copy Data (Make a bit redundant data)
-            Width = bitMapInfoHeader->Width;
-            Height = bitMapInfoHeader->Height;
-
-            bitsPerPixel = bitMapInfoHeader->NumberOfBitsPerPixel;
-        }
-
-        break;
-    }
+    }    
     //-----------------------------------------------------------    
 
-    //---[ Pixel Data ]--------------------------------------------------------    
-    unsigned int pixelIndex = 0;
-    unsigned int length = byteStream.DataLength;
-    unsigned int bytesPerPixel = (bitsPerPixel / 8);
-    unsigned int pixelDataRowSize = Width * bytesPerPixel;
-    unsigned int pixelDataSize = pixelDataRowSize * Height;
+    //---[ Pixel Data ]--------------------------------------------------------  
+    unsigned int bytesPerPixel = (InfoHeader.NumberOfBitsPerPixel / 8);
+    unsigned int pixelDataRowSize = InfoHeader.Width * bytesPerPixel;
+    PixelDataSize = pixelDataRowSize * InfoHeader.Height;
 
     unsigned int paddingSize = pixelDataRowSize % 4;
     unsigned int rowSize = pixelDataRowSize + paddingSize;
 
-    unsigned char* cursorEndOfFile = byteStream.StartAdress + byteStream.DataLength;
-    unsigned char* cursorInputData = byteStream.StartAdress + byteStream.CurrentPosition;
-    unsigned char* cursorOutPutData = 0;
-
-    PixelDataSize = pixelDataSize;
-    PixelData = (unsigned char*)malloc(pixelDataSize);
-
-    cursorOutPutData = PixelData;
-
-    while (cursorInputData < cursorEndOfFile)
+    PixelData = (unsigned char*)malloc(PixelDataSize * sizeof(unsigned char));
+   
+    for (size_t pixelDataOffset = 0 ; file.DataCursorPosition < file.DataSize ; )
     {
-        memcpy(cursorOutPutData, cursorInputData, pixelDataRowSize); // Copy row to data buffer
+        file.Read(PixelData + pixelDataOffset, pixelDataRowSize);
 
-        cursorOutPutData += pixelDataRowSize; // Move to next row
-        cursorInputData += pixelDataRowSize + paddingSize; // Move data, row + padding(padding can be 0)
+        pixelDataOffset += pixelDataRowSize;
+        file.DataCursorPosition += paddingSize; // Move data, row + padding(padding can be 0)
     }
 }
 
-void BF::BMP::Save(const char* filePath)
+BF::ResourceLoadingResult BF::BMP::Save(const char* filePath)
 {
-    unsigned int paddingSize = 0;
-    unsigned int fileSize = DataOffset + PixelDataSize + paddingSize;
-    unsigned char* fileData = (unsigned char*)malloc(fileSize);
-    char Header[3] = "BM";
-
-    ByteStreamHusk bytestream(fileData, fileSize);
-
-    bytestream.InsertArrayAndMove(Header, 2);
-    bytestream.InsertIngegerAndMove(Endian::Little, SizeOfFile);
-    bytestream.InsertIngegerAndMove(Endian::Little, ReservedBlock);
-    bytestream.InsertIngegerAndMove(Endian::Little, DataOffset);
+    File file(filePath, SizeOfFile);
+ 
+    file.Write("BM", 2u);
+    file.Write(SizeOfFile, Endian::Little);
+    file.Write(ReservedBlock, Endian::Little);
+    file.Write(DataOffset, Endian::Little);
 
     //------<Windows-Header>-----------
-    BMPInfoHeader* bitMapInfoHeader = (BMPInfoHeader*)InformationHeader;
+    file.Write(InfoHeader.HeaderSize, Endian::Little);
+    file.Write(InfoHeader.Width, Endian::Little);
+    file.Write(InfoHeader.Height, Endian::Little);
+    file.Write(InfoHeader.NumberOfColorPlanes, Endian::Little);
+    file.Write(InfoHeader.NumberOfBitsPerPixel, Endian::Little);
+    file.Write(InfoHeader.CompressionMethod, Endian::Little);
+    file.Write(InfoHeader.ImageSize, Endian::Little);
+    file.Write(InfoHeader.HorizontalResolution, Endian::Little);
+    file.Write(InfoHeader.VerticalResolution, Endian::Little);
+    file.Write(InfoHeader.NumberOfColorsInTheColorPalette, Endian::Little);
+    file.Write(InfoHeader.NumberOfImportantColorsUsed, Endian::Little);
 
-    bytestream.InsertIngegerAndMove(Endian::Little, bitMapInfoHeader->HeaderSize);
-    bytestream.InsertIngegerAndMove(Endian::Little, bitMapInfoHeader->Width);
-    bytestream.InsertIngegerAndMove(Endian::Little, bitMapInfoHeader->Height);
-    bytestream.InsertShortAndMove(Endian::Little, bitMapInfoHeader->NumberOfColorPlanes);
-    bytestream.InsertShortAndMove(Endian::Little, bitMapInfoHeader->NumberOfBitsPerPixel);
-    bytestream.InsertIngegerAndMove(Endian::Little, bitMapInfoHeader->CompressionMethod);
-    bytestream.InsertIngegerAndMove(Endian::Little, bitMapInfoHeader->ImageSize);
-    bytestream.InsertIngegerAndMove(Endian::Little, bitMapInfoHeader->HorizontalResolution);
-    bytestream.InsertIngegerAndMove(Endian::Little, bitMapInfoHeader->VerticalResolution);
-    bytestream.InsertIngegerAndMove(Endian::Little, bitMapInfoHeader->NumberOfColorsInTheColorPalette);
-    bytestream.InsertIngegerAndMove(Endian::Little, bitMapInfoHeader->NumberOfImportantColorsUsed);
+    file.Write(PixelData, PixelDataSize);
 
-    bytestream.InsertArrayAndMove(PixelData, PixelDataSize);
+    file.WriteToDisk();
 
-    File::WriteToDisk(filePath, (char*)fileData, fileSize);
-
-    free(fileData);
+    return ResourceLoadingResult::Successful;
 }
 
-void BF::BMP::ConvertFrom(Image& image)
+BF::ResourceLoadingResult BF::BMP::ConvertFrom(Image& image)
 {
-    Height = image.Height;
-    Width = image.Width;
-
     PixelData = (unsigned char*)malloc(image.PixelDataSize);
+
+    if (!PixelData)
+    {
+        return ResourceLoadingResult::OutOfMemory;
+    }
+
     PixelDataSize = image.PixelDataSize;
 
     DataOffset = 54u;
-    SizeOfFile = PixelDataSize + DataOffset;  
+    unsigned int padding = 0;
+    unsigned int imageSize = PixelDataSize + padding; 
 
-    BMPInfoHeader* bitMapInfoHeader = new BMPInfoHeader();
-    InformationHeader = bitMapInfoHeader;
+    SizeOfFile = imageSize + DataOffset;
 
-    bitMapInfoHeader->HeaderSize = 40u;
-
-    bitMapInfoHeader->Width = Width;
-    bitMapInfoHeader->Height = Height;
-    bitMapInfoHeader->NumberOfColorPlanes = 1u;
-    bitMapInfoHeader->NumberOfBitsPerPixel = 24u;
-    bitMapInfoHeader->CompressionMethod = 0u; // None
-    bitMapInfoHeader->ImageSize = PixelDataSize;
-    bitMapInfoHeader->HorizontalResolution = 1u;
-    bitMapInfoHeader->VerticalResolution = 1u;
-    bitMapInfoHeader->NumberOfColorsInTheColorPalette = 0u;
-    bitMapInfoHeader->NumberOfImportantColorsUsed = 0u;
+    InfoHeader.Width = image.Width;
+    InfoHeader.Height = image.Height;
+    InfoHeader.ImageSize = imageSize;
 
     memcpy(PixelData, image.PixelData, PixelDataSize);
+
+    return ResourceLoadingResult::Successful;
 }
 
-void BF::BMP::ConvertTo(Image& image)
-{
-    unsigned int pixelDataSize = PixelDataSize;
-    unsigned char* destination = nullptr;
-    unsigned char* source = PixelData;    
-  
-    image.Format = ImageFormat::BGR;
-    image.Height = Height;
-    image.Width = Width;    
-    image.PixelDataSize = Height * Width * 3;
-    image.PixelData = (unsigned char*)malloc(image.PixelDataSize);
+BF::ResourceLoadingResult BF::BMP::ConvertTo(Image& image)
+{    
+    size_t pixelDataSize = InfoHeader.Height * InfoHeader.Width * 3;
+    void* pixelData = malloc(PixelDataSize);
 
-    memcpy(image.PixelData, source, image.PixelDataSize);
+    if (!pixelData)
+    {
+        return ResourceLoadingResult::OutOfMemory;
+    }
+
+    image.Format = ImageFormat::BGR;
+    image.Height = InfoHeader.Height;
+    image.Width = InfoHeader.Width;
+    image.PixelDataSize = pixelDataSize;
+    image.PixelData = (unsigned char*)pixelData;
+
+    memcpy(image.PixelData, PixelData, image.PixelDataSize);
 
     image.FlipHorizontal();
     //image.RemoveColor(0,0,0);
-}
 
-void BF::BMP::PrintContent()
-{
-    printf("[BitMap] (.bmp)");
-    printf("Type      : %u\n", Type);
-    //printf("SizeOfFile: %i\n", bitMap.Header.SizeOfFile);
-   // printf("Unsued    : %i\n", bitMap.Header.ActualSizeOfFile);
-   // printf("DataOffset: %i\n", bitMap.Header.DataOffset);
-
-    switch (InformationHeaderType)
-    {
-        case BMPInformationHeaderType::BitMapInfoHeader:
-
-            BMPInfoHeader* bitMapInfoHeader = (BMPInfoHeader*)(InformationHeader);
-
-            printf("Size : %u\n", bitMapInfoHeader->HeaderSize);
-            printf("Width : %i\n", bitMapInfoHeader->Width);
-            printf("Height : %i\n", bitMapInfoHeader->Height);
-            printf("NumberOfColorPlanes : %u\n", bitMapInfoHeader->NumberOfColorPlanes);
-            printf("NumberOfBitsPerPixel : %u\n", bitMapInfoHeader->NumberOfBitsPerPixel);
-            printf("CompressionMethod : %u\n", bitMapInfoHeader->CompressionMethod);
-            printf("ImageSize : %u\n", bitMapInfoHeader->ImageSize);
-            printf("HorizontalResolution : %i\n", bitMapInfoHeader->HorizontalResolution);
-            printf("VerticalResolution : %i\n", bitMapInfoHeader->VerticalResolution);
-            printf("NumberOfColorsInTheColorPalette : %u\n", bitMapInfoHeader->NumberOfColorsInTheColorPalette);
-            printf("NumberOfImportantColorsUsed : %u\n", bitMapInfoHeader->NumberOfImportantColorsUsed);
-
-            break;
-    }
+    return ResourceLoadingResult::Successful;
 }
