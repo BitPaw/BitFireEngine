@@ -220,6 +220,11 @@ BF::ResourceLoadingResult BF::File::WriteToDisk()
 {
 	FILE* file = fopen(Path, "wb");
 
+	if (!file)
+	{
+		return BF::ResourceLoadingResult::FileNotFound;
+	}
+
 	size_t writtenBytes = fwrite(Data, sizeof(char), DataSize, file);
 
 	int closeResult = fclose(file);

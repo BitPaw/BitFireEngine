@@ -5,10 +5,6 @@
 BF::BMP::BMP()
 {
     Type = BMPType::UnkownOrInavlid;
-    SizeOfFile = -1;
-    ReservedBlock = 0;
-    DataOffset = -1;
-
 	InfoHeaderType = BMPInfoHeaderType::UnkownOrInvalid;
 
     PixelDataSize = 0;
@@ -30,19 +26,20 @@ BF::ResourceLoadingResult BF::BMP::Load(const char* filePath)
         return resourceLoadingResult;
     }
 
-    //-- Parsing Header Tag
+    //---[ Parsing Header ]----------------------------------------------------
     {
         unsigned char type[2];
+        unsigned int sizeOfFile = 0;
+        unsigned int reservedBlock = 0;
+        unsigned int dataOffset = 0;
 
         file.Read(type, 2u);
+        file.Read(sizeOfFile, Endian::Little);
+        file.Read(reservedBlock, Endian::Little);
+        file.Read(dataOffset, Endian::Little);
 
         Type = ConvertBMPType(type);
     }
-
-    //---[ Parsing Header ]----------------------------------------------------
-    file.Read(SizeOfFile, Endian::Little);
-    file.Read(ReservedBlock, Endian::Little);
-    file.Read(DataOffset, Endian::Little);
     //-------------------------------------------------------------------------
 
     //---[ DIP ]---------------------------------------------------------------    
@@ -68,7 +65,6 @@ BF::ResourceLoadingResult BF::BMP::Load(const char* filePath)
 
                 break;
             }
-
             case BMPInfoHeaderType::OS21XBitMapHeader:
             case BMPInfoHeaderType::OS22XBitMapHeader:
             {
@@ -124,12 +120,13 @@ BF::ResourceLoadingResult BF::BMP::Load(const char* filePath)
 
 BF::ResourceLoadingResult BF::BMP::Save(const char* filePath)
 {
-    File file(filePath, SizeOfFile);
+    size_t fileSize = InfoHeader.Width * InfoHeader.Height * 3 + 54u;
+    File file(filePath, fileSize);
  
     file.Write("BM", 2u);
-    file.Write(SizeOfFile, Endian::Little);
-    file.Write(ReservedBlock, Endian::Little);
-    file.Write(DataOffset, Endian::Little);
+    file.Write(fileSize, Endian::Little);
+    file.Write(0u, Endian::Little);
+    file.Write(54u, Endian::Little);
 
     //------<Windows-Header>-----------
     file.Write(InfoHeader.HeaderSize, Endian::Little);
@@ -162,15 +159,9 @@ BF::ResourceLoadingResult BF::BMP::ConvertFrom(Image& image)
 
     PixelDataSize = image.PixelDataSize;
 
-    DataOffset = 54u;
-    unsigned int padding = 0;
-    unsigned int imageSize = PixelDataSize + padding; 
-
-    SizeOfFile = imageSize + DataOffset;
-
     InfoHeader.Width = image.Width;
     InfoHeader.Height = image.Height;
-    InfoHeader.ImageSize = imageSize;
+    InfoHeader.ImageSize = PixelDataSize;
 
     memcpy(PixelData, image.PixelData, PixelDataSize);
 
