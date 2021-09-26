@@ -22,5 +22,7 @@ namespace BF
 		unsigned int CRC;
 
 		void Validate();
+
+		PNGChunk();	
 	};
 }

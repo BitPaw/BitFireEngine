@@ -15,3 +15,9 @@ void BF::PNGChunk::Validate()
 	// 0 (uppercase) = unsafe to copy, 1 (lowercase) = safe to copy.
 
 }
+
+BF::PNGChunk::PNGChunk()
+{
+	Lengh = 0;
+	CRC = 0;
+}

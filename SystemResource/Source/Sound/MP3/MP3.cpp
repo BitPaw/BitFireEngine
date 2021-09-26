@@ -11,9 +11,8 @@ void BF::MP3::Load(const char* filePath)
 	MP3Header mp3Header;
 	MPEGAudioTag mpegAudioTag;
 
-	file.Read();
-
-	ByteStreamHusk byteStreamHusk((unsigned char*)&file.Data[0], file.Size);
+	file.ReadFromDisk();
+	ByteStreamHusk byteStreamHusk(file.Data, file.DataSize);
 
 	char rawHeader[4];
 

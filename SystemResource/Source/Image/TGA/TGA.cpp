@@ -2,6 +2,123 @@
 #include "../../File/File.h"
 #include "../../Types/Endian.h"
 #include "../../Container/ByteStreamHusk.h"
+#include <cassert>
+
+BF::TGAImageDataType BF::TGA::ConvertImageDataType(unsigned char id)
+{
+	switch (id)
+	{
+		case 0u:
+			return TGAImageDataType::NoImageDataIsPresent;
+
+		case 1u:
+			return TGAImageDataType::UncompressedColorMapped;
+
+		case 2u:
+			return TGAImageDataType::UncompressedTrueColor;
+
+		case 3u:
+			return TGAImageDataType::UncompressedBlackAndWhite;
+
+		case 9u:
+			return TGAImageDataType::RunLengthEncodedColorMapped;
+
+		case 10u:
+			return TGAImageDataType::RunLengthEncodedTrueColor;
+
+		case 11u:
+			return TGAImageDataType::RunLengthEncodedBlackAndWhite;
+
+		default:
+			return TGAImageDataType::UnkownImageDataType;
+	}
+}
+
+unsigned char BF::TGA::ConvertImageDataType(TGAImageDataType imageDataType)
+{
+	switch (imageDataType)
+	{
+		default:
+		case BF::TGAImageDataType::UnkownImageDataType:
+			return -1;
+
+		case BF::TGAImageDataType::NoImageDataIsPresent:
+			return 0;
+
+		case BF::TGAImageDataType::UncompressedColorMapped:
+			return 1u;
+
+		case BF::TGAImageDataType::UncompressedTrueColor:
+			return 2u;
+
+		case BF::TGAImageDataType::UncompressedBlackAndWhite:
+			return 3u;
+
+		case BF::TGAImageDataType::RunLengthEncodedColorMapped:
+			return 9u;
+
+		case BF::TGAImageDataType::RunLengthEncodedTrueColor:
+			return 10u;
+
+		case BF::TGAImageDataType::RunLengthEncodedBlackAndWhite:
+			return 11u;
+	}
+}
+
+BF::TGABitsPerPixel BF::TGA::ConvertPixelDepth(unsigned char pixelDepth)
+{
+	switch (pixelDepth)
+	{
+		case 1u:
+			return TGABitsPerPixel::X1;
+
+		case 8u:
+			return TGABitsPerPixel::X8;
+
+		case 15u:
+			return TGABitsPerPixel::X15;
+
+		case 16u:
+			return TGABitsPerPixel::X16;
+
+		case 24u:
+			return TGABitsPerPixel::X24;
+
+		case 32u:
+			return TGABitsPerPixel::X32;
+
+		default:
+			return TGABitsPerPixel::Invalid;
+	}
+}
+
+unsigned char BF::TGA::ConvertPixelDepth(TGABitsPerPixel bitsPerPixel)
+{
+	switch (bitsPerPixel)
+	{
+		default:
+		case BF::TGABitsPerPixel::Invalid:
+			return -1;
+
+		case BF::TGABitsPerPixel::X1:
+			return 1u;
+
+		case BF::TGABitsPerPixel::X8:
+			return 8u;
+
+		case BF::TGABitsPerPixel::X15:
+			return 15u;
+
+		case BF::TGABitsPerPixel::X16:
+			return 16u;
+
+		case BF::TGABitsPerPixel::X24:
+			return 24u;
+
+		case BF::TGABitsPerPixel::X32:
+			return 32u;
+	}
+}
 
 BF::TGA::TGA()
 {
@@ -15,8 +132,8 @@ BF::TGA::TGA()
 	PixelDepth = TGABitsPerPixel::X1;
 	ImageDescriptor = 0;
 
-	ImageIDSize = 0;
-	ImageID = nullptr; 
+	ImageInformationSize = 0;
+	ImageInformation = nullptr;
 	ColorMapDataSize = 0;
 	ColorMapData = nullptr;
 	ImageDataSize = 0;
@@ -25,146 +142,74 @@ BF::TGA::TGA()
 
 BF::TGA::~TGA()
 {
-	free(ImageID);
+	free(ImageInformation);
 	free(ColorMapData);
 	free(ImageData);
 }
 
-void BF::TGA::Load(const char* filePath)
+BF::ResourceLoadingResult BF::TGA::Load(const char* filePath)
 {
-	File file(filePath);
-	file.Read();
-
-	ByteStreamHusk byteSteam((unsigned char*)file.Data, file.Size);
-
 	unsigned int footerEntryIndex = 0;
 	unsigned char imageIDLengh = 0;
 	unsigned short colorPaletteChunkEntryIndex = 0;
 	unsigned short colorPaletteChunkSize = 0;
 	unsigned char colorPaletteEntrySizeInBits = 0;
 	unsigned char imageTypeValue = 0;
-	unsigned char pixelDepth = 0;	
-
+	unsigned char pixelDepth = 0;
 	unsigned int extensionOffset = 0;
 	unsigned int developerAreaOffset = 0;
 	unsigned int firstFieldAfterHeader = 0;
+	File file(filePath);
+	ResourceLoadingResult loadingResult = file.ReadFromDisk();
+
+	if (loadingResult != ResourceLoadingResult::Successful)
+	{
+		return loadingResult;
+	}
 
 	//---[ Parse Header ]-------------------------------
-	imageIDLengh = byteSteam.ExtractByteAndMove();
-	ColorPaletteType = byteSteam.ExtractByteAndMove();
-	imageTypeValue = byteSteam.ExtractByteAndMove();
+	file.Read(imageIDLengh);
+	file.Read(ColorPaletteType);
+	file.Read(imageTypeValue);
 
-	colorPaletteChunkEntryIndex = byteSteam.ExtractShortAndMove(Endian::Little);
-	colorPaletteChunkSize = byteSteam.ExtractShortAndMove(Endian::Little);
-	colorPaletteEntrySizeInBits = byteSteam.ExtractByteAndMove();
+	file.Read(colorPaletteChunkEntryIndex, Endian::Little);
+	file.Read(colorPaletteChunkSize, Endian::Little);
+	file.Read(colorPaletteEntrySizeInBits);
 
-	OriginX = byteSteam.ExtractShortAndMove(Endian::Little);
-	OriginY = byteSteam.ExtractShortAndMove(Endian::Little);
-	Width = byteSteam.ExtractShortAndMove(Endian::Little);
-	Height = byteSteam.ExtractShortAndMove(Endian::Little);
-	pixelDepth = byteSteam.ExtractByteAndMove();
-	ImageDescriptor = byteSteam.ExtractByteAndMove();
+	file.Read(OriginX, Endian::Little);
+	file.Read(OriginY, Endian::Little);
+	file.Read(Width, Endian::Little);
+	file.Read(Height, Endian::Little);
+	file.Read(pixelDepth);
+	file.Read(ImageDescriptor);
 
-	switch (imageTypeValue)
-	{
-		case 0:
-			ImageDataType = TGAImageDataType::NoImageDataIsPresent;
-			break;
-
-		case 1:
-			ImageDataType = TGAImageDataType::UncompressedColorMapped;
-			break;
-
-		case 2:
-			ImageDataType = TGAImageDataType::UncompressedTrueColor;
-			break;
-
-		case 3:
-			ImageDataType = TGAImageDataType::UncompressedBlackAndWhite;
-			break;
-
-		case 9:
-			ImageDataType = TGAImageDataType::RunLengthEncodedColorMapped;
-			break;
-
-		case 10:
-			ImageDataType = TGAImageDataType::RunLengthEncodedTrueColor;
-			break;
-
-		case 11:
-			ImageDataType = TGAImageDataType::RunLengthEncodedBlackAndWhite;
-			break;
-
-		default:
-			throw "Invalid image Type";
-	}
-
-	switch (pixelDepth)
-	{
-		case 1:
-			PixelDepth = TGABitsPerPixel::X1;
-			break;
-
-		case 8:
-			PixelDepth = TGABitsPerPixel::X8;
-			break;
-
-		case 15:
-			PixelDepth = TGABitsPerPixel::X15;
-			break;
-
-		case 16:
-			PixelDepth = TGABitsPerPixel::X16;
-			break;
-
-		case 24:
-			PixelDepth = TGABitsPerPixel::X24;
-			break;
-
-		case 32:
-			PixelDepth = TGABitsPerPixel::X32;
-			break;
-
-		default:
-			PixelDepth = TGABitsPerPixel::Invalid;
-	}
-
+	ImageDataType = ConvertImageDataType(imageTypeValue);
+	PixelDepth = ConvertPixelDepth(pixelDepth);	
 	//----------------------------------------------------
 
 	//---[Parse Image ID]--------------
 	if (imageIDLengh > 0)
 	{
-		ImageID = (unsigned char*)malloc(imageIDLengh);
-		ImageIDSize = imageIDLengh;
+		ImageInformationSize = imageIDLengh;
+		ImageInformation = (unsigned char*)malloc(imageIDLengh);
 
-		unsigned char* source = &byteSteam.StartAdress[byteSteam.CurrentPosition];
-
-		memcpy(ImageID, source, imageIDLengh);
-
-		byteSteam.CurrentPosition += imageIDLengh;
+		file.Read(ImageInformation, ImageInformationSize);
 	}
 	//----------------------------------
 
 	//---[Parse Color-Palette]----------
 	if (colorPaletteChunkSize > 0)
 	{
-		byteSteam.CurrentPosition += colorPaletteChunkSize;
+		file.DataCursorPosition += colorPaletteChunkSize;
 	}
 	//--------------------------------
 
 	//---[ ImageData ]------------------
 	{
-		unsigned char* destination = nullptr;
-		unsigned char* source = nullptr;
-
 		ImageDataSize = Width * Height * (pixelDepth / 8);
 		ImageData = (unsigned char*)malloc(ImageDataSize);
 
-		source = &byteSteam.StartAdress[byteSteam.CurrentPosition];
-
-		memcpy(ImageData, source, ImageDataSize);
-
-		byteSteam.CurrentPosition += ImageDataSize;
+		file.Read(ImageData, ImageDataSize);
 	}
 	//-----------------------------------------------------------------
 	
@@ -173,9 +218,8 @@ void BF::TGA::Load(const char* filePath)
 	{
 		const unsigned int stringLengh = 18;
 		unsigned int compareLength = stringLengh;
-		unsigned char lastCharacter = byteSteam.StartAdress[byteSteam.DataLength];
-		unsigned char* string = &byteSteam.StartAdress[byteSteam.DataLength - stringLengh+1];
-		char truevisionString[stringLengh] = "TRUEVISION-XFILE.";
+		unsigned char lastCharacter = file.Data[file.DataSize-1];
+		char* string = &file.Data[file.DataSize - stringLengh];
 		bool isTGAVersionTwo = false;
 		
 		if (lastCharacter == '.')
@@ -184,29 +228,29 @@ void BF::TGA::Load(const char* filePath)
 			string++;
 		}
 
-		footerEntryIndex = byteSteam.DataLength - compareLength + 1 - 8u;
+		footerEntryIndex = file.DataSize - (26u -1u);
 
-		isTGAVersionTwo = memcmp(truevisionString, string, compareLength-1) == 0; // Is this string at this address?;
+		isTGAVersionTwo = memcmp("TRUEVISION-XFILE.", string, compareLength-1) == 0; // Is this string at this address?;
 
 		if (!isTGAVersionTwo) // Is this a TGA v.1.0 file?
 		{
-			return; // Parsing finished. There should be no more data to parse. End of file.
+			return ResourceLoadingResult::Successful; // Parsing finished. There should be no more data to parse. End of file.
 		}
 	}
 	
-	firstFieldAfterHeader = byteSteam.CurrentPosition;
+	firstFieldAfterHeader = file.DataCursorPosition;
 
 	//---[ Parse Footer ]--------------------------------------------------------
-	byteSteam.CurrentPosition = footerEntryIndex; // Move 26 Bytes before the end. Start of the TGA-Footer.
+	file.DataCursorPosition = footerEntryIndex; // Move 26 Bytes before the end. Start of the TGA-Footer.
 
-	extensionOffset = byteSteam.ExtractIntegerAndMove(Endian::Little);
-	developerAreaOffset = byteSteam.ExtractIntegerAndMove(Endian::Little);
+	file.Read(extensionOffset, Endian::Little);
+	file.Read(developerAreaOffset, Endian::Little);
 	//---------------------------------------------------------------------------
 
 	//---------------------------------------------------------------------------
 	if (developerAreaOffset > 0)
 	{
-		byteSteam.CurrentPosition = developerAreaOffset;// Jump to Developer Block
+		file.DataCursorPosition = developerAreaOffset;// Jump to Developer Block
 		// Parse Developer Fields
 		// Parse Developer Directory
 	}
@@ -215,47 +259,50 @@ void BF::TGA::Load(const char* filePath)
 	//---[ Extension Area ]--------------------------------------------------------
 	if (extensionOffset > 0)
 	{
-		byteSteam.CurrentPosition = extensionOffset; // Jump to Extension Header
+		unsigned short extensionSize = 0;
 
-		unsigned short extensionSize = byteSteam.ExtractShortAndMove(Endian::Little);
+		file.DataCursorPosition = extensionOffset; // Jump to Extension Header
+		file.Read(extensionSize, Endian::Little);
 
 		if (extensionSize != 495u)
 		{
 			throw "Inavlid ExtensionSize";
 		}
 
-		byteSteam.CopyBytesAndMove(AuthorName, 41u);
-		byteSteam.CopyBytesAndMove(AuthorComment, 324u);
+		file.Read(AuthorName, 41u);
+		file.Read(AuthorComment, 324u);
 
-		DateTimeMonth = byteSteam.ExtractShortAndMove(Endian::Little);
-		JobTimeDay = byteSteam.ExtractShortAndMove(Endian::Little);
-		JobTimeYear = byteSteam.ExtractShortAndMove(Endian::Little);
-		JobTimeHour = byteSteam.ExtractShortAndMove(Endian::Little);
-		JobTimeMinute = byteSteam.ExtractShortAndMove(Endian::Little);
-		JobTimeSecond = byteSteam.ExtractShortAndMove(Endian::Little);
+		// 12 Bytes
+		file.Read(DateTimeMonth, Endian::Little);
+		file.Read(JobTimeDay, Endian::Little);
+		file.Read(JobTimeYear, Endian::Little);
+		file.Read(JobTimeHour, Endian::Little);
+		file.Read(JobTimeMinute, Endian::Little);
+		file.Read(JobTimeSecond, Endian::Little);
 
-		byteSteam.CopyBytesAndMove(JobID, 41u);
+		file.Read(JobID, 41u);
 
-		JobTimeHours = byteSteam.ExtractShortAndMove(Endian::Little);
-		JobTimeMinutes = byteSteam.ExtractShortAndMove(Endian::Little);
-		JobTimeSeconds = byteSteam.ExtractShortAndMove(Endian::Little);
+		// 6 Bytes
+		file.Read(JobTimeHours, Endian::Little); 
+		file.Read(JobTimeMinutes, Endian::Little);
+		file.Read(JobTimeSeconds, Endian::Little);		
 
-		byteSteam.CurrentPosition += 12;
+		file.DataCursorPosition += 12u;
 
-		byteSteam.CopyBytesAndMove(SoftwareName, 41u);
+		file.Read(SoftwareName, 41u);
 
-		VersionNumber = byteSteam.ExtractShortAndMove(Endian::Little);;
-		SoftwareVersion = byteSteam.ExtractByteAndMove();
+		file.Read(VersionNumber, Endian::Little);
+		file.Read(SoftwareVersion);
 
-		BackGroundColor = byteSteam.ExtractIntegerAndMove(Endian::Little);
-		PixelAspectRatioCounter = byteSteam.ExtractByteAndMove();
-		PixelAspectRatioDenominator = byteSteam.ExtractByteAndMove();
-		GammaCounter = byteSteam.ExtractByteAndMove();
-		GammaDenominator = byteSteam.ExtractByteAndMove();
-		ColorCorrectionOffset = byteSteam.ExtractIntegerAndMove(Endian::Little);
-		PostagestampOffset = byteSteam.ExtractIntegerAndMove(Endian::Little);
-		ScanlineOffset = byteSteam.ExtractIntegerAndMove(Endian::Little);
-		AttributesType = byteSteam.ExtractByteAndMove();
+		file.Read(BackGroundColor, Endian::Little);
+		file.Read(PixelAspectRatioCounter, Endian::Little);
+		file.Read(PixelAspectRatioDenominator, Endian::Little);
+		file.Read(GammaCounter, Endian::Little);
+		file.Read(GammaDenominator, Endian::Little);
+		file.Read(ColorCorrectionOffset, Endian::Little);
+		file.Read(PostagestampOffset, Endian::Little);
+		file.Read(ScanlineOffset, Endian::Little);
+		file.Read(AttributesType);
 
 		/*
 	if (ColorCorrectionOffset > 0)
@@ -274,11 +321,22 @@ void BF::TGA::Load(const char* filePath)
 	}*/
 	}
 	//-----------------------------------------------------------		
+
+	return ResourceLoadingResult::Successful;
 }
 
-void BF::TGA::Save(const char* filePath)
+BF::ResourceLoadingResult BF::TGA::Save(const char* filePath)
 {
 	const char footer[18] = "TRUEVISION-XFILE.";
+	unsigned int fileLength = 500;
+	File file(filePath, fileLength);
+
+
+	// Data Stuff
+
+	file.WriteToDisk();
+
+	return ResourceLoadingResult::Successful;
 }
 
 void BF::TGA::Convert(Image& image)

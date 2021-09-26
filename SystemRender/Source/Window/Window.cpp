@@ -201,7 +201,12 @@ void BF::Window::Resize(const unsigned int width, const unsigned int height)
 
 void BF::Window::SetCursorTexture(Image* image)
 {
-    GLFWimage flfwImage{ image->Width, image->Height, image->PixelData };
+    GLFWimage flfwImage
+    {
+        (int)image->Width,
+        (int)image->Height,
+        image->PixelData 
+    };
 
     _cursor = glfwCreateCursor(&flfwImage, 0, 0);
 
@@ -284,7 +289,12 @@ void BF::Window::SetIcon(Image* image)
 
     //image->FlipHorizontal();
 
-    GLFWimage flfwImage{ image->Width, image->Height, image->PixelData };
+    GLFWimage flfwImage
+    {
+        (int)image->Width,
+        (int)image->Height,
+        image->PixelData 
+    };
 
     glfwSetWindowIcon(_window, numberOfImages, &flfwImage);
 }

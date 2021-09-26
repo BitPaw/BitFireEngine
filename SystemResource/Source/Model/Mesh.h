@@ -9,10 +9,11 @@
 
 namespace BF
 {
+#define MeshNameSize 50u
 	class Mesh
 	{
 		public:
-		char Name[30];
+		char Name[MeshNameSize];
 
 		int ObjectBufferIndex;
 		Material* MeshMaterial;

@@ -180,11 +180,11 @@ void BF::UIText::SetText(AsciiString& text)
 			interpulatedTexturePoinWidthHeight.Y + interpulatedTexturePointXY.Y  // Left Upper
 		);
 
-		lastPosition += charSize.X + characterSpacingOffset;// +(fntCharacter->XAdvance);
+		lastPosition += charSize.X + (float)characterSpacingOffset;// +(fntCharacter->XAdvance);
 
 		if (character == ' ')
 		{
-			lastPosition += characterSpacingOffset * 10;
+			lastPosition += (float)(characterSpacingOffset * 10);
 		}
 
 		//---[Calculate Max-Width and Max-Height]--

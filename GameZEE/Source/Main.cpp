@@ -12,7 +12,6 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int nShowCmd)
 #else
 int main(int amountOFParameters, char** parameter)
 #endif  
-
 {
     try
     {

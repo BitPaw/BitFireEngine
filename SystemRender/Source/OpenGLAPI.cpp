@@ -40,7 +40,6 @@ void BF::OpenGLAPI::SkyBoxUse(SkyBox& skybox)
     OpenGLAPI::TextureUse(ImageType::TextureCubeContainer, skybox.ID);
 }
 
-
 void BF::OpenGLAPI::SkyBoxSet(SkyBox& skybox)
 {
     glGenTextures(1, &skybox.ID);
@@ -72,7 +71,7 @@ void BF::OpenGLAPI::SkyBoxSet(SkyBox& skybox)
 
     OpenGLAPI::VertexDataDefine(&skybox.VBOID, sizeof(float) * 108u, skybox.SkyboxVertices);
 
-    int vertexstuff[1] = { 3 };
+    unsigned int vertexstuff[1] = { 3 };
 
     OpenGLAPI::VertexAttributeArrayDefine(sizeof(float), 1, vertexstuff);
 
@@ -105,7 +104,7 @@ void BF::OpenGLAPI::DrawOrder(bool clockwise)
 
 void BF::OpenGLAPI::TextureUse(ImageType imageType, int textureID)
 {
-    assert(textureID != -1, "[BitFireEngine][OpenGL] TextureSlot -1 was selected. You can't do that.");
+    assert(textureID != -1);
 
    // glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
 
@@ -323,7 +322,7 @@ unsigned int BF::OpenGLAPI::ShaderCompile(unsigned int type, char* shaderString)
             int lengh;
 
             glGetShaderiv(id, GL_INFO_LOG_LENGTH, &lengh);
-            char* message = new char[lengh];
+            char* message = (char*)malloc(lengh * sizeof(char));
 
             glGetShaderInfoLog(id, lengh, &lengh, message);
 
@@ -339,7 +338,7 @@ unsigned int BF::OpenGLAPI::ShaderCompile(unsigned int type, char* shaderString)
                 message
             );
 
-            delete[] message;
+            free(message);
 
             glDeleteShader(id);
 
@@ -350,7 +349,7 @@ unsigned int BF::OpenGLAPI::ShaderCompile(unsigned int type, char* shaderString)
     return id;
 }
 
-void BF::OpenGLAPI::VertexAttributeArrayDefine(int sizeOfElement, int listSize, int* list)
+void BF::OpenGLAPI::VertexAttributeArrayDefine(unsigned int sizeOfElement, unsigned int listSize, unsigned int* list)
 {
     int offset = 0;
     int wholeBlockSize = 0;

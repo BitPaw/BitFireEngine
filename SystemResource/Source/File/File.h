@@ -8,18 +8,21 @@
 
 #include "../ResourceLoadingResult.hpp"
 #include "../Container/AsciiString.h"
+#include "../Types/Endian.h"
 
 namespace BF
 {
+#define FileLineBufferSize 255u
+
 	struct File
 	{
 		private:
 		ResourceLoadingResult CheckFile();
-		unsigned int _currentCursorPosition;
 
 		public:
-		unsigned int Size;
 		char* Data;
+		size_t DataSize;
+		size_t DataCursorPosition;
 
 		char Path[_MAX_PATH];
 		char Drive[_MAX_DRIVE];
@@ -28,24 +31,14 @@ namespace BF
 		char Extension[_MAX_EXT];
 
 		File(const char* filePath);
+		File(const char* filePath, size_t dataSize);	
 		~File();
 
-		ResourceLoadingResult Read();
-		static ResourceLoadingResult Read(const char* filePath, char** buffer);
-		static ResourceLoadingResult Read(const char* filePath, char** buffer, unsigned int maxSize);
-		ResourceLoadingResult Write();
-		static ResourceLoadingResult Write(const char* filePath, const char* content);
-		static ResourceLoadingResult Write(const char* filePath, const char* content, unsigned int length);
-		bool ReadNextLineInto(char* exportBuffer);
-
-		ResourceLoadingResult ReadAsLines(List<AsciiString>& lineList);
-
+		//---<Utility>--
 		bool DoesFileExist();
-		static bool DoesFileExist(const char* filePath);
-		static void GetFileExtension(AsciiString& path, AsciiString& extension);
-
 		int CountAmountOfLines();
-
+		static bool DoesFileExist(const char* filePath);
+		static void GetFileExtension(const char* filePath, const char* fileExtension);
 		void CursorToBeginning();
 
 		void Remove();
@@ -54,7 +47,40 @@ namespace BF
 
 		void Clear();
 
-		void ExtractAndSave(const char* filePath, unsigned int start, unsigned int length);
-		static void ExtractAndSave(const char* filePath, void* data, unsigned int length);
+		void SetFilePath(const char* filePath);
+		//---------------------------------------------------------------------
+
+		//---<Cursor>---
+		//---------------------------------------------------------------------
+
+		//---<Read>------------------------------------------------------------		
+		unsigned int ReadNextLineInto(char* exportBuffer);
+
+		void Read(bool& value);
+		void Read(char& value);
+		void Read(unsigned char& value);
+		void Read(short& value, Endian endian);
+		void Read(unsigned short& value, Endian endian);
+		void Read(int& value, Endian endian);
+		void Read(unsigned int& value, Endian endian);
+		void Read(void* value, size_t length);
+		ResourceLoadingResult ReadFromDisk();
+		static ResourceLoadingResult ReadFromDisk(const char* filePath, char** buffer);
+		static ResourceLoadingResult ReadFromDisk(const char* filePath, char** buffer, unsigned int maxSize);
+		//---------------------------------------------------------------------
+
+		//---<Write>----------------------------------------------------------------------
+		void Write(bool value);
+		void Write(char value);
+		void Write(unsigned char value);
+		void Write(short value, Endian endian);
+		void Write(unsigned short value, Endian endian);
+		void Write(int value, Endian endian);
+		void Write(unsigned int value, Endian endian);
+		void Write(const char* string, size_t length);
+		void Write(void* value, size_t length);
+		ResourceLoadingResult WriteToDisk();
+		static ResourceLoadingResult WriteToDisk(const char* filePath, const char* content, unsigned int length);
+		//---------------------------------------------------------------------
 	};
 }

@@ -27,7 +27,7 @@ namespace BF
 		static void RenderClear();
 
 		// Data
-		static void VertexAttributeArrayDefine(int sizeOfElement, int listSize, int* list);
+		static void VertexAttributeArrayDefine(unsigned int sizeOfElement, unsigned int listSize, unsigned int* list);
 
 		static void VertexArrayDefine(unsigned int* vertexArrayID);
 		static void VertexDataDefine(unsigned int* vertexID, int size, void* data);

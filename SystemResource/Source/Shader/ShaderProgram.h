@@ -9,10 +9,11 @@ namespace BF
 {
 	class ShaderProgram
 	{
-		protected:
 		public:
 		unsigned int ID;
 		Shader ShaderList[2];
+
+		ShaderProgram();
 
 		void AddShader(const char* vertexShaderPath, const char* fragmentShaderFilePath);
 		void Load();

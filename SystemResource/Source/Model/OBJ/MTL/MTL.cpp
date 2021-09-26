@@ -10,7 +10,7 @@ BF::MTL::MTL()
 
 BF::MTL::~MTL()
 {
-	delete[] MaterialList;
+	free(MaterialList);
 }
 
 void BF::MTL::Load(char* filePath)
@@ -26,10 +26,13 @@ void BF::MTL::Load(char* filePath)
 	const char _weightCharacter = 's';
 	//static const char _newMaterialCharacter = 'i';
 
+
 	File file(filePath);
-	file.Read();
+	file.ReadFromDisk();
 	unsigned int amountOfLines = file.CountAmountOfLines();
 	char currentLineBuffer[200];
+
+
 
 	// Count How many materials are needed
 	{
@@ -48,13 +51,14 @@ void BF::MTL::Load(char* filePath)
 		MaterialList = reinterpret_cast<MTLMaterial*>(calloc(MaterialListSize, sizeof(MTLMaterial)));
 	}
 
+
+
 	// Raw Parse
 	MTLMaterial* material = nullptr; // current material, has to be here, its state dependend
-	char dummyBuffer[20];
 
 	file.CursorToBeginning();
 
-	for (unsigned int line = 0; line < amountOfLines; line++)
+	for (unsigned int line = 0; line <= amountOfLines; line++)
 	{
 		file.ReadNextLineInto(currentLineBuffer);
 		char commandChar = currentLineBuffer[0];
@@ -63,8 +67,7 @@ void BF::MTL::Load(char* filePath)
 		{
 			case 'm':
 			{
-				sscanf(currentLineBuffer, "%s %s", dummyBuffer, material->TextureFilePath);
-
+				AsciiString::Parse(currentLineBuffer, "§s", material->TextureFilePath);
 				break;
 			}
 
@@ -72,7 +75,9 @@ void BF::MTL::Load(char* filePath)
 			{
 				material = &MaterialList[materialIndex++];
 
-				sscanf(currentLineBuffer, "%s %s", dummyBuffer, material->Name);
+				strncpy(material->TextureFilePath, "<internal>", MTLFilePath);
+
+				AsciiString::Parse(currentLineBuffer, "§s", material->Name);
 
 				break;
 			}
@@ -97,7 +102,7 @@ void BF::MTL::Load(char* filePath)
 					}					
 				}
 
-				sscanf(currentLineBuffer, "%s %f", dummyBuffer, value);
+				AsciiString::Parse(currentLineBuffer, "§f", value);
 
 				break;
 			}
@@ -135,15 +140,14 @@ void BF::MTL::Load(char* filePath)
 					}
 				}
 
-				sscanf(currentLineBuffer, "%s %f %f %f", dummyBuffer, &colorVector[0], &colorVector[1], &colorVector[2]);
+				AsciiString::Parse(currentLineBuffer, "§fff", &colorVector[0], &colorVector[1], &colorVector[2]);
 
 				break;
 			}
 
 			case 'd':
 			{
-				sscanf(currentLineBuffer, "%s %f", dummyBuffer, &material->Dissolved);
-
+				AsciiString::Parse(currentLineBuffer, "§f", &material->Dissolved);
 				break;
 			}
 
@@ -152,7 +156,7 @@ void BF::MTL::Load(char* filePath)
 				IlluminationMode mode = IlluminationMode::None;
 				int number = -1;
 
-				sscanf(currentLineBuffer, "%s %i", dummyBuffer, &number);
+				AsciiString::Parse(currentLineBuffer, "§i", &number);
 
 				switch (number)
 				{

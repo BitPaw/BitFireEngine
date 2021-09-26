@@ -5,12 +5,19 @@
 
 #include "../Image.h"
 
+#include "../../Compression/ZLIB/ZLIBHeader.h"
 #include "../../Container/LinkedList.hpp"
+#include "../../ResourceLoadingResult.hpp"
 
 namespace BF
 {
 	struct PNG
 	{
+		private: 
+		static inline PNGColorType ConvertColorType(unsigned int colorType);
+		static inline unsigned int ConvertColorType(PNGColorType colorType);
+
+
 		public:
 		//---[ IHDR - Image Header ]----------------------------------------------
 		unsigned int Width;
@@ -34,7 +41,8 @@ namespace BF
 		//---------------------------------------------------------------------------
 
 		//---[ IDAT - Image Data (Compressed)]---------------------------------------
-		LinkedList<List<unsigned char>*> CompressedData;
+		size_t ZLIBHeaderListSize;
+		ZLIBHeader* ZLIBHeaderList;
 		//---------------------------------------------------------------------------
 
 		//---[ PLTE - Palette ]------------------------------------------------------
@@ -69,7 +77,7 @@ namespace BF
 		//---------------------------------------------------------------------------
 
 		//---[ sRGB - StandardRGBColorSpace ]----------------------------------------
-		unsigned int RenderingIntent;
+		unsigned char RenderingIntent;
 		//---------------------------------------------------------------------------
 
 		//---[ pHYs - PhysicalPixelDimensions ]--------------------------------------
@@ -113,8 +121,8 @@ namespace BF
 
 		//---------------------------------------------------------------------------
 
-		void Load(const char* filePath);
-		void Save(const char* filePath);
+		ResourceLoadingResult Load(const char* filePath);
+		ResourceLoadingResult Save(const char* filePath);
 		void Convert(Image& image);
 		void PrintData();
 	};

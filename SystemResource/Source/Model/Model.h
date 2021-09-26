@@ -26,9 +26,10 @@ namespace BF
 		Matrix4x4<float> ModelMatrix;
 
 		LinkedMesh GlobalMesh;
-		List<Vector4<float>> ColorList;
-		List<Mesh> MeshList;
+		List<Vector4<float>> ColorList;	
 		List<Material> MaterialList;
+
+		List<Mesh> MeshList;
 
 		Model();
 		Model(const char* modelName);

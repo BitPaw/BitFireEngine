@@ -8,9 +8,11 @@ BF::BitStreamHusk::BitStreamHusk()
 	BlockSizeInBytes = 0;
 	BlockSizeInBits = 0;
 	CurrentBitOffset = 0;
+
+	_leftToRight = true;
 }
 
-BF::BitStreamHusk::BitStreamHusk(unsigned char* startAdress, unsigned int dataLengh)
+BF::BitStreamHusk::BitStreamHusk(unsigned char* startAdress, unsigned int dataLengh, bool leftToRight = true)
 {
 	RePosition(startAdress, dataLengh);
 }
@@ -22,34 +24,70 @@ void BF::BitStreamHusk::RePosition(unsigned char* startAdress, unsigned int data
 	CurrentPosition = 0;
 	BlockSizeInBytes = sizeof(unsigned char);
 	BlockSizeInBits = BlockSizeInBytes * 8;
-	CurrentBitOffset = 0;
+
+	if (_leftToRight)
+	{
+		CurrentBitOffset = 0;
+	}
+	else
+	{
+		CurrentBitOffset = 8u - 1u;
+	}	
 }
 
 void BF::BitStreamHusk::SkipBitsToNextByte()
 {
-	if(CurrentBitOffset != 0)
+	if (_leftToRight)
 	{
-		CurrentPosition++;
-		CurrentBitOffset = 0;
+		if (CurrentBitOffset != 0)
+		{
+			CurrentPosition++;
+			CurrentBitOffset = 0;
+		}
+	}
+	else
+	{
+		if (CurrentBitOffset != 7u)
+		{
+			CurrentPosition--;
+			CurrentBitOffset = 7;
+		}
 	}	
 }
 
 unsigned int BF::BitStreamHusk::ExtractBitsAndMove(unsigned char amountOfBits)
 {
-	unsigned int bitBlock = GetFromCurrentPosition(amountOfBits);
+	unsigned int bitBlock;
 
-	CurrentBitOffset += amountOfBits; // Add new offset, we used x bits, they are 'used up'.
-
-	while (CurrentBitOffset >= 8) // Move a Byte at the time forward, 8 Bits = 1 Byte.
+	if (_leftToRight)
 	{
-		CurrentPosition++;
-		CurrentBitOffset -= 8;
+		bitBlock = GetFromLeftCurrentPosition(amountOfBits);
+
+		CurrentBitOffset += amountOfBits; // Add new offset, we used x bits, they are 'used up'.
+
+		while (CurrentBitOffset >= 8) // Move a Byte at the time forward, 8 Bits = 1 Byte.
+		{
+			CurrentPosition++;
+			CurrentBitOffset -= 8;
+		}
+	}
+	else
+	{
+		bitBlock = GetFromRightCurrentPosition(amountOfBits);
+
+		CurrentBitOffset -= amountOfBits; // Add new offset, we used x bits, they are 'used up'.
+
+		while (CurrentBitOffset < 0) // Move a Byte at the time forward, 8 Bits = 1 Byte.
+		{
+			CurrentPosition++;
+			CurrentBitOffset = 7u;
+		}
 	}
 
 	return bitBlock;
 }
 
-unsigned int BF::BitStreamHusk::GetFromCurrentPosition(unsigned char amountOfBits)
+unsigned int BF::BitStreamHusk::GetFromLeftCurrentPosition(unsigned char amountOfBits)
 {
 	unsigned int maxInteger = 0xFFFFFFFF;
 	unsigned int bitMask = (maxInteger << amountOfBits) ^ maxInteger; // how many 1's do we have? Seen in binary.
@@ -83,4 +121,28 @@ unsigned int BF::BitStreamHusk::GetFromCurrentPosition(unsigned char amountOfBit
 	bitBlock = (fourByteBlock & bitMask) >> CurrentBitOffset;
 
 	return bitBlock;
+}
+
+unsigned int BF::BitStreamHusk::GetFromRightCurrentPosition(unsigned char amountOfBits)
+{
+	unsigned int data = 0;
+
+	data =	StartAdress[CurrentPosition  ]       |
+			StartAdress[CurrentPosition+1] << 8  |
+			StartAdress[CurrentPosition+2] << 16 |
+			StartAdress[CurrentPosition+3] << 24;
+
+
+	// 1111 1111 1111 1111 'Maximal Int'
+	// 1111 1111 1100 0000 'Insert amountOfBits as Zeros'
+	// 0000 0000 0011 1111 'Flip XOR'
+	// 0000 0111 1110 0000 'Insert rightOffset as Zeros' 
+
+	unsigned int rightOffset = 7u - CurrentBitOffset;
+	unsigned int bitMask = (~(0xFFFFFFFF << amountOfBits)) << rightOffset;
+	unsigned int result = 0;
+
+	result = (data & bitMask) >> rightOffset;
+
+	return result;
 }

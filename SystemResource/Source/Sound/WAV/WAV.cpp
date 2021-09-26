@@ -25,10 +25,8 @@ BF::WAV::~WAV()
 void BF::WAV::Load(const char* filePath)
 {
 	File file(filePath);
-
-	file.Read();
-
-	ByteStreamHusk byteSteam((unsigned char*)&file.Data[0], file.Size);
+	file.ReadFromDisk();
+	ByteStreamHusk byteSteam(file.Data, file.DataSize);
 
 	RIFF riffChunk;
 	FMT fmtChunk;

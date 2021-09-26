@@ -1,4 +1,6 @@
 #include "AsciiString.h"
+#include <cassert>
+#include <cstdarg>
 
 BF::AsciiString::AsciiString()
 {
@@ -91,7 +93,7 @@ BF::AsciiString& BF::AsciiString::operator=(std::string& string)
 	return *this;
 }
 
-char BF::AsciiString::operator==(const char* string)
+int BF::AsciiString::operator==(const char* string)
 {
 	return strcmp(_data, string);
 }
@@ -115,13 +117,25 @@ void BF::AsciiString::SetAsReference(const char* stringAdress, unsigned int size
 
 void BF::AsciiString::ReSize(unsigned int size)
 {
-	_size = size + 1;
-	_data = (char*)realloc(_data, _size);
+	size_t newSize = size + 1;
+	char* newData = (char*)realloc(_data, newSize);
 
-	if (_data != nullptr)
+	if (!newData)
 	{
-		memset(_data, '\0', _size * sizeof(char));
-	}	
+		return;
+	}
+
+	if (_data == nullptr)
+	{
+		memset(newData, '\0', newSize * sizeof(char));
+	}
+	else
+	{
+		newData[size] = '\0';
+	}
+
+	_data = newData;
+	_size = newSize;
 }
 
 void BF::AsciiString::Delete()
@@ -195,7 +209,7 @@ void BF::AsciiString::AttachToBack(AsciiString& string)
 
 	if (_isReferenceToOtherString) // If the String is just a reference, create a new string to manipulate
 	{
-		startA = new char[stringCLengh+1]; // create space
+		startA = (char*)malloc(stringCLengh+1 * sizeof(char)); // create space
 		memcpy(startA, _data, _size); // Copy old referenced string to new location
 		_isReferenceToOtherString = false; // its no longer a reference
 
@@ -203,7 +217,15 @@ void BF::AsciiString::AttachToBack(AsciiString& string)
 	}
 	else
 	{
-		_data = (char*)realloc(_data, byteLenghC);
+		char* newData = (char*)realloc(_data, byteLenghC);
+
+		if (!newData)
+		{
+			// Error
+			return;
+		}
+
+		_data = newData;
 	}	
 	
 	insertionPoint = _data + byteLenghA; // Move to the next insertion point (After A).
@@ -216,51 +238,126 @@ void BF::AsciiString::AttachToBack(AsciiString& string)
 
 float BF::AsciiString::ToFloat()
 {
-	return std::strtof(&_data[0], 0);
+	return AsciiString::ToFloat(_data);
+}
+
+float BF::AsciiString::ToFloat(const char* string)
+{	
+	int number = 0;
+	unsigned int digitsAfterDot = 1;
+	bool isWholeNumberChunk = true;
+
+	unsigned int index = 0;
+	bool isNegative = false;
+
+	if (string[0] == '-')
+	{
+		index++;
+		isNegative = true;
+	}
+
+	for ( ; string[index] != '\0'; index++)
+	{
+		char character = string[index];
+		bool isDot = character == '.';
+		bool isValidCharacter = (character >= '0' && character <= '9') || isDot;
+		int numberElement = character - '0';
+
+		if (!isValidCharacter)
+		{
+			break;
+		}
+
+		// Trigger when we switch to after dot
+		if (isDot && isWholeNumberChunk)
+		{
+			isWholeNumberChunk = false;
+			continue;
+		}
+
+		number *= 10; // "Shft number to left" Example 12 -> 120
+		number += numberElement; // ASCII character to actual number.
+
+		if (!isWholeNumberChunk)
+		{
+			digitsAfterDot *= 10;		
+		}		
+	}
+
+	if (isNegative)
+	{
+		number *= -1;
+	}
+
+	//double stdResult = std::strtof(string, 0); // STD Method
+	float result = number / (float)digitsAfterDot;
+
+	return  result;
 }
 
 int BF::AsciiString::ToInt()
 {
-	// atoi()
-	//std::strtol(&_data[0], 0, 10);
-
 	return AsciiString::ToInt(_data);	
 }
 
-int BF::AsciiString::ToInt(char* string)
-{
-	int value = -1;
-
-	AsciiString::ToInt(string, &value);
-
-	return value;
-}
-
-void BF::AsciiString::ToInt(char* string, int* target)
+int BF::AsciiString::ToInt(const char* string)
 {
 	int number = 0;
+	unsigned int index = 0;
+	bool isNegative = false;
 
-	for (unsigned int i = 0; string[i] != '\0'; i++)
+	if (string[0] == '-')
 	{
-		char character = string[i];
+		index++;
+		isNegative = true;
+	}
+
+	for (; string[index] != '\0'; index++)
+	{
+		char character = string[index];
 		char isValidCharacter = (character >= '0' && character <= '9');
+		int numberElement = character - '0';
 
 		if (!isValidCharacter)
 		{
-			*target = number;
-			return;
+			break;
 		}
 
 		number *= 10; // "Shft number to left" Example 12 -> 120
-		number += (character - '0'); // ASCII character to actual number.
+		number += numberElement; // ASCII character to actual number.
 	}
 
-	*target = number;
+	if (isNegative)
+	{
+		number *= -1;
+	}
+
+	// atoi()
+	//std::strtol(&_data[0], 0, 10); // STD Method
+
+	return number;
 }
 
 bool BF::AsciiString::ToBool()
 {
-	return !(_data[0] == '0');
+	return AsciiString::ToBool(_data);
+}
+
+int BF::AsciiString::ToBool(const char* string)
+{
+	switch (string[0])
+	{
+		default:
+		case '0':
+		case 'F':
+		case 'f':
+			return false;
+
+		case '1':
+		case 'T':
+		case 't':
+			return true;
+	}
 }
 
 unsigned int BF::AsciiString::Count(char character)
@@ -422,7 +519,7 @@ bool BF::AsciiString::IsCharacterInBetween(char target, char curroundedChar, uns
 char BF::AsciiString::GetFirstNonEmpty()
 {
 	unsigned int size = Size();
-	unsigned char emptyCharacter = ' ';
+	char emptyCharacter = ' ';
 
 	for (unsigned int i = 0; i < size; i++)
 	{
@@ -711,7 +808,7 @@ unsigned int BF::AsciiString::FindFirst(AsciiString& string, unsigned int beginI
 
 	if (searchIndex == -1)
 	{
-		return -1;
+		return (unsigned int)-1;
 	}
 
 	if (searchIndex + tokenSize <= searchPoolStringSize)
@@ -725,7 +822,7 @@ unsigned int BF::AsciiString::FindFirst(AsciiString& string, unsigned int beginI
 		}
 	}
 
-	return -1;
+	return (unsigned int)-1;
 }
 
 unsigned int BF::AsciiString::FindLast(char character)
@@ -787,4 +884,80 @@ void BF::AsciiString::Copy(char character)
 void BF::AsciiString::Copy(AsciiString& string)
 {
 	Copy(&string[0], string.Size());
+}
+
+void BF::AsciiString::Parse(char* buffer, const char* syntax, ...)
+{
+	va_list args;
+	va_start(args, syntax);
+
+	int startIndex = 0;
+	int stopIndex = 0;
+	int command = 0;
+	bool finished = false;
+
+	while (!finished)
+	{
+		char commandKey = syntax[command++];
+		bool commandIsNumber = commandKey == 'i' || commandKey == 'f' || commandKey == 'u';
+
+		while (true)
+		{
+			char current = buffer[stopIndex++];
+			finished = current == '\0';
+
+			if (commandIsNumber && current == '/' || current == ' ' || finished)
+			{
+				break;
+			}
+		}
+
+		switch (commandKey)
+		{
+			case 's':
+			{
+				char* destination = va_arg(args, char*);
+				char* source = &buffer[startIndex];
+				unsigned int length = stopIndex - startIndex - 1;
+
+				memcpy(destination, source, length);
+				destination[length] = '\0';
+				break;
+			}
+			case 'i':
+			case 'd':
+			case 'u':
+			{
+				int* i = va_arg(args, int*);
+				char* source = &buffer[startIndex];
+
+				*i = BF::AsciiString::ToInt(source);
+
+				break;
+			}
+			case 'f':
+			{
+				float* number = va_arg(args, float*);
+				char* source = &buffer[startIndex];
+
+				(*number) = AsciiString::ToFloat(source);
+
+				break;
+			}
+			case 'c':
+			{
+				char* character = va_arg(args, char*);
+
+				*character = buffer[startIndex];
+
+				break;
+			}
+			default:
+				break;
+		}
+
+		startIndex = stopIndex;
+	}
+
+	va_end(args);
 }

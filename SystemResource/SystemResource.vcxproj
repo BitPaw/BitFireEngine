@@ -253,6 +253,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Compression\HUFFMAN\HuffmanCodeBlock.cpp" />
+    <ClCompile Include="Source\Compression\HUFFMAN\HuffmanSymbol.cpp" />
+    <ClCompile Include="Source\Compression\DEFLATE\DeflateEncodingMethod.cpp" />
+    <ClCompile Include="Source\Compression\DEFLATE\DeflateBlock.cpp" />
+    <ClCompile Include="Source\Image\BMP\BMPInfoHeader.cpp" />
+    <ClCompile Include="Source\Image\BMP\BMPInfoHeaderType.cpp" />
+    <ClCompile Include="Source\Image\BMP\BMPType.cpp" />
+    <ClCompile Include="Source\Model\ModelRenderInformation.cpp" />
     <ClCompile Include="Source\Sound\MID\MIDITrack.cpp" />
     <ClCompile Include="Source\Sound\MID\MIDICommandExtended.cpp" />
     <ClCompile Include="Source\Sound\MID\MIDICommand.cpp" />
@@ -275,16 +283,6 @@
     <ClCompile Include="Source\Async\Thread.cpp" />
     <ClCompile Include="Source\Compression\Adler32.cpp" />
     <ClCompile Include="Source\Compression\CRC32.cpp" />
-    <ClCompile Include="Source\Compression\DeflateStateData.cpp" />
-    <ClCompile Include="Source\Compression\GZipFile.cpp" />
-    <ClCompile Include="Source\Compression\GZipHeader.cpp" />
-    <ClCompile Include="Source\Compression\GZipStateData.cpp" />
-    <ClCompile Include="Source\Compression\HuffCode.cpp" />
-    <ClCompile Include="Source\Compression\InflateStateData.cpp" />
-    <ClCompile Include="Source\Compression\StateData.cpp" />
-    <ClCompile Include="Source\Compression\Tree.cpp" />
-    <ClCompile Include="Source\Compression\ZLib.cpp" />
-    <ClCompile Include="Source\Compression\ZLibStream.cpp" />
     <ClCompile Include="Source\Container\AsciiString.cpp" />
     <ClCompile Include="Source\Container\BitStreamHusk.cpp" />
     <ClCompile Include="Source\Container\ByteStreamHusk.cpp" />
@@ -298,7 +296,6 @@
     <ClCompile Include="Source\Font\OTF\OTF.cpp" />
     <ClCompile Include="Source\Font\TTF\TTF.cpp" />
     <ClCompile Include="Source\Image\BMP\BMP.cpp" />
-    <ClCompile Include="Source\Image\BMP\Chunk\Header\BMPInfoHeader.cpp" />
     <ClCompile Include="Source\Image\GIF\GIF.cpp" />
     <ClCompile Include="Source\Image\Image.cpp" />
     <ClCompile Include="Source\Image\JPEG\JPEG.cpp" />
@@ -342,7 +339,6 @@
     <ClCompile Include="Source\Model\Mesh.cpp" />
     <ClCompile Include="Source\Model\MeshIndexData.cpp" />
     <ClCompile Include="Source\Model\Model.cpp" />
-    <ClCompile Include="Source\Model\ModelRenderInformation.cpp" />
     <ClCompile Include="Source\Model\OBJ\MTL\MTL.cpp" />
     <ClCompile Include="Source\Model\OBJ\OBJ.cpp" />
     <ClCompile Include="Source\Model\OBJ\OBJElement.cpp" />
@@ -370,9 +366,17 @@
     <ClCompile Include="Source\Types\Word.cpp" />
     <ClCompile Include="Source\Video\Video.cpp" />
     <ClCompile Include="Source\Sound\WMA\WMA.cpp" />
+    <ClCompile Include="Source\Compression\ZLIB\ZLIBHeader.cpp" />
+    <ClCompile Include="Source\Compression\ZLIB\ZLIBCompressionLevel.cpp" />
+    <ClCompile Include="Source\Compression\ZLIB\ZLIBCompressionMethod.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Compression\HUFFMAN\HuffmanCodeBlock.h" />
+    <ClInclude Include="Source\Compression\HUFFMAN\HuffmanSymbol.h" />
+    <ClInclude Include="Source\Compression\DEFLATE\DeflateEncodingMethod.h" />
+    <ClInclude Include="Source\Compression\DEFLATE\DeflateBlock.h" />
     <ClInclude Include="Source\Math\Geometry\Matrix.hpp" />
+    <ClInclude Include="Source\Model\ModelRenderInformation.h" />
     <ClInclude Include="Source\Sound\MID\MIDITrack.h" />
     <ClInclude Include="Source\Sound\MID\MIDICommandExtended.h" />
     <ClInclude Include="Source\Sound\MID\MIDICommand.h" />
@@ -403,21 +407,7 @@
     <ClInclude Include="Source\Async\AsyncLock.h" />
     <ClInclude Include="Source\Async\Thread.h" />
     <ClInclude Include="Source\Compression\Adler32.h" />
-    <ClInclude Include="Source\Compression\BlockState.h" />
     <ClInclude Include="Source\Compression\CRC32.h" />
-    <ClInclude Include="Source\Compression\DeflateMode.h" />
-    <ClInclude Include="Source\Compression\DeflateStateData.h" />
-    <ClInclude Include="Source\Compression\GZipFile.h" />
-    <ClInclude Include="Source\Compression\GZipHeader.h" />
-    <ClInclude Include="Source\Compression\GZipStateData.h" />
-    <ClInclude Include="Source\Compression\HuffCode.h" />
-    <ClInclude Include="Source\Compression\HuffCodeType.h" />
-    <ClInclude Include="Source\Compression\InflateMode.h" />
-    <ClInclude Include="Source\Compression\InflateStateData.h" />
-    <ClInclude Include="Source\Compression\StateData.h" />
-    <ClInclude Include="Source\Compression\Tree.h" />
-    <ClInclude Include="Source\Compression\ZLib.h" />
-    <ClInclude Include="Source\Compression\ZLibStream.h" />
     <ClInclude Include="Source\Container\AsciiString.h" />
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp" />
     <ClInclude Include="Source\Container\BinaryTree\BinaryTreeData.hpp" />
@@ -448,9 +438,8 @@
     <ClInclude Include="Source\Font\TTF\TTF.h" />
     <ClInclude Include="Source\Image\BMP\BMP.h" />
     <ClInclude Include="Source\Image\BMP\BMPType.h" />
-    <ClInclude Include="Source\Image\BMP\Chunk\Header\BMPInfoHeader.h" />
-    <ClInclude Include="Source\Image\BMP\Chunk\Header\BMPInformationHeaderType.h" />
-    <ClInclude Include="Source\Image\BMP\Chunk\Header\IBMPInformationHeader.h" />
+    <ClInclude Include="Source\Image\BMP\BMPInfoHeaderType.h" />
+    <ClInclude Include="Source\Image\BMP\BMPInfoHeader.h" />
     <ClInclude Include="Source\Image\GIF\GIF.h" />
     <ClInclude Include="Source\Image\Image.h" />
     <ClInclude Include="Source\Image\ImageFileExtension.h" />
@@ -513,7 +502,6 @@
     <ClInclude Include="Source\Model\Mesh.h" />
     <ClInclude Include="Source\Model\MeshIndexData.h" />
     <ClInclude Include="Source\Model\Model.h" />
-    <ClInclude Include="Source\Model\ModelRenderInformation.h" />
     <ClInclude Include="Source\Model\ModelType.h" />
     <ClInclude Include="Source\Model\OBJ\MTL\IlluminationMode.h" />
     <ClInclude Include="Source\Model\OBJ\MTL\MTL.h" />
@@ -551,6 +539,9 @@
     <ClInclude Include="Source\Types\Word.h" />
     <ClInclude Include="Source\Video\Video.h" />
     <ClInclude Include="Source\Sound\WMA\WMA.h" />
+    <ClInclude Include="Source\Compression\ZLIB\ZLIBHeader.h" />
+    <ClInclude Include="Source\Compression\ZLIB\ZLIBCompressionLevel.h" />
+    <ClInclude Include="Source\Compression\ZLIB\ZLIBCompressionMethod.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

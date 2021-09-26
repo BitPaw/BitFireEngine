@@ -1,5 +1,10 @@
 #include "ShaderProgram.h"
 
+BF::ShaderProgram::ShaderProgram()
+{
+    ID = -1;
+}
+
 void BF::ShaderProgram::AddShader(const char* vertexShaderPath, const char* fragmentShaderFilePath)
 {
     ShaderList[0] = Shader(ShaderType::Vertex, vertexShaderPath);

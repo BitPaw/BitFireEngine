@@ -38,6 +38,11 @@ BF::Image::Image()
     WrapWidth = ImageWrap::Repeat;
 }
 
+BF::Image::~Image()
+{
+    free(PixelData);
+}
+
 void BF::Image::RemoveColor(unsigned char red, unsigned char green, unsigned char blue)
 {
     switch (Format)
