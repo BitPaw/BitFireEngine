@@ -88,7 +88,7 @@ void BF::Image::FlipHorizontal()
     unsigned int bytesPerPixel = 3;
     unsigned int scanLineWidthSize = width * bytesPerPixel;
     unsigned int scanLinesToSwap = height / 2;
-    unsigned char copyBufferRow[2048];
+    unsigned char* copyBufferRow = (unsigned char*)malloc(scanLineWidthSize);
 
     for (unsigned int scanlineIndex = 0; scanlineIndex < scanLinesToSwap; scanlineIndex++)
     {
@@ -99,6 +99,8 @@ void BF::Image::FlipHorizontal()
         memcpy(bufferB, bufferA, scanLineWidthSize); // B -> A 'Move B to A(override)'
         memcpy(bufferA, copyBufferRow, scanLineWidthSize); // Buffer -> B 'Move SaveCopy (A) to B'
     }
+
+    free(copyBufferRow);
 }
 
 void BF::Image::PrintData()

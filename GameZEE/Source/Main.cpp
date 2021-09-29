@@ -13,6 +13,8 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int nShowCmd)
 int main(int amountOFParameters, char** parameter)
 #endif  
 {
+    printf("[i][Core] Working Directory : %s\n", parameter[0]);
+
     try
     {
         //printf("[i][Core] Working Directory <%s>\n", parameter[0]);

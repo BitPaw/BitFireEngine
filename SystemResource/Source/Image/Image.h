@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ImageType.h"
 #include "ImageFormat.h"
 #include "ImageFilter.h"
 #include "ImageLayout.h"
@@ -11,7 +12,6 @@
 
 #include "../Container/AsciiString.h"
 #include "../Math/Geometry/Vector4.hpp"
-#include "ImageType.h"
 
 namespace BF
 {

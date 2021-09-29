@@ -1,18 +1,8 @@
 #include "WAV.h"
 #include "../../File/File.h"
-#include "../../Container/ByteStreamHusk.h"
-#include "RIFF.h"
-#include "FMT.h"
 
 BF::WAV::WAV()
 {
-	AudioFormat = 0;
-	NumerOfChannels = 0;
-	SampleRate = 0;
-	ByteRate = 0;
-	BlockAllign = 0;
-	BitsPerSample = 0;
-
 	SoundDataSize = 0;
 	SoundData = nullptr;
 }
@@ -22,25 +12,26 @@ BF::WAV::~WAV()
 	free(SoundData);
 }
 
-void BF::WAV::Load(const char* filePath)
+BF::ResourceLoadingResult BF::WAV::Load(const char* filePath)
 {
 	File file(filePath);
-	file.ReadFromDisk();
-	ByteStreamHusk byteSteam(file.Data, file.DataSize);
+	ResourceLoadingResult resourceLoadingResult = file.ReadFromDisk();
+	Endian endian;
 
-	RIFF riffChunk;
-	FMT fmtChunk;
-	Endian endian;	
+	if (resourceLoadingResult != ResourceLoadingResult::Successful)
+	{
+		return resourceLoadingResult;
+	}
 
-	byteSteam.CopyBytesAndMove(riffChunk.ChunkID, 4);
+	file.Read(RIFFChunk.ChunkID, 4u);
 
-	bool useBigEndian = memcmp("RIFX", riffChunk.ChunkID, 4) == 0;
-	bool useLittleEndian = memcmp("RIFF", riffChunk.ChunkID, 4) == 0;
+	bool useBigEndian = memcmp("RIFX", RIFFChunk.ChunkID, 4u) == 0;
+	bool useLittleEndian = memcmp("RIFF", RIFFChunk.ChunkID, 4u) == 0;
 	bool isValidEndian = useLittleEndian != useBigEndian;
 
 	if (!isValidEndian)
 	{
-		return;
+		return ResourceLoadingResult::FormatNotSupported;
 	}
 
 	if (useLittleEndian)
@@ -53,55 +44,65 @@ void BF::WAV::Load(const char* filePath)
 		endian = Endian::Big;
 	}
 
-	riffChunk.ChunkSize = byteSteam.ExtractIntegerAndMove(endian);
-	byteSteam.CopyBytesAndMove(riffChunk.Format, 4);
+	file.Read(RIFFChunk.ChunkSize, endian);
+	file.Read(RIFFChunk.Format, 4u);
 
-	byteSteam.CopyBytesAndMove(fmtChunk.ChunkID, 4);
-	fmtChunk.ChunkSize = byteSteam.ExtractIntegerAndMove(endian);
-	fmtChunk.AudioFormat = byteSteam.ExtractShortAndMove(endian);
-	fmtChunk.NumerOfChannels = byteSteam.ExtractShortAndMove(endian);
-	fmtChunk.SampleRate = byteSteam.ExtractIntegerAndMove(endian);
-	fmtChunk.ByteRate = byteSteam.ExtractIntegerAndMove(endian);
-	fmtChunk.BlockAllign = byteSteam.ExtractShortAndMove(endian);
-	fmtChunk.BitsPerSample = byteSteam.ExtractShortAndMove(endian);
+	//---<FMT Chunk>---------------------
+	file.Read(FMTChunk.ChunkID, 4u);
+	file.Read(FMTChunk.ChunkSize, endian);
+	file.Read(FMTChunk.AudioFormat, endian);
+	file.Read(FMTChunk.NumerOfChannels, endian);
+	file.Read(FMTChunk.SampleRate, endian);
+	file.Read(FMTChunk.ByteRate, endian);
+	file.Read(FMTChunk.BlockAllign, endian);
+	file.Read(FMTChunk.BitsPerSample, endian);
+	//---------------------------------------
 
+
+	//---------------------------------------	
 	char dataText[4];
 
-	byteSteam.CopyBytesAndMove(dataText, 4);
+	file.Read(dataText, 4u);
 
 	bool isRIFFListChunk = memcmp("LIST", dataText, 4) == 0;
 
 	if (isRIFFListChunk)
 	{
-		byteSteam.CurrentPosition  += 30u;
+		file.DataCursorPosition += 30u;
+	}	
+	//---------------------------------------
+	char dataTagText[4];
+
+	file.Read(dataTagText, 4u);
+
+	bool validDataChunk = memcmp("data", dataTagText, 4u) == 0;
+
+	if (!validDataChunk)
+	{
+		return ResourceLoadingResult::FormatInvalid;
 	}
 
-	byteSteam.CopyBytesAndMove(dataText, 4);
-	unsigned int wavChunkSize = byteSteam.ExtractIntegerAndMove(endian);
+	file.Read(SoundDataSize, endian);
 
-	AudioFormat = fmtChunk.AudioFormat;
-	NumerOfChannels = fmtChunk.NumerOfChannels;
-	SampleRate = fmtChunk.SampleRate;
-	ByteRate = fmtChunk.ByteRate;
-	BlockAllign = fmtChunk.BlockAllign;
-	BitsPerSample = fmtChunk.BitsPerSample;
+	SoundData = (unsigned char*)malloc(SoundDataSize * sizeof(char));
 
-	SoundDataSize = wavChunkSize + BlockAllign;
-	SoundData = (unsigned char*)calloc(SoundDataSize, sizeof(char));
-	
-	byteSteam.CopyBytesAndMove(SoundData, wavChunkSize);
+	file.Read(SoundData, SoundDataSize);	
+
+	return ResourceLoadingResult::Successful;
 }
 
-void BF::WAV::Save(const char* filePath)
+BF::ResourceLoadingResult BF::WAV::Save(const char* filePath)
 {
+	// Note: The sample data must end on an even byte boundary. Whatever that means. 
 
+	return ResourceLoadingResult::Successful;
 }
 
 void BF::WAV::ConvertTo(Sound& sound)
 {
-	sound.NumerOfChannels = NumerOfChannels;
-	sound.SampleRate = SampleRate;
-	sound.BitsPerSample = BitsPerSample;
+	sound.NumerOfChannels = FMTChunk.NumerOfChannels;
+	sound.SampleRate = FMTChunk.SampleRate;
+	sound.BitsPerSample = FMTChunk.BitsPerSample;
 	sound.DataSize = SoundDataSize;
 	sound.Data = (unsigned char*)malloc(SoundDataSize);
 

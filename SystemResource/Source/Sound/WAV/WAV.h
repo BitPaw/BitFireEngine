@@ -1,6 +1,10 @@
 #pragma once
 
+#include "RIFF.h"
+#include "FMT.h"
+
 #include "../Sound.h"
+#include "../../ResourceLoadingResult.hpp"
 
 namespace BF
 {
@@ -8,23 +12,17 @@ namespace BF
 	struct WAV 
 	{
 		public:
-		unsigned short AudioFormat;
-		unsigned short NumerOfChannels;
-		unsigned int SampleRate;
-		unsigned int ByteRate;
-		unsigned short BlockAllign;
-		unsigned short BitsPerSample;
+		RIFF RIFFChunk;
+		FMT FMTChunk;
 
 		unsigned int SoundDataSize;
 		unsigned char* SoundData; 
 
-		// Note: The sample data must end on an even byte boundary. Whatever that means. 
-
 		WAV();
 		~WAV();
 
-		void Load(const char* filePath);
-		void Save(const char* filePath);
+		ResourceLoadingResult Load(const char* filePath);
+		ResourceLoadingResult Save(const char* filePath);
 		void ConvertTo(Sound& sound);
 		void ConvertFrom(Sound& sound);
 	};

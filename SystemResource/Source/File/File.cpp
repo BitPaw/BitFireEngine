@@ -33,7 +33,7 @@ BF::File::File(const char* filePath)
 
 BF::File::~File()
 {
-	Clear();
+	free(Data);
 }
 
 void BF::File::CursorToBeginning()

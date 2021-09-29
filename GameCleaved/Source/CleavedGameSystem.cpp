@@ -9,10 +9,8 @@
 #include "../../BitFireEngine/Source/UI/UIText.h"
 
 BF::UIText* text;
-//BF::Model* sphere;
 
-BF::SkyBox* skybox;
-BF::Model cube;
+BF::SkyBox skybox;
 
 BF::ShaderProgram worldShader;
 BF::ShaderProgram hudShaderID;
@@ -22,43 +20,46 @@ Cleaved::CleavedGameSystem::CleavedGameSystem()
     GameSystem.SetCallBack(this);
 }
 
+using namespace BF;
+
 float _deltaTime = 0;
+ 
+Image _playerCharacterLuna;
+Image _playerCharacterNyte;
+Image _lamp;
+Image _fireplace;
+Image _sign;
 
 void Cleaved::CleavedGameSystem::OnStartUp()
 {
-    BF::StopWatch stopwatch;
-
-    stopwatch.Start();
-
     GameSystem.Resource.Load(worldShader, "Shader/WS.vert", "Shader/WS.frag");
     GameSystem.Resource.Load(hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
 
-    GameSystem.Resource.Load("Level/MainMenu.lev");
-    GameSystem.Resource.Load(cube, "Model/Cube.obj");
+    GameSystem.Resource.Load
+    (
+        skybox,
+        "Shader/SkyBox.vert",
+        "Shader/SkyBox.frag",
+        "Texture/SkyBox_Right.bmp",
+        "Texture/SkyBox_Left.bmp",
+        "Texture/SkyBox_Top.bmp",
+        "Texture/SkyBox_Bottom.bmp",
+        "Texture/SkyBox_Back.bmp",
+        "Texture/SkyBox_Front.bmp"
+    );
 
-    cube.ModelMatrix.Scale(10.0f);
-    cube.EnablePhysics = true;
-    GameSystem.Resource.Add(cube);
+    
+    //GameSystem.Resource.Load(_playerCharacterLuna, "Texture/bmp");
+    //GameSystem.Resource.Load(_playerCharacterNyte, "Texture/bmp");
+    //GameSystem.Resource.Load(_lamp, "Texture/Lamp_B.bmp");
+    GameSystem.Resource.Load(_fireplace, "Texture/FirePlaace.bmp");
+    GameSystem.Resource.Load(_sign, "Texture/Sign.bmp");
 
-    skybox = new BF::SkyBox();
-    GameSystem.Resource.Load(skybox->Faces[0], "Texture/SkyBox/Right.bmp"); // Right
-    GameSystem.Resource.Load(skybox->Faces[1], "Texture/SkyBox/Left.bmp"); // Left
-    GameSystem.Resource.Load(skybox->Faces[2], "Texture/SkyBox/Top.bmp"); // Top
-    GameSystem.Resource.Load(skybox->Faces[3], "Texture/SkyBox/Bottom.bmp"); // Bottom
-    GameSystem.Resource.Load(skybox->Faces[4], "Texture/SkyBox/Back.bmp"); // Back
-    GameSystem.Resource.Load(skybox->Faces[5], "Texture/SkyBox/Front.bmp"); // Front       
-
-    GameSystem.Resource.Load(skybox->Shader, "Shader/SkyBox.vert", "Shader/SkyBox.frag");
-    GameSystem.Resource.Add(*skybox);
 
     text = new BF::UIText("SampleText", *GameSystem.Resource.DefaultFont, -1, -0.8);
     text->RenderInformation.ShaderProgramID = hudShaderID.ID;
     //text->SetFont(*Resource.DefaultFont);
-    GameSystem.Resource.Add(*text);
-
-    printf("[i][Info] Loading took %.2fs\n", stopwatch.Stop());
-
-    GameSystem.Resource.PrintContent(true);
+    GameSystem.Resource.Add(*text);    
 }
 
 void Cleaved::CleavedGameSystem::OnShutDown()
@@ -68,12 +69,6 @@ void Cleaved::CleavedGameSystem::OnShutDown()
 
 void Cleaved::CleavedGameSystem::OnUpdateGameLogic(float deltaTime)
 {
-    if (cube.ModelMatrix.CurrentPosition().Y <= 0)
-    {
-        //cube.ModelMatrix.Move(0, tcap, 0);
-        cube.Velocity.Set(0, 90, 0);
-    }
-
     _deltaTime = deltaTime;
 }
 
@@ -83,6 +78,6 @@ void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
 
 void Cleaved::CleavedGameSystem::OnUpdateUI()
 {
-    sprintf_s(text->TextContent, "FPS: %4i", (BF::Math::Ceiling(1 / _deltaTime)));
-    text->SetText(text->TextContent);
+   //sprintf_s(text->TextContent, "FPS: %4i", (BF::Math::Ceiling(1 / _deltaTime)));
+   //text->SetText(text->TextContent);
 }

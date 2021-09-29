@@ -101,21 +101,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -134,6 +140,7 @@
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -158,6 +165,7 @@
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -176,6 +184,7 @@
       <ConformanceMode>true</ConformanceMode>
       <Optimization>Disabled</Optimization>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -202,6 +211,7 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <OmitFramePointers>false</OmitFramePointers>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -226,6 +236,7 @@
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -244,6 +255,7 @@
       <ConformanceMode>true</ConformanceMode>
       <Optimization>Disabled</Optimization>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -253,6 +265,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Video\AVI\AVIHeader.cpp" />
     <ClCompile Include="Source\Compression\HUFFMAN\HuffmanCodeBlock.cpp" />
     <ClCompile Include="Source\Compression\HUFFMAN\HuffmanSymbol.cpp" />
     <ClCompile Include="Source\Compression\DEFLATE\DeflateEncodingMethod.cpp" />
@@ -281,8 +294,8 @@
     <ClCompile Include="Source\Image\ImageType.cpp" />
     <ClCompile Include="Source\Async\AsyncLock.cpp" />
     <ClCompile Include="Source\Async\Thread.cpp" />
-    <ClCompile Include="Source\Compression\Adler32.cpp" />
-    <ClCompile Include="Source\Compression\CRC32.cpp" />
+    <ClCompile Include="Source\Algorithm\Adler32.cpp" />
+    <ClCompile Include="Source\Algorithm\CRC32.cpp" />
     <ClCompile Include="Source\Container\AsciiString.cpp" />
     <ClCompile Include="Source\Container\BitStreamHusk.cpp" />
     <ClCompile Include="Source\Container\ByteStreamHusk.cpp" />
@@ -305,11 +318,10 @@
     <ClCompile Include="Source\Image\TGA\TGA.cpp" />
     <ClCompile Include="Source\Image\TIFF\TIFF.cpp" />
     <ClCompile Include="Source\Level\Level.cpp" />
-    <ClCompile Include="Source\Math\Algorithm\CRCAlgorithm.cpp" />
-    <ClCompile Include="Source\Math\Encryption\Caesar.cpp" />
-    <ClCompile Include="Source\Math\Encryption\ICypher.cpp" />
-    <ClCompile Include="Source\Math\Encryption\ISBN.cpp" />
-    <ClCompile Include="Source\Math\Encryption\RSA.cpp" />
+    <ClCompile Include="Source\Encryption\Caesar.cpp" />
+    <ClCompile Include="Source\Encryption\ICypher.cpp" />
+    <ClCompile Include="Source\Algorithm\ISBN.cpp" />
+    <ClCompile Include="Source\Encryption\RSA.cpp" />
     <ClCompile Include="Source\Math\Geometry\Form\Cone.cpp" />
     <ClCompile Include="Source\Math\Geometry\Form\Cube.cpp" />
     <ClCompile Include="Source\Math\Geometry\Form\Cuboid.cpp" />
@@ -371,6 +383,7 @@
     <ClCompile Include="Source\Compression\ZLIB\ZLIBCompressionMethod.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Video\AVI\AVIHeader.h" />
     <ClInclude Include="Source\Compression\HUFFMAN\HuffmanCodeBlock.h" />
     <ClInclude Include="Source\Compression\HUFFMAN\HuffmanSymbol.h" />
     <ClInclude Include="Source\Compression\DEFLATE\DeflateEncodingMethod.h" />
@@ -406,8 +419,8 @@
     <ClInclude Include="Source\Image\ImageType.h" />
     <ClInclude Include="Source\Async\AsyncLock.h" />
     <ClInclude Include="Source\Async\Thread.h" />
-    <ClInclude Include="Source\Compression\Adler32.h" />
-    <ClInclude Include="Source\Compression\CRC32.h" />
+    <ClInclude Include="Source\Algorithm\Adler32.h" />
+    <ClInclude Include="Source\Algorithm\CRC32.h" />
     <ClInclude Include="Source\Container\AsciiString.h" />
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp" />
     <ClInclude Include="Source\Container\BinaryTree\BinaryTreeData.hpp" />
@@ -459,13 +472,12 @@
     <ClInclude Include="Source\Image\TGA\TGAImageDataType.h" />
     <ClInclude Include="Source\Image\TIFF\TIFF.h" />
     <ClInclude Include="Source\Level\Level.h" />
-    <ClInclude Include="Source\Math\Algorithm\CRCAlgorithm.h" />
     <ClInclude Include="Source\Math\Complex.h" />
     <ClInclude Include="Source\Math\Diagrams\BoxPlot.hpp" />
-    <ClInclude Include="Source\Math\Encryption\Caesar.h" />
-    <ClInclude Include="Source\Math\Encryption\ICypher.h" />
-    <ClInclude Include="Source\Math\Encryption\ISBN.h" />
-    <ClInclude Include="Source\Math\Encryption\RSA.h" />
+    <ClInclude Include="Source\Encryption\Caesar.h" />
+    <ClInclude Include="Source\Encryption\ICypher.h" />
+    <ClInclude Include="Source\Algorithm\ISBN.h" />
+    <ClInclude Include="Source\Encryption\RSA.h" />
     <ClInclude Include="Source\Math\Geometry\Form\Cone.h" />
     <ClInclude Include="Source\Math\Geometry\Form\Cube.h" />
     <ClInclude Include="Source\Math\Geometry\Form\Cuboid.h" />

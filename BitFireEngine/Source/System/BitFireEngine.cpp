@@ -1,6 +1,5 @@
 #include "BitFireEngine.h"
 
-#include <future>
 #include "../UI/UIText.h"
 #include "../../../SystemResource/Source/Model/Model.h"
 #include "../../../SystemResource/Source/Time/StopWatch.h"
@@ -8,6 +7,8 @@
 #include "../../../SystemResource/Source/Image/BMP/BMP.h"
 #include "../../../SystemRender/Source/OpenGLAPI.h"
 #include "../../../SystemRender/Source/Device/InputContainer.h"
+
+#include <stdlib.h>
 
 BF::BitFireEngine::BitFireEngine()
 {

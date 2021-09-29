@@ -3,8 +3,8 @@
 //#include <GL/glew.h>
 //#include <GLFW/glfw3.h>
 
-#include "../../Dependencies/include/GL/glew.h"
-#include "../../Dependencies/include/GLFW/glfw3.h"
+#include "../../../Dependencies/include/GL/glew.h"
+#include "../../../Dependencies/include/GLFW/glfw3.h"
 
 #include "../../../SystemResource/Source/Container/Dictionary.hpp"
 #include "../../../SystemResource/Source/Container/AsciiString.h"

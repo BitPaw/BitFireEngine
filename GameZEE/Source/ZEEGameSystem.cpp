@@ -90,7 +90,8 @@ void ZEE::ZEEGameSystem::OnStartUp()
     GameSystem.Resource.PrintContent(true);    
 
 
-#if 0 // Sound Enable
+
+#if 1 // Sound Enable
     //BF::MID midi;
     //midi.Load("Sound/CaveStory.mid");
     //midi.Save("Sound/CaveStory_NEW.mid");
@@ -105,6 +106,11 @@ void ZEE::ZEEGameSystem::OnStartUp()
 
 
     GameSystem.SoundPlayer.Play(audioSource, sound);
+
+    GameSystem.SoundPlayer.LoopPart(audioSource, 100, 100);
+
+    GameSystem.SoundPlayer.Play(audioSource, sound);
+
 #endif // Sound Enable
 }
 
@@ -129,16 +135,16 @@ void ZEE::ZEEGameSystem::OnUpdateGameLogic(float deltaTime)
 
 void ZEE::ZEEGameSystem::OnUpdateInput(BF::InputContainer& input)
 {
-#if 0
+#if 1
     bool changed = false;
 
     if (input.KeyBoardInput.O.IsPressed())
     {
         audioSource.Pitch += 0.01;
+        if (audioSource.Pitch > 2.8)
 
-        if (audioSource.Pitch > 2.5)
         {
-            audioSource.Pitch = 2.5;
+            audioSource.Pitch = 2.8;
         }
 
 
@@ -150,9 +156,9 @@ void ZEE::ZEEGameSystem::OnUpdateInput(BF::InputContainer& input)
     {
         audioSource.Pitch -= 0.01;
 
-        if (audioSource.Pitch < 0.4)
+        if (audioSource.Pitch < 0.3)
         {
-            audioSource.Pitch = 0.4;
+            audioSource.Pitch = 0.3;
         }
 
         changed = true;

@@ -5,9 +5,9 @@
 
 #include "AngleRadians.hpp"
 
-#include "../../../Dependencies/include/glm/ext/matrix_transform.hpp"
-#include "../../../Dependencies/include/glm/glm.hpp"
-#include "../../../Dependencies/include/glm/ext.hpp"
+#include "../../../../Dependencies/include/glm/ext/matrix_transform.hpp"
+#include "../../../../Dependencies/include/glm/glm.hpp"
+#include "../../../../Dependencies/include/glm/ext.hpp"
 
 #include <string>
 

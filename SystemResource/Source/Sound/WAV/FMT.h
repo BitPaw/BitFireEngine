@@ -13,5 +13,7 @@ namespace BF
 		unsigned int ByteRate;
 		unsigned short BlockAllign;
 		unsigned short BitsPerSample;
+
+		FMT();
 	};
 }

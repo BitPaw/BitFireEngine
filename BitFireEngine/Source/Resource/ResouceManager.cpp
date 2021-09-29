@@ -377,6 +377,8 @@ void BF::ResourceManager::Load(Model& model, const char* filePath)
 
         if (errorCode == ResourceLoadingResult::Successful)
         {
+            model->ID = ResourceIDLoaded;
+
             for (unsigned int i = 0; i < model->MaterialList.Size(); i++)
             {
                 Material& modelMaterial = model->MaterialList[i];
@@ -399,8 +401,6 @@ void BF::ResourceManager::Load(Model& model, const char* filePath)
                 }, resourceManager, &modelMaterial);
             }
         }
-
-       model->ID = ResourceIDLoaded;  
 
     }, this, &model);
 }

@@ -82,7 +82,7 @@ void BF::ZLIBHeader::Parse(unsigned char* data, unsigned int length)
             /*
                 WARNING! You'll need to read the Bits from RIGHT to LEFT
 
-                NO  : 01234657 
+                NO  : 01234657
                 YES : 76543210
 
                 Byte Boundarys are also ignored! 

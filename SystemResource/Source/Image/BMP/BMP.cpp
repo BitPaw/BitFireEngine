@@ -1,6 +1,8 @@
 #include "BMP.h"
 
 #include "../../File/File.h"
+#include <cassert>
+#include "../../Math/Math.h"
 
 BF::BMP::BMP()
 {
@@ -99,28 +101,33 @@ BF::ResourceLoadingResult BF::BMP::Load(const char* filePath)
     }    
     //-----------------------------------------------------------    
 
-    //---[ Pixel Data ]--------------------------------------------------------  
-    unsigned int bytesPerPixel = (InfoHeader.NumberOfBitsPerPixel / 8);
-    unsigned int pixelDataRowSize = InfoHeader.Width * bytesPerPixel;
-    PixelDataSize = pixelDataRowSize * InfoHeader.Height;
-
-    unsigned int paddingSize = pixelDataRowSize % 4;
-    unsigned int rowSize = pixelDataRowSize + paddingSize;
-
+    PixelDataSize = InfoHeader.Width * InfoHeader.Height * (InfoHeader.NumberOfBitsPerPixel / 8);
     PixelData = (unsigned char*)malloc(PixelDataSize * sizeof(unsigned char));
-   
-    for (size_t pixelDataOffset = 0 ; file.DataCursorPosition < file.DataSize ; )
-    {
-        file.Read(PixelData + pixelDataOffset, pixelDataRowSize);
 
-        pixelDataOffset += pixelDataRowSize;
-        file.DataCursorPosition += paddingSize; // Move data, row + padding(padding can be 0)
+
+    //---[ Pixel Data ]--------------------------------------------------------    
+    unsigned int dataRowSize = InfoHeader.Width * (InfoHeader.NumberOfBitsPerPixel / 8);
+    unsigned int fullRowSize = Math::Floor((InfoHeader.NumberOfBitsPerPixel * InfoHeader.Width + 31) / 32.0f) * 4;
+    unsigned int padding = Math::Absolute((int)fullRowSize - (int)dataRowSize);
+    unsigned int amountOfRows = PixelDataSize / fullRowSize;
+    size_t pixelDataOffset = 0;
+
+    while (amountOfRows-- > 0)
+    {
+        assert(pixelDataOffset <= PixelDataSize);
+
+        file.Read(PixelData + pixelDataOffset, dataRowSize);
+
+        pixelDataOffset += dataRowSize;
+        file.DataCursorPosition += padding; // Move data, row + padding(padding can be 0)
     }
+
+    return ResourceLoadingResult::Successful;
 }
 
 BF::ResourceLoadingResult BF::BMP::Save(const char* filePath)
 {
-    size_t fileSize = InfoHeader.Width * InfoHeader.Height * 3 + 54u;
+    unsigned int fileSize = InfoHeader.Width * InfoHeader.Height * 3 + 54u;
     File file(filePath, fileSize);
  
     file.Write("BM", 2u);
@@ -170,7 +177,6 @@ BF::ResourceLoadingResult BF::BMP::ConvertFrom(Image& image)
 
 BF::ResourceLoadingResult BF::BMP::ConvertTo(Image& image)
 {    
-    size_t pixelDataSize = InfoHeader.Height * InfoHeader.Width * 3;
     void* pixelData = malloc(PixelDataSize);
 
     if (!pixelData)
@@ -181,7 +187,7 @@ BF::ResourceLoadingResult BF::BMP::ConvertTo(Image& image)
     image.Format = ImageFormat::BGR;
     image.Height = InfoHeader.Height;
     image.Width = InfoHeader.Width;
-    image.PixelDataSize = pixelDataSize;
+    image.PixelDataSize = PixelDataSize;
     image.PixelData = (unsigned char*)pixelData;
 
     memcpy(image.PixelData, PixelData, image.PixelDataSize);

@@ -11,6 +11,5 @@ namespace BF
 		char Format[4];
 
 		RIFF();
-		RIFF(unsigned int chunkID, unsigned int chunkSize, unsigned int format);
 	};
 }
