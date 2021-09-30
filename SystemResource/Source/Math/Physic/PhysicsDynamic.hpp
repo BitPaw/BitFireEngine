@@ -1,11 +1,12 @@
 #pragma once
 
+#include "PhysicsStatic.hpp"
 #include "../Geometry/Vector3.hpp"
 
 namespace BF
 {
 	template<class NumberType>
-	struct PhysicalBody
+	struct PhysicsDynamic : public PhysicsStatic<NumberType>
 	{
 		public:
 		Vector3<NumberType> Velocity;
@@ -18,12 +19,17 @@ namespace BF
 		bool EnableGravity;
 		bool IsSolid;
 
-		PhysicalBody()
+		PhysicsDynamic()
 		{
 			Mass = 0.3;
 			EnablePhysics = false;
 			EnableGravity = false;
-			IsSolid = true;
+			IsSolid = true;			
+		}
+
+		void ApplyGravity(Vector3<NumberType> gravity, NumberType deltaTime)
+		{
+			this->MatrixModel.Motion(Force, Velocity, Mass, gravity, deltaTime);
 		}
 	};
 }

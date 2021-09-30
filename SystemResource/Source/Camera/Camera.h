@@ -3,12 +3,12 @@
 #include "CameraPerspective.hpp"
 #include "../Math/Geometry/Vector3.hpp"
 #include "../Math/Geometry/Matrix4x4.hpp"
-#include "../Math/Physic/PhysicalBody.hpp"
+#include "../Math/Physic/PhysicsDynamic.hpp"
 #include "../../../SystemRender/Source/RefreshRateMode.h"
 
 namespace BF
 {
-	class Camera : public PhysicalBody<float>
+	class Camera : public PhysicsDynamic<float>
 	{
 		protected:
 		float _walkSpeed;
@@ -16,14 +16,12 @@ namespace BF
 
 		public:
 		Vector3<float> LookAtPosition;
-		Matrix4x4<float> MatrixModel;
+		Vector3<float> CurrentRotation;
+
 		Matrix4x4<float> MatrixView;
 		Matrix4x4<float> MatrixProjection;		
 
-
 		CameraPerspective Perspective;
-
-		Vector3<float> CurrentRotation;
 
 		float FieldOfView;
 		unsigned int Height;

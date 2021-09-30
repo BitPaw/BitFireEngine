@@ -328,7 +328,7 @@ BF::ResourceLoadingResult BF::PNG::Save(const char* filePath)
     return ResourceLoadingResult::Successful;
 }
 
-void BF::PNG::Convert(Image& image)
+void BF::PNG::ConvertTo(Image& image)
 {
     unsigned char* pixelData = image.PixelData;
     unsigned int width = Width;

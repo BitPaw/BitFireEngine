@@ -11,6 +11,7 @@
 #include "../../SystemResource/Source/Sound/MID/MID.h"
 #include "../../SystemResource/Source/Math/Geometry/Matrix.hpp"
 #include "../../SystemResource/Source/Image/PNG/PNG.h"
+#include "../../SystemResource/Source/Math/Physic/GravityCube.h"
 
 BF::UIText* text;
 //BF::Model* sphere;
@@ -23,6 +24,7 @@ BF::ShaderProgram hudShaderID;
 
 BF::AudioSource audioSource;
 BF::Sound sound;
+BF::GravityCube _worldGravity;
 
 ZEE::ZEEGameSystem::ZEEGameSystem()
 {
@@ -54,15 +56,16 @@ void ZEE::ZEEGameSystem::OnStartUp()
     GameSystem.Resource.Load("Texture/Block.bmp");
     GameSystem.Resource.Load("Model/Triangle.obj");
 
+    _worldGravity.IgnoreAxis(true, true, true);
+    _worldGravity.PullForce.Set(0, -GravityForceEarth, 0);
+    GameSystem.Resource.Add(&_worldGravity);
 
     GameSystem.Resource.Load("Level/MainMenu.lev");
-    GameSystem.Resource.Load(cube, "Model/Cube.obj");
+    GameSystem.Resource.Load(cube, "Model/Cube.obj");   
 
+    textureBix.MatrixModel.Scale(10, 2, 1);
 
-
-    textureBix.ModelMatrix.Scale(10, 2, 1);
-
-    cube.ModelMatrix.Scale(10.0f);
+    cube.MatrixModel.Scale(10.0f);
     cube.EnablePhysics = true;       
 
     GameSystem.Resource.Load
@@ -124,10 +127,10 @@ BF::Vector3<float> rot(0.0349066,0,0);
 void ZEE::ZEEGameSystem::OnUpdateGameLogic(float deltaTime)
 {
     
-    if (cube.ModelMatrix.CurrentPosition().Y <= 0)
+    if (cube.MatrixModel.CurrentPosition().Y <= 0)
     {
         //cube.ModelMatrix.Move(0, tcap, 0);
-        cube.Velocity.Set(0, 90, 0);
+        cube.Velocity.Set(0, _worldGravity.PullForce.Y * -50, 0);
     }
 
     _deltaTime = deltaTime;

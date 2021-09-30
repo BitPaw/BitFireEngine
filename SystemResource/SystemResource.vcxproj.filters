@@ -207,9 +207,6 @@
     <ClCompile Include="Source\Math\Physic\Collider.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Math\Physic\GravityBox.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Math\Physic\GravityField.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -361,6 +358,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Algorithm\ISBN.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Math\Physic\GravityCube.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -683,9 +683,6 @@
     <ClInclude Include="Source\Math\Physic\Collider.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Physic\GravityBox.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Math\Physic\GravityField.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -744,9 +741,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\SkyBox.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Math\Physic\PhysicalBody.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Event\Event.hpp">
@@ -876,6 +870,18 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Algorithm\ISBN.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\Physic\PhysicsDynamic.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\Physic\PhysicsStatic.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\Physic\GravityCube.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\Physic\ColliderType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

@@ -35,7 +35,7 @@ void BF::Model::Move(Vector3<float> position)
         //_currentPosition += position;
     }
 
-    ModelMatrix.Move(position.X, position.Y, position.Z);
+    MatrixModel.Move(position.X, position.Y, position.Z);
 }
 
 void BF::Model::MoveTo(float x, float y, float z)
@@ -51,7 +51,7 @@ void BF::Model::MoveTo(Vector3<float> position)
         {
             Vertex* vertex = GlobalMesh.VertexList[i];
 
-            auto x = ModelMatrix.CurrentPosition();
+            auto x = MatrixModel.CurrentPosition();
 
             vertex->CurrentPosition -= Vector3<float>(x.X, x.Y, x.Z);
             vertex->CurrentPosition += position;
@@ -60,7 +60,7 @@ void BF::Model::MoveTo(Vector3<float> position)
         // _currentPosition = position;
     }
 
-    ModelMatrix.MoveTo(position.X, position.Y, position.Z);
+    MatrixModel.MoveTo(position.X, position.Y, position.Z);
 }
 
 void BF::Model::Rotate(float x, float y, float z)
@@ -81,7 +81,7 @@ void BF::Model::Rotate(Vector3<float> rotation)
             Vertex* vertex = GlobalMesh.VertexList[i];
             Vector3<float>& currentPosition = vertex->CurrentPosition;
 
-            auto x = ModelMatrix.CurrentRotation();
+            auto x = MatrixModel.CurrentRotation();
             Vector3<float> position(x.X, x.Y, x.Z);
 
             currentPosition -= position;
@@ -108,20 +108,8 @@ void BF::Model::Rotate(Vector3<float> rotation)
         }*/
     }
 
-    ModelMatrix.Rotate(xRadians, yRadians, zRadians);
+    MatrixModel.Rotate(xRadians, yRadians, zRadians);
 }
-
-void BF::Model::RotateTo(float x, float y, float z)
-{
-    ModelMatrix.RotateTo(x, y, z);
-}
-
-void BF::Model::RotateTo(Vector3<float> rotation)
-{
-    ModelMatrix.RotateTo(rotation.X, rotation.Y, rotation.Z);
-}
-
-
 
 void BF::Model::Orbit(float x, float y, float z)
 {
@@ -161,7 +149,7 @@ void BF::Model::Scale(Vector3<float> scaleFactor)
     }
     else
     {
-        ModelMatrix.Scale(scaleFactor.X, scaleFactor.Y, scaleFactor.Z);
+        MatrixModel.Scale(scaleFactor.X, scaleFactor.Y, scaleFactor.Z);
     }
 }
 
@@ -478,7 +466,7 @@ BF::ResourceLoadingResult BF::Model::Load(const char* filePath)
 
     ID = ResourceIDLoading;
 
-    strcpy(FilePath, filePath);
+    strncpy(FilePath, filePath, ResourceFilePathSize);
 
     switch (modelType)
     {

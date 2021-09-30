@@ -341,7 +341,7 @@
     <ClCompile Include="Source\Math\Interpolate.cpp" />
     <ClCompile Include="Source\Math\Math.cpp" />
     <ClCompile Include="Source\Math\Physic\Collider.cpp" />
-    <ClCompile Include="Source\Math\Physic\GravityBox.cpp" />
+    <ClCompile Include="Source\Math\Physic\GravityCube.cpp" />
     <ClCompile Include="Source\Math\Physic\GravityField.cpp" />
     <ClCompile Include="Source\Math\Physic\GravitySphere.cpp" />
     <ClCompile Include="Source\Model\3DS\A3DS.cpp" />
@@ -383,6 +383,9 @@
     <ClCompile Include="Source\Compression\ZLIB\ZLIBCompressionMethod.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Math\Physic\ColliderType.h" />
+    <ClInclude Include="Source\Math\Physic\PhysicsStatic.hpp" />
+    <ClInclude Include="Source\Math\Physic\PhysicsDynamic.hpp" />
     <ClInclude Include="Source\Video\AVI\AVIHeader.h" />
     <ClInclude Include="Source\Compression\HUFFMAN\HuffmanCodeBlock.h" />
     <ClInclude Include="Source\Compression\HUFFMAN\HuffmanSymbol.h" />
@@ -412,7 +415,6 @@
     <ClInclude Include="Source\Event\Event.hpp" />
     <ClInclude Include="Source\Math\Geometry\AngleDegree.hpp" />
     <ClInclude Include="Source\Math\Geometry\AngleRadians.hpp" />
-    <ClInclude Include="Source\Math\Physic\PhysicalBody.hpp" />
     <ClInclude Include="Source\Camera\Camera.h" />
     <ClInclude Include="Source\Camera\CameraPerspective.hpp" />
     <ClInclude Include="Source\Game\SkyBox.h" />
@@ -504,7 +506,7 @@
     <ClInclude Include="Source\Math\Interpolate.h" />
     <ClInclude Include="Source\Math\Math.h" />
     <ClInclude Include="Source\Math\Physic\Collider.h" />
-    <ClInclude Include="Source\Math\Physic\GravityBox.h" />
+    <ClInclude Include="Source\Math\Physic\GravityCube.h" />
     <ClInclude Include="Source\Math\Physic\GravityField.h" />
     <ClInclude Include="Source\Math\Physic\GravitySphere.h" />
     <ClInclude Include="Source\Model\3DS\A3DS.h" />

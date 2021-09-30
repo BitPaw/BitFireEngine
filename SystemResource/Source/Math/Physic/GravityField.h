@@ -1,13 +1,34 @@
 #pragma once
 
 #include "Collider.h"
+#include "ColliderType.h"
 #include "../Geometry/Vector3.hpp"
+
+#define GravityForceSun 274
+#define GravityForceMercury 3.7
+#define GravityForceVenus 8.87
+#define GravityForceEarth 9.807
+#define GravityForceEarthMoon 1.62
+#define GravityForceMars 3.721
+#define GravityForceJupiter 24.79
+#define GravityForceSaturn 10.44
+#define GravityForceNeptune 11.15
+#define GravityForceUranus 8.87
+#define GravityForcePluto 0.62
 
 namespace BF
 {
 	class GravityField : public Collider
 	{
 		public:
-		Vector3<float> Force;
+		bool IgnoreAxisX;
+		bool IgnoreAxisY;
+		bool IgnoreAxisZ;
+
+		Vector3<float> PullForce;
+
+		GravityField();
+
+		void IgnoreAxis(bool x, bool y, bool z);
 	};
 }

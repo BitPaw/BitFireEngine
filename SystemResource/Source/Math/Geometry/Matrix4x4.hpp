@@ -365,7 +365,7 @@ namespace BF
 			 Set(view);
 		}
 
-		void Motion(Vector3<NumberType>& force, Vector3<NumberType>& velocity, NumberType mass, Vector3<NumberType>& gravity, NumberType deltaTime)
+		void Motion(Vector3<NumberType>& force, Vector3<NumberType>& velocity, NumberType mass, Vector3<NumberType> gravity, NumberType deltaTime)
 		{
 			Vector3<NumberType> moveDirection;
 

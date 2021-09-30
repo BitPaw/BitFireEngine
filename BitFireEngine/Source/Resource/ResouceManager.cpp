@@ -3,6 +3,7 @@
 #include "../../../SystemResource/Source/File/File.h"
 #include "../../../SystemResource/Source/Time/StopWatch.h"
 #include "../../../SystemResource/Source/Game/SkyBox.h"
+#include "../../../SystemResource/Source/Math/Physic/GravityField.h"
 #include "../../../SystemRender/Source/OpenGLAPI.h"
 #include <thread>
 
@@ -632,7 +633,7 @@ void BF::ResourceManager::Load(Level& level, const char* filePath)
                 //loadedModel->DirectMorth = false;
                 //loadedModel->ModelMatrix.Move(position);
                 //loadedModel->ModelMatrix.Rotate(rotation);
-                loadedModel->ModelMatrix.Scale(scale);
+                loadedModel->MatrixModel.Scale(scale);
                 //loadedModel->UpdateGlobalMesh();
 
                 //Add(*loadedModel);
@@ -793,21 +794,48 @@ void BF::ResourceManager::Add(SkyBox& skyBox)
     DefaultSkyBox = &skyBox;
 }
 
-void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
-{   
-    for (LinkedListNode<Model*>* currentModel = _modelList.GetFirst() ; currentModel != nullptr ; currentModel = currentModel->Next)
-    {
-        Model* model = currentModel->Element;
-        auto& force = model->Force;
-        auto& velocity = model->Velocity;
-        auto mass = model->Mass;
-        Vector3<float> gravity(0.f, -0.981, 0.f);
+void BF::ResourceManager::Add(Collider* collider)
+{
+    _physicList.Add(collider);
+}
 
-        if (model->EnablePhysics)
+// TODO: This Funktion is very inefficient! O(n^2)
+void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
+{      
+    for (LinkedListNode<Collider*>* colliderNode = _physicList.GetFirst(); colliderNode != nullptr; colliderNode = colliderNode->Next)
+    {
+        Collider* collider = colliderNode->Element;
+
+        for (LinkedListNode<Model*>* modelNode = _modelList.GetFirst(); modelNode != nullptr; modelNode = modelNode->Next)
         {
-            model->ModelMatrix.Motion(force, velocity, mass, gravity, deltaTime);
+            Model* model = modelNode->Element;
+            Vector4<float> modelPositionx4 = model->MatrixModel.CurrentPosition();
+            Vector3<float> modelPosition(modelPositionx4.X, modelPositionx4.Y, modelPositionx4.Z);
+            bool isColliding = collider->IsColliding(modelPosition);            
+
+            if (isColliding && model->EnablePhysics)
+            {
+                switch (collider->Type)
+                {
+                    case ColliderType::Gravity:
+                    {
+                        GravityField* gravityField = (GravityField*)collider;
+
+                        model->ApplyGravity(gravityField->PullForce, deltaTime);
+                        break;
+                    }
+                    case ColliderType::HitBox:
+                    {
+                        break;
+                    }
+                    case ColliderType::EffectBox:
+                    {
+                        break;
+                    }
+                }           
+            }
         }
-    }
+    }  
 }
 
 void BF::ResourceManager::ModelsRender(float deltaTime)
@@ -911,7 +939,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
                 OpenGLAPI::TextureUse(ImageType::Texture2D, textureID);
             }     
 
-            OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, model->ModelMatrix.Data);
+            OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, model->MatrixModel.Data);
 
             //---RenderStyle-------------------------
             if (renderInfo.RenderType != RenderMode::Unkown)

@@ -79,6 +79,6 @@ namespace BF
 
 		ResourceLoadingResult Load(const char* filePath);
 		ResourceLoadingResult Save(const char* filePath);
-		void Convert(Image& image);
+		void ConvertTo(Image& image);
 	};
 }

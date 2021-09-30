@@ -58,5 +58,6 @@ namespace BF
 		float Volume() override;
 		float SurfaceArea() override;
 		float Perimeter() override;
+		bool IsPointInObject(float x, float y, float z);
 	};
 }

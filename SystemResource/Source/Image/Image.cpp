@@ -1,10 +1,17 @@
 #include "Image.h"
-#include "../File/File.h"
+
 #include "BMP/BMP.h"
 #include "PNG/PNG.h"
 #include "TGA/TGA.h"
-#include <malloc.h>
+#include "TIFF/TIFF.h"
+#include "GIF/GIF.h"
+#include "JPEG/JPEG.h"
+#include "TIFF/TIFF.h"
+
+#include "../File/File.h"
 #include "../Math/Math.h"
+
+#include <stdlib.h>
 
 BF::Vector4<unsigned char> BF::Image::GetPixel(unsigned int x, unsigned int y)
 {
@@ -269,15 +276,15 @@ BF::ResourceLoadingResult BF::Image::Load(const char* filePath)
 {
     ID = ResourceIDLoading;
 
+    strncpy(FilePath, filePath, ResourceFilePathSize);
+
     if (!File::DoesFileExist(filePath))
     {
         ID = ResourceIDFileNotFound;
         return ResourceLoadingResult::FileNotFound;
     } 
 
-    ImageFileExtension imageFormat = FileFormatPeek(filePath);
-
-    strcpy(FilePath, filePath);
+    ImageFileExtension imageFormat = FileFormatPeek(filePath);   
 
     switch (imageFormat)
     {
@@ -290,28 +297,37 @@ BF::ResourceLoadingResult BF::Image::Load(const char* filePath)
         }
         case ImageFileExtension::GIF:
         {
+            GIF gif;
+            gif.Load(filePath);
+            gif.ConvertTo(*this);
             break;
         }
         case ImageFileExtension::JPEG:
         {
+            JPEG jpeg;
+            jpeg.Load(filePath);
+            jpeg.ConvertTo(*this);
             break;
         }
         case ImageFileExtension::PNG:
         {
             PNG png;
             png.Load(filePath);
-            png.Convert(*this);
+            png.ConvertTo(*this);
             break;
         }
         case ImageFileExtension::TGA:
         {
             TGA tga;
             tga.Load(filePath);
-            tga.Convert(*this);
+            tga.ConvertTo(*this);
             break;
         }
         case ImageFileExtension::TIFF:
         {
+            TIFF tiff;
+            tiff.Load(filePath);
+            tiff.ConvertTo(*this);
             break;
         }
         case ImageFileExtension::Unkown:

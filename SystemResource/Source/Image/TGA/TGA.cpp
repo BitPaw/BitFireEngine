@@ -339,7 +339,7 @@ BF::ResourceLoadingResult BF::TGA::Save(const char* filePath)
 	return ResourceLoadingResult::Successful;
 }
 
-void BF::TGA::Convert(Image& image)
+void BF::TGA::ConvertTo(Image& image)
 {	
 	ImageFormat imageFormat = ImageFormat::Unkown;
 	unsigned int pixelDataLengh = -1;

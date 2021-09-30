@@ -29,6 +29,7 @@ Image _playerCharacterNyte;
 Image _lamp;
 Image _fireplace;
 Image _sign;
+Model _rectangle;
 
 void Cleaved::CleavedGameSystem::OnStartUp()
 {
@@ -49,11 +50,15 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     );
 
     
+    GameSystem.Resource.Load(_rectangle, "");
+
     //GameSystem.Resource.Load(_playerCharacterLuna, "Texture/bmp");
     //GameSystem.Resource.Load(_playerCharacterNyte, "Texture/bmp");
     //GameSystem.Resource.Load(_lamp, "Texture/Lamp_B.bmp");
     GameSystem.Resource.Load(_fireplace, "Texture/FirePlaace.bmp");
     GameSystem.Resource.Load(_sign, "Texture/Sign.bmp");
+
+
 
 
     text = new BF::UIText("SampleText", *GameSystem.Resource.DefaultFont, -1, -0.8);

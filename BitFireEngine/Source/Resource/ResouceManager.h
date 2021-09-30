@@ -18,6 +18,7 @@
 #include "ResourceLoadMode.h"
 
 #include <thread>
+#include "../../../SystemResource/Source/Math/Physic/Collider.h"
 
 namespace BF
 {
@@ -36,6 +37,7 @@ namespace BF
         LinkedList<ShaderProgram*> _shaderProgramList;
         LinkedList<Dialog*> _dialogList;
         LinkedList<Level*> _levelList;
+        LinkedList<Collider*> _physicList;
 
         unsigned int _defaultShaderID;
         unsigned int _defaultTextureID;
@@ -93,7 +95,8 @@ namespace BF
         void Add(Font& font);
         void Add(ShaderProgram& shaderProgram);
         void Add(SkyBox& skyBox);
-       
+        void Add(Collider* collider);
+
         void ModelsPhysicsApply(float deltaTime);
         void ModelsRender(float deltaTime);
 

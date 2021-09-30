@@ -12,18 +12,15 @@
 #include "../Math/Geometry/Vector4.hpp"
 #include "../Math/Geometry/Shape/Shape.h"
 #include "../Math/Geometry/Matrix4x4.hpp"
-#include "../Math/Physic/PhysicalBody.hpp"
+#include "../Math/Physic/PhysicsDynamic.hpp"
 
 namespace BF
 {
 	// Renderable Object used as core element for the rendersystem.
-	class Model : public Resource, public PhysicalBody<float>
+	class Model : public Resource, public PhysicsDynamic<float>
 	{
 		public:
 		ModelRenderInformation RenderInformation;
-
-		
-		Matrix4x4<float> ModelMatrix;
 
 		LinkedMesh GlobalMesh;
 		List<Vector4<float>> ColorList;	
@@ -56,8 +53,6 @@ namespace BF
 		*/
 		void Rotate(float x, float y, float z);
 		void Rotate(Vector3<float> rotation);
-		void RotateTo(float x, float y, float z);
-		void RotateTo(Vector3<float> rotation);
 
 		/**
 	Rotate the object around the worldspace.
@@ -83,14 +78,6 @@ namespace BF
 		void ScaleTexturePoints(float x, float y);
 		void ScaleTexturePoints(Vector2<float> scale);
 
-		/**
-			Get the current position of this object in this worldspace.
-			@return Current position.
-		*/
-		Vector3<float> CurrentPosition();
-
-		Vector3<float> CurrentRotation();
-
 		void UseTexturePointAsColor();
 
 
@@ -104,9 +91,6 @@ namespace BF
 
 
 		void PrintModelData();
-		void PrintCurrentPosition();
-		void PrintCurrentRotation();
-
 		
 		static ModelType FileFormatPeek(const char* filePath);
 		ResourceLoadingResult Load();
