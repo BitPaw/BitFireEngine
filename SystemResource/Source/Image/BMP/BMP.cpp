@@ -18,14 +18,14 @@ BF::BMP::~BMP()
     free(PixelData);	
 }
 
-BF::ResourceLoadingResult BF::BMP::Load(const char* filePath)
+BF::FileActionResult BF::BMP::Load(const char* filePath)
 {
     File file(filePath); 
-    ResourceLoadingResult resourceLoadingResult = file.ReadFromDisk();
+    FileActionResult FileActionResult = file.ReadFromDisk();
 
-    if (resourceLoadingResult != ResourceLoadingResult::Successful)
+    if (FileActionResult != FileActionResult::Successful)
     {
-        return resourceLoadingResult;
+        return FileActionResult;
     }
 
     //---[ Parsing Header ]----------------------------------------------------
@@ -95,7 +95,7 @@ BF::ResourceLoadingResult BF::BMP::Load(const char* filePath)
             default:
             {
                 // Unkown Header 
-                return ResourceLoadingResult::FormatNotSupported;
+                return FileActionResult::FormatNotSupported;
             }
         }
     }    
@@ -122,10 +122,10 @@ BF::ResourceLoadingResult BF::BMP::Load(const char* filePath)
         file.DataCursorPosition += padding; // Move data, row + padding(padding can be 0)
     }
 
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::BMP::Save(const char* filePath)
+BF::FileActionResult BF::BMP::Save(const char* filePath)
 {
     unsigned int fileSize = InfoHeader.Width * InfoHeader.Height * 3 + 54u;
     File file(filePath, fileSize);
@@ -152,16 +152,16 @@ BF::ResourceLoadingResult BF::BMP::Save(const char* filePath)
 
     file.WriteToDisk();
 
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::BMP::ConvertFrom(Image& image)
+BF::FileActionResult BF::BMP::ConvertFrom(Image& image)
 {
     PixelData = (unsigned char*)malloc(image.PixelDataSize);
 
     if (!PixelData)
     {
-        return ResourceLoadingResult::OutOfMemory;
+        return FileActionResult::OutOfMemory;
     }
 
     PixelDataSize = image.PixelDataSize;
@@ -172,16 +172,16 @@ BF::ResourceLoadingResult BF::BMP::ConvertFrom(Image& image)
 
     memcpy(PixelData, image.PixelData, PixelDataSize);
 
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::BMP::ConvertTo(Image& image)
+BF::FileActionResult BF::BMP::ConvertTo(Image& image)
 {    
     void* pixelData = malloc(PixelDataSize);
 
     if (!pixelData)
     {
-        return ResourceLoadingResult::OutOfMemory;
+        return FileActionResult::OutOfMemory;
     }
 
     image.Format = ImageDataFormat::BGR;
@@ -195,5 +195,5 @@ BF::ResourceLoadingResult BF::BMP::ConvertTo(Image& image)
     image.FlipHorizontal();
     //image.RemoveColor(0,0,0);
 
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }

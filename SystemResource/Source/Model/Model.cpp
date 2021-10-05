@@ -1,7 +1,14 @@
 #include "Model.h"
 
 #include "ModelType.h"
+
+#include "3DS/A3DS.h"
+#include "FBX/FBX.h"
 #include "OBJ/OBJ.h"
+#include "PLY/PLY.h"
+#include "STL/STL.h"
+#include "WRL/WRL.h"
+
 #include "../File/File.h"
 #include "../../../SystemResource/Source/Math/Geometry/Shape/Triangle.h"
 #include "../../../SystemResource/Source/Math/Geometry/Shape/Rectangle.h"
@@ -449,17 +456,17 @@ BF::ModelType BF::Model::FileFormatPeek(const char* fileExtension)
     return ModelType::UnKown;
 }
 
-BF::ResourceLoadingResult BF::Model::Load()
+BF::FileActionResult BF::Model::Load()
 {
     return Load(FilePath);
 }
 
-BF::ResourceLoadingResult BF::Model::Load(const char* filePath)
+BF::FileActionResult BF::Model::Load(const char* filePath)
 {
     if (!File::DoesFileExist(filePath))
     {
         ID = ResourceIDFileNotFound;
-        return ResourceLoadingResult::FileNotFound;
+        return FileActionResult::FileNotFound;
     }
 
     ModelType modelType = FileFormatPeek(filePath);
@@ -471,36 +478,61 @@ BF::ResourceLoadingResult BF::Model::Load(const char* filePath)
     switch (modelType)
     {
         case ModelType::A3DS:
+        {
+            A3DS a3ds;
+            a3ds.Load(filePath);
+            a3ds.ConvertTo(*this);
             break;
+        }
 
         case ModelType::FBX:
+        {
+            FBX fbx;
+            fbx.Load(filePath);
+            fbx.ConvertTo(*this);
             break;
+        }
 
         case ModelType::OBJ:
         {
             OBJ obj;
             obj.Load(filePath);
-            obj.Convert(*this);
+            obj.ConvertTo(*this);
             break;
         }
 
         case ModelType::PLY:
+        {
+            OBJ obj;
+            obj.Load(filePath);
+            obj.ConvertTo(*this);
             break;
+        }
 
         case ModelType::STL:
+        {
+            STL stl;
+            stl.Load(filePath);
+            stl.ConvertTo(*this);
             break;
+        }
 
         case ModelType::WRL:
+        {
+            WRL wrl;
+            wrl.Load(filePath);
+            wrl.ConvertTo(*this);
             break;
+        }
 
         case ModelType::UnKown:
         default:
-            return ResourceLoadingResult::FormatNotSupported;
+            return FileActionResult::FormatNotSupported;
     }
 
     ID = ResourceIDLoaded;
 
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }
 
 void BF::Model::ConvertFrom(Shape& shape)

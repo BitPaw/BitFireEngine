@@ -1,16 +1,13 @@
 #pragma once
 
 #include "Image.h"
-#include "../ResourceLoadingResult.hpp"
+#include "../IFileFormat.hpp"
 
 namespace BF
 {
-	struct IImageFormat
+	struct IImageFormat : public IFileFormat
 	{
-		virtual ResourceLoadingResult Load(const char* filePath) = 0;
-		virtual ResourceLoadingResult Save(const char* filePath) = 0;
-
-		virtual ResourceLoadingResult ConvertTo(Image& image) = 0;
-		virtual ResourceLoadingResult ConvertFrom(Image& image) = 0;
+		virtual FileActionResult ConvertTo(Image& image) = 0;
+		virtual FileActionResult ConvertFrom(Image& image) = 0;
 	};
 }

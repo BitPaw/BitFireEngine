@@ -374,9 +374,9 @@ void BF::ResourceManager::Load(Model& model, const char* filePath)
 
     std::thread* modelLoaderThread = new std::thread([](ResourceManager* resourceManager, Model* model)
     {
-        ResourceLoadingResult errorCode = model->Load();
+        FileActionResult errorCode = model->Load();
 
-        if (errorCode == ResourceLoadingResult::Successful)
+        if (errorCode == FileActionResult::Successful)
         {
             model->ID = ResourceIDLoaded;
 
@@ -392,9 +392,9 @@ void BF::ResourceManager::Load(Model& model, const char* filePath)
   
                     resourceManager->Add(*image);
 
-                    ResourceLoadingResult errorCode = image->Load(material->TextureFilePath);                    
+                    FileActionResult errorCode = image->Load(material->TextureFilePath);                    
 
-                    if (errorCode == ResourceLoadingResult::Successful)
+                    if (errorCode == FileActionResult::Successful)
                     {
                         material->Texture = image;
                     }
@@ -422,9 +422,9 @@ void BF::ResourceManager::Load(Font& font, const char* filePath)
 {
     Add(font);
 
-    ResourceLoadingResult errorCode = font.Load(filePath);
+    FileActionResult errorCode = font.Load(filePath);
 
-    if (errorCode == ResourceLoadingResult::Successful)
+    if (errorCode == FileActionResult::Successful)
     {
         for (unsigned int i = 0; i < font.AdditionalResourceListSize; i++)
         {
@@ -449,7 +449,7 @@ void BF::ResourceManager::Load(Font& font, const char* filePath)
            // errorCode = ErrorCode::FileNotFound;
             Load(*font.Texture, textureFilePath);
 
-            if (errorCode != ResourceLoadingResult::Successful)
+            if (errorCode != FileActionResult::Successful)
             {
                 delete font.Texture;
                 font.Texture = nullptr;
@@ -491,11 +491,11 @@ void BF::ResourceManager::Load(Level& level, const char* filePath)
     unsigned int shaderCounter = 0;
     unsigned int dialogCounter = 0;
 
-    ResourceLoadingResult resourceLoadingResult = file.ReadFromDisk();
+    FileActionResult FileActionResult = file.ReadFromDisk();
     unsigned int amountOfLines = file.CountAmountOfLines();
     char currentLineBuffer[200];
 
-    if (resourceLoadingResult != ResourceLoadingResult::Successful)
+    if (FileActionResult != FileActionResult::Successful)
     {
         return;
     }

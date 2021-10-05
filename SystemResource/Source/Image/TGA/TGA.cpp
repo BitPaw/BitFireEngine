@@ -30,7 +30,7 @@ BF::TGA::~TGA()
 	free(ImageData);
 }
 
-BF::ResourceLoadingResult BF::TGA::Load(const char* filePath)
+BF::FileActionResult BF::TGA::Load(const char* filePath)
 {
 	unsigned int footerEntryIndex = 0;
 	unsigned char imageIDLengh = 0;
@@ -43,9 +43,9 @@ BF::ResourceLoadingResult BF::TGA::Load(const char* filePath)
 	unsigned int developerAreaOffset = 0;
 	unsigned int firstFieldAfterHeader = 0;
 	File file(filePath);
-	ResourceLoadingResult loadingResult = file.ReadFromDisk();
+	FileActionResult loadingResult = file.ReadFromDisk();
 
-	if (loadingResult != ResourceLoadingResult::Successful)
+	if (loadingResult != FileActionResult::Successful)
 	{
 		return loadingResult;
 	}
@@ -117,7 +117,7 @@ BF::ResourceLoadingResult BF::TGA::Load(const char* filePath)
 
 		if (!isTGAVersionTwo) // Is this a TGA v.1.0 file?
 		{
-			return ResourceLoadingResult::Successful; // Parsing finished. There should be no more data to parse. End of file.
+			return FileActionResult::Successful; // Parsing finished. There should be no more data to parse. End of file.
 		}
 	}
 	
@@ -205,10 +205,10 @@ BF::ResourceLoadingResult BF::TGA::Load(const char* filePath)
 	}
 	//-----------------------------------------------------------		
 
-	return ResourceLoadingResult::Successful;
+	return FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::TGA::Save(const char* filePath)
+BF::FileActionResult BF::TGA::Save(const char* filePath)
 {
 	const char footer[18] = "TRUEVISION-XFILE.";
 	unsigned int fileLength = 500;
@@ -219,10 +219,10 @@ BF::ResourceLoadingResult BF::TGA::Save(const char* filePath)
 
 	file.WriteToDisk();
 
-	return ResourceLoadingResult::Successful;
+	return FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::TGA::ConvertTo(Image& image)
+BF::FileActionResult BF::TGA::ConvertTo(Image& image)
 {	
 	ImageDataFormat imageFormat = ImageDataFormat::Unkown;
 	unsigned int pixelDataLengh = -1;
@@ -269,7 +269,7 @@ BF::ResourceLoadingResult BF::TGA::ConvertTo(Image& image)
 
 	if (newImageData == nullptr)
 	{
-		return ResourceLoadingResult::OutOfMemory;
+		return FileActionResult::OutOfMemory;
 	}	
 
 	image.Type = ImageType::Texture2D;
@@ -282,7 +282,7 @@ BF::ResourceLoadingResult BF::TGA::ConvertTo(Image& image)
 	memcpy(newImageData, ImageData, pixelDataLengh);
 }
 
-BF::ResourceLoadingResult BF::TGA::ConvertFrom(Image& image)
+BF::FileActionResult BF::TGA::ConvertFrom(Image& image)
 {
-	return ResourceLoadingResult();
+	return FileActionResult();
 }

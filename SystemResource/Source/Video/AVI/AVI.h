@@ -1,16 +1,16 @@
 #pragma once
 
-#include "../../ResourceLoadingResult.hpp"
 #include "AVIHeader.h"
+#include "../IVideoFormat.hpp"
 
 namespace BF
 {
-	struct AVI
+	struct AVI : public IVideoFormat
 	{
 		AVIHeader Header;
 
 		public:
-		ResourceLoadingResult Load(const char* filePath);
-		ResourceLoadingResult Save(const char* filePath);
+		FileActionResult Load(const char* filePath);
+		FileActionResult Save(const char* filePath);
 	};
 }

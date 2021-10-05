@@ -12,4 +12,7 @@ namespace BF
 		GrayscaleWithAlphaChannel,  // ColorType = 4
 		TruecolorWithAlphaChannel  // ColorType = 6
 	};
+
+	PNGColorType ConvertColorType(unsigned int colorType);
+	unsigned int ConvertColorType(PNGColorType colorType);
 }

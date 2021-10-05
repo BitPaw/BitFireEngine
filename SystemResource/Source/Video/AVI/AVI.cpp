@@ -1,12 +1,12 @@
 #include "AVI.h"
 #include "../../File/File.h"
 
-BF::ResourceLoadingResult BF::AVI::Load(const char* filePath)
+BF::FileActionResult BF::AVI::Load(const char* filePath)
 {
     File file(filePath);
-    ResourceLoadingResult loadingResult = file.ReadFromDisk();
+    FileActionResult loadingResult = file.ReadFromDisk();
 
-    if (loadingResult != ResourceLoadingResult::Successful)
+    if (loadingResult != FileActionResult::Successful)
     {
         return loadingResult;
     }
@@ -25,10 +25,10 @@ BF::ResourceLoadingResult BF::AVI::Load(const char* filePath)
   
     file.Read(size, Endian::Big);
 
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::AVI::Save(const char* filePath)
+BF::FileActionResult BF::AVI::Save(const char* filePath)
 {
-    return ResourceLoadingResult();
+    return FileActionResult();
 }

@@ -6,7 +6,7 @@
 #include <fstream>
 #include <sstream>
 
-#include "../ResourceLoadingResult.hpp"
+#include "../File/FileActionResult.hpp"
 #include "../Container/AsciiString.h"
 #include "../Types/Endian.h"
 
@@ -17,7 +17,7 @@ namespace BF
 	struct File
 	{
 		private:
-		ResourceLoadingResult CheckFile();
+		FileActionResult CheckFile();
 
 		public:
 		char* Data;
@@ -41,9 +41,9 @@ namespace BF
 		static void GetFileExtension(const char* filePath, const char* fileExtension);
 		void CursorToBeginning();
 
-		void Remove();
-		static void Remove(const char* filePath);
-		void ReName(const char* name);
+		bool Remove();
+		static bool Remove(const char* filePath);
+		bool ReName(const char* name);
 
 		void Clear();
 
@@ -64,9 +64,9 @@ namespace BF
 		void Read(int& value, Endian endian);
 		void Read(unsigned int& value, Endian endian);
 		void Read(void* value, size_t length);
-		ResourceLoadingResult ReadFromDisk();
-		static ResourceLoadingResult ReadFromDisk(const char* filePath, char** buffer);
-		static ResourceLoadingResult ReadFromDisk(const char* filePath, char** buffer, unsigned int maxSize);
+		FileActionResult ReadFromDisk();
+		static FileActionResult ReadFromDisk(const char* filePath, char** buffer);
+		static FileActionResult ReadFromDisk(const char* filePath, char** buffer, unsigned int maxSize);
 		//---------------------------------------------------------------------
 
 		//---<Write>----------------------------------------------------------------------
@@ -79,8 +79,8 @@ namespace BF
 		void Write(unsigned int value, Endian endian);
 		void Write(const char* string, size_t length);
 		void Write(void* value, size_t length);
-		ResourceLoadingResult WriteToDisk();
-		static ResourceLoadingResult WriteToDisk(const char* filePath, const char* content, unsigned int length);
+		FileActionResult WriteToDisk();
+		static FileActionResult WriteToDisk(const char* filePath, const char* content, unsigned int length);
 		//---------------------------------------------------------------------
 	};
 }

@@ -1,17 +1,21 @@
 #include "FLAC.h"
 
-void BF::FLAC::Load(const char* filePath)
+BF::FileActionResult BF::FLAC::Load(const char* filePath)
 {
+	return FileActionResult::Successful;
 }
 
-void BF::FLAC::Save(const char* filePath)
+BF::FileActionResult BF::FLAC::Save(const char* filePath)
 {
+	return FileActionResult::Successful;
 }
 
-void BF::FLAC::ConvertTo(Sound& sound)
+BF::FileActionResult BF::FLAC::ConvertTo(Sound& sound)
 {
+	return FileActionResult::Successful;
 }
 
-void BF::FLAC::ConvertFrom(Sound& sound)
+BF::FileActionResult BF::FLAC::ConvertFrom(Sound& sound)
 {
+	return FileActionResult::Successful;
 }

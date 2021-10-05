@@ -261,6 +261,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Image\PNG\PNGColorType.cpp" />
+    <ClCompile Include="Source\Video\MP4\MP4.cpp" />
+    <ClCompile Include="Source\Image\JPEG\JPEGScanSelector.cpp" />
+    <ClCompile Include="Source\Image\JPEG\JPEGScanStart.cpp" />
+    <ClCompile Include="Source\Image\JPEG\JPEGHuffmanTable.cpp" />
     <ClCompile Include="Source\Image\JPEG\JPEGFrameComponent.cpp" />
     <ClCompile Include="Source\Image\JPEG\JPEGFrame.cpp" />
     <ClCompile Include="Source\Image\JPEG\JPEGFileInfo.cpp" />
@@ -385,6 +390,13 @@
     <ClCompile Include="Source\Compression\ZLIB\ZLIBCompressionMethod.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Model\IModelFormat.hpp" />
+    <ClInclude Include="Source\Sound\ISoundFormat.hpp" />
+    <ClInclude Include="Source\Video\MP4\MP4.h" />
+    <ClInclude Include="Source\IFileFormat.hpp" />
+    <ClInclude Include="Source\Image\JPEG\JPEGScanSelector.h" />
+    <ClInclude Include="Source\Image\JPEG\JPEGScanStart.h" />
+    <ClInclude Include="Source\Image\JPEG\JPEGHuffmanTable.h" />
     <ClInclude Include="Source\Image\JPEG\JPEGFrameComponent.h" />
     <ClInclude Include="Source\Image\JPEG\JPEGFrame.h" />
     <ClInclude Include="Source\Image\JPEG\JPEGFileInfo.h" />
@@ -447,7 +459,7 @@
     <ClInclude Include="Source\Container\Table.hpp" />
     <ClInclude Include="Source\Dialog\Dialog.h" />
     <ClInclude Include="Source\Email\EML.h" />
-    <ClInclude Include="Source\ResourceLoadingResult.hpp" />
+    <ClInclude Include="Source\File\FileActionResult.hpp" />
     <ClInclude Include="Source\File\File.h" />
     <ClInclude Include="Source\Font\FNT\FNT.h" />
     <ClInclude Include="Source\Font\FNT\FNTChanalMode.h" />
@@ -558,11 +570,16 @@
     <ClInclude Include="Source\Types\Endian.h" />
     <ClInclude Include="Source\Types\UUID.h" />
     <ClInclude Include="Source\Types\Word.h" />
+    <ClInclude Include="Source\Video\IVideoFormat.hpp" />
     <ClInclude Include="Source\Video\Video.h" />
     <ClInclude Include="Source\Sound\WMA\WMA.h" />
     <ClInclude Include="Source\Compression\ZLIB\ZLIBHeader.h" />
     <ClInclude Include="Source\Compression\ZLIB\ZLIBCompressionLevel.h" />
     <ClInclude Include="Source\Compression\ZLIB\ZLIBCompressionMethod.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

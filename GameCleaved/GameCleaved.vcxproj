@@ -43,6 +43,9 @@
     <ProjectReference Include="..\SystemResource\SystemResource.vcxproj">
       <Project>{398c5630-9092-486f-920c-c9992f8b7f6c}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\SystemSound\SystemSound.vcxproj">
+      <Project>{91ed6047-19d8-48a0-ac5c-f9e1812c1962}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\HUD.frag" />

@@ -8,7 +8,7 @@
 #include "ImageFileFormat.h"
 
 #include "../Resource.h"
-#include "../ResourceLoadingResult.hpp"
+#include "../File/FileActionResult.hpp"
 
 #include "../Container/AsciiString.h"
 #include "../Math/Geometry/Vector4.hpp"
@@ -29,7 +29,7 @@ namespace BF
 		ImageWrap WrapHeight;
 		ImageWrap WrapWidth;
 
-		unsigned int PixelDataSize;
+		size_t PixelDataSize;
 		unsigned char* PixelData;
 
 
@@ -50,7 +50,7 @@ namespace BF
 		void FormatChange(ImageDataFormat imageFormat);
 
 		static ImageFileFormat FileFormatPeek(const char* filePath);
-		ResourceLoadingResult Load(const char* filePath);
-		ResourceLoadingResult Save(const char* filePath, ImageFileFormat imageFileFormat);
+		FileActionResult Load(const char* filePath);
+		FileActionResult Save(const char* filePath, ImageFileFormat imageFileFormat);
 	};
 }

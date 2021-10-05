@@ -93,9 +93,14 @@ void BF::Image::FlipHorizontal()
     unsigned int height = Height;
     unsigned int width = Width;
     unsigned int bytesPerPixel = 3;
-    unsigned int scanLineWidthSize = width * bytesPerPixel;
+    size_t scanLineWidthSize = width * bytesPerPixel;
     unsigned int scanLinesToSwap = height / 2;
-    unsigned char* copyBufferRow = (unsigned char*)malloc(scanLineWidthSize);
+    unsigned char* copyBufferRow = (unsigned char*)malloc(scanLineWidthSize * sizeof(char));
+
+    if (!copyBufferRow)
+    {
+        return;
+    }
 
     for (unsigned int scanlineIndex = 0; scanlineIndex < scanLinesToSwap; scanlineIndex++)
     {
@@ -206,11 +211,16 @@ void BF::Image::FormatChange(ImageDataFormat imageFormat)
                     break;
                 case ImageDataFormat::RGBA:
                 {
-                    unsigned int newIndex = 0;
-                    unsigned int oldSize = PixelDataSize;
-                    unsigned int newSize = (oldSize / 3) * 4;
+                    size_t newIndex = 0;
+                    size_t oldSize = PixelDataSize;
+                    size_t newSize = (oldSize / 3) * 4;
                     unsigned char* newData = (unsigned char*)malloc(newSize * sizeof(char));
                     unsigned char* oldData = PixelData;
+
+                    if (!newData)
+                    {
+                        return;
+                    }
 
                     memset(newData, 0xFF, newSize);
 
@@ -272,7 +282,7 @@ BF::ImageFileFormat BF::Image::FileFormatPeek(const char* filePath)
     return ImageFileFormat::Unkown;
 }
 
-BF::ResourceLoadingResult BF::Image::Load(const char* filePath)
+BF::FileActionResult BF::Image::Load(const char* filePath)
 {
     ID = ResourceIDLoading;
 
@@ -281,7 +291,7 @@ BF::ResourceLoadingResult BF::Image::Load(const char* filePath)
     if (!File::DoesFileExist(filePath))
     {
         ID = ResourceIDFileNotFound;
-        return ResourceLoadingResult::FileNotFound;
+        return FileActionResult::FileNotFound;
     } 
 
     ImageFileFormat imageFileFormat = FileFormatPeek(filePath);
@@ -335,23 +345,23 @@ BF::ResourceLoadingResult BF::Image::Load(const char* filePath)
         {
             ID = ResourceIDUnsuportedFormat;
 
-            return ResourceLoadingResult::FormatNotSupported;
+            return FileActionResult::FormatNotSupported;
         }       
     }
 
     ID = ResourceIDLoaded;
 
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::Image::Save(const char* filePath, ImageFileFormat imageFileFormat)
+BF::FileActionResult BF::Image::Save(const char* filePath, ImageFileFormat imageFileFormat)
 {
     switch (imageFileFormat)
     {
         default:
         case BF::ImageFileFormat::Unkown:
         {
-            return ResourceLoadingResult::FormatNotSupported;
+            return FileActionResult::FormatNotSupported;
         }
         case BF::ImageFileFormat::BitMap:
         {
@@ -397,5 +407,5 @@ BF::ResourceLoadingResult BF::Image::Save(const char* filePath, ImageFileFormat 
         }
     }
 
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }

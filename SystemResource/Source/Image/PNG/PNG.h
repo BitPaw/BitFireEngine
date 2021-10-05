@@ -11,11 +11,6 @@ namespace BF
 {
 	struct PNG : public IImageFormat
 	{
-		private: 
-		static inline PNGColorType ConvertColorType(unsigned int colorType);
-		static inline unsigned int ConvertColorType(PNGColorType colorType);
-
-
 		public:
 		//---[ IHDR - Image Header ]----------------------------------------------
 		unsigned int Width;
@@ -119,11 +114,11 @@ namespace BF
 
 		//---------------------------------------------------------------------------
 
-		ResourceLoadingResult Load(const char* filePath);
-		ResourceLoadingResult Save(const char* filePath);
+		FileActionResult Load(const char* filePath);
+		FileActionResult Save(const char* filePath);
 
-		ResourceLoadingResult ConvertTo(Image& image);
-		ResourceLoadingResult ConvertFrom(Image& image);
+		FileActionResult ConvertTo(Image& image);
+		FileActionResult ConvertFrom(Image& image);
 
 		void PrintData();
 	};

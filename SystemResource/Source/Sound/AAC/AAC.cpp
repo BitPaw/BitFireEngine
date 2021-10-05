@@ -1,17 +1,21 @@
 #include "AAC.h"
 
-void BF::AAC::Load(const char* filePath)
+BF::FileActionResult BF::AAC::Load(const char* filePath)
 {
+	return FileActionResult::Successful;
 }
 
-void BF::AAC::Save(const char* filePath)
+BF::FileActionResult BF::AAC::Save(const char* filePath)
 {
+	return FileActionResult::Successful;
 }
 
-void BF::AAC::ConvertTo(Sound& sound)
+BF::FileActionResult BF::AAC::ConvertTo(Sound& sound)
 {
+	return FileActionResult::Successful;
 }
 
-void BF::AAC::ConvertFrom(Sound& sound)
+BF::FileActionResult BF::AAC::ConvertFrom(Sound& sound)
 {
+	return FileActionResult::Successful;
 }

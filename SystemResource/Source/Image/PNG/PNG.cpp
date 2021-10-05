@@ -3,64 +3,15 @@
 #include "../../File/File.h"
 #include "../../Compression/ZLIB/ZLIBHeader.h"
 
-BF::PNGColorType BF::PNG::ConvertColorType(unsigned int colorType)
-{
-    switch (colorType)
-    {
-        case 0u:
-            return PNGColorType::Grayscale;
-
-        case 2u:
-            return PNGColorType::Truecolor;
-
-        case 3u:
-            return PNGColorType::IndexedColor;
-
-        case 4u:
-            return PNGColorType::GrayscaleWithAlphaChannel;
-
-        case 6u:
-            return PNGColorType::TruecolorWithAlphaChannel;
-
-        default:
-            return PNGColorType::InvalidColorType;
-    }
-}
-
-unsigned int BF::PNG::ConvertColorType(PNGColorType colorType)
-{
-    switch (colorType)
-    {
-        default:
-        case BF::PNGColorType::InvalidColorType:
-            return -1;
-
-        case BF::PNGColorType::Grayscale:
-            return 0u;
-
-        case BF::PNGColorType::Truecolor:
-            return 2u;
-
-        case BF::PNGColorType::IndexedColor:
-            return 3u;
-
-        case BF::PNGColorType::GrayscaleWithAlphaChannel:
-            return 4u;
-
-        case BF::PNGColorType::TruecolorWithAlphaChannel:
-            return 6u;
-    }
-}
-
-BF::ResourceLoadingResult BF::PNG::Load(const char* filePath)
+BF::FileActionResult BF::PNG::Load(const char* filePath)
 {   
     File file(filePath);
-    ResourceLoadingResult resourceLoadingResult = file.ReadFromDisk(); 
+    FileActionResult FileActionResult = file.ReadFromDisk(); 
     bool parseFinished = false;
 
-    if (resourceLoadingResult != ResourceLoadingResult::Successful)
+    if (FileActionResult != FileActionResult::Successful)
     {
-        return resourceLoadingResult;
+        return FileActionResult;
     }
 
     // Check Header
@@ -74,7 +25,7 @@ BF::ResourceLoadingResult BF::PNG::Load(const char* filePath)
 
         if (!isValidHeader)
         {
-            return ResourceLoadingResult::FormatNotSupported;
+            return FileActionResult::FormatNotSupported;
         }
     }
  
@@ -237,7 +188,7 @@ BF::ResourceLoadingResult BF::PNG::Load(const char* filePath)
     if (!ZLIBHeaderList)
     {
         ZLIBHeaderListSize = 0;
-        return ResourceLoadingResult::OutOfMemory;
+        return FileActionResult::OutOfMemory;
     }
 
     file.DataCursorPosition = 8u;
@@ -284,7 +235,7 @@ BF::ResourceLoadingResult BF::PNG::Load(const char* filePath)
     }
 }
 
-BF::ResourceLoadingResult BF::PNG::Save(const char* filePath)
+BF::FileActionResult BF::PNG::Save(const char* filePath)
 {
     size_t fileLength = 500;
     File file(filePath, fileLength);
@@ -325,10 +276,10 @@ BF::ResourceLoadingResult BF::PNG::Save(const char* filePath)
 
     file.WriteToDisk();
 
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::PNG::ConvertTo(Image& image)
+BF::FileActionResult BF::PNG::ConvertTo(Image& image)
 {
     unsigned char* pixelData = image.PixelData;
     unsigned int width = Width;
@@ -344,12 +295,12 @@ BF::ResourceLoadingResult BF::PNG::ConvertTo(Image& image)
         ZLIBHeader& zlibHeader = ZLIBHeaderList[i];
     }
 
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::PNG::ConvertFrom(Image& image)
+BF::FileActionResult BF::PNG::ConvertFrom(Image& image)
 {
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }
 
 void BF::PNG::PrintData()

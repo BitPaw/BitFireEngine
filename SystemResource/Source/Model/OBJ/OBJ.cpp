@@ -110,19 +110,19 @@ BF::OBJLineCommand BF::OBJ::PeekCommandLine(const char* commandLine)
 
 
 
-BF::ResourceLoadingResult BF::OBJ::Load(const char* filePath)
+BF::FileActionResult BF::OBJ::Load(const char* filePath)
 {
     bool isFirstVertex = true;
     char currentLineBuffer[FileLineBufferSize];
     File file(filePath); 
-    ResourceLoadingResult resourceLoadingResult = file.ReadFromDisk();
+    FileActionResult FileActionResult = file.ReadFromDisk();
     unsigned int numberOfLines = file.CountAmountOfLines();
 
     strncpy(Name, filePath, OBJNameSize);
 
-    if (resourceLoadingResult != ResourceLoadingResult::Successful)
+    if (FileActionResult != FileActionResult::Successful)
     {
-        return resourceLoadingResult;
+        return FileActionResult;
     }   
 
     //---<Cound needed Space and allocate>----------------------------------
@@ -212,7 +212,7 @@ BF::ResourceLoadingResult BF::OBJ::Load(const char* filePath)
 
                 if (!newelementList)
                 {
-                    return ResourceLoadingResult::OutOfMemory;
+                    return FileActionResult::OutOfMemory;
                 }
 
                 ElementList = newelementList;
@@ -497,12 +497,12 @@ BF::ResourceLoadingResult BF::OBJ::Load(const char* filePath)
     }
 }
 
-BF::ResourceLoadingResult BF::OBJ::Save(const char* filePath)
+BF::FileActionResult BF::OBJ::Save(const char* filePath)
 {
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }
 
-void BF::OBJ::Convert(Model& model)
+BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
 {
     bool usedNormals = false;
 
@@ -613,6 +613,13 @@ void BF::OBJ::Convert(Model& model)
     }
 
     model.UpdateGlobalMesh();
+
+    return FileActionResult::Successful;
+}
+
+BF::FileActionResult BF::OBJ::ConvertFrom(Model& model)
+{
+    return FileActionResult::Successful;
 }
 
 void BF::OBJ::Clear()

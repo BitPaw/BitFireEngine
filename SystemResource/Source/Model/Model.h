@@ -93,8 +93,8 @@ namespace BF
 		void PrintModelData();
 		
 		static ModelType FileFormatPeek(const char* filePath);
-		ResourceLoadingResult Load();
-		ResourceLoadingResult Load(const char* filePath);
+		FileActionResult Load();
+		FileActionResult Load(const char* filePath);
 		void ConvertFrom(Shape& shape);
 	};
 }

@@ -6,14 +6,14 @@
 
 #include "../File/File.h"
 
-BF::ResourceLoadingResult BF::Font::Load(const char* filePath)
+BF::FileActionResult BF::Font::Load(const char* filePath)
 {
     File file(filePath);
     FontFormat fontFormat = FileFormatPeek(filePath);
 
     if (!file.DoesFileExist())
     {
-        return ResourceLoadingResult::FileNotFound;
+        return FileActionResult::FileNotFound;
     }
 
     switch (fontFormat)
@@ -41,10 +41,10 @@ BF::ResourceLoadingResult BF::Font::Load(const char* filePath)
 
     case FontFormat::Unkown:
     default:
-        return ResourceLoadingResult::FormatNotSupported;
+        return FileActionResult::FormatNotSupported;
     }
 
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }
 
 BF::FontFormat BF::Font::FileFormatPeek(const char* filePath)

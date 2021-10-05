@@ -1,9 +1,11 @@
 #include "MID.h"
-#include "../../File/File.h"
-#include "../../Container/ByteStreamHusk.h"
+
 #include "MIDICommand.h"
 
-void BF::MID::Load(const char* filePath)
+#include "../../File/File.h"
+#include "../../Container/ByteStreamHusk.h"
+
+BF::FileActionResult BF::MID::Load(const char* filePath)
 {
 	const char midiTrackEndIndicator[5] = "\x00\xFF\x2F\x00";
 
@@ -34,9 +36,11 @@ void BF::MID::Load(const char* filePath)
 
 		byteStreamHusk.CopyBytesAndMove(track.EventData, chunkLength);
 	}
+
+	return FileActionResult::Successful;
 }
 
-void BF::MID::Save(const char* filePath)
+BF::FileActionResult BF::MID::Save(const char* filePath)
 {
 	unsigned int fileSize = 14u;
 
@@ -68,15 +72,19 @@ void BF::MID::Save(const char* filePath)
 	File::WriteToDisk(filePath, data, fileSize);
 
 	free(data);
+
+
+	return FileActionResult::Successful;
 }
 
-void BF::MID::ConvertTo(Sound& sound)
+BF::FileActionResult BF::MID::ConvertTo(Sound& sound)
 {
-
+	return FileActionResult::Successful;
 }
 
-void BF::MID::ConvertFrom(Sound& sound)
+BF::FileActionResult BF::MID::ConvertFrom(Sound& sound)
 {
+	return FileActionResult::Successful;
 }
 
 

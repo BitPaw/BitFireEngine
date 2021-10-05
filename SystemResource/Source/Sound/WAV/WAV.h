@@ -3,13 +3,12 @@
 #include "RIFF.h"
 #include "FMT.h"
 
-#include "../Sound.h"
-#include "../../ResourceLoadingResult.hpp"
+#include "../ISoundFormat.hpp"
 
 namespace BF
 {
 	// Waveform Audio File
-	struct WAV 
+	struct WAV : public ISoundFormat
 	{
 		public:
 		RIFF RIFFChunk;
@@ -21,9 +20,9 @@ namespace BF
 		WAV();
 		~WAV();
 
-		ResourceLoadingResult Load(const char* filePath);
-		ResourceLoadingResult Save(const char* filePath);
-		void ConvertTo(Sound& sound);
-		void ConvertFrom(Sound& sound);
+		FileActionResult Load(const char* filePath);
+		FileActionResult Save(const char* filePath);
+		FileActionResult ConvertTo(Sound& sound);
+		FileActionResult ConvertFrom(Sound& sound);
 	};
 }

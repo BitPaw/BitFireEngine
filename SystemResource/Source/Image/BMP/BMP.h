@@ -23,10 +23,10 @@ namespace BF
 		BMP();
 		~BMP();
 
-		ResourceLoadingResult Load(const char* filePath);
-		ResourceLoadingResult Save(const char* filePath);
+		FileActionResult Load(const char* filePath);
+		FileActionResult Save(const char* filePath);
 
-		ResourceLoadingResult ConvertFrom(Image& image);
-		ResourceLoadingResult ConvertTo(Image& image);
+		FileActionResult ConvertFrom(Image& image);
+		FileActionResult ConvertTo(Image& image);
 	};
 }

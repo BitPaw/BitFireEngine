@@ -3,14 +3,14 @@
 #include "../Container/AsciiString.h"
 #include <cassert>
 
-BF::ResourceLoadingResult BF::File::CheckFile()
+BF::FileActionResult BF::File::CheckFile()
 {
 	if (!DoesFileExist(Path))
 	{
-		return BF::ResourceLoadingResult::FileNotFound;
+		return BF::FileActionResult::FileNotFound;
 	}
 
-	return BF::ResourceLoadingResult::Successful;
+	return BF::FileActionResult::Successful;
 }
 
 BF::File::File(const char* filePath, size_t dataSize)
@@ -41,19 +41,37 @@ void BF::File::CursorToBeginning()
 	DataCursorPosition = 0;
 }
 
-void BF::File::Remove()
+bool BF::File::Remove()
 {
-	remove(Path);
+	return BF::File::Remove(Path);
 }
 
-void BF::File::Remove(const char* filePath)
+bool BF::File::Remove(const char* filePath)
 {
-	remove(filePath);
+	int removeResult = remove(filePath);
+
+	switch (removeResult)
+	{
+		case 0:
+			return true;
+
+		default:
+			return false;
+	}
 }
 
-void BF::File::ReName(const char* name)
+bool BF::File::ReName(const char* name)
 {
-	rename(Path, name);
+	int renameResult = rename(Path, name);
+
+	switch (renameResult)
+	{
+		case 0:
+			return true;
+
+		default:
+			return false;
+	}
 }
 
 void BF::File::Clear()
@@ -96,7 +114,7 @@ void BF::File::SetFilePath(const char* filePath)
 	fileName.Remove('/');
 }
 
-BF::ResourceLoadingResult BF::File::ReadFromDisk()
+BF::FileActionResult BF::File::ReadFromDisk()
 {
 	const unsigned int elementSize = sizeof(char);
 	size_t fullSize = -1;
@@ -104,7 +122,7 @@ BF::ResourceLoadingResult BF::File::ReadFromDisk()
 
 	if (file == nullptr)
 	{
-		return BF::ResourceLoadingResult::FileNotFound;
+		return BF::FileActionResult::FileNotFound;
 	}
 
 	fseek(file, 0, SEEK_END);
@@ -118,7 +136,7 @@ BF::ResourceLoadingResult BF::File::ReadFromDisk()
 
 	if (!Data)
 	{
-		return BF::ResourceLoadingResult::OutOfMemory;
+		return BF::FileActionResult::OutOfMemory;
 	}
 
 	//Data[fullSize] = '\0'; // Termiate
@@ -137,10 +155,10 @@ BF::ResourceLoadingResult BF::File::ReadFromDisk()
 
 	int closeResult = fclose(file);
 
-	return BF::ResourceLoadingResult::Successful;
+	return BF::FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::File::ReadFromDisk(const char* filePath, char** buffer)
+BF::FileActionResult BF::File::ReadFromDisk(const char* filePath, char** buffer)
 {
 	const unsigned int elementSize = sizeof(char);
 	size_t fullSize = -1;
@@ -149,7 +167,7 @@ BF::ResourceLoadingResult BF::File::ReadFromDisk(const char* filePath, char** bu
 
 	if (file == nullptr)
 	{
-		return BF::ResourceLoadingResult::FileNotFound;
+		return BF::FileActionResult::FileNotFound;
 	}
 
 	fseek(file, 0, SEEK_END);
@@ -163,7 +181,7 @@ BF::ResourceLoadingResult BF::File::ReadFromDisk(const char* filePath, char** bu
 
 	if (!(*buffer))
 	{
-		return BF::ResourceLoadingResult::OutOfMemory;
+		return BF::FileActionResult::OutOfMemory;
 	}
 
 	(*buffer)[fullSize] = '\0';
@@ -180,22 +198,22 @@ BF::ResourceLoadingResult BF::File::ReadFromDisk(const char* filePath, char** bu
 
 	int closeResult = fclose(file);
 
-	return BF::ResourceLoadingResult::Successful;
+	return BF::FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::File::ReadFromDisk(const char* filePath, char** buffer, unsigned int maxSize)
+BF::FileActionResult BF::File::ReadFromDisk(const char* filePath, char** buffer, unsigned int maxSize)
 {
 	std::ifstream inputFileStream(filePath, std::ios::binary | std::ios::ate);
 	size_t length = inputFileStream.tellg();
 
 	if (length == -1)
 	{
-		return BF::ResourceLoadingResult::FileNotFound;
+		return BF::FileActionResult::FileNotFound;
 	}
 
 	if (length > maxSize && maxSize != -1)
 	{
-		return BF::ResourceLoadingResult::OutOfMemory;
+		return BF::FileActionResult::OutOfMemory;
 	}
 
 	if ((*buffer) == nullptr)
@@ -204,7 +222,7 @@ BF::ResourceLoadingResult BF::File::ReadFromDisk(const char* filePath, char** bu
 
 		if ((*buffer) == 0)
 		{
-			return BF::ResourceLoadingResult::OutOfMemory;
+			return BF::FileActionResult::OutOfMemory;
 		}
 	}
 
@@ -213,26 +231,26 @@ BF::ResourceLoadingResult BF::File::ReadFromDisk(const char* filePath, char** bu
 
 	(*buffer)[length] = 0;
 
-	return BF::ResourceLoadingResult::Successful;
+	return BF::FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::File::WriteToDisk()
+BF::FileActionResult BF::File::WriteToDisk()
 {
 	FILE* file = fopen(Path, "wb");
 
 	if (!file)
 	{
-		return BF::ResourceLoadingResult::FileNotFound;
+		return BF::FileActionResult::FileNotFound;
 	}
 
 	size_t writtenBytes = fwrite(Data, sizeof(char), DataSize, file);
 
 	int closeResult = fclose(file);
 
-	return BF::ResourceLoadingResult::Successful;
+	return BF::FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::File::WriteToDisk(const char* filePath, const char* content, unsigned int length)
+BF::FileActionResult BF::File::WriteToDisk(const char* filePath, const char* content, unsigned int length)
 {
 	FILE* file = fopen(filePath, "wb");
 
@@ -240,7 +258,7 @@ BF::ResourceLoadingResult BF::File::WriteToDisk(const char* filePath, const char
 
 	int resultCloseResult = fclose(file);
 
-	return BF::ResourceLoadingResult::Successful;
+	return BF::FileActionResult::Successful;
 }
 
 unsigned int BF::File::ReadNextLineInto(char* exportBuffer)

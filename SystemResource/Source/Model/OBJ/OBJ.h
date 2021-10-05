@@ -4,14 +4,14 @@
 #include "MTL/MTL.h"
 #include "OBJLineCommand.h"
 
-#include "../Model.h"
+#include "../IModelFormat.hpp"
 
 namespace BF
 {
 #define OBJNameSize 50u
 
 	// [.OBJ] Wavefront - 3D model format
-	struct OBJ
+	struct OBJ : public IModelFormat
 	{
 		private:
 		static inline bool ShouldCreateNewMesh(OBJLineCommand objLineCommand, bool isCurrentlyInFaces);
@@ -30,9 +30,10 @@ namespace BF
 		OBJ();
 		~OBJ();
 
-		ResourceLoadingResult Load(const char* filePath);
-		ResourceLoadingResult Save(const char* filePath);
-		void Convert(Model& model);
+		FileActionResult Load(const char* filePath);
+		FileActionResult Save(const char* filePath);
+		FileActionResult ConvertTo(Model& model);
+		FileActionResult ConvertFrom(Model& model);
 		void Clear();
 
 		void PrintData();

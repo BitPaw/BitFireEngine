@@ -5,22 +5,22 @@ BF::TIFF::TIFF()
 
 }
 
-BF::ResourceLoadingResult BF::TIFF::Load(const char* filePath)
+BF::FileActionResult BF::TIFF::Load(const char* filePath)
 {
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::TIFF::Save(const char* filePath)
+BF::FileActionResult BF::TIFF::Save(const char* filePath)
 {
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::TIFF::ConvertTo(Image& image)
+BF::FileActionResult BF::TIFF::ConvertTo(Image& image)
 {
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::TIFF::ConvertFrom(Image& image)
+BF::FileActionResult BF::TIFF::ConvertFrom(Image& image)
 {
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }

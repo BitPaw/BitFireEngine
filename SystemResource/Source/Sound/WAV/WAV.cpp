@@ -12,15 +12,15 @@ BF::WAV::~WAV()
 	free(SoundData);
 }
 
-BF::ResourceLoadingResult BF::WAV::Load(const char* filePath)
+BF::FileActionResult BF::WAV::Load(const char* filePath)
 {
 	File file(filePath);
-	ResourceLoadingResult resourceLoadingResult = file.ReadFromDisk();
+	FileActionResult FileActionResult = file.ReadFromDisk();
 	Endian endian;
 
-	if (resourceLoadingResult != ResourceLoadingResult::Successful)
+	if (FileActionResult != FileActionResult::Successful)
 	{
-		return resourceLoadingResult;
+		return FileActionResult;
 	}
 
 	file.Read(RIFFChunk.ChunkID, 4u);
@@ -31,7 +31,7 @@ BF::ResourceLoadingResult BF::WAV::Load(const char* filePath)
 
 	if (!isValidEndian)
 	{
-		return ResourceLoadingResult::FormatNotSupported;
+		return FileActionResult::FormatNotSupported;
 	}
 
 	if (useLittleEndian)
@@ -79,7 +79,7 @@ BF::ResourceLoadingResult BF::WAV::Load(const char* filePath)
 
 	if (!validDataChunk)
 	{
-		return ResourceLoadingResult::FormatInvalid;
+		return FileActionResult::FormatNotAsExpected;
 	}
 
 	file.Read(SoundDataSize, endian);
@@ -88,17 +88,17 @@ BF::ResourceLoadingResult BF::WAV::Load(const char* filePath)
 
 	file.Read(SoundData, SoundDataSize);	
 
-	return ResourceLoadingResult::Successful;
+	return FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::WAV::Save(const char* filePath)
+BF::FileActionResult BF::WAV::Save(const char* filePath)
 {
 	// Note: The sample data must end on an even byte boundary. Whatever that means. 
 
-	return ResourceLoadingResult::Successful;
+	return FileActionResult::Successful;
 }
 
-void BF::WAV::ConvertTo(Sound& sound)
+BF::FileActionResult BF::WAV::ConvertTo(Sound& sound)
 {
 	sound.NumerOfChannels = FMTChunk.NumerOfChannels;
 	sound.SampleRate = FMTChunk.SampleRate;
@@ -107,9 +107,11 @@ void BF::WAV::ConvertTo(Sound& sound)
 	sound.Data = (unsigned char*)malloc(SoundDataSize);
 
 	memcpy(sound.Data, SoundData, SoundDataSize);
+
+	return FileActionResult::Successful;
 }
 
-void BF::WAV::ConvertFrom(Sound& sound)
+BF::FileActionResult BF::WAV::ConvertFrom(Sound& sound)
 {
-
+	return FileActionResult::Successful;
 }

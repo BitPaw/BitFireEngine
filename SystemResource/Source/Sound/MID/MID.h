@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../Sound.h"
 #include "MIDITrack.h"
+#include "../ISoundFormat.hpp"
 
 namespace BF
 {
-	struct MID 
+	struct MID : public ISoundFormat
 	{
 		unsigned short Format;
 		unsigned short MusicSpeed;
@@ -13,9 +13,9 @@ namespace BF
 		MIDITrack* TrackList;
 
 		public:
-		void Load(const char* filePath);
-		void Save(const char* filePath);
-		void ConvertTo(Sound& sound);
-		void ConvertFrom(Sound& sound);
+		FileActionResult Load(const char* filePath);
+		FileActionResult Save(const char* filePath);
+		FileActionResult ConvertTo(Sound& sound);
+		FileActionResult ConvertFrom(Sound& sound);
 	};
 }

@@ -1,15 +1,15 @@
 #pragma once
 
-#include "../../Sound/Sound.h"
+#include "../ISoundFormat.hpp"
 
 namespace BF
 {
-	struct OGG 
+	struct OGG : public ISoundFormat
 	{
 		public:
-		void Load(const char* filePath);
-		void Save(const char* filePath);
-		void ConvertTo(Sound& sound);
-		void ConvertFrom(Sound& sound);
+		FileActionResult Load(const char* filePath);
+		FileActionResult Save(const char* filePath);
+		FileActionResult ConvertTo(Sound& sound);
+		FileActionResult ConvertFrom(Sound& sound);
 	};
 }

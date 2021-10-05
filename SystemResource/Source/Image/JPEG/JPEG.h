@@ -1,6 +1,9 @@
 #pragma once
 
 #include "JPEGFileInfo.h"
+#include "JPEGScanStart.h"
+#include "JPEGHuffmanTable.h"
+
 #include "../IImageFormat.h"
 
 namespace BF
@@ -9,15 +12,20 @@ namespace BF
 	{
 		public:
 		JPEGFileInfo FileInfo;
-		size_t CompressedDataLength;
-		unsigned char* CompressedData;
+		size_t HuffmanTableSize;
+		JPEGHuffmanTable* HuffmanTable;
+		JPEGScanStart ScanStart;
+
+		size_t CompressedImageDataSize;
+		unsigned char* CompressedImageData;
 
 		JPEG();	
+		~JPEG();
 
-		ResourceLoadingResult Load(const char* filePath);
-		ResourceLoadingResult Save(const char* filePath);
+		FileActionResult Load(const char* filePath);
+		FileActionResult Save(const char* filePath);
 
-		ResourceLoadingResult ConvertTo(Image& image);
-		ResourceLoadingResult ConvertFrom(Image& image);
+		FileActionResult ConvertTo(Image& image);
+		FileActionResult ConvertFrom(Image& image);
 	};
 }

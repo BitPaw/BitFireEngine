@@ -1,16 +1,16 @@
 #pragma once
 
-#include "../Sound.h"
+#include "../ISoundFormat.hpp"
 
 namespace BF
 {
 	// MPEG audio layer 3 file 
-	struct MP3
+	struct MP3 : public ISoundFormat
 	{
 		public:
-		void Load(const char* filePath);
-		void Save(const char* filePath);
-		void ConvertTo(Sound& sound);
-		void ConvertFrom(Sound& sound);
+		FileActionResult Load(const char* filePath);
+		FileActionResult Save(const char* filePath);
+		FileActionResult ConvertTo(Sound& sound);
+		FileActionResult ConvertFrom(Sound& sound);
 	};
 }

@@ -1,11 +1,12 @@
 #include "MP3.h"
 
-#include "../../File/File.h"
-#include "../../Container/ByteStreamHusk.h"
 #include "MP3Header.h"
 #include "MPEGAudioTag.h"
 
-void BF::MP3::Load(const char* filePath)
+#include "../../File/File.h"
+#include "../../Container/ByteStreamHusk.h"
+
+BF::FileActionResult BF::MP3::Load(const char* filePath)
 {
 	File file(filePath);
 	MP3Header mp3Header;
@@ -49,18 +50,22 @@ void BF::MP3::Load(const char* filePath)
 	unsigned char gere = byteStreamHusk.ExtractByteAndMove();
 
 	mpegAudioTag.Genre = MPEGGenreConvert(gere);
+
+
+	return FileActionResult::Successful;
 }
 
-void BF::MP3::Save(const char* filePath)
+BF::FileActionResult BF::MP3::Save(const char* filePath)
 {
-
+	return BF::FileActionResult::Successful;
 }
 
-void BF::MP3::ConvertTo(Sound& sound)
+BF::FileActionResult BF::MP3::ConvertTo(Sound& sound)
 {
-
+	return BF::FileActionResult::Successful;
 }
 
-void BF::MP3::ConvertFrom(Sound& sound)
+BF::FileActionResult BF::MP3::ConvertFrom(Sound& sound)
 {
+	return BF::FileActionResult::Successful;
 }

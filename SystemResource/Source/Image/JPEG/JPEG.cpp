@@ -1,24 +1,29 @@
 #include "JPEG.h"
 
-#include "../../File/File.h"
 #include "JPEGMarker.h"
 #include "JPEGFrame.h"
+
 #include <cassert>
+#include <stdlib.h>
+
+#include "../../File/File.h"
 
 BF::JPEG::JPEG()
 {
-    CompressedDataLength = 0;
-    CompressedData = 0;
+    HuffmanTableSize = 0;
+    HuffmanTable = 0;
+    CompressedImageDataSize = 0;
+    CompressedImageData = 0;
 }
 
-BF::ResourceLoadingResult BF::JPEG::Load(const char* filePath)
+BF::FileActionResult BF::JPEG::Load(const char* filePath)
 {
     File file(filePath);
-    ResourceLoadingResult resourceLoadingResult = file.ReadFromDisk();
+    FileActionResult FileActionResult = file.ReadFromDisk();
 
-    if (resourceLoadingResult != ResourceLoadingResult::Successful)
+    if (FileActionResult != FileActionResult::Successful)
     {
-        return resourceLoadingResult;
+        return FileActionResult;
     }
 
     // Check Start of Image
@@ -34,7 +39,7 @@ BF::ResourceLoadingResult BF::JPEG::Load(const char* filePath)
 
         if (!validStart)
         {
-            return ResourceLoadingResult::FormatInvalid;
+            return FileActionResult::FormatNotAsExpected;
         }
     }
 
@@ -63,13 +68,13 @@ BF::ResourceLoadingResult BF::JPEG::Load(const char* filePath)
 
             case BF::JPEGMarker::EndOfImage:
             {
-                return ResourceLoadingResult::Successful;
+                return FileActionResult::Successful;
             }
 
             case BF::JPEGMarker::StartOfImage:
             {
                 // We read the start tag already. Reading it again is not valid.
-                return ResourceLoadingResult::FormatInvalid;
+                return FileActionResult::FormatNotAsExpected;
             }    
 
             case BF::JPEGMarker::StartOfFrame:
@@ -92,7 +97,7 @@ BF::ResourceLoadingResult BF::JPEG::Load(const char* filePath)
                     file.Read(size);
                     file.Read(frameComponent.Key);
 
-                    frameComponent.Width = size & 0b11110000;
+                    frameComponent.Width = (size & 0b11110000) >> 4;
                     frameComponent.Height = size & 0b00001111;
                 }
 
@@ -116,20 +121,43 @@ BF::ResourceLoadingResult BF::JPEG::Load(const char* filePath)
             case BF::JPEGMarker::DefineHuffmanTable:
             {
                 unsigned short length = 0;
+                JPEGHuffmanTable jpegHuffmanTable;
 
                 file.Read(length, Endian::Big);
+                file.Read(jpegHuffmanTable.Class);
+                file.Read(jpegHuffmanTable.Destination);
 
-                file.DataCursorPosition += length - 2;
-
+                file.DataCursorPosition += (length - 2) - 2;
+                
                 break;
             }
 
             case BF::JPEGMarker::StartOfScan:
             {
-                CompressedDataLength = (file.DataSize - file.DataCursorPosition) - 2;
-                CompressedData = (unsigned char*)malloc(CompressedDataLength * sizeof(char));
+                unsigned short length = 0;
+                file.Read(length, Endian::Big);
+                file.Read(ScanStart.ScanSelectorSize);
+                
+                for (size_t i = 0; i < ScanStart.ScanSelectorSize; i++)
+                {
+                    JPEGScanSelector& scanSelector = ScanStart.ScanSelector[i];
+                    unsigned char dcacTable = 0;
 
-                file.Read(CompressedData, CompressedDataLength);
+                    file.Read(scanSelector.Selector);
+                    file.Read(dcacTable);
+
+                    scanSelector.DC = (dcacTable & 0b11110000) >> 4;
+                    scanSelector.ACTable = dcacTable & 0b00001111;
+                }
+
+                file.Read(ScanStart.SpectralSelectFrom);
+                file.Read(ScanStart.SpectralSelectTo);
+                file.Read(ScanStart.SuccessiveAproximation);
+
+                CompressedImageDataSize = file.DataSize - file.DataCursorPosition - 2;
+                CompressedImageData = (unsigned char*)malloc(CompressedImageDataSize * sizeof(char));
+
+                file.Read(CompressedImageData, CompressedImageDataSize);
 
                 break;
             }
@@ -158,20 +186,25 @@ BF::ResourceLoadingResult BF::JPEG::Load(const char* filePath)
         }
     }
 
-    return ResourceLoadingResult::FormatInvalid;
+    return FileActionResult::FormatNotAsExpected;
 }
 
-BF::ResourceLoadingResult BF::JPEG::Save(const char* filePath)
+BF::FileActionResult BF::JPEG::Save(const char* filePath)
 {
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::JPEG::ConvertTo(Image& image)
+BF::JPEG::~JPEG()
 {
-    return ResourceLoadingResult::Successful;
+    free(CompressedImageData);
 }
 
-BF::ResourceLoadingResult BF::JPEG::ConvertFrom(Image& image)
+BF::FileActionResult BF::JPEG::ConvertTo(Image& image)
 {
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
+}
+
+BF::FileActionResult BF::JPEG::ConvertFrom(Image& image)
+{
+    return FileActionResult::Successful;
 }

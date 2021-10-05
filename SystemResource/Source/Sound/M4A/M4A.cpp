@@ -1,17 +1,21 @@
 #include "M4A.h"
 
-void BF::M4A::Load(const char* filePath)
+BF::FileActionResult BF::M4A::Load(const char* filePath)
 {
+	return FileActionResult::Successful;
 }
 
-void BF::M4A::Save(const char* filePath)
+BF::FileActionResult BF::M4A::Save(const char* filePath)
 {
+	return FileActionResult::Successful;
 }
 
-void BF::M4A::ConvertTo(Sound& sound)
+BF::FileActionResult BF::M4A::ConvertTo(Sound& sound)
 {
+	return FileActionResult::Successful;
 }
 
-void BF::M4A::ConvertFrom(Sound& sound)
+BF::FileActionResult BF::M4A::ConvertFrom(Sound& sound)
 {
+	return FileActionResult::Successful;
 }
