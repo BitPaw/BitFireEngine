@@ -139,6 +139,15 @@ namespace BF
 			}			
 		}
 
+		static Vector3<NumberType> Normalize(Vector3 vector3)
+		{
+			Vector3<NumberType> newVector(vector3);
+
+			newVector.Normalize();
+
+			return newVector;
+		}
+
 		NumberType Length()
 		{
 			NumberType x = X;

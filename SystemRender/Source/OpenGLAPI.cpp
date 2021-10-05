@@ -448,28 +448,28 @@ unsigned int BF::OpenGLAPI::ToShaderType(ShaderType shaderType)
     }
 }
 
-BF::ImageFormat BF::OpenGLAPI::ToImageFormat(unsigned int token)
+BF::ImageDataFormat BF::OpenGLAPI::ToImageFormat(unsigned int token)
 {
-    return ImageFormat();
+    return ImageDataFormat();
 }
 
-unsigned int BF::OpenGLAPI::ToImageFormat(ImageFormat imageFormat)
+unsigned int BF::OpenGLAPI::ToImageFormat(ImageDataFormat imageFormat)
 {
     switch (imageFormat)
     {
-        case ImageFormat::BGR:
+        case ImageDataFormat::BGR:
             return GL_BGR;
 
-        case ImageFormat::BGRA:
+        case ImageDataFormat::BGRA:
             return GL_BGRA;
 
-        case ImageFormat::RGB:
+        case ImageDataFormat::RGB:
             return GL_RGB;
 
-        case ImageFormat::RGBA:
+        case ImageDataFormat::RGBA:
             return GL_RGBA;
 
-        case ImageFormat::AlphaMask:
+        case ImageDataFormat::AlphaMask:
         default:
             return -1;
     }

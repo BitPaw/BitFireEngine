@@ -320,7 +320,7 @@ void BF::Window::TakeScreenShot(Image& image)
 
     image.Width = width;
     image.Height = height;
-    image.Format = ImageFormat::BGR;  
+    image.Format = ImageDataFormat::BGR;  
 
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
     glReadBuffer(GL_FRONT);

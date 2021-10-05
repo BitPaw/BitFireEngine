@@ -31,15 +31,15 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{398c5630-9092-486f-920c-c9992f8b7f6c}</ProjectGuid>
     <RootNamespace>ResourceSystem</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>SystemResource</ProjectName>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -58,8 +58,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -129,7 +129,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard_C>stdc11</LanguageStandard_C>
       <ExceptionHandling>false</ExceptionHandling>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ControlFlowGuard>false</ControlFlowGuard>
@@ -138,7 +137,6 @@
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
-      <LanguageStandard>stdcpp14</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -199,7 +197,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard_C>stdc11</LanguageStandard_C>
       <ExceptionHandling>false</ExceptionHandling>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ControlFlowGuard>false</ControlFlowGuard>
@@ -208,7 +205,6 @@
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
-      <LanguageStandard>stdcpp14</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <OmitFramePointers>false</OmitFramePointers>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -265,6 +261,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Image\JPEG\JPEGFrameComponent.cpp" />
+    <ClCompile Include="Source\Image\JPEG\JPEGFrame.cpp" />
+    <ClCompile Include="Source\Image\JPEG\JPEGFileInfo.cpp" />
+    <ClCompile Include="Source\Image\JPEG\JPEGMarker.cpp" />
+    <ClCompile Include="Source\Image\TGA\TGABitsPerPixel.cpp" />
+    <ClCompile Include="Source\Image\TGA\TGAImageDataType.cpp" />
     <ClCompile Include="Source\Video\AVI\AVIHeader.cpp" />
     <ClCompile Include="Source\Compression\HUFFMAN\HuffmanCodeBlock.cpp" />
     <ClCompile Include="Source\Compression\HUFFMAN\HuffmanSymbol.cpp" />
@@ -364,7 +366,7 @@
     <ClCompile Include="Source\Network\Server.cpp" />
     <ClCompile Include="Source\Network\SocketError.cpp" />
     <ClCompile Include="Source\Resource.cpp" />
-    <ClCompile Include="Source\Image\ImageFormat.cpp" />
+    <ClCompile Include="Source\Image\ImageDataFormat.cpp" />
     <ClCompile Include="Source\Shader\Shader.cpp" />
     <ClCompile Include="Source\Shader\ShaderProgram.cpp" />
     <ClCompile Include="Source\Sound\MID\MID.cpp" />
@@ -383,6 +385,11 @@
     <ClCompile Include="Source\Compression\ZLIB\ZLIBCompressionMethod.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Image\JPEG\JPEGFrameComponent.h" />
+    <ClInclude Include="Source\Image\JPEG\JPEGFrame.h" />
+    <ClInclude Include="Source\Image\JPEG\JPEGFileInfo.h" />
+    <ClInclude Include="Source\Image\JPEG\JPEGMarker.h" />
+    <ClInclude Include="Source\Image\IImageFormat.h" />
     <ClInclude Include="Source\Math\Physic\ColliderType.h" />
     <ClInclude Include="Source\Math\Physic\PhysicsStatic.hpp" />
     <ClInclude Include="Source\Math\Physic\PhysicsDynamic.hpp" />
@@ -457,9 +464,9 @@
     <ClInclude Include="Source\Image\BMP\BMPInfoHeader.h" />
     <ClInclude Include="Source\Image\GIF\GIF.h" />
     <ClInclude Include="Source\Image\Image.h" />
-    <ClInclude Include="Source\Image\ImageFileExtension.h" />
+    <ClInclude Include="Source\Image\ImageFileFormat.h" />
     <ClInclude Include="Source\Image\ImageFilter.h" />
-    <ClInclude Include="Source\Image\ImageFormat.h" />
+    <ClInclude Include="Source\Image\ImageDataFormat.h" />
     <ClInclude Include="Source\Image\ImageLayout.h" />
     <ClInclude Include="Source\Image\ImageWrap.h" />
     <ClInclude Include="Source\Image\JPEG\JPEG.h" />

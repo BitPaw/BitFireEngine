@@ -12,6 +12,7 @@
 #include "../../SystemResource/Source/Math/Geometry/Matrix.hpp"
 #include "../../SystemResource/Source/Image/PNG/PNG.h"
 #include "../../SystemResource/Source/Math/Physic/GravityCube.h"
+#include "../../SystemResource/Source/Image/JPEG/JPEG.h"
 
 BF::UIText* text;
 //BF::Model* sphere;
@@ -38,6 +39,10 @@ BF::Model textureBix;
 
 void ZEE::ZEEGameSystem::OnStartUp()
 {   
+    BF::JPEG jpeg;
+    jpeg.Load("B:/Daten/Bilder/_garbage/KN.jpg");
+
+
     BF::PNG png;
 
     png.Load("Wb.png");
@@ -56,8 +61,9 @@ void ZEE::ZEEGameSystem::OnStartUp()
     GameSystem.Resource.Load("Texture/Block.bmp");
     GameSystem.Resource.Load("Model/Triangle.obj");
 
-    _worldGravity.IgnoreAxis(true, true, true);
-    _worldGravity.PullForce.Set(0, -GravityForceEarth, 0);
+    _worldGravity.IgnoreAxis.Set(true, true, true);
+    _worldGravity.PullForce = GravityForceEarth;
+    _worldGravity.PullDirection.Set(0, -1, 0);
     GameSystem.Resource.Add(&_worldGravity);
 
     GameSystem.Resource.Load("Level/MainMenu.lev");
@@ -67,6 +73,7 @@ void ZEE::ZEEGameSystem::OnStartUp()
 
     cube.MatrixModel.Scale(10.0f);
     cube.EnablePhysics = true;       
+    cube.Mass = 1000;
 
     GameSystem.Resource.Load
     (
@@ -125,12 +132,11 @@ void ZEE::ZEEGameSystem::OnShutDown()
 BF::Vector3<float> rot(0.0349066,0,0);
 
 void ZEE::ZEEGameSystem::OnUpdateGameLogic(float deltaTime)
-{
-    
+{    
     if (cube.MatrixModel.CurrentPosition().Y <= 0)
     {
         //cube.ModelMatrix.Move(0, tcap, 0);
-        cube.Velocity.Set(0, _worldGravity.PullForce.Y * -50, 0);
+        //cube.Force.Add(0, 50, 0);
     }
 
     _deltaTime = deltaTime;
@@ -140,29 +146,18 @@ void ZEE::ZEEGameSystem::OnUpdateInput(BF::InputContainer& input)
 {
 #if 1
     bool changed = false;
+    float value = 0.01f;
 
     if (input.KeyBoardInput.O.IsPressed())
     {
-        audioSource.Pitch += 0.01;
-        if (audioSource.Pitch > 2.8)
+        audioSource.PitchIncrease(value);
 
-        {
-            audioSource.Pitch = 2.8;
-        }
-
-
-      
         changed = true;
     }
 
     if (input.KeyBoardInput.L.IsPressed())
     {
-        audioSource.Pitch -= 0.01;
-
-        if (audioSource.Pitch < 0.3)
-        {
-            audioSource.Pitch = 0.3;
-        }
+        audioSource.PitchReduce(value);
 
         changed = true;
     }

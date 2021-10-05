@@ -1,24 +1,15 @@
 #pragma once
 
-#include "../../Container/AsciiString.h"
-#include "../../Container/List.hpp"
 #include "TGAImageDataType.h"
-#include "../Image.h"
 #include "TGABitsPerPixel.h"
+
+#include "../IImageFormat.h"
 
 namespace BF
 {
 	// Truevision Advanced Raster Graphics Array
-	struct TGA
-	{
-		private:
-		static inline TGAImageDataType ConvertImageDataType(unsigned char id);
-		static inline unsigned char ConvertImageDataType(TGAImageDataType imageDataType);
-
-		static inline TGABitsPerPixel ConvertPixelDepth(unsigned char pixelDepth);
-		static inline unsigned char ConvertPixelDepth(TGABitsPerPixel bitsPerPixel);
-
-
+	struct TGA : public IImageFormat
+	{	
 		public:	
 		//---[Header]----------------------	
 		unsigned char ColorPaletteType;
@@ -79,6 +70,8 @@ namespace BF
 
 		ResourceLoadingResult Load(const char* filePath);
 		ResourceLoadingResult Save(const char* filePath);
-		void ConvertTo(Image& image);
+
+		ResourceLoadingResult ConvertTo(Image& image);
+		ResourceLoadingResult ConvertFrom(Image& image);
 	};
 }

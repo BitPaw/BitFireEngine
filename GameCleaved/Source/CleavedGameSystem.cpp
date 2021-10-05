@@ -35,7 +35,7 @@ void Cleaved::CleavedGameSystem::OnStartUp()
 {
     GameSystem.Resource.Load(worldShader, "Shader/WS.vert", "Shader/WS.frag");
     GameSystem.Resource.Load(hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
-
+    
     GameSystem.Resource.Load
     (
         skybox,
@@ -47,10 +47,10 @@ void Cleaved::CleavedGameSystem::OnStartUp()
         "Texture/SkyBox_Bottom.bmp",
         "Texture/SkyBox_Back.bmp",
         "Texture/SkyBox_Front.bmp"
-    );
+    );      
 
     
-    GameSystem.Resource.Load(_rectangle, "");
+    //GameSystem.Resource.Load(_rectangle, "");
 
     //GameSystem.Resource.Load(_playerCharacterLuna, "Texture/bmp");
     //GameSystem.Resource.Load(_playerCharacterNyte, "Texture/bmp");
@@ -60,11 +60,10 @@ void Cleaved::CleavedGameSystem::OnStartUp()
 
 
 
-
     text = new BF::UIText("SampleText", *GameSystem.Resource.DefaultFont, -1, -0.8);
     text->RenderInformation.ShaderProgramID = hudShaderID.ID;
     //text->SetFont(*Resource.DefaultFont);
-    GameSystem.Resource.Add(*text);    
+    GameSystem.Resource.Add(*text);
 }
 
 void Cleaved::CleavedGameSystem::OnShutDown()

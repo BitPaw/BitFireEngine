@@ -21,14 +21,10 @@ namespace BF
 	class GravityField : public Collider
 	{
 		public:
-		bool IgnoreAxisX;
-		bool IgnoreAxisY;
-		bool IgnoreAxisZ;
-
-		Vector3<float> PullForce;
+		Vector3<bool> IgnoreAxis;
+		float PullForce;
+		Vector3<float> PullDirection;
 
 		GravityField();
-
-		void IgnoreAxis(bool x, bool y, bool z);
 	};
 }

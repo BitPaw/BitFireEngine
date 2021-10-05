@@ -6,7 +6,7 @@
 #include "ZEEGameSystem.h"
 //-----------------------------------------------------------------------------
 
-#if !defined(_DEBUG) && defined(OSWindowsE)
+#if !defined(_DEBUG) && defined(OSWindows5)
 #include <windows.h>
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int nShowCmd)
 #else

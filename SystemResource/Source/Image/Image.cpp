@@ -35,7 +35,7 @@ BF::Image::Image()
 
     Type = ImageType::Texture2D;
 
-    Format = ImageFormat::RGB;
+    Format = ImageDataFormat::RGB;
     Filter = ImageFilter::NoFilter;
 
     LayoutNear = ImageLayout::Nearest;
@@ -54,18 +54,18 @@ void BF::Image::RemoveColor(unsigned char red, unsigned char green, unsigned cha
 {
     switch (Format)
     {
-        case ImageFormat::AlphaMask:
+        case ImageDataFormat::AlphaMask:
         {
             break;
         }
 
-        case ImageFormat::RGB:
+        case ImageDataFormat::RGB:
         {
-            FormatChange(ImageFormat::RGBA);
+            FormatChange(ImageDataFormat::RGBA);
 
             // no break;
         }
-        case ImageFormat::RGBA:
+        case ImageDataFormat::RGBA:
         {
             for (size_t i = 0; i < PixelDataSize; )
             {
@@ -138,15 +138,15 @@ void BF::Image::Resize(unsigned int width, unsigned height)
 
     switch (Format)
     {
-        case ImageFormat::AlphaMask:
+        case ImageDataFormat::AlphaMask:
             pixelSize = 2;
             break;
 
         default:
-        case ImageFormat::RGB:
+        case ImageDataFormat::RGB:
             pixelSize = 3;
             break;
-        case ImageFormat::RGBA:
+        case ImageDataFormat::RGBA:
             pixelSize = 4;
             break;
     }
@@ -162,19 +162,19 @@ void BF::Image::FillRandome()
     }
 }
 
-void BF::Image::FormatChange(ImageFormat imageFormat)
+void BF::Image::FormatChange(ImageDataFormat imageFormat)
 {
     switch (Format)
     {
-        case ImageFormat::AlphaMask:
+        case ImageDataFormat::AlphaMask:
         {
 
         }
-        case ImageFormat::BGR:
+        case ImageDataFormat::BGR:
         {
             switch (imageFormat)
             {
-                case ImageFormat::RGB:
+                case ImageDataFormat::RGB:
                 {
                     unsigned int dIndex = 0;
                     unsigned int index = 0;
@@ -196,15 +196,15 @@ void BF::Image::FormatChange(ImageFormat imageFormat)
             }
         }
 
-        case ImageFormat::RGB:
+        case ImageDataFormat::RGB:
         {
             switch (imageFormat)
             {
-                case ImageFormat::AlphaMask:
+                case ImageDataFormat::AlphaMask:
                     break;
-                case ImageFormat::RGB:
+                case ImageDataFormat::RGB:
                     break;
-                case ImageFormat::RGBA:
+                case ImageDataFormat::RGBA:
                 {
                     unsigned int newIndex = 0;
                     unsigned int oldSize = PixelDataSize;
@@ -224,7 +224,7 @@ void BF::Image::FormatChange(ImageFormat imageFormat)
                         newIndex += 4;
                     }
 
-                    Format = ImageFormat::RGBA;
+                    Format = ImageDataFormat::RGBA;
                     PixelData = newData;
                     PixelDataSize = newSize;
 
@@ -232,7 +232,7 @@ void BF::Image::FormatChange(ImageFormat imageFormat)
 
                     break;
                 }          
-                case ImageFormat::BGR:
+                case ImageDataFormat::BGR:
                 {
                     unsigned int dIndex = 0;
                     unsigned int index = 0;
@@ -250,26 +250,26 @@ void BF::Image::FormatChange(ImageFormat imageFormat)
                 }
             }
         }
-        case ImageFormat::RGBA:
+        case ImageDataFormat::RGBA:
         {
 
         }
     }
 }
 
-BF::ImageFileExtension BF::Image::FileFormatPeek(const char* filePath)
+BF::ImageFileFormat BF::Image::FileFormatPeek(const char* filePath)
 {
     File file(filePath);
     AsciiString fileExtension(file.Extension);
 
-    if (fileExtension.CompareIgnoreCase("bmp")) return ImageFileExtension::BMP;
-    if (fileExtension.CompareIgnoreCase("gif")) return ImageFileExtension::GIF;
-    if (fileExtension.CompareIgnoreCase("jpeg")) return ImageFileExtension::JPEG;
-    if (fileExtension.CompareIgnoreCase("png")) return ImageFileExtension::PNG;
-    if (fileExtension.CompareIgnoreCase("tga")) return ImageFileExtension::TGA;
-    if (fileExtension.CompareIgnoreCase("tiff")) return ImageFileExtension::TIFF;
+    if (fileExtension.CompareIgnoreCase("bmp")) return ImageFileFormat::BitMap;
+    if (fileExtension.CompareIgnoreCase("gif")) return ImageFileFormat::GIF;
+    if (fileExtension.CompareIgnoreCase("jpeg")) return ImageFileFormat::JPEG;
+    if (fileExtension.CompareIgnoreCase("png")) return ImageFileFormat::PNG;
+    if (fileExtension.CompareIgnoreCase("tga")) return ImageFileFormat::TGA;
+    if (fileExtension.CompareIgnoreCase("tiff")) return ImageFileFormat::TIFF;
 
-    return ImageFileExtension::Unkown;
+    return ImageFileFormat::Unkown;
 }
 
 BF::ResourceLoadingResult BF::Image::Load(const char* filePath)
@@ -284,53 +284,53 @@ BF::ResourceLoadingResult BF::Image::Load(const char* filePath)
         return ResourceLoadingResult::FileNotFound;
     } 
 
-    ImageFileExtension imageFormat = FileFormatPeek(filePath);   
+    ImageFileFormat imageFileFormat = FileFormatPeek(filePath);
 
-    switch (imageFormat)
+    switch (imageFileFormat)
     {
-        case ImageFileExtension::BMP:
+        case ImageFileFormat::BitMap:
         {
             BMP bitmap;
             bitmap.Load(filePath);
             bitmap.ConvertTo(*this);
             break;
         }
-        case ImageFileExtension::GIF:
+        case ImageFileFormat::GIF:
         {
             GIF gif;
             gif.Load(filePath);
             gif.ConvertTo(*this);
             break;
         }
-        case ImageFileExtension::JPEG:
+        case ImageFileFormat::JPEG:
         {
             JPEG jpeg;
             jpeg.Load(filePath);
             jpeg.ConvertTo(*this);
             break;
         }
-        case ImageFileExtension::PNG:
+        case ImageFileFormat::PNG:
         {
             PNG png;
             png.Load(filePath);
             png.ConvertTo(*this);
             break;
         }
-        case ImageFileExtension::TGA:
+        case ImageFileFormat::TGA:
         {
             TGA tga;
             tga.Load(filePath);
             tga.ConvertTo(*this);
             break;
         }
-        case ImageFileExtension::TIFF:
+        case ImageFileFormat::TIFF:
         {
             TIFF tiff;
             tiff.Load(filePath);
             tiff.ConvertTo(*this);
             break;
         }
-        case ImageFileExtension::Unkown:
+        case ImageFileFormat::Unkown:
         default:
         {
             ID = ResourceIDUnsuportedFormat;
@@ -340,6 +340,62 @@ BF::ResourceLoadingResult BF::Image::Load(const char* filePath)
     }
 
     ID = ResourceIDLoaded;
+
+    return ResourceLoadingResult::Successful;
+}
+
+BF::ResourceLoadingResult BF::Image::Save(const char* filePath, ImageFileFormat imageFileFormat)
+{
+    switch (imageFileFormat)
+    {
+        default:
+        case BF::ImageFileFormat::Unkown:
+        {
+            return ResourceLoadingResult::FormatNotSupported;
+        }
+        case BF::ImageFileFormat::BitMap:
+        {
+            BMP bitmap;
+            bitmap.ConvertFrom(*this);
+            bitmap.Save(filePath);
+            break;
+        }
+        case BF::ImageFileFormat::PNG:
+        {
+            PNG png;
+            png.ConvertFrom(*this);
+            png.Save(filePath);
+            break;
+        }
+        case BF::ImageFileFormat::TGA:
+        {
+            TGA tga;
+            tga.ConvertFrom(*this);
+            tga.Save(filePath);
+            break;
+        }
+        case BF::ImageFileFormat::JPEG:
+        {
+            JPEG jpeg;
+            jpeg.ConvertFrom(*this);
+            jpeg.Save(filePath);
+            break;
+        }
+        case BF::ImageFileFormat::TIFF:
+        {
+            TIFF tiff;
+            tiff.ConvertFrom(*this);
+            tiff.Save(filePath);
+            break;
+        }
+        case BF::ImageFileFormat::GIF:
+        {
+            GIF gif;
+            gif.ConvertFrom(*this);
+            gif.Save(filePath);
+            break;
+        }
+    }
 
     return ResourceLoadingResult::Successful;
 }

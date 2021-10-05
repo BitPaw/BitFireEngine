@@ -1,124 +1,7 @@
 #include "TGA.h"
+
 #include "../../File/File.h"
-#include "../../Types/Endian.h"
-#include "../../Container/ByteStreamHusk.h"
 #include <cassert>
-
-BF::TGAImageDataType BF::TGA::ConvertImageDataType(unsigned char id)
-{
-	switch (id)
-	{
-		case 0u:
-			return TGAImageDataType::NoImageDataIsPresent;
-
-		case 1u:
-			return TGAImageDataType::UncompressedColorMapped;
-
-		case 2u:
-			return TGAImageDataType::UncompressedTrueColor;
-
-		case 3u:
-			return TGAImageDataType::UncompressedBlackAndWhite;
-
-		case 9u:
-			return TGAImageDataType::RunLengthEncodedColorMapped;
-
-		case 10u:
-			return TGAImageDataType::RunLengthEncodedTrueColor;
-
-		case 11u:
-			return TGAImageDataType::RunLengthEncodedBlackAndWhite;
-
-		default:
-			return TGAImageDataType::UnkownImageDataType;
-	}
-}
-
-unsigned char BF::TGA::ConvertImageDataType(TGAImageDataType imageDataType)
-{
-	switch (imageDataType)
-	{
-		default:
-		case BF::TGAImageDataType::UnkownImageDataType:
-			return -1;
-
-		case BF::TGAImageDataType::NoImageDataIsPresent:
-			return 0;
-
-		case BF::TGAImageDataType::UncompressedColorMapped:
-			return 1u;
-
-		case BF::TGAImageDataType::UncompressedTrueColor:
-			return 2u;
-
-		case BF::TGAImageDataType::UncompressedBlackAndWhite:
-			return 3u;
-
-		case BF::TGAImageDataType::RunLengthEncodedColorMapped:
-			return 9u;
-
-		case BF::TGAImageDataType::RunLengthEncodedTrueColor:
-			return 10u;
-
-		case BF::TGAImageDataType::RunLengthEncodedBlackAndWhite:
-			return 11u;
-	}
-}
-
-BF::TGABitsPerPixel BF::TGA::ConvertPixelDepth(unsigned char pixelDepth)
-{
-	switch (pixelDepth)
-	{
-		case 1u:
-			return TGABitsPerPixel::X1;
-
-		case 8u:
-			return TGABitsPerPixel::X8;
-
-		case 15u:
-			return TGABitsPerPixel::X15;
-
-		case 16u:
-			return TGABitsPerPixel::X16;
-
-		case 24u:
-			return TGABitsPerPixel::X24;
-
-		case 32u:
-			return TGABitsPerPixel::X32;
-
-		default:
-			return TGABitsPerPixel::Invalid;
-	}
-}
-
-unsigned char BF::TGA::ConvertPixelDepth(TGABitsPerPixel bitsPerPixel)
-{
-	switch (bitsPerPixel)
-	{
-		default:
-		case BF::TGABitsPerPixel::Invalid:
-			return -1;
-
-		case BF::TGABitsPerPixel::X1:
-			return 1u;
-
-		case BF::TGABitsPerPixel::X8:
-			return 8u;
-
-		case BF::TGABitsPerPixel::X15:
-			return 15u;
-
-		case BF::TGABitsPerPixel::X16:
-			return 16u;
-
-		case BF::TGABitsPerPixel::X24:
-			return 24u;
-
-		case BF::TGABitsPerPixel::X32:
-			return 32u;
-	}
-}
 
 BF::TGA::TGA()
 {
@@ -339,9 +222,9 @@ BF::ResourceLoadingResult BF::TGA::Save(const char* filePath)
 	return ResourceLoadingResult::Successful;
 }
 
-void BF::TGA::ConvertTo(Image& image)
+BF::ResourceLoadingResult BF::TGA::ConvertTo(Image& image)
 {	
-	ImageFormat imageFormat = ImageFormat::Unkown;
+	ImageDataFormat imageFormat = ImageDataFormat::Unkown;
 	unsigned int pixelDataLengh = -1;
 	unsigned int bytesPerPixel = -1;
 	unsigned char* newImageData = nullptr;
@@ -350,12 +233,12 @@ void BF::TGA::ConvertTo(Image& image)
 	{
 		case TGABitsPerPixel::X1:
 		{
-			imageFormat = ImageFormat::AlphaMaskBinary;			
+			imageFormat = ImageDataFormat::AlphaMaskBinary;			
 			break;
 		}
 		case TGABitsPerPixel::X8:
 		{
-			imageFormat = ImageFormat::AlphaMaskBinary;
+			imageFormat = ImageDataFormat::AlphaMaskBinary;
 			bytesPerPixel = 1;
 			break;
 		}
@@ -369,13 +252,13 @@ void BF::TGA::ConvertTo(Image& image)
 		}
 		case TGABitsPerPixel::X24:
 		{
-			imageFormat = ImageFormat::BGR;
+			imageFormat = ImageDataFormat::BGR;
 			bytesPerPixel = 3;
 			break;
 		}
 		case TGABitsPerPixel::X32:
 		{
-			imageFormat = ImageFormat::BGRA;
+			imageFormat = ImageDataFormat::BGRA;
 			bytesPerPixel = 4;
 			break;
 		}
@@ -386,7 +269,7 @@ void BF::TGA::ConvertTo(Image& image)
 
 	if (newImageData == nullptr)
 	{
-		return;
+		return ResourceLoadingResult::OutOfMemory;
 	}	
 
 	image.Type = ImageType::Texture2D;
@@ -397,4 +280,9 @@ void BF::TGA::ConvertTo(Image& image)
 	image.PixelDataSize = pixelDataLengh;
 
 	memcpy(newImageData, ImageData, pixelDataLengh);
+}
+
+BF::ResourceLoadingResult BF::TGA::ConvertFrom(Image& image)
+{
+	return ResourceLoadingResult();
 }

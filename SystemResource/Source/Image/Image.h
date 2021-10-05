@@ -1,11 +1,11 @@
 #pragma once
 
 #include "ImageType.h"
-#include "ImageFormat.h"
+#include "ImageDataFormat.h"
 #include "ImageFilter.h"
 #include "ImageLayout.h"
 #include "ImageWrap.h"
-#include "ImageFileExtension.h"
+#include "ImageFileFormat.h"
 
 #include "../Resource.h"
 #include "../ResourceLoadingResult.hpp"
@@ -22,7 +22,7 @@ namespace BF
 		unsigned int Height;
 
 		ImageType Type;
-		ImageFormat Format;
+		ImageDataFormat Format;
 		ImageFilter Filter;
 		ImageLayout LayoutNear;
 		ImageLayout LayoutFar;
@@ -47,9 +47,10 @@ namespace BF
 
 		void FillRandome();
 
-		void FormatChange(ImageFormat imageFormat);
+		void FormatChange(ImageDataFormat imageFormat);
 
-		static ImageFileExtension FileFormatPeek(const char* filePath);
+		static ImageFileFormat FileFormatPeek(const char* filePath);
 		ResourceLoadingResult Load(const char* filePath);
+		ResourceLoadingResult Save(const char* filePath, ImageFileFormat imageFileFormat);
 	};
 }

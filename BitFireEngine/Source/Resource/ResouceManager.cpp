@@ -275,7 +275,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePath)
 
     {
         bool isModel = Model::FileFormatPeek(filePath) != ModelType::UnKown;
-        bool isImage = Image::FileFormatPeek(filePath) != ImageFileExtension::Unkown;
+        bool isImage = Image::FileFormatPeek(filePath) != ImageFileFormat::Unkown;
         bool isSound = Sound::FileFormatPeek(filePath) != SoundFormat::Unkown;
         bool isFont = Font::FileFormatPeek(filePath) != FontFormat::Unkown;
         bool isShader = false;
@@ -821,7 +821,7 @@ void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
                     {
                         GravityField* gravityField = (GravityField*)collider;
 
-                        model->ApplyGravity(gravityField->PullForce, deltaTime);
+                        model->ApplyGravity(gravityField->PullDirection, gravityField->PullForce, deltaTime);
                         break;
                     }
                     case ColliderType::HitBox:

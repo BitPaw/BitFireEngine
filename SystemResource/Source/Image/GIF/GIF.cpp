@@ -15,6 +15,12 @@ BF::ResourceLoadingResult BF::GIF::Save(const char* filePath)
     return ResourceLoadingResult::Successful;
 }
 
-void BF::GIF::ConvertTo(Image& image)
+BF::ResourceLoadingResult BF::GIF::ConvertTo(Image& image)
 {
+    return ResourceLoadingResult::Successful;
+}
+
+BF::ResourceLoadingResult BF::GIF::ConvertFrom(Image& image)
+{
+    return ResourceLoadingResult::Successful;
 }

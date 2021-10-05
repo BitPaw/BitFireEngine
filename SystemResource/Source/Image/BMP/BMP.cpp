@@ -184,7 +184,7 @@ BF::ResourceLoadingResult BF::BMP::ConvertTo(Image& image)
         return ResourceLoadingResult::OutOfMemory;
     }
 
-    image.Format = ImageFormat::BGR;
+    image.Format = ImageDataFormat::BGR;
     image.Height = InfoHeader.Height;
     image.Width = InfoHeader.Width;
     image.PixelDataSize = PixelDataSize;

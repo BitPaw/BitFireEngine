@@ -1,17 +1,23 @@
 #pragma once
 
-#include "../Image.h"
-#include "../../ResourceLoadingResult.hpp"
+#include "JPEGFileInfo.h"
+#include "../IImageFormat.h"
 
 namespace BF
 {
-	struct JPEG
+	struct JPEG : public IImageFormat
 	{
 		public:
-		JPEG();
+		JPEGFileInfo FileInfo;
+		size_t CompressedDataLength;
+		unsigned char* CompressedData;
+
+		JPEG();	
 
 		ResourceLoadingResult Load(const char* filePath);
 		ResourceLoadingResult Save(const char* filePath);
-		void ConvertTo(Image& image);
+
+		ResourceLoadingResult ConvertTo(Image& image);
+		ResourceLoadingResult ConvertFrom(Image& image);
 	};
 }

@@ -2,11 +2,14 @@
 
 BF::StopWatch::StopWatch() : StopWatch(0)
 {
-
+	
 }
 
 BF::StopWatch::StopWatch(const unsigned int amountOfTimeStamps)
 {
+	_lastTimeStamp = std::chrono::high_resolution_clock::now();
+
+	Duration = 0;
 	TimeStampListSizeCurrent = 0;
 	TimeStampListSizeMaximal = amountOfTimeStamps;
 

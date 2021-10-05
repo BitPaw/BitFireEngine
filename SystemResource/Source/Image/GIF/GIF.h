@@ -1,17 +1,18 @@
 #pragma once
 
-#include "../Image.h"
-#include "../../ResourceLoadingResult.hpp"
+#include "../IImageFormat.h"
 
 namespace BF
 {
-	struct GIF
+	struct GIF : public IImageFormat
 	{
 		public:
 		GIF();
 
 		ResourceLoadingResult Load(const char* filePath);
 		ResourceLoadingResult Save(const char* filePath);
-		void ConvertTo(Image& image);
+
+		ResourceLoadingResult ConvertTo(Image& image);
+		ResourceLoadingResult ConvertFrom(Image& image);
 	};
 }

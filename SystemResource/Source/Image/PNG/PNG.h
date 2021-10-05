@@ -3,15 +3,13 @@
 #include "PNGColorType.h"
 #include "PNGChunk.h"
 
-#include "../Image.h"
+#include "../IImageFormat.h"
 
 #include "../../Compression/ZLIB/ZLIBHeader.h"
-#include "../../Container/LinkedList.hpp"
-#include "../../ResourceLoadingResult.hpp"
 
 namespace BF
 {
-	struct PNG
+	struct PNG : public IImageFormat
 	{
 		private: 
 		static inline PNGColorType ConvertColorType(unsigned int colorType);
@@ -123,7 +121,10 @@ namespace BF
 
 		ResourceLoadingResult Load(const char* filePath);
 		ResourceLoadingResult Save(const char* filePath);
-		void ConvertTo(Image& image);
+
+		ResourceLoadingResult ConvertTo(Image& image);
+		ResourceLoadingResult ConvertFrom(Image& image);
+
 		void PrintData();
 	};
 }

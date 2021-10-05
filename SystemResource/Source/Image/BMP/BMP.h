@@ -4,12 +4,12 @@
 #include "BMPInfoHeader.h"
 #include "BMPInfoHeaderType.h"
 
-#include "../Image.h"
+#include "../IImageFormat.h"
 
 namespace BF
 {
 	// Image in BitMap-Format [.BMP]
-	struct BMP
+	struct BMP : public IImageFormat
 	{	
 		public:
 		BMPType Type;
@@ -17,7 +17,7 @@ namespace BF
 		BMPInfoHeaderType InfoHeaderType;
 		BMPInfoHeader InfoHeader;
 
-		unsigned int PixelDataSize;
+		size_t PixelDataSize;
 		unsigned char* PixelData;
 
 		BMP();
@@ -25,6 +25,7 @@ namespace BF
 
 		ResourceLoadingResult Load(const char* filePath);
 		ResourceLoadingResult Save(const char* filePath);
+
 		ResourceLoadingResult ConvertFrom(Image& image);
 		ResourceLoadingResult ConvertTo(Image& image);
 	};

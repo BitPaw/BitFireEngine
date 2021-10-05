@@ -328,14 +328,14 @@ BF::ResourceLoadingResult BF::PNG::Save(const char* filePath)
     return ResourceLoadingResult::Successful;
 }
 
-void BF::PNG::ConvertTo(Image& image)
+BF::ResourceLoadingResult BF::PNG::ConvertTo(Image& image)
 {
     unsigned char* pixelData = image.PixelData;
     unsigned int width = Width;
 	unsigned int height = Height;
     unsigned int pIndex = 0;
 
-	image.Format = ImageFormat::RGBA;
+	image.Format = ImageDataFormat::RGBA;
 	image.Resize(width, height);
 	
 
@@ -343,6 +343,13 @@ void BF::PNG::ConvertTo(Image& image)
     {
         ZLIBHeader& zlibHeader = ZLIBHeaderList[i];
     }
+
+    return ResourceLoadingResult::Successful;
+}
+
+BF::ResourceLoadingResult BF::PNG::ConvertFrom(Image& image)
+{
+    return ResourceLoadingResult::Successful;
 }
 
 void BF::PNG::PrintData()
