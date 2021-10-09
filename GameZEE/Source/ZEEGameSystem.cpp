@@ -39,6 +39,8 @@ BF::Model textureBix;
 
 void ZEE::ZEEGameSystem::OnStartUp()
 {   
+
+    /*
     BF::JPEG jpeg;
     jpeg.Load("B:/Daten/Bilder/_garbage/KN.jpg");
 
@@ -46,7 +48,7 @@ void ZEE::ZEEGameSystem::OnStartUp()
     BF::PNG png;
 
     png.Load("Wb.png");
-    png.Save("Wb_EE.png");
+    png.Save("Wb_EE.png");*/
 
 
     BF::StopWatch stopwatch;

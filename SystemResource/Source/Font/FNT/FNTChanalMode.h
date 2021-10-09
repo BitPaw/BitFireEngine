@@ -1,7 +1,11 @@
+#pragma once
+
 namespace BF
 {
 	enum class FNTChanalMode
-	{		
+	{
+		InvalidMode,
+
 		GlyphData,		// 0 if the channel holds the glyph data
 		Outline, 		// 1 if it holds the outline		
 		GlyphAndOutline,// 2 if it holds the glyphand the outline		

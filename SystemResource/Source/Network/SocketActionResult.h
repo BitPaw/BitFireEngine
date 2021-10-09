@@ -1,11 +1,11 @@
-#ifndef SocketErrorInclude
-#define SocketErrorInclude
+#pragma once
 
 namespace BF
 {
-	enum class SocketError
+	enum class SocketActionResult
 	{
-		SocketNoError,
+		InvalidResult,
+		Successful,
 
 		SocketInavlidAdressFamily,
 		SocketCreationFailure,
@@ -33,7 +33,5 @@ namespace BF
 		//----------------------------------------
 	};
 
-	const char* SocketErrorToString(SocketError socketError);
+	const char* SocketActionResultToString(SocketActionResult SocketActionResult);
 }
-
-#endif

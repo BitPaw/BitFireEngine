@@ -2,7 +2,7 @@
 
 #include "FNTCharacter.h"
 
-#include "../../Container/AsciiString.h"
+#define FNTPageFileNameSize 30
 
 namespace BF
 {
@@ -10,10 +10,11 @@ namespace BF
 	{
 		public:
 		unsigned int PageID;
-		char PageFileName[30];
-		List<FNTCharacter> Characters;
+		char PageFileName[FNTPageFileNameSize];
+		size_t CharacteListSize;
+		FNTCharacter* CharacteList;
 
 		FNTPage();
-		FNTPage(const unsigned int pageID, AsciiString& pageFileName);
+		~FNTPage();
 	};
 }

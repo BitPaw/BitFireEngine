@@ -24,6 +24,7 @@ namespace BF
 		//---[ Public-Functions ]----------------------------------------------
 		static FontFormat FileFormatPeek(const char* filePath);
 		FileActionResult Load(const char* filePath);	
+		FileActionResult Save(const char* filePath, FontFormat fontFormat);
 		//---------------------------------------------------------------------
 	};
 }

@@ -3,23 +3,42 @@
 #include "MIDICommand.h"
 
 #include "../../File/File.h"
-#include "../../Container/ByteStreamHusk.h"
+
+BF::MID::MID()
+{
+	Format = 0;
+	MusicSpeed = 0;
+	TrackListSize = 0;
+	TrackList = 0;
+}
+
+BF::MID::~MID()
+{
+	delete[] TrackList;
+}
 
 BF::FileActionResult BF::MID::Load(const char* filePath)
 {
+	
 	const char midiTrackEndIndicator[5] = "\x00\xFF\x2F\x00";
 
 	File file(filePath);
-	file.ReadFromDisk();
-	ByteStreamHusk byteStreamHusk(file.Data, file.DataSize);
+	FileActionResult loadingResult = file.ReadFromDisk();
+
+	if (loadingResult != FileActionResult::Successful)
+	{
+		return loadingResult;
+	}
 
 	// Pasre Chunk header
 	{
-		bool validHeaderTag = byteStreamHusk.CompareBytesAndMove((void*)"MThd", 4u);
-		unsigned int chunkLength = byteStreamHusk.ExtractIntegerAndMove(Endian::Big);
-		Format = byteStreamHusk.ExtractShortAndMove(Endian::Big);
-		TrackListSize = byteStreamHusk.ExtractShortAndMove(Endian::Big);
-		MusicSpeed = byteStreamHusk.ExtractShortAndMove(Endian::Big);
+		unsigned int chunkLength = 0;
+		bool validHeaderTag = file.ReadAndCompare("MThd", 4u);	
+		
+		file.Read(chunkLength, Endian::Big);
+		file.Read(Format, Endian::Big);
+		file.Read(TrackListSize, Endian::Big);
+		file.Read(MusicSpeed, Endian::Big);	
 	}	
 
 	TrackList = new MIDITrack[TrackListSize];
@@ -27,21 +46,23 @@ BF::FileActionResult BF::MID::Load(const char* filePath)
 	// Parse Track Header
 	for (unsigned int i = 0; i < TrackListSize; i++)
 	{
-		bool validTrackHeaderTag = byteStreamHusk.CompareBytesAndMove((void*)"MTrk", 4u);
-		unsigned int chunkLength = byteStreamHusk.ExtractIntegerAndMove(Endian::Big);
+		bool validTrackHeaderTag = file.ReadAndCompare("MTrk", 4u);
+		unsigned int chunkLength = 0;
 		MIDITrack& track = TrackList[i];
+
+		file.Read(chunkLength, Endian::Big);
 
 		track.EventData = (char*)malloc(chunkLength);
 		track.EventDataSize = chunkLength;
 
-		byteStreamHusk.CopyBytesAndMove(track.EventData, chunkLength);
+		file.Read(track.EventData, chunkLength);
 	}
-
+		
 	return FileActionResult::Successful;
 }
 
 BF::FileActionResult BF::MID::Save(const char* filePath)
-{
+{	
 	unsigned int fileSize = 14u;
 
 	for (unsigned int i = 0; i < TrackListSize; i++)
@@ -51,28 +72,24 @@ BF::FileActionResult BF::MID::Save(const char* filePath)
 		fileSize += 8u + track.EventDataSize;
 	}
 
-	char* data = (char*)malloc(fileSize);
-	ByteStreamHusk byteStreamHusk((unsigned char*)data, fileSize);
+	File file(filePath, fileSize);
 
-	byteStreamHusk.InsertArrayAndMove((void*)"MThd", 4u);
-	byteStreamHusk.InsertIngegerAndMove(Endian::Big, 6u);
-	byteStreamHusk.InsertShortAndMove(Endian::Big, Format);
-	byteStreamHusk.InsertShortAndMove(Endian::Big, TrackListSize);
-	byteStreamHusk.InsertShortAndMove(Endian::Big, MusicSpeed);
+	file.Write("MThd", 4u);
+	file.Write((unsigned int)6u, Endian::Big);
+	file.Write(Format, Endian::Big);
+	file.Write(TrackListSize, Endian::Big);
+	file.Write(MusicSpeed, Endian::Big);
 
 	for (unsigned int  i = 0; i < TrackListSize; i++)
 	{
 		MIDITrack& track = TrackList[i];
 
-		byteStreamHusk.InsertArrayAndMove((void*)"MTrk", 4u);
-		byteStreamHusk.InsertIngegerAndMove(Endian::Big, track.EventDataSize);
-		byteStreamHusk.InsertArrayAndMove(track.EventData, track.EventDataSize);
+		file.Write("MTrk", 4u);
+		file.Write(track.EventDataSize, Endian::Big);
+		file.Write(track.EventData, track.EventDataSize);
 	}	
 
-	File::WriteToDisk(filePath, data, fileSize);
-
-	free(data);
-
+	file.WriteToDisk();
 
 	return FileActionResult::Successful;
 }

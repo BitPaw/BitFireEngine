@@ -1,6 +1,7 @@
 #include "MTL.h"
 
 #include "../../../File/File.h"
+#include "../../../Container/AsciiString.h"
 
 BF::MTL::MTL()
 {

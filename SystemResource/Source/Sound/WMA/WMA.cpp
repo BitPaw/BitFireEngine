@@ -1,7 +1,16 @@
 #include "WMA.h"
+#include "../../File/File.h"
 
 BF::FileActionResult BF::WMA::Load(const char* filePath)
 {
+	File file(filePath);
+	FileActionResult loadingResult = file.ReadFromDisk();
+
+	if (loadingResult != FileActionResult::Successful)
+	{
+		return loadingResult;
+	}
+
 	return FileActionResult::Successful;
 }
 

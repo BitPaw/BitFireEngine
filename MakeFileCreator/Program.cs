@@ -7,7 +7,6 @@ namespace MakeFileCreator
     class Program
     {
         static string libyrayName = "";
-        static string allSourceObjects = "";
         static string allBinObjects = "";
 
         static string outPutBuffer = "";
@@ -36,8 +35,7 @@ namespace MakeFileCreator
 
                 string binPath = "bin/" + rawPath + ".o";
 
-                allSourceObjects += filePath + " ";
-                allBinObjects += binPath + " ";
+                   allBinObjects += binPath + " ";
 
                 string finalWrite = binPath + ": " + filePath + "\n\tgcc -c " + filePath + " -o " + binPath + "\n\n";
 

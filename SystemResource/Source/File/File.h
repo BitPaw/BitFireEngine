@@ -6,14 +6,14 @@
 #include <fstream>
 #include <sstream>
 
+#include "Endian.h"
+
 #include "../File/FileActionResult.hpp"
-#include "../Container/AsciiString.h"
-#include "../Types/Endian.h"
+
+#define FileLineBufferSize 255u
 
 namespace BF
 {
-#define FileLineBufferSize 255u
-
 	struct File
 	{
 		private:
@@ -63,7 +63,10 @@ namespace BF
 		void Read(unsigned short& value, Endian endian);
 		void Read(int& value, Endian endian);
 		void Read(unsigned int& value, Endian endian);
+		void Read(unsigned long long& value, Endian endian);
 		void Read(void* value, size_t length);
+		bool ReadAndCompare(const char* value, size_t length);
+		bool ReadAndCompare(void* value, size_t length);
 		FileActionResult ReadFromDisk();
 		static FileActionResult ReadFromDisk(const char* filePath, char** buffer);
 		static FileActionResult ReadFromDisk(const char* filePath, char** buffer, unsigned int maxSize);
@@ -78,7 +81,8 @@ namespace BF
 		void Write(int value, Endian endian);
 		void Write(unsigned int value, Endian endian);
 		void Write(const char* string, size_t length);
-		void Write(void* value, size_t length);
+		void Write(unsigned long long& value, Endian endian);
+		void Write(void* value, size_t length);	
 		FileActionResult WriteToDisk();
 		static FileActionResult WriteToDisk(const char* filePath, const char* content, unsigned int length);
 		//---------------------------------------------------------------------

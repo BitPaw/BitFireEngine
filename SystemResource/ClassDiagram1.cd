@@ -1120,11 +1120,11 @@
       <FileName>Source\Network\IPVersion.h</FileName>
     </TypeIdentifier>
   </Enum>
-  <Enum Name="BF::SocketError" Collapsed="true">
+  <Enum Name="BF::SocketActionResult" Collapsed="true">
     <Position X="42.75" Y="17" Width="1.5" />
     <TypeIdentifier>
       <HashCode>kBAAAAEACAAAAQACAAAAAQCEQAAAAAEAAAAAAgGBQAA=</HashCode>
-      <FileName>Source\Network\SocketError.h</FileName>
+      <FileName>Source\Network\SocketActionResult.h</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="BF::ResourceType" Collapsed="true">

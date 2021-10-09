@@ -21,9 +21,6 @@
     <ClCompile Include="Source\Container\BitStreamHusk.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Container\ByteStreamHusk.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Dialog\Dialog.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -144,13 +141,7 @@
     <ClCompile Include="Source\Sound\Sound.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Types\DoubleWord.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Types\UUID.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Types\Word.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Resource.cpp">
@@ -243,9 +234,6 @@
     <ClCompile Include="Source\Network\Server.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Network\SocketError.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Camera\Camera.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -274,9 +262,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Sound\M4A\M4A.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Types\QuadWord.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Sound\MP3\MP3Header.cpp">
@@ -396,6 +381,15 @@
     <ClCompile Include="Source\Image\PNG\PNGColorType.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Font\FNT\FNTCommonData.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Font\FNT\FNTInfo.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Network\SocketActionResult.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp">
@@ -417,9 +411,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Container\BitStreamHusk.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Container\ByteStreamHusk.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Container\Dictionary.hpp">
@@ -617,16 +608,7 @@
     <ClInclude Include="Source\Sound\SoundFormat.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Types\DoubleWord.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Types\Endian.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Types\UUID.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Types\Word.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Resource.h">
@@ -737,9 +719,6 @@
     <ClInclude Include="Source\Time\StopWatch.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Network\SocketError.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Network\Client.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -795,9 +774,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Sound\M4A\M4A.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Types\QuadWord.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Sound\MP3\MP3Header.h">
@@ -956,9 +932,28 @@
     <ClInclude Include="Source\Model\IModelFormat.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="Source\File\Endian.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Font\FNT\FNTCommonData.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Font\FNT\FNTInfo.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Font\IFontFormat.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Network\SocketActionResult.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Network\ISocketListener.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
     <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
   </ItemGroup>
 </Project>

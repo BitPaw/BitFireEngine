@@ -1,7 +1,7 @@
 #pragma once
 
-#define ResourceNameSize 30u
-#define ResourceFilePathSize 60u
+#define ResourceNameSize 32u
+#define ResourceFilePathSize 64u
 
 #define ResourceIDUndefined -1
 

@@ -1,9 +1,9 @@
 #include "OGG.h"
 #include "../../File/File.h"
-#include "../../Container/ByteStreamHusk.h"
 
 BF::FileActionResult BF::OGG::Load(const char* filePath)
 {
+	/*
 	File file(filePath);
 	file.ReadFromDisk();
 	ByteStreamHusk byteStream(file.Data, file.DataSize);
@@ -20,6 +20,8 @@ BF::FileActionResult BF::OGG::Load(const char* filePath)
 	unsigned int checkSum = byteStream.ExtractIntegerAndMove(Endian::Little);
 	unsigned char pageSegments = byteStream.ExtractByteAndMove();
 	byteStream.CopyBytesAndMove(segmentTable, pageSegments);
+
+	*/
 
 	return FileActionResult::Successful;
 }

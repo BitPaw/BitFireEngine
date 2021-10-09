@@ -10,6 +10,7 @@
 #include "WMA/WMA.h"
 
 #include "../File/File.h"
+#include "../Container/AsciiString.h"
 
 BF::Sound::Sound()
 {

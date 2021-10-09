@@ -9,7 +9,7 @@ namespace BF
 	{
 		private:
 		char* _data;
-		unsigned int _size;
+		size_t _size;
 
 		bool _isReferenceToOtherString;
 
@@ -53,7 +53,7 @@ namespace BF
 		int ToInt();
 		static int ToInt(const char* string);
 		bool ToBool();
-		static int ToBool(const char* string);
+		static bool ToBool(const char* string);
 		//---------------
 
 		unsigned int Count(char character);

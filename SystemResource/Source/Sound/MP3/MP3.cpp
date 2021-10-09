@@ -4,20 +4,23 @@
 #include "MPEGAudioTag.h"
 
 #include "../../File/File.h"
-#include "../../Container/ByteStreamHusk.h"
 
 BF::FileActionResult BF::MP3::Load(const char* filePath)
 {
 	File file(filePath);
+	FileActionResult loadingResult = file.ReadFromDisk();
+
+	if (loadingResult != FileActionResult::Successful)
+	{
+		return loadingResult;
+	}
+
 	MP3Header mp3Header;
 	MPEGAudioTag mpegAudioTag;
 
-	file.ReadFromDisk();
-	ByteStreamHusk byteStreamHusk(file.Data, file.DataSize);
-
 	char rawHeader[4];
 
-	byteStreamHusk.CopyBytesAndMove(rawHeader, 4);
+	file.Read(rawHeader, 4);
 
 	mp3Header.ExtractRawHeader(rawHeader);
 
@@ -41,17 +44,20 @@ BF::FileActionResult BF::MP3::Load(const char* filePath)
 	}
 
 
+	char tagBuffer[3];
+	unsigned char gere;
+	bool validInfoHeader = false;
 
+	file.Read(tagBuffer, 3);
 
-	bool validInfoHeader = byteStreamHusk.CompareBytesAndMove((void*)"TAG", 3u);
+	validInfoHeader = memcmp(tagBuffer, "TAG", 3) == 0;
 
-	byteStreamHusk.CopyBytesAndMove((unsigned char*)&mpegAudioTag, 124u);
-	
-	unsigned char gere = byteStreamHusk.ExtractByteAndMove();
+	file.Read(&mpegAudioTag, 124u);
+	file.Read(gere);	
 
 	mpegAudioTag.Genre = MPEGGenreConvert(gere);
 
-
+	
 	return FileActionResult::Successful;
 }
 

@@ -261,7 +261,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Font\FNT\FNTCommonData.cpp" />
+    <ClCompile Include="Source\Font\FNT\FNTInfo.cpp" />
     <ClCompile Include="Source\Image\PNG\PNGColorType.cpp" />
+    <ClCompile Include="Source\Network\SocketActionResult.cpp" />
     <ClCompile Include="Source\Video\MP4\MP4.cpp" />
     <ClCompile Include="Source\Image\JPEG\JPEGScanSelector.cpp" />
     <ClCompile Include="Source\Image\JPEG\JPEGScanStart.cpp" />
@@ -289,7 +292,6 @@
     <ClCompile Include="Source\Sound\MP3\MPEGAudioTag.cpp" />
     <ClCompile Include="Source\Sound\MP3\MP3Header.cpp" />
     <ClCompile Include="Source\Sound\MP3\MPEGGenre.cpp" />
-    <ClCompile Include="Source\Types\QuadWord.cpp" />
     <ClCompile Include="Source\Sound\M4A\M4A.cpp" />
     <ClCompile Include="Source\Sound\FLAC\FLAC.cpp" />
     <ClCompile Include="Source\Sound\AAC\AAC.cpp" />
@@ -305,7 +307,6 @@
     <ClCompile Include="Source\Algorithm\CRC32.cpp" />
     <ClCompile Include="Source\Container\AsciiString.cpp" />
     <ClCompile Include="Source\Container\BitStreamHusk.cpp" />
-    <ClCompile Include="Source\Container\ByteStreamHusk.cpp" />
     <ClCompile Include="Source\Dialog\Dialog.cpp" />
     <ClCompile Include="Source\Email\EML.cpp" />
     <ClCompile Include="Source\File\File.cpp" />
@@ -369,7 +370,6 @@
     <ClCompile Include="Source\Network\IOSocket.cpp" />
     <ClCompile Include="Source\Network\IPVersion.cpp" />
     <ClCompile Include="Source\Network\Server.cpp" />
-    <ClCompile Include="Source\Network\SocketError.cpp" />
     <ClCompile Include="Source\Resource.cpp" />
     <ClCompile Include="Source\Image\ImageDataFormat.cpp" />
     <ClCompile Include="Source\Shader\Shader.cpp" />
@@ -380,9 +380,7 @@
     <ClCompile Include="Source\Sound\Sound.cpp" />
     <ClCompile Include="Source\Sound\WAV\WAV.cpp" />
     <ClCompile Include="Source\Time\StopWatch.cpp" />
-    <ClCompile Include="Source\Types\DoubleWord.cpp" />
     <ClCompile Include="Source\Types\UUID.cpp" />
-    <ClCompile Include="Source\Types\Word.cpp" />
     <ClCompile Include="Source\Video\Video.cpp" />
     <ClCompile Include="Source\Sound\WMA\WMA.cpp" />
     <ClCompile Include="Source\Compression\ZLIB\ZLIBHeader.cpp" />
@@ -390,7 +388,12 @@
     <ClCompile Include="Source\Compression\ZLIB\ZLIBCompressionMethod.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Font\FNT\FNTCommonData.h" />
+    <ClInclude Include="Source\Font\FNT\FNTInfo.h" />
+    <ClInclude Include="Source\Font\IFontFormat.hpp" />
     <ClInclude Include="Source\Model\IModelFormat.hpp" />
+    <ClInclude Include="Source\Network\ISocketListener.h" />
+    <ClInclude Include="Source\Network\SocketActionResult.h" />
     <ClInclude Include="Source\Sound\ISoundFormat.hpp" />
     <ClInclude Include="Source\Video\MP4\MP4.h" />
     <ClInclude Include="Source\IFileFormat.hpp" />
@@ -424,7 +427,6 @@
     <ClInclude Include="Source\Sound\MP3\MP3Layer.hpp" />
     <ClInclude Include="Source\Sound\MP3\MP3MPEGVersion.hpp" />
     <ClInclude Include="Source\Sound\MP3\MPEGGenre.hpp" />
-    <ClInclude Include="Source\Types\QuadWord.h" />
     <ClInclude Include="Source\Sound\M4A\M4A.h" />
     <ClInclude Include="Source\Sound\FLAC\FLAC.h" />
     <ClInclude Include="Source\Sound\AAC\AAC.h" />
@@ -449,7 +451,6 @@
     <ClInclude Include="Source\Container\BinaryTree\BinaryTreeDirection.h" />
     <ClInclude Include="Source\Container\BinaryTree\BinaryTreeNode.hpp" />
     <ClInclude Include="Source\Container\BitStreamHusk.h" />
-    <ClInclude Include="Source\Container\ByteStreamHusk.h" />
     <ClInclude Include="Source\Container\Dictionary.hpp" />
     <ClInclude Include="Source\Container\LinkedList.hpp" />
     <ClInclude Include="Source\Container\LinkedListNode.hpp" />
@@ -551,7 +552,6 @@
     <ClInclude Include="Source\Network\IOSocket.h" />
     <ClInclude Include="Source\Network\IPVersion.h" />
     <ClInclude Include="Source\Network\Server.h" />
-    <ClInclude Include="Source\Network\SocketError.h" />
     <ClInclude Include="Source\OSDefine.h" />
     <ClInclude Include="Source\Resource.h" />
     <ClInclude Include="Source\ResourceType.hpp" />
@@ -566,10 +566,8 @@
     <ClInclude Include="Source\Sound\SoundPlayStyle.hpp" />
     <ClInclude Include="Source\Sound\WAV\WAV.h" />
     <ClInclude Include="Source\Time\StopWatch.h" />
-    <ClInclude Include="Source\Types\DoubleWord.h" />
-    <ClInclude Include="Source\Types\Endian.h" />
+    <ClInclude Include="Source\File\Endian.h" />
     <ClInclude Include="Source\Types\UUID.h" />
-    <ClInclude Include="Source\Types\Word.h" />
     <ClInclude Include="Source\Video\IVideoFormat.hpp" />
     <ClInclude Include="Source\Video\Video.h" />
     <ClInclude Include="Source\Sound\WMA\WMA.h" />
@@ -580,6 +578,7 @@
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
     <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,9 +1,12 @@
 #include "Server.h"
+#include "SocketActionResult.h"
 #include "../Async/Thread.h"
 
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <thread>
+#include <cassert>
 
 BF::Server::Server()
 {
@@ -19,7 +22,7 @@ BF::Client* BF::Server::GetNextClient()
     for (unsigned int i = 0; i < NumberOfMaximalClients; i++)
     {
         Client* client = &ClientList[i];
-        char isUsed = Socket.IsCurrentlyUsed();
+        char isUsed = client->IsCurrentlyUsed();
 
         if (!isUsed)
         {
@@ -30,21 +33,48 @@ BF::Client* BF::Server::GetNextClient()
     return 0;
 }
 
-char BF::Server::Start(IPVersion ipVersion, unsigned short port)
+BF::SocketActionResult BF::Server::Start(IPVersion ipVersion, unsigned short port)
 {
-    SocketError errorCode = Socket.Open(ipVersion, port);
-    
-    return errorCode == SocketError::SocketNoError;
+    SocketActionResult socketActionResult = Open(ipVersion, port);
+
+    if (socketActionResult != SocketActionResult::Successful)
+    {
+        return socketActionResult;
+    }         
+
+    CommunicationThread = new std::thread([](Server* server)
+    {
+        while (server->IsCurrentlyUsed())
+        {            
+            Client* client = server->WaitForClient();
+
+            if (client)
+            {
+                server->RegisterClient(client);
+
+                client->Callback = server->Callback;
+
+                client->CommunicationThread = new std::thread([](Client* client)
+                {
+                    while (client->IsCurrentlyUsed())
+                    {
+                        SocketActionResult socketActionResult = client->Read();
+
+
+                    }
+
+                }, client);               
+            }
+        }
+
+    }, this);
+
+    return SocketActionResult::Successful;
 }
 
 void BF::Server::Stop()
 {
-    char isRunning = Socket.IsCurrentlyUsed();
-
-    if (isRunning)
-    {        
-        Socket.Close();
-    }
+    Close();
 }
 
 void BF::Server::KickClient(int socketID)
@@ -56,25 +86,22 @@ void BF::Server::KickClient(int socketID)
 
 BF::Client* BF::Server::WaitForClient()
 {
-    char hasCallBack = Socket.OnConnected != 0;
     Client* client = GetNextClient();
     
-    Socket.AwaitConnection(&client->Socket);
+    assert(client);
+
+    AwaitConnection(*client);
       
-    if(client->Socket.ID == -1)
+    if(client->ID == -1)
     {
         return 0;
     }
 
-    if (hasCallBack)
+    if (Callback)
     {
-        Socket.OnConnected(Socket.ID);
+        Callback->OnConnectionLinked(ID);
     }
-
-    RegisterClient(client);
     
-  //  ThreadCreate(&client->CommunicationThread, [](void* data) -> unsigned long { ReadAsync; }, &client->Socket);
-
     return client;
 }
 
@@ -83,7 +110,7 @@ BF::Client* BF::Server::GetClientViaID(int socketID)
     for (unsigned int i = 0; i < NumberOfMaximalClients; i++)
     {
         Client* client = &ClientList[i];
-        int clientSocketID = client->Socket.ID;
+        int clientSocketID = client->ID;
         char foundTarget = clientSocketID == socketID;
 
         if (foundTarget)
@@ -95,7 +122,7 @@ BF::Client* BF::Server::GetClientViaID(int socketID)
     return 0;
 }
 
-BF::SocketError BF::Server::SendToClient(int clientID, char* message)
+BF::SocketActionResult BF::Server::SendToClient(int clientID, char* message)
 {
     // Client LookUp
     Client* client = GetClientViaID(clientID);
@@ -103,26 +130,26 @@ BF::SocketError BF::Server::SendToClient(int clientID, char* message)
     if (client == 0)
     {
         // Error: No client with this ID.
-        return SocketError::SocketSendFailure;
+        return SocketActionResult::SocketSendFailure;
     }
 
     // Sent to Client;
-    return Socket.Write(message);
+    return Write(message);
 }
 
-BF::SocketError BF::Server::BroadcastToClients(char* message)
+BF::SocketActionResult BF::Server::BroadcastToClients(char* message)
 {
-    SocketError errorCode = SocketError::SocketNoError;
+    SocketActionResult errorCode = SocketActionResult::InvalidResult;
 
     for (size_t i = 0; i < NumberOfMaximalClients; i++)
     {
         Client* client = &ClientList[i];
 
-        if (client->Socket.ID != -1)
+        if (client->ID != -1)
         {
-            SocketError currentCrrorCode = Socket.Write(message);
+            SocketActionResult currentCrrorCode = Write(message);
 
-            if (currentCrrorCode != SocketError::SocketNoError)
+            if (currentCrrorCode != SocketActionResult::Successful)
             {
                 errorCode = currentCrrorCode;
             }

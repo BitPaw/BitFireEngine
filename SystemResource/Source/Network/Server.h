@@ -1,35 +1,34 @@
-#ifndef ServerIncluded
-#define ServerIncluded
+#pragma once
 
 #include "Client.h"
 #include "IOSocket.h"
 
 namespace BF
 {
-    class Server
+    class Server : public IOSocket
     {
         public:
-        IOSocket Socket;
-
         Client* ClientList;
         unsigned int NumberOfConnectedClients;
         unsigned int NumberOfMaximalClients;
 
         private:
         Client* GetNextClient();
+        std::thread* _clientListeningThread;
 
         public:
         Server();
 
-        char Start(IPVersion ipVersion, unsigned short port);
+     
+
+        SocketActionResult Start(IPVersion ipVersion, unsigned short port);
         void Stop();
         void KickClient(int socketID);
         Client* WaitForClient();
         Client* GetClientViaID(int socketID);
-        SocketError SendToClient(int clientID, char* message);
-        SocketError BroadcastToClients(char* message);
+        SocketActionResult SendToClient(int clientID, char* message);
+        SocketActionResult BroadcastToClients(char* message);
         void RegisterClient(Client* client);
         void UnRegisterClient(Client* client);
     };
 }
-#endif

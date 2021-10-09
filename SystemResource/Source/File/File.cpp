@@ -106,12 +106,18 @@ void BF::File::SetFilePath(const char* filePath)
 		Extension, _MAX_EXT
 	);
 
-	// Fix stuff
-	AsciiString fileName(Extension);
-	AsciiString extension(Extension);
+	char buffer[_MAX_EXT];
 
-	extension.Remove('.');
-	fileName.Remove('/');
+	memcpy(buffer, Extension, _MAX_EXT);
+	memset(Extension, 0, _MAX_EXT);
+	strncpy(Extension, buffer+1, _MAX_EXT);
+
+	// Fix stuff
+	//AsciiString fileName(Extension);
+	//AsciiString extension(Extension);
+
+	//extension.Remove('.');
+	//fileName.Remove('/');
 }
 
 BF::FileActionResult BF::File::ReadFromDisk()
@@ -380,11 +386,62 @@ void BF::File::Read(unsigned int& value, Endian endian)
 	}
 }
 
+void BF::File::Read(unsigned long long& value, Endian endian)
+{
+	unsigned char valueData[8];
+
+	Read(valueData, 8u);
+
+	switch (endian)
+	{
+		case Endian::Big:
+		{
+			value =
+				(valueData[0] << 56LL) |
+				(valueData[1] << 48LL) |
+				(valueData[2] << 40LL) |
+				(valueData[3] << 32LL) |
+				(valueData[4] << 24LL) |
+				(valueData[5] << 16LL) |
+				(valueData[6] << 8LL) |
+				(valueData[7]);
+
+			break;
+		}
+		default:
+		case Endian::Little:
+			value =
+				(valueData[0]) |
+				(valueData[1] << 8LL) |
+				(valueData[2] << 16LL) |
+				(valueData[3] << 24LL) |
+				(valueData[4] << 32LL) |
+				(valueData[5] << 40LL) |
+				(valueData[6] << 48LL) |
+				(valueData[7] << 56LL);
+			break;
+	}
+}
+
 void BF::File::Read(void* value, size_t length)
 {
 	memcpy(value, &Data[DataCursorPosition], length);
 
 	DataCursorPosition += length;
+}
+
+bool BF::File::ReadAndCompare(const char* value, size_t length)
+{
+	return ReadAndCompare((void*)value, length);
+}
+
+bool BF::File::ReadAndCompare(void* value, size_t length)
+{
+	bool result = memcmp(value, Data + DataCursorPosition, length) == 0;
+
+	DataCursorPosition += length;
+
+	return result;
 }
 
 void BF::File::Write(bool value)
@@ -467,6 +524,10 @@ void BF::File::Write(unsigned int value, Endian endian)
 void BF::File::Write(const char* string, size_t length)
 {
 	Write((void*)string, length);	
+}
+
+void BF::File::Write(unsigned long long& value, Endian endian)
+{
 }
 
 void BF::File::Write(void* value, size_t length)

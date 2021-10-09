@@ -1,9 +1,11 @@
-#ifndef IOSocketInclude
-#define IOSocketInclude
+#pragma once
 
-#include "../OSDefine.h"
-#include "SocketError.h"
+#include "SocketActionResult.h"
 #include "IPVersion.h"
+#include "ISocketListener.h"
+#include "../OSDefine.h"
+
+#include <thread>
 
 #ifdef OSUnix
 #include <sys/types.h> 
@@ -28,18 +30,23 @@ namespace BF
 {
 	class IOSocket
 	{
+		private:
+		int GetAdressFamily(IPVersion ipVersion);
+		SocketActionResult SetupAdress(IPVersion ipVersion, const  char* ip, unsigned short port);
+
+#if defined(OSWindows)
+		SocketActionResult WindowsSocketAgentStartup();
+		SocketActionResult WindowsSocketAgentShutdown();
+#endif
+
 		public:
 		unsigned int ID;
 		unsigned short Port;
-		char Message[SocketBufferSize];
-
+		char BufferMessage[SocketBufferSize];
 		IPVersion IPMode;
 
-		//---[ Events ]------------------------------------------------------------
-		void (*OnMessage)(int socketID, char* message);
-		void (*OnConnected)(int socketID);
-		void (*OnDisconnected)(int socketID);
-		//-------------------------------------------------------------------------
+		ISocketListener* Callback;
+		std::thread* CommunicationThread;	
 
 		struct sockaddr_in AdressIPv4; // Used only in IPv4
 
@@ -47,31 +54,17 @@ namespace BF
 		struct addrinfo AdressIPv6;
 #elif defined(OSWindows)
 		ADDRINFO AdressIPv6;
-#endif
+#endif		
 
+		IOSocket();
 
 		char IsCurrentlyUsed();
-		IOSocket();
-		SocketError Open(IPVersion ipVersion, unsigned short port);
+
 		void Close();
-		void AwaitConnection(IOSocket* clientSocket);
-		SocketError Connect(IOSocket* serverSocket, char* ipAdress, unsigned short port);
-		SocketError Read();
-		SocketError Write(char* message);
-
-		// Private
-		int GetAdressFamily(IPVersion ipVersion);
-		SocketError SetupAdress(IPVersion ipVersion, char* ip, unsigned short port);
-
-#ifdef OSUnix
-		void* ReadAsync();
-#elif defined(OSWindows)
-		unsigned long ReadAsync();
-		SocketError WindowsSocketAgentStartup();
-		SocketError WindowsSocketAgentShutdown();
-#endif
-
-
+		void AwaitConnection(IOSocket& clientSocket);
+		SocketActionResult Open(IPVersion ipVersion, unsigned short port);	
+		SocketActionResult Connect(IOSocket& serverSocket, const char* ipAdress, unsigned short port);
+		SocketActionResult Read();
+		SocketActionResult Write(const char* message);
 	};
 }
-#endif

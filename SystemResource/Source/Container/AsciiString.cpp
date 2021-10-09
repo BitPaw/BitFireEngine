@@ -197,12 +197,12 @@ void BF::AsciiString::AttachToBack(AsciiString& string)
 	C = A + B
 	*/
 
-	unsigned int stringALengh = Size();
-	unsigned int stringBLengh = string.Size();
-	unsigned int stringCLengh = stringALengh + stringBLengh + 1; // +1 for the '\0' c string style. 
-	unsigned int byteLenghA = sizeof(char) * stringALengh;
-	unsigned int byteLenghB = sizeof(char) * stringBLengh;
-	unsigned int byteLenghC = sizeof(char) * stringCLengh;
+	size_t stringALengh = Size();
+	size_t stringBLengh = string.Size();
+	size_t stringCLengh = stringALengh + stringBLengh + 1; // +1 for the '\0' c string style. 
+	size_t byteLenghA = sizeof(char) * stringALengh;
+	size_t byteLenghB = sizeof(char) * stringBLengh;
+	size_t byteLenghC = sizeof(char) * stringCLengh;
 	char* startA = _data;
 	char* startB = &string[0];
 	char* insertionPoint = 0;
@@ -343,7 +343,7 @@ bool BF::AsciiString::ToBool()
 	return AsciiString::ToBool(_data);
 }
 
-int BF::AsciiString::ToBool(const char* string)
+bool BF::AsciiString::ToBool(const char* string)
 {
 	switch (string[0])
 	{
@@ -479,7 +479,7 @@ void BF::AsciiString::Remove(char removerCharacter)
 		}
 	}
 
-	strcpy(_data, resultBuffer);
+	strncpy(_data, resultBuffer, 2048);
 }
 
 void BF::AsciiString::RemoveWhiteSpace()
