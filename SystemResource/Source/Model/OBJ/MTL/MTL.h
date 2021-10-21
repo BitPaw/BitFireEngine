@@ -8,13 +8,13 @@ namespace BF
 	class MTL
 	{
 		public:
-		unsigned int MaterialListSize;
+		size_t MaterialListSize;
 		MTLMaterial* MaterialList;
 
 		MTL();
 		~MTL();
 
-		void Load(char* filePath);
+		void Load(const char* filePath);
 
 		void PrintContent();
 	};

@@ -28,5 +28,6 @@ namespace BF
 
 		FileActionResult ConvertFrom(Image& image);
 		FileActionResult ConvertTo(Image& image);
+		FileActionResult ConvertTo(Image& image, BMP& alphaMap);
 	};
 }

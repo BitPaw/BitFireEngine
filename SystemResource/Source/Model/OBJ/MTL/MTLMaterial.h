@@ -4,7 +4,7 @@
 
 namespace BF
 {
-#define MTLNameSize 50u
+#define MTLNameSize 32u
 #define MTLFilePath 60u
 
 	struct MTLMaterial

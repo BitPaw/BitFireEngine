@@ -50,6 +50,8 @@ namespace BF
 		void FormatChange(ImageDataFormat imageFormat);
 
 		static ImageFileFormat FileFormatPeek(const char* filePath);
+
+		FileActionResult Load();
 		FileActionResult Load(const char* filePath);
 		FileActionResult Save(const char* filePath, ImageFileFormat imageFileFormat);
 	};

@@ -2,9 +2,6 @@
 
 BF::Material::Material()
 {
-	strcpy(Name, "[N/A]");
-	strcpy(TextureFilePath, "[Internal]");
-
 	Ambient[0] = 0;
 	Ambient[1] = 0;
 	Ambient[2] = 0;
@@ -20,6 +17,4 @@ BF::Material::Material()
 	Emission[0] = 0;
 	Emission[1] = 0;
 	Emission[2] = 0;
-
-	Texture = nullptr;
 }

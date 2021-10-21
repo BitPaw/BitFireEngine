@@ -9,8 +9,8 @@ BF::OBJ::OBJ()
 
     VertexStructureSize = 0;
 
-    MaterialListSize = 0;
-    MaterialList = nullptr;
+    MaterialFileListSize = 0;
+    MaterialFileList = nullptr;
 
     ElementListSize = 0;
     ElementList = nullptr;
@@ -152,7 +152,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                     break;
 
                 case OBJLineCommand::MaterialLibraryInclude:
-                    ++MaterialListSize;
+                    ++MaterialFileListSize;
                     break;
 
                 case OBJLineCommand::MaterialLibraryUse:
@@ -238,9 +238,9 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
             }
         }                
    
-        if (MaterialListSize > 0)
+        if (MaterialFileListSize > 0)
         {
-            MaterialList = new MTL[MaterialListSize];
+            MaterialFileList = new MTL[MaterialFileListSize];
         }
      }
      //--------------------------------------------------------------------
@@ -316,7 +316,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
 
                     if (doesFileExist)
                     {
-                        MTL& material = MaterialList[materialIndex++];
+                        MTL& material = MaterialFileList[materialIndex++];
                    
                         material.Load(file.Path);
 
@@ -340,9 +340,9 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                         usedMaterialName
                     );
 
-                    for (unsigned int i = 0; i < MaterialListSize; i++)
+                    for (unsigned int i = 0; i < MaterialFileListSize; i++)
                     {
-                        MTL& mtl = MaterialList[i];
+                        MTL& mtl = MaterialFileList[i];
                         unsigned int materialListSize = mtl.MaterialListSize;
 
                         for (unsigned int j = 0; j < materialListSize; j++)
@@ -506,50 +506,32 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
 {
     bool usedNormals = false;
 
-    switch (VertexStructureSize)
+    model.MeshListSize = ElementListSize;
+    model.MeshList = new Mesh[ElementListSize];
+  
+    for (size_t materialFileIndex = 0; materialFileIndex < MaterialFileListSize; materialFileIndex++)
     {
-        case 3:
-        {
-            model.RenderInformation.RenderType = RenderMode::Triangle;
-            break;
-        }
+        MTL& mtl = MaterialFileList[materialFileIndex];
+        size_t materialListSize = mtl.MaterialListSize;
 
-        case 4:
+        model.MaterialListSize = materialListSize;
+        model.MaterialList = new Material[materialListSize];
+
+        for (size_t materialIndex = 0; materialIndex < materialListSize; materialIndex++)
         {
-            model.RenderInformation.RenderType = RenderMode::Square;
-            break;
+            MTLMaterial& mtlMaterial = mtl.MaterialList[materialIndex];
+            Material& material = model.MaterialList[materialIndex];
+
+            strncpy(material.Name, mtlMaterial.Name, MTLNameSize);
+            strncpy(material.FilePath, mtlMaterial.TextureFilePath, MTLFilePath);
+            memcpy(material.Ambient, mtlMaterial.Ambient, 3 * sizeof(float));
+            memcpy(material.Diffuse, mtlMaterial.Diffuse, 3 * sizeof(float));
+            memcpy(material.Specular, mtlMaterial.Specular, 3 * sizeof(float));
+            memcpy(material.Emission, mtlMaterial.Emission, 3 * sizeof(float));
         }
     }
 
-    model.MeshList.ReSize(ElementListSize);
-
-    // Convert Materials
-    if (MaterialListSize > 0)
-    {
-        unsigned int mtlMaterialListSize = MaterialList[0].MaterialListSize;
-
-        model.MaterialList.ReSize(mtlMaterialListSize);
-
-        for (unsigned int mtlIndex = 0; mtlIndex < MaterialListSize; mtlIndex++)
-        {
-            MTL& mtl = MaterialList[mtlIndex];
-
-            for (unsigned int mtlMaterialIndex = 0; mtlMaterialIndex < mtlMaterialListSize; mtlMaterialIndex++)
-            {
-                MTLMaterial& mtlMaterial = mtl.MaterialList[mtlMaterialIndex];
-                Material& material = model.MaterialList[mtlMaterialIndex];
-
-                strncpy(material.Name, mtlMaterial.Name, MTLNameSize);
-                strncpy(material.TextureFilePath, mtlMaterial.TextureFilePath, MTLFilePath);
-                memcpy(material.Ambient, mtlMaterial.Ambient, 3 * sizeof(float));
-                memcpy(material.Diffuse, mtlMaterial.Diffuse, 3 * sizeof(float));
-                memcpy(material.Specular, mtlMaterial.Specular, 3 * sizeof(float));
-                memcpy(material.Emission, mtlMaterial.Emission, 3 * sizeof(float));
-            }
-        }
-    }
-
-    for (unsigned int elementIndex = 0; elementIndex < model.MeshList.Size(); elementIndex++)
+    for (size_t elementIndex = 0; elementIndex < model.MeshListSize; elementIndex++)
     {
         OBJElement& element = ElementList[elementIndex]; // Get current source Mesh
         Mesh& mesh = model.MeshList[elementIndex]; // Get current target Mesh
@@ -558,61 +540,42 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
         unsigned int normalListSize = element.VertexNormalPositionList.Size();
         unsigned int textureCoordinateListSize = element.TextureCoordinateList.Size();
 
-        strncpy(mesh.Name, element.Name, MeshNameSize);
+       // TODO: strncpy(mesh.Name, element.Name, ResourceNameSize);
+    
+        mesh.Structure.RenderType = VertexStructureSize == 4 ? RenderMode::Square : RenderMode::Triangle;
 
-        mesh.MeshMaterial = element.MaterialListIndex == -1 ? nullptr : &model.MaterialList[element.MaterialListIndex];
+        mesh.Structure.Allocate(faceElementListSize * (3+3+4+2), faceElementListSize);
+        mesh.RenderInfo.MaterialID = element.MaterialListIndex;
 
-        // Color
+        size_t vertecDataIndex = 0;
+        float* vertexDataArray = mesh.Structure.VertexData;
 
-        // Vertex Data
-        mesh.VertexList.ReSize(vertexListSize);
-        for (unsigned int i = 0; i < vertexListSize; i++)
-        {
-            Vertex& vertex = mesh.VertexList[i];
-            vertex.ColorID = (unsigned int)-1;
-            vertex.CurrentPosition = element.VertexPositionList[i];
-
-            //printf("V: <%f|%f|%f> C:%u\n", vertex->CurrentPosition.X, vertex->CurrentPosition.Y, vertex->CurrentPosition.Z, vertex->ColorID);
-        }
-
-        mesh.TexturePointList.ReSize(textureCoordinateListSize);
-        for (unsigned int i = 0; i < textureCoordinateListSize; i++)
-        {
-            mesh.TexturePointList[i] = element.TextureCoordinateList[i];
-            // printf("T: <%f|%f>\n", mesh->TexturePointList[i].X, mesh->TexturePointList[i].Y);
-        }
-
-        if (normalListSize > 0)
-        {
-            usedNormals = true;
-            mesh.NormalPointList.ReSize(normalListSize);
-            for (unsigned int i = 0; i < normalListSize; i++)
-            {
-                mesh.NormalPointList[i] = element.VertexNormalPositionList[i];
-                //printf("N: <%f|%f|%f>\n", mesh->NormalPointList[i].X, mesh->NormalPointList[i].Y, mesh->NormalPointList[i].Z);
-            }
-        }
-
-        // Index Data
-        mesh.IndexList.ReSize(faceElementListSize);
-        for (unsigned int i = 0; i < faceElementListSize; i++)
+        for (size_t i = 0; i < faceElementListSize; i++)
         {
             Vector3<unsigned int>& indexPosition = element.FaceElementList[i];
-            MeshIndexData& meshData = mesh.IndexList[i];
-            meshData.VertexPositionID = indexPosition.X - 1;
-            meshData.TexturePointID = indexPosition.Y - 1;
-            meshData.NormalVectorID = indexPosition.Z - 1;
+            unsigned int vertexPositionID = indexPosition.X - 1;
+            unsigned int texturePointID = indexPosition.Y - 1;
+            unsigned int normalVectorID = indexPosition.Z - 1;
 
-            //printf("F: <%5u|%5u|%5u>\n", meshData->VertexPositionID, meshData->TexturePointID, meshData->NormalVectorID);
+            Vector3<float>& vertexData = element.VertexPositionList[vertexPositionID];
+            Vector2<float>& textureData = element.TextureCoordinateList[vertexPositionID];
+            Vector3<float>& normalData = element.VertexNormalPositionList[vertexPositionID];
+
+            mesh.Structure.IndexData[i] = i;
+            vertexDataArray[vertecDataIndex++] = vertexData.X;
+            vertexDataArray[vertecDataIndex++] = vertexData.Y;
+            vertexDataArray[vertecDataIndex++] = vertexData.Z;
+            vertexDataArray[vertecDataIndex++] = normalData.X;
+            vertexDataArray[vertecDataIndex++] = normalData.Y;
+            vertexDataArray[vertecDataIndex++] = normalData.Z;
+            vertexDataArray[vertecDataIndex++] = 1;
+            vertexDataArray[vertecDataIndex++] = 1;
+            vertexDataArray[vertecDataIndex++] = 1;
+            vertexDataArray[vertecDataIndex++] = 1;
+            vertexDataArray[vertecDataIndex++] = normalData.X;
+            vertexDataArray[vertecDataIndex++] = normalData.Y;
         }
     }
-
-    if (!usedNormals)
-    {
-        model.CalculateNormalVectors();
-    }
-
-    model.UpdateGlobalMesh();
 
     return FileActionResult::Successful;
 }
@@ -624,12 +587,12 @@ BF::FileActionResult BF::OBJ::ConvertFrom(Model& model)
 
 void BF::OBJ::Clear()
 {
-    free(MaterialList);
-    free(ElementList);
+    delete[] MaterialFileList;
+    delete[] ElementList;
 
     VertexStructureSize = 0xFF;
-    MaterialListSize = 0;
-    MaterialList = 0;
+    MaterialFileListSize = 0;
+    MaterialFileList = 0;
     ElementListSize = 0;
     ElementList = 0;
 }
@@ -657,15 +620,15 @@ void BF::OBJ::PrintData()
 
     printf(" +-------+-------+-------+-------+-------+-------\n");
 
-    if (MaterialListSize == 0)
+    if (MaterialFileListSize == 0)
     {
         printf(" +-------+-------+-------+-------+-------+-------\n");
         printf(" | No Materials  |\n");
     }
 
-    for (unsigned int i = 0; i < MaterialListSize; i++)
+    for (unsigned int i = 0; i < MaterialFileListSize; i++)
     {
-        MTL& mtl = MaterialList[i];
+        MTL& mtl = MaterialFileList[i];
 
         for (unsigned int j = 0; j < mtl.MaterialListSize; j++)
         {

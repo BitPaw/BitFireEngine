@@ -10,6 +10,7 @@
 
 #include "../File/FileActionResult.hpp"
 
+#define Byte unsigned char
 #define FileLineBufferSize 255u
 
 namespace BF
@@ -86,5 +87,7 @@ namespace BF
 		FileActionResult WriteToDisk();
 		static FileActionResult WriteToDisk(const char* filePath, const char* content, unsigned int length);
 		//---------------------------------------------------------------------
+
+		static void FilesInFolder(const char* folderPath, wchar_t*** list, size_t& listSize);
 	};
 }

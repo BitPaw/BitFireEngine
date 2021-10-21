@@ -1,6 +1,34 @@
 #include "Cube.h"
-#include <float.h>
+#include <string.h>
 #include <cmath>
+
+BF::Cube::Cube()
+{
+	float vertexData[] =
+	{
+		 1,  1,  1,
+		-1,  1,  1,
+		 1, -1,  1,
+		-1, -1,  1,
+		 1,  1, -1,
+		-1,  1, -1,
+		 1, -1, -1,
+		-1, -1, -1,
+	};
+
+	unsigned int indexList[] =
+	{
+		0,1,3,2, // Left OK
+		6,7,5,4, // Right  OK
+		4,5,1,0, // Top OK
+		2,3,7,6, // Bot OK
+		0,2,6,4, // Front OK
+		5,7,3,1 // Back OK
+	};
+	
+	memcpy(VertexList, vertexData, VertexListSize * sizeof(float));
+	memcpy(IndexList, indexList, IndexListSize * sizeof(unsigned int));
+}
 
 float BF::Cube::Volume()
 {

@@ -21,8 +21,8 @@ namespace BF
 		char Name[OBJNameSize];
 		unsigned char VertexStructureSize;
 
-		unsigned int MaterialListSize;
-		MTL* MaterialList;
+		size_t MaterialFileListSize;
+		MTL* MaterialFileList;
 
 		unsigned int ElementListSize;
 		OBJElement* ElementList;

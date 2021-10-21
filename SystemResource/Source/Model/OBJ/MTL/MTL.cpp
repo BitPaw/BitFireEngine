@@ -14,7 +14,7 @@ BF::MTL::~MTL()
 	free(MaterialList);
 }
 
-void BF::MTL::Load(char* filePath)
+void BF::MTL::Load(const char* filePath)
 {
 	unsigned int materialIndex = 0;
 	const char _newMaterialCharacter = 'n';
@@ -29,11 +29,15 @@ void BF::MTL::Load(char* filePath)
 
 
 	File file(filePath);
-	file.ReadFromDisk();
+	FileActionResult fileActionResult = file.ReadFromDisk();
+
+	if (fileActionResult != FileActionResult::Successful)
+	{
+		return;
+	}
+	
 	unsigned int amountOfLines = file.CountAmountOfLines();
 	char currentLineBuffer[200];
-
-
 
 	// Count How many materials are needed
 	{

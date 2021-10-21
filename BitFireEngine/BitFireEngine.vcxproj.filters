@@ -39,9 +39,6 @@
     <ClCompile Include="Source\Resource\ResouceManager.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Resource\Sprite.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Player\Player.h">
@@ -78,9 +75,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\System\IBitFireEngineSoundListener.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Resource\Sprite.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

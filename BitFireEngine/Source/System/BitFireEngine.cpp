@@ -121,7 +121,7 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
     if (keyboard.D.IsPressed()) { movement.Add(1, 0, 0); }
     if (keyboard.SpaceBar.IsPressed()) 
     {
-        camera.Velocity.Set(0.0f, 6.0f, .0f);
+        camera.Velocity.Add(0.0f, 6.0f, .0f);
 
         movement.Add(0, 1, 0);
     }
@@ -150,12 +150,11 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
     if (keyboard.K.IsShortPressed())
     {
         Image image;
-        BMP bitmap;
+        const char fileName[] = "ScreenShot.bmp";
 
         _mainWindow.TakeScreenShot(image);
 
-        bitmap.ConvertFrom(image);
-        bitmap.Save("ScreenShot.bmp");
+        image.Save(fileName, ImageFileFormat::BitMap);
     }
 
     if (keyboard.F.IsLongPressed())

@@ -6,6 +6,7 @@
 #include "../../../SystemResource/Source/Math/Physic/GravityField.h"
 #include "../../../SystemRender/Source/OpenGLAPI.h"
 #include <thread>
+#include "../../../SystemResource/Source/Math/Geometry/Form/Cube.h"
 
 
 int _matrixModelID;
@@ -39,105 +40,13 @@ void CameraDataUpdate(BF::Camera& camera)
     BF::OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixProjectionID, camera.MatrixProjection.Data);
 }
 
-
-
-
-void BF::ResourceManager::UpdateVBOData(Model& model)
-{
-    LinkedMesh& mesh = model.GlobalMesh;
-    float* vertexData = model.RenderInformation.VertexData;
-    unsigned int* indexData = model.RenderInformation.IndexData;
-    unsigned int indexDataSize = mesh.IndexList.Size();
-    bool validCall = model.RenderInformation.IndexDataSize > 0 && model.RenderInformation.VertexDataSize > 0;
-
-    assert(validCall);
-    assert(indexDataSize > 0);
-
-    for (unsigned int i = 0; i < indexDataSize; i++)
-    {
-        MeshIndexData* indexList = mesh.IndexList[i];
-        unsigned int vertexIndex = indexList->VertexPositionID;
-        unsigned int textureIndex = indexList->TexturePointID;
-        unsigned int normalIndex = indexList->NormalVectorID;
-
-        assert(vertexIndex < mesh.VertexList.Size());
-        assert(textureIndex < mesh.TexturePointList.Size());
-
-        Vertex* vertex = mesh.VertexList[vertexIndex];
-
-        Vector4<float> defaultColor(1, 1, 1, 1);
-        Vector2<float> defaultTexturepoint;
-        Vector3<float> normalPosition;
-
-        Vector4<float>* color = &defaultColor;
-        Vector3<float>* position = nullptr;
-        Vector3<float>* normal = nullptr;
-        Vector2<float>* texture = nullptr;          
-
-        bool hasColor = !model.ColorList.IsEmpty() && vertex->ColorID != -1;
-        bool hasNormal = !mesh.NormalPointList.IsEmpty();
-        bool hasTexture = !mesh.TexturePointList.IsEmpty();
-        
-        position = &vertex->CurrentPosition;
-
-        if (hasColor)
-        {
-            assert(vertex->ColorID <= model.ColorList.Size());
-
-            color = &model.ColorList[vertex->ColorID];
-        }
-
-        if (hasNormal)
-        {
-            assert(normalIndex <= model.GlobalMesh.NormalPointList.Size());
-
-            normal = model.GlobalMesh.NormalPointList[normalIndex];
-        }
-
-        texture = model.GlobalMesh.TexturePointList[textureIndex];
-        indexData[i] = i;
-
-        const unsigned int sizeOfAll = (3+3+4+2);
-        const unsigned int sizeOfAllFloat = sizeOfAll * sizeof(float);
-
-        assert(position != nullptr);
-        assert(normal != nullptr);
-        assert(color != nullptr);
-        assert(texture != nullptr);
-
-        float data[sizeOfAll]
-        {
-            position->X,
-            position->Y,
-            position->Z,
-
-            normal->X,
-            normal->Y,
-            normal->Z,
-
-            color->X,
-            color->Y,
-            color->Z,
-            color->W,
-
-            texture->X,
-            texture->Y,
-        };
-
-        memcpy(vertexData, data, sizeOfAllFloat);
-        vertexData += sizeOfAll;
-    }
-
-    //renderInformation->VertexDataLength = dataIndex - renderInformation->VertexDataPosition -1;
-    //renderInformation->IndiceIndexLength = indiceIndex - renderInformation->IndiceIndex-1;
-}
-
 BF::ResourceManager::ResourceManager()
 {
     _lastUsedShaderProgram = -1;
     _defaultShaderID = -1;
     _defaultTextureID = -1;
 
+    DefaultSkyBox = nullptr;
     DefaultFont = nullptr;
 
     _imageAdd.Create();
@@ -178,7 +87,6 @@ void BF::ResourceManager::PushToGPU(Model& model)
     unsigned int& modelID = model.ID;
     bool isAlreadyLinked = (int)modelID > 0;
     bool isUsable = modelID == ResourceIDLoaded || isAlreadyLinked;
-    ModelRenderInformation& renderInfo = model.RenderInformation;
 
     modelID = ResourceIDLoading;
 
@@ -189,42 +97,11 @@ void BF::ResourceManager::PushToGPU(Model& model)
 
     if (isAlreadyLinked)
     {
-        UpdateVBOData(model);
-
-        if (renderInfo.VertexDataSize > 0)
-        {
-            OpenGLAPI::VertexArrayUpdate(renderInfo.VertexBufferID, renderInfo.VertexDataSize * sizeof(float), renderInfo.VertexData);
-        }
+       // OpenGLAPI::VertexArrayUpdate(renderInfo.VertexBufferID, renderInfo.VertexDataSize * sizeof(float), renderInfo.VertexData);
     }
     else
-    {
-        modelID = _modelList.Size();
-
-        unsigned int vertexDataSize = 3 + 3 + 4 + 2;
-
-        renderInfo.Allocate(vertexDataSize, model.GlobalMesh.IndexList.Size());        
-
-        //printf("\n\nBEFORE\n\n");
-
-        //renderInfo.PrintGPUData();
-
-        UpdateVBOData(model);
-
-        //printf("\n\nAFTER\n\n");
-
-        //renderInfo.PrintGPUData();
-
-        // Allocate GPU Buffer
-        OpenGLAPI::VertexArrayDefine(&renderInfo.VertexArrayID);
-        OpenGLAPI::VertexArrayBind(renderInfo.VertexArrayID);
-
-        OpenGLAPI::VertexDataDefine(&renderInfo.VertexBufferID, renderInfo.VertexDataSize * sizeof(float), renderInfo.VertexData);
-
-        unsigned int sizeList[4] = { 3,3,4,2 };
-
-        OpenGLAPI::VertexAttributeArrayDefine(sizeof(float), 4, sizeList);
-
-        OpenGLAPI::IndexDataDefine(&renderInfo.IndexBufferID, renderInfo.IndexDataSize * sizeof(unsigned int), renderInfo.IndexData);
+    {   
+        OpenGLAPI::RegisterModel(model);       
     }
 }
 
@@ -247,7 +124,7 @@ void BF::ResourceManager::CheckUncachedData()
     {
         Model* model = node->Element;
 
-        if (model->ID == ResourceIDLoaded)
+        if (model->ShallBeCached())
         {
             PushToGPU(*model);
 
@@ -259,7 +136,7 @@ void BF::ResourceManager::CheckUncachedData()
     {
         Image* image = node->Element;
 
-        if (image->ID == ResourceIDLoaded)
+        if (image->ShallBeCached())
         {
             PushToGPU(*image);
 
@@ -366,51 +243,46 @@ BF::Resource* BF::ResourceManager::Load(const char* filePath)
     return resource;
 }
 
-void BF::ResourceManager::Load(Model& model, const char* filePath)
+void BF::ResourceManager::Load(Model& model)
 {
-    model.MarkAsLoading("<Unnamed-Model>", filePath);
+    FileActionResult errorCode = model.Load();
 
-    Add(model);
-
-    std::thread* modelLoaderThread = new std::thread([](ResourceManager* resourceManager, Model* model)
+    if (errorCode == FileActionResult::Successful)
     {
-        FileActionResult errorCode = model->Load();
-
-        if (errorCode == FileActionResult::Successful)
+        for (unsigned int i = 0; i < model.MaterialListSize; i++)
         {
-            model->ID = ResourceIDLoaded;
+            Material& modelMaterial = model.MaterialList[i];
+            Image& image = modelMaterial.Texture;
 
-            for (unsigned int i = 0; i < model->MaterialList.Size(); i++)
-            {
-                Material& modelMaterial = model->MaterialList[i];
+            image.ID = ResourceIDLoading;
+            image.FilePathChange(modelMaterial.FilePath);
 
-                std::thread* asy = new std::thread([](ResourceManager* resourceManager, Material* material)
-                {
-                    Image* image = new Image();
+            Add(image);
 
-                    image->ID = ResourceIDLoading;
-  
-                    resourceManager->Add(*image);
-
-                    FileActionResult errorCode = image->Load(material->TextureFilePath);                    
-
-                    if (errorCode == FileActionResult::Successful)
-                    {
-                        material->Texture = image;
-                    }
-
-                }, resourceManager, &modelMaterial);
-            }
+            image.Load();
         }
 
-    }, this, &model);
+        model.ShouldItBeRendered = true;        
+    }
+}
+
+void BF::ResourceManager::Load(Model& model, const char* filePath)
+{
+    model.FilePathChange(filePath);
+
+    Load(model);   
+}
+
+void BF::ResourceManager::Load(Image& image)
+{
+    image.Load();
 }
 
 void BF::ResourceManager::Load(Image& image, const char* filePath)
 {
-    Add(image);
+    image.FilePathChange(filePath);
 
-   image.Load(filePath);   
+    Load(image);
 }
 
 void BF::ResourceManager::Load(Sound& sound, const char* filePath)
@@ -724,6 +596,8 @@ void BF::ResourceManager::Load
     const char* textureBack, 
     const char* textureFront)
 {
+    skyBox.NameChange("SkyBox");
+
     Load(skyBox.Faces[0], textureRight);
     Load(skyBox.Faces[1], textureLeft);
     Load(skyBox.Faces[2], textureTop);
@@ -736,18 +610,89 @@ void BF::ResourceManager::Load
     Add(skyBox);
 }
 
-void BF::ResourceManager::Add(Model& model)
+void BF::ResourceManager::Add(Sprite& sprite)
 {
+    Image& image = sprite.Texture;
+    Model& model = (Model&)sprite; 
+
+    Add(image, false);
+
+    float scaling = 0.01f;
+    float scalingPos = 10;
+    float xScaling = image.Width * scaling;
+    float yScaling = image.Height * scaling;
+    float xPos = model.MatrixModel.Data[TransformX] * scalingPos;
+    float yPos = model.MatrixModel.Data[TransformY] * scalingPos + yScaling;
+    float zPos = model.MatrixModel.Data[TransformZ];
+
+    sprite.SharedRenderInfoOverride.MaterialID = image.ID;
+    model.MatrixModel.Scale(xScaling, yScaling, 1.0f);
+    model.MatrixModel.MoveTo(xPos, yPos, zPos);
+
+    Add(model);
+}
+
+void BF::ResourceManager::Add(Model& model, bool loadAsynchronously)
+{
+    bool isAlreadyLoaded = model.IsLoaded();
+
     _modelAdd.Lock();
     _modelList.Add(&model);
     _modelAdd.Release();
+
+    if (isAlreadyLoaded)
+    {
+        model.ShouldItBeRendered = true;
+
+        return; // No need to load if already loaded
+    }
+
+
+    if (loadAsynchronously)
+    {
+        std::thread* modelLoaderThread = new std::thread([](ResourceManager* resourceManager, Model* model)
+        {
+            resourceManager->Load(*model);
+        }, this, &model);
+    }
+    else
+    {
+        Load(model);
+    }
 }
 
-void BF::ResourceManager::Add(Image& image)
+void BF::ResourceManager::Add(Model& model, const char* filePath, bool loadAsynchronously)
+{
+    model.FilePathChange(filePath);
+
+    Add(model, loadAsynchronously);
+}
+
+void BF::ResourceManager::Add(Image& image, bool loadAsynchronously)
 {  
     _imageAdd.Lock();
     _imageList.Add(&image);
     _imageAdd.Release();
+
+    if (loadAsynchronously)
+    {
+        std::thread* imageLoaderThread = new std::thread([](ResourceManager* resourceManager, Image* image)
+        {
+            image->Load();
+        }, this, &image);
+    }
+    else
+    {
+        image.Load();
+        PushToGPU(image);
+    }
+}
+
+void BF::ResourceManager::Add(Image& image, const char* filePath, bool loadAsynchronously)
+{
+    image.FilePathChange(filePath);
+
+    Add(image, loadAsynchronously);
 }
 
 void BF::ResourceManager::Add(Font& font)
@@ -786,10 +731,10 @@ void BF::ResourceManager::Add(ShaderProgram& shaderProgram)
 
 void BF::ResourceManager::Add(SkyBox& skyBox)
 {
-    
+    OpenGLAPI::RegisterModel(skyBox);
 
     OpenGLAPI::SkyBoxSet(skyBox);
-  // OpenGLAPI::SkyBoxUse(skyBox);
+   // OpenGLAPI::SkyBoxUse(skyBox);
 
     DefaultSkyBox = &skyBox;
 }
@@ -856,19 +801,21 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
             viewTri.ResetForthAxis();
 
             OpenGLAPI::DepthMaskEnable(false);
-            OpenGLAPI::DrawOrder(true);          
+            OpenGLAPI::DrawOrder(true);
 
             OpenGLAPI::UseShaderProgram(shaderID);
             _lastUsedShaderProgram = shaderID;
 
-            CameraDataGet(shaderID);        
-            CameraDataUpdate(MainCamera);                               
+            CameraDataGet(shaderID);
+            CameraDataUpdate(MainCamera);
 
             OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixViewID, viewTri.Data);
 
             OpenGLAPI::SkyBoxUse(*DefaultSkyBox);
 
-            OpenGLAPI::Render(RenderMode::Triangle, 0, DefaultSkyBox->VertexListSize);
+            Mesh& skyMesh = DefaultSkyBox->MeshList[0];
+
+            OpenGLAPI::Render(skyMesh.Structure.RenderType, 0, skyMesh.Structure.IndexDataSize);
 
             OpenGLAPI::DepthMaskEnable(true);
             OpenGLAPI::DrawOrder(false);
@@ -878,80 +825,105 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
     for (LinkedListNode<Model*>* currentModel = _modelList.GetFirst() ; currentModel != nullptr ; currentModel = currentModel->Next)
     {
         Model* model = currentModel->Element;
-        ModelRenderInformation& renderInfo = model->RenderInformation;
-        unsigned int shaderProgramID = renderInfo.ShaderProgramID;
-        bool useDefaultShader = shaderProgramID == -1;
-        bool changeShader = shaderProgramID != _lastUsedShaderProgram;
-        bool isRegistered = ((int)model->ID) >= 0;
-        bool skipRendering = !(renderInfo.ShouldItBeRendered && isRegistered);
-       
+        Model* parentModel = nullptr;
+        bool isSharedModel = model->SharedModel != nullptr;
+        unsigned int vaoID = isSharedModel ? model->SharedModel->ID : model->ID;
+        bool skipRendering = !model->ShouldItBeRendered || vaoID == -1;       
+
         if (skipRendering)
         {
-            continue;
+            continue; // Skip to next model.
         }
 
-        assert(isRegistered);
-
-        if (useDefaultShader)
+        if (isSharedModel)
         {
-            shaderProgramID = _defaultShaderID;
-            changeShader = shaderProgramID != _lastUsedShaderProgram;
-        }
+            parentModel = model;
+            model = model->SharedModel;
+        }      
 
-        OpenGLAPI::VertexArrayBind(renderInfo.VertexArrayID);
+        OpenGLAPI::VertexArrayBind(vaoID);
 
-        //-----[Shader Lookup]--------------------------------------------------------------------
-        if (changeShader)
+        for (size_t meshIndex = 0; meshIndex < model->MeshListSize; meshIndex++)
         {
-            OpenGLAPI::UseShaderProgram(shaderProgramID);
+            Mesh& mesh = model->MeshList[meshIndex];
+            unsigned int shaderProgramID = parentModel ? parentModel->SharedRenderInfoOverride.ShaderProgramID : mesh.RenderInfo.ShaderProgramID ;
+            bool useDefaultShader = shaderProgramID == -1;
+            bool changeShader = shaderProgramID != _lastUsedShaderProgram;
+            bool isRegistered = ((int)model->ID) >= 0;
+            bool skipRendering = !(mesh.RenderInfo.ShouldBeRendered && isRegistered) || mesh.Structure.RenderType == RenderMode::Invalid;
 
-            _lastUsedShaderProgram = shaderProgramID;
-
-            CameraDataGet(shaderProgramID);  
-        }
-
-        CameraDataUpdate(MainCamera);
-
-        unsigned int currentIndex = 0;
-
-        for (unsigned int i = 0; i < model->MeshList.Size(); i++)
-        {
-            Mesh& mesh = model->MeshList[i];
-            Material* material = mesh.MeshMaterial;    
-            unsigned int textureID = _defaultTextureID;
-            unsigned int amountToRender = 0; 
-            bool hasMaterial = material != nullptr;
-
-            if (hasMaterial)
+            if (skipRendering) // Skip to next mesh.
             {
-                Image* texture = material->Texture;
-                bool hasTexture = texture != nullptr;
+                continue;
+            }
 
-                if (hasTexture)
+            assert(isRegistered);       
+
+            OpenGLAPI::VertexBufferBind(mesh.Structure.VertexBufferID, mesh.Structure.IndexBufferID);
+
+            //-----[Shader Lookup]---------------------------------------------
+            {
+                if (useDefaultShader)
                 {
-                    textureID = texture->ID;      
-
-                    OpenGLAPI::TextureUse(texture->Type, textureID);
+                    shaderProgramID = _defaultShaderID;
+                    changeShader = shaderProgramID != _lastUsedShaderProgram;
                 }
+
+                if (changeShader)
+                {
+                    OpenGLAPI::UseShaderProgram(shaderProgramID);
+
+                    _lastUsedShaderProgram = shaderProgramID;
+
+                    CameraDataGet(shaderProgramID);
+                }
+
+                CameraDataUpdate(MainCamera);
+            }           
+            //-----------------------------------------------------------------
+
+            if (isSharedModel)
+            {
+                OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, parentModel->MatrixModel.Data);
             }
             else
             {
-                OpenGLAPI::TextureUse(ImageType::Texture2D, textureID);
-            }     
-
-            OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, model->MatrixModel.Data);
-
-            //---RenderStyle-------------------------
-            if (renderInfo.RenderType != RenderMode::Unkown)
-            {
-                amountToRender = mesh.IndexList.Size();
-
-                OpenGLAPI::Render(renderInfo.RenderType, currentIndex, amountToRender);      
-
-                currentIndex += amountToRender;
+                OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, model->MatrixModel.Data);
             }
-            //------------------------------------------------------------------------------
-        }
+
+            //-----[Texture Lookup]--------------------------------------------
+            {
+                unsigned int materialID = parentModel ? parentModel->SharedRenderInfoOverride.MaterialID : mesh.RenderInfo.MaterialID;
+                bool hasMaterial = materialID != -1;
+                unsigned int textureID = hasMaterial ? materialID : _defaultTextureID;
+
+                OpenGLAPI::TextureUse(ImageType::Texture2D, textureID);
+/*
+                if (hasMaterial)
+                {      
+
+                    Image* texture = mesh.;
+                    bool hasTexture = texture != nullptr;
+
+                    if (hasTexture)
+                    {
+                        textureID = texture->ID;
+
+                        OpenGLAPI::TextureUse(texture->Type, textureID);
+                    }
+                }
+                else
+                {
+                    OpenGLAPI::TextureUse(ImageType::Texture2D, textureID);
+                }
+            */
+            }
+            //-----------------------------------------------------------------           
+
+            //-----[RenderStyle]-----------------------------------------------
+            OpenGLAPI::Render(mesh.Structure.RenderType, 0, mesh.Structure.IndexDataSize);
+            //-----------------------------------------------------------------
+        }       
     }
 }
 

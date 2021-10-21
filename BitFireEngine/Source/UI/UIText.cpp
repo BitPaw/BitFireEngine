@@ -7,20 +7,16 @@ void BF::UIText::Setup(AsciiString& text, Font& font, float x, float y)
 	AncerPosition.Set(x, y);
 	Width = 0;
 	Height = 0;
-	RenderInformation.RenderType = RenderMode::Square;
 
 	strcpy(Name, "<Internal Text>");
 
-	MeshList.ReSize(1); // textSize
+	MeshList = new Mesh[1];
 
 	Mesh& mesh = MeshList[0];
-	mesh.NormalPointList.ReSize(1);
-	mesh.NormalPointList[0].Set(0, 0, -1);
-	mesh.MeshMaterial = new Material();
+	mesh.Structure.RenderType = RenderMode::Square;
 
-	strcpy(mesh.Name, "<Text-Mesh>");
-	strcpy(mesh.MeshMaterial->Name, "<Text Content>");	
-	strcpy(mesh.MeshMaterial->TextureFilePath, "<Internal>");
+	//strcpy(mesh.Name, "<Text-Mesh>");
+	//strcpy(mesh.FilePath, "<Internal>");
 
 	SetFont(font);
 	SetText(text);
@@ -51,7 +47,7 @@ void BF::UIText::SetTextPosition(float x, float y)
 	x = Interpolate::Liniar(-Width* offset, Width* offset, -1, 1, x);
 	y = Interpolate::Liniar(-Height* offset, Height* offset, -1, 1, y);
 
-	 MoveTo(x- Width, y- Height, 0);
+	MatrixModel.MoveTo(x- Width, y- Height, 0);
 }
 
 void BF::UIText::SetText(const char* text)
@@ -63,7 +59,7 @@ void BF::UIText::SetText(const char* text)
 
 void BF::UIText::SetText(AsciiString& text)
 {	
-	if (_font == nullptr)
+	if (_font == nullptr || true)
 	{
 		return;
 	}
@@ -87,7 +83,7 @@ void BF::UIText::SetText(AsciiString& text)
 	Mesh& mesh = MeshList[0];
 	unsigned int textSize = strlen(TextContent);//currentText.Size();
 	unsigned int amountOfVertices = 4 * textSize;
-	mesh.MeshMaterial->Texture = _font->Texture;
+	//mesh.MeshMaterial->Texture = _font->Texture;
 
 	if (!hasTextChanged)
 	{
@@ -96,13 +92,13 @@ void BF::UIText::SetText(AsciiString& text)
 
 	if (isDifferentSize)
 	{
-		mesh.VertexList.DeleteAll();
-		mesh.TexturePointList.DeleteAll();
-		mesh.IndexList.DeleteAll();
+		//mesh.VertexList.DeleteAll();
+		//mesh.TexturePointList.DeleteAll();
+	//	mesh.IndexList.DeleteAll();
 
-		mesh.VertexList.ReSize(amountOfVertices);
-		mesh.TexturePointList.ReSize(amountOfVertices);
-		mesh.IndexList.ReSize(amountOfVertices);
+		//mesh.VertexList.ReSize(amountOfVertices);
+		//mesh.TexturePointList.ReSize(amountOfVertices);
+	//	mesh.IndexList.ReSize(amountOfVertices);
 	}
 
 	// Put Data
@@ -199,6 +195,7 @@ void BF::UIText::SetText(AsciiString& text)
 		// Vertex data (no change do to not pointer?)
 		float z = 0;
 
+		/*
 		mesh.IndexList[faceIndex++].Set(vertexIndex, textureIndex, 0);
 		mesh.VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointA.X, objectPosition.PointA.Y, z);
 		mesh.TexturePointList[textureIndex++].Set(texturePosition.PointD);// 00
@@ -214,9 +211,8 @@ void BF::UIText::SetText(AsciiString& text)
 		mesh.IndexList[faceIndex++].Set(vertexIndex, textureIndex, 0);
 		mesh.VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointD.X, objectPosition.PointD.Y, z);
 		mesh.TexturePointList[textureIndex++].Set(texturePosition.PointA);
+		*/
 	}
-
-	UpdateGlobalMesh();
 
 	ID = ResourceIDLoaded;
 }

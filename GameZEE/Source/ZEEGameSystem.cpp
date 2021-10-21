@@ -26,20 +26,17 @@ BF::ShaderProgram hudShaderID;
 BF::AudioSource audioSource;
 BF::Sound sound;
 BF::GravityCube _worldGravity;
+float _deltaTime = 0;
+BF::Model* model;
+BF::Model textureBix;
 
 ZEE::ZEEGameSystem::ZEEGameSystem()
 {
     GameSystem.SetCallBack(this);
 }
 
-float _deltaTime = 0;
-BF::Model* model;
-
-BF::Model textureBix;
-
 void ZEE::ZEEGameSystem::OnStartUp()
 {   
-
     /*
     BF::JPEG jpeg;
     jpeg.Load("B:/Daten/Bilder/_garbage/KN.jpg");
@@ -49,7 +46,6 @@ void ZEE::ZEEGameSystem::OnStartUp()
 
     png.Load("Wb.png");
     png.Save("Wb_EE.png");*/
-
 
     BF::StopWatch stopwatch;
 
@@ -61,21 +57,26 @@ void ZEE::ZEEGameSystem::OnStartUp()
     GameSystem.Resource.Load(textureBix, "Model/Dialog/DialogBox.obj");
 
     GameSystem.Resource.Load("Texture/Block.bmp");
+   
     GameSystem.Resource.Load("Model/Triangle.obj");
-
+    
     _worldGravity.IgnoreAxis.Set(true, true, true);
     _worldGravity.PullForce = GravityForceEarth;
     _worldGravity.PullDirection.Set(0, -1, 0);
     GameSystem.Resource.Add(&_worldGravity);
 
-    GameSystem.Resource.Load("Level/MainMenu.lev");
-    GameSystem.Resource.Load(cube, "Model/Cube.obj");   
+    GameSystem.Resource.Load(cube, "Model/Cube.obj");
+    cube.MatrixModel.Scale(10.0f);
+    cube.EnablePhysics = true;
+    cube.Mass = 1000;
+
+    
+    //GameSystem.Resource.Load("Level/MainMenu.lev");
+
 
     textureBix.MatrixModel.Scale(10, 2, 1);
 
-    cube.MatrixModel.Scale(10.0f);
-    cube.EnablePhysics = true;       
-    cube.Mass = 1000;
+
 
     GameSystem.Resource.Load
     (
@@ -90,20 +91,20 @@ void ZEE::ZEEGameSystem::OnStartUp()
         "Texture/SkyBox/Front.bmp"
     );           
 
-    text = new BF::UIText("SampleText", *GameSystem.Resource.DefaultFont, -1, -0.8);
-    text->RenderInformation.ShaderProgramID = hudShaderID.ID;
+    //text = new BF::UIText("SampleText", *GameSystem.Resource.DefaultFont, -1, -0.8);
+    //text->MeshList[0].RenderInformation.ShaderProgramID = hudShaderID.ID;
     //text->SetFont(*Resource.DefaultFont);
-    text->SetText(text->TextContent);
-    GameSystem.Resource.Add(*text);
+    //text->SetText(text->TextContent);
+    //GameSystem.Resource.Add(*text);
     
 
     printf("[i][Info] Loading took %.2fs\n", stopwatch.Stop());
 
     GameSystem.Resource.PrintContent(true);    
 
+    
 
-
-#if 1 // Sound Enable
+#if 0 // Sound Enable
     //BF::MID midi;
     //midi.Load("Sound/CaveStory.mid");
     //midi.Save("Sound/CaveStory_NEW.mid");
@@ -146,7 +147,7 @@ void ZEE::ZEEGameSystem::OnUpdateGameLogic(float deltaTime)
 
 void ZEE::ZEEGameSystem::OnUpdateInput(BF::InputContainer& input)
 {
-#if 1
+#if 0
     bool changed = false;
     float value = 0.01f;
 

@@ -7,7 +7,7 @@
 
 namespace BF
 {
-	class Triangle : public Shape
+	class Triangle : public Shape<9,3>
 	{
 		public:	
 		Triangle();

@@ -12,6 +12,8 @@
 #include "../Math/Math.h"
 
 #include <stdlib.h>
+#include <stdio.h>
+#include <wchar.h>
 
 BF::Vector4<unsigned char> BF::Image::GetPixel(unsigned int x, unsigned int y)
 {
@@ -43,6 +45,9 @@ BF::Image::Image()
 
     WrapHeight = ImageWrap::Repeat;
     WrapWidth = ImageWrap::Repeat;
+
+    PixelDataSize = 0;
+    PixelData = 0;
 }
 
 BF::Image::~Image()
@@ -92,7 +97,32 @@ void BF::Image::FlipHorizontal()
 {
     unsigned int height = Height;
     unsigned int width = Width;
-    unsigned int bytesPerPixel = 3;
+    unsigned int bytesPerPixel = -1;
+
+    switch (Format)
+    {
+        default:
+        case BF::ImageDataFormat::Unkown:
+            bytesPerPixel = -1;
+            break;
+
+        case BF::ImageDataFormat::AlphaMask:
+        case BF::ImageDataFormat::AlphaMaskBinary:
+            bytesPerPixel = 1;
+            break;
+ 
+        case BF::ImageDataFormat::BGR:
+        case BF::ImageDataFormat::RGB:
+            bytesPerPixel = 3;
+            break;
+
+        case BF::ImageDataFormat::RGBA:
+        case BF::ImageDataFormat::BGRA:
+            bytesPerPixel = 4;
+            break;
+    }
+
+
     size_t scanLineWidthSize = width * bytesPerPixel;
     unsigned int scanLinesToSwap = height / 2;
     unsigned char* copyBufferRow = (unsigned char*)malloc(scanLineWidthSize * sizeof(char));
@@ -282,61 +312,107 @@ BF::ImageFileFormat BF::Image::FileFormatPeek(const char* filePath)
     return ImageFileFormat::Unkown;
 }
 
-BF::FileActionResult BF::Image::Load(const char* filePath)
+BF::FileActionResult BF::Image::Load()
 {
     ID = ResourceIDLoading;
 
-    strncpy(FilePath, filePath, ResourceFilePathSize);
-
-    if (!File::DoesFileExist(filePath))
+    if (!File::DoesFileExist(FilePath))
     {
         ID = ResourceIDFileNotFound;
         return FileActionResult::FileNotFound;
-    } 
+    }
 
-    ImageFileFormat imageFileFormat = FileFormatPeek(filePath);
+    ImageFileFormat imageFileFormat = FileFormatPeek(FilePath);
 
     switch (imageFileFormat)
     {
         case ImageFileFormat::BitMap:
-        {
+        {            
             BMP bitmap;
-            bitmap.Load(filePath);
+            bitmap.Load(FilePath);
             bitmap.ConvertTo(*this);
+
+            bool foundAlphaFile = false;
+            wchar_t alphaMaskFile[_MAX_FNAME];
+
+            wmemset(alphaMaskFile, 0, _MAX_FNAME);
+
+            // Search for Alphafile
+            {
+                wchar_t** list = 0;
+                size_t listSize = 0;
+
+                File::FilesInFolder("Texture/*Alpha.bmp", &list, listSize);
+           
+                size_t writtenBytes = mbstowcs(alphaMaskFile, FilePath + 8, _MAX_FNAME) - 4;
+
+                for (size_t i = 0; i < listSize; i++)
+                {
+                    wchar_t* file = list[i];
+                    std::wstring text(file);
+
+                    bool isTargetedFile = wmemcmp(alphaMaskFile, file, writtenBytes) == 0;
+
+                    if (isTargetedFile)
+                    {
+                        foundAlphaFile = true;
+                        wmemcpy(alphaMaskFile, L"Texture/", 8);
+                        wmemcpy(alphaMaskFile + 8, file, text.length());     
+                        break;
+                    }
+                }
+            }
+
+            if(foundAlphaFile)// Load Alpha Mask
+            {
+                BMP bitmapAlpha;
+                char bitmapAlphaFilePath[255];               
+             
+                sprintf(bitmapAlphaFilePath, "%ws", alphaMaskFile);                
+                
+                bitmapAlpha.Load(bitmapAlphaFilePath);
+
+                bitmap.ConvertTo(*this, bitmapAlpha);
+            }      
+            else
+            {
+                bitmap.ConvertTo(*this);
+            }
+
             break;
         }
         case ImageFileFormat::GIF:
         {
             GIF gif;
-            gif.Load(filePath);
+            gif.Load(FilePath);
             gif.ConvertTo(*this);
             break;
         }
         case ImageFileFormat::JPEG:
         {
             JPEG jpeg;
-            jpeg.Load(filePath);
+            jpeg.Load(FilePath);
             jpeg.ConvertTo(*this);
             break;
         }
         case ImageFileFormat::PNG:
         {
             PNG png;
-            png.Load(filePath);
+            png.Load(FilePath);
             png.ConvertTo(*this);
             break;
         }
         case ImageFileFormat::TGA:
         {
             TGA tga;
-            tga.Load(filePath);
+            tga.Load(FilePath);
             tga.ConvertTo(*this);
             break;
         }
         case ImageFileFormat::TIFF:
         {
             TIFF tiff;
-            tiff.Load(filePath);
+            tiff.Load(FilePath);
             tiff.ConvertTo(*this);
             break;
         }
@@ -346,12 +422,21 @@ BF::FileActionResult BF::Image::Load(const char* filePath)
             ID = ResourceIDUnsuportedFormat;
 
             return FileActionResult::FormatNotSupported;
-        }       
+        }
     }
 
     ID = ResourceIDLoaded;
 
     return FileActionResult::Successful;
+}
+
+BF::FileActionResult BF::Image::Load(const char* filePath)
+{
+    FilePathChange(filePath);
+
+    FileActionResult fileActionResult = Load();    
+
+    return fileActionResult;
 }
 
 BF::FileActionResult BF::Image::Save(const char* filePath, ImageFileFormat imageFileFormat)

@@ -35,7 +35,6 @@
     <ClCompile Include="Source\UI\UIElement.cpp" />
     <ClCompile Include="Source\UI\UIImage.cpp" />
     <ClCompile Include="Source\UI\UIText.cpp" />
-    <ClCompile Include="Source\Resource\Sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Player\Player.h" />
@@ -50,7 +49,6 @@
     <ClInclude Include="Source\UI\UIElement.h" />
     <ClInclude Include="Source\UI\UIImage.h" />
     <ClInclude Include="Source\UI\UIText.h" />
-    <ClInclude Include="Source\Resource\Sprite.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RenderSystem\RenderSystem.vcxproj">

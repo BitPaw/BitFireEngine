@@ -1,7 +1,16 @@
 #include "File.h"
 
 #include "../Container/AsciiString.h"
+#include "../OSDefine.h"
 #include <cassert>
+#include <cstdlib>
+#include <cwchar>
+
+#if  defined(OSUnix)
+
+#elif defined(OSWindows)
+#include <Windows.h>
+#endif
 
 BF::FileActionResult BF::File::CheckFile()
 {
@@ -265,6 +274,60 @@ BF::FileActionResult BF::File::WriteToDisk(const char* filePath, const char* con
 	int resultCloseResult = fclose(file);
 
 	return BF::FileActionResult::Successful;
+}
+
+void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& listSize)
+{
+#if  defined(OSUnix)
+
+#elif defined(OSWindows)
+	wchar_t folderPathW[MAX_PATH];
+	WIN32_FIND_DATA dataCursour;
+	HANDLE hFind = 0;
+	size_t writtenBytes = mbstowcs(folderPathW, folderPath, MAX_PATH);
+
+	memset(&dataCursour, 0, sizeof(WIN32_FIND_DATA));
+
+	hFind = FindFirstFile(folderPathW, &dataCursour); 	// "/*.*";
+
+	bool foundData = hFind != INVALID_HANDLE_VALUE;
+
+	if (!foundData)
+	{
+		return;
+	}
+
+	listSize++;
+
+	for (; FindNextFile(hFind, &dataCursour); listSize++);
+
+	memset(&dataCursour, 0, sizeof(WIN32_FIND_DATA));
+
+
+	(*list) = (wchar_t**)malloc(listSize * sizeof(wchar_t*));
+
+	hFind = FindFirstFile(folderPathW, &dataCursour); // Expected "." Folder
+	size_t fileIndex = 0;
+
+	do
+	{
+		wchar_t* filePathDestination = 0;
+		wchar_t* filePathSource = dataCursour.cFileName;
+		size_t length = wcslen(filePathSource);
+
+		(*list)[fileIndex] = (wchar_t*)calloc(length + 1, sizeof(wchar_t));
+
+		filePathDestination = (*list)[fileIndex];
+
+		wcsncpy(filePathDestination, filePathSource, length);
+
+		fileIndex++;
+	}
+	while (FindNextFile(hFind, &dataCursour));
+
+	FindClose(hFind);
+	
+#endif
 }
 
 unsigned int BF::File::ReadNextLineInto(char* exportBuffer)

@@ -5,7 +5,6 @@
 
 void BF::OpenGLAPI::RegisterImage(Image& image)
 {
-    unsigned int& imageID = image.ID;
     unsigned int format = ToImageFormat(image.Format);
     unsigned int textureType = ToImageType(image.Type);
    // bool validFormat = image.Type == ImageType::Texture2D || image.Type == ImageType::Texture3D;
@@ -15,9 +14,9 @@ void BF::OpenGLAPI::RegisterImage(Image& image)
         return;
     }
 
-    glGenTextures(1, &imageID);
+    glGenTextures(1, &image.ID);
 
-    glBindTexture(textureType, imageID);
+    glBindTexture(textureType, image.ID);
 
     glTexParameteri(textureType, GL_TEXTURE_WRAP_S, ImageWrapToOpenGLFormat(image.WrapWidth));
     glTexParameteri(textureType, GL_TEXTURE_WRAP_T, ImageWrapToOpenGLFormat(image.WrapHeight));
@@ -27,16 +26,40 @@ void BF::OpenGLAPI::RegisterImage(Image& image)
 
     //glTexParameterf(textureType, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16.0f);
 
-    glTexImage2D(textureType, 0, GL_RGB, image.Width, image.Height, 0, format, GL_UNSIGNED_BYTE, image.PixelData);
+    // ToDO: erro?
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexImage2D(textureType, 0, GL_RGBA, image.Width, image.Height, 0, format, GL_UNSIGNED_BYTE, image.PixelData);
 
     glGenerateMipmap(textureType);
 
     glBindTexture(textureType, 0);
 }
 
+void BF::OpenGLAPI::RegisterModel(Model& model)
+{
+    OpenGLAPI::VertexArrayDefine(&model.ID);
+    OpenGLAPI::VertexArrayBind(model.ID);
+
+    for (size_t meshIndex = 0; meshIndex < model.MeshListSize; meshIndex++)
+    {
+        Mesh& mesh = model.MeshList[meshIndex];
+        MeshStructure& structure = mesh.Structure;
+
+        structure.PrintData();
+
+        OpenGLAPI::VertexDataDefine(&structure.VertexBufferID, structure.VertexDataSize * sizeof(float), structure.VertexData);
+        OpenGLAPI::VertexAttributeArrayDefine(sizeof(float), structure.VertexDataBlockListSize, structure.VertexDataBlockList);
+        OpenGLAPI::IndexDataDefine(&structure.IndexBufferID, structure.IndexDataSize * sizeof(unsigned int), structure.IndexData);
+
+        mesh.RenderInfo.ShouldBeRendered = true;
+    }
+
+    model.ShouldItBeRendered = true;
+}
+
 void BF::OpenGLAPI::SkyBoxUse(SkyBox& skybox)
 {
-    OpenGLAPI::VertexArrayBind(skybox.VAOID);
+    OpenGLAPI::VertexArrayBind(skybox.ID);
     OpenGLAPI::TextureUse(ImageType::TextureCubeContainer, skybox.ID);
 }
 
@@ -64,18 +87,7 @@ void BF::OpenGLAPI::SkyBoxSet(SkyBox& skybox)
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-
-    OpenGLAPI::VertexArrayDefine(&skybox.VAOID);
-    OpenGLAPI::VertexArrayBind(skybox.VAOID);
-
-    OpenGLAPI::VertexDataDefine(&skybox.VBOID, sizeof(float) * 108u, skybox.SkyboxVertices);
-
-    unsigned int vertexstuff[1] = { 3 };
-
-    OpenGLAPI::VertexAttributeArrayDefine(sizeof(float), 1, vertexstuff);
-
-    OpenGLAPI::IndexDataDefine(&skybox.IndexID, 36u* sizeof(unsigned int), skybox.IndexList);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);   
 }
 
 void BF::OpenGLAPI::DepthMaskEnable(bool enable)
@@ -104,7 +116,17 @@ void BF::OpenGLAPI::DrawOrder(bool clockwise)
 
 void BF::OpenGLAPI::TextureUse(ImageType imageType, int textureID)
 {
-    assert(textureID != -1);
+    bool isValidTexture = textureID != -1;
+
+#if 1 // Ignore
+    if (!isValidTexture)
+    {
+        return;
+    }
+#else
+    assert(isValidTexture);
+#endif
+
 
    // glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
 
@@ -115,6 +137,8 @@ void BF::OpenGLAPI::TextureUse(ImageType imageType, int textureID)
 
 char BF::OpenGLAPI::UseShaderProgram(int shaderProgramID)
 {
+    assert(shaderProgramID != -1);
+
     glUseProgram(shaderProgramID);
 
     return 0;
@@ -122,7 +146,15 @@ char BF::OpenGLAPI::UseShaderProgram(int shaderProgramID)
 
 void BF::OpenGLAPI::VertexArrayBind(int vertexArrayID)
 {
+    assert(vertexArrayID != -1);
+
     glBindVertexArray(vertexArrayID);
+}
+
+void BF::OpenGLAPI::VertexBufferBind(int vertexBufferID, int indexBuffer)
+{
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 }
 
 void BF::OpenGLAPI::Render(RenderMode renderMode, int startIndex, int amount)
@@ -188,9 +220,9 @@ void BF::OpenGLAPI::Render(RenderMode renderMode, int startIndex, int amount)
     } 
 
 
-
-    //glDrawElements(mode, amount, GL_UNSIGNED_INT, 0);
-    glDrawArrays(mode, startIndex, amount);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glDrawElements(mode, amount, GL_UNSIGNED_INT, 0);
+    //glDrawArrays(mode, startIndex, amount);
 
     /*
     bool wireFrame = true;

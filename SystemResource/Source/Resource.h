@@ -7,6 +7,7 @@
 
 #define ResourceIDLoading -2
 #define ResourceIDLoaded -3
+#define ResourceIDShared -5
 
 #define ResourceIDFileNotFound -10
 #define ResourceIDOutOfMemory -20
@@ -39,5 +40,18 @@ namespace BF
 		char FilePath[ResourceFilePathSize];
 
 		void MarkAsLoading(const char* name, const char* filePath);
+
+		void NameChange(const char* name);
+		void FilePathChange(const char* filePath);
+
+		bool IsLoaded() 
+		{
+			return ID == ResourceIDLoaded || ID == ResourceIDShared;
+		}
+
+		bool ShallBeCached()
+		{
+			return ID == ResourceIDLoaded;
+		}
 	};
 }

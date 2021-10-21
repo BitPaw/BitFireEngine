@@ -177,7 +177,7 @@ BF::FileActionResult BF::BMP::ConvertFrom(Image& image)
 
 BF::FileActionResult BF::BMP::ConvertTo(Image& image)
 {    
-    void* pixelData = malloc(PixelDataSize);
+    unsigned char* pixelData = (unsigned char*)malloc(PixelDataSize * sizeof(unsigned char));
 
     if (!pixelData)
     {
@@ -188,12 +188,50 @@ BF::FileActionResult BF::BMP::ConvertTo(Image& image)
     image.Height = InfoHeader.Height;
     image.Width = InfoHeader.Width;
     image.PixelDataSize = PixelDataSize;
-    image.PixelData = (unsigned char*)pixelData;
+    image.PixelData = pixelData;
 
     memcpy(image.PixelData, PixelData, image.PixelDataSize);
 
     image.FlipHorizontal();
     //image.RemoveColor(0,0,0);
+
+    return FileActionResult::Successful;
+}
+
+BF::FileActionResult BF::BMP::ConvertTo(Image& image, BMP& alphaMap)
+{
+    size_t pixelDataSize = (PixelDataSize / 3) * 4;
+    unsigned char* pixelData = (unsigned char*)malloc(pixelDataSize * sizeof(unsigned char));
+
+    if (!pixelData)
+    {
+        return FileActionResult::OutOfMemory;
+    }
+
+    image.Format = ImageDataFormat::BGRA;
+    image.Height = InfoHeader.Height;
+    image.Width = InfoHeader.Width;
+    image.PixelDataSize = pixelDataSize;
+    image.PixelData = pixelData;
+
+    size_t imageDataIndex = 0;
+    size_t alphaDataIndex = 0;
+
+    for (size_t i = 0; i < pixelDataSize; )
+    {
+        unsigned char blue = PixelData[imageDataIndex++];
+        unsigned char green = PixelData[imageDataIndex++];
+        unsigned char red = PixelData[imageDataIndex++];
+        unsigned char alpha = alphaMap.PixelData[alphaDataIndex++];
+        bool isTansparanetColor = blue == 0xFF && green == 0xFF && red == 0xFF;
+
+        pixelData[i++] = blue;
+        pixelData[i++] = green;
+        pixelData[i++] = red;
+        pixelData[i++] = isTansparanetColor ? 0x00 : 0xFF;
+    }
+
+    image.FlipHorizontal();
 
     return FileActionResult::Successful;
 }

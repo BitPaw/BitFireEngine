@@ -129,16 +129,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <ExceptionHandling>false</ExceptionHandling>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <ControlFlowGuard>false</ControlFlowGuard>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <ExceptionHandling>Sync</ExceptionHandling>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -261,9 +260,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Model\MeshRenderInfo.cpp" />
+    <ClCompile Include="Source\Model\MeshStructure.cpp" />
     <ClCompile Include="Source\Font\FNT\FNTCommonData.cpp" />
     <ClCompile Include="Source\Font\FNT\FNTInfo.cpp" />
     <ClCompile Include="Source\Image\PNG\PNGColorType.cpp" />
+    <ClCompile Include="Source\Model\Model.cpp" />
     <ClCompile Include="Source\Network\SocketActionResult.cpp" />
     <ClCompile Include="Source\Video\MP4\MP4.cpp" />
     <ClCompile Include="Source\Image\JPEG\JPEGScanSelector.cpp" />
@@ -283,7 +285,6 @@
     <ClCompile Include="Source\Image\BMP\BMPInfoHeader.cpp" />
     <ClCompile Include="Source\Image\BMP\BMPInfoHeaderType.cpp" />
     <ClCompile Include="Source\Image\BMP\BMPType.cpp" />
-    <ClCompile Include="Source\Model\ModelRenderInformation.cpp" />
     <ClCompile Include="Source\Sound\MID\MIDITrack.cpp" />
     <ClCompile Include="Source\Sound\MID\MIDICommandExtended.cpp" />
     <ClCompile Include="Source\Sound\MID\MIDICommand.cpp" />
@@ -358,7 +359,6 @@
     <ClCompile Include="Source\Model\Material.cpp" />
     <ClCompile Include="Source\Model\Mesh.cpp" />
     <ClCompile Include="Source\Model\MeshIndexData.cpp" />
-    <ClCompile Include="Source\Model\Model.cpp" />
     <ClCompile Include="Source\Model\OBJ\MTL\MTL.cpp" />
     <ClCompile Include="Source\Model\OBJ\OBJ.cpp" />
     <ClCompile Include="Source\Model\OBJ\OBJElement.cpp" />
@@ -386,12 +386,17 @@
     <ClCompile Include="Source\Compression\ZLIB\ZLIBHeader.cpp" />
     <ClCompile Include="Source\Compression\ZLIB\ZLIBCompressionLevel.cpp" />
     <ClCompile Include="Source\Compression\ZLIB\ZLIBCompressionMethod.cpp" />
+    <ClCompile Include="Source\Game\Sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Container\QuadTree.hpp" />
+    <ClInclude Include="Source\Model\MeshRenderInfo.h" />
+    <ClInclude Include="Source\Model\MeshStructure.h" />
     <ClInclude Include="Source\Font\FNT\FNTCommonData.h" />
     <ClInclude Include="Source\Font\FNT\FNTInfo.h" />
     <ClInclude Include="Source\Font\IFontFormat.hpp" />
     <ClInclude Include="Source\Model\IModelFormat.hpp" />
+    <ClInclude Include="Source\Model\Model.h" />
     <ClInclude Include="Source\Network\ISocketListener.h" />
     <ClInclude Include="Source\Network\SocketActionResult.h" />
     <ClInclude Include="Source\Sound\ISoundFormat.hpp" />
@@ -414,7 +419,6 @@
     <ClInclude Include="Source\Compression\DEFLATE\DeflateEncodingMethod.h" />
     <ClInclude Include="Source\Compression\DEFLATE\DeflateBlock.h" />
     <ClInclude Include="Source\Math\Geometry\Matrix.hpp" />
-    <ClInclude Include="Source\Model\ModelRenderInformation.h" />
     <ClInclude Include="Source\Sound\MID\MIDITrack.h" />
     <ClInclude Include="Source\Sound\MID\MIDICommandExtended.h" />
     <ClInclude Include="Source\Sound\MID\MIDICommand.h" />
@@ -535,7 +539,6 @@
     <ClInclude Include="Source\Model\Material.h" />
     <ClInclude Include="Source\Model\Mesh.h" />
     <ClInclude Include="Source\Model\MeshIndexData.h" />
-    <ClInclude Include="Source\Model\Model.h" />
     <ClInclude Include="Source\Model\ModelType.h" />
     <ClInclude Include="Source\Model\OBJ\MTL\IlluminationMode.h" />
     <ClInclude Include="Source\Model\OBJ\MTL\MTL.h" />
@@ -574,11 +577,7 @@
     <ClInclude Include="Source\Compression\ZLIB\ZLIBHeader.h" />
     <ClInclude Include="Source\Compression\ZLIB\ZLIBCompressionLevel.h" />
     <ClInclude Include="Source\Compression\ZLIB\ZLIBCompressionMethod.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
-    <None Include="ClassDiagram2.cd" />
+    <ClInclude Include="Source\Game\Sprite.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

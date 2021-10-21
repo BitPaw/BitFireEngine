@@ -6,7 +6,10 @@
 #include "../../SystemResource/Source/Game/SkyBox.h"
 #include "../../SystemResource/Source/Model/Model.h"
 #include "../../SystemResource/Source/Math/Math.h"
+#include "../../SystemResource/Source/Math/Geometry/Shape/Rectangle.h"
 #include "../../BitFireEngine/Source/UI/UIText.h"
+#include "../../SystemResource/Source/Math/Geometry/Form/Cube.h"
+#include "../../SystemResource/Source/Game/Sprite.h"
 
 BF::UIText* text;
 
@@ -24,12 +27,17 @@ using namespace BF;
 
 float _deltaTime = 0;
  
-Image _playerCharacterLuna;
-Image _playerCharacterNyte;
-Image _lamp;
-Image _fireplace;
-Image _sign;
-Model _rectangle;
+BF::Sprite _playerCharacterLuna;
+BF::Sprite _playerCharacterNyte;
+BF::Sprite _lamp;
+BF::Sprite _fireplace;
+BF::Sprite _sign;
+
+BF::Rectangle _rectangle;
+BF::Cube _cube;
+
+Model _rectangleModel;
+Model _cubeBotlane;
 
 void Cleaved::CleavedGameSystem::OnStartUp()
 {
@@ -47,7 +55,58 @@ void Cleaved::CleavedGameSystem::OnStartUp()
         "Texture/SkyBox_Bottom.bmp",
         "Texture/SkyBox_Back.bmp",
         "Texture/SkyBox_Front.bmp"
-    );      
+    );  
+
+    _cubeBotlane.ConvertFrom(_cube.VertexList, _cube.VertexListSize, _cube.IndexList, _cube.IndexListSize, RenderMode::Square);
+    _rectangleModel.ConvertFrom(_rectangle.VertexList, _rectangle.VertexListSize, _rectangle.IndexList, _rectangle.IndexListSize, RenderMode::Square);
+
+
+    //_fireplace.MeshListSize = 1;
+    //_fireplace.MeshList = new Mesh();
+    //_fireplace.MeshList[0].Structure.MeshLink(_rectangleModel.MeshList[0].Structure);
+
+    //_fireplace.MaterialListSize = 1;
+    //_fireplace.MaterialList = new Material();
+   // GameSystem.Resource.Load(_fireplace.MaterialList->Texture, "Texture/FirePlaace.bmp");
+   // GameSystem.Resource.Add(_fireplace);
+
+
+    GameSystem.Resource.Add(_rectangleModel);
+    GameSystem.Resource.Add(_cubeBotlane);
+
+    _rectangleModel.MatrixModel.Move(0,5,0);
+    _cubeBotlane.MatrixModel.Move(0, 3, 0);
+
+    _rectangleModel.NameChange("Rectangle");
+    _cubeBotlane.NameChange("Cube");
+
+
+    //_rectangleModel.MeshList->RenderInfo.ShouldBeRendered = true; 
+
+    _playerCharacterLuna.Set(5, 0, 0.5, "Sprite_Luna", "Texture/Luna.bmp", &_rectangleModel);
+    GameSystem.Resource.Add(_playerCharacterLuna);
+    
+    _playerCharacterNyte.Set(10, 0, 0.4, "Sprite_Nyte", "Texture/Nyte.bmp", &_rectangleModel);
+    GameSystem.Resource.Add(_playerCharacterNyte);
+
+    _lamp.Set(15, 0, 0.3, "Sprite_Lamp", "Texture/Lamp_A.bmp",&_rectangleModel);
+    GameSystem.Resource.Add(_lamp);
+
+    _fireplace.Set(20, 0, 0.2, "Sprite_FirePlace", "Texture/FirePlace.bmp", &_rectangleModel);
+    GameSystem.Resource.Add(_fireplace);
+
+    _sign.Set(25, 0, 0.1, "Sprite_Sign", "Texture/Sign.bmp", &_rectangleModel);
+    GameSystem.Resource.Add(_sign);
+
+
+
+    //
+ 
+
+
+
+    //_cubeBotlane.MeshList[0].ShaderProgramID = worldShader.ID;
+    //_cubeBotlane.MatrixModel.Scale(1.0f);
 
     
     //GameSystem.Resource.Load(_rectangle, "");
@@ -55,15 +114,15 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     //GameSystem.Resource.Load(_playerCharacterLuna, "Texture/bmp");
     //GameSystem.Resource.Load(_playerCharacterNyte, "Texture/bmp");
     //GameSystem.Resource.Load(_lamp, "Texture/Lamp_B.bmp");
-    GameSystem.Resource.Load(_fireplace, "Texture/FirePlaace.bmp");
-    GameSystem.Resource.Load(_sign, "Texture/Sign.bmp");
+    
+   
+  //  GameSystem.Resource.Load(_sign, "Texture/Sign.bmp");
 
-
-
-    text = new BF::UIText("SampleText", *GameSystem.Resource.DefaultFont, -1, -0.8);
-    text->RenderInformation.ShaderProgramID = hudShaderID.ID;
+    GameSystem.Resource.PrintContent(true);
+    //text = new BF::UIText("SampleText", *GameSystem.Resource.DefaultFont, -1, -0.8);
+    //text->RenderInformation.ShaderProgramID = hudShaderID.ID;
     //text->SetFont(*Resource.DefaultFont);
-    GameSystem.Resource.Add(*text);
+    //GameSystem.Resource.Add(*text);
 }
 
 void Cleaved::CleavedGameSystem::OnShutDown()
