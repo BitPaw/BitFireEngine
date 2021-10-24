@@ -260,6 +260,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\File\IFIle.cpp" />
+    <ClCompile Include="Source\File\FileStream.cpp" />
+    <ClCompile Include="Source\File\ByteStream.cpp" />
+    <ClCompile Include="Source\File\FileTemporary.cpp" />
     <ClCompile Include="Source\Model\MeshRenderInfo.cpp" />
     <ClCompile Include="Source\Model\MeshStructure.cpp" />
     <ClCompile Include="Source\Font\FNT\FNTCommonData.cpp" />
@@ -389,6 +393,12 @@
     <ClCompile Include="Source\Game\Sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\File\FileOpenMode.hpp" />
+    <ClInclude Include="Source\File\FilePersistence.hpp" />
+    <ClInclude Include="Source\File\IFIle.h" />
+    <ClInclude Include="Source\File\FileStream.h" />
+    <ClInclude Include="Source\File\ByteStream.h" />
+    <ClInclude Include="Source\File\FileTemporary.h" />
     <ClInclude Include="Source\Container\QuadTree.hpp" />
     <ClInclude Include="Source\Model\MeshRenderInfo.h" />
     <ClInclude Include="Source\Model\MeshStructure.h" />
@@ -578,6 +588,9 @@
     <ClInclude Include="Source\Compression\ZLIB\ZLIBCompressionLevel.h" />
     <ClInclude Include="Source\Compression\ZLIB\ZLIBCompressionMethod.h" />
     <ClInclude Include="Source\Game\Sprite.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

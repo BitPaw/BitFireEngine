@@ -1,5 +1,6 @@
 #include "WAV.h"
-#include "../../File/File.h"
+#include "../../File/FileStream.h"
+#include <string>
 
 BF::WAV::WAV()
 {
@@ -14,8 +15,8 @@ BF::WAV::~WAV()
 
 BF::FileActionResult BF::WAV::Load(const char* filePath)
 {
-	File file(filePath);
-	FileActionResult FileActionResult = file.ReadFromDisk();
+	FileStream file;
+	FileActionResult FileActionResult = file.ReadFromDisk(filePath);
 	Endian endian;
 
 	if (FileActionResult != FileActionResult::Successful)

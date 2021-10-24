@@ -10,7 +10,7 @@
 
 namespace BF
 {
-	class FNT : public IFontFormat
+	struct FNT : public IFontFormat
 	{
 		public:
 		FNTInfo Info; 

@@ -10,6 +10,7 @@
 #include "../../BitFireEngine/Source/UI/UIText.h"
 #include "../../SystemResource/Source/Math/Geometry/Form/Cube.h"
 #include "../../SystemResource/Source/Game/Sprite.h"
+#include "../../SystemResource/Source/File/FileTemporary.h"
 
 BF::UIText* text;
 
@@ -32,6 +33,8 @@ BF::Sprite _playerCharacterNyte;
 BF::Sprite _lamp;
 BF::Sprite _fireplace;
 BF::Sprite _sign;
+BF::Sprite _floor;
+
 
 BF::Rectangle _rectangle;
 BF::Cube _cube;
@@ -83,7 +86,9 @@ void Cleaved::CleavedGameSystem::OnStartUp()
 
     //_rectangleModel.MeshList->RenderInfo.ShouldBeRendered = true; 
 
-    _playerCharacterLuna.Set(5, 0, 0.5, "Sprite_Luna", "Texture/Luna.bmp", &_rectangleModel);
+    _playerCharacterLuna.Set(5, 0, 0.5, "Sprite_Luna", "Texture/Luna.bmp");
+    _playerCharacterLuna.Texture.WrapHeight = ImageWrap::Repeat;
+    _playerCharacterLuna.Texture.WrapWidth = ImageWrap::Repeat;
     GameSystem.Resource.Add(_playerCharacterLuna);
     
     _playerCharacterNyte.Set(10, 0, 0.4, "Sprite_Nyte", "Texture/Nyte.bmp", &_rectangleModel);
@@ -99,24 +104,17 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     GameSystem.Resource.Add(_sign);
 
 
+    _floor.Set(0, 0, 0.0, "Floor", "Texture/Sign.bmp", &_rectangleModel);
+    _floor.Texture.WrapHeight = ImageWrap::Repeat;
+    _floor.Texture.WrapWidth = ImageWrap::Repeat;
 
-    //
- 
-
-
-
-    //_cubeBotlane.MeshList[0].ShaderProgramID = worldShader.ID;
-    //_cubeBotlane.MatrixModel.Scale(1.0f);
+   // GameSystem.Resource.Add(_floor);
+  
+    _floor.MatrixModel.Scale(200,10,1);
+    _floor.MatrixModel.Move(100,-15,0);
 
     
-    //GameSystem.Resource.Load(_rectangle, "");
 
-    //GameSystem.Resource.Load(_playerCharacterLuna, "Texture/bmp");
-    //GameSystem.Resource.Load(_playerCharacterNyte, "Texture/bmp");
-    //GameSystem.Resource.Load(_lamp, "Texture/Lamp_B.bmp");
-    
-   
-  //  GameSystem.Resource.Load(_sign, "Texture/Sign.bmp");
 
     GameSystem.Resource.PrintContent(true);
     //text = new BF::UIText("SampleText", *GameSystem.Resource.DefaultFont, -1, -0.8);
@@ -137,6 +135,7 @@ void Cleaved::CleavedGameSystem::OnUpdateGameLogic(float deltaTime)
 
 void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
 {
+
 }
 
 void Cleaved::CleavedGameSystem::OnUpdateUI()

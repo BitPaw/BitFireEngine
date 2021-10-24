@@ -6,7 +6,7 @@
 #include <cassert>
 #include <stdlib.h>
 
-#include "../../File/File.h"
+#include "../../File/FileStream.h"
 
 BF::JPEG::JPEG()
 {
@@ -18,8 +18,8 @@ BF::JPEG::JPEG()
 
 BF::FileActionResult BF::JPEG::Load(const char* filePath)
 {
-    File file(filePath);
-    FileActionResult FileActionResult = file.ReadFromDisk();
+    FileStream file;
+    FileActionResult FileActionResult = file.ReadFromDisk(filePath);
 
     if (FileActionResult != FileActionResult::Successful)
     {

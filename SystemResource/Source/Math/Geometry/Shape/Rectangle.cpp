@@ -3,22 +3,6 @@
 BF::Rectangle::Rectangle()
 {
 	Set(1, 1);
-
-	float vertexData[] =
-	{
-		1,  1, 0,  // top right
-		1, -1, 0,  // bottom right
-		-1, -1, 0,  // bottom left
-		-1, 1, 0   // top left 
-	};
-
-	unsigned int indexList[] =
-	{
-		0, 1, 2, 3
-	};
-
-	memcpy(VertexList, vertexData, VertexListSize * sizeof(float));
-	memcpy(IndexList, indexList, IndexListSize * sizeof(unsigned int));
 }
 
 BF::Rectangle::Rectangle(float width, float height)
@@ -107,10 +91,21 @@ void BF::Rectangle::Set(float width, float height)
 
 void BF::Rectangle::Set(float x, float y, float width, float height)
 {
-	//PointA.Set(x, y);
-	//PointB.Set(width, y);
-	//PointC.Set(width, height);
-	//PointD.Set(x, height);
+	float vertexData[] =
+	{
+		width,  height, 0,  // top right
+		width, y, 0,  // bottom right
+		x, y, 0,  // bottom left
+		x, height, 0   // top left 
+	};
+
+	const unsigned int indexList[] =
+	{
+		0, 1, 2, 3
+	};
+
+	memcpy(VertexList, vertexData, VertexListSize * sizeof(float));
+	memcpy(IndexList, indexList, IndexListSize * sizeof(unsigned int));
 }
 
 void BF::Rectangle::Set(Vector2<float> a, Vector2<float> b)

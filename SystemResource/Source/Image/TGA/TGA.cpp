@@ -1,7 +1,9 @@
 #include "TGA.h"
 
-#include "../../File/File.h"
 #include <cassert>
+
+#include "../../File/FileStream.h"
+
 
 BF::TGA::TGA()
 {
@@ -42,8 +44,8 @@ BF::FileActionResult BF::TGA::Load(const char* filePath)
 	unsigned int extensionOffset = 0;
 	unsigned int developerAreaOffset = 0;
 	unsigned int firstFieldAfterHeader = 0;
-	File file(filePath);
-	FileActionResult loadingResult = file.ReadFromDisk();
+	FileStream file;
+	FileActionResult loadingResult = file.ReadFromDisk(filePath);
 
 	if (loadingResult != FileActionResult::Successful)
 	{
@@ -102,7 +104,7 @@ BF::FileActionResult BF::TGA::Load(const char* filePath)
 		const unsigned int stringLengh = 18;
 		unsigned int compareLength = stringLengh;
 		unsigned char lastCharacter = file.Data[file.DataSize-1];
-		char* string = &file.Data[file.DataSize - stringLengh];
+		Byte* string = &file.Data[file.DataSize - stringLengh];
 		bool isTGAVersionTwo = false;
 		
 		if (lastCharacter == '.')
@@ -212,12 +214,12 @@ BF::FileActionResult BF::TGA::Save(const char* filePath)
 {
 	const char footer[18] = "TRUEVISION-XFILE.";
 	unsigned int fileLength = 500;
-	File file(filePath, fileLength);
+	FileStream fileStream(fileLength);
 
 
 	// Data Stuff
 
-	file.WriteToDisk();
+	fileStream.WriteToDisk(filePath);
 
 	return FileActionResult::Successful;
 }

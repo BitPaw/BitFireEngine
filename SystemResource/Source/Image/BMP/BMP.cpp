@@ -1,7 +1,8 @@
 #include "BMP.h"
 
-#include "../../File/File.h"
 #include <cassert>
+
+#include "../../File/FileStream.h"
 #include "../../Math/Math.h"
 
 BF::BMP::BMP()
@@ -20,8 +21,8 @@ BF::BMP::~BMP()
 
 BF::FileActionResult BF::BMP::Load(const char* filePath)
 {
-    File file(filePath); 
-    FileActionResult FileActionResult = file.ReadFromDisk();
+    FileStream file; 
+    FileActionResult FileActionResult = file.ReadFromDisk(filePath);
 
     if (FileActionResult != FileActionResult::Successful)
     {
@@ -128,7 +129,7 @@ BF::FileActionResult BF::BMP::Load(const char* filePath)
 BF::FileActionResult BF::BMP::Save(const char* filePath)
 {
     unsigned int fileSize = InfoHeader.Width * InfoHeader.Height * 3 + 54u;
-    File file(filePath, fileSize);
+    FileStream file(fileSize);
  
     file.Write("BM", 2u);
     file.Write(fileSize, Endian::Little);
@@ -150,7 +151,7 @@ BF::FileActionResult BF::BMP::Save(const char* filePath)
 
     file.Write(PixelData, PixelDataSize);
 
-    file.WriteToDisk();
+    file.WriteToDisk(filePath);
 
     return FileActionResult::Successful;
 }

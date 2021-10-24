@@ -1,11 +1,14 @@
 #include "Shader.h"
-#include "../File/File.h"
+#include "../File/FileStream.h"
+
+#include <string>
 
 BF::Shader::Shader()
 {
 	ID = -1;
 	Type = ShaderType::Unkown;
 	Content = 0;
+    ContentSize = 0;
 }
 
 BF::Shader::Shader(ShaderType type, const char* filePath)
@@ -13,8 +16,9 @@ BF::Shader::Shader(ShaderType type, const char* filePath)
     ID = -1;
     Type = type;
     Content = 0;
+    ContentSize = 0;
 
-    strcpy(FilePath, filePath);
+    FilePathChange(filePath);
 }
 
 void BF::Shader::Load()
@@ -48,5 +52,6 @@ void BF::Shader::Load()
     return ShaderType::Unkown;
 	*/
 
-	File::ReadFromDisk(FilePath, &Content);
+
+     FileStream::ReadFromDisk(FilePath, &Content, ContentSize);
 }

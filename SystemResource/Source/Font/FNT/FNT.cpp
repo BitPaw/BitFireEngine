@@ -1,6 +1,7 @@
 #include "FNT.h"
-#include "../../File/File.h"
 #include "FNTCommand.h"
+
+#include "../../File/FileStream.h"
 
 BF::FNTCharacter* BF::FNT::GetCharacterPosition(unsigned char character)
 {
@@ -38,17 +39,22 @@ BF::FileActionResult BF::FNT::Load(const char* filePath)
 	AsciiString dataString;
 	AsciiString referenceSting;
 	FNTPage* currentPage = nullptr;
-	File file(filePath);
+
 	char currentCursor[2048];
 	char textCharacter[120];
 	int pageCounter = 0;
-
-	file.ReadFromDisk();
-
 	char hasCommas = 0;
 	bool stopFlag = false;
 	int characterCounter = 0;
 	int dynamicIndex = 0;
+
+	FileStream file;
+	FileActionResult fileActionResult = file.ReadFromDisk(filePath);
+
+	if (fileActionResult != FileActionResult::Successful)
+	{
+		return fileActionResult;
+	}
 
 	// HARD CODED
 	FontPageListSize = 1;

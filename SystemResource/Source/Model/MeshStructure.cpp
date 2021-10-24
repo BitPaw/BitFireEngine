@@ -73,6 +73,20 @@ void BF::MeshStructure::MeshLink(MeshStructure& mesh)
 	RenderType = mesh.RenderType;
 }
 
+void BF::MeshStructure::TexturePointScale(float scale)
+{
+	TexturePointScale(scale, scale);
+}
+
+void BF::MeshStructure::TexturePointScale(float x, float y)
+{
+	for (size_t i = 9; i < VertexDataSize; i += 12)
+	{
+		VertexData[i] *= x;
+		VertexData[i+1] *= y;
+	}
+}
+
 void BF::MeshStructure::PrintData()
 {
 	if (!Original)

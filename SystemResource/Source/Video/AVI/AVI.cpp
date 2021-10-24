@@ -1,10 +1,10 @@
 #include "AVI.h"
-#include "../../File/File.h"
+#include "../../File/FileStream.h"
 
 BF::FileActionResult BF::AVI::Load(const char* filePath)
 {
-    File file(filePath);
-    FileActionResult loadingResult = file.ReadFromDisk();
+    FileStream fileStream;
+    FileActionResult loadingResult = fileStream.ReadFromDisk(filePath);
 
     if (loadingResult != FileActionResult::Successful)
     {
@@ -16,14 +16,14 @@ BF::FileActionResult BF::AVI::Load(const char* filePath)
     {
         char expectedRIFFSignature[4];
 
-        file.Read(expectedRIFFSignature, 4u);
+        fileStream.Read(expectedRIFFSignature, 4u);       ;
 
-        bool validRIFF = memcmp("RIFF", expectedRIFFSignature, 4u) == 0;
+        bool validRIFF = fileStream.ReadAndCompare("RIFF", 4u);
     }
 
     unsigned int size = 0;
   
-    file.Read(size, Endian::Big);
+    fileStream.Read(size, Endian::Big);
 
     return FileActionResult::Successful;
 }

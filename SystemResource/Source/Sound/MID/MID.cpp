@@ -3,6 +3,7 @@
 #include "MIDICommand.h"
 
 #include "../../File/File.h"
+#include "../../File/FileStream.h"
 
 BF::MID::MID()
 {
@@ -22,8 +23,8 @@ BF::FileActionResult BF::MID::Load(const char* filePath)
 	
 	const char midiTrackEndIndicator[5] = "\x00\xFF\x2F\x00";
 
-	File file(filePath);
-	FileActionResult loadingResult = file.ReadFromDisk();
+	FileStream file;
+	FileActionResult loadingResult = file.ReadFromDisk(filePath);
 
 	if (loadingResult != FileActionResult::Successful)
 	{
@@ -72,7 +73,7 @@ BF::FileActionResult BF::MID::Save(const char* filePath)
 		fileSize += 8u + track.EventDataSize;
 	}
 
-	File file(filePath, fileSize);
+	FileStream file(fileSize);
 
 	file.Write("MThd", 4u);
 	file.Write((unsigned int)6u, Endian::Big);
@@ -89,7 +90,7 @@ BF::FileActionResult BF::MID::Save(const char* filePath)
 		file.Write(track.EventData, track.EventDataSize);
 	}	
 
-	file.WriteToDisk();
+	file.WriteToDisk(filePath);
 
 	return FileActionResult::Successful;
 }

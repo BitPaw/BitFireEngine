@@ -1,12 +1,13 @@
 #include "ResouceManager.h"
 #include "../../../SystemResource/Source/Font/FNT/FNTPage.h"
-#include "../../../SystemResource/Source/File/File.h"
+#include "../../../SystemResource/Source/File/FileStream.h"
 #include "../../../SystemResource/Source/Time/StopWatch.h"
 #include "../../../SystemResource/Source/Game/SkyBox.h"
 #include "../../../SystemResource/Source/Math/Physic/GravityField.h"
 #include "../../../SystemRender/Source/OpenGLAPI.h"
 #include <thread>
 #include "../../../SystemResource/Source/Math/Geometry/Form/Cube.h"
+#include "../../../SystemResource/Source/Math/Geometry/Shape/Rectangle.h"
 
 
 int _matrixModelID;
@@ -346,7 +347,7 @@ void BF::ResourceManager::Load(Dialog& resource, const char* filePath)
 
 void BF::ResourceManager::Load(Level& level, const char* filePath)
 {
-    File file(filePath);
+
 
     const char _modelToken = 'O';
     const char _textureToken = 'T';
@@ -363,8 +364,8 @@ void BF::ResourceManager::Load(Level& level, const char* filePath)
     unsigned int shaderCounter = 0;
     unsigned int dialogCounter = 0;
 
-    FileActionResult FileActionResult = file.ReadFromDisk();
-    unsigned int amountOfLines = file.CountAmountOfLines();
+    FileStream file;
+    FileActionResult FileActionResult = file.ReadFromDisk(filePath);
     char currentLineBuffer[200];
 
     if (FileActionResult != FileActionResult::Successful)
@@ -625,8 +626,21 @@ void BF::ResourceManager::Add(Sprite& sprite)
     float yPos = model.MatrixModel.Data[TransformY] * scalingPos + yScaling;
     float zPos = model.MatrixModel.Data[TransformZ];
 
-    sprite.SharedRenderInfoOverride.MaterialID = image.ID;
-    model.MatrixModel.Scale(xScaling, yScaling, 1.0f);
+    if (sprite.ID == ResourceIDShared)
+    {
+        sprite.SharedRenderInfoOverride.MaterialID = image.ID;    
+
+        model.MatrixModel.Scale(xScaling, yScaling, 1.0f);
+    }
+    else
+    {
+        BF::Rectangle rectangle(image.Width, image.Height);
+
+        model.MatrixModel.Scale(scaling);
+
+        sprite.ConvertFrom(rectangle.VertexList, rectangle.VertexListSize, rectangle.IndexList, rectangle.IndexListSize, RenderMode::Square, 10);
+    }
+   
     model.MatrixModel.MoveTo(xPos, yPos, zPos);
 
     Add(model);

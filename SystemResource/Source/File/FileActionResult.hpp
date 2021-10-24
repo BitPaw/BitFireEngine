@@ -10,6 +10,10 @@ namespace BF
 		FileNotFound,
 		OutOfMemory,
 
+		//
+		FileOpenFailure,
+		FileCloseFailure,
+
 		// Parsing
 		FormatNotSupported,
 		FormatNotAsExpected		

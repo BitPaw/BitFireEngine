@@ -2,7 +2,7 @@
 
 namespace BF
 {
-	class FNTCharacter
+	struct FNTCharacter
 	{
 		public:
 		unsigned char ID;		

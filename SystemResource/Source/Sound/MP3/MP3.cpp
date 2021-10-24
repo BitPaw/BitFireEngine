@@ -3,12 +3,13 @@
 #include "MP3Header.h"
 #include "MPEGAudioTag.h"
 
-#include "../../File/File.h"
+#include "../../File/FileStream.h"
+#include <string>
 
 BF::FileActionResult BF::MP3::Load(const char* filePath)
 {
-	File file(filePath);
-	FileActionResult loadingResult = file.ReadFromDisk();
+	FileStream file;
+	FileActionResult loadingResult = file.ReadFromDisk(filePath);
 
 	if (loadingResult != FileActionResult::Successful)
 	{

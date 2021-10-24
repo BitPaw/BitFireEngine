@@ -1,10 +1,10 @@
 #include "WMA.h"
-#include "../../File/File.h"
+#include "../../File/FileStream.h"
 
 BF::FileActionResult BF::WMA::Load(const char* filePath)
 {
-	File file(filePath);
-	FileActionResult loadingResult = file.ReadFromDisk();
+	FileStream file;
+	FileActionResult loadingResult = file.ReadFromDisk(filePath);
 
 	if (loadingResult != FileActionResult::Successful)
 	{

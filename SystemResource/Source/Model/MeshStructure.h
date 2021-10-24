@@ -36,5 +36,8 @@ namespace BF
 		void MeshLink(MeshStructure& mesh);
 
 		void PrintData();
+
+		void TexturePointScale(float scale);
+		void TexturePointScale(float x, float y);
 	};
 }

@@ -12,6 +12,6 @@ namespace BF
 
 		Image Texture;
 
-		void Set(float x, float y, float z, const char* name, const char* textureFilePath, Model* model);
+		void Set(float x, float y, float z, const char* name, const char* textureFilePath, Model* model = nullptr);
 	};
 }

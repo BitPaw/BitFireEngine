@@ -1,6 +1,7 @@
 #include "OBJ.h"
+
 #include "../../File/File.h"
-#include <cstdarg>
+#include "../../File/FileStream.h"
 #include "../../Container/AsciiString.h"
 
 BF::OBJ::OBJ()
@@ -113,12 +114,9 @@ BF::OBJLineCommand BF::OBJ::PeekCommandLine(const char* commandLine)
 BF::FileActionResult BF::OBJ::Load(const char* filePath)
 {
     bool isFirstVertex = true;
-    char currentLineBuffer[FileLineBufferSize];
-    File file(filePath); 
-    FileActionResult FileActionResult = file.ReadFromDisk();
-    unsigned int numberOfLines = file.CountAmountOfLines();
-
-    strncpy(Name, filePath, OBJNameSize);
+    char currentLineBuffer[300];
+    FileStream file; 
+    FileActionResult FileActionResult = file.ReadFromDisk(filePath);
 
     if (FileActionResult != FileActionResult::Successful)
     {
@@ -138,9 +136,8 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
         ElementListSize = 1;
         ElementList = new OBJElement();
 
-        for (size_t lineIndex = 0; lineIndex <= numberOfLines; lineIndex++)
-        {
-            unsigned int writtenBytes = file.ReadNextLineInto(currentLineBuffer);                       
+        while (file.ReadNextLineInto(currentLineBuffer))
+        {                
             OBJLineCommand command = PeekCommandLine(currentLineBuffer);
 
             switch (command)
@@ -195,6 +192,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
 
             bool fetchNextMesh = ShouldCreateNewMesh(command, isInMesh);
 
+            /*
             if (!(lineIndex < numberOfLines))
             {
                 OBJElement& element = ElementList[ElementListSize - 1];
@@ -204,7 +202,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                 element.VertexNormalPositionList.ReSize(vertexNormalPositionListSize);
                 element.VertexParameterList.ReSize(vertexParameterListSize);
                 element.FaceElementList.ReSize(faceElementListSize);
-            }
+            }*/
 
             if (fetchNextMesh)
             {
@@ -264,9 +262,8 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
         file.CursorToBeginning();
 
         // Parse
-        for (unsigned int lineIndex = 0; lineIndex <= numberOfLines; lineIndex++)
+        while (file.ReadNextLineInto(currentLineBuffer))
         {
-            unsigned int writtenBytes = file.ReadNextLineInto(currentLineBuffer);
             OBJLineCommand command = PeekCommandLine(currentLineBuffer);
             bool fetchNextMesh = ShouldCreateNewMesh(command, isInMesh);
                       
@@ -311,14 +308,15 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                         materialFileFolder.Copy(materialPathS);
                     }
 
-                    File file(&materialFileFolder[0]);
-                    doesFileExist = file.DoesFileExist();
+                    const char* filePath = &materialFileFolder[0];
+                    FileStream fileStreamMaterial;
+                    doesFileExist = File::DoesFileExist(filePath);
 
                     if (doesFileExist)
                     {
                         MTL& material = MaterialFileList[materialIndex++];
                    
-                        material.Load(file.Path);
+                        material.Load(filePath);
 
                         //material.PrintContent();
                     }

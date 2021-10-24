@@ -131,7 +131,7 @@ BF::FileActionResult BF::Model::Load(const char* filePath)
     return FileActionResult::Successful;
 }
 
-void BF::Model::ConvertFrom(float* vertexList, size_t vertexListSize, unsigned int* indexList, size_t indexListSize, RenderMode renderMode, bool rawPositions)
+void BF::Model::ConvertFrom(float* vertexList, size_t vertexListSize, unsigned int* indexList, size_t indexListSize, RenderMode renderMode, float textureScale, bool rawPositions)
 {
     ID = ResourceIDLoading;
 
@@ -179,6 +179,10 @@ void BF::Model::ConvertFrom(float* vertexList, size_t vertexListSize, unsigned i
             float x = vertexList[i++];
             float y = vertexList[i++];
             float z = vertexList[i++];
+            float xNorm = x != 0 ? 0 : 1;
+            float yNorm = y != 0 ? 0 : 1;
+            float tx = xNorm * textureScale; // [-1,1] -> [0,2] -> [0,1] // ((-x + 1) / 2.0f) * textureScale
+            float ty = yNorm * textureScale;
 
             vertexFullData[vertexFullDataIndex++] = x;
             vertexFullData[vertexFullDataIndex++] = y;
@@ -193,8 +197,8 @@ void BF::Model::ConvertFrom(float* vertexList, size_t vertexListSize, unsigned i
             vertexFullData[vertexFullDataIndex++] = 1;
             vertexFullData[vertexFullDataIndex++] = 1;
 
-            vertexFullData[vertexFullDataIndex++] = (-x + 1) / 2;
-            vertexFullData[vertexFullDataIndex++] = (-y + 1) / 2;
+            vertexFullData[vertexFullDataIndex++] = tx; 
+            vertexFullData[vertexFullDataIndex++] = ty; 
         }
     }   
 
