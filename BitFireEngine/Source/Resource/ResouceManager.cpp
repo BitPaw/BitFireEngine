@@ -623,7 +623,7 @@ void BF::ResourceManager::Add(Sprite& sprite)
     float xScaling = image.Width * scaling;
     float yScaling = image.Height * scaling;
     float xPos = model.MatrixModel.Data[TransformX] * scalingPos;
-    float yPos = model.MatrixModel.Data[TransformY] * scalingPos + yScaling;
+    float yPos = model.MatrixModel.Data[TransformY] * scalingPos * yScaling;
     float zPos = model.MatrixModel.Data[TransformZ];
 
     if (sprite.ID == ResourceIDShared)
@@ -634,11 +634,24 @@ void BF::ResourceManager::Add(Sprite& sprite)
     }
     else
     {
-        BF::Rectangle rectangle(image.Width, image.Height);
+        BF::Rectangle rectangle(image.Width, image.Height);       
+     
+
+        if (image.WrapWidth == ImageWrap::Repeat)
+        {
+            sprite.TextureScale[0] = model.MatrixModel.Data[ScaleX] / 10;
+        }
+
+        if (image.WrapHeight == ImageWrap::Repeat)
+        {
+            sprite.TextureScale[1] = model.MatrixModel.Data[ScaleY] / 10;
+        }
 
         model.MatrixModel.Scale(scaling);
 
-        sprite.ConvertFrom(rectangle.VertexList, rectangle.VertexListSize, rectangle.IndexList, rectangle.IndexListSize, RenderMode::Square, 10);
+        sprite.ConvertFrom(rectangle.VertexList, rectangle.VertexListSize, rectangle.IndexList, rectangle.IndexListSize, RenderMode::Square, sprite.TextureScale[0], sprite.TextureScale[1]);
+        
+        sprite.MeshList[0].RenderInfo.MaterialID = image.ID;
     }
    
     model.MatrixModel.MoveTo(xPos, yPos, zPos);
@@ -660,7 +673,6 @@ void BF::ResourceManager::Add(Model& model, bool loadAsynchronously)
 
         return; // No need to load if already loaded
     }
-
 
     if (loadAsynchronously)
     {
@@ -943,15 +955,9 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
 
 void BF::ResourceManager::PrintContent(bool detailed)
 {
-    unsigned int modelListSize = _modelList.Size();
-    unsigned int imageListSize = _imageList.Size();
-    unsigned int soundListSize = _soundList.Size();
-    unsigned int shaderListSize = _shaderProgramList.Size();
-    unsigned int fontListSize = _fontList.Size();
-    unsigned int dialogListSize = _dialogList.Size();
-
     if (detailed)
     {
+        const char* noValue = "| %-73s |\n";
         const char* message =
             "+-----------------------------------------------------------------------------+\r\n"
             "|   %-73s |\n"
@@ -966,62 +972,47 @@ void BF::ResourceManager::PrintContent(bool detailed)
     
         printf(message, "Models");
 
-        LinkedListNode<Model*>* currentModel = _modelList.GetFirst();
-
-        while (currentModel != nullptr)
+        for (LinkedListNode<Model*>* currentModel = _modelList.GetFirst(); currentModel ; currentModel = currentModel->Next)
         {
             Model* model = currentModel->Element;
 
             printf(line, model->ID, model->Name, model->FilePath, sizeof(*model));
-
-            currentModel = currentModel->Next;
         }
 
         printf(endLine);
         printf(message, "Images");
 
-        LinkedListNode<Image*>* currentImage = _imageList.GetFirst();
-
-        while (currentImage != nullptr)
+        for (LinkedListNode<Image*>* currentImage = _imageList.GetFirst() ;  currentImage ; currentImage = currentImage->Next)
         {
             Image* image = currentImage->Element;
 
-            printf(line, image->ID, image->Name, image->FilePath, sizeof(*image));
-     
-            //printf("| %2s | %s-%-11s | %s\n", buffer, ImageFormatToString(image->Format), ImageTypeToString(image->Type), image->FilePath);
-
-            currentImage = currentImage->Next;
+            printf(line, image->ID, image->Name, image->FilePath, sizeof(*image));             
         }
 
         printf(endLine);
         printf(message, "Sounds");
 
-        for (size_t i = 0; i < soundListSize; i++)
+        for (LinkedListNode<Sound*>* currentSound = _soundList.GetFirst();  currentSound ; currentSound = currentSound->Next)
         {
+            Sound* sound = currentSound->Element;
 
+            printf(line, sound->ID, sound->Name, sound->FilePath, sizeof(*sound));
         }
 
         printf(endLine);
         printf(message, "Font");
 
-
-        LinkedListNode<Font*>* currentFont = _fontList.GetFirst();
-
-        while (currentFont != nullptr)
+        for (LinkedListNode<Font*>* currentFont = _fontList.GetFirst(); currentFont; currentFont = currentFont->Next)
         {
             Font* font = currentFont->Element;
 
             printf("| ID:%u Font Source: %s\n", font->ID, &font->FilePath[0]);
-
-            currentFont = currentFont->Next;
         }
 
         printf(endLine);
         printf(message, "Shader");
 
-        LinkedListNode<ShaderProgram*>* currentChaderProgram = _shaderProgramList.GetFirst();
-
-        while (currentChaderProgram != nullptr)
+        for (LinkedListNode<ShaderProgram*>* currentChaderProgram = _shaderProgramList.GetFirst(); currentChaderProgram ; currentChaderProgram = currentChaderProgram->Next)
         {
             ShaderProgram* shaderProgram = currentChaderProgram->Element;
 
@@ -1029,26 +1020,33 @@ void BF::ResourceManager::PrintContent(bool detailed)
 
             for (size_t i = 0; i < 2; i++)
             {
-                Shader& shader = shaderProgram->ShaderList[i];                
+                Shader& shader = shaderProgram->ShaderList[i];
 
                 printf("| - Sub-Shader ID:%u Type:%u Source:%s\n", shader.ID, shader.Type, &shader.FilePath[0]);
             }
-
-            currentChaderProgram = currentChaderProgram->Next;
         }
 
         printf(endLine);
         printf(message, "Dialog");
 
-        for (size_t i = 0; i < dialogListSize; i++)
+        for (LinkedListNode<Dialog*>* dialogList = _dialogList.GetFirst(); dialogList; dialogList = dialogList->Next)
         {
+            Dialog* dialog = dialogList->Element;
 
+            printf(line, dialog->ID, dialog->Name, dialog->FilePath, sizeof(*dialog));
         }
    
         printf(endLine);
     }
     else
     {
+        unsigned int modelListSize = _modelList.Size();
+        unsigned int imageListSize = _imageList.Size();
+        unsigned int soundListSize = _soundList.Size();
+        unsigned int shaderListSize = _shaderProgramList.Size();
+        unsigned int fontListSize = _fontList.Size();
+        unsigned int dialogListSize = _dialogList.Size();
+
         const char* message =
             "+--------------------------------------------------+\n"
             "| Loaded Resources\n"

@@ -86,33 +86,37 @@ void Cleaved::CleavedGameSystem::OnStartUp()
 
     //_rectangleModel.MeshList->RenderInfo.ShouldBeRendered = true; 
 
-    _playerCharacterLuna.Set(5, 0, 0.5, "Sprite_Luna", "Texture/Luna.bmp");
-    _playerCharacterLuna.Texture.WrapHeight = ImageWrap::Repeat;
-    _playerCharacterLuna.Texture.WrapWidth = ImageWrap::Repeat;
-    GameSystem.Resource.Add(_playerCharacterLuna);
+  
     
-    _playerCharacterNyte.Set(10, 0, 0.4, "Sprite_Nyte", "Texture/Nyte.bmp", &_rectangleModel);
+    _playerCharacterNyte.Set(10, 0, 0.4, "Sprite_Nyte", "Texture/Nyte.bmp");
     GameSystem.Resource.Add(_playerCharacterNyte);
 
-    _lamp.Set(15, 0, 0.3, "Sprite_Lamp", "Texture/Lamp_A.bmp",&_rectangleModel);
-    GameSystem.Resource.Add(_lamp);
 
-    _fireplace.Set(20, 0, 0.2, "Sprite_FirePlace", "Texture/FirePlace.bmp", &_rectangleModel);
+
+
+
+    _fireplace.Set(20, 0, 0.2, "Sprite_FirePlace", "Texture/FirePlace.bmp");
     GameSystem.Resource.Add(_fireplace);
 
-    _sign.Set(25, 0, 0.1, "Sprite_Sign", "Texture/Sign.bmp", &_rectangleModel);
+    _playerCharacterLuna.Set(23, 0, 0.5, "Sprite_Luna", "Texture/Luna.bmp");
+    GameSystem.Resource.Add(_playerCharacterLuna);
+    _playerCharacterLuna.MatrixModel.Scale(0.5);
+
+    _sign.Set(24, 0, 0.1, "Sprite_Sign", "Texture/Sign.bmp");
     GameSystem.Resource.Add(_sign);
 
+    _lamp.Set(25, 0, 0.3, "Sprite_Lamp", "Texture/Lamp_A.bmp");
+    GameSystem.Resource.Add(_lamp);
 
-    _floor.Set(0, 0, 0.0, "Floor", "Texture/Sign.bmp", &_rectangleModel);
-    _floor.Texture.WrapHeight = ImageWrap::Repeat;
-    _floor.Texture.WrapWidth = ImageWrap::Repeat;
 
-   // GameSystem.Resource.Add(_floor);
-  
-    _floor.MatrixModel.Scale(200,10,1);
-    _floor.MatrixModel.Move(100,-15,0);
+    _floor.Set(0, 0, 0.0, "Floor", "Texture/Brick.bmp");
+    _floor.Texture.ImageWrapSet(ImageWrap::Repeat);
 
+    _floor.MatrixModel.Scale(200, 50, 1);   
+
+     GameSystem.Resource.Add(_floor);  
+
+     _floor.MatrixModel.Move(100, -63, 0);
     
 
 

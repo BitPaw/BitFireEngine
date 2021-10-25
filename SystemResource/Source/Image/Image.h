@@ -38,6 +38,9 @@ namespace BF
 		Image();
 		~Image();
 
+		void ImageWrapSet(ImageWrap wrap);
+		void ImageWrapSet(ImageWrap wrapHeight, ImageWrap wrapWidth);
+
 		void RemoveColor(unsigned char red, unsigned char green, unsigned char blue);
 
 		void FlipHorizontal();

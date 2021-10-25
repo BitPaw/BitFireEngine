@@ -40,6 +40,6 @@ namespace BF
 		FileActionResult Load();
 		FileActionResult Load(const char* filePath);
 
-		void ConvertFrom(float* vertexList, size_t vertexListSize, unsigned int* indexList, size_t indexListSize, RenderMode renderMode, float textureScale = 1, bool rawPositions = false);
+		void ConvertFrom(float* vertexList, size_t vertexListSize, unsigned int* indexList, size_t indexListSize, RenderMode renderMode, float textureScaleX = 1, float textureScaleY = 1, bool rawPositions = false);
 	};
 }

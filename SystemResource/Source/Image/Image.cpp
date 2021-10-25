@@ -55,6 +55,18 @@ BF::Image::~Image()
     free(PixelData);
 }
 
+void BF::Image::ImageWrapSet(ImageWrap wrap)
+{
+    WrapHeight = wrap;
+    WrapWidth = wrap;
+}
+
+void BF::Image::ImageWrapSet(ImageWrap wrapHeight, ImageWrap wrapWidth)
+{
+    WrapHeight = wrapHeight;
+    WrapWidth = wrapWidth;
+}
+
 void BF::Image::RemoveColor(unsigned char red, unsigned char green, unsigned char blue)
 {
     switch (Format)
