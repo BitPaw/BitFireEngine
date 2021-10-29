@@ -12,22 +12,19 @@
 #include "../../SystemResource/Source/Game/Sprite.h"
 #include "../../SystemResource/Source/File/FileTemporary.h"
 
-BF::UIText* text;
 
-BF::SkyBox skybox;
-
-BF::ShaderProgram worldShader;
-BF::ShaderProgram hudShaderID;
-
-Cleaved::CleavedGameSystem::CleavedGameSystem()
-{
-    GameSystem.SetCallBack(this);
-}
 
 using namespace BF;
 
 float _deltaTime = 0;
- 
+
+BF::UIText* text;
+
+BF::SkyBox skybox;
+BF::ShaderProgram worldShader;
+BF::ShaderProgram hudShaderID;
+
+BF::Camera* _camera = nullptr;
 BF::Sprite _playerCharacterLuna;
 BF::Sprite _playerCharacterNyte;
 BF::Sprite _lamp;
@@ -35,15 +32,23 @@ BF::Sprite _fireplace;
 BF::Sprite _sign;
 BF::Sprite _floor;
 
-
 BF::Rectangle _rectangle;
 BF::Cube _cube;
 
-Model _rectangleModel;
-Model _cubeBotlane;
+BF::Model _rectangleModel;
+BF::Model _cubeBotlane;
+
+bool moveCamera = false;
+
+Cleaved::CleavedGameSystem::CleavedGameSystem()
+{
+    GameSystem.SetCallBack(this);
+}
 
 void Cleaved::CleavedGameSystem::OnStartUp()
 {
+    _camera = &GameSystem.Resource.MainCamera;
+
     GameSystem.Resource.Load(worldShader, "Shader/WS.vert", "Shader/WS.frag");
     GameSystem.Resource.Load(hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
     
@@ -63,17 +68,6 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     _cubeBotlane.ConvertFrom(_cube.VertexList, _cube.VertexListSize, _cube.IndexList, _cube.IndexListSize, RenderMode::Square);
     _rectangleModel.ConvertFrom(_rectangle.VertexList, _rectangle.VertexListSize, _rectangle.IndexList, _rectangle.IndexListSize, RenderMode::Square);
 
-
-    //_fireplace.MeshListSize = 1;
-    //_fireplace.MeshList = new Mesh();
-    //_fireplace.MeshList[0].Structure.MeshLink(_rectangleModel.MeshList[0].Structure);
-
-    //_fireplace.MaterialListSize = 1;
-    //_fireplace.MaterialList = new Material();
-   // GameSystem.Resource.Load(_fireplace.MaterialList->Texture, "Texture/FirePlaace.bmp");
-   // GameSystem.Resource.Add(_fireplace);
-
-
     GameSystem.Resource.Add(_rectangleModel);
     GameSystem.Resource.Add(_cubeBotlane);
 
@@ -82,18 +76,10 @@ void Cleaved::CleavedGameSystem::OnStartUp()
 
     _rectangleModel.NameChange("Rectangle");
     _cubeBotlane.NameChange("Cube");
-
-
-    //_rectangleModel.MeshList->RenderInfo.ShouldBeRendered = true; 
-
   
     
     _playerCharacterNyte.Set(10, 0, 0.4, "Sprite_Nyte", "Texture/Nyte.bmp");
     GameSystem.Resource.Add(_playerCharacterNyte);
-
-
-
-
 
     _fireplace.Set(20, 0, 0.2, "Sprite_FirePlace", "Texture/FirePlace.bmp");
     GameSystem.Resource.Add(_fireplace);
@@ -125,6 +111,13 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     //text->RenderInformation.ShaderProgramID = hudShaderID.ID;
     //text->SetFont(*Resource.DefaultFont);
     //GameSystem.Resource.Add(*text);
+
+    _camera->Rotate(0,0);
+    _camera->MatrixModel.Move(Vector3<float>(240,15,-60));
+    _camera->CurrentRotation.Set(90, 0, 0);
+    _camera->Rotate(0, 0);
+    //_camera->MatrixModel.Rotate(90, 0, 0);
+
 }
 
 void Cleaved::CleavedGameSystem::OnShutDown()
@@ -139,11 +132,48 @@ void Cleaved::CleavedGameSystem::OnUpdateGameLogic(float deltaTime)
 
 void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
 {
+    KeyBoard& keyboard = input.KeyBoardInput;
+    Mouse& mouse = input.MouseInput;
+    Camera& camera = *_camera;
+    Vector3<float> movement;
 
+    if (keyboard.W.IsPressed()) { movement.Add(0, 1, 0); }
+    if (keyboard.A.IsPressed()) { movement.Add(-1, 0, 0); }
+    if (keyboard.S.IsPressed()) { movement.Add(0, -1, 0); }
+    if (keyboard.D.IsPressed()) { movement.Add(1, 0, 0); }
+    if (keyboard.SpaceBar.IsPressed())
+    {
+        _playerCharacterLuna.Velocity.Add(0.0f, 6.0f, .0f);
+
+        movement.Add(0, 1, 0);
+    }
+
+    if (keyboard.F.IsLongPressed())
+    {
+        switch (camera.Perspective)
+        {
+            case CameraPerspective::Orthographic:
+                camera.PerspectiveChange(CameraPerspective::Perspective);
+                break;
+
+            case CameraPerspective::Perspective:
+                camera.PerspectiveChange(CameraPerspective::Orthographic);
+                break;
+        }
+    }
+
+    _playerCharacterLuna.MatrixModel.Move(movement);
 }
 
 void Cleaved::CleavedGameSystem::OnUpdateUI()
 {
-   //sprintf_s(text->TextContent, "FPS: %4i", (BF::Math::Ceiling(1 / _deltaTime)));
+  // sprintf_s(text->TextContent, "FPS: %4i", (BF::Math::Ceiling(1 / _deltaTime)));
+
+  // printf("FPS: %4i", (BF::Math::Ceiling(1 / _deltaTime));
+
+   // Vector4<float> position = _camera->MatrixModel.CurrentPosition();
+
+   //printf("CamPos: <%f|%f|%f>\n", position.X, position.Y, position.Z);
+
    //text->SetText(text->TextContent);
 }

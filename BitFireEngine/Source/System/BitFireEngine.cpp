@@ -112,25 +112,13 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
     KeyBoard& keyboard = input.KeyBoardInput;
     Mouse& mouse = input.MouseInput;    
     Camera& camera = Resource.MainCamera;
-    Vector3<float> movement;  
 
-    if (keyboard.ShitftLeft.IsPressed()) { movement.Add(0, -1, 0); }
-    if (keyboard.W.IsPressed()) { movement.Add(0, 0, 1); }
-    if (keyboard.A.IsPressed()) { movement.Add(-1, 0, 0); }
-    if (keyboard.S.IsPressed()) { movement.Add(0, 0, -1); }
-    if (keyboard.D.IsPressed()) { movement.Add(1, 0, 0); }
-    if (keyboard.SpaceBar.IsPressed()) 
-    {
-        camera.Velocity.Add(0.0f, 6.0f, .0f);
-
-        movement.Add(0, 1, 0);
-    }
-   
+    _callbackListener->OnUpdateInput(input);
+    
     if (keyboard.J.IsShortPressed())
     {
         Resource.PrintContent(true);        
     }
-
 
     if (keyboard.R.IsShortPressed())    
     {
@@ -170,10 +158,6 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
                 break;
         }
     }
-
-    camera.Move(movement);
-
-    camera.Rotate(mouse.InputAxis[0], mouse.InputAxis[1]);
 
     camera.Update(_deltaTime);
     keyboard.IncrementButtonTick();

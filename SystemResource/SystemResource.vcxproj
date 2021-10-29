@@ -138,6 +138,8 @@
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <ControlFlowGuard>false</ControlFlowGuard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -207,6 +209,8 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <OmitFramePointers>false</OmitFramePointers>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -393,13 +397,16 @@
     <ClCompile Include="Source\Game\Sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Container\QuadTree\QuadTreeDirection.hpp" />
+    <ClInclude Include="Source\Container\QuadTree\QuadTreeNode.hpp" />
+    <ClInclude Include="Source\Container\QuadTree\QuadTreePosition.hpp" />
     <ClInclude Include="Source\File\FileOpenMode.hpp" />
     <ClInclude Include="Source\File\FilePersistence.hpp" />
     <ClInclude Include="Source\File\IFIle.h" />
     <ClInclude Include="Source\File\FileStream.h" />
     <ClInclude Include="Source\File\ByteStream.h" />
     <ClInclude Include="Source\File\FileTemporary.h" />
-    <ClInclude Include="Source\Container\QuadTree.hpp" />
+    <ClInclude Include="Source\Container\QuadTree\QuadTree.hpp" />
     <ClInclude Include="Source\Model\MeshRenderInfo.h" />
     <ClInclude Include="Source\Model\MeshStructure.h" />
     <ClInclude Include="Source\Font\FNT\FNTCommonData.h" />

@@ -974,9 +974,6 @@
     <ClInclude Include="Source\Model\Model.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Container\QuadTree.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\File\ByteStream.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -993,6 +990,18 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\File\FilePersistence.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Container\QuadTree\QuadTree.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Container\QuadTree\QuadTreeNode.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Container\QuadTree\QuadTreeDirection.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Container\QuadTree\QuadTreePosition.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

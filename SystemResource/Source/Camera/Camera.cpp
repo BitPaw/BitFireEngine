@@ -14,12 +14,24 @@ void BF::Camera::PerspectiveChange(CameraPerspective cmeraPerspective)
 	switch (Perspective)
 	{
 		case CameraPerspective::Orthographic:
-			MatrixProjection.Orthographic(-10.0f, 10.0f, -10.0f, 10.0f, Near, Far);
+		{
+			float scaling = 0.10;
+			float left = -(Width / 2.0f) * scaling;
+			float right = (Width / 2.0f) * scaling;
+			float bottom = -(Height / 2.0f) * scaling;
+			float top = (Height / 2.0f) * scaling;
+
+			MatrixProjection.Orthographic(left, right, bottom, top, Near, Far);
 			break;
+		}	
 
 		case CameraPerspective::Perspective:
-			MatrixProjection.Perspective(FieldOfView, GetAspectRatio(), Near, Far);
+		{
+			float aspectRatio = GetAspectRatio();
+
+			MatrixProjection.Perspective(FieldOfView, aspectRatio, Near, Far);
 			break;
+		}			
 	}
 }
 
