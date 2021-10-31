@@ -10,10 +10,10 @@ namespace BF
 	struct FileTemporary : public IFile
 	{
 		public:
-		FILE* FileMarker;
-
 		FileActionResult Open(const char* filePath, FileOpenMode fileOpenMode);
 		FileActionResult Open(const wchar_t* filePath, FileOpenMode fileOpenMode);
+
+		FileActionResult ReadAll();
 
 		FileActionResult Close();
 	};

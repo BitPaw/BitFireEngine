@@ -51,6 +51,9 @@
     <ClInclude Include="Source\Device\InputContainer.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Window\Key.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Window\Window.cpp">
@@ -78,6 +81,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Device\InputContainer.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Window\Key.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

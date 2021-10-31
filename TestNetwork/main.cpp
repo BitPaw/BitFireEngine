@@ -1,6 +1,9 @@
 
 #include "../SystemResource/Source/Network/Server.h"
 #include "../SystemResource/Source/Network/Client.h"
+#include "../SystemResource/Source/File/FileTemporary.h"
+#include "../SystemResource/Source/File/Program.h"
+#include "../SystemResource/Source/File/FileActionResult.hpp"
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -45,10 +48,20 @@ struct MainSt : public ISocketListener
 	}
 };
 
-int main()
+int main(int amountOFParameters, char** parameter)
 {
+	printf("[i][Core] Working Directory <%s>\n", parameter[0]);
+
 	MainSt serverCallBack;
 	MainSt clientCallBack;
+
+	/*
+	Program program;	
+
+	FileActionResult fileActionResult = program.Execute("DummyProgram.exe", 0, 0);
+
+	return 1;*/
+
 
 	Server server;
 
@@ -72,13 +85,13 @@ int main()
 
 	SocketActionResult socketActionResult = client.ConnectToServer("::1", 25565);
 
-	while (counter < 10000 && socketActionResult == SocketActionResult::Successful)
+	while (counter < (int)-1 && socketActionResult == SocketActionResult::Successful)
 	{
 		sprintf_s(buffer,30,"Hello x%i", ++counter);
 
 		client.Write(buffer);
 
-		//Sleep(250);
+		//Sleep(25);
 	}
 
 	client.Disconnect();

@@ -25,9 +25,14 @@ BF::FileActionResult BF::FileTemporary::Open(const char* filePath, FileOpenMode 
     FileMarker = popen(filePath, readMode);
 #elif defined(OSWindows)
     FileMarker = _popen(filePath, readMode);
-#endif 
+#endif    
 
-    return FileMarker ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
+    if (!FileMarker)
+    {
+        return FileActionResult::FileNotFound;
+    }
+
+    return FileActionResult::Successful;
 }
 
 BF::FileActionResult BF::FileTemporary::Open(const wchar_t* filePath, FileOpenMode fileOpenMode)

@@ -140,7 +140,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(ProjectDir)Dependencies\lib32\GLFW;$(ProjectDir)Dependencies\lib32\GL;$(ProjectDir)Dependencies\lib32\AL\Rel;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Dependencies\lib32\GLFW;$(SolutionDir)Dependencies\lib32\GL;$(SolutionDir)Dependencies\lib32\AL\Rel;$(LibraryPath)</LibraryPath>
     <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|Win32'">
@@ -150,7 +150,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(ProjectDir)Dependencies\lib64\GLFW;$(ProjectDir)Dependencies\lib64\GL;$(ProjectDir)Dependencies\lib64\AL\Rel;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Dependencies\lib64\GLFW;$(SolutionDir)Dependencies\lib64\GL;$(SolutionDir)Dependencies\lib64\AL\Rel;$(LibraryPath)</LibraryPath>
     <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

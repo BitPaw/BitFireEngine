@@ -86,23 +86,27 @@ void BF::BitFireEngine::Update()
 
         _callbackListener->OnUpdateUI();
     }
+    //---------------------------------------------------------------------
 
     //---[User-Input]------------------------------------------------------
     _mainWindow.Update(); // Pull inputs from window
-    auto inputPool = _mainWindow.GetInput();
-    auto& eeeeee = *inputPool;
+    InputContainer& inputPool = *_mainWindow.GetInput();
 
-    UpdateInput(eeeeee);
+    UpdateInput(inputPool);
 
-    _callbackListener->OnUpdateInput(eeeeee);
+    _callbackListener->OnUpdateInput(inputPool);
+    //---------------------------------------------------------------------
 
     //---[Game-Logic]------------------------------------------------------
     Resource.ModelsPhysicsApply(deltaTime);
+    //Resource.Models
 
     _callbackListener->OnUpdateGameLogic(deltaTime);
+    //---------------------------------------------------------------------
 
     //---[Render World]----------------------------------------------------
     Resource.ModelsRender(deltaTime);
+    //---------------------------------------------------------------------
 
     IsRunning = !_mainWindow.ShouldCloseWindow;
 }

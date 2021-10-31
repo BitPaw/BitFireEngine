@@ -165,12 +165,14 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CallingConvention>StdCall</CallingConvention>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|Win32'">
@@ -222,7 +224,7 @@
       <WarningLevel>Level4</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -236,12 +238,14 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CallingConvention>StdCall</CallingConvention>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|x64'">
@@ -264,6 +268,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\ErrorCode.cpp" />
+    <ClCompile Include="Source\File\Program.cpp" />
+    <ClCompile Include="Source\File\Bash.cpp" />
     <ClCompile Include="Source\File\IFIle.cpp" />
     <ClCompile Include="Source\File\FileStream.cpp" />
     <ClCompile Include="Source\File\ByteStream.cpp" />
@@ -397,6 +404,9 @@
     <ClCompile Include="Source\Game\Sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\ErrorCode.h" />
+    <ClInclude Include="Source\File\Program.h" />
+    <ClInclude Include="Source\File\Bash.h" />
     <ClInclude Include="Source\Container\QuadTree\QuadTreeDirection.hpp" />
     <ClInclude Include="Source\Container\QuadTree\QuadTreeNode.hpp" />
     <ClInclude Include="Source\Container\QuadTree\QuadTreePosition.hpp" />
@@ -407,6 +417,7 @@
     <ClInclude Include="Source\File\ByteStream.h" />
     <ClInclude Include="Source\File\FileTemporary.h" />
     <ClInclude Include="Source\Container\QuadTree\QuadTree.hpp" />
+    <ClInclude Include="Source\File\ProgramExecuteResultListener.hpp" />
     <ClInclude Include="Source\Model\MeshRenderInfo.h" />
     <ClInclude Include="Source\Model\MeshStructure.h" />
     <ClInclude Include="Source\Font\FNT\FNTCommonData.h" />

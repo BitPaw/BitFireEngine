@@ -17,7 +17,7 @@ namespace BF
 
 		FileActionResult ReadFromDisk(const char* filePath, FilePersistence filePersistence = FilePersistence::Permanent);
 		FileActionResult ReadFromDisk(const wchar_t* filePath, FilePersistence filePersistence = FilePersistence::Permanent);
-		
+		static FileActionResult ReadFromDisk(FILE* file, Byte** targetBuffer, size_t& bufferSize, bool addNullTerminator = false);
 		static FileActionResult ReadFromDisk
 		(
 			const char* filePath,

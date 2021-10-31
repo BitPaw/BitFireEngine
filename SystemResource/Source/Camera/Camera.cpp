@@ -1,6 +1,5 @@
 #include "Camera.h"
 #include <stdio.h>
-#include "../../../SystemRender/Source/Window/Window.h"
 
 float BF::Camera::GetAspectRatio()
 {
@@ -116,8 +115,8 @@ void BF::Camera::Update(float deltaTime)
 
 	//printf("CurrentPosition <%2.2f %2.2f %2.2f>\n", currentPosition.Data[0], currentPosition.Data[1], currentPosition.Data[2]);
 
-	Width = Window::Width;
-	Height = Window::Height;
+	//Width = Window::Width;
+	//Height = Window::Height;
 
 	PerspectiveChange(Perspective);
 }

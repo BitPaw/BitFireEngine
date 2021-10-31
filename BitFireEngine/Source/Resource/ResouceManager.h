@@ -104,6 +104,7 @@ namespace BF
         void Add(Collider* collider);
 
         void ModelsPhysicsApply(float deltaTime);
+
         void ModelsRender(float deltaTime);
 
         void PrintContent(bool detailed);

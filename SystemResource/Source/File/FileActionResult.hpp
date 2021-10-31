@@ -9,6 +9,7 @@ namespace BF
 		// Classic
 		FileNotFound,
 		OutOfMemory,
+		FileEmpty,
 
 		//
 		FileOpenFailure,

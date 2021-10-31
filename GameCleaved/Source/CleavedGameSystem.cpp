@@ -87,6 +87,8 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     _playerCharacterLuna.Set(23, 0, 0.5, "Sprite_Luna", "Texture/Luna.bmp");
     GameSystem.Resource.Add(_playerCharacterLuna);
     _playerCharacterLuna.MatrixModel.Scale(0.5);
+   // GameSystem.Resource.Add(_playerCharacterLuna);
+    _playerCharacterLuna.EnablePhysics = true;
 
     _sign.Set(24, 0, 0.1, "Sprite_Sign", "Texture/Sign.bmp");
     GameSystem.Resource.Add(_sign);
@@ -135,17 +137,24 @@ void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
     KeyBoard& keyboard = input.KeyBoardInput;
     Mouse& mouse = input.MouseInput;
     Camera& camera = *_camera;
-    Vector3<float> movement;
+    Vector3<float> movementCamera;
+    Vector3<float> movementCharacter;
 
-    if (keyboard.W.IsPressed()) { movement.Add(0, 1, 0); }
-    if (keyboard.A.IsPressed()) { movement.Add(-1, 0, 0); }
-    if (keyboard.S.IsPressed()) { movement.Add(0, -1, 0); }
-    if (keyboard.D.IsPressed()) { movement.Add(1, 0, 0); }
+    if (keyboard.Eight.IsPressed()) { movementCamera.Add(0, 1, 0); }
+    if (keyboard.Four.IsPressed()) { movementCamera.Add(-1, 0, 0); }
+    if (keyboard.Two.IsPressed()) { movementCamera.Add(0, -1, 0); }
+    if (keyboard.Six.IsPressed()) { movementCamera.Add(1, 0, 0); }
+
+
+    if (keyboard.W.IsPressed()) { movementCharacter.Add(0, 1, 0); }
+    if (keyboard.A.IsPressed()) { movementCharacter.Add(-1, 0, 0); }
+    if (keyboard.S.IsPressed()) { movementCharacter.Add(0, -1, 0); }
+    if (keyboard.D.IsPressed()) { movementCharacter.Add(1, 0, 0); }
     if (keyboard.SpaceBar.IsPressed())
     {
         _playerCharacterLuna.Velocity.Add(0.0f, 6.0f, .0f);
 
-        movement.Add(0, 1, 0);
+        movementCharacter.Add(0, 1, 0);
     }
 
     if (keyboard.F.IsLongPressed())
@@ -162,7 +171,10 @@ void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
         }
     }
 
-    _playerCharacterLuna.MatrixModel.Move(movement);
+    movementCharacter.X *= -1;  // Flip X-Axis
+
+    _playerCharacterLuna.MatrixModel.Move(movementCharacter);
+    _camera->MatrixModel.Move(movementCamera);
 }
 
 void Cleaved::CleavedGameSystem::OnUpdateUI()

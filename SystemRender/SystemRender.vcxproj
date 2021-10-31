@@ -253,6 +253,7 @@
     <ClInclude Include="Source\VideoConfig.h" />
     <ClInclude Include="Source\VulcanAPI.h" />
     <ClInclude Include="Source\Device\InputContainer.h" />
+    <ClInclude Include="Source\Window\Key.h" />
     <ClInclude Include="Source\Window\Window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -264,6 +265,7 @@
     <ClCompile Include="Source\VideoConfig.cpp" />
     <ClCompile Include="Source\VulcanAPI.cpp" />
     <ClCompile Include="Source\Device\InputContainer.cpp" />
+    <ClCompile Include="Source\Window\Key.cpp" />
     <ClCompile Include="Source\Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>

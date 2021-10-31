@@ -66,9 +66,48 @@ BF::FileActionResult BF::FileStream::ReadFromDisk(const wchar_t* filePath, FileP
 	return BF::FileActionResult::Successful;
 }
 
+BF::FileActionResult BF::FileStream::ReadFromDisk(FILE* file, Byte** targetBuffer, size_t& bufferSize, bool addNullTerminator)
+{
+	fseek(file, 0, SEEK_END); // Jump to end of file
+	bufferSize = ftell(file); // Get current 'data-cursor' position
+
+	if (!bufferSize) // If no bytes in file, exit.
+	{
+		return FileActionResult::FileEmpty;
+	}
+
+	rewind(file); // Jump to the begining of the file
+
+	if (addNullTerminator)
+	{
+		++bufferSize;
+	}
+
+	Byte* dataBuffer = (Byte*)malloc(bufferSize * sizeof(Byte));	
+
+	if (!dataBuffer) // If malloc failed
+	{
+		return BF::FileActionResult::OutOfMemory;
+	}
+
+	*targetBuffer = dataBuffer;
+
+	if (addNullTerminator)
+	{
+		dataBuffer[bufferSize - 1] = '\0';
+		--bufferSize;
+	}	
+
+	size_t readBytes = fread(dataBuffer, 1u, bufferSize, file);
+	size_t overAllocatedBytes = bufferSize - readBytes; // if overAllocatedBytes > 0 there was a reading error.	
+
+	assert(bufferSize == readBytes);
+
+	return FileActionResult::Successful;
+}
+
 BF::FileActionResult BF::FileStream::ReadFromDisk(const char* filePath, Byte** targetBuffer, size_t& bufferSize, bool addNullTerminator, FilePersistence filePersistence)
 {
-	size_t fullSize = -1;
 	File file;
 	FileActionResult result = file.Open(filePath, FileOpenMode::Read);
 
@@ -77,44 +116,7 @@ BF::FileActionResult BF::FileStream::ReadFromDisk(const char* filePath, Byte** t
 		return result;
 	}	
 
-	fseek(file.FileMarker, 0, SEEK_END);
-	bufferSize = ftell(file.FileMarker);
-	rewind(file.FileMarker);
-
-	fullSize = bufferSize * sizeof(Byte);
-
-	if (bufferSize)
-	{
-		++fullSize;
-	}
-
-	Byte* data = (Byte*)malloc(fullSize);
-
-	if (!data)
-	{
-		return BF::FileActionResult::OutOfMemory;
-	}
-
-	if (bufferSize)
-	{
-		data[fullSize - 1] = '\0';
-	}
-
-	*targetBuffer = data;
-
-	//Data[fullSize] = '\0'; // Termiate
-
-	size_t readBytes = fread(data, 1u, bufferSize, file.FileMarker);
-	size_t overAllocatedBytes = bufferSize - readBytes; // if overAllocatedBytes > 0 there was a reading error.	
-
-	assert(readBytes == bufferSize);
-
-	if (readBytes != bufferSize)
-	{
-		memset(&data[readBytes], 0, bufferSize - readBytes);
-
-		bufferSize = readBytes;
-	}
+	result = ReadFromDisk(file.FileMarker, targetBuffer, bufferSize);
 
 	result = file.Close();
 
