@@ -1,27 +1,23 @@
-#ifndef ClientIncluded
-#define ClientIncluded
+#pragma once
 
 #include "IOSocket.h"
 #include "../Async/Thread.h"
 
+#define IPSize 60
+
 namespace BF
 {
-    class Client
+    class Client : public IOSocket
     {
         public:
-        char* IP;
-        IOSocket Socket;
+        char IP[IPSize];
 
         int ConnectedServerID;
         IOSocket ConnectedServerData;
 
-        Thread CommunicationThread;
-
         Client();
-        SocketError ConnectToServer(char* ip, unsigned short port);
-        void SendCommand();
+
+        SocketActionResult ConnectToServer(const char* ip, unsigned short port);
         void Disconnect();
     }; 
 }
-
-#endif

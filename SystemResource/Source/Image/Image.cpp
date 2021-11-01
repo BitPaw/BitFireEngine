@@ -1,10 +1,19 @@
 #include "Image.h"
-#include "../File/File.h"
+
 #include "BMP/BMP.h"
 #include "PNG/PNG.h"
 #include "TGA/TGA.h"
-#include <malloc.h>
+#include "TIFF/TIFF.h"
+#include "GIF/GIF.h"
+#include "JPEG/JPEG.h"
+#include "TIFF/TIFF.h"
+
+#include "../File/File.h"
 #include "../Math/Math.h"
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <wchar.h>
 
 BF::Vector4<unsigned char> BF::Image::GetPixel(unsigned int x, unsigned int y)
 {
@@ -28,7 +37,7 @@ BF::Image::Image()
 
     Type = ImageType::Texture2D;
 
-    Format = ImageFormat::RGB;
+    Format = ImageDataFormat::RGB;
     Filter = ImageFilter::NoFilter;
 
     LayoutNear = ImageLayout::Nearest;
@@ -36,6 +45,9 @@ BF::Image::Image()
 
     WrapHeight = ImageWrap::Repeat;
     WrapWidth = ImageWrap::Repeat;
+
+    PixelDataSize = 0;
+    PixelData = 0;
 }
 
 BF::Image::~Image()
@@ -43,22 +55,34 @@ BF::Image::~Image()
     free(PixelData);
 }
 
+void BF::Image::ImageWrapSet(ImageWrap wrap)
+{
+    WrapHeight = wrap;
+    WrapWidth = wrap;
+}
+
+void BF::Image::ImageWrapSet(ImageWrap wrapHeight, ImageWrap wrapWidth)
+{
+    WrapHeight = wrapHeight;
+    WrapWidth = wrapWidth;
+}
+
 void BF::Image::RemoveColor(unsigned char red, unsigned char green, unsigned char blue)
 {
     switch (Format)
     {
-        case ImageFormat::AlphaMask:
+        case ImageDataFormat::AlphaMask:
         {
             break;
         }
 
-        case ImageFormat::RGB:
+        case ImageDataFormat::RGB:
         {
-            FormatChange(ImageFormat::RGBA);
+            FormatChange(ImageDataFormat::RGBA);
 
             // no break;
         }
-        case ImageFormat::RGBA:
+        case ImageDataFormat::RGBA:
         {
             for (size_t i = 0; i < PixelDataSize; )
             {
@@ -85,10 +109,40 @@ void BF::Image::FlipHorizontal()
 {
     unsigned int height = Height;
     unsigned int width = Width;
-    unsigned int bytesPerPixel = 3;
-    unsigned int scanLineWidthSize = width * bytesPerPixel;
+    unsigned int bytesPerPixel = -1;
+
+    switch (Format)
+    {
+        default:
+        case BF::ImageDataFormat::Unkown:
+            bytesPerPixel = -1;
+            break;
+
+        case BF::ImageDataFormat::AlphaMask:
+        case BF::ImageDataFormat::AlphaMaskBinary:
+            bytesPerPixel = 1;
+            break;
+ 
+        case BF::ImageDataFormat::BGR:
+        case BF::ImageDataFormat::RGB:
+            bytesPerPixel = 3;
+            break;
+
+        case BF::ImageDataFormat::RGBA:
+        case BF::ImageDataFormat::BGRA:
+            bytesPerPixel = 4;
+            break;
+    }
+
+
+    size_t scanLineWidthSize = width * bytesPerPixel;
     unsigned int scanLinesToSwap = height / 2;
-    unsigned char copyBufferRow[2048];
+    unsigned char* copyBufferRow = (unsigned char*)malloc(scanLineWidthSize * sizeof(char));
+
+    if (!copyBufferRow)
+    {
+        return;
+    }
 
     for (unsigned int scanlineIndex = 0; scanlineIndex < scanLinesToSwap; scanlineIndex++)
     {
@@ -99,6 +153,8 @@ void BF::Image::FlipHorizontal()
         memcpy(bufferB, bufferA, scanLineWidthSize); // B -> A 'Move B to A(override)'
         memcpy(bufferA, copyBufferRow, scanLineWidthSize); // Buffer -> B 'Move SaveCopy (A) to B'
     }
+
+    free(copyBufferRow);
 }
 
 void BF::Image::PrintData()
@@ -129,15 +185,15 @@ void BF::Image::Resize(unsigned int width, unsigned height)
 
     switch (Format)
     {
-        case ImageFormat::AlphaMask:
+        case ImageDataFormat::AlphaMask:
             pixelSize = 2;
             break;
 
         default:
-        case ImageFormat::RGB:
+        case ImageDataFormat::RGB:
             pixelSize = 3;
             break;
-        case ImageFormat::RGBA:
+        case ImageDataFormat::RGBA:
             pixelSize = 4;
             break;
     }
@@ -153,19 +209,19 @@ void BF::Image::FillRandome()
     }
 }
 
-void BF::Image::FormatChange(ImageFormat imageFormat)
+void BF::Image::FormatChange(ImageDataFormat imageFormat)
 {
     switch (Format)
     {
-        case ImageFormat::AlphaMask:
+        case ImageDataFormat::AlphaMask:
         {
 
         }
-        case ImageFormat::BGR:
+        case ImageDataFormat::BGR:
         {
             switch (imageFormat)
             {
-                case ImageFormat::RGB:
+                case ImageDataFormat::RGB:
                 {
                     unsigned int dIndex = 0;
                     unsigned int index = 0;
@@ -187,21 +243,26 @@ void BF::Image::FormatChange(ImageFormat imageFormat)
             }
         }
 
-        case ImageFormat::RGB:
+        case ImageDataFormat::RGB:
         {
             switch (imageFormat)
             {
-                case ImageFormat::AlphaMask:
+                case ImageDataFormat::AlphaMask:
                     break;
-                case ImageFormat::RGB:
+                case ImageDataFormat::RGB:
                     break;
-                case ImageFormat::RGBA:
+                case ImageDataFormat::RGBA:
                 {
-                    unsigned int newIndex = 0;
-                    unsigned int oldSize = PixelDataSize;
-                    unsigned int newSize = (oldSize / 3) * 4;
+                    size_t newIndex = 0;
+                    size_t oldSize = PixelDataSize;
+                    size_t newSize = (oldSize / 3) * 4;
                     unsigned char* newData = (unsigned char*)malloc(newSize * sizeof(char));
                     unsigned char* oldData = PixelData;
+
+                    if (!newData)
+                    {
+                        return;
+                    }
 
                     memset(newData, 0xFF, newSize);
 
@@ -215,7 +276,7 @@ void BF::Image::FormatChange(ImageFormat imageFormat)
                         newIndex += 4;
                     }
 
-                    Format = ImageFormat::RGBA;
+                    Format = ImageDataFormat::RGBA;
                     PixelData = newData;
                     PixelDataSize = newSize;
 
@@ -223,7 +284,7 @@ void BF::Image::FormatChange(ImageFormat imageFormat)
 
                     break;
                 }          
-                case ImageFormat::BGR:
+                case ImageDataFormat::BGR:
                 {
                     unsigned int dIndex = 0;
                     unsigned int index = 0;
@@ -241,87 +302,206 @@ void BF::Image::FormatChange(ImageFormat imageFormat)
                 }
             }
         }
-        case ImageFormat::RGBA:
+        case ImageDataFormat::RGBA:
         {
 
         }
     }
 }
 
-BF::ImageFileExtension BF::Image::FileFormatPeek(const char* filePath)
+BF::ImageFileFormat BF::Image::FileFormatPeek(const char* filePath)
 {
-    File file(filePath);
-    AsciiString fileExtension(file.Extension);
+    File file(filePath); 
 
-    if (fileExtension.CompareIgnoreCase("bmp")) return ImageFileExtension::BMP;
-    if (fileExtension.CompareIgnoreCase("gif")) return ImageFileExtension::GIF;
-    if (fileExtension.CompareIgnoreCase("jpeg")) return ImageFileExtension::JPEG;
-    if (fileExtension.CompareIgnoreCase("png")) return ImageFileExtension::PNG;
-    if (fileExtension.CompareIgnoreCase("tga")) return ImageFileExtension::TGA;
-    if (fileExtension.CompareIgnoreCase("tiff")) return ImageFileExtension::TIFF;
+    if (file.ExtensionEquals("BMP"))  return ImageFileFormat::BitMap;
+    if (file.ExtensionEquals("GIF"))  return ImageFileFormat::GIF;
+    if (file.ExtensionEquals("JPEG"))  return ImageFileFormat::JPEG;
+    if (file.ExtensionEquals("PNG"))  return ImageFileFormat::PNG;
+    if (file.ExtensionEquals("TGA"))  return ImageFileFormat::TGA;
+    if (file.ExtensionEquals("TIFF"))  return ImageFileFormat::TIFF;
 
-    return ImageFileExtension::Unkown;
+    return ImageFileFormat::Unkown;
 }
 
-BF::ResourceLoadingResult BF::Image::Load(const char* filePath)
+BF::FileActionResult BF::Image::Load()
 {
     ID = ResourceIDLoading;
 
-    if (!File::DoesFileExist(filePath))
+    if (!File::DoesFileExist(FilePath))
     {
         ID = ResourceIDFileNotFound;
-        return ResourceLoadingResult::FileNotFound;
-    } 
+        return FileActionResult::FileNotFound;
+    }
 
-    ImageFileExtension imageFormat = FileFormatPeek(filePath);
+    ImageFileFormat imageFileFormat = FileFormatPeek(FilePath);
 
-    strcpy(FilePath, filePath);
-
-    switch (imageFormat)
+    switch (imageFileFormat)
     {
-        case ImageFileExtension::BMP:
-        {
+        case ImageFileFormat::BitMap:
+        {            
             BMP bitmap;
-            bitmap.Load(filePath);
+            bitmap.Load(FilePath);
             bitmap.ConvertTo(*this);
+
+            bool foundAlphaFile = false;
+            wchar_t alphaMaskFile[_MAX_FNAME];
+
+            wmemset(alphaMaskFile, 0, _MAX_FNAME);
+
+            // Search for Alphafile
+            {
+                wchar_t** list = 0;
+                size_t listSize = 0;
+
+                File::FilesInFolder("Texture/*Alpha.bmp", &list, listSize);
+           
+                size_t writtenBytes = mbstowcs(alphaMaskFile, FilePath + 8, _MAX_FNAME) - 4;
+
+                for (size_t i = 0; i < listSize; i++)
+                {
+                    wchar_t* file = list[i];
+                    std::wstring text(file);
+
+                    bool isTargetedFile = wmemcmp(alphaMaskFile, file, writtenBytes) == 0;
+
+                    if (isTargetedFile)
+                    {
+                        foundAlphaFile = true;
+                        wmemcpy(alphaMaskFile, L"Texture/", 8);
+                        wmemcpy(alphaMaskFile + 8, file, text.length());     
+                        break;
+                    }
+                }
+            }
+
+            if(foundAlphaFile)// Load Alpha Mask
+            {
+                BMP bitmapAlpha;
+                char bitmapAlphaFilePath[255];               
+             
+                sprintf(bitmapAlphaFilePath, "%ws", alphaMaskFile);                
+                
+                bitmapAlpha.Load(bitmapAlphaFilePath);
+
+                bitmap.ConvertTo(*this, bitmapAlpha);
+            }      
+            else
+            {
+                bitmap.ConvertTo(*this);
+            }
+
             break;
         }
-        case ImageFileExtension::GIF:
+        case ImageFileFormat::GIF:
         {
+            GIF gif;
+            gif.Load(FilePath);
+            gif.ConvertTo(*this);
             break;
         }
-        case ImageFileExtension::JPEG:
+        case ImageFileFormat::JPEG:
         {
+            JPEG jpeg;
+            jpeg.Load(FilePath);
+            jpeg.ConvertTo(*this);
             break;
         }
-        case ImageFileExtension::PNG:
+        case ImageFileFormat::PNG:
         {
             PNG png;
-            png.Load(filePath);
-            png.Convert(*this);
+            png.Load(FilePath);
+            png.ConvertTo(*this);
             break;
         }
-        case ImageFileExtension::TGA:
+        case ImageFileFormat::TGA:
         {
             TGA tga;
-            tga.Load(filePath);
-            tga.Convert(*this);
+            tga.Load(FilePath);
+            tga.ConvertTo(*this);
             break;
         }
-        case ImageFileExtension::TIFF:
+        case ImageFileFormat::TIFF:
         {
+            TIFF tiff;
+            tiff.Load(FilePath);
+            tiff.ConvertTo(*this);
             break;
         }
-        case ImageFileExtension::Unkown:
+        case ImageFileFormat::Unkown:
         default:
         {
             ID = ResourceIDUnsuportedFormat;
 
-            return ResourceLoadingResult::FormatNotSupported;
-        }       
+            return FileActionResult::FormatNotSupported;
+        }
     }
 
     ID = ResourceIDLoaded;
 
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
+}
+
+BF::FileActionResult BF::Image::Load(const char* filePath)
+{
+    FilePathChange(filePath);
+
+    FileActionResult fileActionResult = Load();    
+
+    return fileActionResult;
+}
+
+BF::FileActionResult BF::Image::Save(const char* filePath, ImageFileFormat imageFileFormat)
+{
+    switch (imageFileFormat)
+    {
+        default:
+        case BF::ImageFileFormat::Unkown:
+        {
+            return FileActionResult::FormatNotSupported;
+        }
+        case BF::ImageFileFormat::BitMap:
+        {
+            BMP bitmap;
+            bitmap.ConvertFrom(*this);
+            bitmap.Save(filePath);
+            break;
+        }
+        case BF::ImageFileFormat::PNG:
+        {
+            PNG png;
+            png.ConvertFrom(*this);
+            png.Save(filePath);
+            break;
+        }
+        case BF::ImageFileFormat::TGA:
+        {
+            TGA tga;
+            tga.ConvertFrom(*this);
+            tga.Save(filePath);
+            break;
+        }
+        case BF::ImageFileFormat::JPEG:
+        {
+            JPEG jpeg;
+            jpeg.ConvertFrom(*this);
+            jpeg.Save(filePath);
+            break;
+        }
+        case BF::ImageFileFormat::TIFF:
+        {
+            TIFF tiff;
+            tiff.ConvertFrom(*this);
+            tiff.Save(filePath);
+            break;
+        }
+        case BF::ImageFileFormat::GIF:
+        {
+            GIF gif;
+            gif.ConvertFrom(*this);
+            gif.Save(filePath);
+            break;
+        }
+    }
+
+    return FileActionResult::Successful;
 }

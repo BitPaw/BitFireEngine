@@ -6,6 +6,7 @@
 #include "../Sound/Sound.h"
 #include "../Dialog/Dialog.h"
 #include "../Camera/Camera.h"
+#include "../Shader/Shader.h"
 
 namespace BF
 {

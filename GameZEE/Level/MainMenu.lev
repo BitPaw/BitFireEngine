@@ -7,7 +7,7 @@
 
 T Texture/MissingTexture.bmp
 
-F Font/segoe.fnt
+#F Font/segoe.fnt
 
 
 #O A:/_WorkSpace/BitFireEngine/Model/desert_city.obj -200|-100|0 0|0|0 0.5|0.5|0.5

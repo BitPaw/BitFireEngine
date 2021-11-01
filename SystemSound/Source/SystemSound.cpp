@@ -125,6 +125,12 @@ void BF::SystemSound::Play(AudioSource& audioSource, Sound& sound)
 
 }
 
+void BF::SystemSound::LoopPart(AudioSource& audioSource, unsigned int startIndex, unsigned int endIndex)
+{
+	alSourcei(audioSource.ID, AL_BYTE_OFFSET, (ALint)startIndex);
+	alSourcei(audioSource.ID, AL_SEC_OFFSET, (ALint)endIndex);
+}
+
 ALenum BF::SystemSound::ToChannalFormat(unsigned short numerOfChannels, unsigned short bitsPerSample)
 {
 	bool stereo = (numerOfChannels > 1);

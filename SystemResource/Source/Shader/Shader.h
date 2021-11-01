@@ -2,6 +2,7 @@
 
 #include "ShaderType.h"
 #include "../Resource.h"
+#include <cstdlib>
 
 namespace BF
 {
@@ -10,6 +11,7 @@ namespace BF
 		public:
 		ShaderType Type;
 		char* Content;
+		size_t ContentSize;
 
 		Shader();
 		Shader(ShaderType type, const char* content);

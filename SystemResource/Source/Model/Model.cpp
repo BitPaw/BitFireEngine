@@ -1,519 +1,210 @@
 #include "Model.h"
 
 #include "ModelType.h"
+
+#include "3DS/A3DS.h"
+#include "FBX/FBX.h"
 #include "OBJ/OBJ.h"
+#include "PLY/PLY.h"
+#include "STL/STL.h"
+#include "WRL/WRL.h"
+
 #include "../File/File.h"
 #include "../../../SystemResource/Source/Math/Geometry/Shape/Triangle.h"
 #include "../../../SystemResource/Source/Math/Geometry/Shape/Rectangle.h"
 
 BF::Model::Model()
 {
-    RenderInformation.RenderType = RenderMode::Unkown;
+    ShouldItBeRendered = false;
+
+    MaterialListSize = 0;
+    MaterialList = nullptr;
+
+    MeshListSize = 0;
+    MeshList = nullptr;
+
+    SharedModel = nullptr;
+
+    NameChange("<Unnamed Model>");
 }
 
-BF::Model::Model(const char* modelName)
+BF::Model::Model(const char* modelName) : Model()
 {
-    RenderInformation.RenderType = RenderMode::Unkown;
-
-    strcpy(Name, modelName);
-}
-
-void BF::Model::Move(float x, float y, float z)
-{
-    Move(Vector3<float>(x, y, z));
-}
-
-void BF::Model::Move(Vector3<float> position)
-{
-    if (DirectMorth)
-    {
-        for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
-        {
-            GlobalMesh.VertexList[i]->CurrentPosition.Add(position);
-        }
-
-        //_currentPosition += position;
-    }
-
-    ModelMatrix.Move(position.X, position.Y, position.Z);
-}
-
-void BF::Model::MoveTo(float x, float y, float z)
-{
-    MoveTo(Vector3<float>(x, y, z));
-}
-
-void BF::Model::MoveTo(Vector3<float> position)
-{
-    if (DirectMorth)
-    {
-        for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
-        {
-            Vertex* vertex = GlobalMesh.VertexList[i];
-
-            auto x = ModelMatrix.CurrentPosition();
-
-            vertex->CurrentPosition -= Vector3<float>(x.X, x.Y, x.Z);
-            vertex->CurrentPosition += position;
-        }
-
-        // _currentPosition = position;
-    }
-
-    ModelMatrix.MoveTo(position.X, position.Y, position.Z);
-}
-
-void BF::Model::Rotate(float x, float y, float z)
-{
-    Rotate(Vector3<float>(x, y, z));
-}
-
-void BF::Model::Rotate(Vector3<float> rotation)
-{
-    float xRadians = Math::DegreeToRadians(rotation.X);
-    float yRadians = Math::DegreeToRadians(rotation.Y);
-    float zRadians = Math::DegreeToRadians(rotation.Z);
-
-    if (DirectMorth)
-    {
-        for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
-        {
-            Vertex* vertex = GlobalMesh.VertexList[i];
-            Vector3<float>& currentPosition = vertex->CurrentPosition;
-
-            auto x = ModelMatrix.CurrentRotation();
-            Vector3<float> position(x.X, x.Y, x.Z);
-
-            currentPosition -= position;
-            currentPosition.Rotate(rotation);
-            currentPosition += position;
-        }
-
-        /*
-        _currentRotation += rotation;
-
-        if (_currentRotation.X > 360)
-        {
-            _currentRotation.X -= 360;
-        }
-
-        if (_currentRotation.Y > 360)
-        {
-            _currentRotation.Y -= 360;
-        }
-
-        if (_currentRotation.Z > 360)
-        {
-            _currentRotation.Z -= 360;
-        }*/
-    }
-
-    ModelMatrix.Rotate(xRadians, yRadians, zRadians);
-}
-
-void BF::Model::RotateTo(float x, float y, float z)
-{
-    ModelMatrix.RotateTo(x, y, z);
-}
-
-void BF::Model::RotateTo(Vector3<float> rotation)
-{
-    ModelMatrix.RotateTo(rotation.X, rotation.Y, rotation.Z);
-}
-
-
-
-void BF::Model::Orbit(float x, float y, float z)
-{
-    Orbit(Vector3<float>(x, y, z));
-}
-
-void BF::Model::Orbit(Vector3<float> rotation)
-{
-    for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
-    {
-        Vertex* vertex = GlobalMesh.VertexList[i];
-
-        vertex->CurrentPosition.Rotate(rotation);
-    }
-}
-
-void BF::Model::Orbit(Vector3<float> rotation, Vector3<float> ancerPosition)
-{
-    // ModelMatrix.Orbit();
-}
-
-void BF::Model::Scale(float x, float y, float z)
-{
-    Scale(Vector3<float>(x, y, z));
-}
-
-void BF::Model::Scale(Vector3<float> scaleFactor)
-{
-    if (DirectMorth)
-    {
-        for (unsigned int i = 0; i < GlobalMesh.VertexList.Size(); i++)
-        {
-            Vertex* vertex = GlobalMesh.VertexList[i];
-
-            vertex->CurrentPosition *= scaleFactor;
-        }
-    }
-    else
-    {
-        ModelMatrix.Scale(scaleFactor.X, scaleFactor.Y, scaleFactor.Z);
-    }
-}
-
-void BF::Model::CalculateNormalVectors()
-{
-    /*
-    for (unsigned int i = 0; i < MeshList.Size(); i++)
-    {
-        Mesh* mesh = &MeshList[i];
-        List<MeshIndexData>* indexList = &mesh->IndexList;
-        List<Vertex>* vertexList = &mesh->VertexList;
-        unsigned int indexListSize = mesh->IndexList.Size();
-
-        switch (indexListSize)
-        {
-            case 0:
-                // Poligon has no points, there cant be a normal verctor.
-                break;
-
-            case 1:
-                // Poligon has only one Point, normal will be teh point itself.
-
-                break;
-
-            case 2:
-                // There are only 2 points, you cant render something like this. Or can it?
-                break;
-
-            case 3:
-            default:
-            {
-                switch (RenderInformation.RenderType)
-                {
-                    case RenderMode::Triangle:
-                    {
-                        unsigned int i = 0;
-                        unsigned int normalPointIndex = 0;
-                        float normals = indexListSize / 3.0f;
-                        unsigned int normalSaveVectorSize = Math::Floor(normals);
-                        unsigned int normalExactVectorSize = Math::Ceiling(normals);
-                        mesh->NormalPointList.ReSize(normalExactVectorSize);
-
-                        while (normalPointIndex < normalSaveVectorSize)
-                        {
-                            MeshIndexData* mIndexA = &(*indexList)[i++];
-                            MeshIndexData* mIndexB = &(*indexList)[i++];
-                            MeshIndexData* mIndexC = &(*indexList)[i++];
-
-                            Vertex* vertexA = &(*vertexList)[mIndexA->VertexPositionID];
-                            Vertex* vertexB = &(*vertexList)[mIndexB->VertexPositionID];
-                            Vertex* vertexC = &(*vertexList)[mIndexC->VertexPositionID];
-
-                            Triangle triangle
-                            (
-                                vertexA->CurrentPosition,
-                                vertexB->CurrentPosition,
-                                vertexC->CurrentPosition
-                            );
-
-                            mIndexA->NormalVectorID = normalPointIndex;
-                            mIndexB->NormalVectorID = normalPointIndex;
-                            mIndexC->NormalVectorID = normalPointIndex;
-
-                            mesh->NormalPointList[normalPointIndex++] = triangle.NormalDirection();
-                        }
-
-                        if (normalSaveVectorSize < normalExactVectorSize)
-                        {
-                            MeshIndexData* mIndexA = &(*indexList)[i - 1];
-                            MeshIndexData* mIndexB = &(*indexList)[i];
-                            MeshIndexData* mIndexC = &(*indexList)[0];
-
-                            Vertex* vertexA = &(*vertexList)[mIndexA->VertexPositionID];
-                            Vertex* vertexB = &(*vertexList)[mIndexB->VertexPositionID];
-                            Vertex* vertexC = &(*vertexList)[mIndexC->VertexPositionID];
-
-                            Triangle triangle
-                            (
-                                vertexA->CurrentPosition,
-                                vertexB->CurrentPosition,
-                                vertexC->CurrentPosition
-                            );
-
-                            mIndexA->NormalVectorID = normalPointIndex;
-                            mIndexB->NormalVectorID = normalPointIndex;
-                            mIndexC->NormalVectorID = normalPointIndex;
-
-                            mesh->NormalPointList[normalPointIndex++] = triangle.NormalDirection();
-                        }
-                    }
-                    break;
-
-                    case RenderMode::Square:
-                    {
-                        unsigned int i = 0;
-                        unsigned int normalPointIndex = 0;
-                        float normals = indexListSize / 4.0f;
-                        unsigned int normalSaveVectorSize = Math::Floor(normals);
-                        unsigned int normalExactVectorSize = Math::Ceiling(normals);
-                        mesh->NormalPointList.ReSize(normalExactVectorSize);
-
-                        while (normalPointIndex < normalSaveVectorSize)
-                        {
-                            MeshIndexData* mIndexA = &(*indexList)[i];
-                            MeshIndexData* mIndexB = &(*indexList)[i + 1];
-                            MeshIndexData* mIndexC = &(*indexList)[i + 2];
-                            MeshIndexData* mIndexD = &(*indexList)[i + 3];
-
-                            Vertex* vertexA = &(*vertexList)[mIndexA->VertexPositionID];
-                            Vertex* vertexB = &(*vertexList)[mIndexB->VertexPositionID];
-                            Vertex* vertexC = &(*vertexList)[mIndexC->VertexPositionID];
-                            Vertex* vertexD = &(*vertexList)[mIndexD->VertexPositionID];
-
-                            Rectangle rectangle
-                            (
-                                vertexA->CurrentPosition,
-                                vertexB->CurrentPosition,
-                                vertexC->CurrentPosition,
-                                vertexD->CurrentPosition
-                            );
-
-                            mIndexA->NormalVectorID = normalPointIndex;
-                            mIndexB->NormalVectorID = normalPointIndex;
-                            mIndexC->NormalVectorID = normalPointIndex;
-                            mIndexD->NormalVectorID = normalPointIndex;
-
-                            mesh->NormalPointList[normalPointIndex++] = rectangle.NormalDirection();
-                        }
-
-                        if (normalSaveVectorSize < normalExactVectorSize)
-                        {
-                            printf("Error");
-                        }
-                        break;
-                    }
-
-
-                    break;
-                }
-            }  
-        }
-    }
-    */
-}
-
-void BF::Model::UseTexturePointAsColor()
-{
-    unsigned int indexListLength = GlobalMesh.IndexList.Size();
-
-    ColorList.ReSize(indexListLength);
-
-    for (unsigned int i = 0; i < indexListLength; i++)
-    {
-        MeshIndexData& meshIndexData = MeshList[0].IndexList[i];
-
-        Vertex& vertex = MeshList[0].VertexList[meshIndexData.VertexPositionID];
-        Vector2<float>& texturepoint = MeshList[0].TexturePointList[meshIndexData.TexturePointID];
-
-        vertex.ColorID = i;
-
-        ColorList[i].Set(texturepoint.X, texturepoint.Y, 0, 0);
-    }
-
-    UpdateGlobalMesh();
+    NameChange(modelName);
 }
 
 void BF::Model::PrintModelData()
 {
-    printf("Meshes %u\n", MeshList.Size());
-
-    for (unsigned int i = 0; i < MeshList.Size(); i++)
-    {
-        Mesh& mesh = MeshList[i];
-
-        printf("Material <%u>: %5u %5u %5u", i, mesh.VertexList.Size(), mesh.NormalPointList.Size(), mesh.TexturePointList.Size());
-
-        if (mesh.MeshMaterial == nullptr)
-        {
-            printf(" - No Material\n");
-        }
-        else
-        {
-            Material* material = mesh.MeshMaterial;
-            Image* texture = material->Texture;
-
-            if (texture == nullptr)
-            {
-                printf(" - <NoImage> Path %s", &mesh.MeshMaterial->Name[0]);
-
-            }
-            else
-            {
-                printf(" - ImageID:%u Path %s", texture->ID, &mesh.MeshMaterial->Name[0]);
-            }
-        }
-
-        printf("\n");
-    }
-}
-
-void BF::Model::UpdateGlobalMesh()
-{
-    const unsigned int length = MeshList.Size();
-    unsigned int vertexListLength = 0;
-    unsigned int texturePointListLength = 0;
-    unsigned int normalPointListLength = 0;
-    unsigned int colorListLength = ColorList.Size();
-    unsigned int indexListLength = 0;
-
-    unsigned int vertexIndex = 0;
-    unsigned int textureIndex = 0;
-    unsigned int normalIndex = 0;
-    unsigned int colorIndex = 0;
-    unsigned int indexIndex = 0;
-    
-    if (length == 0)
-    {
-        return;
-    }
-
-    for (unsigned int i = 0; i < length; i++)
-    {
-        Mesh& mesh = MeshList[i];
-
-        vertexListLength += mesh.VertexList.Size();
-        texturePointListLength += mesh.TexturePointList.Size();
-        normalPointListLength += mesh.NormalPointList.Size();
-        indexListLength += mesh.IndexList.Size();
-    }
-
-    GlobalMesh.VertexList.ReSize(vertexListLength);
-    GlobalMesh.TexturePointList.ReSize(texturePointListLength);
-    GlobalMesh.NormalPointList.ReSize(normalPointListLength);
-    GlobalMesh.ColorList.ReSize(colorListLength);
-    GlobalMesh.IndexList.ReSize(indexListLength);
-
-    for (unsigned int i = 0; i < length; i++)
-    {
-        Mesh& mesh = MeshList[i];
-
-        vertexListLength = mesh.VertexList.Size();
-        texturePointListLength = mesh.TexturePointList.Size();
-        normalPointListLength = mesh.NormalPointList.Size();
-        indexListLength = mesh.IndexList.Size();
-
-        for (unsigned int i = 0; i < vertexListLength; i++)
-        {
-            GlobalMesh.VertexList[vertexIndex++] = &mesh.VertexList[i];
-        }
-
-        for (unsigned int i = 0; i < texturePointListLength; i++)
-        {
-            GlobalMesh.TexturePointList[textureIndex++] = &mesh.TexturePointList[i];
-        }
-
-        for (unsigned int i = 0; i < normalPointListLength; i++)
-        {
-            GlobalMesh.NormalPointList[normalIndex++] = &mesh.NormalPointList[i];
-        }
-
-        for (unsigned int i = 0; i < colorListLength; i++)
-        {
-            GlobalMesh.ColorList[colorIndex++] = &ColorList[i];
-        }
-
-        for (unsigned int i = 0; i < indexListLength; i++)
-        {
-            GlobalMesh.IndexList[indexIndex++] = &mesh.IndexList[i];
-        }
-    }
-}
-
-void BF::Model::ScaleTexturePoints(float x, float y)
-{
-    ScaleTexturePoints(Vector2<float>(x, y));
-}
-
-void BF::Model::ScaleTexturePoints(Vector2<float> scale)
-{
-    for (unsigned int i = 0; i < GlobalMesh.TexturePointList.Size(); i++)
-    {
-        GlobalMesh.TexturePointList[i]->Multiply(scale);
-    }
+    printf("Meshes %u\n", MeshListSize);
 }
 
 BF::ModelType BF::Model::FileFormatPeek(const char* fileExtension)
 {
     File file(fileExtension);
-    AsciiString extension(file.Extension);
 
-    if (extension.CompareIgnoreCase("3ds")) return ModelType::A3DS;
-    if (extension.CompareIgnoreCase("obj")) return ModelType::OBJ;
-    if (extension.CompareIgnoreCase("ply")) return ModelType::PLY;
-    if (extension.CompareIgnoreCase("stl")) return ModelType::STL;
-    if (extension.CompareIgnoreCase("wrl")) return ModelType::WRL;
+    if (file.ExtensionEquals("3ds")) return ModelType::A3DS;
+    if (file.ExtensionEquals("obj")) return ModelType::OBJ;
+    if (file.ExtensionEquals("ply")) return ModelType::PLY;
+    if (file.ExtensionEquals("stl")) return ModelType::STL;
+    if (file.ExtensionEquals("wrl")) return ModelType::WRL;
 
     return ModelType::UnKown;
 }
 
-BF::ResourceLoadingResult BF::Model::Load()
+BF::FileActionResult BF::Model::Load()
 {
     return Load(FilePath);
 }
 
-BF::ResourceLoadingResult BF::Model::Load(const char* filePath)
+BF::FileActionResult BF::Model::Load(const char* filePath)
 {
     if (!File::DoesFileExist(filePath))
     {
         ID = ResourceIDFileNotFound;
-        return ResourceLoadingResult::FileNotFound;
+        return FileActionResult::FileNotFound;
     }
 
     ModelType modelType = FileFormatPeek(filePath);
 
     ID = ResourceIDLoading;
 
-    strcpy(FilePath, filePath);
+    strncpy(FilePath, filePath, ResourceFilePathSize);
 
     switch (modelType)
     {
         case ModelType::A3DS:
+        {
+            A3DS a3ds;
+            a3ds.Load(filePath);
+            a3ds.ConvertTo(*this);
             break;
+        }
 
         case ModelType::FBX:
+        {
+            FBX fbx;
+            fbx.Load(filePath);
+            fbx.ConvertTo(*this);
             break;
+        }
 
         case ModelType::OBJ:
         {
             OBJ obj;
             obj.Load(filePath);
-            obj.Convert(*this);
+            obj.ConvertTo(*this);
             break;
         }
 
         case ModelType::PLY:
+        {
+            OBJ obj;
+            obj.Load(filePath);
+            obj.ConvertTo(*this);
             break;
+        }
 
         case ModelType::STL:
+        {
+            STL stl;
+            stl.Load(filePath);
+            stl.ConvertTo(*this);
             break;
+        }
 
         case ModelType::WRL:
+        {
+            WRL wrl;
+            wrl.Load(filePath);
+            wrl.ConvertTo(*this);
             break;
+        }
 
         case ModelType::UnKown:
         default:
-            return ResourceLoadingResult::FormatNotSupported;
+            return FileActionResult::FormatNotSupported;
     }
 
     ID = ResourceIDLoaded;
 
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }
+
+void BF::Model::ConvertFrom(float* vertexList, size_t vertexListSize, unsigned int* indexList, size_t indexListSize, RenderMode renderMode, float textureScaleX, float textureScaleY, bool rawPositions)
+{
+    ID = ResourceIDLoading;
+
+    MeshListSize = 1;
+    MeshList = new Mesh[MeshListSize];
+
+    Mesh& mesh = MeshList[0]; // Get current target Mesh
+    
+    mesh.Structure.RenderType = renderMode;
+
+    NameChange("<Shape>");
+
+    if (rawPositions)
+    {
+        mesh.Structure.VertexDataBlockListSize = 1;
+        mesh.Structure.VertexDataBlockList[0] = 3;
+        mesh.Structure.VertexDataBlockList[1] = 0;
+        mesh.Structure.VertexDataBlockList[2] = 0;
+        mesh.Structure.VertexDataBlockList[3] = 0;
+
+        mesh.Structure.Allocate(vertexListSize, indexListSize);
+
+        memcpy(mesh.Structure.VertexData, vertexList, vertexListSize * sizeof(float));
+        memcpy(mesh.Structure.IndexData, indexList, indexListSize * sizeof(unsigned int));
+    }
+    else
+    {
+        mesh.Structure.VertexDataBlockListSize = 4;
+        mesh.Structure.VertexDataBlockList[0] = 3;
+        mesh.Structure.VertexDataBlockList[1] = 3;
+        mesh.Structure.VertexDataBlockList[2] = 4;
+        mesh.Structure.VertexDataBlockList[3] = 2;
+
+        mesh.Structure.Allocate((vertexListSize / 3) * (3 + 3 + 4 + 2), indexListSize);
+
+        // strncpy(mesh.Name, "Shape", MeshNameSize);
+
+        memcpy(mesh.Structure.IndexData, indexList, indexListSize * sizeof(unsigned int));
+
+        float* vertexFullData = mesh.Structure.VertexData;
+        unsigned int vertexFullDataIndex = 0;
+
+        for (size_t i = 0; i < vertexListSize; )
+        {
+            float x = vertexList[i++];
+            float y = vertexList[i++];
+            float z = vertexList[i++];
+            float xNorm = x != 0 ? 0 : 1;
+            float yNorm = y != 0 ? 0 : 1;
+            float tx = xNorm * textureScaleX; // [-1,1] -> [0,2] -> [0,1] // ((-x + 1) / 2.0f) * textureScale
+            float ty = yNorm * textureScaleY;
+
+            vertexFullData[vertexFullDataIndex++] = x;
+            vertexFullData[vertexFullDataIndex++] = y;
+            vertexFullData[vertexFullDataIndex++] = z;
+
+            vertexFullData[vertexFullDataIndex++] = 0;
+            vertexFullData[vertexFullDataIndex++] = 0;
+            vertexFullData[vertexFullDataIndex++] = 0;
+
+            vertexFullData[vertexFullDataIndex++] = 1;
+            vertexFullData[vertexFullDataIndex++] = 1;
+            vertexFullData[vertexFullDataIndex++] = 1;
+            vertexFullData[vertexFullDataIndex++] = 1;
+
+            vertexFullData[vertexFullDataIndex++] = tx; 
+            vertexFullData[vertexFullDataIndex++] = ty; 
+        }
+    }   
+
+    ID = ResourceIDLoaded;
+}
+
+/*
 
 void BF::Model::ConvertFrom(Shape& shape)
 {
@@ -555,5 +246,6 @@ void BF::Model::ConvertFrom(Shape& shape)
 
     CalculateNormalVectors();
 
-    UpdateGlobalMesh();*/
+    UpdateGlobalMesh();*
 }
+*/

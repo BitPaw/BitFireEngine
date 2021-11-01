@@ -11,6 +11,8 @@
 #include "../../SystemResource/Source/Sound/MID/MID.h"
 #include "../../SystemResource/Source/Math/Geometry/Matrix.hpp"
 #include "../../SystemResource/Source/Image/PNG/PNG.h"
+#include "../../SystemResource/Source/Math/Physic/GravityCube.h"
+#include "../../SystemResource/Source/Image/JPEG/JPEG.h"
 
 BF::UIText* text;
 //BF::Model* sphere;
@@ -23,24 +25,27 @@ BF::ShaderProgram hudShaderID;
 
 BF::AudioSource audioSource;
 BF::Sound sound;
+BF::GravityCube _worldGravity;
+float _deltaTime = 0;
+BF::Model* model;
+BF::Model textureBix;
 
 ZEE::ZEEGameSystem::ZEEGameSystem()
 {
     GameSystem.SetCallBack(this);
 }
 
-float _deltaTime = 0;
-BF::Model* model;
-
-BF::Model textureBix;
-
 void ZEE::ZEEGameSystem::OnStartUp()
 {   
+    /*
+    BF::JPEG jpeg;
+    jpeg.Load("B:/Daten/Bilder/_garbage/KN.jpg");
+
+
     BF::PNG png;
 
     png.Load("Wb.png");
-    png.Save("Wb_EE.png");
-
+    png.Save("Wb_EE.png");*/
 
     BF::StopWatch stopwatch;
 
@@ -52,18 +57,26 @@ void ZEE::ZEEGameSystem::OnStartUp()
     GameSystem.Resource.Load(textureBix, "Model/Dialog/DialogBox.obj");
 
     GameSystem.Resource.Load("Texture/Block.bmp");
+   
     GameSystem.Resource.Load("Model/Triangle.obj");
+    
+    _worldGravity.IgnoreAxis.Set(true, true, true);
+    _worldGravity.PullForce = GravityForceEarth;
+    _worldGravity.PullDirection.Set(0, -1, 0);
+    GameSystem.Resource.Add(&_worldGravity);
 
-
-    GameSystem.Resource.Load("Level/MainMenu.lev");
     GameSystem.Resource.Load(cube, "Model/Cube.obj");
+    cube.MatrixModel.Scale(10.0f);
+    cube.EnablePhysics = true;
+    cube.Mass = 1000;
+
+    
+    //GameSystem.Resource.Load("Level/MainMenu.lev");
 
 
+    textureBix.MatrixModel.Scale(10, 2, 1);
 
-    textureBix.ModelMatrix.Scale(10, 2, 1);
 
-    cube.ModelMatrix.Scale(10.0f);
-    cube.EnablePhysics = true;       
 
     GameSystem.Resource.Load
     (
@@ -78,17 +91,18 @@ void ZEE::ZEEGameSystem::OnStartUp()
         "Texture/SkyBox/Front.bmp"
     );           
 
-    text = new BF::UIText("SampleText", *GameSystem.Resource.DefaultFont, -1, -0.8);
-    text->RenderInformation.ShaderProgramID = hudShaderID.ID;
+    //text = new BF::UIText("SampleText", *GameSystem.Resource.DefaultFont, -1, -0.8);
+    //text->MeshList[0].RenderInformation.ShaderProgramID = hudShaderID.ID;
     //text->SetFont(*Resource.DefaultFont);
-    text->SetText(text->TextContent);
-    GameSystem.Resource.Add(*text);
+    //text->SetText(text->TextContent);
+    //GameSystem.Resource.Add(*text);
     
 
     printf("[i][Info] Loading took %.2fs\n", stopwatch.Stop());
 
     GameSystem.Resource.PrintContent(true);    
 
+    
 
 #if 0 // Sound Enable
     //BF::MID midi;
@@ -105,6 +119,11 @@ void ZEE::ZEEGameSystem::OnStartUp()
 
 
     GameSystem.SoundPlayer.Play(audioSource, sound);
+
+    GameSystem.SoundPlayer.LoopPart(audioSource, 100, 100);
+
+    GameSystem.SoundPlayer.Play(audioSource, sound);
+
 #endif // Sound Enable
 }
 
@@ -116,12 +135,11 @@ void ZEE::ZEEGameSystem::OnShutDown()
 BF::Vector3<float> rot(0.0349066,0,0);
 
 void ZEE::ZEEGameSystem::OnUpdateGameLogic(float deltaTime)
-{
-    
-    if (cube.ModelMatrix.CurrentPosition().Y <= 0)
+{    
+    if (cube.MatrixModel.CurrentPosition().Y <= 0)
     {
         //cube.ModelMatrix.Move(0, tcap, 0);
-        cube.Velocity.Set(0, 90, 0);
+        //cube.Force.Add(0, 50, 0);
     }
 
     _deltaTime = deltaTime;
@@ -131,29 +149,18 @@ void ZEE::ZEEGameSystem::OnUpdateInput(BF::InputContainer& input)
 {
 #if 0
     bool changed = false;
+    float value = 0.01f;
 
     if (input.KeyBoardInput.O.IsPressed())
     {
-        audioSource.Pitch += 0.01;
+        audioSource.PitchIncrease(value);
 
-        if (audioSource.Pitch > 2.5)
-        {
-            audioSource.Pitch = 2.5;
-        }
-
-
-      
         changed = true;
     }
 
     if (input.KeyBoardInput.L.IsPressed())
     {
-        audioSource.Pitch -= 0.01;
-
-        if (audioSource.Pitch < 0.4)
-        {
-            audioSource.Pitch = 0.4;
-        }
+        audioSource.PitchReduce(value);
 
         changed = true;
     }

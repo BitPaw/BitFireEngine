@@ -5,9 +5,9 @@
 
 #include "AngleRadians.hpp"
 
-#include "../../../Dependencies/include/glm/ext/matrix_transform.hpp"
-#include "../../../Dependencies/include/glm/glm.hpp"
-#include "../../../Dependencies/include/glm/ext.hpp"
+#include "../../../../Dependencies/include/glm/ext/matrix_transform.hpp"
+#include "../../../../Dependencies/include/glm/glm.hpp"
+#include "../../../../Dependencies/include/glm/ext.hpp"
 
 #include <string>
 
@@ -363,28 +363,6 @@ namespace BF
 			 glm::mat4 view = glm::lookAt(eyeEE, centerEE, upEE);
 
 			 Set(view);
-		}
-
-		void Motion(Vector3<NumberType>& force, Vector3<NumberType>& velocity, NumberType mass, Vector3<NumberType>& gravity, NumberType deltaTime)
-		{
-			Vector3<NumberType> moveDirection;
-
-			force += (gravity * mass);
-
-			moveDirection = (force / mass);
-			
-			velocity += moveDirection;
-
-			moveDirection = velocity * deltaTime;
-
-			force.Set(0, 0, 0);
-
-			Move(moveDirection);
-
-			if (Data[TransformY] < 0)
-			{
-				Data[TransformY] = 0;
-			}
 		}
 
 		// Flip matrix diagonally

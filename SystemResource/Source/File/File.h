@@ -1,86 +1,63 @@
 #pragma once
 
-#include <string>
 #include <cstdlib>
-#include <iostream>
-#include <fstream>
-#include <sstream>
 
-#include "../ResourceLoadingResult.hpp"
-#include "../Container/AsciiString.h"
-#include "../Types/Endian.h"
+#include "IFile.h"
+#include "../File/FileActionResult.hpp"
+#include "../ErrorCode.h"
+
+#define FileLineBufferSize 255u
 
 namespace BF
 {
-#define FileLineBufferSize 255u
-
-	struct File
+	struct File : public IFile
 	{
 		private:
-		ResourceLoadingResult CheckFile();
+		FileActionResult CheckFile();
 
-		public:
-		char* Data;
-		size_t DataSize;
-		size_t DataCursorPosition;
+		public:	
+		FILE* FileMarker;
 
-		char Path[_MAX_PATH];
-		char Drive[_MAX_DRIVE];
-		char Directory[_MAX_DIR];
-		char FileName[_MAX_FNAME];
-		char Extension[_MAX_EXT];
+		wchar_t Path[_MAX_PATH];
+		wchar_t Drive[_MAX_DRIVE];
+		wchar_t Directory[_MAX_DIR];
+		wchar_t FileName[_MAX_FNAME];
+		wchar_t Extension[_MAX_EXT];
 
-		File(const char* filePath);
-		File(const char* filePath, size_t dataSize);	
-		~File();
+		File();
+		File(const char* filePath);		
+		File(const wchar_t* filePath);
+
+		FileActionResult Open(const char* filePath, FileOpenMode fileOpenMode);
+		FileActionResult Open(const wchar_t* filePath, FileOpenMode fileOpenMode);
+
+		FileActionResult Close();
+
 
 		//---<Utility>--
 		bool DoesFileExist();
-		int CountAmountOfLines();
 		static bool DoesFileExist(const char* filePath);
+		static bool DoesFileExist(const wchar_t* filePath);
+
 		static void GetFileExtension(const char* filePath, const char* fileExtension);
-		void CursorToBeginning();
+	
+		bool ExtensionEquals(const char* extension);
+		bool ExtensionEquals(const wchar_t* extension);
 
-		void Remove();
-		static void Remove(const char* filePath);
-		void ReName(const char* name);
+		ErrorCode Remove();
+		static ErrorCode Remove(const char* filePath);
+		static ErrorCode Remove(const wchar_t* filePath);
 
-		void Clear();
+		ErrorCode Rename(const char* name);
+		static ErrorCode Rename(const char* oldName, const char* newName);
+		ErrorCode Rename(const wchar_t* name);
+		static ErrorCode Rename(const wchar_t* oldName, const wchar_t* newName);
+		
 
 		void SetFilePath(const char* filePath);
+		void SetFilePath(const wchar_t* filePath);
 		//---------------------------------------------------------------------
 
-		//---<Cursor>---
-		//---------------------------------------------------------------------
-
-		//---<Read>------------------------------------------------------------		
-		unsigned int ReadNextLineInto(char* exportBuffer);
-
-		void Read(bool& value);
-		void Read(char& value);
-		void Read(unsigned char& value);
-		void Read(short& value, Endian endian);
-		void Read(unsigned short& value, Endian endian);
-		void Read(int& value, Endian endian);
-		void Read(unsigned int& value, Endian endian);
-		void Read(void* value, size_t length);
-		ResourceLoadingResult ReadFromDisk();
-		static ResourceLoadingResult ReadFromDisk(const char* filePath, char** buffer);
-		static ResourceLoadingResult ReadFromDisk(const char* filePath, char** buffer, unsigned int maxSize);
-		//---------------------------------------------------------------------
-
-		//---<Write>----------------------------------------------------------------------
-		void Write(bool value);
-		void Write(char value);
-		void Write(unsigned char value);
-		void Write(short value, Endian endian);
-		void Write(unsigned short value, Endian endian);
-		void Write(int value, Endian endian);
-		void Write(unsigned int value, Endian endian);
-		void Write(const char* string, size_t length);
-		void Write(void* value, size_t length);
-		ResourceLoadingResult WriteToDisk();
-		static ResourceLoadingResult WriteToDisk(const char* filePath, const char* content, unsigned int length);
-		//---------------------------------------------------------------------
+		static void FilesInFolder(const char* folderPath, wchar_t*** list, size_t& listSize);
 	};
 }

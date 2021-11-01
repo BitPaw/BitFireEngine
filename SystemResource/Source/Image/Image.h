@@ -1,17 +1,17 @@
 #pragma once
 
-#include "ImageFormat.h"
+#include "ImageType.h"
+#include "ImageDataFormat.h"
 #include "ImageFilter.h"
 #include "ImageLayout.h"
 #include "ImageWrap.h"
-#include "ImageFileExtension.h"
+#include "ImageFileFormat.h"
 
 #include "../Resource.h"
-#include "../ResourceLoadingResult.hpp"
+#include "../File/FileActionResult.hpp"
 
 #include "../Container/AsciiString.h"
 #include "../Math/Geometry/Vector4.hpp"
-#include "ImageType.h"
 
 namespace BF
 {
@@ -22,14 +22,14 @@ namespace BF
 		unsigned int Height;
 
 		ImageType Type;
-		ImageFormat Format;
+		ImageDataFormat Format;
 		ImageFilter Filter;
 		ImageLayout LayoutNear;
 		ImageLayout LayoutFar;
 		ImageWrap WrapHeight;
 		ImageWrap WrapWidth;
 
-		unsigned int PixelDataSize;
+		size_t PixelDataSize;
 		unsigned char* PixelData;
 
 
@@ -37,6 +37,9 @@ namespace BF
 
 		Image();
 		~Image();
+
+		void ImageWrapSet(ImageWrap wrap);
+		void ImageWrapSet(ImageWrap wrapHeight, ImageWrap wrapWidth);
 
 		void RemoveColor(unsigned char red, unsigned char green, unsigned char blue);
 
@@ -47,9 +50,12 @@ namespace BF
 
 		void FillRandome();
 
-		void FormatChange(ImageFormat imageFormat);
+		void FormatChange(ImageDataFormat imageFormat);
 
-		static ImageFileExtension FileFormatPeek(const char* filePath);
-		ResourceLoadingResult Load(const char* filePath);
+		static ImageFileFormat FileFormatPeek(const char* filePath);
+
+		FileActionResult Load();
+		FileActionResult Load(const char* filePath);
+		FileActionResult Save(const char* filePath, ImageFileFormat imageFileFormat);
 	};
 }

@@ -1,71 +1,177 @@
 #include "File.h"
 
 #include "../Container/AsciiString.h"
+#include "../OSDefine.h"
 #include <cassert>
+#include <cstdlib>
+#include <cwchar>
 
-BF::ResourceLoadingResult BF::File::CheckFile()
+#if  defined(OSUnix)
+#define FileRemove remove 
+#define FileRemoveW wremove 
+#define FileRename rename 
+#define FileRenameW wrename 
+#elif defined(OSWindows)
+#include <Windows.h>
+#define FileRemove remove 
+#define FileRemoveW _wremove 
+#define FileRename rename 
+#define FileRenameW _wrename 
+#endif
+
+BF::FileActionResult BF::File::CheckFile()
 {
 	if (!DoesFileExist(Path))
 	{
-		return BF::ResourceLoadingResult::FileNotFound;
+		return BF::FileActionResult::FileNotFound;
 	}
 
-	return BF::ResourceLoadingResult::Successful;
+	return BF::FileActionResult::Successful;
 }
 
-BF::File::File(const char* filePath, size_t dataSize)
-{
-	Data = (char*)malloc(dataSize * sizeof(char));
-	DataSize = dataSize;
-	DataCursorPosition = 0;
 
-	SetFilePath(filePath);
+BF::File::File()
+{
+	FileMarker = nullptr;
 }
 
 BF::File::File(const char* filePath)
 {
-	Data = 0;
-	DataSize = 0;
-	DataCursorPosition = 0;
-
 	SetFilePath(filePath);
 }
 
-BF::File::~File()
+BF::File::File(const wchar_t* filePath)
 {
-	Clear();
+	SetFilePath(filePath);
 }
 
-void BF::File::CursorToBeginning()
+BF::FileActionResult BF::File::Open(const char* filePath, FileOpenMode fileOpenMode)
 {
-	DataCursorPosition = 0;
+	const char* readMode = nullptr;
+
+	switch (fileOpenMode)
+	{
+		case BF::FileOpenMode::Read:
+			readMode = FileReadMode;
+			break;
+
+		case BF::FileOpenMode::Write:
+			readMode = FileWriteMode;
+			break;
+	}
+
+	assert(readMode != nullptr);
+
+	FileMarker = fopen(filePath, readMode);
+
+	return FileMarker ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
 }
 
-void BF::File::Remove()
+BF::FileActionResult BF::File::Open(const wchar_t* filePath, FileOpenMode fileOpenMode)
 {
-	remove(Path);
+	const wchar_t* readMode = nullptr;
+
+	switch (fileOpenMode)
+	{
+		case BF::FileOpenMode::Read:
+			readMode = FileReadModeW;
+			break;
+
+		case BF::FileOpenMode::Write:
+			readMode = FileWriteModeW;
+			break;
+	}
+
+	assert(readMode != nullptr);
+
+	FileMarker = _wfopen(filePath, readMode);
+
+	return FileMarker ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
 }
 
-void BF::File::Remove(const char* filePath)
+BF::FileActionResult BF::File::Close()
 {
-	remove(filePath);
+	int closeResult = fclose(FileMarker);
+
+	switch (closeResult)
+	{
+		case 0:
+			return FileActionResult::Successful;
+
+		default:
+			return FileActionResult::FileCloseFailure;
+	}
 }
 
-void BF::File::ReName(const char* name)
+BF::ErrorCode BF::File::Remove()
 {
-	rename(Path, name);
+	return BF::File::Remove(Path);
 }
 
-void BF::File::Clear()
+BF::ErrorCode BF::File::Remove(const char* filePath)
 {
-	free(Data);
+	int removeResult = FileRemove(filePath);
+	ErrorCode errorCode = ConvertErrorCode(removeResult);
 
-	DataCursorPosition = 0;
-	DataSize = 0;
-	Data = nullptr;
+	return errorCode;
+}
+
+BF::ErrorCode BF::File::Remove(const wchar_t* filePath)
+{
+	int removeResult = FileRemoveW(filePath);
+	ErrorCode errorCode = ConvertErrorCode(removeResult);
+
+	return errorCode;
+}
+
+BF::ErrorCode BF::File::Rename(const char* name)
+{
+	wchar_t nameW[_MAX_FNAME];
+	size_t changedCharacters = 0;
+
+	mbstowcs_s(&changedCharacters, nameW, _MAX_FNAME - 1, name, _MAX_FNAME - 1);
+
+	return File::Rename(Path, nameW);
+}
+
+BF::ErrorCode BF::File::Rename(const char* oldName, const char* newName)
+{
+	int renameResult = FileRename(oldName, newName);
+	ErrorCode errorCode = ConvertErrorCode(renameResult);
+
+	return errorCode;
+}
+
+BF::ErrorCode BF::File::Rename(const wchar_t* name)
+{
+	return File::Rename(Path, name);
+}
+
+BF::ErrorCode BF::File::Rename(const wchar_t* oldName, const wchar_t* newName)
+{
+	int renameResult = FileRenameW(oldName, newName);
+	ErrorCode errorCode = ConvertErrorCode(renameResult);
+
+	return errorCode;
 }
 
 void BF::File::SetFilePath(const char* filePath)
+{
+	if (!filePath)
+	{
+		SetFilePath((wchar_t*)nullptr);
+		return;
+	}
+
+	wchar_t filePathW[_MAX_PATH];
+	size_t changedCharacters = 0;
+
+	mbstowcs_s(&changedCharacters, filePathW, _MAX_PATH-1, filePath, _MAX_PATH-1);
+
+	SetFilePath(filePathW);
+}
+
+void BF::File::SetFilePath(const wchar_t* filePath)
 {
 	if (filePath == nullptr)
 	{
@@ -77,9 +183,9 @@ void BF::File::SetFilePath(const char* filePath)
 		return;
 	}
 
-	strcpy_s(Path, _MAX_PATH, filePath);
+	lstrcpyW(Path, filePath);
 
-	_splitpath_s
+	_wsplitpath_s
 	(
 		filePath,
 		Drive, _MAX_DRIVE,
@@ -88,399 +194,102 @@ void BF::File::SetFilePath(const char* filePath)
 		Extension, _MAX_EXT
 	);
 
+	wchar_t buffer[_MAX_EXT];
+
+	memcpy(buffer, Extension, _MAX_EXT);
+	memset(Extension, 0, _MAX_EXT);
+	lstrcpyW(Extension, buffer + 1);
+
 	// Fix stuff
-	AsciiString fileName(Extension);
-	AsciiString extension(Extension);
+	//AsciiString fileName(Extension);
+	//AsciiString extension(Extension);
 
-	extension.Remove('.');
-	fileName.Remove('/');
+	//extension.Remove('.');
+	//fileName.Remove('/');
 }
 
-BF::ResourceLoadingResult BF::File::ReadFromDisk()
+void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& listSize)
 {
-	const unsigned int elementSize = sizeof(char);
-	size_t fullSize = -1;
-	FILE* file = fopen(Path, "rb");
+#if  defined(OSUnix)
 
-	if (file == nullptr)
+#elif defined(OSWindows)
+	wchar_t folderPathW[MAX_PATH];
+	WIN32_FIND_DATA dataCursour;
+	HANDLE hFind = 0;
+	size_t writtenBytes = mbstowcs(folderPathW, folderPath, MAX_PATH);
+
+	memset(&dataCursour, 0, sizeof(WIN32_FIND_DATA));
+
+	hFind = FindFirstFile(folderPathW, &dataCursour); 	// "/*.*";
+
+	bool foundData = hFind != INVALID_HANDLE_VALUE;
+
+	if (!foundData)
 	{
-		return BF::ResourceLoadingResult::FileNotFound;
+		return;
 	}
 
-	fseek(file, 0, SEEK_END);
-	DataSize = ftell(file);
-	rewind(file);
-	//fseek(file, 0, SEEK_SET);
+	listSize++;
+
+	for (; FindNextFile(hFind, &dataCursour); listSize++);
+
+	memset(&dataCursour, 0, sizeof(WIN32_FIND_DATA));
 
 
-	fullSize = DataSize * elementSize;
-	Data = (char*)malloc(fullSize);	// +1 if text
+	(*list) = (wchar_t**)malloc(listSize * sizeof(wchar_t*));
 
-	if (!Data)
+	hFind = FindFirstFile(folderPathW, &dataCursour); // Expected "." Folder
+	size_t fileIndex = 0;
+
+	do
 	{
-		return BF::ResourceLoadingResult::OutOfMemory;
+		wchar_t* filePathDestination = 0;
+		wchar_t* filePathSource = dataCursour.cFileName;
+		size_t length = wcslen(filePathSource);
+
+		(*list)[fileIndex] = (wchar_t*)calloc(length + 1, sizeof(wchar_t));
+
+		filePathDestination = (*list)[fileIndex];
+
+		wcsncpy(filePathDestination, filePathSource, length);
+
+		fileIndex++;
 	}
-
-	//Data[fullSize] = '\0'; // Termiate
-
-	size_t readBytes = fread(Data, elementSize, DataSize, file);
-	size_t overAllocatedBytes = DataSize - readBytes; // if overAllocatedBytes > 0 there was a reading error.	
-
-	assert(readBytes == DataSize);
-
-	if (readBytes != DataSize)
-	{
-		memset(&Data[readBytes], 0, DataSize - readBytes);
-
-		DataSize = readBytes;
-	}
-
-	int closeResult = fclose(file);
-
-	return BF::ResourceLoadingResult::Successful;
-}
-
-BF::ResourceLoadingResult BF::File::ReadFromDisk(const char* filePath, char** buffer)
-{
-	const unsigned int elementSize = sizeof(char);
-	size_t fullSize = -1;
-	size_t fileSize = 0;
-	FILE* file = fopen(filePath, "rb");
-
-	if (file == nullptr)
-	{
-		return BF::ResourceLoadingResult::FileNotFound;
-	}
-
-	fseek(file, 0, SEEK_END);
-	fileSize = ftell(file);
-	rewind(file);
-	//fseek(file, 0, SEEK_SET);
-
-
-	fullSize = fileSize * elementSize;
-	(*buffer) = (char*)malloc(fullSize + 1);
-
-	if (!(*buffer))
-	{
-		return BF::ResourceLoadingResult::OutOfMemory;
-	}
-
-	(*buffer)[fullSize] = '\0';
-
-	size_t readBytes = fread((*buffer), elementSize, fileSize, file);
-	size_t overAllocatedBytes = fileSize - readBytes; // if overAllocatedBytes > 0 there was a reading error.	
-
-	if (readBytes != fileSize)
-	{
-		memset(&(*buffer)[readBytes], 0, fileSize - readBytes);
-
-		fileSize = readBytes;
-	}
-
-	int closeResult = fclose(file);
-
-	return BF::ResourceLoadingResult::Successful;
-}
-
-BF::ResourceLoadingResult BF::File::ReadFromDisk(const char* filePath, char** buffer, unsigned int maxSize)
-{
-	std::ifstream inputFileStream(filePath, std::ios::binary | std::ios::ate);
-	size_t length = inputFileStream.tellg();
-
-	if (length == -1)
-	{
-		return BF::ResourceLoadingResult::FileNotFound;
-	}
-
-	if (length > maxSize && maxSize != -1)
-	{
-		return BF::ResourceLoadingResult::OutOfMemory;
-	}
-
-	if ((*buffer) == nullptr)
-	{
-		(*buffer) = new char[length + 1];
-
-		if ((*buffer) == 0)
-		{
-			return BF::ResourceLoadingResult::OutOfMemory;
-		}
-	}
-
-	inputFileStream.seekg(0, inputFileStream.beg);
-	inputFileStream.read(*buffer, length);
-
-	(*buffer)[length] = 0;
-
-	return BF::ResourceLoadingResult::Successful;
-}
-
-BF::ResourceLoadingResult BF::File::WriteToDisk()
-{
-	FILE* file = fopen(Path, "wb");
-
-	if (!file)
-	{
-		return BF::ResourceLoadingResult::FileNotFound;
-	}
-
-	size_t writtenBytes = fwrite(Data, sizeof(char), DataSize, file);
-
-	int closeResult = fclose(file);
-
-	return BF::ResourceLoadingResult::Successful;
-}
-
-BF::ResourceLoadingResult BF::File::WriteToDisk(const char* filePath, const char* content, unsigned int length)
-{
-	FILE* file = fopen(filePath, "wb");
-
-	unsigned int resultwrittenBytes = fwrite(content, sizeof(char), length, file);
-
-	int resultCloseResult = fclose(file);
-
-	return BF::ResourceLoadingResult::Successful;
-}
-
-unsigned int BF::File::ReadNextLineInto(char* exportBuffer)
-{
-	int length = 0;
-	int index = DataCursorPosition;
-
-	while (index < DataSize && Data[index] != '\n' && Data[index] != '\0')
-	{
-		index = DataCursorPosition + length++;
-	}
-
-	if (length <= 1)
-	{
-		return 0;
-	}	
-
-	memcpy(exportBuffer, Data + DataCursorPosition, length);
-	exportBuffer[length-1] = '\0';
-
-	DataCursorPosition += length;
-
-	while (Data[DataCursorPosition] == '\n' && DataCursorPosition < DataSize)
-	{
-		DataCursorPosition++;
-	}
-
-	return length;
-}
-
-void BF::File::Read(bool& value)
-{
-	char byte = Data[DataCursorPosition++];
-
-	switch (byte)
-	{
-		case '1':
-		case 1:
-			value = true;
-			break;
-
-		default:
-			value = false;
-			break;
-	}
-}
-
-void BF::File::Read(char& value)
-{
-	Read((unsigned char&)value);
-}
-
-void BF::File::Read(unsigned char& value)
-{
-	value = Data[DataCursorPosition++];
-}
-
-void BF::File::Read(short& value, Endian endian)
-{
-	Read((unsigned short&)value, endian);
-}
-
-void BF::File::Read(unsigned short& value, Endian endian)
-{
-	unsigned char valueData[2];
-
-	Read(valueData, 2u);
-
-	switch (endian)
-	{
-		case Endian::Big:
-			value =
-				(valueData[0] << 8) |
-				(valueData[1]);
-
-			break;
-
-		default:
-		case Endian::Little:
-			value =
-				(valueData[0]) |
-				(valueData[1] << 8);
-			break;
-	}
-
-	assert(value < 65408);
-}
-
-void BF::File::Read(int& value, Endian endian)
-{
-	Read((unsigned int&)value, endian);
-}
-
-void BF::File::Read(unsigned int& value, Endian endian)
-{
-	unsigned char valueData[4];
-
-	Read(valueData, 4u);
-
-	switch (endian)
-	{
-		case Endian::Big:
-			value =
-				(valueData[0] << 24) |
-				(valueData[1] << 16) |
-				(valueData[2] << 8) |
-				(valueData[3]);
-
-			break;
-
-		default:
-		case Endian::Little:
-			value =
-				(valueData[0]) |
-				(valueData[1] << 8) |
-				(valueData[2] << 16) |
-				(valueData[3] << 24);
-			break;
-	}
-}
-
-void BF::File::Read(void* value, size_t length)
-{
-	memcpy(value, &Data[DataCursorPosition], length);
-
-	DataCursorPosition += length;
-}
-
-void BF::File::Write(bool value)
-{
-	Data[DataCursorPosition++] = value;
-}
-
-void BF::File::Write(char value)
-{
-	Data[DataCursorPosition++] = value;
-}
-
-void BF::File::Write(unsigned char value)
-{
-	Data[DataCursorPosition++] = value;
-}
-
-void BF::File::Write(short value, Endian endian)
-{
-	Write((unsigned short)value, endian);
-}
-
-void BF::File::Write(unsigned short value, Endian endian)
-{
-	unsigned char valueData[2];
-
-	switch (endian)
-	{
-		case Endian::Big:
-		{
-			valueData[0] = (value & 0xFF00) >> 8;
-			valueData[1] = (value & 0x00FF);
-			break;
-		}
-		default:
-		case Endian::Little:
-		{
-			valueData[0] = (value & 0x00FF);	
-			valueData[1] = (value & 0xFF00) >> 8;
-			break;
-		}
-	}
-
-	Write(valueData, 2u);
-}
-
-void BF::File::Write(int value, Endian endian)
-{
-	Write((unsigned int)value, endian);
-}
-
-void BF::File::Write(unsigned int value, Endian endian)
-{
-	unsigned char valueData[4];	
-
-	switch (endian)
-	{
-		case Endian::Big:
-		{
-			valueData[0] = (value & 0xFF000000) >> 24;
-			valueData[1] = (value & 0x00FF0000) >> 16;
-			valueData[2] = (value & 0x0000FF00) >> 8;
-			valueData[3] =  value & 0x000000FF;
-			break;
-		}
-		default:
-		case Endian::Little:
-		{
-			valueData[0] =  value & 0x000000FF;
-			valueData[1] = (value & 0x0000FF00) >> 8;
-			valueData[2] = (value & 0x00FF0000) >> 16;
-			valueData[3] = (value & 0xFF000000) >> 24;
-			break;
-		}
-	}
-
-	Write(valueData, 4u);
-}
-
-void BF::File::Write(const char* string, size_t length)
-{
-	Write((void*)string, length);	
-}
-
-void BF::File::Write(void* value, size_t length)
-{
-	memcpy(Data + DataCursorPosition, value, length);
-
-	DataCursorPosition += length;
+	while (FindNextFile(hFind, &dataCursour));
+
+	FindClose(hFind);
+	
+#endif
 }
 
 bool BF::File::DoesFileExist()
 {
-	std::ifstream file(Path);
-	bool fileExists = file.good();
+	FileActionResult fileActionResult = Open(Path, FileOpenMode::Read);
 
-	file.close();
+	if (fileActionResult == FileActionResult::Successful)
+	{
+		Close();
 
-	return fileExists;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool BF::File::DoesFileExist(const char* filePath)
 {
-	if (!filePath)
-	{
-		return false;
-	}
+	File file(filePath);
+	
+	return file.DoesFileExist();
+}
 
-    std::ifstream file(filePath);
-    bool fileExists = file.good();
-
-    file.close();
-
-    return fileExists;
+bool BF::File::DoesFileExist(const wchar_t* filePath)
+{
+	File file(filePath);
+	
+	return file.DoesFileExist();
 }
 
 void BF::File::GetFileExtension(const char* filePath, const char* fileExtension)
@@ -496,30 +305,18 @@ void BF::File::GetFileExtension(const char* filePath, const char* fileExtension)
 		(char*)fileExtension, _MAX_EXT
 	);
 }
-int BF::File::CountAmountOfLines()
+
+bool BF::File::ExtensionEquals(const char* extension)
 {
-	int lineCounter = 0;
-	int index = 0;
+	wchar_t extensionW[_MAX_EXT];
+	size_t changedCharacters = 0;
 
-	if (Data == nullptr)
-	{
-		return 0;
-	}
+	mbstowcs_s(&changedCharacters, extensionW, _MAX_EXT, extension, _MAX_EXT);
 
-	while (index < DataSize)
-	{
-		char character = Data[index++];
+	return ExtensionEquals(extensionW);
+}
 
-		if (character == '\n')
-		{
-			++lineCounter;
-
-			while (Data[index] == '\n')
-			{
-				++index;
-			}
-		}		
-	}
-
-	return lineCounter;
+bool BF::File::ExtensionEquals(const wchar_t* extension)
+{
+	return lstrcmpiW(Extension, extension) == 0;
 }

@@ -1,4 +1,5 @@
 #include "SkyBox.h"
+#include "../Math/Geometry/Form/Cube.h"
 
 BF::SkyBox::SkyBox()
 {
@@ -8,4 +9,8 @@ BF::SkyBox::SkyBox()
 	Faces[3].Type = ImageType::TextureCubeDown;
 	Faces[4].Type = ImageType::TextureCubeBack;
 	Faces[5].Type = ImageType::TextureCubeFront;
+
+	Cube cube;	
+
+	ConvertFrom(cube.VertexList, cube.VertexListSize, cube.IndexList, cube.IndexListSize, RenderMode::Square, true);
 }

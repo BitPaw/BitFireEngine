@@ -13,4 +13,7 @@ namespace BF
 		X24,
 		X32
 	};
+
+	TGABitsPerPixel ConvertPixelDepth(unsigned char pixelDepth);
+	unsigned char ConvertPixelDepth(TGABitsPerPixel bitsPerPixel);
 }

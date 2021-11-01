@@ -4,7 +4,7 @@ namespace BF
 {
 	enum class RenderMode
 	{
-		Unkown,
+		Invalid,
 
 		Point,
 

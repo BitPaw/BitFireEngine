@@ -3,10 +3,12 @@
 BF::FNTPage::FNTPage()
 {
 	PageID = -1;
+	PageFileName[0] = 0;
+	CharacteListSize = 0;
+	CharacteList = 0;
 }
 
-BF::FNTPage::FNTPage(const unsigned int pageID, AsciiString& pageFileName)
+BF::FNTPage::~FNTPage()
 {
-	PageID = pageID;
-	//PageFileName.Copy(pageFileName);
+	delete[] CharacteList;
 }

@@ -1,26 +1,21 @@
 #include "Client.h"
-#include "Server.h"
 
 #include <stdio.h>
-#include <string.h>
 
 BF::Client::Client()
 {
-	IP = 0;
+	strncpy(IP, "127.0.0.1", 10);
 	ConnectedServerID = -1;
 }
 
-BF::SocketError BF::Client::ConnectToServer(char* ip, unsigned short port)
+BF::SocketActionResult BF::Client::ConnectToServer(const char* ip, unsigned short port)
 {
-	return Socket.Connect(&ConnectedServerData, ip, port);
-}
+	strncpy(IP, ip, 10);
 
-void BF::Client::SendCommand()
-{
-
+	return Connect(ConnectedServerData, IP, port);
 }
 
 void BF::Client::Disconnect()
 {
-	Socket.Close();
+	Close();
 }

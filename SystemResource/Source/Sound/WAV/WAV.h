@@ -1,31 +1,28 @@
 #pragma once
 
-#include "../Sound.h"
+#include "RIFF.h"
+#include "FMT.h"
+
+#include "../ISoundFormat.hpp"
 
 namespace BF
 {
 	// Waveform Audio File
-	struct WAV 
+	struct WAV : public ISoundFormat
 	{
 		public:
-		unsigned short AudioFormat;
-		unsigned short NumerOfChannels;
-		unsigned int SampleRate;
-		unsigned int ByteRate;
-		unsigned short BlockAllign;
-		unsigned short BitsPerSample;
+		RIFF RIFFChunk;
+		FMT FMTChunk;
 
 		unsigned int SoundDataSize;
 		unsigned char* SoundData; 
 
-		// Note: The sample data must end on an even byte boundary. Whatever that means. 
-
 		WAV();
 		~WAV();
 
-		void Load(const char* filePath);
-		void Save(const char* filePath);
-		void ConvertTo(Sound& sound);
-		void ConvertFrom(Sound& sound);
+		FileActionResult Load(const char* filePath);
+		FileActionResult Save(const char* filePath);
+		FileActionResult ConvertTo(Sound& sound);
+		FileActionResult ConvertFrom(Sound& sound);
 	};
 }

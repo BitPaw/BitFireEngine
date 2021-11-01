@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Types/Endian.h"
+#include "../File/Endian.h"
 
 namespace BF
 {

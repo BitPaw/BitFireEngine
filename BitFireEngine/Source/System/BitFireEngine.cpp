@@ -1,6 +1,5 @@
 #include "BitFireEngine.h"
 
-#include <future>
 #include "../UI/UIText.h"
 #include "../../../SystemResource/Source/Model/Model.h"
 #include "../../../SystemResource/Source/Time/StopWatch.h"
@@ -8,6 +7,8 @@
 #include "../../../SystemResource/Source/Image/BMP/BMP.h"
 #include "../../../SystemRender/Source/OpenGLAPI.h"
 #include "../../../SystemRender/Source/Device/InputContainer.h"
+
+#include <stdlib.h>
 
 BF::BitFireEngine::BitFireEngine()
 {
@@ -85,23 +86,27 @@ void BF::BitFireEngine::Update()
 
         _callbackListener->OnUpdateUI();
     }
+    //---------------------------------------------------------------------
 
     //---[User-Input]------------------------------------------------------
     _mainWindow.Update(); // Pull inputs from window
-    auto inputPool = _mainWindow.GetInput();
-    auto& eeeeee = *inputPool;
+    InputContainer& inputPool = *_mainWindow.GetInput();
 
-    UpdateInput(eeeeee);
+    UpdateInput(inputPool);
 
-    _callbackListener->OnUpdateInput(eeeeee);
+    _callbackListener->OnUpdateInput(inputPool);
+    //---------------------------------------------------------------------
 
     //---[Game-Logic]------------------------------------------------------
     Resource.ModelsPhysicsApply(deltaTime);
+    //Resource.Models
 
     _callbackListener->OnUpdateGameLogic(deltaTime);
+    //---------------------------------------------------------------------
 
     //---[Render World]----------------------------------------------------
     Resource.ModelsRender(deltaTime);
+    //---------------------------------------------------------------------
 
     IsRunning = !_mainWindow.ShouldCloseWindow;
 }
@@ -111,25 +116,13 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
     KeyBoard& keyboard = input.KeyBoardInput;
     Mouse& mouse = input.MouseInput;    
     Camera& camera = Resource.MainCamera;
-    Vector3<float> movement;  
 
-    if (keyboard.ShitftLeft.IsPressed()) { movement.Add(0, -1, 0); }
-    if (keyboard.W.IsPressed()) { movement.Add(0, 0, 1); }
-    if (keyboard.A.IsPressed()) { movement.Add(-1, 0, 0); }
-    if (keyboard.S.IsPressed()) { movement.Add(0, 0, -1); }
-    if (keyboard.D.IsPressed()) { movement.Add(1, 0, 0); }
-    if (keyboard.SpaceBar.IsPressed()) 
-    {
-        camera.Velocity.Set(0.0f, 6.0f, .0f);
-
-        movement.Add(0, 1, 0);
-    }
-   
+    _callbackListener->OnUpdateInput(input);
+    
     if (keyboard.J.IsShortPressed())
     {
         Resource.PrintContent(true);        
     }
-
 
     if (keyboard.R.IsShortPressed())    
     {
@@ -149,12 +142,11 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
     if (keyboard.K.IsShortPressed())
     {
         Image image;
-        BMP bitmap;
+        const char fileName[] = "ScreenShot.bmp";
 
         _mainWindow.TakeScreenShot(image);
 
-        bitmap.ConvertFrom(image);
-        bitmap.Save("ScreenShot.bmp");
+        image.Save(fileName, ImageFileFormat::BitMap);
     }
 
     if (keyboard.F.IsLongPressed())
@@ -170,10 +162,6 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
                 break;
         }
     }
-
-    camera.Move(movement);
-
-    camera.Rotate(mouse.InputAxis[0], mouse.InputAxis[1]);
 
     camera.Update(_deltaTime);
     keyboard.IncrementButtonTick();

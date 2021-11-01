@@ -4,18 +4,15 @@
 
 namespace BF
 {
-	struct Material
+	struct Material : public Resource
 	{
 		public:
-		char Name[50];
-		char TextureFilePath[60];		
-
 		float Ambient[3];
 		float Diffuse[3];
 		float Specular[3];
 		float Emission[3];
 
-		Image* Texture;
+		Image Texture;
 
 		Material();
 	};

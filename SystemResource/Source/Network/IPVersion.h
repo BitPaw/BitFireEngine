@@ -1,5 +1,4 @@
-#ifndef IPTypeIncluded
-#define IPTypeIncluded
+#pragma once
 
 namespace BF
 {
@@ -12,10 +11,8 @@ namespace BF
         IPVersion6
     };
 
-    IPVersion AnalyseIPVersion(char* ip);
-    char IsValidIP(char* ipAdress);
-    char IsValidIPv4(char* ipv4Adress);
-    char IsValidIPv6(char* ipv6Adress);
+    IPVersion AnalyseIPVersion(const char* ip);
+    char IsValidIP(const char* ipAdress);
+    char IsValidIPv4(const char* ipv4Adress);
+    char IsValidIPv6(const char* ipv6Adress);
 }
-
-#endif

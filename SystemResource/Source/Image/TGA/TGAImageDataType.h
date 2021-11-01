@@ -14,4 +14,7 @@ namespace BF
 		RunLengthEncodedTrueColor, // 10
 		RunLengthEncodedBlackAndWhite // 11 (grayscale) image 
 	};
+
+	TGAImageDataType ConvertImageDataType(unsigned char id);
+	unsigned char ConvertImageDataType(TGAImageDataType imageDataType);
 }

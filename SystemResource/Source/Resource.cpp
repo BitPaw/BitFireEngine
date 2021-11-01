@@ -5,14 +5,24 @@ BF::Resource::Resource()
 {
 	ID = ResourceIDUndefined;
 
-	strcpy(Name, "<Unnamed>");
-	strcpy(FilePath, "<Internal Origin>");
+	NameChange("<Unnamed>");
+	FilePathChange("<Internal Origin>");
 }
 
 void BF::Resource::MarkAsLoading(const char* name, const char* filePath)
 {
 	ID = ResourceIDLoading;
 
-	strcpy_s(Name, ResourceNameSize , name);
-	strcpy_s(FilePath, ResourceFilePathSize, filePath);
+	NameChange(name);
+	FilePathChange(filePath);
+}
+
+void BF::Resource::NameChange(const char* name)
+{
+	strncpy_s(Name, name, ResourceNameSize);
+}
+
+void BF::Resource::FilePathChange(const char* filePath)
+{
+	strncpy_s(FilePath, filePath, ResourceNameSize);
 }

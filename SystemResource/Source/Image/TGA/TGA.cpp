@@ -1,124 +1,9 @@
 #include "TGA.h"
-#include "../../File/File.h"
-#include "../../Types/Endian.h"
-#include "../../Container/ByteStreamHusk.h"
+
 #include <cassert>
 
-BF::TGAImageDataType BF::TGA::ConvertImageDataType(unsigned char id)
-{
-	switch (id)
-	{
-		case 0u:
-			return TGAImageDataType::NoImageDataIsPresent;
+#include "../../File/FileStream.h"
 
-		case 1u:
-			return TGAImageDataType::UncompressedColorMapped;
-
-		case 2u:
-			return TGAImageDataType::UncompressedTrueColor;
-
-		case 3u:
-			return TGAImageDataType::UncompressedBlackAndWhite;
-
-		case 9u:
-			return TGAImageDataType::RunLengthEncodedColorMapped;
-
-		case 10u:
-			return TGAImageDataType::RunLengthEncodedTrueColor;
-
-		case 11u:
-			return TGAImageDataType::RunLengthEncodedBlackAndWhite;
-
-		default:
-			return TGAImageDataType::UnkownImageDataType;
-	}
-}
-
-unsigned char BF::TGA::ConvertImageDataType(TGAImageDataType imageDataType)
-{
-	switch (imageDataType)
-	{
-		default:
-		case BF::TGAImageDataType::UnkownImageDataType:
-			return -1;
-
-		case BF::TGAImageDataType::NoImageDataIsPresent:
-			return 0;
-
-		case BF::TGAImageDataType::UncompressedColorMapped:
-			return 1u;
-
-		case BF::TGAImageDataType::UncompressedTrueColor:
-			return 2u;
-
-		case BF::TGAImageDataType::UncompressedBlackAndWhite:
-			return 3u;
-
-		case BF::TGAImageDataType::RunLengthEncodedColorMapped:
-			return 9u;
-
-		case BF::TGAImageDataType::RunLengthEncodedTrueColor:
-			return 10u;
-
-		case BF::TGAImageDataType::RunLengthEncodedBlackAndWhite:
-			return 11u;
-	}
-}
-
-BF::TGABitsPerPixel BF::TGA::ConvertPixelDepth(unsigned char pixelDepth)
-{
-	switch (pixelDepth)
-	{
-		case 1u:
-			return TGABitsPerPixel::X1;
-
-		case 8u:
-			return TGABitsPerPixel::X8;
-
-		case 15u:
-			return TGABitsPerPixel::X15;
-
-		case 16u:
-			return TGABitsPerPixel::X16;
-
-		case 24u:
-			return TGABitsPerPixel::X24;
-
-		case 32u:
-			return TGABitsPerPixel::X32;
-
-		default:
-			return TGABitsPerPixel::Invalid;
-	}
-}
-
-unsigned char BF::TGA::ConvertPixelDepth(TGABitsPerPixel bitsPerPixel)
-{
-	switch (bitsPerPixel)
-	{
-		default:
-		case BF::TGABitsPerPixel::Invalid:
-			return -1;
-
-		case BF::TGABitsPerPixel::X1:
-			return 1u;
-
-		case BF::TGABitsPerPixel::X8:
-			return 8u;
-
-		case BF::TGABitsPerPixel::X15:
-			return 15u;
-
-		case BF::TGABitsPerPixel::X16:
-			return 16u;
-
-		case BF::TGABitsPerPixel::X24:
-			return 24u;
-
-		case BF::TGABitsPerPixel::X32:
-			return 32u;
-	}
-}
 
 BF::TGA::TGA()
 {
@@ -147,7 +32,7 @@ BF::TGA::~TGA()
 	free(ImageData);
 }
 
-BF::ResourceLoadingResult BF::TGA::Load(const char* filePath)
+BF::FileActionResult BF::TGA::Load(const char* filePath)
 {
 	unsigned int footerEntryIndex = 0;
 	unsigned char imageIDLengh = 0;
@@ -159,10 +44,10 @@ BF::ResourceLoadingResult BF::TGA::Load(const char* filePath)
 	unsigned int extensionOffset = 0;
 	unsigned int developerAreaOffset = 0;
 	unsigned int firstFieldAfterHeader = 0;
-	File file(filePath);
-	ResourceLoadingResult loadingResult = file.ReadFromDisk();
+	FileStream file;
+	FileActionResult loadingResult = file.ReadFromDisk(filePath);
 
-	if (loadingResult != ResourceLoadingResult::Successful)
+	if (loadingResult != FileActionResult::Successful)
 	{
 		return loadingResult;
 	}
@@ -219,7 +104,7 @@ BF::ResourceLoadingResult BF::TGA::Load(const char* filePath)
 		const unsigned int stringLengh = 18;
 		unsigned int compareLength = stringLengh;
 		unsigned char lastCharacter = file.Data[file.DataSize-1];
-		char* string = &file.Data[file.DataSize - stringLengh];
+		Byte* string = &file.Data[file.DataSize - stringLengh];
 		bool isTGAVersionTwo = false;
 		
 		if (lastCharacter == '.')
@@ -234,7 +119,7 @@ BF::ResourceLoadingResult BF::TGA::Load(const char* filePath)
 
 		if (!isTGAVersionTwo) // Is this a TGA v.1.0 file?
 		{
-			return ResourceLoadingResult::Successful; // Parsing finished. There should be no more data to parse. End of file.
+			return FileActionResult::Successful; // Parsing finished. There should be no more data to parse. End of file.
 		}
 	}
 	
@@ -322,26 +207,26 @@ BF::ResourceLoadingResult BF::TGA::Load(const char* filePath)
 	}
 	//-----------------------------------------------------------		
 
-	return ResourceLoadingResult::Successful;
+	return FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::TGA::Save(const char* filePath)
+BF::FileActionResult BF::TGA::Save(const char* filePath)
 {
 	const char footer[18] = "TRUEVISION-XFILE.";
 	unsigned int fileLength = 500;
-	File file(filePath, fileLength);
+	FileStream fileStream(fileLength);
 
 
 	// Data Stuff
 
-	file.WriteToDisk();
+	fileStream.WriteToDisk(filePath);
 
-	return ResourceLoadingResult::Successful;
+	return FileActionResult::Successful;
 }
 
-void BF::TGA::Convert(Image& image)
+BF::FileActionResult BF::TGA::ConvertTo(Image& image)
 {	
-	ImageFormat imageFormat = ImageFormat::Unkown;
+	ImageDataFormat imageFormat = ImageDataFormat::Unkown;
 	unsigned int pixelDataLengh = -1;
 	unsigned int bytesPerPixel = -1;
 	unsigned char* newImageData = nullptr;
@@ -350,12 +235,12 @@ void BF::TGA::Convert(Image& image)
 	{
 		case TGABitsPerPixel::X1:
 		{
-			imageFormat = ImageFormat::AlphaMaskBinary;			
+			imageFormat = ImageDataFormat::AlphaMaskBinary;			
 			break;
 		}
 		case TGABitsPerPixel::X8:
 		{
-			imageFormat = ImageFormat::AlphaMaskBinary;
+			imageFormat = ImageDataFormat::AlphaMaskBinary;
 			bytesPerPixel = 1;
 			break;
 		}
@@ -369,13 +254,13 @@ void BF::TGA::Convert(Image& image)
 		}
 		case TGABitsPerPixel::X24:
 		{
-			imageFormat = ImageFormat::BGR;
+			imageFormat = ImageDataFormat::BGR;
 			bytesPerPixel = 3;
 			break;
 		}
 		case TGABitsPerPixel::X32:
 		{
-			imageFormat = ImageFormat::BGRA;
+			imageFormat = ImageDataFormat::BGRA;
 			bytesPerPixel = 4;
 			break;
 		}
@@ -386,7 +271,7 @@ void BF::TGA::Convert(Image& image)
 
 	if (newImageData == nullptr)
 	{
-		return;
+		return FileActionResult::OutOfMemory;
 	}	
 
 	image.Type = ImageType::Texture2D;
@@ -397,4 +282,9 @@ void BF::TGA::Convert(Image& image)
 	image.PixelDataSize = pixelDataLengh;
 
 	memcpy(newImageData, ImageData, pixelDataLengh);
+}
+
+BF::FileActionResult BF::TGA::ConvertFrom(Image& image)
+{
+	return FileActionResult();
 }

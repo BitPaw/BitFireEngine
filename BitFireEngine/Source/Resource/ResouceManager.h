@@ -18,6 +18,8 @@
 #include "ResourceLoadMode.h"
 
 #include <thread>
+#include "../../../SystemResource/Source/Math/Physic/Collider.h"
+#include "../../../SystemResource/Source/Game/Sprite.h"
 
 namespace BF
 {
@@ -36,11 +38,10 @@ namespace BF
         LinkedList<ShaderProgram*> _shaderProgramList;
         LinkedList<Dialog*> _dialogList;
         LinkedList<Level*> _levelList;
+        LinkedList<Collider*> _physicList;
 
         unsigned int _defaultShaderID;
         unsigned int _defaultTextureID;
-
-        void UpdateVBOData(Model& model);
 
         // Async Locks
         AsyncLock _imageAdd;
@@ -67,7 +68,11 @@ namespace BF
 
         Resource* Load(const char* filePathString);
 
+        //void Load(Sprite& sprite, const char* model, const char* texturePath);
+
+        void Load(Model& model);
         void Load(Model& model, const char* filePath);
+        void Load(Image& image);
         void Load(Image& image, const char* filePath);
         void Load(Sound& sound, const char* filePath);
         void Load(Font& font, const char* filePath);
@@ -88,13 +93,18 @@ namespace BF
             const char* textureFront
          );
 
-        void Add(Model& model);
-        void Add(Image& image);
+        void Add(Sprite& sprite);
+        void Add(Model& model, bool loadAsynchronously = true);
+        void Add(Model& model, const char* filePath, bool loadAsynchronously = true);
+        void Add(Image& image, bool loadAsynchronously = true);
+        void Add(Image& image, const char* filePath, bool loadAsynchronously = true);
         void Add(Font& font);
         void Add(ShaderProgram& shaderProgram);
         void Add(SkyBox& skyBox);
-       
+        void Add(Collider* collider);
+
         void ModelsPhysicsApply(float deltaTime);
+
         void ModelsRender(float deltaTime);
 
         void PrintContent(bool detailed);

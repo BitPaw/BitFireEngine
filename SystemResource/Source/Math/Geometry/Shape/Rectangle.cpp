@@ -27,12 +27,12 @@ BF::Rectangle::Rectangle(Vector2<float> a, Vector2<float> b, Vector2<float> c, V
 
 float BF::Rectangle::Width()
 {
-	return Math::Absolute(PointA.X + PointC.X);
+	return 0;// Math::Absolute(PointA.X + PointC.X);
 }
 
 float BF::Rectangle::Height()
 {
-	return Math::Absolute(PointA.Y + PointC.Y);
+	return 0;//Math::Absolute(PointA.Y + PointC.Y);
 }
 
 float BF::Rectangle::SurfaceArea()
@@ -47,6 +47,7 @@ float BF::Rectangle::Perimeter()
 
 bool BF::Rectangle::IsColliding(Rectangle* rectangle)
 {
+	/*
 	//D C 
 	//A B
 	float r1X = PointA.X;
@@ -62,7 +63,9 @@ bool BF::Rectangle::IsColliding(Rectangle* rectangle)
 	return	r1X < r2X + r2Width &&
 			r1X + r1Width > r2X &&
 			r1Y < r2Y + r2Height &&
-			r1Y + r1Height > r2Y;
+			r1Y + r1Height > r2Y;*/
+
+	return false;
 }
 
 BF::Vector3<float> BF::Rectangle::NormalDirection()
@@ -88,24 +91,35 @@ void BF::Rectangle::Set(float width, float height)
 
 void BF::Rectangle::Set(float x, float y, float width, float height)
 {
-	PointA.Set(x, y);
-	PointB.Set(width, y);
-	PointC.Set(width, height);
-	PointD.Set(x, height);
+	float vertexData[] =
+	{
+		width,  height, 0,  // top right
+		width, y, 0,  // bottom right
+		x, y, 0,  // bottom left
+		x, height, 0   // top left 
+	};
+
+	const unsigned int indexList[] =
+	{
+		0, 1, 2, 3
+	};
+
+	memcpy(VertexList, vertexData, VertexListSize * sizeof(float));
+	memcpy(IndexList, indexList, IndexListSize * sizeof(unsigned int));
 }
 
 void BF::Rectangle::Set(Vector2<float> a, Vector2<float> b)
 {
-	PointA.Set(a);
-	PointB.Set(b.X, a.Y);
-	PointC.Set(b);
-	PointD.Set(a.X, b.Y);
+	//PointA.Set(a);
+	//PointB.Set(b.X, a.Y);
+	//PointC.Set(b);
+	//PointD.Set(a.X, b.Y);
 }
 
 void BF::Rectangle::Set(Vector2<float> a, Vector2<float> b, Vector2<float> c, Vector2<float> d)
 {
-	PointA.Set(a);
-	PointB.Set(b);
-	PointC.Set(c);
-	PointD.Set(d);
+	//PointA.Set(a);
+	//PointB.Set(b);
+	//PointC.Set(c);
+	//PointD.Set(d);
 }

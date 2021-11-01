@@ -1,8 +1,9 @@
 #pragma once
 
-#include "../Resource.h"
-#include "../ResourceLoadingResult.hpp"
 #include "FontFormat.h"
+
+#include "../Resource.h"
+#include "../File/FileActionResult.hpp"
 #include "../Image/Image.h"
 
 namespace BF
@@ -22,7 +23,8 @@ namespace BF
 
 		//---[ Public-Functions ]----------------------------------------------
 		static FontFormat FileFormatPeek(const char* filePath);
-		ResourceLoadingResult Load(const char* filePath);	
+		FileActionResult Load(const char* filePath);	
+		FileActionResult Save(const char* filePath, FontFormat fontFormat);
 		//---------------------------------------------------------------------
 	};
 }

@@ -9,7 +9,6 @@ BF::Level::Level()
 bool BF::Level::IsLevelFile(const char* filePath)
 {
 	File file(filePath);
-	AsciiString fileExtension(file.Extension);
 
-	return fileExtension.CompareIgnoreCase("lev");
+	return file.ExtensionEquals("lev");
 }

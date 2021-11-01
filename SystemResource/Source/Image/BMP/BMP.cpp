@@ -1,6 +1,9 @@
 #include "BMP.h"
 
-#include "../../File/File.h"
+#include <cassert>
+
+#include "../../File/FileStream.h"
+#include "../../Math/Math.h"
 
 BF::BMP::BMP()
 {
@@ -16,14 +19,14 @@ BF::BMP::~BMP()
     free(PixelData);	
 }
 
-BF::ResourceLoadingResult BF::BMP::Load(const char* filePath)
+BF::FileActionResult BF::BMP::Load(const char* filePath)
 {
-    File file(filePath); 
-    ResourceLoadingResult resourceLoadingResult = file.ReadFromDisk();
+    FileStream file; 
+    FileActionResult FileActionResult = file.ReadFromDisk(filePath);
 
-    if (resourceLoadingResult != ResourceLoadingResult::Successful)
+    if (FileActionResult != FileActionResult::Successful)
     {
-        return resourceLoadingResult;
+        return FileActionResult;
     }
 
     //---[ Parsing Header ]----------------------------------------------------
@@ -93,35 +96,40 @@ BF::ResourceLoadingResult BF::BMP::Load(const char* filePath)
             default:
             {
                 // Unkown Header 
-                return ResourceLoadingResult::FormatNotSupported;
+                return FileActionResult::FormatNotSupported;
             }
         }
     }    
     //-----------------------------------------------------------    
 
-    //---[ Pixel Data ]--------------------------------------------------------  
-    unsigned int bytesPerPixel = (InfoHeader.NumberOfBitsPerPixel / 8);
-    unsigned int pixelDataRowSize = InfoHeader.Width * bytesPerPixel;
-    PixelDataSize = pixelDataRowSize * InfoHeader.Height;
-
-    unsigned int paddingSize = pixelDataRowSize % 4;
-    unsigned int rowSize = pixelDataRowSize + paddingSize;
-
+    PixelDataSize = InfoHeader.Width * InfoHeader.Height * (InfoHeader.NumberOfBitsPerPixel / 8);
     PixelData = (unsigned char*)malloc(PixelDataSize * sizeof(unsigned char));
-   
-    for (size_t pixelDataOffset = 0 ; file.DataCursorPosition < file.DataSize ; )
-    {
-        file.Read(PixelData + pixelDataOffset, pixelDataRowSize);
 
-        pixelDataOffset += pixelDataRowSize;
-        file.DataCursorPosition += paddingSize; // Move data, row + padding(padding can be 0)
+
+    //---[ Pixel Data ]--------------------------------------------------------    
+    unsigned int dataRowSize = InfoHeader.Width * (InfoHeader.NumberOfBitsPerPixel / 8);
+    unsigned int fullRowSize = Math::Floor((InfoHeader.NumberOfBitsPerPixel * InfoHeader.Width + 31) / 32.0f) * 4;
+    unsigned int padding = Math::Absolute((int)fullRowSize - (int)dataRowSize);
+    unsigned int amountOfRows = PixelDataSize / fullRowSize;
+    size_t pixelDataOffset = 0;
+
+    while (amountOfRows-- > 0)
+    {
+        assert(pixelDataOffset <= PixelDataSize);
+
+        file.Read(PixelData + pixelDataOffset, dataRowSize);
+
+        pixelDataOffset += dataRowSize;
+        file.DataCursorPosition += padding; // Move data, row + padding(padding can be 0)
     }
+
+    return FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::BMP::Save(const char* filePath)
+BF::FileActionResult BF::BMP::Save(const char* filePath)
 {
-    size_t fileSize = InfoHeader.Width * InfoHeader.Height * 3 + 54u;
-    File file(filePath, fileSize);
+    unsigned int fileSize = InfoHeader.Width * InfoHeader.Height * 3 + 54u;
+    FileStream file(fileSize);
  
     file.Write("BM", 2u);
     file.Write(fileSize, Endian::Little);
@@ -143,18 +151,18 @@ BF::ResourceLoadingResult BF::BMP::Save(const char* filePath)
 
     file.Write(PixelData, PixelDataSize);
 
-    file.WriteToDisk();
+    file.WriteToDisk(filePath);
 
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::BMP::ConvertFrom(Image& image)
+BF::FileActionResult BF::BMP::ConvertFrom(Image& image)
 {
     PixelData = (unsigned char*)malloc(image.PixelDataSize);
 
     if (!PixelData)
     {
-        return ResourceLoadingResult::OutOfMemory;
+        return FileActionResult::OutOfMemory;
     }
 
     PixelDataSize = image.PixelDataSize;
@@ -165,29 +173,66 @@ BF::ResourceLoadingResult BF::BMP::ConvertFrom(Image& image)
 
     memcpy(PixelData, image.PixelData, PixelDataSize);
 
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }
 
-BF::ResourceLoadingResult BF::BMP::ConvertTo(Image& image)
+BF::FileActionResult BF::BMP::ConvertTo(Image& image)
 {    
-    size_t pixelDataSize = InfoHeader.Height * InfoHeader.Width * 3;
-    void* pixelData = malloc(PixelDataSize);
+    unsigned char* pixelData = (unsigned char*)malloc(PixelDataSize * sizeof(unsigned char));
 
     if (!pixelData)
     {
-        return ResourceLoadingResult::OutOfMemory;
+        return FileActionResult::OutOfMemory;
     }
 
-    image.Format = ImageFormat::BGR;
+    image.Format = ImageDataFormat::BGR;
     image.Height = InfoHeader.Height;
     image.Width = InfoHeader.Width;
-    image.PixelDataSize = pixelDataSize;
-    image.PixelData = (unsigned char*)pixelData;
+    image.PixelDataSize = PixelDataSize;
+    image.PixelData = pixelData;
 
     memcpy(image.PixelData, PixelData, image.PixelDataSize);
 
     image.FlipHorizontal();
     //image.RemoveColor(0,0,0);
 
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
+}
+
+BF::FileActionResult BF::BMP::ConvertTo(Image& image, BMP& alphaMap)
+{
+    size_t pixelDataSize = (PixelDataSize / 3) * 4;
+    unsigned char* pixelData = (unsigned char*)malloc(pixelDataSize * sizeof(unsigned char));
+
+    if (!pixelData)
+    {
+        return FileActionResult::OutOfMemory;
+    }
+
+    image.Format = ImageDataFormat::BGRA;
+    image.Height = InfoHeader.Height;
+    image.Width = InfoHeader.Width;
+    image.PixelDataSize = pixelDataSize;
+    image.PixelData = pixelData;
+
+    size_t imageDataIndex = 0;
+    size_t alphaDataIndex = 0;
+
+    for (size_t i = 0; i < pixelDataSize; )
+    {
+        unsigned char blue = PixelData[imageDataIndex++];
+        unsigned char green = PixelData[imageDataIndex++];
+        unsigned char red = PixelData[imageDataIndex++];
+        unsigned char alpha = alphaMap.PixelData[alphaDataIndex++];
+        bool isTansparanetColor = blue == 0xFF && green == 0xFF && red == 0xFF;
+
+        pixelData[i++] = blue;
+        pixelData[i++] = green;
+        pixelData[i++] = red;
+        pixelData[i++] = isTansparanetColor ? 0x00 : 0xFF;
+    }
+
+    image.FlipHorizontal();
+
+    return FileActionResult::Successful;
 }

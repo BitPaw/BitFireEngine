@@ -2,10 +2,13 @@
 
 BF::RIFF::RIFF()
 {
+	ChunkID[0] = '?';
+	ChunkID[1] = '?';
+	ChunkID[2] = '?';
+	ChunkID[3] = '?';
 	ChunkSize = 0;
-}
-
-BF::RIFF::RIFF(unsigned int chunkID, unsigned int chunkSize, unsigned int format)
-{
-	ChunkSize = chunkSize;
+	Format[0] = '?';
+	Format[1] = '?';
+	Format[2] = '?';
+	Format[3] = '?';
 }

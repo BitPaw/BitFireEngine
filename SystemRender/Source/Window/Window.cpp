@@ -1,9 +1,12 @@
 #include "Window.h"
-#include "../VideoConfig.h"
-#include "../../../SystemResource/Source/Math/Interpolate.h"
-#include "../../Dependencies/include/GL/glew.h"
-#include "../../Dependencies/include/GLFW/glfw3.h"
+
 #include <stdio.h>
+
+#include "../VideoConfig.h"
+
+#include "../../../SystemResource/Source/Math/Interpolate.h"
+#include "../../../Dependencies/include/GL/glew.h"
+#include "../../../Dependencies/include/GLFW/glfw3.h"
 
 BF::Dictionary<GLFWwindow*, BF::InputContainer> BF::Window::WindowsInput;
 
@@ -317,7 +320,7 @@ void BF::Window::TakeScreenShot(Image& image)
 
     image.Width = width;
     image.Height = height;
-    image.Format = ImageFormat::BGR;  
+    image.Format = ImageDataFormat::BGR;  
 
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
     glReadBuffer(GL_FRONT);
@@ -431,6 +434,7 @@ bool BF::Window::Create(int width, int height, const char* title)
     {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
     }
 
     glfwSetTime(0);

@@ -12,6 +12,7 @@ namespace BF
 	{
 		public:
 		static void RegisterImage(Image& image);
+		static void RegisterModel(Model& model);
 
 		static void SkyBoxUse(SkyBox& skybox);
 		static void SkyBoxSet(SkyBox& skybox);
@@ -51,14 +52,15 @@ namespace BF
 
 		static char UseShaderProgram(int shaderProgramID);
 		static void VertexArrayBind(int vertexArrayID);
+		static void VertexBufferBind(int vertexBufferID, int indexBuffer);
 
 		// Converter
 		private:
 		static ShaderType ToShaderType(unsigned int token);
 		static unsigned int ToShaderType(ShaderType shaderType);
 
-		static ImageFormat ToImageFormat(unsigned int token);
-		static unsigned int ToImageFormat(ImageFormat imageFormat);
+		static ImageDataFormat ToImageFormat(unsigned int token);
+		static unsigned int ToImageFormat(ImageDataFormat imageFormat);
 
 		static ImageType ToImageType(unsigned int token);
 		static unsigned int ToImageType(ImageType imageType);
@@ -69,9 +71,3 @@ namespace BF
 		static const char* ShaderTypeToString(int type);
 	};
 }
-
-/*
-
-	glLineWidth(10);
-	glPointSize(5);
-*/

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../Dependencies/include/glm/glm.hpp"
+#include "../../../../Dependencies/include/glm/glm.hpp"
 #include "../Math.h"
 
 namespace BF
@@ -137,6 +137,15 @@ namespace BF
 				Y /= length;
 				Z /= length;
 			}			
+		}
+
+		static Vector3<NumberType> Normalize(Vector3 vector3)
+		{
+			Vector3<NumberType> newVector(vector3);
+
+			newVector.Normalize();
+
+			return newVector;
 		}
 
 		NumberType Length()

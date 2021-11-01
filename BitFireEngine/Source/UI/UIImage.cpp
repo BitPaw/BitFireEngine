@@ -50,5 +50,5 @@ void BF::UIImage::SetBorder(const int borderSize)
 	//RenderInformation.VertexData.ReSize(8*(3+2+3+4));
 	//RenderInformation.IndexData.ReSize(4*5);
 
-	unsigned int* indexData = &RenderInformation.IndexData[0];
+	//unsigned int* indexData = &RenderInformation.IndexData[0];
 }

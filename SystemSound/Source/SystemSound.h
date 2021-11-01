@@ -1,8 +1,8 @@
 #pragma once
 
 #include "AudioSource.h"
-#include "../Dependencies/include/AL/al.h"
-#include "../Dependencies/include/AL/alc.h"
+#include "../../Dependencies/include/AL/al.h"
+#include "../../Dependencies/include/AL/alc.h"
 #include "../../SystemResource/Source/Sound/Sound.h"
 
 namespace BF
@@ -25,6 +25,9 @@ namespace BF
 		void Update(AudioSource& audioSource);
 
 		void Play(AudioSource& audioSource, Sound& sound);
+		void LoopPart(AudioSource& audioSource, unsigned int startIndex, unsigned int endIndex);
+
+		
 
 		static ALenum ToChannalFormat(unsigned short numerOfChannels, unsigned short bitsPerSample);
 	};

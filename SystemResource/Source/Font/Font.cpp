@@ -6,59 +6,92 @@
 
 #include "../File/File.h"
 
-BF::ResourceLoadingResult BF::Font::Load(const char* filePath)
+BF::FileActionResult BF::Font::Load(const char* filePath)
 {
     File file(filePath);
     FontFormat fontFormat = FileFormatPeek(filePath);
 
     if (!file.DoesFileExist())
     {
-        return ResourceLoadingResult::FileNotFound;
+        return FileActionResult::FileNotFound;
     }
 
     switch (fontFormat)
     {
-    case FontFormat::FNT:
+        case FontFormat::FNT:
+        {
+            // TODO: this is pointer for no reason. I use it at another place -> No delete needed
+            FNT* fnt = new FNT();
+            fnt->Load(filePath);
+            fnt->ConvertTo(*this);
+            break;
+        }
+        case FontFormat::OFT:
+        {
+            OTF otf;
+            otf.Load(filePath);
+            otf.ConvertTo(*this);
+            break;
+        }
+        case FontFormat::TTF:
+        {
+            TTF ttf;
+            ttf.Load(filePath);
+            ttf.ConvertTo(*this);
+            break;
+        }
+        case FontFormat::Unkown:
+        default:
+        {
+            return FileActionResult::FormatNotSupported;
+        }
+    }
+
+    return FileActionResult::Successful;
+}
+
+BF::FileActionResult BF::Font::Save(const char* filePath, FontFormat fontFormat)
+{
+    switch (fontFormat)
     {
-        FNT* fnt = new FNT();
-        fnt->Load(filePath);
-        fnt->Convert(*this);
-        break;
+        default:
+        case BF::FontFormat::Unkown:
+        {
+            return FileActionResult::FormatNotSupported;
+        }
+        case BF::FontFormat::FNT:
+        {
+            FNT fnt;
+            fnt.ConvertFrom(*this);
+            fnt.Save(filePath);
+            break;
+        }       
+        case BF::FontFormat::OFT:
+        {
+            OTF otf;
+            otf.ConvertFrom(*this);
+            otf.Save(filePath);
+            break;
+        }
+        case BF::FontFormat::TTF:
+        {
+            TTF ttf;
+            ttf.ConvertFrom(*this);
+            ttf.Save(filePath);
+            break;
+        }
     }
 
-    case FontFormat::OFT:
-    {
-        OTF otf;
-
-        break;
-    }
-
-    case FontFormat::TTF:
-    {
-        TTF ttf;
-        break;
-    }
-
-    case FontFormat::Unkown:
-    default:
-        return ResourceLoadingResult::FormatNotSupported;
-    }
-
-    return ResourceLoadingResult::Successful;
+    return FileActionResult::Successful;
 }
 
 BF::FontFormat BF::Font::FileFormatPeek(const char* filePath)
 {
     File file(filePath);
-    AsciiString fileExtensionAS(file.Extension);
 
-    bool isFNT = fileExtensionAS.CompareIgnoreCase("fnt");
-    bool isOTF = fileExtensionAS.CompareIgnoreCase("otf");
-    bool isTTF = fileExtensionAS.CompareIgnoreCase("ttf");
-
-    if (isFNT) return FontFormat::FNT;
-    if (isOTF) return FontFormat::OFT;
-    if (isTTF) return FontFormat::TTF;
+    if (file.ExtensionEquals("FNT")) return FontFormat::FNT;
+    if (file.ExtensionEquals("OTF")) return FontFormat::OFT;
+    if (file.ExtensionEquals("TTF")) return FontFormat::TTF;
 
     return FontFormat::Unkown;
 }

@@ -5,7 +5,7 @@
 
 namespace BF
 {
-	class Square : public Shape
+	class Square : public Shape<12, 4>
 	{
 		public:
 		Square();

@@ -6,7 +6,7 @@
 
 namespace BF
 {
-	class Circle : public Shape
+	class Circle// : public Shape<5,5>
 	{
 		public:
 		Circle();
@@ -33,13 +33,13 @@ namespace BF
 		/// A = PI * r^2
 		/// </summary>
 		/// <returns></returns>
-		virtual float SurfaceArea() override;
+		float SurfaceArea();
 
 		/// <summary>
 		/// U = 2 * PI  * r
 		/// </summary>
 		/// <returns></returns>
-		virtual float Perimeter() override;
+		float Perimeter();
 
 		void Set(float radius);
 		void Set(float midPointx, float midPointy, float cornerPointx, float cornerPointy);

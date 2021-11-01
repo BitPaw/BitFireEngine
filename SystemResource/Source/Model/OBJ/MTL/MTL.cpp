@@ -1,6 +1,7 @@
 #include "MTL.h"
 
-#include "../../../File/File.h"
+#include "../../../File/FileStream.h"
+#include "../../../Container/AsciiString.h"
 
 BF::MTL::MTL()
 {
@@ -13,7 +14,7 @@ BF::MTL::~MTL()
 	free(MaterialList);
 }
 
-void BF::MTL::Load(char* filePath)
+void BF::MTL::Load(const char* filePath)
 {
 	unsigned int materialIndex = 0;
 	const char _newMaterialCharacter = 'n';
@@ -27,19 +28,21 @@ void BF::MTL::Load(char* filePath)
 	//static const char _newMaterialCharacter = 'i';
 
 
-	File file(filePath);
-	file.ReadFromDisk();
-	unsigned int amountOfLines = file.CountAmountOfLines();
+	FileStream file;
+	FileActionResult fileActionResult = file.ReadFromDisk(filePath);
+
+	if (fileActionResult != FileActionResult::Successful)
+	{
+		return;
+	}
+	
 	char currentLineBuffer[200];
-
-
 
 	// Count How many materials are needed
 	{
 
-		for (unsigned int line = 0; line < amountOfLines; line++)
-		{
-			file.ReadNextLineInto(currentLineBuffer);
+		while (file.ReadNextLineInto(currentLineBuffer))
+		{			
 			char commandChar = currentLineBuffer[0];
 
 			if (commandChar == 'n')
@@ -58,9 +61,8 @@ void BF::MTL::Load(char* filePath)
 
 	file.CursorToBeginning();
 
-	for (unsigned int line = 0; line <= amountOfLines; line++)
+	while (file.ReadNextLineInto(currentLineBuffer))
 	{
-		file.ReadNextLineInto(currentLineBuffer);
 		char commandChar = currentLineBuffer[0];
 
 		switch (commandChar)

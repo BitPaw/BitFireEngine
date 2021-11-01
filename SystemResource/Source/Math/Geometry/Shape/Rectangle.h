@@ -7,7 +7,7 @@
 
 namespace BF
 {
-	class Rectangle : public Shape
+	class Rectangle : public Shape<12,4>
 	{
 		public:
 		Rectangle();
@@ -15,26 +15,6 @@ namespace BF
 		Rectangle(float x, float y, float width, float height);
 		Rectangle(Vector2<float> a, Vector2<float> b);
 		Rectangle(Vector2<float> a, Vector2<float> b, Vector2<float> c, Vector2<float> d);
-
-		/// <summary>
-		/// Left-Lower
-		/// </summary>
-		Vector2<float> PointA;
-
-		/// <summary>
-		/// Right-Lower
-		/// </summary>
-		Vector2<float> PointB;
-
-		/// <summary>
-		/// Right-Upper
-		/// </summary>
-		Vector2<float> PointC;
-
-		/// <summary>
-		/// Left-Upper
-		/// </summary>
-		Vector2<float> PointD;
 
 		/// <summary>
 		/// Width of the Rectangle
