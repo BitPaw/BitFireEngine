@@ -7,9 +7,16 @@
 #include <cwchar>
 
 #if  defined(OSUnix)
-
+#define FileRemove remove 
+#define FileRemoveW wremove 
+#define FileRename rename 
+#define FileRenameW wrename 
 #elif defined(OSWindows)
 #include <Windows.h>
+#define FileRemove remove 
+#define FileRemoveW _wremove 
+#define FileRename rename 
+#define FileRenameW _wrename 
 #endif
 
 BF::FileActionResult BF::File::CheckFile()
@@ -33,6 +40,10 @@ BF::File::File(const char* filePath)
 	SetFilePath(filePath);
 }
 
+BF::File::File(const wchar_t* filePath)
+{
+	SetFilePath(filePath);
+}
 
 BF::FileActionResult BF::File::Open(const char* filePath, FileOpenMode fileOpenMode)
 {
@@ -92,40 +103,75 @@ BF::FileActionResult BF::File::Close()
 	}
 }
 
-bool BF::File::Remove()
+BF::ErrorCode BF::File::Remove()
 {
 	return BF::File::Remove(Path);
 }
 
-bool BF::File::Remove(const char* filePath)
+BF::ErrorCode BF::File::Remove(const char* filePath)
 {
-	int removeResult = remove(filePath);
+	int removeResult = FileRemove(filePath);
+	ErrorCode errorCode = ConvertErrorCode(removeResult);
 
-	switch (removeResult)
-	{
-		case 0:
-			return true;
-
-		default:
-			return false;
-	}
+	return errorCode;
 }
 
-bool BF::File::ReName(const char* name)
+BF::ErrorCode BF::File::Remove(const wchar_t* filePath)
 {
-	int renameResult = rename(Path, name);
+	int removeResult = FileRemoveW(filePath);
+	ErrorCode errorCode = ConvertErrorCode(removeResult);
 
-	switch (renameResult)
-	{
-		case 0:
-			return true;
+	return errorCode;
+}
 
-		default:
-			return false;
-	}
+BF::ErrorCode BF::File::Rename(const char* name)
+{
+	wchar_t nameW[_MAX_FNAME];
+	size_t changedCharacters = 0;
+
+	mbstowcs_s(&changedCharacters, nameW, _MAX_FNAME - 1, name, _MAX_FNAME - 1);
+
+	return File::Rename(Path, nameW);
+}
+
+BF::ErrorCode BF::File::Rename(const char* oldName, const char* newName)
+{
+	int renameResult = FileRename(oldName, newName);
+	ErrorCode errorCode = ConvertErrorCode(renameResult);
+
+	return errorCode;
+}
+
+BF::ErrorCode BF::File::Rename(const wchar_t* name)
+{
+	return File::Rename(Path, name);
+}
+
+BF::ErrorCode BF::File::Rename(const wchar_t* oldName, const wchar_t* newName)
+{
+	int renameResult = FileRenameW(oldName, newName);
+	ErrorCode errorCode = ConvertErrorCode(renameResult);
+
+	return errorCode;
 }
 
 void BF::File::SetFilePath(const char* filePath)
+{
+	if (!filePath)
+	{
+		SetFilePath((wchar_t*)nullptr);
+		return;
+	}
+
+	wchar_t filePathW[_MAX_PATH];
+	size_t changedCharacters = 0;
+
+	mbstowcs_s(&changedCharacters, filePathW, _MAX_PATH-1, filePath, _MAX_PATH-1);
+
+	SetFilePath(filePathW);
+}
+
+void BF::File::SetFilePath(const wchar_t* filePath)
 {
 	if (filePath == nullptr)
 	{
@@ -137,9 +183,9 @@ void BF::File::SetFilePath(const char* filePath)
 		return;
 	}
 
-	strcpy_s(Path, _MAX_PATH, filePath);
+	lstrcpyW(Path, filePath);
 
-	_splitpath_s
+	_wsplitpath_s
 	(
 		filePath,
 		Drive, _MAX_DRIVE,
@@ -148,11 +194,11 @@ void BF::File::SetFilePath(const char* filePath)
 		Extension, _MAX_EXT
 	);
 
-	char buffer[_MAX_EXT];
+	wchar_t buffer[_MAX_EXT];
 
 	memcpy(buffer, Extension, _MAX_EXT);
 	memset(Extension, 0, _MAX_EXT);
-	strncpy(Extension, buffer+1, _MAX_EXT);
+	lstrcpyW(Extension, buffer + 1);
 
 	// Fix stuff
 	//AsciiString fileName(Extension);
@@ -239,6 +285,13 @@ bool BF::File::DoesFileExist(const char* filePath)
 	return file.DoesFileExist();
 }
 
+bool BF::File::DoesFileExist(const wchar_t* filePath)
+{
+	File file(filePath);
+	
+	return file.DoesFileExist();
+}
+
 void BF::File::GetFileExtension(const char* filePath, const char* fileExtension)
 {
 	char dummyBuffer[_MAX_PATH];
@@ -251,4 +304,19 @@ void BF::File::GetFileExtension(const char* filePath, const char* fileExtension)
 		dummyBuffer, _MAX_FNAME,
 		(char*)fileExtension, _MAX_EXT
 	);
+}
+
+bool BF::File::ExtensionEquals(const char* extension)
+{
+	wchar_t extensionW[_MAX_EXT];
+	size_t changedCharacters = 0;
+
+	mbstowcs_s(&changedCharacters, extensionW, _MAX_EXT, extension, _MAX_EXT);
+
+	return ExtensionEquals(extensionW);
+}
+
+bool BF::File::ExtensionEquals(const wchar_t* extension)
+{
+	return lstrcmpiW(Extension, extension) == 0;
 }

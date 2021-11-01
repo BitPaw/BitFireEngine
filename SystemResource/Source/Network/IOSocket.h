@@ -50,7 +50,7 @@ namespace BF
 
 		struct sockaddr_in AdressIPv4; // Used only in IPv4
 
-#ifdef OSUnix
+#if defined(OSUnix)
 		struct addrinfo AdressIPv6;
 #elif defined(OSWindows)
 		ADDRINFO AdressIPv6;

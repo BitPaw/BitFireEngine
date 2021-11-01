@@ -311,15 +311,14 @@ void BF::Image::FormatChange(ImageDataFormat imageFormat)
 
 BF::ImageFileFormat BF::Image::FileFormatPeek(const char* filePath)
 {
-    File file(filePath);
-    AsciiString fileExtension(file.Extension);
+    File file(filePath); 
 
-    if (fileExtension.CompareIgnoreCase("bmp")) return ImageFileFormat::BitMap;
-    if (fileExtension.CompareIgnoreCase("gif")) return ImageFileFormat::GIF;
-    if (fileExtension.CompareIgnoreCase("jpeg")) return ImageFileFormat::JPEG;
-    if (fileExtension.CompareIgnoreCase("png")) return ImageFileFormat::PNG;
-    if (fileExtension.CompareIgnoreCase("tga")) return ImageFileFormat::TGA;
-    if (fileExtension.CompareIgnoreCase("tiff")) return ImageFileFormat::TIFF;
+    if (file.ExtensionEquals("BMP"))  return ImageFileFormat::BitMap;
+    if (file.ExtensionEquals("GIF"))  return ImageFileFormat::GIF;
+    if (file.ExtensionEquals("JPEG"))  return ImageFileFormat::JPEG;
+    if (file.ExtensionEquals("PNG"))  return ImageFileFormat::PNG;
+    if (file.ExtensionEquals("TGA"))  return ImageFileFormat::TGA;
+    if (file.ExtensionEquals("TIFF"))  return ImageFileFormat::TIFF;
 
     return ImageFileFormat::Unkown;
 }

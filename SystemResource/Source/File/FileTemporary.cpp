@@ -4,6 +4,16 @@
 #include <string>
 #include <cassert>
 
+#if defined(OSUnix)
+#define PipeOpen popen
+#define PipeOpenW wpopen
+#define PipeClose pclose
+#elif defined(OSWindows)
+#define PipeOpen _popen
+#define PipeOpenW _wpopen
+#define PipeClose _pclose
+#endif  
+
 BF::FileActionResult BF::FileTemporary::Open(const char* filePath, FileOpenMode fileOpenMode)
 {
     const char* readMode = nullptr;
@@ -21,11 +31,7 @@ BF::FileActionResult BF::FileTemporary::Open(const char* filePath, FileOpenMode 
 
     assert(readMode != nullptr);
 
-#if defined(OSUnix)
-    FileMarker = popen(filePath, readMode);
-#elif defined(OSWindows)
-    FileMarker = _popen(filePath, readMode);
-#endif    
+    FileMarker = PipeOpen(filePath, readMode);
 
     if (!FileMarker)
     {
@@ -52,24 +58,14 @@ BF::FileActionResult BF::FileTemporary::Open(const wchar_t* filePath, FileOpenMo
 
     assert(readMode != nullptr);
 
-#if defined(OSUnix)
-    FileMarker = wpopen(filePath, readMode);
-#elif defined(OSWindows)
-    FileMarker = _wpopen(filePath, readMode);
-#endif 
+    FileMarker = PipeOpenW(filePath, readMode);
 
     return FileMarker ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
 }
 
 BF::FileActionResult BF::FileTemporary::Close()
 {
-    int closeResult = -1;
-
-#if defined(OSUnix)
-    closeResult =  pclose(FileMarker);
-#elif defined(OSWindows)
-    closeResult = _pclose(FileMarker);
-#endif   
+    int closeResult = PipeClose(FileMarker);
 
     FileMarker = nullptr;
 

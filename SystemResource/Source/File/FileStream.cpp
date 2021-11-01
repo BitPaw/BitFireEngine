@@ -116,7 +116,7 @@ BF::FileActionResult BF::FileStream::ReadFromDisk(const char* filePath, Byte** t
 		return result;
 	}	
 
-	result = ReadFromDisk(file.FileMarker, targetBuffer, bufferSize);
+	result = ReadFromDisk(file.FileMarker, targetBuffer, bufferSize, addNullTerminator);
 
 	result = file.Close();
 

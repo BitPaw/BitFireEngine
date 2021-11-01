@@ -303,7 +303,7 @@ bool BF::OpenGLAPI::ShaderCompile(ShaderProgram& shaderProgram)
         Shader& shader = shaderProgram.ShaderList[i];
         unsigned int type = ToShaderType(shader.Type);
      
-        shader.ID = OpenGLAPI::ShaderCompile(type, (char*)&shader.Content[0]);
+        shader.ID = OpenGLAPI::ShaderCompile(type, shader.Content);
 
         if (shader.ID == -1)
         {

@@ -26,7 +26,7 @@ BF::FileActionResult BF::Program::Execute(const char* programPath, const char* p
 
             if (!programExecutionSuccesfull)
             {
-                errorCode = ConvertErrorCode(errno);
+                errorCode = GetCurrentError();
             }     
 
             callback->OnProgramExecuted(programExecutionSuccesfull, programReturnresult, errorCode);
@@ -41,7 +41,7 @@ BF::FileActionResult BF::Program::Execute(const char* programPath, const char* p
 
         if (!programExecutionSuccesfull)
         {
-            errorCode = ConvertErrorCode(errno);
+            errorCode = GetCurrentError();
         }
 
         printf("[Extrenal Program] <%s> returned with <%i>.\n", programPath, programReturnresult);

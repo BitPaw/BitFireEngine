@@ -96,4 +96,6 @@ namespace BF
 
 	int ConvertErrorCode(ErrorCode errorCode);
 	ErrorCode ConvertErrorCode(int errorCode);
+
+	ErrorCode GetCurrentError();
 }

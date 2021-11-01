@@ -154,28 +154,28 @@ void BF::ByteStream::Read(unsigned long long& value, Endian endian)
 		case Endian::Big:
 		{
 			value =
-				(valueData[0] << 56LL) |
-				(valueData[1] << 48LL) |
-				(valueData[2] << 40LL) |
-				(valueData[3] << 32LL) |
-				(valueData[4] << 24LL) |
-				(valueData[5] << 16LL) |
-				(valueData[6] << 8LL) |
-				(valueData[7]);
+				((unsigned long long)valueData[0] << 56LL) |
+				((unsigned long long)valueData[1] << 48LL) |
+				((unsigned long long)valueData[2] << 40LL) |
+				((unsigned long long)valueData[3] << 32LL) |
+				((unsigned long long)valueData[4] << 24LL) |
+				((unsigned long long)valueData[5] << 16LL) |
+				((unsigned long long)valueData[6] << 8LL) |
+				((unsigned long long)valueData[7]);
 
 			break;
 		}
 		default:
 		case Endian::Little:
 			value =
-				(valueData[0]) |
-				(valueData[1] << 8LL) |
-				(valueData[2] << 16LL) |
-				(valueData[3] << 24LL) |
-				(valueData[4] << 32LL) |
-				(valueData[5] << 40LL) |
-				(valueData[6] << 48LL) |
-				(valueData[7] << 56LL);
+				((unsigned long long)valueData[0]) |
+				((unsigned long long)valueData[1] << 8LL) |
+				((unsigned long long)valueData[2] << 16LL) |
+				((unsigned long long)valueData[3] << 24LL) |
+				((unsigned long long)valueData[4] << 32LL) |
+				((unsigned long long)valueData[5] << 40LL) |
+				((unsigned long long)valueData[6] << 48LL) |
+				((unsigned long long)valueData[7] << 56LL);
 			break;
 	}
 }

@@ -41,13 +41,12 @@ void BF::Model::PrintModelData()
 BF::ModelType BF::Model::FileFormatPeek(const char* fileExtension)
 {
     File file(fileExtension);
-    AsciiString extension(file.Extension);
 
-    if (extension.CompareIgnoreCase("3ds")) return ModelType::A3DS;
-    if (extension.CompareIgnoreCase("obj")) return ModelType::OBJ;
-    if (extension.CompareIgnoreCase("ply")) return ModelType::PLY;
-    if (extension.CompareIgnoreCase("stl")) return ModelType::STL;
-    if (extension.CompareIgnoreCase("wrl")) return ModelType::WRL;
+    if (file.ExtensionEquals("3ds")) return ModelType::A3DS;
+    if (file.ExtensionEquals("obj")) return ModelType::OBJ;
+    if (file.ExtensionEquals("ply")) return ModelType::PLY;
+    if (file.ExtensionEquals("stl")) return ModelType::STL;
+    if (file.ExtensionEquals("wrl")) return ModelType::WRL;
 
     return ModelType::UnKown;
 }

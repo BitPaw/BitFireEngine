@@ -53,5 +53,5 @@ void BF::Shader::Load()
 	*/
 
 
-     FileStream::ReadFromDisk(FilePath, &Content, ContentSize);
+     FileStream::ReadFromDisk(FilePath, (Byte**)&Content, ContentSize, true);
 }

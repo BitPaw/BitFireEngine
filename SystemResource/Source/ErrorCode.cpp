@@ -487,3 +487,8 @@ BF::ErrorCode BF::ConvertErrorCode(int errorCode)
 			return  BF::ErrorCode::CrossDeviceLink;
 	}
 }
+
+BF::ErrorCode BF::GetCurrentError()
+{
+	return ConvertErrorCode(errno);
+}

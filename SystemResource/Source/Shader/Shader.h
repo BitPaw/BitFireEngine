@@ -10,7 +10,7 @@ namespace BF
 	{
 		public:
 		ShaderType Type;
-		unsigned char* Content;
+		char* Content;
 		size_t ContentSize;
 
 		Shader();

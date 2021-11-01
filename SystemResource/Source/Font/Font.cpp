@@ -88,15 +88,10 @@ BF::FileActionResult BF::Font::Save(const char* filePath, FontFormat fontFormat)
 BF::FontFormat BF::Font::FileFormatPeek(const char* filePath)
 {
     File file(filePath);
-    AsciiString fileExtensionAS(file.Extension);
 
-    bool isFNT = fileExtensionAS.CompareIgnoreCase("fnt");
-    bool isOTF = fileExtensionAS.CompareIgnoreCase("otf");
-    bool isTTF = fileExtensionAS.CompareIgnoreCase("ttf");
-
-    if (isFNT) return FontFormat::FNT;
-    if (isOTF) return FontFormat::OFT;
-    if (isTTF) return FontFormat::TTF;
+    if (file.ExtensionEquals("FNT")) return FontFormat::FNT;
+    if (file.ExtensionEquals("OTF")) return FontFormat::OFT;
+    if (file.ExtensionEquals("TTF")) return FontFormat::TTF;
 
     return FontFormat::Unkown;
 }
