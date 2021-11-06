@@ -115,7 +115,7 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     //GameSystem.Resource.Add(*text);
 
     _camera->Rotate(0,0);
-    _camera->MatrixModel.Move(Vector3<float>(240,15,-60));
+    _camera->MatrixModel.Move(240,15,-60);
     _camera->CurrentRotation.Set(90, 0, 0);
     _camera->Rotate(0, 0);
     //_camera->MatrixModel.Rotate(90, 0, 0);

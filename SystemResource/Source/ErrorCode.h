@@ -12,6 +12,8 @@ namespace BF
 {
 	enum class ErrorCode
 	{
+		Successful,
+
 		UnkownError, // OTHER
 
 		PermissionDenied, // ACCES

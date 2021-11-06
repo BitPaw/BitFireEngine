@@ -4,19 +4,22 @@
 #include "../OSDefine.h"
 #include <cassert>
 #include <cstdlib>
+#include <cstdio>
 #include <cwchar>
+#include <direct.h>
 
 #if  defined(OSUnix)
 #define FileRemove remove 
 #define FileRemoveW wremove 
 #define FileRename rename 
-#define FileRenameW wrename 
+#define FileRenameW wrename
+#define FileDirectoryCreate(string) mkdir(string, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)
 #elif defined(OSWindows)
-#include <Windows.h>
 #define FileRemove remove 
 #define FileRemoveW _wremove 
 #define FileRename rename 
-#define FileRenameW _wrename 
+#define FileRenameW _wrename
+#define FileDirectoryCreate(string) _mkdir(string)
 #endif
 
 BF::FileActionResult BF::File::CheckFile()
@@ -28,7 +31,6 @@ BF::FileActionResult BF::File::CheckFile()
 
 	return BF::FileActionResult::Successful;
 }
-
 
 BF::File::File()
 {
@@ -150,9 +152,92 @@ BF::ErrorCode BF::File::Rename(const wchar_t* name)
 BF::ErrorCode BF::File::Rename(const wchar_t* oldName, const wchar_t* newName)
 {
 	int renameResult = FileRenameW(oldName, newName);
-	ErrorCode errorCode = ConvertErrorCode(renameResult);
+	bool wasSuccesful = renameResult == 0;
 
-	return errorCode;
+	if (!wasSuccesful)
+	{
+		return GetCurrentError();
+	}
+
+	return ErrorCode::Successful;
+}
+
+BF::ErrorCode BF::File::DirectoryCreate(const char* directoryName)
+{
+	int creationResult = FileDirectoryCreate(directoryName);
+	bool wasSuccesful = creationResult == 0;
+
+	if (!wasSuccesful)
+	{
+		return GetCurrentError();
+	}
+
+	return ErrorCode::Successful;
+}
+
+BF::ErrorCode BF::File::DirectoryCreate(const wchar_t* directoryName)
+{
+	int creationResult = _wmkdir(directoryName);
+	bool wasSuccesful = creationResult == 0;
+
+	if (!wasSuccesful)
+	{
+		return GetCurrentError();
+	}
+
+	return ErrorCode::Successful;
+}
+
+BF::ErrorCode BF::File::WorkingDirectoryChange(const char* directoryName)
+{
+	int creationResult = _chdir(directoryName);
+	bool wasSuccesful = creationResult == 0;
+
+	if (!wasSuccesful)
+	{
+		return GetCurrentError();
+	}
+
+	return ErrorCode::Successful;
+}
+
+BF::ErrorCode BF::File::WorkingDirectoryChange(const wchar_t* directoryName)
+{
+	int creationResult = _wchdir(directoryName);
+	bool wasSuccesful = creationResult == 0;
+
+	if (!wasSuccesful)
+	{
+		return GetCurrentError();
+	}
+
+	return ErrorCode::Successful;
+}
+
+BF::ErrorCode BF::File::DirectoryDelete(const char* directoryName)
+{
+	int creationResult = _rmdir(directoryName);
+	bool wasSuccesful = creationResult == 0;
+
+	if (!wasSuccesful)
+	{
+		return GetCurrentError();
+	}
+
+	return ErrorCode::Successful;
+}
+
+BF::ErrorCode BF::File::DirectoryDelete(const wchar_t* directoryName)
+{
+	int creationResult = _wrmdir(directoryName);
+	bool wasSuccesful = creationResult == 0;
+
+	if (!wasSuccesful)
+	{
+		return GetCurrentError();
+	}
+
+	return ErrorCode::Successful;
 }
 
 void BF::File::SetFilePath(const char* filePath)
@@ -210,13 +295,51 @@ void BF::File::SetFilePath(const wchar_t* filePath)
 
 void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& listSize)
 {
-#if  defined(OSUnix)
-
-#elif defined(OSWindows)
 	wchar_t folderPathW[MAX_PATH];
+	size_t writtenBytes = mbstowcs(folderPathW, folderPath, MAX_PATH);	
+
+#if defined(OSUnix)		
+	DIR* directory = opendir(folderPath);
+
+	if (directory)
+	{
+		struct dirent* directoryInfo = nullptr;
+
+		while (directoryInfo = readdir(directory))
+		{
+			++listSize;
+		}
+
+		rewinddir(directory);
+
+		(*list) = (wchar_t**)malloc(listSize * sizeof(wchar_t*));
+
+		for (size_t index = 0; directoryInfo = readdir(directory); index++)
+		{
+			bool isFile = directoryInfo->d_type == DT_REG || true;
+
+			if (isFile)
+			{
+				const char* fileName = directoryInfo->d_name;
+				size_t length = strlen(fileName);				
+				wchar_t* newString = (wchar_t*)malloc((length + 1) * sizeof(wchar_t));
+				wchar_t** target = &(*list)[index];				
+
+				if (!newString)
+				{
+					return; // Error: OutOfMemory
+				}
+
+				(*target) = newString;
+				size_t writtenBytes = mbstowcs(*target, fileName, 255);
+			}
+		}
+
+		closedir(directory);
+	}
+#elif defined(OSWindows)
 	WIN32_FIND_DATA dataCursour;
 	HANDLE hFind = 0;
-	size_t writtenBytes = mbstowcs(folderPathW, folderPath, MAX_PATH);
 
 	memset(&dataCursour, 0, sizeof(WIN32_FIND_DATA));
 
@@ -229,12 +352,11 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 		return;
 	}
 
-	listSize++;
+	++listSize;
 
 	for (; FindNextFile(hFind, &dataCursour); listSize++);
 
 	memset(&dataCursour, 0, sizeof(WIN32_FIND_DATA));
-
 
 	(*list) = (wchar_t**)malloc(listSize * sizeof(wchar_t*));
 
@@ -243,15 +365,18 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 
 	do
 	{
-		wchar_t* filePathDestination = 0;
-		wchar_t* filePathSource = dataCursour.cFileName;
-		size_t length = wcslen(filePathSource);
+		size_t length = wcslen(dataCursour.cFileName);
+		wchar_t* filePathSource = dataCursour.cFileName;		
+		wchar_t* newString = (wchar_t*)malloc((length + 1) * sizeof(wchar_t));
+	
+		if (!newString)
+		{
+			return; // Error: OutOfMemory
+		}
 
-		(*list)[fileIndex] = (wchar_t*)calloc(length + 1, sizeof(wchar_t));
+		(*list)[fileIndex] = newString;
 
-		filePathDestination = (*list)[fileIndex];
-
-		wcsncpy(filePathDestination, filePathSource, length);
+		wcsncpy(newString, filePathSource, length);
 
 		fileIndex++;
 	}

@@ -14,7 +14,9 @@ BF::Server::Server()
     NumberOfConnectedClients = 0;
     NumberOfMaximalClients = 10;
 
-    ClientList = new Client[10];
+    _clientListeningThread = nullptr;
+
+    ClientList = new Client[NumberOfMaximalClients];
 }
 
 BF::Client* BF::Server::GetNextClient()
@@ -30,7 +32,23 @@ BF::Client* BF::Server::GetNextClient()
         }
     }
 
-    return 0;
+    size_t riseAmount = 10;
+    size_t newNumberOfMaximalClients = NumberOfMaximalClients + riseAmount;
+    Client* movedMemory = (Client*)realloc(ClientList, newNumberOfMaximalClients * sizeof(Client));
+
+    if (!movedMemory)
+    {
+        return nullptr; // No memory for another Client
+    }
+
+    for (size_t i = NumberOfMaximalClients; i < newNumberOfMaximalClients; i++)
+    {
+        movedMemory[i] = Client();
+    }
+
+    ClientList = movedMemory;
+
+    return GetNextClient();
 }
 
 BF::SocketActionResult BF::Server::Start(IPVersion ipVersion, unsigned short port)

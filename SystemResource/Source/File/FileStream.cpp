@@ -19,9 +19,8 @@ BF::FileStream::~FileStream()
 	free(Data);
 }
 
-BF::FileActionResult BF::FileStream::ReadFromDisk(const char* filePath, FilePersistence filePersistence)
+BF::FileActionResult BF::FileStream::ReadFromDisk(const char* filePath, bool addNullTerminator, FilePersistence filePersistence)
 {
-	size_t fullSize = -1;
 	File file;
 	FileActionResult result = file.Open(filePath, FileOpenMode::Read);
 
@@ -30,39 +29,27 @@ BF::FileActionResult BF::FileStream::ReadFromDisk(const char* filePath, FilePers
 		return result;
 	}
 
-	fseek(file.FileMarker, 0, SEEK_END);
-	DataSize = ftell(file.FileMarker);
-	rewind(file.FileMarker);
-	//fseek(file, 0, SEEK_SET);
-
-	Data = (Byte*)malloc(DataSize * sizeof(Byte));
-
-	if (!Data)
-	{
-		return BF::FileActionResult::OutOfMemory;
-	}
-
-	//Data[fullSize] = '\0'; // Termiate
-
-	size_t readBytes = fread(Data, 1u, DataSize, file.FileMarker);
-	size_t overAllocatedBytes = DataSize - readBytes; // if overAllocatedBytes > 0 there was a reading error.	
-
-	assert(readBytes == DataSize);
-
-	if (readBytes != DataSize)
-	{
-		memset(&Data[readBytes], 0, DataSize - readBytes);
-
-		DataSize = readBytes;
-	}
+	result = ReadFromDisk(file.FileMarker, &Data, DataSize, addNullTerminator);
 
 	result = file.Close();
 
 	return BF::FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::FileStream::ReadFromDisk(const wchar_t* filePath, FilePersistence filePersistence)
+BF::FileActionResult BF::FileStream::ReadFromDisk(const wchar_t* filePath, bool addNullTerminator, FilePersistence filePersistence)
 {
+	File file;
+	FileActionResult result = file.Open(filePath, FileOpenMode::Read);
+
+	if (result != FileActionResult::Successful)
+	{
+		return result;
+	}
+
+	result = ReadFromDisk(file.FileMarker, &Data, DataSize, addNullTerminator);
+
+	result = file.Close();
+
 	return BF::FileActionResult::Successful;
 }
 

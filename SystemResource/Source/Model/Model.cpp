@@ -68,7 +68,7 @@ BF::FileActionResult BF::Model::Load(const char* filePath)
 
     ID = ResourceIDLoading;
 
-    strncpy(FilePath, filePath, ResourceFilePathSize);
+    FilePathChange(filePath);
 
     switch (modelType)
     {

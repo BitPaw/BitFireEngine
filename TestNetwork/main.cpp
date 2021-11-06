@@ -1,9 +1,10 @@
-
+﻿
 #include "../SystemResource/Source/Network/Server.h"
 #include "../SystemResource/Source/Network/Client.h"
 #include "../SystemResource/Source/File/FileTemporary.h"
 #include "../SystemResource/Source/File/Program.h"
 #include "../SystemResource/Source/File/FileActionResult.hpp"
+#include "../SystemResource/Source/File/File.h"
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -61,7 +62,6 @@ int main(int amountOFParameters, char** parameter)
 	FileActionResult fileActionResult = program.Execute("DummyProgram.exe", 0, 0);
 
 	return 1;*/
-
 
 	Server server;
 

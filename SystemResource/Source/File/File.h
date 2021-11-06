@@ -53,6 +53,12 @@ namespace BF
 		ErrorCode Rename(const wchar_t* name);
 		static ErrorCode Rename(const wchar_t* oldName, const wchar_t* newName);
 		
+		static ErrorCode DirectoryCreate(const char* directoryName);
+		static ErrorCode DirectoryCreate(const wchar_t* directoryName);
+		static ErrorCode WorkingDirectoryChange(const char* directoryName);
+		static ErrorCode WorkingDirectoryChange(const wchar_t* directoryName);
+		static ErrorCode DirectoryDelete(const char* directoryName);
+		static ErrorCode DirectoryDelete(const wchar_t* directoryName);
 
 		void SetFilePath(const char* filePath);
 		void SetFilePath(const wchar_t* filePath);

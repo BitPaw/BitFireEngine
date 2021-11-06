@@ -109,14 +109,12 @@ BF::OBJLineCommand BF::OBJ::PeekCommandLine(const char* commandLine)
     }
 }
 
-
-
 BF::FileActionResult BF::OBJ::Load(const char* filePath)
 {
     bool isFirstVertex = true;
     char currentLineBuffer[300];
     FileStream file; 
-    FileActionResult FileActionResult = file.ReadFromDisk(filePath);
+    FileActionResult FileActionResult = file.ReadFromDisk(filePath, true);
 
     if (FileActionResult != FileActionResult::Successful)
     {
@@ -220,11 +218,14 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
 
                 newElement = OBJElement();
 
-                oldElement.VertexPositionList.ReSize(vertexPositionListSize);
-                oldElement.TextureCoordinateList.ReSize(vertexTextureCoordinateListSize);
-                oldElement.VertexNormalPositionList.ReSize(vertexNormalPositionListSize);
-                oldElement.VertexParameterList.ReSize(vertexParameterListSize);
-                oldElement.FaceElementList.ReSize(faceElementListSize);
+                oldElement.Allocate
+                (
+                    vertexPositionListSize,
+                    vertexTextureCoordinateListSize,
+                    vertexNormalPositionListSize,
+                    vertexParameterListSize,
+                    faceElementListSize
+                );
 
                 vertexPositionListSize = 0;
                 vertexTextureCoordinateListSize = 0;
@@ -234,8 +235,17 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
 
                 isInMesh = false;
             }
-        }                
-   
+        } 
+
+        ElementList[ElementListSize - 1].Allocate
+        (
+            vertexPositionListSize,
+            vertexTextureCoordinateListSize,
+            vertexNormalPositionListSize,
+            vertexParameterListSize,
+            faceElementListSize
+        );
+
         if (MaterialFileListSize > 0)
         {
             MaterialFileList = new MTL[MaterialFileListSize];
@@ -372,7 +382,9 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                 case OBJLineCommand::VertexNormal:
                 case OBJLineCommand::VertexGeometric:
                 {
-                    Vector3<float>* currentVectorValue;
+                    Vector3<float>* currentVectorValue = nullptr;
+
+                    assert(elemtent);
 
                     switch (command)
                     {
@@ -387,10 +399,9 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                         case OBJLineCommand::VertexGeometric:
                             currentVectorValue = &elemtent->VertexPositionList[currentPositionElement++];
                             break;
-
-                        default:
-                            throw "Error";
                     }
+
+                    assert(currentVectorValue);
 
                     AsciiString::Parse
                     (
