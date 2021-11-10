@@ -169,6 +169,8 @@ void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
                 camera.PerspectiveChange(CameraPerspective::Orthographic);
                 break;
         }
+
+        keyboard.F.Value = 0;
     }
 
     movementCharacter.X *= -1;  // Flip X-Axis

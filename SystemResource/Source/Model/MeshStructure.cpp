@@ -102,8 +102,9 @@ void BF::MeshStructure::PrintData()
 
 	printf
 	(
-		"+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+ [VertexData]\n"
-		"| Pos-X | Pos-Y | Pos-Z | Nor-X | Nor-Y | Nor-Z | Red   | Green | Blue  | Alpha | Tex-X | Tex-Y |\n"
+		"+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+ [VertexData %i]\n"
+		"| Pos-X | Pos-Y | Pos-Z | Nor-X | Nor-Y | Nor-Z | Red   | Green | Blue  | Alpha | Tex-X | Tex-Y |\n",
+		VertexBufferID
 	);
 
 	for (size_t i = 0; i < VertexDataSize; i++)
@@ -116,7 +117,11 @@ void BF::MeshStructure::PrintData()
 		}
 	}
 
-	printf("+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+ [IndexData]\n");
+	printf
+	(
+		"+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+ [IndexData %i]\n",
+		IndexBufferID
+	);
 
 	for (size_t i = 0; i < IndexDataSize; i++)
 	{

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../SystemRender/Source/Device/InputContainer.h"
+
 namespace BF
 {
 	class IBitFireEngineListener

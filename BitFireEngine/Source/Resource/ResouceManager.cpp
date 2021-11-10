@@ -150,6 +150,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePath)
 {
     Resource* resource = nullptr;
     ResourceType resourceType = ResourceType::Unknown;
+    bool loadAsync = true;
 
     {
         bool isModel = Model::FileFormatPeek(filePath) != ModelType::UnKown;
@@ -197,7 +198,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePath)
         {
             Image* image = new Image();
 
-            Load(*image, filePath);
+            Add(*image, filePath, loadAsync);
 
             resource = image;
 
@@ -219,7 +220,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePath)
         {
             Model* model = new Model();
 
-            Load(*model, filePath);
+            Add(*model, filePath, true);
 
             resource = model;
 

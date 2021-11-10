@@ -24,6 +24,101 @@ BF::OBJ::~OBJ()
     //delete[] ElementList;
 }
 
+BF::Vector3<float>* BF::OBJ::GlobalVertexPosition(size_t index)
+{
+    for (size_t i = 0; i < ElementListSize; i++)
+    {
+        OBJElement& objElement = ElementList[i];
+        size_t arraySize = objElement.VertexPositionList.Size();
+        bool isInThisElement = index <= arraySize;
+
+        if (isInThisElement)
+        {
+            return &objElement.VertexPositionList[index];
+        }
+
+        index -= arraySize;
+    }
+
+    return nullptr;
+}
+
+BF::Vector2<float>* BF::OBJ::GlobalTextureCoordinate(size_t index)
+{
+    for (size_t i = 0; i < ElementListSize; i++)
+    {
+        OBJElement& objElement = ElementList[i];
+        size_t arraySize = objElement.TextureCoordinateList.Size();
+        bool isInThisElement = index <= arraySize;
+
+        if (isInThisElement)
+        {
+            return &objElement.TextureCoordinateList[index];
+        }
+
+        index -= arraySize;
+    }
+
+    return nullptr;
+}
+
+BF::Vector3<float>* BF::OBJ::GlobalVertexNormalPosition(size_t index)
+{
+    for (size_t i = 0; i < ElementListSize; i++)
+    {
+        OBJElement& objElement = ElementList[i];
+        size_t arraySize = objElement.VertexNormalPositionList.Size();
+        bool isInThisElement = index <= arraySize;
+
+        if (isInThisElement)
+        {
+            return &objElement.VertexNormalPositionList[index];
+        }
+
+        index -= arraySize;
+    }
+
+    return nullptr;
+}
+
+BF::Vector3<float>* BF::OBJ::GlobalVertexParameter(size_t index)
+{
+    for (size_t i = 0; i < ElementListSize; i++)
+    {
+        OBJElement& objElement = ElementList[i];
+        size_t arraySize = objElement.VertexParameterList.Size();
+        bool isInThisElement = index <= arraySize;
+
+        if (isInThisElement)
+        {
+            return &objElement.VertexParameterList[index];
+        }
+
+        index -= arraySize;
+    }
+
+    return nullptr;
+}
+
+BF::Vector3<unsigned int>* BF::OBJ::GlobalFaceElement(size_t index)
+{
+    for (size_t i = 0; i < ElementListSize; i++)
+    {
+        OBJElement& objElement = ElementList[i];
+        size_t arraySize = objElement.FaceElementList.Size();
+        bool isInThisElement = index <= arraySize;
+
+        if (isInThisElement)
+        {
+            return &objElement.FaceElementList[index];
+        }
+
+        index -= arraySize;
+    }
+
+    return nullptr;
+}
+
 bool BF::OBJ::ShouldCreateNewMesh(OBJLineCommand objLineCommand, bool isCurrentlyInFaces)
 {
     if (!isCurrentlyInFaces)
@@ -565,24 +660,30 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
             unsigned int vertexPositionID = indexPosition.X - 1;
             unsigned int texturePointID = indexPosition.Y - 1;
             unsigned int normalVectorID = indexPosition.Z - 1;
+            Vector3<float>* vertexData = GlobalVertexPosition(vertexPositionID);
+            Vector2<float>* textureData = GlobalTextureCoordinate(texturePointID);
+            Vector3<float>* normalData = GlobalVertexNormalPosition(normalVectorID);
+            bool vertexPositionIDValid = vertexData;
+            bool texturePointIDValid = textureData;
+            bool normalVectorIDValid = normalData;
 
-            Vector3<float>& vertexData = element.VertexPositionList[vertexPositionID];
-            Vector2<float>& textureData = element.TextureCoordinateList[vertexPositionID];
-            Vector3<float>& normalData = element.VertexNormalPositionList[vertexPositionID];
+            assert(vertexPositionIDValid);
+            assert(texturePointIDValid);
+            assert(normalVectorIDValid);
 
             mesh.Structure.IndexData[i] = i;
-            vertexDataArray[vertecDataIndex++] = vertexData.X;
-            vertexDataArray[vertecDataIndex++] = vertexData.Y;
-            vertexDataArray[vertecDataIndex++] = vertexData.Z;
-            vertexDataArray[vertecDataIndex++] = normalData.X;
-            vertexDataArray[vertecDataIndex++] = normalData.Y;
-            vertexDataArray[vertecDataIndex++] = normalData.Z;
+            vertexDataArray[vertecDataIndex++] = vertexData->X;
+            vertexDataArray[vertecDataIndex++] = vertexData->Y;
+            vertexDataArray[vertecDataIndex++] = vertexData->Z;
+            vertexDataArray[vertecDataIndex++] = normalData->X;
+            vertexDataArray[vertecDataIndex++] = normalData->Y;
+            vertexDataArray[vertecDataIndex++] = normalData->Z;
             vertexDataArray[vertecDataIndex++] = 1;
             vertexDataArray[vertecDataIndex++] = 1;
             vertexDataArray[vertecDataIndex++] = 1;
             vertexDataArray[vertecDataIndex++] = 1;
-            vertexDataArray[vertecDataIndex++] = normalData.X;
-            vertexDataArray[vertecDataIndex++] = normalData.Y;
+            vertexDataArray[vertecDataIndex++] = normalData->X;
+            vertexDataArray[vertecDataIndex++] = normalData->Y;
         }
     }
 

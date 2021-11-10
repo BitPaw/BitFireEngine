@@ -268,6 +268,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Process.cpp" />
     <ClCompile Include="Source\ErrorCode.cpp" />
     <ClCompile Include="Source\File\Program.cpp" />
     <ClCompile Include="Source\File\Bash.cpp" />
@@ -404,6 +405,7 @@
     <ClCompile Include="Source\Game\Sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Process.h" />
     <ClInclude Include="Source\ErrorCode.h" />
     <ClInclude Include="Source\File\Program.h" />
     <ClInclude Include="Source\File\Bash.h" />

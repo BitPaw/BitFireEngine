@@ -9,7 +9,6 @@
 #include <unistd.h>
 #define ExecuteProgram spawnl
 #elif defined(OSWindows)
-#include <windows.h>
 #include <process.h>
 #define ExecuteProgram _spawnl
 #endif
@@ -53,4 +52,40 @@ BF::FileActionResult BF::Program::Execute(const char* programPath, const char* p
 BF::FileActionResult BF::Program::Execute(const wchar_t* programPath, const char* parameterList, ProgramExecuteResultListener* callback)
 {
     return FileActionResult::Successful;
+}
+
+void* BF::Program::CurrentProcess()
+{
+    return GetCurrentProcess();
+}
+
+size_t BF::Program::CurrentProcessID()
+{
+    return GetCurrentProcessId();
+}
+
+void BF::Program::Attach()
+{
+    DWORD dwDesiredAccess = 0;
+    BOOL bInheritHandle = 0;
+    DWORD dwProcessID = 0;
+    HANDLE handleID = OpenProcess(dwDesiredAccess, bInheritHandle, dwProcessID);
+}
+
+void BF::Program::Detach()
+{
+    HANDLE handleID = 0;
+
+    CloseHandle(handleID);
+}
+
+void BF::Program::ReadMemory()
+{
+    HANDLE hProcess = 0;
+    LPCVOID lpBaseAddress = 0;
+    LPVOID* lpBuffer = 0;
+    SIZE_T nSize = 0;
+    SIZE_T* lpNumberOfBytesRead = 0;
+
+    bool successful = ReadProcessMemory(hProcess, lpBaseAddress, lpBuffer, nSize, lpNumberOfBytesRead);
 }

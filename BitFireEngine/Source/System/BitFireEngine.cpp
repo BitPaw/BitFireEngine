@@ -36,8 +36,7 @@ void BF::BitFireEngine::Start()
         "|  |    |  _/|  |\\   __\\|   __)   |  |\\_  __ \\_/ __ \\  |                      |\n"
         "|  |    |   \\|  | |  |  |   |     |  | |  | \\/\\  ___/  |                      |\n"
         "|  |________/|__| |__|  \\___|     |__| |__|    \\_____> |                      |\n"
-        "+------------------------------------------------------+----------------------+\n"
-    ,
+        "+------------------------------------------------------+----------------------+\n",
         versionMajor,
         versionMinor,
         versionPatch
@@ -142,7 +141,7 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
     if (keyboard.K.IsShortPressed())
     {
         Image image;
-        const char fileName[] = "ScreenShot.bmp";
+        const char* fileName = "ScreenShot.bmp";
 
         _mainWindow.TakeScreenShot(image);
 

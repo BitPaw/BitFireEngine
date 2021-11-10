@@ -14,6 +14,9 @@
 #include "../../SystemResource/Source/Math/Physic/GravityCube.h"
 #include "../../SystemResource/Source/Image/JPEG/JPEG.h"
 
+
+using namespace BF;
+
 BF::UIText* text;
 //BF::Model* sphere;
 
@@ -56,8 +59,7 @@ void ZEE::ZEEGameSystem::OnStartUp()
 
     GameSystem.Resource.Load(textureBix, "Model/Dialog/DialogBox.obj");
 
-    GameSystem.Resource.Load("Texture/Block.bmp");
-   
+    GameSystem.Resource.Load("Texture/Block.bmp");   
     GameSystem.Resource.Load("Model/Triangle.obj");
     
     _worldGravity.IgnoreAxis.Set(true, true, true);
@@ -71,7 +73,7 @@ void ZEE::ZEEGameSystem::OnStartUp()
     cube.Mass = 1000;
 
     
-    //GameSystem.Resource.Load("Level/MainMenu.lev");
+    GameSystem.Resource.Load("Level/MainMenu.lev");
 
 
     textureBix.MatrixModel.Scale(10, 2, 1);
@@ -170,6 +172,31 @@ void ZEE::ZEEGameSystem::OnUpdateInput(BF::InputContainer& input)
         GameSystem.SoundPlayer.Update(audioSource);
     }
 #endif
+
+    KeyBoard& keyboard = input.KeyBoardInput;
+    Mouse& mouse = input.MouseInput;
+    Camera& camera = GameSystem.Resource.MainCamera;
+    Vector3<float> movement;
+
+    if (keyboard.ShitftLeft.IsPressed()) { movement.Add(0, -1, 0); }
+    if (keyboard.W.IsPressed()) { movement.Add(0, 0, 1); }
+    if (keyboard.A.IsPressed()) { movement.Add(-1, 0, 0); }
+    if (keyboard.S.IsPressed()) { movement.Add(0, 0, -1); }
+    if (keyboard.D.IsPressed()) { movement.Add(1, 0, 0); }
+    if (keyboard.SpaceBar.IsPressed())
+    {
+        camera.Velocity.Set(0.0f, 6.0f, .0f);
+
+        movement.Add(0, 1, 0);
+    }
+
+    camera.Move(movement);
+
+    camera.Rotate(mouse.InputAxis[0], mouse.InputAxis[1]);
+
+    camera.Update(_deltaTime);
+    keyboard.IncrementButtonTick();
+    mouse.ResetAxis();
 }
 
 void ZEE::ZEEGameSystem::OnUpdateUI()

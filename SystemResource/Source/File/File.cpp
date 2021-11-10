@@ -8,7 +8,7 @@
 #include <cwchar>
 #include <direct.h>
 
-#if  defined(OSUnix)
+#if defined(OSUnix)
 #define FileRemove remove 
 #define FileRemoveW wremove 
 #define FileRename rename 

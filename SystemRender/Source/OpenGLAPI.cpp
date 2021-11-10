@@ -43,13 +43,13 @@ void BF::OpenGLAPI::RegisterModel(Model& model)
     for (size_t meshIndex = 0; meshIndex < model.MeshListSize; meshIndex++)
     {
         Mesh& mesh = model.MeshList[meshIndex];
-        MeshStructure& structure = mesh.Structure;
-
-        structure.PrintData();
+        MeshStructure& structure = mesh.Structure;      
 
         OpenGLAPI::VertexDataDefine(&structure.VertexBufferID, structure.VertexDataSize * sizeof(float), structure.VertexData);
         OpenGLAPI::VertexAttributeArrayDefine(sizeof(float), structure.VertexDataBlockListSize, structure.VertexDataBlockList);
         OpenGLAPI::IndexDataDefine(&structure.IndexBufferID, structure.IndexDataSize * sizeof(unsigned int), structure.IndexData);
+
+        structure.PrintData();
 
         mesh.RenderInfo.ShouldBeRendered = true;
     }

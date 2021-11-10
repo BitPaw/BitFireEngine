@@ -49,7 +49,7 @@ int main(int amountOFParameters, char** parameter)
     catch (const std::exception& exception)
     {
         printf("[x][Core] System colapsed. Reason : \n%s", exception.what());
-        return 1;
+        return EXIT_FAILURE;
     }
 
     return EXIT_SUCCESS;

@@ -24,11 +24,19 @@ namespace BF
 		size_t MaterialFileListSize;
 		MTL* MaterialFileList;
 
-		unsigned int ElementListSize;
+		size_t ElementListSize;
 		OBJElement* ElementList;
 
 		OBJ();
 		~OBJ();
+
+		//---<GlobalMesh>---
+		Vector3<float>* GlobalVertexPosition(size_t index);
+		Vector2<float>* GlobalTextureCoordinate(size_t index);
+		Vector3<float>* GlobalVertexNormalPosition(size_t index);
+		Vector3<float>* GlobalVertexParameter(size_t index);
+		Vector3<unsigned int>* GlobalFaceElement(size_t index);
+		//------------------
 
 		FileActionResult Load(const char* filePath);
 		FileActionResult Save(const char* filePath);
