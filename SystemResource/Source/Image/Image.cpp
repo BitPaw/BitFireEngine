@@ -43,8 +43,8 @@ BF::Image::Image()
     LayoutNear = ImageLayout::Nearest;
     LayoutFar = ImageLayout::Nearest;
 
-    WrapHeight = ImageWrap::StrechEdges;
-    WrapWidth = ImageWrap::StrechEdges;
+    WrapHeight = ImageWrap::Repeat;
+    WrapWidth = ImageWrap::Repeat;
 
     PixelDataSize = 0;
     PixelData = 0;

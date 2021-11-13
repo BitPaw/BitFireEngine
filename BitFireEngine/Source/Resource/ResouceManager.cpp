@@ -920,11 +920,11 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
 
             //-----[Texture Lookup]--------------------------------------------
             {
-                unsigned int materialID = parentModel ? parentModel->SharedRenderInfoOverride.MaterialID : mesh.RenderInfo.MaterialID;
-                bool hasMaterial = materialID != -1;
-                unsigned int textureID = hasMaterial ? materialID : _defaultTextureID;
+                unsigned int materialIndex = parentModel ? parentModel->SharedRenderInfoOverride.MaterialID : mesh.RenderInfo.MaterialID;
+                bool hasMaterial = materialIndex != -1;
+                unsigned int textureID = hasMaterial ? model->MaterialList[materialIndex].Texture.ID : _defaultTextureID;
 
-                OpenGLAPI::TextureUse(ImageType::Texture2D, 4);
+                OpenGLAPI::TextureUse(ImageType::Texture2D, textureID);
             }
             //-----------------------------------------------------------------           
 
@@ -962,8 +962,16 @@ void BF::ResourceManager::PrintContent(bool detailed)
         for (LinkedListNode<Model*>* currentModel = _modelList.GetFirst(); currentModel ; currentModel = currentModel->Next)
         {
             Model* model = currentModel->Element;
+            unsigned int meshListSize = model->MeshListSize;
 
             printf(line, model->ID, model->Name, model->FilePath, sizeof(*model));
+
+            for (size_t i = 0; i < meshListSize; i++)
+            {
+                Mesh& mesh = model->MeshList[i];
+
+                printf("| Mesh [%i/%i] Texture : %i |\n", i, meshListSize, mesh.RenderInfo.MaterialID);
+            }
         }
 
         printf(endLine);

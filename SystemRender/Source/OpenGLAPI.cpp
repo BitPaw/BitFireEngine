@@ -68,12 +68,12 @@ void BF::OpenGLAPI::RegisterModel(Model& model)
         glBindVertexArray(vertexArrayID);
 
         glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID); // Select Buffer
-        glBufferData(GL_ARRAY_BUFFER, structure.VertexDataSize * sizeof(float), structure.VertexData, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, structure.VertexDataSize * sizeof(float), structure.VertexData, GL_STATIC_DRAW);
 
         OpenGLAPI::VertexAttributeArrayDefine(sizeof(float), structure.VertexDataBlockListSize, structure.VertexDataBlockList);
         
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, structure.IndexDataSize * sizeof(unsigned int), structure.IndexData, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, structure.IndexDataSize * sizeof(unsigned int), structure.IndexData, GL_STATIC_DRAW);
         
         //structure.PrintData();
 

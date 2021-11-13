@@ -57,20 +57,20 @@ void ZEE::ZEEGameSystem::OnStartUp()
     GameSystem.Resource.Load(worldShader, "Shader/WS.vert", "Shader/WS.frag");
     GameSystem.Resource.Load(hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
 
-    GameSystem.Resource.Load(textureBix, "Model/Dialog/DialogBox.obj");
+    //GameSystem.Resource.Load(textureBix, "Model/Dialog/DialogBox.obj");
 
-    GameSystem.Resource.Load("Texture/Block.bmp");   
-    GameSystem.Resource.Load("Model/Triangle.obj");
+    //GameSystem.Resource.Load("Texture/Block.bmp");   
+    //GameSystem.Resource.Load("Model/Triangle.obj");
     
-    _worldGravity.IgnoreAxis.Set(true, true, true);
-    _worldGravity.PullForce = GravityForceEarth;
-    _worldGravity.PullDirection.Set(0, -1, 0);
-    GameSystem.Resource.Add(&_worldGravity);
+   // _worldGravity.IgnoreAxis.Set(true, true, true);
+   // _worldGravity.PullForce = GravityForceEarth;
+   // _worldGravity.PullDirection.Set(0, -1, 0);
+   // GameSystem.Resource.Add(&_worldGravity);
 
-    GameSystem.Resource.Load(cube, "Model/Cube.obj");
-    cube.MatrixModel.Scale(10.0f);
-    cube.EnablePhysics = true;
-    cube.Mass = 1000;
+    //GameSystem.Resource.Load(cube, "Model/Cube.obj");
+    //cube.MatrixModel.Scale(10.0f);
+    //cube.EnablePhysics = true;
+    //cube.Mass = 1000;
 
     
     GameSystem.Resource.Load("Level/MainMenu.lev");
