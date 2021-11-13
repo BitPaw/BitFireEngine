@@ -35,7 +35,23 @@ BF::Model::Model(const char* modelName) : Model()
 
 void BF::Model::PrintModelData()
 {
-    printf("Meshes %u\n", MeshListSize);
+    printf("+--------------------------------------------+\n");
+    printf("| Meshes %u |\n", MeshListSize);
+
+    for (size_t i = 0; i < MeshListSize; i++)
+    {
+        Mesh& mesh = MeshList[i];
+        MeshRenderInfo& info = mesh.RenderInfo;
+        MeshStructure& structure = mesh.Structure;
+
+        printf("+--------------------------------------------+\n");
+        printf("| Mesh <%u/%u>\n", i, MeshListSize);
+        printf("| Vertex   : ID:%u, Size:%u |\n", structure.VertexBufferID, structure.VertexDataSize);
+        printf("| Index    : ID:%u, Size:%u |\n", structure.IndexBufferID, structure.IndexDataSize);
+        printf("| Material : ID:%u, ShaderID:%u, Render:%u |\n", info.MaterialID, info.ShaderProgramID, info.ShouldBeRendered);
+    }
+
+    printf("+--------------------------------------------+");
 }
 
 BF::ModelType BF::Model::FileFormatPeek(const char* fileExtension)

@@ -37,29 +37,61 @@ void BF::OpenGLAPI::RegisterImage(Image& image)
 
 void BF::OpenGLAPI::RegisterModel(Model& model)
 {
-    OpenGLAPI::VertexArrayDefine(&model.ID);
-    OpenGLAPI::VertexArrayBind(model.ID);
+    size_t bufferIndexCounter = 0;
+    size_t numberOfMeshes = model.MeshListSize;
+    unsigned int vaoIDList[128u];
+    unsigned int bufferIDList[128u];
+    memset(vaoIDList, -1, 128u * sizeof(unsigned int));
+    memset(bufferIDList, -1, 128u * sizeof(unsigned int));
 
-    for (size_t meshIndex = 0; meshIndex < model.MeshListSize; meshIndex++)
+    glGenVertexArrays(numberOfMeshes, vaoIDList);
+    glGenBuffers(numberOfMeshes * 2, bufferIDList); // Create Buffers
+
+    printf("[OpenGL] Register Mesh <%s>. MeshID <%i> Sub-Meshes <%i>\n", model.FilePath, model.ID, model.MeshListSize);
+       
+    for (size_t meshIndex = 0; meshIndex < numberOfMeshes; meshIndex++)
     {
+        unsigned int vertexArrayID = vaoIDList[meshIndex];
+        unsigned int vertexBufferID = bufferIDList[bufferIndexCounter++];
+        unsigned int indexBufferID = bufferIDList[bufferIndexCounter++];
         Mesh& mesh = model.MeshList[meshIndex];
         MeshStructure& structure = mesh.Structure;      
 
-        OpenGLAPI::VertexDataDefine(&structure.VertexBufferID, structure.VertexDataSize * sizeof(float), structure.VertexData);
-        OpenGLAPI::VertexAttributeArrayDefine(sizeof(float), structure.VertexDataBlockListSize, structure.VertexDataBlockList);
-        OpenGLAPI::IndexDataDefine(&structure.IndexBufferID, structure.IndexDataSize * sizeof(unsigned int), structure.IndexData);
+        assert(structure.VertexDataSize > 0);
+        assert(structure.IndexDataSize > 0);
+       
+        // Link Dara
+        structure.VertexArrayID = vertexArrayID;
+        structure.VertexBufferID = vertexBufferID;
+        structure.IndexBufferID = indexBufferID;
 
-        structure.PrintData();
+        glBindVertexArray(vertexArrayID);
+
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID); // Select Buffer
+        glBufferData(GL_ARRAY_BUFFER, structure.VertexDataSize * sizeof(float), structure.VertexData, GL_DYNAMIC_DRAW);
+
+        OpenGLAPI::VertexAttributeArrayDefine(sizeof(float), structure.VertexDataBlockListSize, structure.VertexDataBlockList);
+        
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, structure.IndexDataSize * sizeof(unsigned int), structure.IndexData, GL_DYNAMIC_DRAW);
+        
+        //structure.PrintData();
 
         mesh.RenderInfo.ShouldBeRendered = true;
     }
 
+    //glBindBuffer(GL_ARRAY_BUFFER, 0);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    model.ID = ResourceIDStored;
     model.ShouldItBeRendered = true;
 }
 
 void BF::OpenGLAPI::SkyBoxUse(SkyBox& skybox)
 {
     OpenGLAPI::VertexArrayBind(skybox.ID);
+    OpenGLAPI::VertexBufferBind(skybox.MeshList[0].Structure.VertexBufferID, skybox.MeshList[0].Structure.IndexBufferID);
     OpenGLAPI::TextureUse(ImageType::TextureCubeContainer, skybox.ID);
 }
 
@@ -153,6 +185,9 @@ void BF::OpenGLAPI::VertexArrayBind(int vertexArrayID)
 
 void BF::OpenGLAPI::VertexBufferBind(int vertexBufferID, int indexBuffer)
 {
+    assert(vertexBufferID != -1);
+    assert(indexBuffer != -1);
+
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 }
@@ -161,7 +196,7 @@ void BF::OpenGLAPI::Render(RenderMode renderMode, int startIndex, int amount)
 {
     unsigned int mode = -1;
 
-    glPointSize(40);
+    glPointSize(10);
     glLineWidth(30);
 
     switch (renderMode)
@@ -424,7 +459,7 @@ void BF::OpenGLAPI::IndexDataDefine(unsigned int* indexID, int size, void* data)
 {
     glGenBuffers(1, indexID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *indexID); 
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
 }
 
 int BF::OpenGLAPI::ShaderGetUniformLocationID(int shaderID, const char* UniformName)

@@ -76,7 +76,7 @@ void ZEE::ZEEGameSystem::OnStartUp()
     GameSystem.Resource.Load("Level/MainMenu.lev");
 
 
-    textureBix.MatrixModel.Scale(10, 2, 1);
+   // textureBix.MatrixModel.Scale(10, 2, 1);
 
 
 

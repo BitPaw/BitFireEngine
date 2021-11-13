@@ -7,6 +7,8 @@ BF::MeshStructure::MeshStructure()
 {
 	Original = true;
 
+	VertexArrayID = -1;
+
 	VertexBufferID = -1;
 	VertexDataSize = 0;
 	VertexData = nullptr;
@@ -109,7 +111,7 @@ void BF::MeshStructure::PrintData()
 
 	for (size_t i = 0; i < VertexDataSize; i++)
 	{
-		printf("| %5.2f ", VertexData[i]);
+		printf("| %6.2f ", VertexData[i]);
 
 		if (((i + 1) % (3 + 3 + 4 + 2)) == 0)
 		{

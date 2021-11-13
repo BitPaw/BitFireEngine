@@ -9,6 +9,8 @@ namespace BF
 		public:
 		bool Original;
 
+		unsigned int VertexArrayID; // VAO
+
 		//---<Vertex Data>-----------------------
 		unsigned int VertexBufferID; // VBO
 		size_t VertexDataSize;

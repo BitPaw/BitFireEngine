@@ -233,7 +233,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePath)
         case ResourceType::Sound:
         {
             Sound* sound = new Sound();
-
+               
             Load(*sound, filePath);
 
             resource = sound;
@@ -259,9 +259,7 @@ void BF::ResourceManager::Load(Model& model)
             image.ID = ResourceIDLoading;
             image.FilePathChange(modelMaterial.FilePath);
 
-            Add(image);
-
-            image.Load();
+            Add(image, true);
         }
 
         model.ShouldItBeRendered = true;        
@@ -348,8 +346,6 @@ void BF::ResourceManager::Load(Dialog& resource, const char* filePath)
 
 void BF::ResourceManager::Load(Level& level, const char* filePath)
 {
-
-
     const char _modelToken = 'O';
     const char _textureToken = 'T';
     const char _musicToken = 'M';
@@ -448,10 +444,16 @@ void BF::ResourceManager::Load(Level& level, const char* filePath)
                 Vector3<float> rotation;
                 Vector3<float> scale;
 
-                sscanf(currentLineBuffer, "%s %s %s %s %s", dummyBuffer, path, positionText, rotationText, scaleText);
-
-
-                
+                sscanf
+                (
+                    currentLineBuffer, 
+                    "%s %s %s %s %s", 
+                    dummyBuffer,
+                    path, 
+                    positionText,
+                    rotationText, 
+                    scaleText
+                );                
 
                 // Get raw Data-------------------------                         
 
@@ -488,13 +490,13 @@ void BF::ResourceManager::Load(Level& level, const char* filePath)
                 // Load Model----------------
                 Model* loadedModel = new Model(); 
 
-                Load(*loadedModel, path);
+                Add(*loadedModel, path, false);
 
-                if (loadedModel == nullptr)
+                /*
+                for (size_t i = 0; i < loadedModel->MeshListSize; i++)
                 {
-                    printf("[Warning] Loading failed!\n");
-                    break;
-                }
+                    loadedModel->MeshList[i].Structure.RenderType = RenderMode::Point;
+                }*/                
 
                 level.ModelList[modelCounter++] = loadedModel;
                 //-------------------
@@ -854,8 +856,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
         Model* model = currentModel->Element;
         Model* parentModel = nullptr;
         bool isSharedModel = model->SharedModel != nullptr;
-        unsigned int vaoID = isSharedModel ? model->SharedModel->ID : model->ID;
-        bool skipRendering = !model->ShouldItBeRendered || vaoID == -1;       
+        bool skipRendering = !model->ShouldItBeRendered;       
 
         if (skipRendering)
         {
@@ -866,9 +867,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
         {
             parentModel = model;
             model = model->SharedModel;
-        }      
-
-        OpenGLAPI::VertexArrayBind(vaoID);
+        }        
 
         for (size_t meshIndex = 0; meshIndex < model->MeshListSize; meshIndex++)
         {
@@ -878,15 +877,14 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
             bool changeShader = shaderProgramID != _lastUsedShaderProgram;
             bool isRegistered = ((int)model->ID) >= 0;
             bool skipRendering = !(mesh.RenderInfo.ShouldBeRendered && isRegistered) || mesh.Structure.RenderType == RenderMode::Invalid;
+            unsigned int vaoID = isSharedModel ? model->SharedModel->ID : mesh.Structure.VertexArrayID;
 
             if (skipRendering) // Skip to next mesh.
             {
                 continue;
             }
 
-            assert(isRegistered);       
-
-            OpenGLAPI::VertexBufferBind(mesh.Structure.VertexBufferID, mesh.Structure.IndexBufferID);
+            assert(isRegistered);     
 
             //-----[Shader Lookup]---------------------------------------------
             {
@@ -918,37 +916,25 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
                 OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, model->MatrixModel.Data);
             }
 
+            OpenGLAPI::VertexArrayBind(vaoID);
+
             //-----[Texture Lookup]--------------------------------------------
             {
                 unsigned int materialID = parentModel ? parentModel->SharedRenderInfoOverride.MaterialID : mesh.RenderInfo.MaterialID;
                 bool hasMaterial = materialID != -1;
                 unsigned int textureID = hasMaterial ? materialID : _defaultTextureID;
 
-                OpenGLAPI::TextureUse(ImageType::Texture2D, textureID);
-/*
-                if (hasMaterial)
-                {      
-
-                    Image* texture = mesh.;
-                    bool hasTexture = texture != nullptr;
-
-                    if (hasTexture)
-                    {
-                        textureID = texture->ID;
-
-                        OpenGLAPI::TextureUse(texture->Type, textureID);
-                    }
-                }
-                else
-                {
-                    OpenGLAPI::TextureUse(ImageType::Texture2D, textureID);
-                }
-            */
+                OpenGLAPI::TextureUse(ImageType::Texture2D, 4);
             }
             //-----------------------------------------------------------------           
 
-            //-----[RenderStyle]-----------------------------------------------
+            //-----[RenderStyle]-----------------------------------------------                      
+                        
+                      
             OpenGLAPI::Render(mesh.Structure.RenderType, 0, mesh.Structure.IndexDataSize);
+
+            // INFO: VAO = MESH -> 1x VBO & 1x VEO
+            //Sleep(.5f);
             //-----------------------------------------------------------------
         }       
     }
