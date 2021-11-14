@@ -947,7 +947,7 @@ void BF::ResourceManager::PrintContent(bool detailed)
         const char* noValue = "| %-73s |\n";
         const char* message =
             "+-----------------------------------------------------------------------------+\r\n"
-            "|   %-73s |\n"
+            "|  %-74s |\n"
             "+-----+-----------------------+--------------------------------------+--------+\n"
             "|  ID | Name                  | Source - FilePath                    | Size   |\n"
             "+-----+-----------------------+--------------------------------------+--------+\n";
@@ -970,7 +970,11 @@ void BF::ResourceManager::PrintContent(bool detailed)
             {
                 Mesh& mesh = model->MeshList[i];
 
-                printf("| Mesh [%i/%i] Texture : %i |\n", i, meshListSize, mesh.RenderInfo.MaterialID);
+                // mesh.RenderInfo.MaterialID
+                char buffer[60];
+                sprintf(buffer, "(Sub-Mesh) [%2i/%2i]", i+1, meshListSize);
+
+                printf(line, mesh.Structure.VertexArrayID, mesh.Name, buffer, sizeof(mesh));
             }
         }
 
@@ -1010,14 +1014,19 @@ void BF::ResourceManager::PrintContent(bool detailed)
         for (LinkedListNode<ShaderProgram*>* currentChaderProgram = _shaderProgramList.GetFirst(); currentChaderProgram ; currentChaderProgram = currentChaderProgram->Next)
         {
             ShaderProgram* shaderProgram = currentChaderProgram->Element;
+            unsigned int shaderListSize = ShaderListSize;
+            char buffer[50];
 
-            printf("| ID:%u ShaderProgram\n", shaderProgram->ID);
+            sprintf(buffer, "(ShaderContainer) [%i]", shaderListSize);
 
-            for (size_t i = 0; i < 2; i++)
+            printf(line, shaderProgram->ID, buffer, "<Internal>", sizeof(ShaderProgram));
+
+            for (size_t i = 0; i < shaderListSize; i++)
             {
                 Shader& shader = shaderProgram->ShaderList[i];
+                const char* shaderTypeString = ShaderTypeToString(shader.Type);
 
-                printf("| - Sub-Shader ID:%u Type:%u Source:%s\n", shader.ID, shader.Type, &shader.FilePath[0]);
+                printf(line, shader.ID, shaderTypeString, shader.FilePath, sizeof(shader));
             }
         }
 

@@ -9,6 +9,7 @@ namespace BF
 	struct Mesh
 	{
 		public:
+		char Name[50];
 		MeshStructure Structure;
 		MeshRenderInfo RenderInfo;	
 	};

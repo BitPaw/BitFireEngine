@@ -3,7 +3,7 @@
 #define ResourceNameSize 32u
 #define ResourceFilePathSize 64u
 
-#define ResourceIDStored 42069000
+#define ResourceIDStored 999
 
 #define ResourceIDUndefined -1
 

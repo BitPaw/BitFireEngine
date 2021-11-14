@@ -216,6 +216,8 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
         return FileActionResult;
     }   
 
+    strncpy(Name, filePath, OBJNameSize);
+
     //---<Cound needed Space and allocate>----------------------------------
     {
         bool isInMesh = false;  
@@ -469,7 +471,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
 
                 case OBJLineCommand::ObjectName:
                 {
-                    strcpy_s(elemtent->Name, OBJElementNameLength, currentLineBuffer + 2);
+                    strncpy_s(elemtent->Name, currentLineBuffer + 2, OBJElementNameLength);
                     break;
                 }
 
@@ -635,6 +637,8 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
     model.MeshListSize = ElementListSize;
     model.MeshList = new Mesh[ElementListSize];
 
+    strncpy_s(model.Name, Name, OBJNameSize);
+
     for (size_t elementIndex = 0; elementIndex < model.MeshListSize; elementIndex++)
     {
         OBJElement& element = ElementList[elementIndex]; // Get current source Mesh
@@ -648,6 +652,8 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
 
         mesh.Structure.Allocate(faceElementListSize * (3 + 3 + 4 + 2), faceElementListSize);
         mesh.RenderInfo.MaterialID = element.MaterialListIndex;
+
+        strncpy_s(mesh.Name, element.Name, OBJElementNameLength);
 
         size_t vertecDataIndex = 0;
         float* vertexDataArray = mesh.Structure.VertexData;

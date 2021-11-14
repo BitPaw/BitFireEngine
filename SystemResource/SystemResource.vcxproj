@@ -283,6 +283,7 @@
     <ClCompile Include="Source\Image\PNG\PNGColorType.cpp" />
     <ClCompile Include="Source\Model\Model.cpp" />
     <ClCompile Include="Source\Network\SocketActionResult.cpp" />
+    <ClCompile Include="Source\Shader\ShaderType.cpp" />
     <ClCompile Include="Source\Video\MP4\MP4.cpp" />
     <ClCompile Include="Source\Image\JPEG\JPEGScanSelector.cpp" />
     <ClCompile Include="Source\Image\JPEG\JPEGScanStart.cpp" />
