@@ -91,7 +91,6 @@ void BF::OpenGLAPI::RegisterModel(Model& model)
 void BF::OpenGLAPI::SkyBoxUse(SkyBox& skybox)
 {
     OpenGLAPI::VertexArrayBind(skybox.ID);
-    OpenGLAPI::VertexBufferBind(skybox.MeshList[0].Structure.VertexBufferID, skybox.MeshList[0].Structure.IndexBufferID);
     OpenGLAPI::TextureUse(ImageType::TextureCubeContainer, skybox.ID);
 }
 

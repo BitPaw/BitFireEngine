@@ -878,6 +878,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
             bool isRegistered = ((int)model->ID) >= 0;
             bool skipRendering = !(mesh.RenderInfo.ShouldBeRendered && isRegistered) || mesh.Structure.RenderType == RenderMode::Invalid;
             unsigned int vaoID = isSharedModel ? model->SharedModel->ID : mesh.Structure.VertexArrayID;
+            Matrix4x4<float>& modelMatrix = isSharedModel ? parentModel->MatrixModel : model->MatrixModel;
 
             if (skipRendering) // Skip to next mesh.
             {
@@ -907,34 +908,21 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
             }           
             //-----------------------------------------------------------------
 
-            if (isSharedModel)
-            {
-                OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, parentModel->MatrixModel.Data);
-            }
-            else
-            {
-                OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, model->MatrixModel.Data);
-            }
-
             OpenGLAPI::VertexArrayBind(vaoID);
 
-            //-----[Texture Lookup]--------------------------------------------
-            {
-                unsigned int materialIndex = parentModel ? parentModel->SharedRenderInfoOverride.MaterialID : mesh.RenderInfo.MaterialID;
-                bool hasMaterial = materialIndex != -1;
-                unsigned int textureID = hasMaterial ? model->MaterialList[materialIndex].Texture.ID : _defaultTextureID;
+            //-----[Position]--------------------------------------------------
+            OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, modelMatrix.Data);
+            //-----------------------------------------------------------------  
 
-                OpenGLAPI::TextureUse(ImageType::Texture2D, textureID);
-            }
+            //-----[Texture Lookup]--------------------------------------------
+            unsigned int materialIndex = parentModel ? parentModel->SharedRenderInfoOverride.MaterialID : mesh.RenderInfo.MaterialID;
+            //unsigned int textureID = materialIndex != -1 ? model->MaterialList[materialIndex].Texture.ID : _defaultTextureID;
+
+            OpenGLAPI::TextureUse(ImageType::Texture2D, materialIndex);
             //-----------------------------------------------------------------           
 
             //-----[RenderStyle]-----------------------------------------------                      
-                        
-                      
             OpenGLAPI::Render(mesh.Structure.RenderType, 0, mesh.Structure.IndexDataSize);
-
-            // INFO: VAO = MESH -> 1x VBO & 1x VEO
-            //Sleep(.5f);
             //-----------------------------------------------------------------
         }       
     }
