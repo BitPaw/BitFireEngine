@@ -90,4 +90,7 @@ namespace BF
         // Unkown type, placegolder for future types or a midified PNG standard
         Custom
     };
+
+    PNGChunkType ConvertChunkType(unsigned char chunk[4]);
+    void ConvertChunkType(unsigned char chunk[4], PNGChunkType pngchunkType);
 }

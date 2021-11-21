@@ -265,3 +265,8 @@ void BF::Model::ConvertFrom(Shape& shape)
     UpdateGlobalMesh();*
 }
 */
+
+size_t BF::Model::FullSizeInMemory()
+{
+    return sizeof(Model);
+}

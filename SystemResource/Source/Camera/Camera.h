@@ -34,7 +34,8 @@ namespace BF
 		void Rotate(float x, float y);
 		void Move(Vector3<float> movement);
 		void Update(float deltaTime);
-		float GetAspectRatio();
+		float AspectRatioGet();
+		void AspectRatioSet(float width, float height);
 		void PerspectiveChange(CameraPerspective cmeraPerspective);
 	};
 }

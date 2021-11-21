@@ -268,7 +268,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Process.cpp" />
+    <ClCompile Include="Source\Compression\HUFFMAN\HuffmanNumberCode.cpp" />
+    <ClCompile Include="Source\Compression\HUFFMAN\HuffmanCodeType.cpp" />
+    <ClCompile Include="Source\Image\PNG\PNGChunkType.cpp" />
+    <ClCompile Include="Source\Image\PNG\PNGColorTree.cpp" />
+    <ClCompile Include="Source\Image\PNG\PNGColorCompressor.cpp" />
+    <ClCompile Include="Source\Compression\ADAM7\ADAM7.cpp" />
+    <ClCompile Include="Source\Compression\HUFFMAN\HuffmanTree.cpp" />
     <ClCompile Include="Source\ErrorCode.cpp" />
     <ClCompile Include="Source\File\Program.cpp" />
     <ClCompile Include="Source\File\Bash.cpp" />
@@ -295,7 +301,6 @@
     <ClCompile Include="Source\Image\TGA\TGABitsPerPixel.cpp" />
     <ClCompile Include="Source\Image\TGA\TGAImageDataType.cpp" />
     <ClCompile Include="Source\Video\AVI\AVIHeader.cpp" />
-    <ClCompile Include="Source\Compression\HUFFMAN\HuffmanCodeBlock.cpp" />
     <ClCompile Include="Source\Compression\HUFFMAN\HuffmanSymbol.cpp" />
     <ClCompile Include="Source\Compression\DEFLATE\DeflateEncodingMethod.cpp" />
     <ClCompile Include="Source\Compression\DEFLATE\DeflateBlock.cpp" />
@@ -340,7 +345,6 @@
     <ClCompile Include="Source\Image\JPEG\JPEG.cpp" />
     <ClCompile Include="Source\Image\PNG\PNG.cpp" />
     <ClCompile Include="Source\Image\PNG\PNGChunk.cpp" />
-    <ClCompile Include="Source\Image\PNG\PNGChunkTypeBlock.cpp" />
     <ClCompile Include="Source\Image\TGA\TGA.cpp" />
     <ClCompile Include="Source\Image\TIFF\TIFF.cpp" />
     <ClCompile Include="Source\Level\Level.cpp" />
@@ -404,9 +408,15 @@
     <ClCompile Include="Source\Compression\ZLIB\ZLIBCompressionLevel.cpp" />
     <ClCompile Include="Source\Compression\ZLIB\ZLIBCompressionMethod.cpp" />
     <ClCompile Include="Source\Game\Sprite.cpp" />
+    <ClCompile Include="Source\Compression\ZLIB\ZLIB.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Process.h" />
+    <ClInclude Include="Source\Compression\HUFFMAN\HuffmanNumberCode.h" />
+    <ClInclude Include="Source\Image\PNG\PNGColorTree.h" />
+    <ClInclude Include="Source\Image\PNG\PNGColorCompressor.h" />
+    <ClInclude Include="Source\Compression\ADAM7\ADAM7.h" />
+    <ClInclude Include="Source\Compression\HUFFMAN\HuffmanCodeType.h" />
+    <ClInclude Include="Source\Compression\HUFFMAN\HuffmanTree.h" />
     <ClInclude Include="Source\ErrorCode.h" />
     <ClInclude Include="Source\File\Program.h" />
     <ClInclude Include="Source\File\Bash.h" />
@@ -421,6 +431,7 @@
     <ClInclude Include="Source\File\FileTemporary.h" />
     <ClInclude Include="Source\Container\QuadTree\QuadTree.hpp" />
     <ClInclude Include="Source\File\ProgramExecuteResultListener.hpp" />
+    <ClInclude Include="Source\Image\Image.h" />
     <ClInclude Include="Source\Model\MeshRenderInfo.h" />
     <ClInclude Include="Source\Model\MeshStructure.h" />
     <ClInclude Include="Source\Font\FNT\FNTCommonData.h" />
@@ -445,7 +456,6 @@
     <ClInclude Include="Source\Math\Physic\PhysicsStatic.hpp" />
     <ClInclude Include="Source\Math\Physic\PhysicsDynamic.hpp" />
     <ClInclude Include="Source\Video\AVI\AVIHeader.h" />
-    <ClInclude Include="Source\Compression\HUFFMAN\HuffmanCodeBlock.h" />
     <ClInclude Include="Source\Compression\HUFFMAN\HuffmanSymbol.h" />
     <ClInclude Include="Source\Compression\DEFLATE\DeflateEncodingMethod.h" />
     <ClInclude Include="Source\Compression\DEFLATE\DeflateBlock.h" />
@@ -511,7 +521,6 @@
     <ClInclude Include="Source\Image\BMP\BMPInfoHeaderType.h" />
     <ClInclude Include="Source\Image\BMP\BMPInfoHeader.h" />
     <ClInclude Include="Source\Image\GIF\GIF.h" />
-    <ClInclude Include="Source\Image\Image.h" />
     <ClInclude Include="Source\Image\ImageFileFormat.h" />
     <ClInclude Include="Source\Image\ImageFilter.h" />
     <ClInclude Include="Source\Image\ImageDataFormat.h" />
@@ -521,7 +530,6 @@
     <ClInclude Include="Source\Image\PNG\PNG.h" />
     <ClInclude Include="Source\Image\PNG\PNGChunk.h" />
     <ClInclude Include="Source\Image\PNG\PNGChunkType.h" />
-    <ClInclude Include="Source\Image\PNG\PNGChunkTypeBlock.h" />
     <ClInclude Include="Source\Image\PNG\PNGColorType.h" />
     <ClInclude Include="Source\Image\TGA\TGA.h" />
     <ClInclude Include="Source\Image\TGA\TGABitsPerPixel.h" />
@@ -609,9 +617,7 @@
     <ClInclude Include="Source\Compression\ZLIB\ZLIBCompressionLevel.h" />
     <ClInclude Include="Source\Compression\ZLIB\ZLIBCompressionMethod.h" />
     <ClInclude Include="Source\Game\Sprite.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
+    <ClInclude Include="Source\Compression\ZLIB\ZLIB.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

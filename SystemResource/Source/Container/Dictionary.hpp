@@ -12,14 +12,17 @@ namespace BF
 		public:
 		Value* GetValue(Key key)
 		{
-			return &_valueTree;
+			return &_valueTree; // Found
+
+			//return nullptr; // NotFound
 		}
 
-		Key Add(Key key)
+		Key Add(Key key, Value value)
 		{
 			_keyTree = key;
+			_valueTree = value;
 
-			return nullptr;
+			return key;
 		}
 
 		void Remove(Key key)

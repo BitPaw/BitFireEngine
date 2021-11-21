@@ -1,5 +1,30 @@
 #include "PNGColorType.h"
 
+const char* BF::PNGColorTypeToString(PNGColorType pngColorType)
+{
+    switch (pngColorType)
+    {
+        default:
+        case PNGColorType::InvalidColorType:
+            return "InvalidColorType";
+
+        case PNGColorType::Grayscale:
+            return "Grayscale";
+
+        case PNGColorType::Truecolor:
+            return "Truecolor";
+         
+        case PNGColorType::IndexedColor:
+            return "Indexed Color";
+         
+        case PNGColorType::GrayscaleWithAlphaChannel:
+            return "Grayscale with AlphaChannel";
+
+        case PNGColorType::TruecolorWithAlphaChannel:
+            return "Truecolor with AlphaChannel";
+    }
+}
+
 BF::PNGColorType BF::ConvertColorType(unsigned int colorType)
 {
     switch (colorType)
@@ -46,5 +71,30 @@ unsigned int BF::ConvertColorType(PNGColorType colorType)
 
         case BF::PNGColorType::TruecolorWithAlphaChannel:
             return 6u;
+    }
+}
+
+unsigned int BF::NumberOfColorChannels(PNGColorType pngColorType)
+{
+    switch (pngColorType)
+    {
+        default:
+        case BF::PNGColorType::InvalidColorType:
+            return -1;
+
+        case BF::PNGColorType::Grayscale:
+            return 1;
+
+        case BF::PNGColorType::Truecolor:
+            return 3;
+
+        case BF::PNGColorType::IndexedColor:
+            return 1;
+
+        case BF::PNGColorType::GrayscaleWithAlphaChannel:
+            return 2;
+
+        case BF::PNGColorType::TruecolorWithAlphaChannel:
+            return 4;
     }
 }

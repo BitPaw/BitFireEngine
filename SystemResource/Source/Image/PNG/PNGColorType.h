@@ -13,6 +13,10 @@ namespace BF
 		TruecolorWithAlphaChannel  // ColorType = 6
 	};
 
+	const char* PNGColorTypeToString(PNGColorType pngColorType);
+
 	PNGColorType ConvertColorType(unsigned int colorType);
 	unsigned int ConvertColorType(PNGColorType colorType);
+
+	unsigned int NumberOfColorChannels(PNGColorType pngColorType);
 }

@@ -57,6 +57,7 @@ void BF::BitFireEngine::Start()
         OpenGLAPI::TextureMaxLoaded()
     );
 
+    _mainWindow.Callback = this;
     _callbackListener->OnStartUp();
    
     IsRunning = true;
@@ -84,7 +85,7 @@ void BF::BitFireEngine::Update()
 
     //---[User-Input]------------------------------------------------------
     _mainWindow.Update(); // Pull inputs from window
-    InputContainer& inputPool = *_mainWindow.GetInput();
+    InputContainer& inputPool = _mainWindow.Input;
 
     UpdateInput(inputPool);
 
@@ -165,4 +166,24 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
 void BF::BitFireEngine::Stop()
 {
     IsRunning = false;
+}
+
+void BF::BitFireEngine::OnKeyPressed(int key, int scancode, int action, int mods)
+{
+
+}
+
+void BF::BitFireEngine::OnMouseButtonClick(int button, int action, int mods)
+{
+
+}
+
+void BF::BitFireEngine::OnMousePositionChanged(double positionX, double positionY)
+{
+
+}
+
+void BF::BitFireEngine::OnWindowSizeChanged(int width, int height)
+{
+    Resource.MainCamera.AspectRatioSet(width, height);
 }

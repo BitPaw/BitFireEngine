@@ -63,9 +63,6 @@
     <ClCompile Include="Source\Image\PNG\PNGChunk.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\PNG\PNGChunkTypeBlock.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Image\TGA\TGA.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -297,9 +294,6 @@
     <ClCompile Include="Source\Compression\HUFFMAN\HuffmanSymbol.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Compression\HUFFMAN\HuffmanCodeBlock.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Compression\DEFLATE\DeflateBlock.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -417,10 +411,31 @@
     <ClCompile Include="Source\ErrorCode.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Process.cpp">
+    <ClCompile Include="Source\Shader\ShaderType.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Shader\ShaderType.cpp">
+    <ClCompile Include="Source\Compression\HUFFMAN\HuffmanTree.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Compression\ADAM7\ADAM7.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Image\PNG\PNGColorCompressor.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Image\PNG\PNGColorTree.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Image\PNG\PNGChunkType.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Compression\HUFFMAN\HuffmanCodeType.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Compression\HUFFMAN\HuffmanNumberCode.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Compression\ZLIB\ZLIB.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -524,9 +539,6 @@
     <ClInclude Include="Source\Image\PNG\PNGChunkType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\PNG\PNGChunkTypeBlock.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Image\PNG\PNGColorType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -543,9 +555,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Image\TIFF\TIFF.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Image\Image.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Image\ImageFilter.h">
@@ -857,9 +866,6 @@
     <ClInclude Include="Source\Compression\HUFFMAN\HuffmanSymbol.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Compression\HUFFMAN\HuffmanCodeBlock.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Compression\DEFLATE\DeflateBlock.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -1031,11 +1037,29 @@
     <ClInclude Include="Source\File\ProgramExecuteResultListener.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Process.h">
+    <ClInclude Include="Source\Image\Image.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
+    <ClInclude Include="Source\Compression\HUFFMAN\HuffmanTree.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Compression\HUFFMAN\HuffmanCodeType.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Compression\ADAM7\ADAM7.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Image\PNG\PNGColorCompressor.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Image\PNG\PNGColorTree.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Compression\HUFFMAN\HuffmanNumberCode.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Compression\ZLIB\ZLIB.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

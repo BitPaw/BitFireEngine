@@ -362,7 +362,7 @@ void BF::ResourceManager::Load(Level& level, const char* filePath)
     unsigned int dialogCounter = 0;
 
     FileStream file;
-    FileActionResult FileActionResult = file.ReadFromDisk(filePath);
+    FileActionResult FileActionResult = file.ReadFromDisk(filePath, true);
     char currentLineBuffer[200];
 
     if (FileActionResult != FileActionResult::Successful)
@@ -518,13 +518,11 @@ void BF::ResourceManager::Load(Level& level, const char* filePath)
             }
             case _textureToken:
             {
-                sscanf(currentLineBuffer, "%s %s", dummyBuffer, path);
-
                 Image* image = new Image();
 
-                Add(*image);
+                sscanf(currentLineBuffer, "%s %s", dummyBuffer, image->FilePath);
 
-                Load(*image, path);      
+                Add(*image, true);
 
                 level.ImageList[imageCounter++] = image;
                 break;
@@ -601,6 +599,7 @@ void BF::ResourceManager::Load
     const char* textureFront)
 {
     skyBox.NameChange("SkyBox");
+    strcpy(skyBox.MeshList[0].Name, "SkyBox");
 
     Load(skyBox.Faces[0], textureRight);
     Load(skyBox.Faces[1], textureLeft);
@@ -826,9 +825,11 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
         {
             unsigned int shaderID = DefaultSkyBox->Shader.ID;
             Matrix4x4<float> viewTri(MainCamera.MatrixView);
+            Mesh& skyMesh = DefaultSkyBox->MeshList[0];
 
             viewTri.ResetForthAxis();
 
+            OpenGLAPI::RenderBothSides(true);
             OpenGLAPI::DepthMaskEnable(false);
             OpenGLAPI::DrawOrder(true);
 
@@ -840,9 +841,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
 
             OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixViewID, viewTri.Data);
 
-            OpenGLAPI::SkyBoxUse(*DefaultSkyBox);
-
-            Mesh& skyMesh = DefaultSkyBox->MeshList[0];
+            OpenGLAPI::SkyBoxUse(*DefaultSkyBox);          
 
             OpenGLAPI::Render(skyMesh.Structure.RenderType, 0, skyMesh.Structure.IndexDataSize);
 
@@ -916,9 +915,9 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
 
             //-----[Texture Lookup]--------------------------------------------
             unsigned int materialIndex = parentModel ? parentModel->SharedRenderInfoOverride.MaterialID : mesh.RenderInfo.MaterialID;
-            //unsigned int textureID = materialIndex != -1 ? model->MaterialList[materialIndex].Texture.ID : _defaultTextureID;
+            unsigned int textureID = materialIndex != -1 ? model->MaterialList[materialIndex].Texture.ID : _defaultTextureID;
 
-            OpenGLAPI::TextureUse(ImageType::Texture2D, materialIndex);
+            OpenGLAPI::TextureUse(ImageType::Texture2D, textureID);
             //-----------------------------------------------------------------           
 
             //-----[RenderStyle]-----------------------------------------------                      
@@ -926,6 +925,38 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
             //-----------------------------------------------------------------
         }       
     }
+}
+
+void ByteToString(char* string, size_t value)
+{
+    if (value > 1000)
+    {
+        value /= 1000;
+
+        if (value > 1000)
+        {
+            value /= 1000;
+
+            if (value > 1000)
+            {
+                value /= 1000;
+
+                sprintf(string, "%i GB", value);
+            }
+            else
+            {
+                sprintf(string, "%i MB", value);
+            }
+        }
+        else
+        {
+            sprintf(string, "%i KB", value);
+        }
+    }
+    else
+    {
+        sprintf(string, "%i B", value);
+    } 
 }
 
 void BF::ResourceManager::PrintContent(bool detailed)
@@ -972,8 +1003,11 @@ void BF::ResourceManager::PrintContent(bool detailed)
         for (LinkedListNode<Image*>* currentImage = _imageList.GetFirst() ;  currentImage ; currentImage = currentImage->Next)
         {
             Image* image = currentImage->Element;
+            char byteStringBuffer[40];
 
-            printf(line, image->ID, image->Name, image->FilePath, sizeof(*image));             
+            ByteToString(byteStringBuffer, image->FullSizeInMemory());
+
+            printf("| %3i | %-21s | %-36.36s | %6s |\n", image->ID, image->Name, image->FilePath, byteStringBuffer);
         }
 
         printf(endLine);

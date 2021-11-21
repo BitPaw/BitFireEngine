@@ -10,7 +10,7 @@
 
 namespace BF
 {
-	class BitFireEngine
+	class BitFireEngine : protected IWindowListener
 	{
 		private:
 		//---[Elements}---------------------------------
@@ -18,6 +18,13 @@ namespace BF
 		Window _mainWindow;
 		float _deltaTime;
 		//----------------------------------------------
+
+
+		// Geerbt über IWindowListener
+		virtual void OnKeyPressed(int key, int scancode, int action, int mods) override;
+		virtual void OnMouseButtonClick(int button, int action, int mods) override;
+		virtual void OnMousePositionChanged(double positionX, double positionY) override;
+		virtual void OnWindowSizeChanged(int width, int height) override;
 
 		void UpdateInput(InputContainer& input);
 

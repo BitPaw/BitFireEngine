@@ -7,9 +7,6 @@ namespace BF
 {
 	struct ZLIBHeader
 	{
-		private:
-	
-
 		public:
 		ZLIBCompressionMethod CompressionMethod; // 4 Bits
 
@@ -23,18 +20,17 @@ namespace BF
 		CINFO is not defined in this specification for CM not equal to 8.
 		*/
 		unsigned char CompressionInfo; 
+	
 		size_t WindowSize;
-
 		unsigned char  CheckFlag; // 5 Bits
-		bool DicttionaryPresent; // 1 Bit
+		bool DictionaryPresent; // 1 Bit
 		ZLIBCompressionLevel CompressionLevel; // 2 Bits	
 
-
-		size_t DataSize;
-		char Data[2000];
+		
 
 		ZLIBHeader();
+		ZLIBHeader(unsigned char compressionFormatByte, unsigned int flagByte);
 
-		void Parse(unsigned char* data, unsigned int length);
+		void Parse(unsigned char compressionFormatByte, unsigned int flagByte);
 	};
 }

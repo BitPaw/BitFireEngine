@@ -38,7 +38,7 @@ BF::Image::Image()
     Type = ImageType::Texture2D;
 
     Format = ImageDataFormat::RGB;
-    Filter = ImageFilter::NoFilter;
+    Filter = ImageFilter::Trilinear;
 
     LayoutNear = ImageLayout::Nearest;
     LayoutFar = ImageLayout::Nearest;
@@ -177,7 +177,6 @@ void BF::Image::PrintData()
 
 void BF::Image::Resize(unsigned int width, unsigned height)
 {
-    unsigned int newArraySize = width * height;
     unsigned int pixelSize;
 
     Width = width;
@@ -198,7 +197,8 @@ void BF::Image::Resize(unsigned int width, unsigned height)
             break;
     }
 
-    PixelData = (unsigned char*)realloc(PixelData,newArraySize * pixelSize);
+    PixelDataSize = width * height * pixelSize;
+    PixelData = (unsigned char*)realloc(PixelData, PixelDataSize);
 }
 
 void BF::Image::FillRandome()
@@ -504,4 +504,9 @@ BF::FileActionResult BF::Image::Save(const char* filePath, ImageFileFormat image
     }
 
     return FileActionResult::Successful;
+}
+
+size_t BF::Image::FullSizeInMemory()
+{
+    return sizeof(Image) + (PixelDataSize * sizeof(Byte));
 }

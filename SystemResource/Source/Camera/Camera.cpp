@@ -1,9 +1,17 @@
 #include "Camera.h"
 #include <stdio.h>
 
-float BF::Camera::GetAspectRatio()
+float BF::Camera::AspectRatioGet()
 {
 	return (float)Width / (float)Height;
+}
+
+void BF::Camera::AspectRatioSet(float width, float height)
+{
+	Width = width;
+	Height = height;
+
+	PerspectiveChange(Perspective);
 }
 
 void BF::Camera::PerspectiveChange(CameraPerspective cmeraPerspective)
@@ -26,7 +34,7 @@ void BF::Camera::PerspectiveChange(CameraPerspective cmeraPerspective)
 
 		case CameraPerspective::Perspective:
 		{
-			float aspectRatio = GetAspectRatio();
+			float aspectRatio = AspectRatioGet();
 
 			MatrixProjection.Perspective(FieldOfView, aspectRatio, Near, Far);
 			break;
@@ -39,7 +47,7 @@ BF::Camera::Camera()
 	_walkSpeed = 0.3;
 	_viewSpeed = 2.5;
 
-	FieldOfView = 90;
+	FieldOfView = 75;
 	Height = 1000;
 	Width = 1000;
 	Near = 0.01;
@@ -72,8 +80,6 @@ void BF::Camera::Rotate(float x, float y)
 
 	float pitchRAD = glm::radians(CurrentRotation.Y);
 	float yawRAD = glm::radians(CurrentRotation.X);
-
-
 	float rx = cos(pitchRAD) * cos(yawRAD);
 	float ry = sin(pitchRAD);
 	float rz = cos(pitchRAD) * sin(yawRAD);

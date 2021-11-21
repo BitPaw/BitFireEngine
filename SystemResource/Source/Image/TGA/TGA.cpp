@@ -4,6 +4,8 @@
 
 #include "../../File/FileStream.h"
 
+#define TGAFileIdentifier "TRUEVISION-XFILE."
+#define TGAFileIdentifierSize 18u
 
 BF::TGA::TGA()
 {
@@ -18,7 +20,6 @@ BF::TGA::TGA()
 	ImageDescriptor = 0;
 
 	ImageInformationSize = 0;
-	ImageInformation = nullptr;
 	ColorMapDataSize = 0;
 	ColorMapData = nullptr;
 	ImageDataSize = 0;
@@ -27,20 +28,17 @@ BF::TGA::TGA()
 
 BF::TGA::~TGA()
 {
-	free(ImageInformation);
 	free(ColorMapData);
 	free(ImageData);
 }
 
 BF::FileActionResult BF::TGA::Load(const char* filePath)
 {
-	unsigned int footerEntryIndex = 0;
-	unsigned char imageIDLengh = 0;
 	unsigned short colorPaletteChunkEntryIndex = 0;
 	unsigned short colorPaletteChunkSize = 0;
 	unsigned char colorPaletteEntrySizeInBits = 0;
-	unsigned char imageTypeValue = 0;
-	unsigned char pixelDepth = 0;
+
+	unsigned int footerEntryIndex = 0;	
 	unsigned int extensionOffset = 0;
 	unsigned int developerAreaOffset = 0;
 	unsigned int firstFieldAfterHeader = 0;
@@ -53,31 +51,39 @@ BF::FileActionResult BF::TGA::Load(const char* filePath)
 	}
 
 	//---[ Parse Header ]-------------------------------
-	file.Read(imageIDLengh);
-	file.Read(ColorPaletteType);
-	file.Read(imageTypeValue);
+	{			
+		unsigned char imageIDLengh = 0;
+		unsigned char pixelDepth = 0;
+		unsigned char imageTypeValue = 0;
 
-	file.Read(colorPaletteChunkEntryIndex, Endian::Little);
-	file.Read(colorPaletteChunkSize, Endian::Little);
-	file.Read(colorPaletteEntrySizeInBits);
+		file.Read(imageIDLengh);
+		file.Read(ColorPaletteType);
+		file.Read(imageTypeValue);
 
-	file.Read(OriginX, Endian::Little);
-	file.Read(OriginY, Endian::Little);
-	file.Read(Width, Endian::Little);
-	file.Read(Height, Endian::Little);
-	file.Read(pixelDepth);
-	file.Read(ImageDescriptor);
+		file.Read(colorPaletteChunkEntryIndex, Endian::Little);
+		file.Read(colorPaletteChunkSize, Endian::Little);
+		file.Read(colorPaletteEntrySizeInBits);
 
-	ImageDataType = ConvertImageDataType(imageTypeValue);
-	PixelDepth = ConvertPixelDepth(pixelDepth);	
+		file.Read(OriginX, Endian::Little);
+		file.Read(OriginY, Endian::Little);
+		file.Read(Width, Endian::Little);
+		file.Read(Height, Endian::Little);
+		file.Read(pixelDepth);
+		file.Read(ImageDescriptor);
+
+		ImageInformationSize = imageIDLengh;
+
+		ImageDataType = ConvertImageDataType(imageTypeValue);
+		PixelDepth = ConvertPixelDepth(pixelDepth);
+
+		ImageDataSize = Width * Height * (pixelDepth / 8);
+		ImageData = (Byte*)malloc(ImageDataSize * sizeof(Byte));
+	}	
 	//----------------------------------------------------
 
 	//---[Parse Image ID]--------------
-	if (imageIDLengh > 0)
+	if (ImageInformationSize > 0)
 	{
-		ImageInformationSize = imageIDLengh;
-		ImageInformation = (unsigned char*)malloc(imageIDLengh);
-
 		file.Read(ImageInformation, ImageInformationSize);
 	}
 	//----------------------------------
@@ -89,22 +95,17 @@ BF::FileActionResult BF::TGA::Load(const char* filePath)
 	}
 	//--------------------------------
 
-	//---[ ImageData ]------------------
-	{
-		ImageDataSize = Width * Height * (pixelDepth / 8);
-		ImageData = (unsigned char*)malloc(ImageDataSize);
-
-		file.Read(ImageData, ImageDataSize);
-	}
+	//---[ ImageData ]------------------	
+	file.Read(ImageData, ImageDataSize);	
 	//-----------------------------------------------------------------
 	
 
 	// Check end of file if the file is a Version 2.0 file.
 	{
-		const unsigned int stringLengh = 18;
+		const unsigned int stringLengh = TGAFileIdentifierSize;
 		unsigned int compareLength = stringLengh;
 		unsigned char lastCharacter = file.Data[file.DataSize-1];
-		Byte* string = &file.Data[file.DataSize - stringLengh];
+		Byte* string = file.Data + (file.DataSize - stringLengh);
 		bool isTGAVersionTwo = false;
 		
 		if (lastCharacter == '.')
@@ -114,8 +115,8 @@ BF::FileActionResult BF::TGA::Load(const char* filePath)
 		}
 
 		footerEntryIndex = file.DataSize - (26u -1u);
-
-		isTGAVersionTwo = memcmp("TRUEVISION-XFILE.", string, compareLength-1) == 0; // Is this string at this address?;
+		
+		isTGAVersionTwo = memcmp(TGAFileIdentifier, string, compareLength-1) == 0; // Is this string at this address?;
 
 		if (!isTGAVersionTwo) // Is this a TGA v.1.0 file?
 		{
@@ -212,7 +213,7 @@ BF::FileActionResult BF::TGA::Load(const char* filePath)
 
 BF::FileActionResult BF::TGA::Save(const char* filePath)
 {
-	const char footer[18] = "TRUEVISION-XFILE.";
+	const char footer[18] = TGAFileIdentifier;
 	unsigned int fileLength = 500;
 	FileStream fileStream(fileLength);
 

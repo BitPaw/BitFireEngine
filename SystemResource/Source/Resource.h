@@ -1,6 +1,10 @@
 #pragma once
 
-#define ResourceNameSize 32u
+#ifndef Byte
+#define Byte unsigned char
+#endif
+
+#define ResourceNameSize 64u
 #define ResourceFilePathSize 64u
 
 #define ResourceIDStored 999
@@ -54,6 +58,11 @@ namespace BF
 		bool ShallBeCached()
 		{
 			return ID == ResourceIDLoaded;
+		}
+
+		virtual size_t FullSizeInMemory()
+		{
+			return sizeof(Resource);
 		}
 	};
 }

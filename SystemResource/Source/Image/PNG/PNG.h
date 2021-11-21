@@ -114,11 +114,16 @@ namespace BF
 
 		//---------------------------------------------------------------------------
 
+		size_t PixelDataSize;
+		Byte* PixelData;
+
+		unsigned int BitsPerPixel();
+
 		FileActionResult Load(const char* filePath);
 		FileActionResult Save(const char* filePath);
 
 		FileActionResult ConvertTo(Image& image);
-		FileActionResult ConvertFrom(Image& image);
+		FileActionResult ConvertFrom(Image& image);		
 
 		void PrintData();
 	};

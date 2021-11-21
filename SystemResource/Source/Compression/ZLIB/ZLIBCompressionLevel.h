@@ -7,9 +7,7 @@ namespace BF
 		InvalidCompressionLevel,
 
 		Default,
-
 		Slowest,
-
 		Fast,
 		Fastest	
 	};

@@ -279,12 +279,16 @@ void BF::File::SetFilePath(const wchar_t* filePath)
 		Extension, _MAX_EXT
 	);
 
-	wchar_t buffer[_MAX_EXT];
+	if (Extension[0] != '\0')
+	{
+		wchar_t buffer[_MAX_EXT];
 
-	memcpy(buffer, Extension, _MAX_EXT);
-	memset(Extension, 0, _MAX_EXT);
-	lstrcpyW(Extension, buffer + 1);
+		memcpy(buffer, Extension, _MAX_EXT);
+		memset(Extension, 0, _MAX_EXT);
+		lstrcpyW(Extension, buffer + 1);
+	}
 
+	
 	// Fix stuff
 	//AsciiString fileName(Extension);
 	//AsciiString extension(Extension);
@@ -405,9 +409,16 @@ bool BF::File::DoesFileExist()
 
 bool BF::File::DoesFileExist(const char* filePath)
 {
-	File file(filePath);
-	
-	return file.DoesFileExist();
+	FILE* file = fopen(filePath, "rb"); 
+
+	if (file)
+	{
+		fclose(file);
+
+		return true;
+	}
+
+	return false;
 }
 
 bool BF::File::DoesFileExist(const wchar_t* filePath)

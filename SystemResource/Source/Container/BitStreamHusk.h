@@ -7,27 +7,28 @@ namespace BF
 	class BitStreamHusk
 	{
 		private:
-		bool _leftToRight;
-
-		unsigned int GetFromLeftCurrentPosition(unsigned char amountOfBits);
-		unsigned int GetFromRightCurrentPosition(unsigned char amountOfBits);
+		void Allign();
 
 		public:
 		unsigned char* StartAdress;
 
 		unsigned int CurrentPosition;
 		unsigned int DataLengh;
+		unsigned int CurrentBitOffset;
 
-		unsigned int BlockSizeInBytes;
-		unsigned int BlockSizeInBits;
-		int CurrentBitOffset;
+		unsigned int BlockSizeInBits;	
 
 		BitStreamHusk();
-		BitStreamHusk(unsigned char* startAdress, unsigned int dataLengh, bool leftToRight);
+		BitStreamHusk(unsigned char* startAdress, unsigned int dataLengh);
 
 		void RePosition(unsigned char* startAdress, unsigned int dataLengh);
 		void SkipBitsToNextByte();
-		unsigned int ExtractBitsAndMove(unsigned char amountOfBits);
 
+		unsigned int ExtractBitsAndMove(unsigned char amountOfBits);
+		unsigned int ExtractBits(unsigned char amountOfBits);
+		void Move(size_t amount);	
+
+		static void PrintBinary(unsigned int number);
+		static void PrintBinary(unsigned char number);
 	};
 }

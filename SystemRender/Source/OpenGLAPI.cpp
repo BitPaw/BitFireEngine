@@ -47,7 +47,7 @@ void BF::OpenGLAPI::RegisterModel(Model& model)
     glGenVertexArrays(numberOfMeshes, vaoIDList);
     glGenBuffers(numberOfMeshes * 2, bufferIDList); // Create Buffers
 
-    printf("[OpenGL] Register Mesh <%s>. MeshID <%i> Sub-Meshes <%i>\n", model.FilePath, model.ID, model.MeshListSize);
+    printf("[OpenGL] Register Mesh <%s> from <%s>. Sub-Meshes <%i>\n", model.Name, model.FilePath, model.MeshListSize);
        
     for (size_t meshIndex = 0; meshIndex < numberOfMeshes; meshIndex++)
     {
@@ -129,7 +129,7 @@ void BF::OpenGLAPI::DepthMaskEnable(bool enable)
     }
     else
     {
-        glDepthMask(GL_FALSE);
+        glDepthMask(GL_FALSE);     
     }
 }
 
@@ -142,6 +142,18 @@ void BF::OpenGLAPI::DrawOrder(bool clockwise)
     else
     {
         glFrontFace(GL_CCW);
+    }
+}
+
+void BF::OpenGLAPI::RenderBothSides(bool renderBothSides)
+{
+    if (renderBothSides)
+    {
+        glDisable(GL_CULL_FACE);
+    }
+    else
+    {
+        glEnable(GL_CULL_FACE);
     }
 }
 

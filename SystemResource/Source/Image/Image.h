@@ -18,8 +18,8 @@ namespace BF
 	class Image : public Resource
 	{
 		public:
-		unsigned int Width;
-		unsigned int Height;
+		size_t Width;
+		size_t Height;
 
 		ImageType Type;
 		ImageDataFormat Format;
@@ -30,8 +30,7 @@ namespace BF
 		ImageWrap WrapWidth;
 
 		size_t PixelDataSize;
-		unsigned char* PixelData;
-
+		Byte* PixelData;
 
 		Vector4<unsigned char> GetPixel(unsigned int x, unsigned int y);
 
@@ -57,5 +56,7 @@ namespace BF
 		FileActionResult Load();
 		FileActionResult Load(const char* filePath);
 		FileActionResult Save(const char* filePath, ImageFileFormat imageFileFormat);
+
+		virtual size_t FullSizeInMemory() override;
 	};
 }

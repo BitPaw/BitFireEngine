@@ -19,6 +19,7 @@ namespace BF
 
 		static void DepthMaskEnable(bool enable);
 		static void DrawOrder(bool clockwise);
+		static void RenderBothSides(bool renderBothSides);
 
 		static void TextureUse(ImageType imageType, int textureID);
 

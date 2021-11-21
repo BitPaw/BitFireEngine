@@ -253,6 +253,7 @@
     <ClInclude Include="Source\VideoConfig.h" />
     <ClInclude Include="Source\VulcanAPI.h" />
     <ClInclude Include="Source\Device\InputContainer.h" />
+    <ClInclude Include="Source\Window\IWindowListener.h" />
     <ClInclude Include="Source\Window\Key.h" />
     <ClInclude Include="Source\Window\Window.h" />
   </ItemGroup>

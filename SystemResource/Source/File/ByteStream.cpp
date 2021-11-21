@@ -187,6 +187,11 @@ void BF::ByteStream::Read(void* value, size_t length)
 	DataCursorPosition += length;
 }
 
+bool BF::ByteStream::ReadAndCompare(const Byte* value, size_t length)
+{
+	return ReadAndCompare((void*)value, length);
+}
+
 bool BF::ByteStream::ReadAndCompare(const char* value, size_t length)
 {
 	return ReadAndCompare((void*)value, length);

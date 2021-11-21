@@ -8,16 +8,16 @@
 #include "../../../Dependencies/include/GL/glew.h"
 #include "../../../Dependencies/include/GLFW/glfw3.h"
 
-BF::Dictionary<GLFWwindow*, BF::InputContainer> BF::Window::WindowsInput;
-
-int BF::Window::Width = 0;
-int BF::Window::Height = 0;
+BF::Dictionary<GLFWwindow*, BF::Window*> BF::Window::WindowLookup;
 
 BF::Window::Window()
 {
     _window = nullptr;
     _cursor = nullptr;
     _montor = nullptr;
+
+    Width = 0;
+    Height = 0;
 
     ActiveTime = 0;
     ShouldCloseWindow = false;
@@ -30,7 +30,8 @@ BF::Window::~Window()
 
 void BF::Window::OnKeyPressed(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    BF::KeyBoard* keyBoard = &BF::Window::WindowsInput.GetValue(window)->KeyBoardInput;
+    BF::Window* windowF = BF::Window::GetWindow(window);
+    BF::KeyBoard* keyBoard = &windowF->Input.KeyBoardInput;
 
     /* [key]
         The key will be GLFW_KEY_UNKNOWN
@@ -89,11 +90,17 @@ void BF::Window::OnKeyPressed(GLFWwindow* window, int key, int scancode, int act
 
     }
 
+
+    if (windowF->Callback)
+    {
+        windowF->Callback->OnKeyPressed(key, scancode, action, mods);
+    }    
 }
 
 void BF::Window::OnMouseButton(GLFWwindow* window, int button, int action, int mods)
 {
-    BF::Mouse* mouse = &BF::Window::WindowsInput.GetValue(window)->MouseInput;
+    BF::Window* windowF = BF::Window::GetWindow(window);
+    BF::Mouse* mouse = &windowF->Input.MouseInput;
     /*
     0 = GLFW_MOUSE_BUTTON_1 | GLFW_MOUSE_BUTTON_LEFT
     1 = GLFW_MOUSE_BUTTON_2 | GLFW_MOUSE_BUTTON_RIGHT
@@ -139,11 +146,17 @@ void BF::Window::OnMouseButton(GLFWwindow* window, int button, int action, int m
             mouse->CustomButton5.Value = action;
             break;
     }
+
+    if (windowF->Callback)
+    {
+        windowF->Callback->OnMouseButtonClick(button, action, mods);
+    }
 }
 
 void BF::Window::OnMousePosition(GLFWwindow* window, double xpos, double ypos)
 {
-    BF::Mouse* mouse = &BF::Window::WindowsInput.GetValue(window)->MouseInput;
+    BF::Window* windowF = BF::Window::GetWindow(window);
+    BF::Mouse* mouse = &windowF->Input.MouseInput;
 
     if (mouse->ShoudRegisterInput())
     {
@@ -160,14 +173,26 @@ void BF::Window::OnMousePosition(GLFWwindow* window, double xpos, double ypos)
         mouse->Position[0] = xPosition;
         mouse->Position[1] = yPosition;
     }
+
+    if (windowF->Callback)
+    {
+        windowF->Callback->OnMousePositionChanged(xpos, ypos);
+    }
 }
 
 void BF::Window::OnWindowSizeChanged(GLFWwindow* window, int width, int height)
 {
+    BF::Window* windowF = BF::Window::GetWindow(window);
+
     glViewport(0, 0, width, height); // Change rendering Image to size of screen
 
-    Width = width;
-    Height = height;
+    windowF->Width = width;
+    windowF->Height = height;
+
+    if (windowF->Callback)
+    {
+        windowF->Callback->OnWindowSizeChanged(width, height);
+    }
 }
 
 double BF::Window::GetTime()
@@ -219,25 +244,28 @@ void BF::Window::SetCursorTexture(Image* image)
 
 void BF::Window::SetCursorMode(CursorMode mode)
 {
-    BF::Mouse* mouse = &BF::Window::WindowsInput.GetValue(_window)->MouseInput;
+    BF::Mouse& mouse = Input.MouseInput;
+    unsigned int cursorModeID = -1;
 
-    mouse->Mode = mode;
+    mouse.Mode = mode;
 
     switch (mode)
     {
         case CursorMode::Show:
         case CursorMode::Ignore:
-            glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            cursorModeID = GLFW_CURSOR_NORMAL;
             break;
 
         case CursorMode::Invisible:
-            glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+            cursorModeID = GLFW_CURSOR_HIDDEN;
             break;
 
         case CursorMode::Locked:
-            glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            cursorModeID = GLFW_CURSOR_DISABLED;
             break;
     }
+
+    glfwSetInputMode(_window, GLFW_CURSOR, cursorModeID);
 }
 
 void BF::Window::SetVideoRefreshRate(RefreshRateMode mode)
@@ -390,7 +418,7 @@ bool BF::Window::Create(int width, int height, const char* title)
 
         printf("[OK]\n");
 
-        BF::Window::WindowsInput.Add(_window);
+        BF::Window::WindowLookup.Add(_window, this);
     }
 
     glfwMakeContextCurrent(_window);
