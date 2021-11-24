@@ -84,7 +84,7 @@ void ZEE::ZEEGameSystem::OnStartUp()
    // _worldGravity.PullDirection.Set(0, -1, 0);
    // GameSystem.Resource.Add(&_worldGravity);
 
-    
+    GameSystem.Resource.Load("Level/MainMenu.lev");
 
     GameSystem.Resource.Add(cube, "Model/Cube.obj", false);
     cube.MatrixModel.Move(0,50,0);
@@ -95,10 +95,10 @@ void ZEE::ZEEGameSystem::OnStartUp()
     cube.MaterialListSize++;
     cube.MaterialList = new Material();
 
-    GameSystem.Resource.Add(cube.MaterialList[0].Texture, "C:/Users/BitPaw/Videos/TEST_PNG2.png", false);
+    GameSystem.Resource.Add(cube.MaterialList[0].Texture, "C:/Users/BitPaw/Videos/TEST_PNG3.png", false);
     cube.MeshList[0].RenderInfo.MaterialID = 0;
     
-    GameSystem.Resource.Load("Level/MainMenu.lev");
+
     
 
    // textureBix.MatrixModel.Scale(10, 2, 1);

@@ -66,7 +66,8 @@ namespace BF
 		//---------------------------------------------------------------------------
 
 		//---[ hIST - PaletteHistogram]----------------------------------------------
-
+		size_t ColorFrequencyListSize;
+		unsigned short* ColorFrequencyList;
 		//---------------------------------------------------------------------------
 
 		//---[ tRNS - Transparency ]-------------------------------------------------
@@ -91,7 +92,12 @@ namespace BF
 		//---------------------------------------------------------------------------
 
 		//---[ tIME - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
-
+		unsigned short Year;
+		unsigned char Month;
+		unsigned char Day;
+		unsigned char Hour;
+		unsigned char Minute;
+		unsigned char Second;
 		//---------------------------------------------------------------------------
 
 		//---[ tEXt - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------

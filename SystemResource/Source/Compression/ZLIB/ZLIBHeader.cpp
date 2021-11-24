@@ -42,9 +42,9 @@ void BF::ZLIBHeader::Parse(unsigned char compressionFormatByte, unsigned char fl
         // log_2(32768) - 8 = 7
         // 2^(CompressionInfo + 8)
 
-        WindowSize = Math::Power(2, CompressionInfo + 8);
-
         assert(CompressionInfo <= 7u);
+
+        WindowSize = Math::Power(2, CompressionInfo + 8);      
     }
     //-------------------------------------------------------------------------
 

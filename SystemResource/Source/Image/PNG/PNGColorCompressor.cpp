@@ -2,45 +2,87 @@
 
 #include <string.h>
 
-unsigned int BF::PNGColorCompressor::Decompress(unsigned char* out, const unsigned char* in,
-    const LodePNGColorMode* mode_out, const LodePNGColorMode* mode_in, size_t width, size_t height)
+unsigned int BF::PNGColorCompressor::Decompress(const unsigned char* pixelDataIn, unsigned char* pixelDataOut, size_t width, size_t height, unsigned char bitDepth, PNGColorType colorType)
 {
+    LodePNGColorMode colorModeIn;
+    LodePNGColorMode colorModeOut;
+
+    memset(&colorModeIn, 0, sizeof(LodePNGColorMode));
+    memset(&colorModeOut, 0, sizeof(LodePNGColorMode));
+
+    colorModeIn.bitdepth = bitDepth;
+    colorModeIn.colortype = LCT_RGBA;
+
+    colorModeOut.bitdepth = bitDepth;
+    colorModeOut.colortype = LCT_RGBA;
+
+    switch (colorType)
+    {
+        default:
+        case BF::PNGColorType::InvalidColorType:
+            colorModeIn.colortype = LCT_MAX_OCTET_VALUE;
+            break;
+
+        case BF::PNGColorType::Grayscale:
+            colorModeIn.colortype = LCT_GREY;
+            break;
+
+        case BF::PNGColorType::Truecolor:
+            colorModeIn.colortype = LCT_RGB;
+            break;
+
+        case BF::PNGColorType::IndexedColor:
+            colorModeIn.colortype = LCT_PALETTE;
+            break;
+
+        case BF::PNGColorType::GrayscaleWithAlphaChannel:         
+            colorModeIn.colortype = LCT_GREY_ALPHA;
+            break;
+
+        case BF::PNGColorType::TruecolorWithAlphaChannel:
+            colorModeIn.colortype = LCT_RGBA;
+            break;
+    }
+
+    colorModeOut.bitdepth = colorModeIn.bitdepth;
+    colorModeOut.colortype = colorModeIn.colortype;
+
     size_t i;
     PNGColorTree tree;
     size_t numpixels = width * height;
     unsigned error = 0;
 
-    if (mode_in->colortype == LCT_PALETTE && !mode_in->palette)
+    if (colorModeIn.colortype == LCT_PALETTE && !colorModeIn.palette)
     {
         return 107; /* error: must provide palette if input mode is palette */
     }
 
-    if (lodepng_color_mode_equal(mode_out, mode_in))
+    if (lodepng_color_mode_equal(&colorModeOut, &colorModeIn))
     {
-        size_t numbytes = lodepng_get_raw_size(width, height, mode_in);
-        memcpy(out, in, numbytes);
+        size_t numbytes = lodepng_get_raw_size(width, height, &colorModeIn);
+        memcpy(pixelDataOut, pixelDataIn, numbytes);
         return 0;
     }
 
-    if (mode_out->colortype == LCT_PALETTE)
+    if (colorModeOut.colortype == LCT_PALETTE)
     {
-        size_t palettesize = mode_out->palettesize;
-        const unsigned char* palette = mode_out->palette;
-        size_t palsize = (size_t)1u << mode_out->bitdepth;
+        size_t palettesize = colorModeOut.palettesize;
+        const unsigned char* palette = colorModeOut.palette;
+        size_t palsize = (size_t)1u << colorModeOut.bitdepth;
         /*if the user specified output palette but did not give the values, assume
         they want the values of the input color type (assuming that one is palette).
         Note that we never create a new palette ourselves.*/
         if (palettesize == 0)
         {
-            palettesize = mode_in->palettesize;
-            palette = mode_in->palette;
+            palettesize = colorModeIn.palettesize;
+            palette = colorModeIn.palette;
             /*if the input was also palette with same bitdepth, then the color types are also
             equal, so copy literally. This to preserve the exact indices that were in the PNG
             even in case there are duplicate colors in the palette.*/
-            if (mode_in->colortype == LCT_PALETTE && mode_in->bitdepth == mode_out->bitdepth)
+            if (colorModeIn.colortype == LCT_PALETTE && colorModeIn.bitdepth == colorModeOut.bitdepth)
             {
-                size_t numbytes = lodepng_get_raw_size(width, height, mode_in);
-                memcpy(out, in, numbytes);
+                size_t numbytes = lodepng_get_raw_size(width, height, &colorModeIn);
+                memcpy(pixelDataOut, pixelDataIn, numbytes);
                 return 0;
             }
         }
@@ -58,39 +100,40 @@ unsigned int BF::PNGColorCompressor::Decompress(unsigned char* out, const unsign
 
     if (!error)
     {
-        if (mode_in->bitdepth == 16 && mode_out->bitdepth == 16)
+        if (colorModeIn.bitdepth == 16 && colorModeOut.bitdepth == 16)
         {
             for (i = 0; i != numpixels; ++i)
             {
                 unsigned short r = 0, g = 0, b = 0, a = 0;
-                getPixelColorRGBA16(&r, &g, &b, &a, in, i, mode_in);
-                rgba16ToPixel(out, i, mode_out, r, g, b, a);
+                getPixelColorRGBA16(&r, &g, &b, &a, pixelDataIn, i, &colorModeIn);
+                rgba16ToPixel(pixelDataOut, i, &colorModeOut, r, g, b, a);
             }
         }
-        else if (mode_out->bitdepth == 8 && mode_out->colortype == LCT_RGBA)
+        else if (colorModeOut.bitdepth == 8 && colorModeOut.colortype == LCT_RGBA)
         {
-            getPixelColorsRGBA8(out, numpixels, in, mode_in);
+            getPixelColorsRGBA8(pixelDataOut, numpixels, pixelDataIn, &colorModeIn);
         }
-        else if (mode_out->bitdepth == 8 && mode_out->colortype == LCT_RGB)
+        else if (colorModeOut.bitdepth == 8 && colorModeOut.colortype == LCT_RGB)
         {
-            getPixelColorsRGB8(out, numpixels, in, mode_in);
+            getPixelColorsRGB8(pixelDataOut, numpixels, pixelDataIn, &colorModeIn);
         }
         else
         {
             unsigned char r = 0, g = 0, b = 0, a = 0;
             for (i = 0; i != numpixels; ++i)
             {
-                getPixelColorRGBA8(&r, &g, &b, &a, in, i, mode_in);
-                error = rgba8ToPixel(out, i, mode_out, &tree, r, g, b, a);
+                getPixelColorRGBA8(&r, &g, &b, &a, pixelDataIn, i, &colorModeIn);
+                error = rgba8ToPixel(pixelDataOut, i, &colorModeOut, &tree, r, g, b, a);
                 if (error) break;
             }
         }
     }
 
-    if (mode_out->colortype == LCT_PALETTE)
+    /*
+    if (colorModeOut.colortype == LCT_PALETTE)
     {
        // color_tree_cleanup(&tree);
-    }
+    }*/
 
     return error;
 }

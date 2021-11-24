@@ -69,9 +69,7 @@ namespace BF
 	class PNGColorCompressor
 	{
 		public:
-		static unsigned int Decompress(unsigned char* out, const unsigned char* in,
-			const LodePNGColorMode* mode_out, const LodePNGColorMode* mode_in,
-			size_t w, size_t h);
+		static unsigned int Decompress(const unsigned char* pixelDataIn, unsigned char* pixelDataOut, size_t width, size_t height, unsigned char bitDepth, PNGColorType colorType);
 	
 		static unsigned getNumColorChannels(LodePNGColorType colortype);
 
