@@ -13,19 +13,17 @@ BF::DeflateBlock::DeflateBlock()
 	EncodingMethod = DeflateEncodingMethod::Invalid;
 }
 
-void BF::DeflateBlock::Inflate(unsigned char* dataIn, size_t dataInSize, unsigned char* dataOut, size_t& dataOutSize)
+void BF::DeflateBlock::Parse(BitStreamHusk& bitStream)
 {
-    BitStreamHusk bitStream(dataIn, dataInSize);
+    IsLastBlock = bitStream.ExtractBitsAndMove(1);
+    unsigned char encodingMethodValue = bitStream.ExtractBitsAndMove(2);
+   
+    EncodingMethod = ConvertDeflateEncodingMethod(encodingMethodValue);
+}
 
-    //---<Parse Header>---
-    {
-        unsigned char isLastBlockValue = bitStream.ExtractBitsAndMove(1);
-        unsigned char encodingMethodValue = bitStream.ExtractBitsAndMove(2);
 
-        IsLastBlock = isLastBlockValue == 1;
-        EncodingMethod = ConvertDeflateEncodingMethod(encodingMethodValue);
-    }
-
+void BF::DeflateBlock::Inflate(BitStreamHusk& bitStream, unsigned char* dataOut, size_t& dataOutSize)
+{
     switch (EncodingMethod)
     {
         default:
@@ -37,9 +35,10 @@ void BF::DeflateBlock::Inflate(unsigned char* dataIn, size_t dataInSize, unsigne
         case DeflateEncodingMethod::LiteralRaw:
         {
             // Skip remaining Bytes
-            unsigned short length = dataIn[1] << 8 | dataIn[2];
-            unsigned short lengthInverse = dataIn[3] << 8 | dataIn[4];
-            unsigned char* sourceAdress = dataIn + 5u;
+            unsigned char* literalData = bitStream.StartAdress + bitStream.CurrentPosition;
+            unsigned short length = literalData[1] << 8 | literalData[2];
+            unsigned short lengthInverse = literalData[3] << 8 | literalData[4];
+            unsigned char* sourceAdress = literalData + 5u;
 
             assert(length == !lengthInverse);
 
@@ -60,6 +59,13 @@ void BF::DeflateBlock::Inflate(unsigned char* dataIn, size_t dataInSize, unsigne
             {
                 case DeflateEncodingMethod::HuffmanDynamic:
                 {
+                    unsigned int result = HuffmanTree::GenerateDynamicTree(bitStream, literalAndLengthCodes, distanceCodes);
+
+                    if (result != 0)
+                    {
+                        printf("EE");
+                    }
+
                     break;
                 }
                 case DeflateEncodingMethod::HuffmanStatic:
@@ -68,7 +74,7 @@ void BF::DeflateBlock::Inflate(unsigned char* dataIn, size_t dataInSize, unsigne
                     distanceCodes.GenerateFixedDistanceTree();
                     break;
                 }
-            }           
+            }
 
             while (!foundEndOFBlock)
             {
@@ -79,18 +85,18 @@ void BF::DeflateBlock::Inflate(unsigned char* dataIn, size_t dataInSize, unsigne
                 {
                     case BF::HuffmanCodeType::InvalidCode:
                     {
-                        printf("[Symbol] Error: Invalid\n");
+                        // printf("[Symbol] Error: Invalid\n");
                         break; // ERROR
                     }
                     case BF::HuffmanCodeType::Literal:
                     {
-                        printf("[Symbol] <%2x>(%3i) Literal.\n", resultLengthCode, resultLengthCode);
+                        // printf("[Symbol] <%2x>(%3i) Literal.\n", resultLengthCode, resultLengthCode);
                         dataOut[dataOutSize++] = resultLengthCode;
                         break;
                     }
                     case BF::HuffmanCodeType::Length:
                     {
-                        printf("[Symbol] <%2x>(%3i) Length.\n", resultLengthCode, resultLengthCode);
+                        // printf("[Symbol] <%2x>(%3i) Length.\n", resultLengthCode, resultLengthCode);
 
 #define FIRST_LENGTH_CODE_INDEX 257
 #define LAST_LENGTH_CODE_INDEX 285
@@ -126,7 +132,7 @@ void BF::DeflateBlock::Inflate(unsigned char* dataIn, size_t dataInSize, unsigne
 
                         /*part 3: get distance code*/
                         //ensureBits32(reader, 28); /* up to 15 for the huffman symbol, up to 13 for the extra bits */
-                        unsigned int resultDistanceCode = HuffmanTree::huffmanDecodeSymbol(bitStream, distanceCodes);    
+                        unsigned int resultDistanceCode = HuffmanTree::huffmanDecodeSymbol(bitStream, distanceCodes);
                         bool isUnsupportedCode = resultDistanceCode > 29;
                         bool isIllegalCode = resultDistanceCode > 31;
 
@@ -181,8 +187,9 @@ void BF::DeflateBlock::Inflate(unsigned char* dataIn, size_t dataInSize, unsigne
                     }
                     case BF::HuffmanCodeType::EndOfBlock:
                     {
-                        printf("[Symbol] <%2x>(%3i) End of Block.\n", resultLengthCode, resultLengthCode);
-                        foundEndOFBlock = true;
+                        //printf("[Symbol] <%2x>(%3i) End of Block.\n", resultLengthCode, resultLengthCode);
+                        foundEndOFBlock = true;   
+
                         break; // FINISHED!
                     }
                 }
@@ -191,8 +198,4 @@ void BF::DeflateBlock::Inflate(unsigned char* dataIn, size_t dataInSize, unsigne
             break;
         }
     }
-}
-
-void BF::DeflateBlock::Deflalate(unsigned char* dataIn, size_t dataInSize, unsigned char* dataOut, size_t& dataOutSize)
-{
 }

@@ -29,8 +29,10 @@ namespace BF
 		
 
 		ZLIBHeader();
-		ZLIBHeader(unsigned char compressionFormatByte, unsigned int flagByte);
+		ZLIBHeader(unsigned char compressionFormatByte, unsigned char flagByte);
 
-		void Parse(unsigned char compressionFormatByte, unsigned int flagByte);
+		void Parse(unsigned char compressionFormatByte, unsigned char flagByte);
+
+		
 	};
 }

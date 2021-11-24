@@ -34,8 +34,8 @@ namespace BF
 		//---------------------------------------------------------------------------
 
 		//---[ IDAT - Image Data (Compressed)]---------------------------------------
-		size_t ZLIBHeaderListSize;
-		ZLIBHeader* ZLIBHeaderList;
+		//size_t ZLIBHeaderListSize;
+		//ZLIBHeader* ZLIBHeaderList;
 		//---------------------------------------------------------------------------
 
 		//---[ PLTE - Palette ]------------------------------------------------------
@@ -58,7 +58,11 @@ namespace BF
 		//---------------------------------------------------------------------------
 
 		//---[ bKGD - BackgroundColor]-----------------------------------------------
-		// Depends on colorType
+		unsigned short BackgroundColorGreyScale; 
+		unsigned short BackgroundColorRed;
+		unsigned short BackgroundColorGreen;
+		unsigned short BackgroundColorBlue;
+		unsigned char BackgroundColorPaletteIndex;
 		//---------------------------------------------------------------------------
 
 		//---[ hIST - PaletteHistogram]----------------------------------------------

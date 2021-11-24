@@ -93,4 +93,6 @@ namespace BF
 
     PNGChunkType ConvertChunkType(unsigned char chunk[4]);
     void ConvertChunkType(unsigned char chunk[4], PNGChunkType pngchunkType);
+
+    const char* ChunkTypeToString(PNGChunkType pngchunkType);
 }

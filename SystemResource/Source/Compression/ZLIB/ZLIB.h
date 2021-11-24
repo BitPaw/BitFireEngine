@@ -1,10 +1,22 @@
 #pragma once
 
+#include "ZLIBHeader.h"
+#include "../../Algorithm/Adler32.h"
+
 namespace BF
 {
-	class ZLIB
+	struct ZLIB
 	{
 		public:
-		static void Unpack(unsigned char* inputData, size_t inputDataSize, unsigned char** outputData, size_t& outputDataSize);
+		ZLIBHeader Header;
+
+		size_t CompressedDataSize;
+		unsigned char* CompressedData;
+
+		Adler32 AdlerChecksum;
+
+		ZLIB(unsigned char* inputData, size_t inputDataSize);
+
+		void Parse(unsigned char* inputData, size_t inputDataSize);
 	};
 }

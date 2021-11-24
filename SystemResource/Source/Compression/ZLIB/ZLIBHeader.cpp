@@ -17,12 +17,12 @@ BF::ZLIBHeader::ZLIBHeader()
     WindowSize = 0;
 }
 
-BF::ZLIBHeader::ZLIBHeader(unsigned char compressionFormatByte, unsigned int flagByte)
+BF::ZLIBHeader::ZLIBHeader(unsigned char compressionFormatByte, unsigned char flagByte)
 {
     Parse(compressionFormatByte, flagByte);
 }
 
-void BF::ZLIBHeader::Parse(unsigned char compressionFormatByte, unsigned int flagByte)
+void BF::ZLIBHeader::Parse(unsigned char compressionFormatByte, unsigned char flagByte)
 {
     // Valid Check
     {

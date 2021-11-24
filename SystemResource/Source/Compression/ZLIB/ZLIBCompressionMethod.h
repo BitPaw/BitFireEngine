@@ -12,4 +12,6 @@ namespace BF
 
 	ZLIBCompressionMethod ConvertCompressionMethod(unsigned char compressionMethod);
 	unsigned char ConvertCompressionMethod(ZLIBCompressionMethod compressionMethod);
+
+	const char* CompressionMethodToString(ZLIBCompressionMethod compressionMethod);
 }

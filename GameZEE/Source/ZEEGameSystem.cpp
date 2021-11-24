@@ -95,7 +95,7 @@ void ZEE::ZEEGameSystem::OnStartUp()
     cube.MaterialListSize++;
     cube.MaterialList = new Material();
 
-    GameSystem.Resource.Add(cube.MaterialList[0].Texture, "C:/Users/BitPaw/Videos/TEST_PNG.png", false);
+    GameSystem.Resource.Add(cube.MaterialList[0].Texture, "C:/Users/BitPaw/Videos/TEST_PNG2.png", false);
     cube.MeshList[0].RenderInfo.MaterialID = 0;
     
     GameSystem.Resource.Load("Level/MainMenu.lev");

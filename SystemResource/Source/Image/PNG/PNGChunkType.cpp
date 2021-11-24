@@ -61,3 +61,71 @@ BF::PNGChunkType BF::ConvertChunkType(unsigned char chunk[4])
 void BF::ConvertChunkType(unsigned char chunk[4], PNGChunkType pngchunkType)
 {
 }
+
+const char* BF::ChunkTypeToString(PNGChunkType pngchunkType)
+{
+    switch (pngchunkType)
+    {
+        default:
+        case BF::PNGChunkType::Invalid:
+            return "Invalid";
+
+        case BF::PNGChunkType::ImageHeader:
+            return "Image Header";
+
+        case BF::PNGChunkType::Palette:
+            return "Palette";
+
+        case BF::PNGChunkType::ImageData:
+            return "Image Data";
+
+        case BF::PNGChunkType::ImageEnd:
+            return "Image End";
+
+        case BF::PNGChunkType::Transparency:
+            return "Transparency";
+
+        case BF::PNGChunkType::ImageGamma:
+            return "ImageGamma";
+
+        case BF::PNGChunkType::PrimaryChromaticities:
+            return "Primary Chromaticities";
+
+        case BF::PNGChunkType::StandardRGBColorSpace:
+            return "Standard RGB ColorSpace";
+
+        case BF::PNGChunkType::EmbeddedICCProfile:
+            return "Embedded ICC Profile";
+
+        case BF::PNGChunkType::TextualData:
+            return "Textual Data";
+
+        case BF::PNGChunkType::CompressedTextualData:
+            return "Compressed TextualData";
+
+        case BF::PNGChunkType::InternationalTextualData:
+            return "International TextualData";
+
+        case BF::PNGChunkType::BackgroundColor:
+            return "Background Color";
+
+        case BF::PNGChunkType::PhysicalPixelDimensions:
+            return "Physical Pixel Dimensions";
+
+        case BF::PNGChunkType::SignificantBits:
+            return "Significant Bits";
+
+        case BF::PNGChunkType::SuggestedPalette:
+            return "Suggested Palette";
+
+        case BF::PNGChunkType::PaletteHistogram:
+            return "Palette Histogram";
+
+        case BF::PNGChunkType::LastModificationTime:
+            return "Last Modification Time";
+
+        case BF::PNGChunkType::Custom:
+            return "Custom";
+
+     }
+}

@@ -1,19 +1,22 @@
 #include "BitStreamHusk.h"
 #include <stdio.h>
+#include <cassert>
 
 BF::BitStreamHusk::BitStreamHusk()
 {
-	StartAdress = nullptr;
-	CurrentPosition = 0;
-	DataLengh = 0;
-	//BlockSizeInBytes = 0;
-	BlockSizeInBits = 0;
-	CurrentBitOffset = 0;
+	RePosition(nullptr, 0);
 }
 
 BF::BitStreamHusk::BitStreamHusk(unsigned char* startAdress, unsigned int dataLengh)
 {
 	RePosition(startAdress, dataLengh);
+}
+
+BF::BitStreamHusk::BitStreamHusk(unsigned char* startAdress, unsigned int dataLengh, size_t startPosition)
+{
+	RePosition(startAdress, dataLengh);
+
+	CurrentPosition = startPosition;
 }
 
 void BF::BitStreamHusk::RePosition(unsigned char* startAdress, unsigned int dataLengh)
@@ -23,7 +26,6 @@ void BF::BitStreamHusk::RePosition(unsigned char* startAdress, unsigned int data
 	CurrentPosition = 0;
 	//BlockSizeInBytes = sizeof(unsigned char);
 	BlockSizeInBits = 8;
-
 	CurrentBitOffset = 0;
 }
 
@@ -100,6 +102,8 @@ void BF::BitStreamHusk::Allign()
 		CurrentPosition++;
 		CurrentBitOffset -= 8;
 	}
+
+	//assert(CurrentPosition < DataLengh);
 }
 
 void BF::BitStreamHusk::PrintBinary(unsigned int number)

@@ -14,4 +14,6 @@ namespace BF
 
 	ZLIBCompressionLevel ConvertCompressionLevel(unsigned char compressionLevel);
 	unsigned char ConvertCompressionLevel(ZLIBCompressionLevel compressionLevel);
+
+	const char* CompressionLevelToString(ZLIBCompressionLevel compressionLevel);
 }

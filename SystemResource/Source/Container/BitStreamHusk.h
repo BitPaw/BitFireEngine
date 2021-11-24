@@ -20,6 +20,7 @@ namespace BF
 
 		BitStreamHusk();
 		BitStreamHusk(unsigned char* startAdress, unsigned int dataLengh);
+		BitStreamHusk(unsigned char* startAdress, unsigned int dataLengh, size_t startPosition);
 
 		void RePosition(unsigned char* startAdress, unsigned int dataLengh);
 		void SkipBitsToNextByte();

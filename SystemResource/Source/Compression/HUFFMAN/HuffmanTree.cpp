@@ -256,8 +256,8 @@ tree of the dynamic huffman tree lengths is generated*/
 		if (error) break;
 
 		/*now we can use this tree to read the lengths for the tree that this function will return*/
-		bitlen_ll = (unsigned*)malloc(NUM_DEFLATE_CODE_SYMBOLS * sizeof(unsigned));
-		bitlen_d = (unsigned*)malloc(NUM_DISTANCE_SYMBOLS * sizeof(unsigned));
+		bitlen_ll = (unsigned int*)malloc(NUM_DEFLATE_CODE_SYMBOLS * sizeof(unsigned int));
+		bitlen_d = (unsigned int*)malloc(NUM_DISTANCE_SYMBOLS * sizeof(unsigned int));
 		if (!bitlen_ll || !bitlen_d) throw(83 /*alloc fail*/);
 		memset(bitlen_ll, 0, NUM_DEFLATE_CODE_SYMBOLS * sizeof(*bitlen_ll));
 		memset(bitlen_d, 0, NUM_DISTANCE_SYMBOLS * sizeof(*bitlen_d));
@@ -334,7 +334,7 @@ tree of the dynamic huffman tree lengths is generated*/
 			{
 				/*return error code 10 or 11 depending on the situation that happened in huffmanDecodeSymbol
 				(10=no endcode, 11=wrong jump outside of tree)*/
-				/* TODO: revise error codes 10,11,50: the above comment is no longer valid */
+				/* TODO: revise error codes 10,11,50: the above comment is no longer valid * /
 				throw(50); /*error, bit pointer jumps past memory* /
 			}*/ 
 		}

@@ -42,3 +42,25 @@ unsigned char BF::ConvertCompressionLevel(ZLIBCompressionLevel compressionLevel)
             return 0u;
     }
 }
+
+const char* BF::CompressionLevelToString(ZLIBCompressionLevel compressionLevel)
+{
+    switch (compressionLevel)
+    {
+        default:
+        case BF::ZLIBCompressionLevel::InvalidCompressionLevel:
+            return "Invalid";
+
+        case BF::ZLIBCompressionLevel::Default:
+            return "Default";
+
+        case BF::ZLIBCompressionLevel::Slowest:
+            return "Slowest";
+
+        case BF::ZLIBCompressionLevel::Fast:
+            return "Fast";
+
+        case BF::ZLIBCompressionLevel::Fastest:
+            return "Fastest";
+    }
+}
