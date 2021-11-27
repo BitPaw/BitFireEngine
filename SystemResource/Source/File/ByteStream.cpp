@@ -107,7 +107,7 @@ void BF::ByteStream::Read(unsigned short& value, Endian endian)
 			break;
 	}
 
-	assert(value < 65408);
+	//assert(value < 65408);
 }
 
 void BF::ByteStream::Read(int& value, Endian endian)

@@ -409,6 +409,28 @@
     <ClCompile Include="Source\Compression\ZLIB\ZLIBCompressionMethod.cpp" />
     <ClCompile Include="Source\Game\Sprite.cpp" />
     <ClCompile Include="Source\Compression\ZLIB\ZLIB.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFOffsetTable.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFVersion.cpp" />
+    <ClCompile Include="Source\Font\TTF\TTFTableEntry.cpp" />
+    <ClCompile Include="Source\Font\TTF\TTFTableEntryType.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFHorizontalHeader.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFHeader.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFMaximumProfile.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFCompatibility.cpp" />
+    <ClCompile Include="Source\Font\TTF\Panose\TTFPanose.cpp" />
+    <ClCompile Include="Source\Font\TTF\Panose\TTFWeight.cpp" />
+    <ClCompile Include="Source\Font\TTF\Panose\TTFFamilyType.cpp" />
+    <ClCompile Include="Source\Font\TTF\Panose\TTFSerifStyle.cpp" />
+    <ClCompile Include="Source\Font\TTF\Panose\TTFArmStyle.cpp" />
+    <ClCompile Include="Source\Font\TTF\Panose\TTFContrast.cpp" />
+    <ClCompile Include="Source\Font\TTF\Panose\TTFHeightX.cpp" />
+    <ClCompile Include="Source\Font\TTF\Panose\TTFLetterform.cpp" />
+    <ClCompile Include="Source\Font\TTF\Panose\TTFMidline.cpp" />
+    <ClCompile Include="Source\Font\TTF\Panose\TTFProportion.cpp" />
+    <ClCompile Include="Source\Font\TTF\Panose\TTFStrokeVariatoon.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFDigitalSignature.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFDigitalSignatureRecord.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFDigitalSignatureBlock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Compression\HUFFMAN\HuffmanNumberCode.h" />
@@ -618,6 +640,28 @@
     <ClInclude Include="Source\Compression\ZLIB\ZLIBCompressionMethod.h" />
     <ClInclude Include="Source\Game\Sprite.h" />
     <ClInclude Include="Source\Compression\ZLIB\ZLIB.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFOffsetTable.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFVersion.h" />
+    <ClInclude Include="Source\Font\TTF\TTFTableEntry.h" />
+    <ClInclude Include="Source\Font\TTF\TTFTableEntryType.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFHorizontalHeader.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFHeader.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFMaximumProfile.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFCompatibility.h" />
+    <ClInclude Include="Source\Font\TTF\Panose\TTFPanose.h" />
+    <ClInclude Include="Source\Font\TTF\Panose\TTFWeight.h" />
+    <ClInclude Include="Source\Font\TTF\Panose\TTFFamilyType.h" />
+    <ClInclude Include="Source\Font\TTF\Panose\TTFSerifStyle.h" />
+    <ClInclude Include="Source\Font\TTF\Panose\TTFArmStyle.h" />
+    <ClInclude Include="Source\Font\TTF\Panose\TTFContrast.h" />
+    <ClInclude Include="Source\Font\TTF\Panose\TTFHeightX.h" />
+    <ClInclude Include="Source\Font\TTF\Panose\TTFLetterform.h" />
+    <ClInclude Include="Source\Font\TTF\Panose\TTFMidline.h" />
+    <ClInclude Include="Source\Font\TTF\Panose\TTFProportion.h" />
+    <ClInclude Include="Source\Font\TTF\Panose\TTFStrokeVariatoon.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFDigitalSignature.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFDigitalSignatureRecord.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFDigitalSignatureBlock.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

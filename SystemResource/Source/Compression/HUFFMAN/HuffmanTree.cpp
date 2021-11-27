@@ -427,6 +427,7 @@ void BF::HuffmanTree::GenerateFixedLiteralLengthTree()
 	const size_t numcodes = NUM_DEFLATE_CODE_SYMBOLS;
 	unsigned int bitlen[numcodes];
 	unsigned int i = 0;
+	
 
 	/*288 possible codes: 0-255=literals, 256=endcode, 257-285=lengthcodes, 286-287=unused*/
 	for (i = 0; i <= 143; ++i) bitlen[i] = 8;

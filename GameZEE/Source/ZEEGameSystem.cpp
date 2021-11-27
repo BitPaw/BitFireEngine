@@ -13,6 +13,7 @@
 #include "../../SystemResource/Source/Image/PNG/PNG.h"
 #include "../../SystemResource/Source/Math/Physic/GravityCube.h"
 #include "../../SystemResource/Source/Image/JPEG/JPEG.h"
+#include "../../SystemResource/Source/Font/TTF/TTF.h"
 
 
 using namespace BF;
@@ -42,6 +43,10 @@ ZEE::ZEEGameSystem::ZEEGameSystem()
 
 void ZEE::ZEEGameSystem::OnStartUp()
 {   
+   // TTF fnt;
+
+   // fnt.Load("A:/_WorkSpace/BOOKOSI.TTF");
+
     /*
     BF::JPEG jpeg;
     jpeg.Load("B:/Daten/Bilder/_garbage/KN.jpg");
