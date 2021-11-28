@@ -608,6 +608,14 @@ void BF::ResourceManager::Load
     Load(skyBox.Faces[4], textureBack);
     Load(skyBox.Faces[5], textureFront);
 
+    skyBox.Faces[0].FlipHorizontal();
+    skyBox.Faces[1].FlipHorizontal();
+    //skyBox.Faces[2].FlipHorizontal();
+    //skyBox.Faces[2].FlipVertical();
+    skyBox.Faces[3].FlipHorizontal();
+    skyBox.Faces[4].FlipHorizontal();
+    skyBox.Faces[5].FlipHorizontal();
+
     Load(skyBox.Shader, shaderVertex, shaderFragment);
 
     Add(skyBox);
@@ -831,7 +839,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
 
             OpenGLAPI::RenderBothSides(true);
             OpenGLAPI::DepthMaskEnable(false);
-            OpenGLAPI::DrawOrder(true);
+            //OpenGLAPI::DrawOrder(true);
 
             OpenGLAPI::UseShaderProgram(shaderID);
             _lastUsedShaderProgram = shaderID;
@@ -846,7 +854,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
             OpenGLAPI::Render(skyMesh.Structure.RenderType, 0, skyMesh.Structure.IndexDataSize);
 
             OpenGLAPI::DepthMaskEnable(true);
-            OpenGLAPI::DrawOrder(false);
+            //OpenGLAPI::DrawOrder(false);
         }
     }
 

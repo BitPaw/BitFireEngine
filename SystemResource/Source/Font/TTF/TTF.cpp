@@ -1,12 +1,13 @@
 #include "TTF.h"
 
-#include "TTFTableEntry.h"
+#include "TableEntry.h"
 #include "Chunks/TTFOffsetTable.h"
 #include "../../File/FileStream.h"
 
 #include <cassert>
+#include "Chunks/OS2/Panose/TTFPanose.h"
 
-BF::FileActionResult BF::TTF::Load(const char* filePath)
+BF::FileActionResult BF::TTF::TTF::Load(const char* filePath)
 {
 	FileStream file;
 	FileActionResult fileActionResult = file.ReadFromDisk(filePath);
@@ -27,7 +28,7 @@ BF::FileActionResult BF::TTF::Load(const char* filePath)
 
 	for (size_t i = 0; i < offsetTable.NumberOfTables; i++)
 	{
-		TTFTableEntry tableEntry;
+		TableEntry tableEntry;
 		ByteStream chunkData;
 
 		file.Read(tableEntry.TypeRaw, 4u);
@@ -35,7 +36,7 @@ BF::FileActionResult BF::TTF::Load(const char* filePath)
 		file.Read(tableEntry.Offset, Endian::Big);
 		file.Read(tableEntry.Length, Endian::Big);
 
-		tableEntry.Type = ConvertTTFTableEntryType(tableEntry.TypeRaw);
+		tableEntry.Type = ConvertTableEntryType(tableEntry.TypeRaw);
 
 		chunkData.DataSet(file.Data + tableEntry.Offset, tableEntry.Length);
 
@@ -46,14 +47,49 @@ BF::FileActionResult BF::TTF::Load(const char* filePath)
 			tableEntry.TypeRaw[1],
 			tableEntry.TypeRaw[2],
 			tableEntry.TypeRaw[3],
-			tableEntry.Type == TTFTableEntryType::UnkownType ? '-' : 'x',
+			tableEntry.Type == TableEntryType::UnkownType ? '-' : 'x',
 			tableEntry.Offset,
 			tableEntry.Length
 		);
 
 		switch (tableEntry.Type)
 		{
-			case BF::TTFTableEntryType::DigitalSignature:
+			case TableEntryType::CharacterCodeMapping:
+			{
+				chunkData.Read(CharacterMapping.Version, Endian::Big);
+				chunkData.Read(CharacterMapping.NumberOfTables, Endian::Big);
+
+				CharacterMapping.EncodingRecordList = new CMAP::EncodingRecord[CharacterMapping.NumberOfTables];
+
+				for (size_t i = 0; i < CharacterMapping.NumberOfTables; i++)
+				{
+					CMAP::EncodingRecord& encodingRecord = CharacterMapping.EncodingRecordList[i];
+
+					unsigned short platformID;
+					unsigned short encodingID;
+
+					chunkData.Read(platformID, Endian::Big);
+					chunkData.Read(encodingID, Endian::Big);
+					chunkData.Read(encodingRecord.SubtableOffset, Endian::Big);
+
+					encodingRecord.Platform = CMAP::ConvertPlatformID(platformID);
+					encodingRecord.Encoding = CMAP::ConvertEncodingID(encodingRecord.Platform, encodingID);
+				}
+
+				break;
+			}
+			case TableEntryType::LinearThreshold:
+			{
+				chunkData.Read(LinearThreshold.Version, Endian::Big);
+				chunkData.Read(LinearThreshold.NumberOfGlyphs, Endian::Big);
+
+				LinearThreshold.PelsHeightList = (Byte*)malloc(LinearThreshold.NumberOfGlyphs * sizeof(Byte));
+
+				chunkData.Read(LinearThreshold.PelsHeightList, LinearThreshold.NumberOfGlyphs * sizeof(Byte));
+
+				break;
+			}
+			case TableEntryType::DigitalSignature:
 			{
 				Byte* startPointer = chunkData.Data + chunkData.DataCursorPosition;
 
@@ -96,7 +132,7 @@ BF::FileActionResult BF::TTF::Load(const char* filePath)
 
 				break;
 			}
-			case BF::TTFTableEntryType::FontHeader:
+			case TableEntryType::FontHeader:
 			{
 				chunkData.Read(Header.Version.Major, Endian::Big);
 				chunkData.Read(Header.Version.Minor, Endian::Little);
@@ -121,7 +157,7 @@ BF::FileActionResult BF::TTF::Load(const char* filePath)
 
 				break;
 			}				
-			case BF::TTFTableEntryType::HorizontalHeader:
+			case TableEntryType::HorizontalHeader:
 			{
 				chunkData.Read(HorizontalHeader.Version.Major, Endian::Big);
 				chunkData.Read(HorizontalHeader.Version.Minor, Endian::Little);
@@ -140,7 +176,7 @@ BF::FileActionResult BF::TTF::Load(const char* filePath)
 
 				break;
 			}
-			case BF::TTFTableEntryType::MaximumProfile:
+			case TableEntryType::MaximumProfile:
 			{
 				chunkData.Read(MaximumProfile.Version.Major, Endian::Big);
 				chunkData.Read(MaximumProfile.Version.Minor, Endian::Little);
@@ -172,7 +208,7 @@ BF::FileActionResult BF::TTF::Load(const char* filePath)
 
 				break;
 			}			
-			case BF::TTFTableEntryType::Compatibility:
+			case TableEntryType::Compatibility:
 			{
 				chunkData.Read(Compatibility.Version, Endian::Big);
 				chunkData.Read(Compatibility.xAvgCharWidth, Endian::Big);
@@ -267,17 +303,17 @@ BF::FileActionResult BF::TTF::Load(const char* filePath)
     return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::TTF::Save(const char* filePath)
+BF::FileActionResult BF::TTF::TTF::Save(const char* filePath)
 {
     return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::TTF::ConvertTo(Font& font)
+BF::FileActionResult BF::TTF::TTF::ConvertTo(Font& font)
 {
     return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::TTF::ConvertFrom(Font& font)
+BF::FileActionResult BF::TTF::TTF::ConvertFrom(Font& font)
 {
     return FileActionResult::Successful;
 }

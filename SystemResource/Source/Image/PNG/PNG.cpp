@@ -175,6 +175,8 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
                 }
                 case PNGChunkType::Transparency:
                 {
+                    fileStream.DataCursorPosition += chunk.Lengh;
+
                     break;
                 }
                 case PNGChunkType::ImageGamma:
@@ -275,6 +277,7 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
                 }
                 case PNGChunkType::SignificantBits:
                 {
+                    /*
                     unsigned int byteLength = 0;
                     unsigned int result = 0;
 
@@ -307,7 +310,9 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
                         result = (result << (i * 8)) | calcbyte;
                     }
 
-                    SignificantBits = result;
+                    SignificantBits = result;*/
+
+                    fileStream.DataCursorPosition += chunk.Lengh;
 
                     break;
                 }
@@ -362,8 +367,8 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
     PixelData = (Byte*)malloc(PixelDataSize * sizeof(Byte));  
 
     size_t zlibDataCache = 0;
-    Byte* zlibCache = (Byte*)malloc(imageDataCounter * 10 * 32768 * sizeof(Byte));
-    Byte* dataFilder = (Byte*)malloc(PixelDataSize * 2 * sizeof(Byte));
+    Byte* zlibCache = (Byte*)malloc(imageDataCounter * 50 * 32768 * sizeof(Byte));
+    Byte* dataFilder = (Byte*)malloc(PixelDataSize * 5 * sizeof(Byte));
     //-------------------------------------------------------------------------
     
 
@@ -398,6 +403,9 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
             break;
         }
     }
+
+    free(zlibCache);
+    free(dataFilder);
 }
 
 BF::FileActionResult BF::PNG::Save(const char* filePath)

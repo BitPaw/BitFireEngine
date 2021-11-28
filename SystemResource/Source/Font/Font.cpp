@@ -35,7 +35,7 @@ BF::FileActionResult BF::Font::Load(const char* filePath)
         }
         case FontFormat::TTF:
         {
-            TTF ttf;
+            TTF::TTF ttf;
             ttf.Load(filePath);
             ttf.ConvertTo(*this);
             break;
@@ -75,7 +75,7 @@ BF::FileActionResult BF::Font::Save(const char* filePath, FontFormat fontFormat)
         }
         case BF::FontFormat::TTF:
         {
-            TTF ttf;
+            TTF::TTF ttf;
             ttf.ConvertFrom(*this);
             ttf.Save(filePath);
             break;

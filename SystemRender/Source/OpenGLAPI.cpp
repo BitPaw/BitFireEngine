@@ -75,7 +75,7 @@ void BF::OpenGLAPI::RegisterModel(Model& model)
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, structure.IndexDataSize * sizeof(unsigned int), structure.IndexData, GL_STATIC_DRAW);
         
-        //structure.PrintData();
+       // structure.PrintData();
 
         mesh.RenderInfo.ShouldBeRendered = true;
     }

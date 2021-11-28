@@ -1,8 +1,8 @@
 #pragma once
 
-namespace BF
+namespace BF::TTF
 {
-	enum class TTFTableEntryType
+	enum class TableEntryType
 	{
         UnkownType,
 
@@ -55,9 +55,11 @@ namespace BF
 
 
         // Additional
-        DigitalSignature // DSIG 
+        DigitalSignature, // DSIG 
+        LinearThreshold, // LTSH
+        VerticalDeviceMetrics // VDMX
 	};
 
-    TTFTableEntryType ConvertTTFTableEntryType(char tag[4]);
-    void ConvertTTFTableEntryType(char tag[4], TTFTableEntryType tableEntryType);
+    TableEntryType ConvertTableEntryType(char tag[4]);
+    void ConvertTableEntryType(char tag[4], TableEntryType tableEntryType);
 }

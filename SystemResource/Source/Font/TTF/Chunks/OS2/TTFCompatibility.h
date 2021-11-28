@@ -1,7 +1,7 @@
 #pragma once
 
-#include "TTFVersion.h"
-#include "../Panose/TTFPanose.h"
+#include "../TTFVersion.h"
+#include "Panose/TTFPanose.h"
 
 namespace BF
 {

@@ -43,6 +43,8 @@ namespace BF
 		void RemoveColor(unsigned char red, unsigned char green, unsigned char blue);
 
 		void FlipHorizontal();
+		void FlipVertical();
+
 		void PrintData();
 
 		void Resize(unsigned int width, unsigned height);

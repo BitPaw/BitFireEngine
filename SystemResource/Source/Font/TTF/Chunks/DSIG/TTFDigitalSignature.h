@@ -13,7 +13,6 @@ namespace BF
 		unsigned short Flags;
 		TTFDigitalSignatureRecord* SignatureRecordList;
 
-
 		TTFDigitalSignatureBlock* SignatureBlockList;
 
 		TTFDigitalSignature();

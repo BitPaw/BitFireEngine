@@ -107,6 +107,31 @@ void BF::Image::RemoveColor(unsigned char red, unsigned char green, unsigned cha
 
 void BF::Image::FlipHorizontal()
 {
+    size_t bbp = BytesPerPixel(Format);
+    size_t rowSize = (Width * bbp);
+    size_t length = (Width * bbp) / 2;
+
+    for (size_t x = 0; x < length; x += bbp) // 
+    {
+        size_t xB = rowSize - x - bbp;
+
+        for (size_t y = 0; y < Height; y++)
+        {
+            size_t indexA = x + (y * rowSize);
+            size_t indexB = xB + (y * rowSize);
+            Byte tempByte[4] = {0,0,0,0};
+            Byte* pixelA = PixelData + indexA;
+            Byte* pixelB = PixelData + indexB;
+
+            memcpy(tempByte, pixelA, bbp);
+            memcpy(pixelA, pixelB, bbp);
+            memcpy(pixelB, tempByte, bbp);       
+        }
+    }
+}
+
+void BF::Image::FlipVertical()
+{
     unsigned int height = Height;
     unsigned int width = Width;
     unsigned int bytesPerPixel = -1;
@@ -122,7 +147,7 @@ void BF::Image::FlipHorizontal()
         case BF::ImageDataFormat::AlphaMaskBinary:
             bytesPerPixel = 1;
             break;
- 
+
         case BF::ImageDataFormat::BGR:
         case BF::ImageDataFormat::RGB:
             bytesPerPixel = 3;
@@ -133,7 +158,6 @@ void BF::Image::FlipHorizontal()
             bytesPerPixel = 4;
             break;
     }
-
 
     size_t scanLineWidthSize = width * bytesPerPixel;
     unsigned int scanLinesToSwap = height / 2;

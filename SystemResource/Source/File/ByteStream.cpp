@@ -182,7 +182,7 @@ void BF::ByteStream::Read(unsigned long long& value, Endian endian)
 
 void BF::ByteStream::Read(void* value, size_t length)
 {
-	memcpy(value, &Data[DataCursorPosition], length);
+	memcpy(value, Data + DataCursorPosition, length);
 
 	DataCursorPosition += length;
 }
