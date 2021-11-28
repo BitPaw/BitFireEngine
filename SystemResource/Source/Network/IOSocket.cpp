@@ -382,7 +382,7 @@ BF::SocketActionResult BF::IOSocket::Connect(IOSocket& serverSocket, const  char
     return SocketActionResult::Successful;
 }
 
-BF::SocketActionResult BF::IOSocket::Read()
+BF::SocketActionResult BF::IOSocket::Receive()
 {
     unsigned int byteRead = 0;
 
@@ -417,25 +417,24 @@ BF::SocketActionResult BF::IOSocket::Read()
     }
 }
 
-BF::SocketActionResult BF::IOSocket::Write(const char* message)
+BF::SocketActionResult BF::IOSocket::Send(const char* message, size_t messageLength)
 {
-    int messageLengh = strnlen_s(message, SocketBufferSize);
     unsigned int writtenBytes = 0;
 
-    if (messageLengh == 0)
+    if (messageLength == 0)
     {
         return SocketActionResult::Successful; // Do not send anything if the message is empty
     }
 
     if (Callback)
     {
-        Callback->OnMessageSend(ID, message, messageLengh);
+        Callback->OnMessageSend(ID, message, messageLength);
     }
 
 #ifdef OSUnix
-    writtenBytes = write(ID, message, messageLengh);
+    writtenBytes = write(ID, message, messageLength);
 #elif defined(OSWindows)
-    writtenBytes = send(ID, message, messageLengh, 0);
+    writtenBytes = send(ID, message, messageLength, 0);
 #endif  
 
     switch (writtenBytes)

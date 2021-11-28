@@ -64,7 +64,7 @@ namespace BF
 		void AwaitConnection(IOSocket& clientSocket);
 		SocketActionResult Open(IPVersion ipVersion, unsigned short port);	
 		SocketActionResult Connect(IOSocket& serverSocket, const char* ipAdress, unsigned short port);
-		SocketActionResult Read();
-		SocketActionResult Write(const char* message);
+		SocketActionResult Receive();
+		SocketActionResult Send(const char* message, size_t messageLength);
 	};
 }

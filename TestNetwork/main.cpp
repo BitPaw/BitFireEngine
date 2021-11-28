@@ -14,7 +14,7 @@ const char* _client = "Client";
 const char* _server = "Server";
 
 
-struct MainSt : public ISocketListener
+struct MainSt : public ISocketListener, BF::ProgramExecuteResultListener
 {
 	const char* stringAdress = 0;
 
@@ -47,14 +47,29 @@ struct MainSt : public ISocketListener
 	{
 		printf("[%s][%i] Message Received : %s (%i Byte)\n", stringAdress, socketID, message, messageLengh);
 	}
+
+	// Geerbt über ProgramExecuteResultListener
+	virtual void OnProgramExecuted(bool succesful, size_t returnResult, ErrorCode errorCode) override
+	{
+		printf("Heelp");
+	}
 };
 
 int main(int amountOFParameters, char** parameter)
 {
 	printf("[i][Core] Working Directory <%s>\n", parameter[0]);
 
+
 	MainSt serverCallBack;
 	MainSt clientCallBack;
+
+	Program::Execute
+	(
+		"N:/Schule/Studium/Semester/Semester 5/[VS] Verteilte Systeme/Aufgabe/ClusterWorker/Program/VSClient/DummyProgram.exe",
+		nullptr,
+		&serverCallBack
+	);
+
 
 	/*
 	Program program;	
@@ -69,7 +84,7 @@ int main(int amountOFParameters, char** parameter)
 	server.Callback = &serverCallBack;
 
 	
-	SocketActionResult serverCreateResult = server.Start(IPVersion::IPVersion6, 25565);
+	SocketActionResult serverCreateResult = server.Start(IPVersion::IPVersion4 , 25565);
 
 
 
@@ -81,15 +96,16 @@ int main(int amountOFParameters, char** parameter)
 	unsigned int counter = 0;
 	char buffer[30];
 
+	
 	Sleep(100);
 
-	SocketActionResult socketActionResult = client.ConnectToServer("::1", 25565);
+	SocketActionResult socketActionResult = client.ConnectToServer("127.0.0.1", 25565);
 
 	while (counter < (int)-1 && socketActionResult == SocketActionResult::Successful)
 	{
 		sprintf_s(buffer,30,"Hello x%i", ++counter);
 
-		client.Write(buffer);
+		client.Send(buffer, 30);
 
 		//Sleep(25);
 	}

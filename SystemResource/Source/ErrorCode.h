@@ -1,13 +1,5 @@
 #pragma once
 
-#include "OSDefine.h"
-
-#if defined(OSUnix)
-#include <unistd.h>
-#elif defined(OSWindows)
-#include <windows.h>
-#endif
-
 namespace BF
 {
 	enum class ErrorCode

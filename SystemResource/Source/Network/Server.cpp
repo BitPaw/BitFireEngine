@@ -76,7 +76,7 @@ BF::SocketActionResult BF::Server::Start(IPVersion ipVersion, unsigned short por
                 {
                     while (client->IsCurrentlyUsed())
                     {
-                        SocketActionResult socketActionResult = client->Read();
+                        SocketActionResult socketActionResult = client->Receive();
 
 
                     }
@@ -140,7 +140,7 @@ BF::Client* BF::Server::GetClientViaID(int socketID)
     return 0;
 }
 
-BF::SocketActionResult BF::Server::SendToClient(int clientID, char* message)
+BF::SocketActionResult BF::Server::SendToClient(int clientID, char* message, size_t messageLength)
 {
     // Client LookUp
     Client* client = GetClientViaID(clientID);
@@ -152,10 +152,10 @@ BF::SocketActionResult BF::Server::SendToClient(int clientID, char* message)
     }
 
     // Sent to Client;
-    return Write(message);
+    return Send(message, messageLength);
 }
 
-BF::SocketActionResult BF::Server::BroadcastToClients(char* message)
+BF::SocketActionResult BF::Server::BroadcastToClients(char* message, size_t messageLength)
 {
     SocketActionResult errorCode = SocketActionResult::InvalidResult;
 
@@ -165,7 +165,7 @@ BF::SocketActionResult BF::Server::BroadcastToClients(char* message)
 
         if (client->ID != -1)
         {
-            SocketActionResult currentCrrorCode = Write(message);
+            SocketActionResult currentCrrorCode = Send(message, messageLength);
 
             if (currentCrrorCode != SocketActionResult::Successful)
             {

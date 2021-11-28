@@ -10,9 +10,20 @@ BF::Client::Client()
 
 BF::SocketActionResult BF::Client::ConnectToServer(const char* ip, unsigned short port)
 {
-	strncpy(IP, ip, 10);
+	strncpy(IP, ip, IPSize);
 
-	return Connect(ConnectedServerData, IP, port);
+	SocketActionResult socketActionResult = Connect(ConnectedServerData, IP, port);
+
+    CommunicationThread = new std::thread([](Client* client)
+    {
+        while (client->IsCurrentlyUsed())
+        {
+            SocketActionResult socketActionResult = client->Receive();           
+        }
+
+    }, this);
+
+    return socketActionResult;
 }
 
 void BF::Client::Disconnect()

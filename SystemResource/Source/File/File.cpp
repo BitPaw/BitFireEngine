@@ -20,6 +20,7 @@
 #define FileRename rename 
 #define FileRenameW _wrename
 #define FileDirectoryCreate(string) _mkdir(string)
+#include <Windows.h>
 #endif
 
 BF::FileActionResult BF::File::CheckFile()

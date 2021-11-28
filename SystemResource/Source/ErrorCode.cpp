@@ -1,5 +1,13 @@
 #include "ErrorCode.h"
 
+#include "OSDefine.h"
+
+#if defined(OSUnix)
+#include <unistd.h>
+#elif defined(OSWindows)
+#include <windows.h>
+#endif
+
 int BF::ConvertErrorCode(ErrorCode errorCode)
 {
 	switch (errorCode)

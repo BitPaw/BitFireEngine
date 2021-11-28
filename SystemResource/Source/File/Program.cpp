@@ -9,6 +9,7 @@
 #include <unistd.h>
 #define ExecuteProgram spawnl
 #elif defined(OSWindows)
+#include <Windows.h>
 #include <process.h>
 #define ExecuteProgram _spawnl
 #endif
@@ -19,9 +20,9 @@ BF::FileActionResult BF::Program::Execute(const char* programPath, const char* p
     {
         std::thread* modelLoaderThread = new std::thread([](const char* programPath, const char* parameterList, ProgramExecuteResultListener* callback)
         {
-            size_t programReturnresult = ExecuteProgram(_P_NOWAIT, programPath, programPath, parameterList);
-            bool programExecutionSuccesfull = programReturnresult != -1;
-            ErrorCode errorCode = ErrorCode::UnkownError;
+            size_t programReturnresult = ExecuteProgram(_P_WAIT, programPath, programPath, parameterList);
+            bool programExecutionSuccesfull = programReturnresult >= 0;
+            ErrorCode errorCode = ErrorCode::Successful;
 
             if (!programExecutionSuccesfull)
             {

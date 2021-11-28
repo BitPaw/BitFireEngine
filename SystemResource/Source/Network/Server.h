@@ -26,8 +26,8 @@ namespace BF
         void KickClient(int socketID);
         Client* WaitForClient();
         Client* GetClientViaID(int socketID);
-        SocketActionResult SendToClient(int clientID, char* message);
-        SocketActionResult BroadcastToClients(char* message);
+        SocketActionResult SendToClient(int clientID, char* message, size_t messageLength);
+        SocketActionResult BroadcastToClients(char* message, size_t messageLength);
         void RegisterClient(Client* client);
         void UnRegisterClient(Client* client);
     };
