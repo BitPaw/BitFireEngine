@@ -103,11 +103,15 @@
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>$(ProjectDir)Dependencies\lib32\AL;$(LibraryPath)</LibraryPath>
     <IncludePath>$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)__Export__/x86 Debug</OutDir>
+    <IntDir>$(SolutionDir)__Temp__/x86 Debug/$(ProjectName)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(ProjectDir)Dependencies\lib32\AL;$(LibraryPath)</LibraryPath>
     <IncludePath>$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)__Export__/x86 Release</OutDir>
+    <IntDir>$(SolutionDir)__Temp__/x86 Release/$(ProjectName)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -118,11 +122,15 @@
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>$(ProjectDir)Dependencies\lib32\AL\Deb;$(LibraryPath)</LibraryPath>
     <IncludePath>$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)__Export__/x64 Debug</OutDir>
+    <IntDir>$(SolutionDir)__Temp__/x64 Debug/$(ProjectName)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(ProjectDir)Dependencies\lib32\AL\Deb;$(LibraryPath)</LibraryPath>
     <IncludePath>$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)__Export__/x64 Release</OutDir>
+    <IntDir>$(SolutionDir)__Temp__/x64 Release/$(ProjectName)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|x64'">
     <LinkIncremental>false</LinkIncremental>

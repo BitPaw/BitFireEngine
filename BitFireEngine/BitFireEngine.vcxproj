@@ -60,6 +60,15 @@
     <ProjectReference Include="..\SoundSystem\SoundSystem.vcxproj">
       <Project>{91ed6047-19d8-48a0-ac5c-f9e1812c1962}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\SystemRender\SystemRender.vcxproj">
+      <Project>{4304423b-6009-45f9-b023-7c0c2c405e0e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\SystemResource\SystemResource.vcxproj">
+      <Project>{398c5630-9092-486f-920c-c9992f8b7f6c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\SystemSound\SystemSound.vcxproj">
+      <Project>{91ed6047-19d8-48a0-ac5c-f9e1812c1962}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -137,11 +146,15 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)__Export__/x86 Debug</OutDir>
+    <IntDir>$(SolutionDir)__Temp__/x86 Debug/$(ProjectName)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(LibraryPath);$(SolutionDir)Dependencies\lib32\AL\Rel;$(SolutionDir)Dependencies\lib32\GL;$(SolutionDir)Dependencies\lib32\GLFW;$(SolutionDir)Dependencies\lib32\zlib</LibraryPath>
     <IncludePath>$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)__Export__/x86 Release</OutDir>
+    <IntDir>$(SolutionDir)__Temp__/x86 Release/$(ProjectName)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -152,11 +165,15 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath);$(SolutionDir)Dependencies\lib64\AL\Deb;$(SolutionDir)Dependencies\lib64\GL;$(SolutionDir)Dependencies\lib64\GLFW</LibraryPath>
+    <OutDir>$(SolutionDir)__Export__/x64 Debug</OutDir>
+    <IntDir>$(SolutionDir)__Temp__/x64 Debug/$(ProjectName)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(LibraryPath);$(SolutionDir)Dependencies\lib64\AL\Rel;$(SolutionDir)Dependencies\lib64\GL;$(SolutionDir)Dependencies\lib64\GLFW</LibraryPath>
     <IncludePath>$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)__Export__/x64 Release</OutDir>
+    <IntDir>$(SolutionDir)__Temp__/x64 Release/$(ProjectName)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -254,11 +271,11 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);GLEW_STATIC;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <LanguageStandard_C>stdc11</LanguageStandard_C>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
       <OmitFramePointers>false</OmitFramePointers>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
