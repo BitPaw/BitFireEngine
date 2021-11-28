@@ -6,6 +6,7 @@
 #include "../IImageFormat.h"
 
 #include "../../Compression/ZLIB/ZLIBHeader.h"
+#include "PNGInterlaceMethod.h"
 
 namespace BF
 {
@@ -30,7 +31,7 @@ namespace BF
 		PNGColorType ColorType;
 		unsigned char CompressionMethod;
 		unsigned char FilterMethod;
-		unsigned char InterlaceMethod;
+		PNGInterlaceMethod InterlaceMethod;
 		//---------------------------------------------------------------------------
 
 		//---[ IDAT - Image Data (Compressed)]---------------------------------------

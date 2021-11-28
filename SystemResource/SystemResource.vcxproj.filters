@@ -522,6 +522,9 @@
     <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFWeight.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Image\PNG\PNGInterlaceMethod.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp">
@@ -1227,6 +1230,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFWeight.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Image\PNG\PNGInterlaceMethod.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

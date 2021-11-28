@@ -95,18 +95,20 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
             {
                 case PNGChunkType::ImageHeader:
                 {
-                    unsigned char colorType = 0;
+                    unsigned char colorTypeRaw = 0;
+                    unsigned char interlaceMethodRaw = 0;
 
                     fileStream.Read(Width, Endian::Big); // 4 Bytes
                     fileStream.Read(Height, Endian::Big); // 4 Bytes
 
                     fileStream.Read(BitDepth); // 1 Byte
-                    fileStream.Read(colorType); // 1 Byte
+                    fileStream.Read(colorTypeRaw); // 1 Byte
                     fileStream.Read(CompressionMethod); // 1 Byte
                     fileStream.Read(FilterMethod); // 1 Byte
-                    fileStream.Read(InterlaceMethod); // 1 Byte
+                    fileStream.Read(interlaceMethodRaw); // 1 Byte
 
-                    ColorType = ConvertColorType(colorType);
+                    ColorType = ConvertColorType(colorTypeRaw);
+                    InterlaceMethod = ConvertPNGInterlaceMethod(interlaceMethodRaw);
 
                     break;
                 }
@@ -364,18 +366,14 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
 
     //---<Allocate>------------------------------------------------------------
     PixelDataSize = Width * Height * NumberOfColorChannels(ColorType);
-    PixelData = (Byte*)malloc(PixelDataSize * sizeof(Byte));  
-
-    size_t zlibDataCache = 0;
-    Byte* zlibCache = (Byte*)malloc(imageDataCounter * 50 * 32768 * sizeof(Byte));
-    Byte* dataFilder = (Byte*)malloc(PixelDataSize * 5 * sizeof(Byte));
+    PixelData = (Byte*)malloc(PixelDataSize * sizeof(Byte));   
     //-------------------------------------------------------------------------
     
 
     BitStreamHusk bitstream(imageDataChunkCache, imageDataChunkCacheSizeUSED);
-    ZLIB zlib(imageDataChunkCache, imageDataChunkCacheSizeUSED);   
- 
-    bitstream.CurrentPosition += 2u;
+    ZLIB zlib(imageDataChunkCache, imageDataChunkCacheSizeUSED);       
+
+    bitstream.CurrentPosition += 2u;    
 
     switch (zlib.Header.CompressionMethod)
     {
@@ -383,16 +381,29 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
         {
             DeflateBlock deflateBlock;
 
+            size_t zlibDataCache = 0;
+            size_t bitsPerPixel = BitsPerPixel();
+            size_t expectedzlibCacheSize = ZLIB::CalculateExpectedSize(Width, Height, bitsPerPixel, InterlaceMethod);
+            size_t expectedadam7CacheSize = ADAM7::CaluclateExpectedSize(Width, Height, bitsPerPixel);
+            Byte* zlibCache = (Byte*)malloc(expectedzlibCacheSize * sizeof(Byte));
+            Byte* adam7Cache = nullptr;
+
             do
             {           
                 deflateBlock.Parse(bitstream);
-                deflateBlock.Inflate(bitstream, zlibCache, zlibDataCache);       
+                deflateBlock.Inflate(bitstream, zlibCache, zlibDataCache);     
             }
             while (!deflateBlock.IsLastBlock);
 
-            ADAM7::ProcessScanlines(dataFilder, zlibCache, Width, Height, BitsPerPixel(), InterlaceMethod);
+            adam7Cache = (Byte*)malloc(expectedadam7CacheSize * sizeof(Byte));
 
-            PNGColorCompressor::Decompress(dataFilder, PixelData, Width, Height, BitDepth, ColorType);
+            ADAM7::ProcessScanlines(adam7Cache, zlibCache, Width, Height, bitsPerPixel, InterlaceMethod);
+
+            free(zlibCache);
+
+            PNGColorCompressor::Decompress(adam7Cache, PixelData, Width, Height, BitDepth, ColorType);
+       
+            free(adam7Cache);
 
             break;
         }
@@ -403,9 +414,6 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
             break;
         }
     }
-
-    free(zlibCache);
-    free(dataFilder);
 }
 
 BF::FileActionResult BF::PNG::Save(const char* filePath)
@@ -423,6 +431,7 @@ BF::FileActionResult BF::PNG::Save(const char* filePath)
     // Header
     {
         unsigned char colorType = ConvertColorType(ColorType);
+        unsigned char interlaceMethod = ConvertPNGInterlaceMethod(InterlaceMethod);
 
         fileStream.Write(13u, Endian::Big);
         fileStream.Write("IHDR", 4u);
@@ -434,7 +443,7 @@ BF::FileActionResult BF::PNG::Save(const char* filePath)
         fileStream.Write(colorType);
         fileStream.Write(CompressionMethod);
         fileStream.Write(FilterMethod);
-        fileStream.Write(InterlaceMethod);
+        fileStream.Write(interlaceMethod);
 
         fileStream.Write(0u, Endian::Big);
     }
@@ -486,79 +495,4 @@ BF::FileActionResult BF::PNG::ConvertTo(Image& image)
 BF::FileActionResult BF::PNG::ConvertFrom(Image& image)
 {
     return FileActionResult::Successful;
-}
-
-void BF::PNG::PrintData()
-{
-    const char* colorType = PNGColorTypeToString(ColorType);
-    const char* compressionMethod;
-    const char* filterMethod;
-    const char* interlaceMethod;
-
-    switch (CompressionMethod)
-    {
-        case 0:
-        {
-            compressionMethod = "None";
-            break;
-        }
-        
-        default:
-        {
-            compressionMethod = "Error";
-            break;
-        }
-    }
-
-    switch (FilterMethod)
-    {
-        case 0:
-        {
-            filterMethod = "None";
-            break;
-        }
-
-        default:
-        {
-            filterMethod = "Error";
-            break;
-        }
-    }
-
-    switch (InterlaceMethod)
-    {
-        case 0:
-        {
-            interlaceMethod = "None";
-            break;
-        }
-
-        default:
-        {
-            interlaceMethod = "Error";
-            break;
-        }
-    }
-
-	printf
-	(
-	    "+---------------------------+\n"
-		"| PNG File                  |\n"
-		"+---------------------------+\n"
-		"| Width             : %5i |\n"
-		"| Height            : %5i |\n"
-		"| BitDepth          : %5i |\n"
-		"| ColorType         : %5s |\n"
-		"| CompressionMethod : %5s |\n"
-		"| FilterMethod      : %5s |\n"
-		"| InterlaceMethod   : %5s |\n"
-		"+---------------------------+\n",
-		Width,
-		Height,
-		BitDepth,
-        colorType,
-        compressionMethod,
-        filterMethod,
-        interlaceMethod
-	);
 }

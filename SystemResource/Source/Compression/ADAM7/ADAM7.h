@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../Image/PNG/PNGInterlaceMethod.h"
+
 namespace BF
 {
 	class ADAM7
@@ -23,7 +25,9 @@ namespace BF
 			size_t width,
 			size_t height, 
 			size_t bbp,
-			size_t interlaceMethod
+			PNGInterlaceMethod interlaceMethod
 		);		
+
+		static size_t CaluclateExpectedSize(size_t width, size_t height, size_t bpp);
 	};
 }

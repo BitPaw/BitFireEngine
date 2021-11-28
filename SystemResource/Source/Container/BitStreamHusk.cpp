@@ -52,9 +52,9 @@ unsigned int BF::BitStreamHusk::ExtractBits(unsigned char amountOfBits)
 	unsigned int bitMask = ((1u << amountOfBits) - 1u) << CurrentBitOffset; // 0000111111
 	unsigned int bitBlock;
 	unsigned char* a = StartAdress + CurrentPosition;
-	unsigned char* b = StartAdress + CurrentPosition + 1;
-	unsigned char* c = StartAdress + CurrentPosition + 2;
-	unsigned char* d = StartAdress + CurrentPosition + 3;
+	unsigned char* b = a + 1;
+	unsigned char* c = a + 2;
+	unsigned char* d = a + 3;
 	unsigned char* maxAdress = StartAdress + (DataLengh -1);
 
 	unsigned int ai = a > maxAdress ? 0 : *a;

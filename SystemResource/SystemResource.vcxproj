@@ -268,6 +268,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Image\PNG\PNGInterlaceMethod.cpp" />
     <ClCompile Include="Source\Font\TTF\Chunks\CMAP\EncodingID.cpp" />
     <ClCompile Include="Source\Compression\HUFFMAN\HuffmanNumberCode.cpp" />
     <ClCompile Include="Source\Compression\HUFFMAN\HuffmanCodeType.cpp" />
@@ -439,6 +440,7 @@
     <ClCompile Include="Source\Font\TTF\Chunks\CMAP\PlatformID.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Image\PNG\PNGInterlaceMethod.h" />
     <ClInclude Include="Source\Font\TTF\Chunks\CMAP\EncodingID.h" />
     <ClInclude Include="Source\Compression\HUFFMAN\HuffmanNumberCode.h" />
     <ClInclude Include="Source\Image\PNG\PNGColorTree.h" />

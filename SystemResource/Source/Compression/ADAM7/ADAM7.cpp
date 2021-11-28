@@ -13,7 +13,7 @@ static const unsigned ADAM7_IY[7] = { 0, 0, 4, 0, 2, 0, 1 }; /*y start values*/
 static const unsigned ADAM7_DX[7] = { 8, 8, 4, 4, 2, 2, 1 }; /*x delta values*/
 static const unsigned ADAM7_DY[7] = { 8, 8, 8, 4, 4, 2, 2 }; /*y delta values*/
 
-unsigned int BF::ADAM7::ProcessScanlines(unsigned char* out, unsigned char* in, size_t width, size_t height, size_t bpp, size_t interlaceMethod)
+unsigned int BF::ADAM7::ProcessScanlines(unsigned char* out, unsigned char* in, size_t width, size_t height, size_t bpp, PNGInterlaceMethod interlaceMethod)
 {
     /*
      This function converts the filtered-padded-interlaced data into pure 2D image buffer with the PNG's colortype.
@@ -24,41 +24,60 @@ unsigned int BF::ADAM7::ProcessScanlines(unsigned char* out, unsigned char* in, 
      */
     if (bpp == 0) return 31; /*error: invalid colortype*/
 
-    if (interlaceMethod == 0)
-    {
-        if (bpp < 8 && width * bpp != ((width * bpp + 7u) / 8u) * 8u)
-        {
-            CERROR_TRY_RETURN(unfilter(in, in, width, height, bpp));
-            removePaddingBits(out, in, width * bpp, ((width * bpp + 7u) / 8u) * 8u, height);
-        }
-        /*we can immediately filter into the out buffer, no other steps needed*/
-        else CERROR_TRY_RETURN(unfilter(out, in, width, height, bpp));
-    }
-    else /*interlace_method is 1 (Adam7)*/
-    {
-        unsigned passw[7], passh[7]; size_t filter_passstart[8], padded_passstart[8], passstart[8];
-        unsigned i;
 
-        Adam7_getpassvalues(passw, passh, filter_passstart, padded_passstart, passstart, width, height, bpp);
 
-        for (i = 0; i != 7; ++i)
+    switch (interlaceMethod)
+    {
+        default:
+        case BF::PNGInterlaceMethod::Invalid:
+            break;
+
+        case BF::PNGInterlaceMethod::NoInterlace:
         {
-            CERROR_TRY_RETURN(unfilter(&in[padded_passstart[i]], &in[filter_passstart[i]], passw[i], passh[i], bpp));
-            /*TODO: possible efficiency improvement: if in this reduced image the bits fit nicely in 1 scanline,
-            move bytes instead of bits or move not at all*/
-            if (bpp < 8)
+            if (bpp < 8 && width * bpp != ((width * bpp + 7u) / 8u) * 8u)
             {
-                /*remove padding bits in scanlines; after this there still may be padding
-                bits between the different reduced images: each reduced image still starts nicely at a byte*/
-                removePaddingBits(&in[passstart[i]], &in[padded_passstart[i]], passw[i] * bpp,
-                    ((passw[i] * bpp + 7u) / 8u) * 8u, passh[i]);
+                CERROR_TRY_RETURN(unfilter(in, in, width, height, bpp));
+                removePaddingBits(out, in, width * bpp, ((width * bpp + 7u) / 8u) * 8u, height);
             }
-        }
+            /*we can immediately filter into the out buffer, no other steps needed*/
+            else CERROR_TRY_RETURN(unfilter(out, in, width, height, bpp));
 
-        Adam7_deinterlace(out, in, width, height, bpp);
+            break;
+        }    
+        case BF::PNGInterlaceMethod::ADAM7Interlace:
+        {
+            unsigned passw[7], passh[7]; size_t filter_passstart[8], padded_passstart[8], passstart[8];
+            unsigned i;
+
+            Adam7_getpassvalues(passw, passh, filter_passstart, padded_passstart, passstart, width, height, bpp);
+
+            for (i = 0; i != 7; ++i)
+            {
+                CERROR_TRY_RETURN(unfilter(&in[padded_passstart[i]], &in[filter_passstart[i]], passw[i], passh[i], bpp));
+                /*TODO: possible efficiency improvement: if in this reduced image the bits fit nicely in 1 scanline,
+                move bytes instead of bits or move not at all*/
+                if (bpp < 8)
+                {
+                    /*remove padding bits in scanlines; after this there still may be padding
+                    bits between the different reduced images: each reduced image still starts nicely at a byte*/
+                    removePaddingBits(&in[passstart[i]], &in[padded_passstart[i]], passw[i] * bpp,
+                        ((passw[i] * bpp + 7u) / 8u) * 8u, passh[i]);
+                }
+            }
+
+            Adam7_deinterlace(out, in, width, height, bpp);
+
+            break; 
+        }
     }
 
     return 0;
+}
+
+size_t BF::ADAM7::CaluclateExpectedSize(size_t width, size_t height, size_t bpp)
+{
+    size_t n = width * height;
+    return ((n / 8u) * bpp) + ((n & 7u) * bpp + 7u) / 8u;
 }
 
 unsigned char BF::ADAM7::paethPredictor(short a, short b, short c)

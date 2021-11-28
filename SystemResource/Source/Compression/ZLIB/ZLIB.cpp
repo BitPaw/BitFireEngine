@@ -45,3 +45,39 @@ void BF::ZLIB::Parse(unsigned char* inputData, size_t inputDataSize)
 
     //AdlerChecksum.;
 }
+
+size_t BF::ZLIB::CalculateExpectedSize(size_t width, size_t height, size_t bpp, PNGInterlaceMethod interlaceMethod)
+{
+    size_t expected_size = 0;
+
+    switch (interlaceMethod)
+    {
+        default:
+        case BF::PNGInterlaceMethod::Invalid:
+            break;
+
+        case BF::PNGInterlaceMethod::NoInterlace:
+        {
+            // predict output size, to allocate exact size for output buffer to avoid more dynamic allocation.
+            // If the decompressed size does not match the prediction, the image must be corrupt.
+            expected_size = CalculateRawSizeIDAT(width, height, bpp);
+            break;
+        }
+        case BF::PNGInterlaceMethod::ADAM7Interlace:
+        {
+            // Adam-7 interlaced: expected size is the sum of the 7 sub-images sizes
+            expected_size = 0;
+            expected_size += CalculateRawSizeIDAT((width + 7) >> 3, (height + 7) >> 3, bpp);
+            if (width > 4) expected_size += CalculateRawSizeIDAT((width + 3) >> 3, (height + 7) >> 3, bpp);
+            expected_size += CalculateRawSizeIDAT((width + 3) >> 2, (height + 3) >> 3, bpp);
+            if (width > 2) expected_size += CalculateRawSizeIDAT((width + 1) >> 2, (height + 3) >> 2, bpp);
+            expected_size += CalculateRawSizeIDAT((width + 1) >> 1, (height + 1) >> 2, bpp);
+            if (width > 1) expected_size += CalculateRawSizeIDAT((width + 0) >> 1, (height + 1) >> 1, bpp);
+            expected_size += CalculateRawSizeIDAT((width + 0), (height + 0) >> 1, bpp);
+
+            break;
+        }           
+    }
+
+    return expected_size;
+}
