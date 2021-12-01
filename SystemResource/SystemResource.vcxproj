@@ -276,6 +276,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\File\OpenFileDialog.cpp" />
     <ClCompile Include="Source\Image\PNG\PNGInterlaceMethod.cpp" />
     <ClCompile Include="Source\Font\TTF\Chunks\CMAP\EncodingID.cpp" />
     <ClCompile Include="Source\Compression\HUFFMAN\HuffmanNumberCode.cpp" />
@@ -421,8 +422,8 @@
     <ClCompile Include="Source\Compression\ZLIB\ZLIB.cpp" />
     <ClCompile Include="Source\Font\TTF\Chunks\TTFOffsetTable.cpp" />
     <ClCompile Include="Source\Font\TTF\Chunks\TTFVersion.cpp" />
-    <ClCompile Include="Source\Font\TTF\TableEntry.cpp" />
-    <ClCompile Include="Source\Font\TTF\TableEntryType.cpp" />
+    <ClCompile Include="Source\Font\TTF\TTFTableEntry.cpp" />
+    <ClCompile Include="Source\Font\TTF\TTFTableEntryType.cpp" />
     <ClCompile Include="Source\Font\TTF\Chunks\TTFHorizontalHeader.cpp" />
     <ClCompile Include="Source\Font\TTF\Chunks\TTFHeader.cpp" />
     <ClCompile Include="Source\Font\TTF\Chunks\TTFMaximumProfile.cpp" />
@@ -443,11 +444,21 @@
     <ClCompile Include="Source\Font\TTF\Chunks\DSIG\TTFDigitalSignatureBlock.cpp" />
     <ClCompile Include="Source\Font\TTF\Chunks\TTFLinearThreshold.cpp" />
     <ClCompile Include="Source\Font\TTF\Chunks\TTFVerticalDeviceMetrics.cpp" />
-    <ClCompile Include="Source\Font\TTF\Chunks\CMAP\CharacterMapping.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\CMAP\TTFCharacterMapping.cpp" />
     <ClCompile Include="Source\Font\TTF\Chunks\CMAP\EncodingRecord.cpp" />
     <ClCompile Include="Source\Font\TTF\Chunks\CMAP\PlatformID.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFPostScript.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFVersionType.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFKerning.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFKerningSubtable.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat0.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat2.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFKerningPair.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\File\OpenFileDialog.h" />
+    <ClInclude Include="Source\Container\Dictionary.hpp" />
+    <ClInclude Include="Source\Dictionary.hpp" />
     <ClInclude Include="Source\Image\PNG\PNGInterlaceMethod.h" />
     <ClInclude Include="Source\Font\TTF\Chunks\CMAP\EncodingID.h" />
     <ClInclude Include="Source\Compression\HUFFMAN\HuffmanNumberCode.h" />
@@ -535,7 +546,7 @@
     <ClInclude Include="Source\Container\BinaryTree\BinaryTreeDirection.h" />
     <ClInclude Include="Source\Container\BinaryTree\BinaryTreeNode.hpp" />
     <ClInclude Include="Source\Container\BitStreamHusk.h" />
-    <ClInclude Include="Source\Container\Dictionary.hpp" />
+    <ClInclude Include="Source\Container\DictionaryStatic.hpp" />
     <ClInclude Include="Source\Container\LinkedList.hpp" />
     <ClInclude Include="Source\Container\LinkedListNode.hpp" />
     <ClInclude Include="Source\Container\List.hpp" />
@@ -659,8 +670,8 @@
     <ClInclude Include="Source\Compression\ZLIB\ZLIB.h" />
     <ClInclude Include="Source\Font\TTF\Chunks\TTFOffsetTable.h" />
     <ClInclude Include="Source\Font\TTF\Chunks\TTFVersion.h" />
-    <ClInclude Include="Source\Font\TTF\TableEntry.h" />
-    <ClInclude Include="Source\Font\TTF\TableEntryType.h" />
+    <ClInclude Include="Source\Font\TTF\TTFTableEntry.h" />
+    <ClInclude Include="Source\Font\TTF\TTFTableEntryType.h" />
     <ClInclude Include="Source\Font\TTF\Chunks\TTFHorizontalHeader.h" />
     <ClInclude Include="Source\Font\TTF\Chunks\TTFHeader.h" />
     <ClInclude Include="Source\Font\TTF\Chunks\TTFMaximumProfile.h" />
@@ -681,9 +692,16 @@
     <ClInclude Include="Source\Font\TTF\Chunks\DSIG\TTFDigitalSignatureBlock.h" />
     <ClInclude Include="Source\Font\TTF\Chunks\TTFLinearThreshold.h" />
     <ClInclude Include="Source\Font\TTF\Chunks\TTFVerticalDeviceMetrics.h" />
-    <ClInclude Include="Source\Font\TTF\Chunks\CMAP\CharacterMapping.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\CMAP\TTFCharacterMapping.h" />
     <ClInclude Include="Source\Font\TTF\Chunks\CMAP\EncodingRecord.h" />
     <ClInclude Include="Source\Font\TTF\Chunks\CMAP\PlatformID.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFPostScript.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFVersionType.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFKerning.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFKerningSubtable.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat0.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat2.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFKerningPair.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace BF::TTF::CMAP
+namespace BF
 {
 	enum class PlatformID
 	{

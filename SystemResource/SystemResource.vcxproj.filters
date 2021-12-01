@@ -465,16 +465,7 @@
     <ClCompile Include="Source\Font\TTF\Chunks\CMAP\PlatformID.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\CMAP\CharacterMapping.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Font\TTF\Chunks\CMAP\EncodingRecord.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Font\TTF\TableEntryType.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Font\TTF\TableEntry.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Font\TTF\Chunks\DSIG\TTFDigitalSignature.cpp">
@@ -525,6 +516,39 @@
     <ClCompile Include="Source\Image\PNG\PNGInterlaceMethod.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFPostScript.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFVersionType.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\File\OpenFileDialog.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFKerning.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFKerningSubtable.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat0.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat2.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFKerningPair.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Font\TTF\Chunks\CMAP\TTFCharacterMapping.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Font\TTF\TTFTableEntryType.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Font\TTF\TTFTableEntry.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp">
@@ -546,9 +570,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Container\BitStreamHusk.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Container\Dictionary.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Container\LinkedList.hpp">
@@ -1175,16 +1196,7 @@
     <ClInclude Include="Source\Font\TTF\Chunks\CMAP\PlatformID.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\CMAP\CharacterMapping.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Font\TTF\Chunks\CMAP\EncodingRecord.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Font\TTF\TableEntryType.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Font\TTF\TableEntry.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Font\TTF\Chunks\DSIG\TTFDigitalSignature.h">
@@ -1233,6 +1245,48 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Image\PNG\PNGInterlaceMethod.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Container\DictionaryStatic.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dictionary.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Container\Dictionary.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFPostScript.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFVersionType.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\File\OpenFileDialog.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFKerning.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFKerningSubtable.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat2.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat0.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFKerningPair.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Font\TTF\Chunks\CMAP\TTFCharacterMapping.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Font\TTF\TTFTableEntryType.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Font\TTF\TTFTableEntry.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

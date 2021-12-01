@@ -20,12 +20,7 @@ BF::IOSocket::IOSocket()
 
     memset(BufferMessage, 0, SocketBufferSize);
     memset(&AdressIPv4, 0, sizeof(struct sockaddr_in));
-
-#ifdef OSUnix
-    memset(&socket->AdressIPv6, 0, sizeof(socket->AdressIPv6));
-#elif defined(OSWindows)
     memset(&AdressIPv6, 0, sizeof(AdressIPv6));
-#endif
 }
 
 BF::SocketActionResult BF::IOSocket::SetupAdress(IPVersion ipVersion, const char* ip, unsigned short port)
@@ -49,7 +44,7 @@ BF::SocketActionResult BF::IOSocket::SetupAdress(IPVersion ipVersion, const char
 
         case IPVersion::IPVersion6:
         {
-#ifdef OSUnix
+#if defined(OSUnix)
             struct addrinfo adressIPv6RAW;
             struct addrinfo* adressIPv6Result = &AdressIPv6;
             struct addrinfo** adressIPv6HintPointer = &adressIPv6Adress;
@@ -122,7 +117,7 @@ BF::SocketActionResult BF::IOSocket::SetupAdress(IPVersion ipVersion, const char
 
 BF::SocketActionResult BF::IOSocket::Open(IPVersion ipVersion, unsigned short port)
 {    
-#ifdef OSWindows
+#if defined(OSWindows)
     SocketActionResult errorCode = WindowsSocketAgentStartup();
 
     if (errorCode != SocketActionResult::Successful)
@@ -151,16 +146,9 @@ BF::SocketActionResult BF::IOSocket::Open(IPVersion ipVersion, unsigned short po
             }
             case IPVersion::IPVersion6:
             {
-#ifdef OSUnix
-                adressFamily = serverSocket->AdressIPv6.ai_family;
-                streamType = serverSocket->AdressIPv6.ai_socktype;
-                protocol = serverSocket->AdressIPv6.ai_protocol;
-#elif defined(OSWindows)
                 adressFamily = AdressIPv6.ai_family;
                 streamType = AdressIPv6.ai_socktype;
                 protocol = AdressIPv6.ai_protocol;
-#endif
-
                 break;
             }
         }
@@ -177,10 +165,11 @@ BF::SocketActionResult BF::IOSocket::Open(IPVersion ipVersion, unsigned short po
     {
         const int level = SOL_SOCKET;
 
-#ifdef OSUnix
-        const int optionName = SO_REUSEADDR;      // Do not use SO_REUSEADDR, else the port can be hacked. SO_REUSEPORT
+        const int optionName =
+#if defined(OSUnix)
+        SO_REUSEADDR;      // Do not use SO_REUSEADDR, else the port can be hacked. SO_REUSEPORT
 #elif defined(OSWindows)
-        const int optionName = SO_EXCLUSIVEADDRUSE;
+        SO_EXCLUSIVEADDRUSE;
 #endif
         const char opval = 1;
         int optionsocketResult = setsockopt(ID, level, optionName, &opval, sizeof(opval));
@@ -204,13 +193,7 @@ BF::SocketActionResult BF::IOSocket::Open(IPVersion ipVersion, unsigned short po
 
             case IPVersion::IPVersion6:
             {
-#ifdef OSUnix
-                bindingResult = bind(serverSocket->ID, serverSocket->AdressIPv6.ai_addr, serverSocket->AdressIPv6.ai_addrlen);
-#elif defined(OSWindows)
                 bindingResult = bind(ID, AdressIPv6.ai_addr, AdressIPv6.ai_addrlen);
-#endif
-
-
                 break;
             }
         }
@@ -277,12 +260,10 @@ void BF::IOSocket::AwaitConnection(IOSocket& clientSocket)
 
         case IPVersion::IPVersion6:
         {
-#ifdef OSUnix
-            clientSocket->ID = accept(serverSocket->ID, clientSocket->AdressIPv6.ai_addr, clientSocket->AdressIPv6.ai_addrlen);
-#elif defined(OSWindows)
             memset(&clientSocket.AdressIPv6, 0, sizeof(ADDRINFO));
+
             clientSocket.ID = accept(ID, (sockaddr*)&clientSocket.AdressIPv6.ai_addr, (int*)&AdressIPv6.ai_addrlen);
-#endif
+
             break;
         }
     }
@@ -318,16 +299,9 @@ BF::SocketActionResult BF::IOSocket::Connect(IOSocket& serverSocket, const  char
             }   
             case IPVersion::IPVersion6:
             {
-#ifdef OSUnix
-                adressFamily = clientSocket->AdressIPv6.ai_family;
-                streamType = clientSocket->AdressIPv6.ai_socktype;
-                protocol = clientSocket->AdressIPv6.ai_protocol;
-#elif defined(OSWindows)
                 adressFamily = AdressIPv6.ai_family;
                 streamType = AdressIPv6.ai_socktype;
                 protocol = AdressIPv6.ai_protocol;
-#endif
-
                 break;
             }
             default:
@@ -358,12 +332,7 @@ BF::SocketActionResult BF::IOSocket::Connect(IOSocket& serverSocket, const  char
 
             case IPVersion::IPVersion6:
             {
-#ifdef OSUnix
-                serverSocket.ID = connect(clientSocket->ID, clientSocket->AdressIPv6.ai_addr, clientSocket->AdressIPv6.ai_addrlen);
-#elif defined(OSWindows)
                 serverSocket.ID = connect(ID, AdressIPv6.ai_addr, AdressIPv6.ai_addrlen);
-#endif
-
                 break;
             }
         }
@@ -388,10 +357,10 @@ BF::SocketActionResult BF::IOSocket::Receive()
 
     memset(BufferMessage, 0, SocketBufferSize);
 
-#ifdef OSUnix
-    byteRead = read(ID, BufferMessage, SocketBufferSize - 1);
+#if defined(OSUnix)
+    byteRead = read(ID, BufferMessage, SocketBufferSize);
 #elif defined(OSWindows)
-    byteRead = recv(ID, BufferMessage, SocketBufferSize - 1, 0);
+    byteRead = recv(ID, BufferMessage, SocketBufferSize, 0);
 #endif
 
     switch (byteRead)
@@ -431,7 +400,7 @@ BF::SocketActionResult BF::IOSocket::Send(const char* message, size_t messageLen
         Callback->OnMessageSend(ID, message, messageLength);
     }
 
-#ifdef OSUnix
+#if defined(OSUnix)
     writtenBytes = write(ID, message, messageLength);
 #elif defined(OSWindows)
     writtenBytes = send(ID, message, messageLength, 0);
@@ -445,6 +414,30 @@ BF::SocketActionResult BF::IOSocket::Send(const char* message, size_t messageLen
         default:
             return SocketActionResult::Successful;
     }   
+}
+
+BF::SocketActionResult BF::IOSocket::SendFile(const char* filePath, size_t sendBufferSize)
+{
+    FILE* file = fopen(filePath, "rb");
+    char buffer[2048];
+
+    if (!file)
+    {
+        return SocketActionResult::FileNotFound;
+    }
+
+    size_t readSize = 0;
+
+    do
+    {
+        readSize = fread(buffer, sizeof(char), sendBufferSize, file);
+        Send(buffer, readSize);
+    }
+    while (readSize > 0);
+
+    int closeResult = fclose(file);
+
+    return closeResult == 0 ? SocketActionResult::Successful : SocketActionResult::InvalidResult;
 }
 
 int BF::IOSocket::GetAdressFamily(IPVersion ipVersion)

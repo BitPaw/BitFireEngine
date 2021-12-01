@@ -110,9 +110,9 @@ BF::Client* BF::Server::WaitForClient()
 
     AwaitConnection(*client);
       
-    if(client->ID == -1)
+    if(!client->IsCurrentlyUsed())
     {
-        return 0;
+        return nullptr;
     }
 
     if (Callback)
@@ -142,17 +142,26 @@ BF::Client* BF::Server::GetClientViaID(int socketID)
 
 BF::SocketActionResult BF::Server::SendToClient(int clientID, char* message, size_t messageLength)
 {
-    // Client LookUp
     Client* client = GetClientViaID(clientID);
 
-    if (client == 0)
+    if (!client)
     {
-        // Error: No client with this ID.
-        return SocketActionResult::SocketSendFailure;
+        return SocketActionResult::NoClientWithThisID;
     }
 
-    // Sent to Client;
-    return Send(message, messageLength);
+    return client->Send(message, messageLength);
+}
+
+BF::SocketActionResult BF::Server::SendFileToClient(int clientID, const char* filePath)
+{
+    Client* client = GetClientViaID(clientID);
+
+    if (!client)
+    {
+        return SocketActionResult::NoClientWithThisID;
+    }        
+
+    return client->SendFile(filePath);
 }
 
 BF::SocketActionResult BF::Server::BroadcastToClients(char* message, size_t messageLength)
@@ -163,7 +172,7 @@ BF::SocketActionResult BF::Server::BroadcastToClients(char* message, size_t mess
     {
         Client* client = &ClientList[i];
 
-        if (client->ID != -1)
+        if (client->IsCurrentlyUsed())
         {
             SocketActionResult currentCrrorCode = Send(message, messageLength);
 

@@ -2,7 +2,7 @@
 
 #include "PlatformID.h"
 
-namespace BF::TTF::CMAP
+namespace BF
 {
 	enum class EncodingID
 	{

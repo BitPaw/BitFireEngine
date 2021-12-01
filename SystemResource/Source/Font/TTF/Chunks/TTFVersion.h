@@ -1,5 +1,7 @@
 #pragma once
 
+#include "TTFVersionType.h"
+
 namespace BF
 {
 	struct TTFVersion
@@ -7,7 +9,10 @@ namespace BF
 		public:
 		unsigned short Major;
 		unsigned short Minor;
+		TTFVersionType Type;
 
 		TTFVersion();
+
+		void Check();
 	};
 }

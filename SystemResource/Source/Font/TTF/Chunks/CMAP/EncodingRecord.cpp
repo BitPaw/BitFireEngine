@@ -1,6 +1,6 @@
 #include "EncodingRecord.h"
 
-BF::TTF::CMAP::EncodingRecord::EncodingRecord()
+BF::EncodingRecord::EncodingRecord()
 {
 	Platform = PlatformID::Invalid;
 	Encoding = EncodingID::Invalid;

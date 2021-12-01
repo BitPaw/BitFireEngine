@@ -1,6 +1,6 @@
-#include "TableEntryType.h"
+#include "TTFTableEntryType.h"
 
-BF::TTF::TableEntryType BF::TTF::ConvertTableEntryType(char tag[4])
+BF::TTFTableEntryType BF::ConvertTableEntryType(char tag[4])
 {
 	char a = tag[0];
 	char b = tag[1];
@@ -12,112 +12,112 @@ BF::TTF::TableEntryType BF::TTF::ConvertTableEntryType(char tag[4])
         case 'a':
         {
             if (b == 'c' && c == 'n' && d == 't') // acnt
-                return TableEntryType::AccentAttachment;
+                return TTFTableEntryType::AccentAttachment;
 
             if (b == 'n' && c == 'k' && d == 'r') // ankr
-                return TableEntryType::AnchorPoint;
+                return TTFTableEntryType::AnchorPoint;
 
             if (b == 'v' && c == 'a' && d == 'r') // avar
-                return TableEntryType::AxisVariation;
+                return TTFTableEntryType::AxisVariation;
 
             break;
         }
         case 'b':
         {
             if (b == 'd' && c == 'a' && d == 't') // bdat
-                return TableEntryType::BitmapData;
+                return TTFTableEntryType::BitmapData;
 
             if (b == 'h' && c == 'e' && d == 'd') // bhed
-                return TableEntryType::BitmapFontHeader;
+                return TTFTableEntryType::BitmapFontHeader;
 
             if (b == 'l' && c == 'o' && d == 'c') // bloc
-                return TableEntryType::BitmapLocation;
+                return TTFTableEntryType::BitmapLocation;
 
             if (b == 's' && c == 'l' && d == 'n') // bsln
-                return TableEntryType::Baseline;
+                return TTFTableEntryType::Baseline;
 
             break;
         }
         case 'c':
         {
             if (b == 'm' && c == 'a' && d == 'p') // cmap
-                return TableEntryType::CharacterCodeMapping;
+                return TTFTableEntryType::CharacterCodeMapping;
 
             if (b == 'v' && c == 'a' && d == 'r') // cvar
-                return TableEntryType::CVTVariation;
+                return TTFTableEntryType::CVTVariation;
 
             if (b == 'v' && c == 't' && d == ' ') // cvt
-                return TableEntryType::ControlValue;
+                return TTFTableEntryType::ControlValue;
 
             break;
         }
         case 'D':
         {
             if (b == 'S' && c == 'I' && d == 'G') // DSIG
-                return TableEntryType::DigitalSignature;
+                return TTFTableEntryType::DigitalSignature;
         }
         case 'E':
         {
             if (b == 'B' && c == 'S' && d == 'C') // EBSC
-                return TableEntryType::EmbeddedBitmapScalingControl;
+                return TTFTableEntryType::EmbeddedBitmapScalingControl;
 
             break;
         }
         case 'f':
         {
             if (b == 'd' && c == 's' && d == 'c') // fdsc
-                return TableEntryType::FontDescriptor;
+                return TTFTableEntryType::FontDescriptor;
 
             if (b == 'e' && c == 'a' && d == 't') // feat
-                return TableEntryType::LayoutFeature;
+                return TTFTableEntryType::LayoutFeature;
 
             if (b == 'm' && c == 't' && d == 'x') // fmtx
-                return TableEntryType::FontMetrics;
+                return TTFTableEntryType::FontMetrics;
 
             if (b == 'o' && c == 'n' && d == 'd') // fond
-                return TableEntryType::FontFamilyCompatibility;
+                return TTFTableEntryType::FontFamilyCompatibility;
 
             if (b == 'p' && c == 'g' && d == 'm') // fpgm
-                return TableEntryType::FontProgram;
+                return TTFTableEntryType::FontProgram;
 
             if (b == 'v' && c == 'a' && d == 'r') // fvar
-                return TableEntryType::FontVariation;
+                return TTFTableEntryType::FontVariation;
 
             break;
         }
         case 'g':
         {
             if (b == 'a' && c == 's' && d == 'p') // gasp
-                return TableEntryType::GridFittingAndScanConversionProcedure;
+                return TTFTableEntryType::GridFittingAndScanConversionProcedure;
 
             if (b == 'l' && c == 'y' && d == 'f') // glyf
-                return TableEntryType::GlyphOutline;
+                return TTFTableEntryType::GlyphOutline;
 
             if (b == 'v' && c == 'a' && d == 'r') // gvar
-                return TableEntryType::GlyphVariation;
+                return TTFTableEntryType::GlyphVariation;
 
             break;
         }
         case 'h':
         {
             if (b == 'd' && c == 'm' && d == 'x') // hdmx
-                return TableEntryType::HorizontalDeviceMetrics;
+                return TTFTableEntryType::HorizontalDeviceMetrics;
 
             if (b == 'e' && c == 'a' && d == 'd') // head
-                return TableEntryType::FontHeader;
+                return TTFTableEntryType::FontHeader;
 
             if (b == 'h' && c == 'e' && d == 'a') // hhea
-                return TableEntryType::HorizontalHeader;
+                return TTFTableEntryType::HorizontalHeader;
 
             if (b == 'm' && c == 't' && d == 'x') // hmtx
-                return TableEntryType::HorizontalMetrics;
+                return TTFTableEntryType::HorizontalMetrics;
 
             break;
         }
         case 'j':
         {
             if (b == 'u' && c == 's' && d == 't') // just
-                return TableEntryType::Justification;
+                return TTFTableEntryType::Justification;
 
             break;
         }
@@ -128,10 +128,10 @@ BF::TTF::TableEntryType BF::TTF::ConvertTableEntryType(char tag[4])
                 switch (d)
                 {
                     case 'n':  // kern
-                        return TableEntryType::Kerning;
+                        return TTFTableEntryType::Kerning;
 
                     case 'x':  // kerx
-                        return TableEntryType::ExtendedKerning;
+                        return TTFTableEntryType::ExtendedKerning;
                 }
             }   
       
@@ -140,124 +140,124 @@ BF::TTF::TableEntryType BF::TTF::ConvertTableEntryType(char tag[4])
         case 'l':
         {
             if (b == 'c' && c == 'a' && d == 'r') // lcar
-                return TableEntryType::LigatureCaret;
+                return TTFTableEntryType::LigatureCaret;
 
             if (b == 'o' && c == 'c' && d == 'a') // loca
-                return TableEntryType::GlyphLocation;
+                return TTFTableEntryType::GlyphLocation;
 
             if (b == 't' && c == 'a' && d == 'g') // ltag
-                return TableEntryType::LanguageTag;
+                return TTFTableEntryType::LanguageTag;
 
             break;
         }
         case 'L':
         {
             if (b == 'T' && c == 'S' && d == 'H') // LTSH
-                return TableEntryType::LinearThreshold;
+                return TTFTableEntryType::LinearThreshold;
 
             break;
         }
         case 'm':
         {
             if (b == 'a' && c == 'x' && d == 'p') // maxp
-                return TableEntryType::MaximumProfile;
+                return TTFTableEntryType::MaximumProfile;
 
             if (b == 'e' && c == 't' && d == 'a') // meta
-                return TableEntryType::Metadata;
+                return TTFTableEntryType::Metadata;
 
             if (b == 'o' && c == 'r' && d == 't') // mort
-                return TableEntryType::MetamorphosisTabledeprecated;
+                return TTFTableEntryType::MetamorphosisTabledeprecated;
 
             if (b == 'o' && c == 't' && d == 'x') // morx
-                return TableEntryType::ExtendedMetamorphosis;
+                return TTFTableEntryType::ExtendedMetamorphosis;
 
             break;
         }
         case 'n':
         {
             if (b == 'a' && c == 'm' && d == 'e') // name
-                return TableEntryType::Name;
+                return TTFTableEntryType::Name;
 
             break;
         }
         case 'o':
         {
             if (b == 'p' && c == 'b' && d == 'd') // opbd
-                return TableEntryType::OpticalBounds;
+                return TTFTableEntryType::OpticalBounds;
 
             break;
         }
         case 'O':
         {
             if (b == 'S' && c == '/' && d == '2') // OS/2
-                return TableEntryType::Compatibility;
+                return TTFTableEntryType::Compatibility;
 
             break;
         }
         case 'p':
         {
             if (b == 'o' && c == 's' && d == 't') // post
-                return TableEntryType::GlyphNameAndPostScriptCompatibility;
+                return TTFTableEntryType::GlyphNameAndPostScriptCompatibility;
 
             if (b == 'r' && c == 'e' && d == 'p') // prep
-                return TableEntryType::ControlValueProgram;
+                return TTFTableEntryType::ControlValueProgram;
 
             if (b == 'r' && c == 'o' && d == 'p') // prop
-                return TableEntryType::Properties;
+                return TTFTableEntryType::Properties;
 
             break;
         }
         case 's':
         {
             if (b == 'b' && c == 'i' && d == 'x') // sbix
-                return TableEntryType::ExtendedBitmaps;
+                return TTFTableEntryType::ExtendedBitmaps;
 
             break;
         }
         case 't':
         {
             if (b == 'r' && c == 'a' && d == 'k') // trak
-                return TableEntryType::Tracking;
+                return TTFTableEntryType::Tracking;
 
             break;
         }
         case 'v':
         {
             if (b == 'h' && c == 'e' && d == 'a') // vhea
-                return TableEntryType::VerticalHeader;
+                return TTFTableEntryType::VerticalHeader;
 
             if (b == 'm' && c == 't' && d == 'x') // vmtx
-                return TableEntryType::VerticalMetrics;
+                return TTFTableEntryType::VerticalMetrics;
 
             break;
         }
         case 'V':
         {
             if (b == 'D' && c == 'M' && d == 'X') // VDMX
-                return TableEntryType::VerticalDeviceMetrics;
+                return TTFTableEntryType::VerticalDeviceMetrics;
 
             break;
         }
         case 'x':
         {
             if (b == 'r' && c == 'e' && d == 'f') // xref
-                return TableEntryType::GlyphReference;
+                return TTFTableEntryType::GlyphReference;
 
             break;
         }
         case 'Z':
         {
             if (b == 'a' && c == 'p' && d == 'f') // Zapf
-                return TableEntryType::GlyphReference;
+                return TTFTableEntryType::GlyphReference;
 
             break;
         }               
 	}
 
-    return TableEntryType::UnkownType;
+    return TTFTableEntryType::UnkownType;
 }
 
-void BF::TTF::ConvertTableEntryType(char tag[4], TableEntryType tableEntryType)
+void BF::ConvertTableEntryType(char tag[4], TTFTableEntryType TTFTableEntryType)
 {
     
 }

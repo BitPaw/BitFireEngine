@@ -21,6 +21,11 @@ namespace BF
 		SocketConnectionFailure,
 
 
+		// Server
+		NoClientWithThisID,
+		NoSendEmptyData,
+
+
 		//---[ Windows Only (WindowsSocketAgent) ]-------
 		SubSystemNotReady,
 		VersionNotSupported,
@@ -29,8 +34,11 @@ namespace BF
 		InvalidParameter,
 		SubSystemNotInitialised,
 		SubSystemNetworkFailed,
-		SocketIsBlocking
+		SocketIsBlocking,
 		//----------------------------------------
+
+		// File IO
+		FileNotFound
 	};
 
 	const char* SocketActionResultToString(SocketActionResult SocketActionResult);

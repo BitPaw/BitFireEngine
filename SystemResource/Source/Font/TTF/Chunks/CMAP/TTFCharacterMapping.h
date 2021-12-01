@@ -2,9 +2,9 @@
 
 #include "EncodingRecord.h"
 
-namespace BF::TTF::CMAP
+namespace BF
 {
-	struct CharacterMapping
+	struct TTFCharacterMapping
 	{
 		public:
 		// Header
@@ -13,6 +13,6 @@ namespace BF::TTF::CMAP
 		unsigned short NumberOfTables; // Number of encoding tables that follow.
 		EncodingRecord* EncodingRecordList;
 
-		CharacterMapping();
+		TTFCharacterMapping();
 	};
 }

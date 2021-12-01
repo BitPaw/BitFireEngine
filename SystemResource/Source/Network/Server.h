@@ -27,6 +27,7 @@ namespace BF
         Client* WaitForClient();
         Client* GetClientViaID(int socketID);
         SocketActionResult SendToClient(int clientID, char* message, size_t messageLength);
+        SocketActionResult SendFileToClient(int clientID, const char* filePath);
         SocketActionResult BroadcastToClients(char* message, size_t messageLength);
         void RegisterClient(Client* client);
         void UnRegisterClient(Client* client);

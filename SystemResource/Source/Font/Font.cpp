@@ -18,7 +18,7 @@ BF::FileActionResult BF::Font::Load(const char* filePath)
 
     switch (fontFormat)
     {
-        case FontFormat::FNT:
+        case FontFormat::FormatFNT:
         {
             // TODO: this is pointer for no reason. I use it at another place -> No delete needed
             FNT* fnt = new FNT();
@@ -26,16 +26,16 @@ BF::FileActionResult BF::Font::Load(const char* filePath)
             fnt->ConvertTo(*this);
             break;
         }
-        case FontFormat::OFT:
+        case FontFormat::FormatOFT:
         {
             OTF otf;
             otf.Load(filePath);
             otf.ConvertTo(*this);
             break;
         }
-        case FontFormat::TTF:
+        case FontFormat::FormatTTF:
         {
-            TTF::TTF ttf;
+            TTF ttf;
             ttf.Load(filePath);
             ttf.ConvertTo(*this);
             break;
@@ -59,23 +59,23 @@ BF::FileActionResult BF::Font::Save(const char* filePath, FontFormat fontFormat)
         {
             return FileActionResult::FormatNotSupported;
         }
-        case BF::FontFormat::FNT:
+        case BF::FontFormat::FormatFNT:
         {
             FNT fnt;
             fnt.ConvertFrom(*this);
             fnt.Save(filePath);
             break;
         }       
-        case BF::FontFormat::OFT:
+        case BF::FontFormat::FormatOFT:
         {
             OTF otf;
             otf.ConvertFrom(*this);
             otf.Save(filePath);
             break;
         }
-        case BF::FontFormat::TTF:
+        case BF::FontFormat::FormatTTF:
         {
-            TTF::TTF ttf;
+            TTF ttf;
             ttf.ConvertFrom(*this);
             ttf.Save(filePath);
             break;
@@ -89,9 +89,9 @@ BF::FontFormat BF::Font::FileFormatPeek(const char* filePath)
 {
     File file(filePath);
 
-    if (file.ExtensionEquals("FNT")) return FontFormat::FNT;
-    if (file.ExtensionEquals("OTF")) return FontFormat::OFT;
-    if (file.ExtensionEquals("TTF")) return FontFormat::TTF;
+    if (file.ExtensionEquals("FNT")) return FontFormat::FormatFNT;
+    if (file.ExtensionEquals("OTF")) return FontFormat::FormatOFT;
+    if (file.ExtensionEquals("TTF")) return FontFormat::FormatTTF;
 
     return FontFormat::Unkown;
 }

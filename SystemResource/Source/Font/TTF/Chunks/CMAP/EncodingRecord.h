@@ -3,7 +3,7 @@
 #include "PlatformID.h"
 #include "EncodingID.h"
 
-namespace BF::TTF::CMAP
+namespace BF
 {
 	struct EncodingRecord
 	{

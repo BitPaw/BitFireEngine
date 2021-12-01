@@ -1,10 +1,10 @@
 #include "EncodingID.h"
 
-BF::TTF::CMAP::EncodingID BF::TTF::CMAP::ConvertEncodingID(PlatformID platformID, unsigned char encodingID)
+BF::EncodingID BF::ConvertEncodingID(PlatformID platformID, unsigned char encodingID)
 {
 	switch (platformID)
 	{
-		case BF::TTF::CMAP::PlatformID::Unicode:
+		case PlatformID::Unicode:
 		{
 			switch (encodingID)
 			{
@@ -19,12 +19,12 @@ BF::TTF::CMAP::EncodingID BF::TTF::CMAP::ConvertEncodingID(PlatformID platformID
 
 			break;
 		}
-		case BF::TTF::CMAP::PlatformID::Macintosh:			
+		case BF::PlatformID::Macintosh:			
 		{
 			// ???
 			break;
 		}
-		case BF::TTF::CMAP::PlatformID::ISO:
+		case BF::PlatformID::ISO:
 		{
 			switch (encodingID)
 			{
@@ -35,7 +35,7 @@ BF::TTF::CMAP::EncodingID BF::TTF::CMAP::ConvertEncodingID(PlatformID platformID
 
 			break;
 		}
-		case BF::TTF::CMAP::PlatformID::Windows:
+		case BF::PlatformID::Windows:
 		{
 			switch (encodingID)
 			{
@@ -57,7 +57,7 @@ BF::TTF::CMAP::EncodingID BF::TTF::CMAP::ConvertEncodingID(PlatformID platformID
 
 			break;
 		}		
-		case BF::TTF::CMAP::PlatformID::Custom:
+		case BF::PlatformID::Custom:
 			return EncodingID::OTFWindowsNTCompatibilityMapping;
 	}
 

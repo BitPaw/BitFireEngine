@@ -66,5 +66,6 @@ namespace BF
 		SocketActionResult Connect(IOSocket& serverSocket, const char* ipAdress, unsigned short port);
 		SocketActionResult Receive();
 		SocketActionResult Send(const char* message, size_t messageLength);
+		SocketActionResult SendFile(const char* filePath, size_t sendBufferSize = 2048);
 	};
 }

@@ -1,18 +1,18 @@
 #pragma once
 
-#include "TableEntryType.h"
+#include "TTFTableEntryType.h"
 
-namespace BF::TTF
+namespace BF
 {
-	struct TableEntry
+	struct TTFTableEntry
 	{
 		public:
 		char TypeRaw[4];
-		TableEntryType Type;
+		TTFTableEntryType Type;
 		unsigned int CheckSum;
 		unsigned int Offset;
 		unsigned int Length;
 
-		TableEntry();
+		TTFTableEntry();
 	};
 }

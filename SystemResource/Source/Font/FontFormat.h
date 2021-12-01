@@ -6,8 +6,8 @@ namespace BF
 	{
 		Unkown,
 
-		FNT,
-		OFT,
-		TTF
+		FormatFNT,
+		FormatOFT,
+		FormatTTF
 	};
 }

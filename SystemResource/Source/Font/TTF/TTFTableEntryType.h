@@ -1,8 +1,8 @@
 #pragma once
 
-namespace BF::TTF
+namespace BF
 {
-	enum class TableEntryType
+	enum class TTFTableEntryType
 	{
         UnkownType,
 
@@ -60,6 +60,6 @@ namespace BF::TTF
         VerticalDeviceMetrics // VDMX
 	};
 
-    TableEntryType ConvertTableEntryType(char tag[4]);
-    void ConvertTableEntryType(char tag[4], TableEntryType tableEntryType);
+    TTFTableEntryType ConvertTableEntryType(char tag[4]);
+    void ConvertTableEntryType(char tag[4], TTFTableEntryType tableEntryType);
 }
