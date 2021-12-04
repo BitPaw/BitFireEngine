@@ -4,13 +4,13 @@
 
 BF::Client::Client()
 {
-	strncpy(IP, "127.0.0.1", 10);
+	strncpy_s(IP, "127.0.0.1", 10);
 	ConnectedServerID = -1;
 }
 
 BF::SocketActionResult BF::Client::ConnectToServer(const char* ip, unsigned short port)
 {
-	strncpy(IP, ip, IPSize);
+	strncpy_s(IP, ip, IPSize); 
 
 	SocketActionResult socketActionResult = Connect(ConnectedServerData, IP, port);
 

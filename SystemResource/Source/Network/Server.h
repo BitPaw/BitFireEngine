@@ -2,6 +2,7 @@
 
 #include "Client.h"
 #include "IOSocket.h"
+#include "IServerListener.h"
 
 namespace BF
 {
@@ -17,9 +18,9 @@ namespace BF
         std::thread* _clientListeningThread;
 
         public:
-        Server();
+        IServerListener* EventCallBackServer;
 
-     
+        Server();
 
         SocketActionResult Start(IPVersion ipVersion, unsigned short port);
         void Stop();
@@ -29,7 +30,5 @@ namespace BF
         SocketActionResult SendToClient(int clientID, char* message, size_t messageLength);
         SocketActionResult SendFileToClient(int clientID, const char* filePath);
         SocketActionResult BroadcastToClients(char* message, size_t messageLength);
-        void RegisterClient(Client* client);
-        void UnRegisterClient(Client* client);
     };
 }

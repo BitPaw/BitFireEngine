@@ -42,15 +42,15 @@ struct MainSt : public ISocketListener, BF::ProgramExecuteResultListener
 		printf("[%s][%i] Connection Terminated.\n", stringAdress, socketID);
 	}
 
-	void OnMessageSend(int socketID, const char* message, size_t messageLengh)
+	void OnMessageSend(IOSocketMessage socketMessage)
 	{
 		//printf("[%s][%i] Message Send : %s (%i Byte)\n", stringAdress, socketID, message, messageLengh);
-		printf("[%s][%i] Message Send : (%i Byte)\n", stringAdress, socketID, messageLengh);
+		printf("[%s][%i] Message Send : (%i Byte)\n", stringAdress, socketMessage.SocketID, socketMessage.MessageSize);
 	}
 
-	void OnMessageReceive(int socketID, const char* message, size_t messageLengh)
+	void OnMessageReceive(IOSocketMessage socketMessage)
 	{
-		printf("[%s][%i] Message Received : %s (%i Byte)\n", stringAdress, socketID, message, messageLengh);
+		printf("[%s][%i] Message Received : %s (%i Byte)\n", stringAdress, socketMessage.SocketID, socketMessage.Message, socketMessage.MessageSize);
 	}
 
 	// Geerbt über ProgramExecuteResultListener
@@ -74,8 +74,8 @@ int main(int amountOFParameters, char** parameter)
 	//dict.Add();
 
 
-	BF::TTF ttf;
-	ttf.Load("A:/_WorkSpace/BOOKOSI.TTF");
+//	BF::TTF ttf;
+//	ttf.Load("A:/_WorkSpace/BOOKOSI.TTF");
 
 	/*
 	Program::Execute
@@ -106,16 +106,16 @@ int main(int amountOFParameters, char** parameter)
 	Server server;
 
 	serverCallBack.stringAdress = _server;
-	server.Callback = &serverCallBack;
+	server.EventCallBackSocket = &serverCallBack;
 
 	
-	//SocketActionResult serverCreateResult = server.Start(IPVersion::IPVersion4 , 25565);
+	SocketActionResult serverCreateResult = server.Start(IPVersion::IPVersion4 , 25666);
 
 
 
 	Client client;
 	clientCallBack.stringAdress = _client;
-	client.Callback = &clientCallBack;
+	client.EventCallBackSocket = &clientCallBack;
 
 	
 	unsigned int counter = 0;
@@ -124,21 +124,21 @@ int main(int amountOFParameters, char** parameter)
 	
 	Sleep(100);
 
-	SocketActionResult socketActionResult = client.ConnectToServer("127.0.0.1", 25666);
+	SocketActionResult socketActionResult = client.ConnectToServer("www.google.de", 25666);
 
-	client.Send("U\0\0\0\11BOOKOSI.TTF",17);
-	client.SendFile("A:/_WorkSpace/BOOKOSI.TTF");
+	//client.Send("U\0\0\0\11BOOKOSI.TTF",17);
+	//client.SendFile("A:/_WorkSpace/BOOKOSI.TTF");
 
 	
-	/*
+	
 	while (counter < (int)-1 && socketActionResult == SocketActionResult::Successful)
 	{
 		size_t readSize = sprintf_s(buffer,50,"Hello x%i", ++counter);
 
 		client.Send(buffer, readSize);
 
-		Sleep(25);
-	}*/
+		Sleep(250);
+	}
 
 	client.Disconnect();
 

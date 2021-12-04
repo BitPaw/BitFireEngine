@@ -276,6 +276,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Network\IOSocketMessage.cpp" />
     <ClCompile Include="Source\File\OpenFileDialog.cpp" />
     <ClCompile Include="Source\Image\PNG\PNGInterlaceMethod.cpp" />
     <ClCompile Include="Source\Font\TTF\Chunks\CMAP\EncodingID.cpp" />
@@ -456,6 +457,7 @@
     <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFKerningPair.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Network\IOSocketMessage.h" />
     <ClInclude Include="Source\File\OpenFileDialog.h" />
     <ClInclude Include="Source\Container\Dictionary.hpp" />
     <ClInclude Include="Source\Dictionary.hpp" />
@@ -489,6 +491,7 @@
     <ClInclude Include="Source\Font\IFontFormat.hpp" />
     <ClInclude Include="Source\Model\IModelFormat.hpp" />
     <ClInclude Include="Source\Model\Model.h" />
+    <ClInclude Include="Source\Network\IServerListener.h" />
     <ClInclude Include="Source\Network\ISocketListener.h" />
     <ClInclude Include="Source\Network\SocketActionResult.h" />
     <ClInclude Include="Source\Sound\ISoundFormat.hpp" />

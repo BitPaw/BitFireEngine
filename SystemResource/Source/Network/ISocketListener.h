@@ -1,5 +1,7 @@
 #pragma once
 
+#include "IOSocketMessage.h"
+
 namespace BF
 {
 	struct ISocketListener
@@ -10,7 +12,7 @@ namespace BF
 		virtual void OnConnectionEstablished(int socketID) = 0;
 		virtual void OnConnectionTerminated(int socketID) = 0;
 
-		virtual void OnMessageSend(int socketID, const char* message, size_t messageSize) = 0;
-		virtual void OnMessageReceive(int socketID, const char* message, size_t messageSize) = 0;
+		virtual void OnMessageSend(IOSocketMessage socketMessage) = 0;
+		virtual void OnMessageReceive(IOSocketMessage socketMessage) = 0;
 	};
 }

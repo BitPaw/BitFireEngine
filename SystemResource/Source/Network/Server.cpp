@@ -10,11 +10,12 @@
 
 BF::Server::Server()
 {
+    _clientListeningThread = nullptr;
+
     ClientList = 0;
     NumberOfConnectedClients = 0;
     NumberOfMaximalClients = 10;
-
-    _clientListeningThread = nullptr;
+    EventCallBackServer = nullptr;
 
     ClientList = new Client[NumberOfMaximalClients];
 }
@@ -68,20 +69,33 @@ BF::SocketActionResult BF::Server::Start(IPVersion ipVersion, unsigned short por
 
             if (client)
             {
-                server->RegisterClient(client);
+                client->EventCallBackSocket = server->EventCallBackSocket;
 
-                client->Callback = server->Callback;
+                server->NumberOfConnectedClients++;
 
-                client->CommunicationThread = new std::thread([](Client* client)
+                if (server->EventCallBackServer)
+                {
+                    server->EventCallBackServer->OnClientConnected(*client);
+                }
+
+                client->CommunicationThread = new std::thread([](Client* client, Server* server)
                 {
                     while (client->IsCurrentlyUsed())
                     {
-                        SocketActionResult socketActionResult = client->Receive();
-
+                        SocketActionResult socketActionResult = client->Receive();                                        
 
                     }
 
-                }, client);               
+                    server->NumberOfConnectedClients--;                 
+
+                    if (server->EventCallBackServer)
+                    {
+                        server->EventCallBackServer->OnClientDisconnected(*client);
+                    }
+
+                    client->Disconnect();
+
+                }, client, server);               
             }
         }
 
@@ -113,11 +127,6 @@ BF::Client* BF::Server::WaitForClient()
     if(!client->IsCurrentlyUsed())
     {
         return nullptr;
-    }
-
-    if (Callback)
-    {
-        Callback->OnConnectionLinked(ID);
     }
     
     return client;
@@ -184,18 +193,4 @@ BF::SocketActionResult BF::Server::BroadcastToClients(char* message, size_t mess
     }
 
     return errorCode;
-}
-
-void BF::Server::RegisterClient(Client* client)
-{
-    NumberOfConnectedClients++;
-
-   // server->ClientList = realloc(server->ClientList, ++server->NumberOfConnectedClients);
-
-    //server->ClientList[server->NumberOfConnectedClients - 1] = *client;  
-}
-
-void BF::Server::UnRegisterClient(Client* client)
-{
-    NumberOfConnectedClients--;
 }

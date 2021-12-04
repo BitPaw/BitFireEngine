@@ -2,11 +2,29 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "IOSocketMessage.h"
 #include "SocketActionResult.h"
+#include "../ErrorCode.h"
 
 char BF::IOSocket::IsCurrentlyUsed()
 {
     return ID != -1;
+}
+
+bool BF::IOSocket::ResolveDomainName(const char* domainName, char* ip)
+{
+    hostent* host = gethostbyname(ip);
+    char* uh = host->h_addr_list[0];
+    size_t size = host->h_length;
+    in_addr inaddr;
+
+    memcpy(&inaddr, uh, size);
+
+    char* resolvedIP = inet_ntoa(inaddr);
+
+    strncpy(ip, resolvedIP, 120);
+
+    return true;
 }
 
 BF::IOSocket::IOSocket()
@@ -15,7 +33,7 @@ BF::IOSocket::IOSocket()
     Port = -1;
     IPMode = IPVersion::IPVersionInvalid;
 
-    Callback = 0;
+    EventCallBackSocket = 0;
     CommunicationThread = 0;
 
     memset(BufferMessage, 0, SocketBufferSize);
@@ -33,6 +51,7 @@ BF::SocketActionResult BF::IOSocket::SetupAdress(IPVersion ipVersion, const char
 
     switch (ipVersion)
     {
+        default:
         case IPVersion::IPVersion4:
         {
             memset(&AdressIPv4, 0, sizeof(AdressIPv4));
@@ -215,9 +234,9 @@ BF::SocketActionResult BF::IOSocket::Open(IPVersion ipVersion, unsigned short po
         }
     }
 
-    if (Callback)
+    if (EventCallBackSocket)
     {
-        Callback->OnConnectionListening(ID);
+        EventCallBackSocket->OnConnectionListening(ID);
     }
 
     return SocketActionResult::Successful;
@@ -232,6 +251,11 @@ void BF::IOSocket::Close()
         return;
     }
 
+    //CommunicationThread->detach();
+
+    //delete CommunicationThread;
+    //CommunicationThread = nullptr;
+
 #ifdef OSWindows
     shutdown(ID, SD_SEND);
     closesocket(ID);
@@ -239,9 +263,9 @@ void BF::IOSocket::Close()
     close(socket->ID);
 #endif     
 
-    if (Callback)
+    if (EventCallBackSocket)
     {
-        Callback->OnConnectionTerminated(ID);
+        EventCallBackSocket->OnConnectionTerminated(ID);
     }
 
     ID = -1;
@@ -267,9 +291,14 @@ void BF::IOSocket::AwaitConnection(IOSocket& clientSocket)
             break;
         }
     }
+
+    if (EventCallBackSocket)
+    {
+        EventCallBackSocket->OnConnectionLinked(ID);
+    }
 }
 
-BF::SocketActionResult BF::IOSocket::Connect(IOSocket& serverSocket, const  char* ipAdress, unsigned short port)
+BF::SocketActionResult BF::IOSocket::Connect(IOSocket& serverSocket, const char* ipAdress, unsigned short port)
 {
 #ifdef OSWindows
     SocketActionResult errorCode = WindowsSocketAgentStartup();
@@ -280,7 +309,16 @@ BF::SocketActionResult BF::IOSocket::Connect(IOSocket& serverSocket, const  char
     }
 #endif  
 
-    SetupAdress(AnalyseIPVersion(ipAdress) ,ipAdress, port);
+    IPVersion ipVersion = AnalyseIPVersion(ipAdress);
+
+    if (ipVersion == IPVersion::IPVersionUnknownDomain)
+    {
+        ResolveDomainName(ipAdress, (char*)ipAdress);
+
+        ipVersion = IPVersion::IPVersion4;
+    }
+
+    SetupAdress(ipVersion, ipAdress, port);
 
     // Create Socket
     {
@@ -326,7 +364,7 @@ BF::SocketActionResult BF::IOSocket::Connect(IOSocket& serverSocket, const  char
         {
             case IPVersion::IPVersion4:
             {
-                serverSocket.ID = connect(ID, (const sockaddr*) &AdressIPv4, sizeof(AdressIPv4));
+                serverSocket.ID = connect(ID, (const sockaddr*) &AdressIPv4, sizeof(AdressIPv4));   
                 break;
             }
 
@@ -339,13 +377,15 @@ BF::SocketActionResult BF::IOSocket::Connect(IOSocket& serverSocket, const  char
 
         if (serverSocket.ID == -1)
         {
+            BF::ErrorCode errorCode = GetCurrentError();
+
             return SocketActionResult::SocketConnectionFailure;
         }
     }
 
-    if (Callback)
+    if (EventCallBackSocket)
     {
-        Callback->OnConnectionEstablished(ID);
+        EventCallBackSocket->OnConnectionEstablished(ID);
     }
 
     return SocketActionResult::Successful;
@@ -376,9 +416,11 @@ BF::SocketActionResult BF::IOSocket::Receive()
         }  
         default:
         {
-            if (Callback)
+            if (EventCallBackSocket)
             {
-                Callback->OnMessageReceive(ID, BufferMessage, byteRead);
+                IOSocketMessage socketMessage(ID, BufferMessage, byteRead);
+
+                EventCallBackSocket->OnMessageReceive(socketMessage);
             }
 
             return SocketActionResult::Successful;
@@ -395,9 +437,11 @@ BF::SocketActionResult BF::IOSocket::Send(const char* message, size_t messageLen
         return SocketActionResult::Successful; // Do not send anything if the message is empty
     }
 
-    if (Callback)
+    if (EventCallBackSocket)
     {
-        Callback->OnMessageSend(ID, message, messageLength);
+        IOSocketMessage socketMessage(ID, BufferMessage, messageLength);
+
+        EventCallBackSocket->OnMessageSend(socketMessage);
     }
 
 #if defined(OSUnix)
@@ -444,14 +488,12 @@ int BF::IOSocket::GetAdressFamily(IPVersion ipVersion)
 {
     switch (ipVersion)
     {
+        default:
         case IPVersion::IPVersion4:
             return AF_INET;
 
         case IPVersion::IPVersion6:
             return AF_INET6;
-
-        default:
-            return -1;
     }
 
     return PF_UNSPEC;
