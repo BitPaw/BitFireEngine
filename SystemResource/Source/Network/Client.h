@@ -11,6 +11,7 @@ namespace BF
     {
         public:
         char IP[IPSize];
+        unsigned short Port;
 
         int ConnectedServerID;
         IOSocket ConnectedServerData;
@@ -19,5 +20,7 @@ namespace BF
 
         SocketActionResult ConnectToServer(const char* ip, unsigned short port);
         void Disconnect();
+
+        static ThreadFunctionReturnType CommunicationFunctionAsync(void* ioSocket);
     }; 
 }

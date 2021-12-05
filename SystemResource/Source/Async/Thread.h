@@ -5,27 +5,23 @@
 
 #ifdef OSUnix
 #include <pthread.h>
+#define ThreadFunctionReturnType void*
+#define ThreadID pthread_t
 #elif defined(OSWindows)
-typedef struct IUnknown IUnknown;
 #include <windows.h>
-#endif 
+#define ThreadFunctionReturnType unsigned long
+#define ThreadID HANDLE
+typedef struct IUnknown IUnknown;
+#endif
 
 namespace BF
 {
-#ifdef OSUnix
-	typedef void* (*ThreadFunction)(void* data);
-#elif defined(OSWindows)
-	typedef unsigned long (*ThreadFunction)(void* data);
-#endif
+	typedef ThreadFunctionReturnType(*ThreadFunction)(void* data);
 
 	class Thread
 	{
 		private:
-#ifdef OSUnix
-		pthread_t ThreadHandle;
-#elif defined(OSWindows)
-		HANDLE ThreadHandle;
-#endif
+		ThreadID ThreadHandle;
 
 		public:
 		void Create(ThreadFunction threadFunction, void* parameter);

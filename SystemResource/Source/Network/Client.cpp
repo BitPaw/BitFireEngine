@@ -14,14 +14,7 @@ BF::SocketActionResult BF::Client::ConnectToServer(const char* ip, unsigned shor
 
 	SocketActionResult socketActionResult = Connect(ConnectedServerData, IP, port);
 
-    CommunicationThread = new std::thread([](Client* client)
-    {
-        while (client->IsCurrentlyUsed())
-        {
-            SocketActionResult socketActionResult = client->Receive();           
-        }
-
-    }, this);
+    CommunicationThread.Create(Client::CommunicationFunctionAsync, this);
 
     return socketActionResult;
 }
@@ -29,4 +22,21 @@ BF::SocketActionResult BF::Client::ConnectToServer(const char* ip, unsigned shor
 void BF::Client::Disconnect()
 {
 	Close();
+}
+
+ThreadFunctionReturnType BF::Client::CommunicationFunctionAsync(void* data)
+{
+    IOSocket* ioSocket = (IOSocket*)data;
+
+    while (ioSocket->IsCurrentlyUsed())
+    {
+        SocketActionResult socketActionResult = ioSocket->Receive();
+
+        if (socketActionResult != SocketActionResult::Successful)
+        {
+            ioSocket->Close();
+        }
+    }  
+
+    return 0;
 }

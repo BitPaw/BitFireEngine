@@ -276,6 +276,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Network\SocketType.cpp" />
+    <ClCompile Include="Source\Network\IPAdressFamily.cpp" />
+    <ClCompile Include="Source\Network\ProtocolMode.cpp" />
     <ClCompile Include="Source\Network\IOSocketMessage.cpp" />
     <ClCompile Include="Source\File\OpenFileDialog.cpp" />
     <ClCompile Include="Source\Image\PNG\PNGInterlaceMethod.cpp" />
@@ -457,6 +460,9 @@
     <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFKerningPair.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Network\SocketType.h" />
+    <ClInclude Include="Source\Network\IPAdressFamily.h" />
+    <ClInclude Include="Source\Network\ProtocolMode.h" />
     <ClInclude Include="Source\Network\IOSocketMessage.h" />
     <ClInclude Include="Source\File\OpenFileDialog.h" />
     <ClInclude Include="Source\Container\Dictionary.hpp" />

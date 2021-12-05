@@ -26,5 +26,4 @@ void BF::Thread::WaitForFinish()
 #elif defined(OSWindows)
 	
 #endif 
-
 }

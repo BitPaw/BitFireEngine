@@ -3,32 +3,38 @@
 #include "Client.h"
 #include "IOSocket.h"
 #include "IServerListener.h"
+#include "SocketActionResult.h"
+
+#include "../Async/Thread.h"
 
 namespace BF
 {
     class Server : public IOSocket
     {
+        private:
+        Client* GetNextClient();
+        Thread _clientListeningThread;     
+
         public:
+        IServerListener* EventCallBackServer;
         Client* ClientList;
         unsigned int NumberOfConnectedClients;
         unsigned int NumberOfMaximalClients;
 
-        private:
-        Client* GetNextClient();
-        std::thread* _clientListeningThread;
-
-        public:
-        IServerListener* EventCallBackServer;
-
         Server();
 
-        SocketActionResult Start(IPVersion ipVersion, unsigned short port);
+        SocketActionResult Start(unsigned short port);
         void Stop();
         void KickClient(int socketID);
         Client* WaitForClient();
         Client* GetClientViaID(int socketID);
-        SocketActionResult SendToClient(int clientID, char* message, size_t messageLength);
+
+        SocketActionResult SendMessageToClient(int clientID, char* message, size_t messageLength);
         SocketActionResult SendFileToClient(int clientID, const char* filePath);
-        SocketActionResult BroadcastToClients(char* message, size_t messageLength);
+
+        SocketActionResult BroadcastMessageToClients(char* message, size_t messageLength);
+        SocketActionResult BroadcastFileToClients(const char* filePath);
+
+        static ThreadFunctionReturnType ClientListeningThread(void* server);
     };
 }

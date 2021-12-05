@@ -7,6 +7,8 @@
 #include "../SystemResource/Source/File/File.h"
 #include "../SystemResource/Source/Font/TTF/TTF.h"
 
+#include "../SystemResource/Source/Network/SocketActionResult.h"
+
 #pragma comment(lib, "Ws2_32.lib")
 
 using namespace BF;
@@ -92,8 +94,8 @@ int main(int amountOFParameters, char** parameter)
 	FileActionResult fileActionResult = program.Execute("DummyProgram.exe", 0, 0);
 
 	return 1;*/
-	char fileNameBuffer[255];
-	OpenFileDialog::Open(fileNameBuffer);
+	//char fileNameBuffer[255];
+	//OpenFileDialog::Open(fileNameBuffer);
 
 	/*
 	OPENFILENAMEA fileNameBuffer;
@@ -109,8 +111,7 @@ int main(int amountOFParameters, char** parameter)
 	server.EventCallBackSocket = &serverCallBack;
 
 	
-	SocketActionResult serverCreateResult = server.Start(IPVersion::IPVersion4 , 25666);
-
+	SocketActionResult serverCreateResult = server.Start(25666);
 
 
 	Client client;
@@ -122,22 +123,26 @@ int main(int amountOFParameters, char** parameter)
 	char buffer[50];
 
 	
+	/*
+	while (true)
+	{
+
+	}*/
+
 	Sleep(100);
 
-	SocketActionResult socketActionResult = client.ConnectToServer("www.google.de", 25666);
+	SocketActionResult socketActionResult = client.ConnectToServer("localhost", 25666);
 
 	//client.Send("U\0\0\0\11BOOKOSI.TTF",17);
 	//client.SendFile("A:/_WorkSpace/BOOKOSI.TTF");
-
-	
-	
+		
 	while (counter < (int)-1 && socketActionResult == SocketActionResult::Successful)
 	{
 		size_t readSize = sprintf_s(buffer,50,"Hello x%i", ++counter);
 
 		client.Send(buffer, readSize);
 
-		Sleep(250);
+		Sleep(500);
 	}
 
 	client.Disconnect();

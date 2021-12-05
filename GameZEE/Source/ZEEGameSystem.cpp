@@ -43,9 +43,9 @@ ZEE::ZEEGameSystem::ZEEGameSystem()
 
 void ZEE::ZEEGameSystem::OnStartUp()
 {   
-   TTF::TTF fnt;
+   //TTF fnt;
 
-   fnt.Load("A:/_WorkSpace/BOOKOSI.TTF");
+   //fnt.Load("A:/_WorkSpace/BOOKOSI.TTF");
 
 
     BF::StopWatch stopwatch;
