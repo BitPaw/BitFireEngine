@@ -66,7 +66,7 @@ BF::SocketActionResult BF::IOSocket::SetupAdress(char* ip, unsigned short port, 
     adressHints.ai_canonname = NULL;
     adressHints.ai_addr = NULL;
     adressHints.ai_next = NULL;
-
+        
     /*
                 adressIPv6RAW.ai_family = adressFamily; //    AF_INET / AF_INET6:
             adressIPv6RAW.ai_socktype = socketType;
@@ -76,18 +76,28 @@ BF::SocketActionResult BF::IOSocket::SetupAdress(char* ip, unsigned short port, 
 
     int adressInfoSuccessful = getaddrinfo(ip, portNumberString, &adressHints, &adressResult);
 
-    char budder[80];
-    size_t bufferSize = 80;
+    char budder[INET6_ADDRSTRLEN];
+    size_t bufferSize = INET6_ADDRSTRLEN;
+
+
 
     memcpy(&AdressInfo, adressResult, sizeof(AdressInfo));
     AdressInfo.ai_next = nullptr; 
 
     for (ADDRINFOA* rp = adressResult; rp != NULL; rp = rp->ai_next)
     {
-        //getnameinfo();
-       // const char* resolvedIP = inet_ntop(rp->ai_family, rp->ai_addr,budder, bufferSize);
+        memset(budder, 0, INET6_ADDRSTRLEN);
 
-       // printf("sdfs\n");
+        char ipbuffer[50];
+        memset(ipbuffer, 0, 50);
+        //memcpy(, );
+        struct sockaddr_in6* ipv6 = (struct sockaddr_in6*)rp->ai_addr;
+        
+
+        //getnameinfo();
+        const char* resolvedIP = inet_ntop(rp->ai_family, &ipv6->sin6_addr, budder, bufferSize);
+
+        printf("IPv%i : %s\n", rp->ai_family == AF_INET6 ? 6 : 4,resolvedIP);
 
         /*
         int sfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
