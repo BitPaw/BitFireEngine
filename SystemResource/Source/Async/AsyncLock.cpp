@@ -1,5 +1,10 @@
 #include "AsyncLock.h"
 
+BF::AsyncLock::AsyncLock()
+{
+	HandleID = nullptr;
+}
+
 int BF::AsyncLock::Create()
 {
 	int createResult = -1;

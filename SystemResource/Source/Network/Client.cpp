@@ -2,21 +2,70 @@
 
 #include <stdio.h>
 
+#include "../ErrorCode.h"
+
 BF::Client::Client()
 {
-	strncpy_s(IP, "127.0.0.1", 10);
-	ConnectedServerID = -1;
+    EventCallBackClient = 0;
 }
 
 BF::SocketActionResult BF::Client::ConnectToServer(const char* ip, unsigned short port)
 {
-	strncpy_s(IP, ip, IPSize); 
+    IPAdressFamily ipAdressFamily = IPAdressFamily::Unspecified;
+    SocketType socketType = SocketType::Stream;
+    ProtocolMode protocolMode = ProtocolMode::TCP;
 
-	SocketActionResult socketActionResult = Connect(ConnectedServerData, IP, port);
+    size_t adressInfoListSize = 0;
+    IPAdressInfo* adressInfoList = nullptr;
 
-    CommunicationThread.Create(Client::CommunicationFunctionAsync, this);
+    SetupAdress
+    (
+        (char*)ip,
+        port, 
+        ipAdressFamily,
+        socketType,
+        protocolMode,
+        adressInfoListSize,
+        &adressInfoList
+    );
 
-    return socketActionResult;
+    bool wasSucessful = false;
+
+    for (size_t i = 0; i < adressInfoListSize; i++)
+    {
+        IPAdressInfo& adressInfo = adressInfoList[i];
+        SocketActionResult socketCreateResult = Create(adressInfo.Family, adressInfo.Type, adressInfo.Protocol, adressInfo.SocketID);
+        bool creationSuccesful = adressInfo.SocketID != -1;
+
+        if (creationSuccesful)
+        {
+            int serverSocketID = connect(adressInfo.SocketID, (struct sockaddr*)adressInfo.IPRawByte, adressInfo.IPRawByteSize);
+            bool connected = serverSocketID != -1;
+
+            if (connected)
+            {
+                AdressInfo = adressInfo;
+
+                if (EventCallBackSocket)
+                {
+                    EventCallBackSocket->OnConnectionEstablished(adressInfo.SocketID);
+
+                    CommunicationThread.Run(Client::CommunicationFunctionAsync, this);
+                }
+
+                wasSucessful = true;
+            }
+
+            break;
+        }
+    }
+
+    if (!wasSucessful)
+    {
+        return SocketActionResult::SocketCreationFailure;
+    }
+
+    return SocketActionResult::Successful;
 }
 
 void BF::Client::Disconnect()
@@ -26,15 +75,15 @@ void BF::Client::Disconnect()
 
 ThreadFunctionReturnType BF::Client::CommunicationFunctionAsync(void* data)
 {
-    IOSocket* ioSocket = (IOSocket*)data;
+    Client& client = *(Client*)data;
 
-    while (ioSocket->IsCurrentlyUsed())
+    while (client.IsCurrentlyUsed())
     {
-        SocketActionResult socketActionResult = ioSocket->Receive();
+        SocketActionResult socketActionResult = client.Receive();
 
         if (socketActionResult != SocketActionResult::Successful)
         {
-            ioSocket->Close();
+            client.Disconnect();
         }
     }  
 

@@ -17,6 +17,21 @@ namespace BF
 		SocketRecieveFailure,
 		SocketRecieveConnectionClosed,
 
+		SocketFlagsInvalid,
+		NameServerReturnedTemporaryFailureIndication,
+		NameServerReturnedPermanentFailureIndication,
+		SocketTypeNotSupported,
+		RequestedAddressFamilyNotSupported,
+		OutOfMemory,
+		HostExistsButHasNoData,
+		HostHasNoNetworkAddresses,
+
+		IPOrPortNotKnown,
+
+		SocketIsNotConnected,
+
+		RequestedServiceNotAvailableForSocket,
+
 		// Client
 		SocketConnectionFailure,
 
@@ -24,6 +39,8 @@ namespace BF
 		// Server
 		NoClientWithThisID,
 		NoSendEmptyData,
+
+
 
 
 		//---[ Windows Only (WindowsSocketAgent) ]-------
@@ -35,6 +52,8 @@ namespace BF
 		SubSystemNotInitialised,
 		SubSystemNetworkFailed,
 		SocketIsBlocking,
+
+		WindowsSocketSystemNotInitialized,
 		//----------------------------------------
 
 		// File IO

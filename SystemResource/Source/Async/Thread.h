@@ -24,7 +24,9 @@ namespace BF
 		ThreadID ThreadHandle;
 
 		public:
-		void Create(ThreadFunction threadFunction, void* parameter);
+		Thread();
+
+		void Run(ThreadFunction threadFunction, void* parameter);
 
 		void WaitForFinish();
 	};

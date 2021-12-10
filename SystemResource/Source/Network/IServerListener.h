@@ -9,5 +9,7 @@ namespace BF
 		public:
 		virtual void OnClientConnected(Client& client) = 0;
 		virtual void OnClientDisconnected(Client& client) = 0;
+
+		virtual void OnClientAcceptFailure() = 0;
 	};
 }

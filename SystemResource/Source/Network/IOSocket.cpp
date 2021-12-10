@@ -8,48 +8,40 @@
 
 #include "../ErrorCode.h"
 
+#if defined(OSWindows)
+#define EAI_ADDRFAMILY WSAHOST_NOT_FOUND
+#endif
+
 char BF::IOSocket::IsCurrentlyUsed()
 {
-    return ID != -1;
+    return AdressInfo.SocketID != -1;
 }
 
-bool BF::IOSocket::GetIP(char* buffer, size_t bufferSize)
+BF::SocketActionResult BF::IOSocket::SetupAdress
+(
+    char* ip, 
+    unsigned short port, 
+    IPAdressFamily ipMode, 
+    SocketType socketType, 
+    ProtocolMode protocolMode,
+    size_t& adressInfoListSize,
+    IPAdressInfo** adressInfoList
+)
 {
-    const char* resolvedIP = inet_ntop(AdressInfo.ai_family, AdressInfo.ai_addr, buffer, bufferSize);;
-
-    return resolvedIP;
-}
-
-bool BF::IOSocket::GetIPAndPort(char* ip, unsigned short& port)
-{
-    char sbuf[NI_MAXSERV];
-    int returnCode = getnameinfo(AdressInfo.ai_addr, AdressInfo.ai_addrlen, ip, NI_MAXHOST, sbuf, sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV);
-    bool successful = returnCode == 0;
-
-    port = atoi(sbuf);
-
-    return successful;
-}
-
-BF::SocketActionResult BF::IOSocket::SetupAdress(char* ip, unsigned short port, IPAdressFamily ipMode, SocketType socketType, ProtocolMode protocolMode)
-{
-#if 0 // Use depricated soultion. Only works for IPv4
-    hostent* host = gethostbyname(ip);
-    char* uh = host->h_addr_list[0];
-    size_t size = host->h_length;
-    in_addr inaddr;
-
-    memcpy(&inaddr, uh, size);
-
-    char* resolvedIP = inet_ntoa(inaddr);
-
-    strncpy(ip, resolvedIP, 120);
-#else 
     char portNumberString[30];
     char* portNumberStringAdress = nullptr;
     ADDRINFOA adressHints;
     ADDRINFOA* adressResult = nullptr;    
     // ADRRINFOW?
+
+#if defined(OSWindows)
+    SocketActionResult errorCode = WindowsSocketAgentStartup();
+
+    if (errorCode != SocketActionResult::Successful)
+    {
+        return errorCode;
+    }
+#endif 
 
     if (port != -1)
     {
@@ -57,76 +49,95 @@ BF::SocketActionResult BF::IOSocket::SetupAdress(char* ip, unsigned short port, 
         portNumberStringAdress = portNumberString;
     }
 
-    memset(&adressHints, 0, sizeof(ADDRINFOA));
-
+    adressHints.ai_flags = AI_PASSIVE;    // For wildcard IP address (AI_NUMERICHOST | AI_PASSIVE;)
     adressHints.ai_family = ConvertIPAdressFamily(ipMode);
     adressHints.ai_socktype = ConvertSocketType(socketType); // Datagram socket
-    adressHints.ai_flags = AI_PASSIVE;    // For wildcard IP address
-    adressHints.ai_protocol = 0;// ConvertProtocolMode(protocolMode);
-    adressHints.ai_canonname = NULL;
-    adressHints.ai_addr = NULL;
-    adressHints.ai_next = NULL;
-        
-    /*
-                adressIPv6RAW.ai_family = adressFamily; //    AF_INET / AF_INET6:
-            adressIPv6RAW.ai_socktype = socketType;
-            adressIPv6RAW.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
-            adressIPv6RAW.ai_protocol = IPPROTO_TCP;
-    */
+    adressHints.ai_protocol = ConvertProtocolMode(protocolMode);
+    adressHints.ai_addrlen = 0;
+    adressHints.ai_canonname = nullptr;
+    adressHints.ai_addr = nullptr;
+    adressHints.ai_next = nullptr;    
 
-    int adressInfoSuccessful = getaddrinfo(ip, portNumberString, &adressHints, &adressResult);
-
-    char budder[INET6_ADDRSTRLEN];
-    size_t bufferSize = INET6_ADDRSTRLEN;
-
-
-
-    memcpy(&AdressInfo, adressResult, sizeof(AdressInfo));
-    AdressInfo.ai_next = nullptr; 
-
-    for (ADDRINFOA* rp = adressResult; rp != NULL; rp = rp->ai_next)
+    int adressInfoResult = getaddrinfo(ip, portNumberString, &adressHints, &adressResult);
+    
+    switch (adressInfoResult)
     {
-        memset(budder, 0, INET6_ADDRSTRLEN);
+        case 0:
+            break; // OK - Sucess
 
-        char ipbuffer[50];
-        memset(ipbuffer, 0, 50);
-        //memcpy(, );
-        struct sockaddr_in6* ipv6 = (struct sockaddr_in6*)rp->ai_addr;
-        
+        case EAI_ADDRFAMILY:
+            return SocketActionResult::HostHasNoNetworkAddresses;
 
-        //getnameinfo();
-        const char* resolvedIP = inet_ntop(rp->ai_family, &ipv6->sin6_addr, budder, bufferSize);
+        case EAI_AGAIN:
+            return SocketActionResult::NameServerReturnedTemporaryFailureIndication;
 
-        printf("IPv%i : %s\n", rp->ai_family == AF_INET6 ? 6 : 4,resolvedIP);
+        case EAI_BADFLAGS:
+            return SocketActionResult::SocketFlagsInvalid;
 
-        /*
-        int sfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+        case EAI_FAIL:
+            return SocketActionResult::NameServerReturnedPermanentFailureIndication;
 
-        if (sfd == -1)
-            continue;
+        case EAI_FAMILY:
+            return SocketActionResult::RequestedAddressFamilyNotSupported;
 
-        if (bind(sfd, rp->ai_addr, rp->ai_addrlen) == 0)
-            break;                  /* Success */
+        case EAI_MEMORY:
+            return SocketActionResult::OutOfMemory;
 
-            // close(sfd);
+       // case EAI_NODATA:
+        //    return SocketActionResult::HostExistsButHasNoData;
+
+        //case EAI_NONAME:
+          //  return SocketActionResult::IPOrPortNotKnown;
+
+        case EAI_SERVICE:
+            return SocketActionResult::RequestedServiceNotAvailableForSocket;
+
+        case EAI_SOCKTYPE:
+            return SocketActionResult::SocketTypeNotSupported;
+
+        case WSANOTINITIALISED:
+            return SocketActionResult::WindowsSocketSystemNotInitialized;
+
+        default:
+       // case EAI_SYSTEM:
+        {
+            ErrorCode error = GetCurrentError();
+
+            break;
+        }
+    }
+
+    for (ADDRINFOA* adressInfo = adressResult; adressInfo ; adressInfo = adressInfo->ai_next)
+    {
+        ++adressInfoListSize;
+    }
+
+    // Allocate 
+    (*adressInfoList) = new IPAdressInfo[adressInfoListSize];
+
+    if (!(*adressInfoList))
+    {
+        FreeAddrInfoA(adressResult);
+        return SocketActionResult::OutOfMemory;
+    }
+
+    size_t index = 0;
+
+    for (ADDRINFOA* rp = adressResult; rp ; rp = rp->ai_next)
+    {
+        IPAdressInfo& adressInfo = (*adressInfoList)[index++];
+
+        adressInfo.ConvertFrom(*rp);    
     }
 
     FreeAddrInfoA(adressResult);
-
-#endif   
 
     return SocketActionResult::Successful;
 }
 
 BF::IOSocket::IOSocket()
 {
-    ID = -1;
-    Port = -1;
-
     EventCallBackSocket = 0;
-
-    memset(BufferMessage, 0, SocketBufferSize);
-    memset(&AdressInfo, 0, sizeof(AdressInfo));
 }
 
 void BF::IOSocket::Close()
@@ -138,50 +149,27 @@ void BF::IOSocket::Close()
         return;
     }
 
-    //CommunicationThread->detach();
-
-    //delete CommunicationThread;
-    //CommunicationThread = nullptr;
-
 #ifdef OSWindows
-    shutdown(ID, SD_SEND);
-    closesocket(ID);
+    shutdown(AdressInfo.SocketID, SD_SEND);
+    closesocket(AdressInfo.SocketID);
 #elif defined(OSUnix)
-    close(socket->ID);
-#endif     
+    close(AdressInfo.SocketID);
+#endif   
 
     if (EventCallBackSocket)
     {
-        EventCallBackSocket->OnConnectionTerminated(ID);
+        EventCallBackSocket->OnConnectionTerminated(AdressInfo.SocketID);
     }
 
-    ID = -1;
+    AdressInfo.SocketID = 0;
 }
 
-void BF::IOSocket::AwaitConnection(IOSocket& clientSocket)
+BF::SocketActionResult BF::IOSocket::Create(IPAdressFamily adressFamily, SocketType socketType, ProtocolMode protocolMode, unsigned int& socketID)
 {
-    clientSocket.AdressInfo.ai_addrlen = 60;
-    clientSocket.AdressInfo.ai_addr = (struct sockaddr*)malloc(60);
+    int ipAdressFamilyID = ConvertIPAdressFamily(adressFamily);
+    int socketTypeID = ConvertSocketType(socketType);
+    int protocolModeID = ConvertProtocolMode(protocolMode);
 
-    clientSocket.ID = accept(ID, clientSocket.AdressInfo.ai_addr, (int*)&clientSocket.AdressInfo.ai_addrlen);
-
-    bool sucessful = clientSocket.ID != -1;
-
-    if (!sucessful)
-    {
-       ErrorCode errorCode = GetCurrentError();
-    }
-    else
-    {
-        if (EventCallBackSocket)
-        {
-            EventCallBackSocket->OnConnectionLinked(clientSocket.ID);
-        }
-    }  
-}
-
-BF::SocketActionResult BF::IOSocket::Open(unsigned short port, IPAdressFamily ipAdressFamily, SocketType socketType, ProtocolMode protocolMode)
-{
 #if defined(OSWindows)
     SocketActionResult errorCode = WindowsSocketAgentStartup();
 
@@ -191,105 +179,13 @@ BF::SocketActionResult BF::IOSocket::Open(unsigned short port, IPAdressFamily ip
     }
 #endif 
 
-    SetupAdress(nullptr, port, ipAdressFamily, socketType, protocolMode);
+    socketID = socket(ipAdressFamilyID, socketTypeID, protocolModeID);
 
-    //---<Create Socket>--------------------
-    ID = socket(AdressInfo.ai_family, AdressInfo.ai_socktype, AdressInfo.ai_protocol);
+    bool wasSucessful = socketID != -1;
 
-    if (ID == -1)
+    if (!wasSucessful)
     {
         return SocketActionResult::SocketCreationFailure;
-    }
-    //---------------------------------------
-
-    // Set Socket Options
-    {
-        const int level = SOL_SOCKET;
-
-        const int optionName =
-#if defined(OSUnix)
-            SO_REUSEADDR;      // Do not use SO_REUSEADDR, else the port can be hacked. SO_REUSEPORT
-#elif defined(OSWindows)
-            SO_EXCLUSIVEADDRUSE;
-#endif
-        const char opval = 1;
-        int optionsocketResult = setsockopt(ID, level, optionName, &opval, sizeof(opval));
-
-        if (optionsocketResult == 1)
-        {
-            return SocketActionResult::SocketOptionFailure;
-        }
-    }
-
-    // Bind Socket
-    {
-        int bindingResult = bind(ID, AdressInfo.ai_addr, AdressInfo.ai_addrlen);
-
-        if (bindingResult == -1)
-        {
-            return SocketActionResult::SocketBindingFailure;
-        }
-    }
-
-    // Listen
-    {
-        int maximalClientsWaitingInQueue = 10;
-        int listeningResult = listen(ID, maximalClientsWaitingInQueue);
-
-        if (listeningResult == -1)
-        {
-            return SocketActionResult::SocketListeningFailure;
-        }
-    }
-
-    if (EventCallBackSocket)
-    {
-        EventCallBackSocket->OnConnectionListening(ID);
-    }
-
-    return SocketActionResult::Successful;
-}
-
-BF::SocketActionResult BF::IOSocket::Connect(IOSocket& serverSocket, const char* ipAdress, unsigned short port)
-{
-#ifdef OSWindows
-    SocketActionResult errorCode = WindowsSocketAgentStartup();
-
-    if (errorCode != SocketActionResult::Successful)
-    {
-        return errorCode;
-    }
-#endif  
-
-    IPAdressFamily ipAdressFamily = IPAdressFamily::Unspecified;
-    SocketType socketType = SocketType::Stream;
-    ProtocolMode protocolMode = ProtocolMode::Any;
-
-    SetupAdress((char*)ipAdress, port, ipAdressFamily, socketType, protocolMode);
-
-    // Create Socket
-    ID = socket(AdressInfo.ai_family, AdressInfo.ai_socktype, AdressInfo.ai_protocol);
-
-    if (ID == -1)
-    {
-        return SocketActionResult::SocketCreationFailure;
-    }
-
-    // Connect
-    {     
-        serverSocket.ID = connect(ID, AdressInfo.ai_addr, AdressInfo.ai_addrlen);
-
-        if (serverSocket.ID == -1)
-        {
-            BF::ErrorCode errorCode = GetCurrentError();
-
-            return SocketActionResult::SocketConnectionFailure;
-        }
-    }
-
-    if (EventCallBackSocket)
-    {
-        EventCallBackSocket->OnConnectionEstablished(ID);
     }
 
     return SocketActionResult::Successful;
@@ -299,12 +195,17 @@ BF::SocketActionResult BF::IOSocket::Receive()
 {
     unsigned int byteRead = 0;
 
+    if (AdressInfo.SocketID == -1)
+    {
+        return SocketActionResult::SocketIsNotConnected;
+    }
+
     memset(BufferMessage, 0, SocketBufferSize);
 
 #if defined(OSUnix)
-    byteRead = read(ID, BufferMessage, SocketBufferSize);
+    byteRead = read(AdressInfo.SocketID, BufferMessage, SocketBufferSize);
 #elif defined(OSWindows)
-    byteRead = recv(ID, BufferMessage, SocketBufferSize, 0);
+    byteRead = recv(AdressInfo.SocketID, BufferMessage, SocketBufferSize, 0);
 #endif
 
     switch (byteRead)
@@ -322,7 +223,7 @@ BF::SocketActionResult BF::IOSocket::Receive()
         {
             if (EventCallBackSocket)
             {
-                IOSocketMessage socketMessage(ID, BufferMessage, byteRead);
+                IOSocketMessage socketMessage(AdressInfo.SocketID, BufferMessage, byteRead);
 
                 EventCallBackSocket->OnMessageReceive(socketMessage);
             }
@@ -336,24 +237,29 @@ BF::SocketActionResult BF::IOSocket::Send(const char* message, size_t messageLen
 {
     unsigned int writtenBytes = 0;
 
-    memcpy(BufferMessage, message, messageLength);
+    if (AdressInfo.SocketID == -1)
+    {
+        return SocketActionResult::SocketIsNotConnected;
+    }
 
     if (messageLength == 0)
     {
         return SocketActionResult::Successful; // Do not send anything if the message is empty
     }
 
+    memcpy(BufferMessage, message, messageLength);
+
     if (EventCallBackSocket)
     {
-        IOSocketMessage socketMessage(ID, BufferMessage, messageLength);
+        IOSocketMessage socketMessage(AdressInfo.SocketID, BufferMessage, messageLength);
 
         EventCallBackSocket->OnMessageSend(socketMessage);
     }
 
 #if defined(OSUnix)
-    writtenBytes = write(ID, BufferMessage, messageLength);
+    writtenBytes = write(AdressInfo.SocketID, BufferMessage, messageLength);
 #elif defined(OSWindows)
-    writtenBytes = send(ID, BufferMessage, messageLength, 0);
+    writtenBytes = send(AdressInfo.SocketID, BufferMessage, messageLength, 0);
 #endif  
 
     switch (writtenBytes)

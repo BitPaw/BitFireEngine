@@ -154,7 +154,7 @@ int BF::ConvertErrorCode(ErrorCode errorCode)
 		case BF::ErrorCode::LinkHasBeenSevered:
 			return 0000;
 
-		case BF::ErrorCode::NotEnoughSpace:
+		case BF::ErrorCode::OutOfMemory:
 			return 0000;
 
 		case BF::ErrorCode::NoMessageOfTheDesiredType:
@@ -399,7 +399,7 @@ BF::ErrorCode BF::ConvertErrorCode(int errorCode)
 			return  BF::ErrorCode::LinkHasBeenSevered;
 
 		case ENOMEM:
-			return  BF::ErrorCode::NotEnoughSpace;
+			return  BF::ErrorCode::OutOfMemory;
 
 		case ENOMSG:
 			return  BF::ErrorCode::NoMessageOfTheDesiredType;

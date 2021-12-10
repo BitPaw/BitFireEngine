@@ -54,7 +54,7 @@ namespace BF
 		ExecutableFileFormatError, // NOEXEC
 		NoLocksAvailable, // NOLCK
 		LinkHasBeenSevered, // NOLINK
-		NotEnoughSpace, // NOMEM
+		OutOfMemory, // NOMEM
 		NoMessageOfTheDesiredType, // NOMSG
 		ProtocolNotAvailable, // NOPROTOOPT
 		NoSpaceLeftOnDevice, // NOSPC

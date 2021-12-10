@@ -20,7 +20,7 @@ const char* _server = "Server";
 
 #include "../SystemResource/Source/File/OpenFileDialog.h"
 
-struct MainSt : public ISocketListener, BF::ProgramExecuteResultListener
+struct MainSt : public ISocketListener, public IClientListener, public IServerListener, BF::ProgramExecuteResultListener
 {
 	const char* stringAdress = 0;
 
@@ -56,9 +56,40 @@ struct MainSt : public ISocketListener, BF::ProgramExecuteResultListener
 	}
 
 	// Geerbt über ProgramExecuteResultListener
-	virtual void OnProgramExecuted(bool succesful, size_t returnResult, ErrorCode errorCode) override
+	void OnProgramExecuted(bool succesful, size_t returnResult, ErrorCode errorCode)
 	{
 		printf("Heelp");
+	}
+
+	// Geerbt über ISocketListener
+	void OnSocketCreating(const IPAdressInfo& adressInfo, bool& use)
+	{
+		printf("OnSocketCreate()\n");
+	}
+	void OnSocketCreated(const IPAdressInfo& adressInfo, bool& use)
+	{
+		printf("OnSocketCreated()\n");
+	}
+
+
+	void OnClientConnected(Client& client)
+	{
+		printf("OnClientConnected()\n");
+	}
+
+	void OnClientDisconnected(Client& client)
+	{
+		printf("OnClientDisconnected()\n");
+	}
+
+	void OnClientAcceptFailure()
+	{
+		printf("OnClientAcceptFailure()\n");
+	}
+
+	void OnConnectedToServer(IPAdressInfo& adressInfo)
+	{
+		printf("Connected to server\n");
 	}
 };
 
@@ -108,7 +139,7 @@ int main(int amountOFParameters, char** parameter)
 	Server server;
 
 	serverCallBack.stringAdress = _server;
-	server.EventCallBackSocket = &serverCallBack;
+	server.EventCallBackServer = &serverCallBack;
 
 	
 	SocketActionResult serverCreateResult = server.Start(25666);
@@ -117,7 +148,7 @@ int main(int amountOFParameters, char** parameter)
 	Client client;
 	clientCallBack.stringAdress = _client;
 	client.EventCallBackSocket = &clientCallBack;
-
+	client.EventCallBackClient = &clientCallBack;
 	
 	unsigned int counter = 0;
 	char buffer[50];

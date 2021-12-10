@@ -2,6 +2,7 @@
 
 #include "IOSocket.h"
 #include "../Async/Thread.h"
+#include "IClientListener.hpp"
 
 #define IPSize 60
 
@@ -10,11 +11,9 @@ namespace BF
     class Client : public IOSocket
     {
         public:
-        char IP[IPSize];
-        unsigned short Port;
+        IPAdressInfo ConnectedServerInfo;
 
-        int ConnectedServerID;
-        IOSocket ConnectedServerData;
+        IClientListener* EventCallBackClient;
 
         Client();
 

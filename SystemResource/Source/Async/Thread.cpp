@@ -1,12 +1,19 @@
 #include "Thread.h"
 
+BF::Thread::Thread()
+{
+	ThreadHandle = nullptr;
+}
+
+
 #ifdef OSUnix
 void BF::Thread::ThreadCreate(ThreadFunction threadFunction, void* parameter)
 {
 	int result = pthread_create(&thread->ThreadHandle, 0, threadTask, parameter);
 }
 #elif defined(OSWindows)
-void BF::Thread::Create(ThreadFunction threadFunction, void* parameter)
+
+void BF::Thread::Run(ThreadFunction threadFunction, void* parameter)
 {
 	const LPSECURITY_ATTRIBUTES lpThreadAttributes = NULL;
 	const SIZE_T dwStackSize = NULL;
