@@ -24,6 +24,7 @@
 #include "IPAdressFamily.h"
 #include "SocketType.h"
 
+#define SocketIDOffline -1
 #define IPv6LengthMax 65
 
 namespace BF
@@ -58,5 +59,8 @@ namespace BF
 
 		void ConvertFrom(ADDRINFOA& adressInfo);
 		void ConvertTo(ADDRINFOA& adressInfo);
+
+		void IPFromBinaryFormat();
+		void IPToBinaryFormat();
 	};
 }

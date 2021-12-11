@@ -9,7 +9,7 @@
 
 #define AF_Invalid 0xFF
 
-BF::IPAdressFamily BF::ConvertIPAdressFamily(unsigned char ipMode)
+BF::IPAdressFamily BF::ConvertIPAdressFamily(unsigned int ipMode)
 {
 	switch (ipMode)
 	{
@@ -49,7 +49,7 @@ BF::IPAdressFamily BF::ConvertIPAdressFamily(unsigned char ipMode)
 	}
 }
 
-unsigned char BF::ConvertIPAdressFamily(IPAdressFamily ipMode)
+unsigned int BF::ConvertIPAdressFamily(IPAdressFamily ipMode)
 {
 	switch (ipMode)
 	{

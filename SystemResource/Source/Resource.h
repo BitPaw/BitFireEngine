@@ -9,15 +9,15 @@
 
 #define ResourceIDStored 999
 
-#define ResourceIDUndefined -1
+#define ResourceIDUndefined (unsigned int)-1
 
-#define ResourceIDLoading -2
-#define ResourceIDLoaded -3
-#define ResourceIDShared -5
+#define ResourceIDLoading (unsigned int)-2
+#define ResourceIDLoaded (unsigned int)-3
+#define ResourceIDShared (unsigned int)-5
 
-#define ResourceIDFileNotFound -10
-#define ResourceIDOutOfMemory -20
-#define ResourceIDUnsuportedFormat -30
+#define ResourceIDFileNotFound (unsigned int)-10
+#define ResourceIDOutOfMemory (unsigned int)-20
+#define ResourceIDUnsuportedFormat (unsigned int)-30
 
 namespace BF
 {

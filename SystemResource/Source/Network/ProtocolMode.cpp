@@ -1,6 +1,6 @@
 #include "ProtocolMode.h"
 
-#define ProtocolInvalid -1
+#define ProtocolInvalid (unsigned int)-1
 #define ProtocolHOPOPTS 0
 #define ProtocolICMP 1
 #define ProtocolIGMP 2

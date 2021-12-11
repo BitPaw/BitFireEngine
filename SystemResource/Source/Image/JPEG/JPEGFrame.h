@@ -11,5 +11,7 @@ namespace BF
 		unsigned char LineSamples;
 		unsigned char ComponentListSize;
 		JPEGFrameComponent ComponentList[3];
+
+		JPEGFrame();
 	};
 }

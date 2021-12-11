@@ -110,14 +110,14 @@ enough memory.*/
 			unsigned char r, unsigned char g, unsigned char b, unsigned char a);
 
 
-		static size_t lodepng_get_raw_size_lct(unsigned w, unsigned h, LodePNGColorType colortype, unsigned bitdepth);
-		static size_t lodepng_get_raw_size(unsigned w, unsigned h, const LodePNGColorMode* color);
+		static size_t lodepng_get_raw_size_lct(size_t w, size_t h, LodePNGColorType colortype, size_t bitdepth);
+		static size_t lodepng_get_raw_size(size_t w, size_t h, const LodePNGColorMode* color);
 
 		/*returns -1 if color not present, its index otherwise*/
 		static int color_tree_get(PNGColorTree* tree, unsigned char r, unsigned char g, unsigned char b, unsigned char a);
 
 		/*index: bitgroup index, bits: bitgroup size(1, 2 or 4), in: bitgroup value, out: octet array to add bits to*/
-		static void addColorBits(unsigned char* out, size_t index, unsigned bits, unsigned in);
+		static void addColorBits(unsigned char* out, size_t index, unsigned int bits, unsigned int in);
 
 		static unsigned char readBitFromReversedStream(size_t* bitpointer, const unsigned char* bitstream);		
 		static unsigned readBitsFromReversedStream(size_t* bitpointer, const unsigned char* bitstream, size_t nbits);

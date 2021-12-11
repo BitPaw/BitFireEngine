@@ -187,9 +187,9 @@ void BF::Image::PrintData()
     (
         "+------------------------------+\n"
         "| Registered image ID:%u\n"
-        "| - Width  : %i\n"
-        "| - Height : %i\n"
-        "| - Size   : %i\n"
+        "| - Width  : %zi\n"
+        "| - Height : %zi\n"
+        "| - Size   : %zi\n"
         "+------------------------------+\n",
 
         ID,

@@ -12,7 +12,7 @@
 #define EAI_ADDRFAMILY WSAHOST_NOT_FOUND
 #endif
 
-char BF::IOSocket::IsCurrentlyUsed()
+bool BF::IOSocket::IsCurrentlyUsed()
 {
     return AdressInfo.SocketID != -1;
 }
@@ -30,7 +30,7 @@ BF::SocketActionResult BF::IOSocket::SetupAdress
 {
     char portNumberString[30];
     char* portNumberStringAdress = nullptr;
-    ADDRINFOA adressHints;
+    ADDRINFOA adressHints { 0 };
     ADDRINFOA* adressResult = nullptr;    
     // ADRRINFOW?
 
@@ -138,6 +138,8 @@ BF::SocketActionResult BF::IOSocket::SetupAdress
 BF::IOSocket::IOSocket()
 {
     EventCallBackSocket = 0;
+
+    memset(BufferMessage, 0, SocketBufferSize);
 }
 
 void BF::IOSocket::Close()
@@ -158,10 +160,10 @@ void BF::IOSocket::Close()
 
     if (EventCallBackSocket)
     {
-        EventCallBackSocket->OnConnectionTerminated(AdressInfo.SocketID);
+        EventCallBackSocket->OnConnectionTerminated(AdressInfo);
     }
 
-    AdressInfo.SocketID = 0;
+    AdressInfo.SocketID = SocketIDOffline;
 }
 
 BF::SocketActionResult BF::IOSocket::Create(IPAdressFamily adressFamily, SocketType socketType, ProtocolMode protocolMode, unsigned int& socketID)
@@ -181,7 +183,7 @@ BF::SocketActionResult BF::IOSocket::Create(IPAdressFamily adressFamily, SocketT
 
     socketID = socket(ipAdressFamilyID, socketTypeID, protocolModeID);
 
-    bool wasSucessful = socketID != -1;
+    bool wasSucessful = socketID != SocketIDOffline;
 
     if (!wasSucessful)
     {
@@ -195,7 +197,7 @@ BF::SocketActionResult BF::IOSocket::Receive()
 {
     unsigned int byteRead = 0;
 
-    if (AdressInfo.SocketID == -1)
+    if (!IsCurrentlyUsed())
     {
         return SocketActionResult::SocketIsNotConnected;
     }
@@ -237,7 +239,7 @@ BF::SocketActionResult BF::IOSocket::Send(const char* message, size_t messageLen
 {
     unsigned int writtenBytes = 0;
 
-    if (AdressInfo.SocketID == -1)
+    if (!IsCurrentlyUsed())
     {
         return SocketActionResult::SocketIsNotConnected;
     }
@@ -294,21 +296,6 @@ BF::SocketActionResult BF::IOSocket::SendFile(const char* filePath, size_t sendB
     int closeResult = fclose(file);
 
     return closeResult == 0 ? SocketActionResult::Successful : SocketActionResult::InvalidResult;
-}
-
-int BF::IOSocket::GetAdressFamily(IPVersion ipVersion)
-{
-    switch (ipVersion)
-    {
-        default:
-        case IPVersion::IPVersion4:
-            return AF_INET;
-
-        case IPVersion::IPVersion6:
-            return AF_INET6;
-    }
-
-    return PF_UNSPEC;
 }
 
 #ifdef OSWindows

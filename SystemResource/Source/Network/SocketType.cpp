@@ -9,7 +9,7 @@
 
 #define SOCK_Invalid 0xFF 
 
-BF::SocketType BF::ConvertSocketType(unsigned char socketType)
+BF::SocketType BF::ConvertSocketType(unsigned int socketType)
 {
 	switch (socketType)
 	{
@@ -33,7 +33,7 @@ BF::SocketType BF::ConvertSocketType(unsigned char socketType)
 	}
 }
 
-unsigned char BF::ConvertSocketType(SocketType socketType)
+unsigned int BF::ConvertSocketType(SocketType socketType)
 {
 	switch (socketType)
 	{

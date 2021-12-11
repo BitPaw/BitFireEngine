@@ -8,7 +8,7 @@ namespace BF
 	{
 		public:
 		IOSocket* ServerSocket;
-		Server* ServerAdress;
+		Server* ServerAdress;	
 
 		ServerListeningThreadInfo();
 		ServerListeningThreadInfo(IOSocket* serverSocket, Server* server);

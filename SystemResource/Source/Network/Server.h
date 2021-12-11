@@ -18,6 +18,7 @@ namespace BF
 
         public:
         IServerListener* EventCallBackServer;
+        ISocketListener* EventCallBackSocket; // Gets attached to all clients
 
         //---<InputSterams>
         Client* ClientList;
@@ -31,6 +32,7 @@ namespace BF
         //-----------------------------------
 
         Server();
+        ~Server();
 
         SocketActionResult Start(unsigned short port);
         void Stop();

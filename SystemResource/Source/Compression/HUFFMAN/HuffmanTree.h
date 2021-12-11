@@ -30,7 +30,7 @@ namespace BF
 		void GenerateFixedLiteralLengthTree();
 		void GenerateFixedDistanceTree();
 
-		int GenerateFromLengths(const unsigned int* bitlen, size_t numcodes, unsigned maxbitlen);
+		int GenerateFromLengths(const unsigned int* bitlen, size_t numcodes, size_t maxbitlen);
 
 		static unsigned int GenerateDynamicTree(BitStreamHusk& bitStreamHusk, HuffmanTree& treeLength, HuffmanTree& treeDistance);
 

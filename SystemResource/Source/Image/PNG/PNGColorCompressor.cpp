@@ -653,14 +653,15 @@ unsigned BF::PNGColorCompressor::rgba8ToPixel(unsigned char* out, size_t i, cons
     return 0; /*no error*/
 }
 
-size_t BF::PNGColorCompressor::lodepng_get_raw_size_lct(unsigned w, unsigned h, LodePNGColorType colortype, unsigned bitdepth)
+size_t BF::PNGColorCompressor::lodepng_get_raw_size_lct(size_t w, size_t h, LodePNGColorType colortype, size_t bitdepth)
 {
     size_t bpp = lodepng_get_bpp_lct(colortype, bitdepth);
-    size_t n = (size_t)w * (size_t)h;
+    size_t n = w * h;
+
     return ((n / 8u) * bpp) + ((n & 7u) * bpp + 7u) / 8u;
 }
 
-size_t BF::PNGColorCompressor::lodepng_get_raw_size(unsigned w, unsigned h, const LodePNGColorMode* color)
+size_t BF::PNGColorCompressor::lodepng_get_raw_size(size_t w, size_t h, const LodePNGColorMode* color)
 {
     return lodepng_get_raw_size_lct(w, h, color->colortype, color->bitdepth);
 }
@@ -677,15 +678,23 @@ int BF::PNGColorCompressor::color_tree_get(PNGColorTree* tree, unsigned char r, 
     return tree ? tree->index : -1;
 }
 
-void BF::PNGColorCompressor::addColorBits(unsigned char* out, size_t index, unsigned bits, unsigned in)
+void BF::PNGColorCompressor::addColorBits(unsigned char* out, size_t index, unsigned int bits, unsigned int in)
 {
-    unsigned m = bits == 1 ? 7 : bits == 2 ? 3 : 1; /*8 / bits - 1*/
+    unsigned int m = bits == 1 ? 7 : bits == 2 ? 3 : 1; /*8 / bits - 1*/
   /*p = the partial index in the byte, e.g. with 4 palettebits it is 0 for first half or 1 for second half*/
-    unsigned p = index & m;
+    unsigned int p = index & m;
+
     in &= (1u << bits) - 1u; /*filter out any other bits of the input value*/
     in = in << (bits * (m - p));
-    if (p == 0) out[index * bits / 8u] = in;
-    else out[index * bits / 8u] |= in;
+
+    if (p == 0)
+    {
+        out[index * bits / 8u] = in;
+    }      
+    else
+    {
+        out[index * bits / 8u] |= in;
+    }
 }
 
 unsigned char BF::PNGColorCompressor::readBitFromReversedStream(size_t* bitpointer, const unsigned char* bitstream)

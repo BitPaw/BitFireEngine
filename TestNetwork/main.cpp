@@ -24,35 +24,15 @@ struct MainSt : public ISocketListener, public IClientListener, public IServerLi
 {
 	const char* stringAdress = 0;
 
-	void OnConnectionLinked(int socketID)
-	{
-		printf("[%s][%i] Connection Linked.\n", stringAdress, socketID);
-	}
-
-	void OnConnectionListening(int socketID)
-	{
-		printf("[%s][%i] Connection Listening...\n", stringAdress, socketID);
-	}
-
-	void OnConnectionEstablished(int socketID)
-	{
-		printf("[%s][%i] Connection Established.\n", stringAdress, socketID);
-	}
-
-	void OnConnectionTerminated(int socketID)
-	{
-		printf("[%s][%i] Connection Terminated.\n", stringAdress, socketID);
-	}
-
 	void OnMessageSend(IOSocketMessage socketMessage)
 	{
 		//printf("[%s][%i] Message Send : %s (%i Byte)\n", stringAdress, socketID, message, messageLengh);
-		printf("[%s][%i] Message Send : (%i Byte)\n", stringAdress, socketMessage.SocketID, socketMessage.MessageSize);
+		printf("[%s][%i] Message Send : (%zi Byte)\n", stringAdress, socketMessage.SocketID, socketMessage.MessageSize);
 	}
 
 	void OnMessageReceive(IOSocketMessage socketMessage)
 	{
-		printf("[%s][%i] Message Received : %s (%i Byte)\n", stringAdress, socketMessage.SocketID, socketMessage.Message, socketMessage.MessageSize);
+		printf("[%s][%i] Message Received : %s (%zi Byte)\n", stringAdress, socketMessage.SocketID, socketMessage.Message, socketMessage.MessageSize);
 	}
 
 	// Geerbt über ProgramExecuteResultListener
@@ -70,7 +50,6 @@ struct MainSt : public ISocketListener, public IClientListener, public IServerLi
 	{
 		printf("OnSocketCreated()\n");
 	}
-
 
 	void OnClientConnected(Client& client)
 	{
@@ -91,6 +70,23 @@ struct MainSt : public ISocketListener, public IClientListener, public IServerLi
 	{
 		printf("Connected to server\n");
 	}
+
+	void OnConnectionListening(const IPAdressInfo& adressInfo)
+	{
+		printf("[%s][%i] Connection Listening...\n", stringAdress, adressInfo.SocketID);
+	}
+	void OnConnectionLinked(const IPAdressInfo& adressInfo)
+	{
+		printf("[%s][%i] Connection Linked.\n", stringAdress, adressInfo.SocketID);
+	}
+	void OnConnectionEstablished(const IPAdressInfo& adressInfo)
+	{
+		printf("[%s][%i] Connection Established.\n", stringAdress, adressInfo.SocketID);
+	}
+	void OnConnectionTerminated(const IPAdressInfo& adressInfo)
+	{
+		printf("[%s][%i] Connection Terminated.\n", stringAdress, adressInfo.SocketID);
+	}		
 };
 
 int main(int amountOFParameters, char** parameter)
@@ -140,6 +136,7 @@ int main(int amountOFParameters, char** parameter)
 
 	serverCallBack.stringAdress = _server;
 	server.EventCallBackServer = &serverCallBack;
+	server.EventCallBackSocket = &serverCallBack;
 
 	
 	SocketActionResult serverCreateResult = server.Start(25666);

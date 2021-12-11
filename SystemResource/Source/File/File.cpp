@@ -35,7 +35,7 @@ BF::FileActionResult BF::File::CheckFile()
 
 BF::File::File()
 {
-	FileMarker = nullptr;
+	SetFilePath((wchar_t*)nullptr);
 }
 
 BF::File::File(const char* filePath)
@@ -259,6 +259,8 @@ void BF::File::SetFilePath(const char* filePath)
 
 void BF::File::SetFilePath(const wchar_t* filePath)
 {
+	FileMarker = nullptr;
+
 	if (filePath == nullptr)
 	{
 		Path[0] = '\0';

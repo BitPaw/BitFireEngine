@@ -564,9 +564,6 @@
     <ClCompile Include="Source\Network\IPAdressInfo.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Network\ISocketListener.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Network\ServerListeningThreadInfo.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>

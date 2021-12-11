@@ -14,7 +14,7 @@ which is possible in case of only 0 or 1 present symbols. */
 #define LODEPNG_MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define LODEPNG_ABS(x) ((x) < 0 ? -(x) : (x))
 
-int BF::HuffmanTree::GenerateFromLengths(const unsigned int* bitlen, size_t numcodes, unsigned maxbitlen)
+int BF::HuffmanTree::GenerateFromLengths(const unsigned int* bitlen, size_t numcodes, size_t maxbitlen)
 {
 	// HuffmanTree_makeFromLengths()
 	lengths = (unsigned int*)malloc(numcodes * sizeof(unsigned int));
@@ -29,9 +29,9 @@ int BF::HuffmanTree::GenerateFromLengths(const unsigned int* bitlen, size_t numc
 	unsigned error = 0;
 	unsigned bits, n;
 
-	codes = (unsigned*)malloc(numcodes * sizeof(unsigned int));
-	blcount = (unsigned*)malloc((maxbitlen + 1) * sizeof(unsigned int));
-	nextcode = (unsigned*)malloc((maxbitlen + 1) * sizeof(unsigned int));
+	codes = (unsigned int*)malloc(numcodes * sizeof(unsigned int));
+	blcount = (unsigned int*)malloc((maxbitlen + 1) * sizeof(unsigned int));
+	nextcode = (unsigned int*)malloc((maxbitlen + 1) * sizeof(unsigned int));
 	if (!codes || !blcount || !nextcode) error = 83; /*alloc fail*/
 
 	if (!error)
@@ -64,17 +64,17 @@ int BF::HuffmanTree::GenerateFromLengths(const unsigned int* bitlen, size_t numc
 	// HuffmanTree_makeTable()
 	static const unsigned headsize = 1u << FIRSTBITS; /*size of the first table*/
 	static const unsigned mask = (1u << FIRSTBITS) /*headsize*/ - 1u;
-	size_t i, numpresent, pointer, size; /*total table size*/
+	size_t numpresent, pointer, size; /*total table size*/
 	unsigned* maxlens = (unsigned*)malloc(headsize * sizeof(unsigned));
 	if (!maxlens) return 83; /*alloc fail*/
 
 	/* compute maxlens: max total bit length of symbols sharing prefix in the first table*/
 	memset(maxlens, 0, headsize * sizeof(*maxlens));
-	for (i = 0; i < numcodes; i++)
+	for (size_t i = 0; i < numcodes; i++)
 	{
-		unsigned symbol = codes[i];
-		unsigned l = lengths[i];
-		unsigned index;
+		unsigned int symbol = codes[i];
+		unsigned int l = lengths[i];
+		unsigned int index;
 		if (l <= FIRSTBITS) continue; /*symbols that fit in first table don't increase secondary table size*/
 		/*get the FIRSTBITS MSBs, the MSBs of the symbol are encoded first. See later comment about the reversing*/
 		index = reverseBits(symbol >> (l - FIRSTBITS), FIRSTBITS);
@@ -82,10 +82,14 @@ int BF::HuffmanTree::GenerateFromLengths(const unsigned int* bitlen, size_t numc
 	}
 	/* compute total table size: size of first table plus all secondary tables for symbols longer than FIRSTBITS */
 	size = headsize;
-	for (i = 0; i < headsize; ++i)
+	for (size_t i = 0; i < headsize; ++i)
 	{
-		unsigned l = maxlens[i];
-		if (l > FIRSTBITS) size += (1u << (l - FIRSTBITS));
+		size_t l = maxlens[i];
+
+		if (l > FIRSTBITS)
+		{
+			size += (1u << (l - FIRSTBITS));
+		}
 	}
 	table_len = (unsigned char*)malloc(size * sizeof(*table_len));
 	table_value = (unsigned short*)malloc(size * sizeof(*table_value));
@@ -96,23 +100,27 @@ int BF::HuffmanTree::GenerateFromLengths(const unsigned int* bitlen, size_t numc
 		return 83; /*alloc fail*/
 	}
 	/*initialize with an invalid length to indicate unused entries*/
-	for (i = 0; i < size; ++i) table_len[i] = 16;
+	for (size_t i = 0; i < size; ++i) table_len[i] = 16;
 
 	/*fill in the first table for long symbols: max prefix size and pointer to secondary tables*/
 	pointer = headsize;
-	for (i = 0; i < headsize; ++i)
+	for (size_t i = 0; i < headsize; ++i)
 	{
-		unsigned l = maxlens[i];
+		size_t l = maxlens[i];
+
 		if (l <= FIRSTBITS) continue;
+
 		table_len[i] = l;
 		table_value[i] = pointer;
+		
 		pointer += (1u << (l - FIRSTBITS));
 	}
+
 	free(maxlens);
 
 	/*fill in the first table for short symbols, or secondary table for long symbols*/
 	numpresent = 0;
-	for (i = 0; i < numcodes; ++i)
+	for (size_t i = 0; i < numcodes; ++i)
 	{
 		unsigned l = lengths[i];
 		unsigned symbol = codes[i]; /*the huffman bit pattern. i itself is the value.*/
@@ -165,7 +173,7 @@ int BF::HuffmanTree::GenerateFromLengths(const unsigned int* bitlen, size_t numc
 		codes are never used). In both cases, not all symbols of the table will be
 		filled in. Fill them in with an invalid symbol value so returning them from
 		huffmanDecodeSymbol will cause error. */
-		for (i = 0; i < size; ++i)
+		for (size_t i = 0; i < size; ++i)
 		{
 			if (table_len[i] == 16)
 			{
@@ -183,7 +191,7 @@ int BF::HuffmanTree::GenerateFromLengths(const unsigned int* bitlen, size_t numc
 		If that is not the case (due to too long length codes), the table will not
 		have been fully used, and this is an error (not all bit combinations can be
 		decoded): an oversubscribed huffman tree, indicated by error 55. */
-		for (i = 0; i < size; ++i)
+		for (size_t i = 0; i < size; ++i)
 		{
 			if (table_len[i] == 16) return 55;
 		}

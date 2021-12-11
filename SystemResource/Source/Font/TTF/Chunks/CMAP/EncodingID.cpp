@@ -59,6 +59,9 @@ BF::EncodingID BF::ConvertEncodingID(PlatformID platformID, unsigned char encodi
 		}		
 		case BF::PlatformID::Custom:
 			return EncodingID::OTFWindowsNTCompatibilityMapping;
+			
+		case BF::PlatformID::Invalid:
+			return EncodingID::Invalid;
 	}
 
 	return EncodingID::Invalid;

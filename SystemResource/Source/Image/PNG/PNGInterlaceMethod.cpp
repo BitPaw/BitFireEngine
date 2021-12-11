@@ -13,8 +13,6 @@ BF::PNGInterlaceMethod BF::ConvertPNGInterlaceMethod(unsigned char interlaceMeth
 		default:
 			return PNGInterlaceMethod::Invalid;
 	}
-
-	return PNGInterlaceMethod();
 }
 
 unsigned char BF::ConvertPNGInterlaceMethod(PNGInterlaceMethod interlaceMethod)
@@ -23,7 +21,7 @@ unsigned char BF::ConvertPNGInterlaceMethod(PNGInterlaceMethod interlaceMethod)
 	{
 		default:
 		case BF::PNGInterlaceMethod::Invalid:
-			return -1;
+			return (unsigned char)-1;
 
 		case BF::PNGInterlaceMethod::NoInterlace:
 			return 0u;

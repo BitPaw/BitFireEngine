@@ -135,7 +135,5 @@ namespace BF
 
 		FileActionResult ConvertTo(Image& image);
 		FileActionResult ConvertFrom(Image& image);		
-
-		void PrintData();
 	};
 }

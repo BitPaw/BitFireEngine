@@ -2,10 +2,10 @@
 
 BF::PNGChunkType BF::ConvertChunkType(unsigned char chunk[4])
 {
-    char byteA = chunk[0];
-    char byteB = chunk[1];
-    char byteC = chunk[2];
-    char byteD = chunk[3];
+    unsigned char byteA = chunk[0];
+    unsigned char byteB = chunk[1];
+    unsigned char byteC = chunk[2];
+    unsigned char byteD = chunk[3];
 
     switch (byteA)
     {
@@ -60,6 +60,7 @@ BF::PNGChunkType BF::ConvertChunkType(unsigned char chunk[4])
 
 void BF::ConvertChunkType(unsigned char chunk[4], PNGChunkType pngchunkType)
 {
+    // TODO: implement
 }
 
 const char* BF::ChunkTypeToString(PNGChunkType pngchunkType)

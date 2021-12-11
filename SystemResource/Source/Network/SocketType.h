@@ -13,6 +13,6 @@ namespace BF
 		SeqPacket // sequenced packet stream */
 	};
 
-	SocketType ConvertSocketType(unsigned char socketType);
-	unsigned char ConvertSocketType(SocketType socketType);
+	SocketType ConvertSocketType(unsigned int socketType);
+	unsigned int ConvertSocketType(SocketType socketType);
 }

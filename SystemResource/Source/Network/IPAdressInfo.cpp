@@ -60,4 +60,15 @@ void BF::IPAdressInfo::ConvertFrom(ADDRINFOA& adressInfo)
 
 void BF::IPAdressInfo::ConvertTo(ADDRINFOA& adressInfo)
 {
+    // TODO: implement
+}
+
+void BF::IPAdressInfo::IPFromBinaryFormat()
+{
+    const char* result = inet_ntop(ConvertIPAdressFamily(Family), IPRawByte, IP, IPv6LengthMax);
+}
+
+void BF::IPAdressInfo::IPToBinaryFormat()
+{
+    int result = inet_pton(ConvertIPAdressFamily(Family), IP, IPRawByte);
 }

@@ -15,7 +15,7 @@ namespace BF
 	struct IFile
 	{
 		public:
-		FILE* FileMarker;
+		FILE* FileMarker = nullptr;
 
 		virtual FileActionResult Open(const char* filePath, FileOpenMode fileOpenMode) = 0;
 		virtual FileActionResult Open(const wchar_t* filePath, FileOpenMode fileOpenMode) = 0;

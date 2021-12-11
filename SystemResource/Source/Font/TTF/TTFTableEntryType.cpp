@@ -55,6 +55,8 @@ BF::TTFTableEntryType BF::ConvertTableEntryType(char tag[4])
         {
             if (b == 'S' && c == 'I' && d == 'G') // DSIG
                 return TTFTableEntryType::DigitalSignature;
+
+            break;
         }
         case 'E':
         {

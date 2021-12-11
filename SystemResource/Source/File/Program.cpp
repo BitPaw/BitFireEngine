@@ -9,7 +9,7 @@
 #include <unistd.h>
 #define ExecuteProgram spawnl
 #elif defined(OSWindows)
-#include <Windows.h>
+#include <windows.h>
 #include <process.h>
 #define ExecuteProgram _spawnl
 #endif
@@ -44,7 +44,7 @@ BF::FileActionResult BF::Program::Execute(const char* programPath, const char* p
             errorCode = GetCurrentError();
         }
 
-        printf("[Extrenal Program] <%s> returned with <%i>.\n", programPath, programReturnresult);
+        printf("[Extrenal Program] <%s> returned with <%zi>.\n", programPath, programReturnresult);
     }   
 
     return FileActionResult::Successful;

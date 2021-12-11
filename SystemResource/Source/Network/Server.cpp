@@ -1,12 +1,12 @@
 #include "Server.h"
-#include "SocketActionResult.h"
-#include "../Async/Thread.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <cassert>
-#include "ServerListeningThreadInfo.h"
 
+#include "../Async/Thread.h"
+#include "SocketActionResult.h"
+#include "ServerListeningThreadInfo.h"
 
 BF::Server::Server()
 {
@@ -14,6 +14,7 @@ BF::Server::Server()
     NumberOfConnectedClients = 0;
     NumberOfMaximalClients = 10;
     EventCallBackServer = nullptr;
+    EventCallBackSocket = nullptr;
 
     ClientList = new Client[NumberOfMaximalClients];
 
@@ -21,6 +22,12 @@ BF::Server::Server()
     SocketList = nullptr;
 
     _clientListLock.Create();
+}
+
+BF::Server::~Server()
+{
+    delete[] ClientList;
+    delete[] SocketList;
 }
 
 BF::Client* BF::Server::GetNextClient()
@@ -84,6 +91,8 @@ BF::SocketActionResult BF::Server::Start(unsigned short port)
     {
         IOSocket& ioSocket = SocketList[i];
         ioSocket.AdressInfo = adressInfoList[i];        
+
+        ioSocket.EventCallBackSocket = EventCallBackSocket;
 
         // If some is there to ask, ask. He may want to say no.
         {
@@ -149,7 +158,7 @@ BF::SocketActionResult BF::Server::Start(unsigned short port)
 
         if (ioSocket.EventCallBackSocket)
         {
-            ioSocket.EventCallBackSocket->OnConnectionListening(ioSocket.AdressInfo.SocketID);
+            ioSocket.EventCallBackSocket->OnConnectionListening(ioSocket.AdressInfo);
         }
 
         ServerListeningThreadInfo* serverListeningThreadInfo = new ServerListeningThreadInfo(&SocketList[i], this);
@@ -317,7 +326,7 @@ ThreadFunctionReturnType BF::Server::ClientListeningThread(void* data)
             (int*)&clientSocket.AdressInfo.IPRawByteSize
         );
 
-        bool sucessful = clientSocket.AdressInfo.SocketID;
+        bool sucessful = clientSocket.IsCurrentlyUsed();
 
         if (!sucessful)
         {

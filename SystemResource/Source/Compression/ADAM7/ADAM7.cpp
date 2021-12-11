@@ -60,8 +60,7 @@ unsigned int BF::ADAM7::ProcessScanlines(unsigned char* out, unsigned char* in, 
                 {
                     /*remove padding bits in scanlines; after this there still may be padding
                     bits between the different reduced images: each reduced image still starts nicely at a byte*/
-                    removePaddingBits(&in[passstart[i]], &in[padded_passstart[i]], passw[i] * bpp,
-                        ((passw[i] * bpp + 7u) / 8u) * 8u, passh[i]);
+                    removePaddingBits(&in[passstart[i]], &in[padded_passstart[i]], passw[i] * bpp, ((passw[i] * bpp + 7u) / 8u) * 8u, passh[i]);
                 }
             }
 
@@ -255,7 +254,7 @@ unsigned BF::ADAM7::unfilterScanline(unsigned char* recon, const unsigned char* 
     return 0;
 }
 
-size_t BF::ADAM7::lodepng_get_raw_size_idat(unsigned w, unsigned h, unsigned bpp)
+size_t BF::ADAM7::lodepng_get_raw_size_idat(size_t w, size_t h, size_t bpp)
 {
     /* + 1 for the filter byte, and possibly plus padding bits per line. */
   /* Ignoring casts, the expression is equal to (w * bpp + 7) / 8 + 1, but avoids overflow of w * bpp */
@@ -263,7 +262,7 @@ size_t BF::ADAM7::lodepng_get_raw_size_idat(unsigned w, unsigned h, unsigned bpp
     return (size_t)h * line;
 }
 
-unsigned BF::ADAM7::unfilter(unsigned char* out, const unsigned char* in, unsigned w, unsigned h, unsigned bpp)
+unsigned BF::ADAM7::unfilter(unsigned char* out, const unsigned char* in, size_t w, size_t h, size_t bpp)
 {
     /*
   For PNG filter method 0
@@ -295,7 +294,7 @@ unsigned BF::ADAM7::unfilter(unsigned char* out, const unsigned char* in, unsign
     return 0;
 }
 
-void BF::ADAM7::removePaddingBits(unsigned char* out, const unsigned char* in, size_t olinebits, size_t ilinebits, unsigned h)
+void BF::ADAM7::removePaddingBits(unsigned char* out, const unsigned char* in, size_t olinebits, size_t ilinebits, size_t h)
 {
     /*
   After filtering there are still padding bits if scanlines have non multiple of 8 bit amounts. They need
@@ -306,13 +305,14 @@ void BF::ADAM7::removePaddingBits(unsigned char* out, const unsigned char* in, s
   also used to move bits after earlier such operations happened, e.g. in a sequence of reduced images from Adam7
   only useful if (ilinebits - olinebits) is a value in the range 1..7
   */
-    unsigned y;
+
     size_t diff = ilinebits - olinebits;
-    size_t ibp = 0, obp = 0; /*input and output bit pointers*/
-    for (y = 0; y < h; ++y)
+    size_t ibp = 0;
+    size_t obp = 0; /*input and output bit pointers*/
+
+    for (size_t y = 0; y < h; ++y)
     {
-        size_t x;
-        for (x = 0; x < olinebits; ++x)
+        for (size_t x = 0; x < olinebits; ++x)
         {
             unsigned char bit = readBitFromReversedStream(&ibp, in);
             setBitOfReversedStream(&obp, out, bit);
@@ -336,15 +336,15 @@ void BF::ADAM7::setBitOfReversedStream(size_t* bitpointer, unsigned char* bitstr
     ++(*bitpointer);
 }
 
-void BF::ADAM7::Adam7_getpassvalues(unsigned passw[7], unsigned passh[7], size_t filter_passstart[8], size_t padded_passstart[8], size_t passstart[8], unsigned w, unsigned h, unsigned bpp)
+void BF::ADAM7::Adam7_getpassvalues(unsigned passw[7], unsigned passh[7], size_t filter_passstart[8], size_t padded_passstart[8], size_t passstart[8], size_t w, size_t h, size_t bpp)
 {
    
 
     /*the passstart values have 8 values: the 8th one indicates the byte after the end of the 7th (= last) pass*/
-    unsigned i;
+    //unsigned i;
 
     /*calculate width and height in pixels of each pass*/
-    for (i = 0; i != 7; ++i)
+    for (size_t i = 0; i != 7; ++i)
     {
         passw[i] = (w + ADAM7_DX[i] - ADAM7_IX[i] - 1) / ADAM7_DX[i];
         passh[i] = (h + ADAM7_DY[i] - ADAM7_IY[i] - 1) / ADAM7_DY[i];
@@ -353,11 +353,11 @@ void BF::ADAM7::Adam7_getpassvalues(unsigned passw[7], unsigned passh[7], size_t
     }
 
     filter_passstart[0] = padded_passstart[0] = passstart[0] = 0;
-    for (i = 0; i != 7; ++i)
+
+    for (size_t i = 0; i != 7; ++i)
     {
         /*if passw[i] is 0, it's 0 bytes, not 1 (no filtertype-byte)*/
-        filter_passstart[i + 1] = filter_passstart[i]
-            + ((passw[i] && passh[i]) ? passh[i] * (1u + (passw[i] * bpp + 7u) / 8u) : 0);
+        filter_passstart[i + 1] = filter_passstart[i] + ((passw[i] && passh[i]) ? passh[i] * (1u + (passw[i] * bpp + 7u) / 8u) : 0);
         /*bits padded if needed to fill full byte at end of each scanline*/
         padded_passstart[i + 1] = padded_passstart[i] + passh[i] * ((passw[i] * bpp + 7u) / 8u);
         /*only padded at end of reduced image*/
@@ -365,36 +365,38 @@ void BF::ADAM7::Adam7_getpassvalues(unsigned passw[7], unsigned passh[7], size_t
     }
 }
 
-void BF::ADAM7::Adam7_deinterlace(unsigned char* out, const unsigned char* in, unsigned w, unsigned h, unsigned bpp)
+void BF::ADAM7::Adam7_deinterlace(unsigned char* out, const unsigned char* in, size_t w, unsigned h, unsigned bpp)
 {
-    unsigned passw[7], passh[7];
+    unsigned int passw[7];
+    unsigned int passh[7];
     size_t filter_passstart[8], padded_passstart[8], passstart[8];
-    unsigned i;
 
     Adam7_getpassvalues(passw, passh, filter_passstart, padded_passstart, passstart, w, h, bpp);
 
     if (bpp >= 8)
     {
-        for (i = 0; i != 7; ++i)
+        for (size_t i = 0; i != 7; ++i)
         {
-            unsigned x, y, b;
             size_t bytewidth = bpp / 8u;
-            for (y = 0; y < passh[i]; ++y)
-                for (x = 0; x < passw[i]; ++x)
+
+            for (size_t y = 0; y < passh[i]; ++y)
+            {
+                for (size_t x = 0; x < passw[i]; ++x)
                 {
                     size_t pixelinstart = passstart[i] + (y * passw[i] + x) * bytewidth;
-                    size_t pixeloutstart = ((ADAM7_IY[i] + (size_t)y * ADAM7_DY[i]) * (size_t)w
-                        + ADAM7_IX[i] + (size_t)x * ADAM7_DX[i]) * bytewidth;
-                    for (b = 0; b < bytewidth; ++b)
+                    size_t pixeloutstart = ((ADAM7_IY[i] + y * ADAM7_DY[i]) * w + ADAM7_IX[i] + x * ADAM7_DX[i]) * bytewidth;
+                  
+                    for (size_t b = 0; b < bytewidth; ++b)
                     {
                         out[pixeloutstart + b] = in[pixelinstart + b];
                     }
                 }
+            }                
         }
     }
     else /*bpp < 8: Adam7 with pixels < 8 bit is a bit trickier: with bit pointers*/
     {
-        for (i = 0; i != 7; ++i)
+        for (size_t i = 0; i != 7; ++i)
         {
             unsigned x, y, b;
             unsigned ilinebits = bpp * passw[i];

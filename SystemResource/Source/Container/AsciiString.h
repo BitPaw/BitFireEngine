@@ -38,7 +38,7 @@ namespace BF
 		void SetAsReference(AsciiString& string);
 		void SetAsReference(const char* stringAdress);
 		void SetAsReference(const char* stringAdress, unsigned int size);
-		void ReSize(unsigned int size);
+		void ReSize(size_t size);
 		void Delete();
 		unsigned int Size();
 		unsigned int SizeInBytes();

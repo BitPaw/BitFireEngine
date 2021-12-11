@@ -45,6 +45,6 @@ namespace BF
 		ICLFXBM
 	};
 
-	IPAdressFamily ConvertIPAdressFamily(unsigned char ipMode);
-	unsigned char ConvertIPAdressFamily(IPAdressFamily ipMode);
+	IPAdressFamily ConvertIPAdressFamily(unsigned int ipMode);
+	unsigned int ConvertIPAdressFamily(IPAdressFamily ipMode);
 }

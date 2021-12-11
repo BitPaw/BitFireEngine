@@ -48,7 +48,7 @@ BF::SocketActionResult BF::Client::ConnectToServer(const char* ip, unsigned shor
 
                 if (EventCallBackSocket)
                 {
-                    EventCallBackSocket->OnConnectionEstablished(adressInfo.SocketID);
+                    EventCallBackSocket->OnConnectionEstablished(adressInfo);
 
                     CommunicationThread.Run(Client::CommunicationFunctionAsync, this);
                 }

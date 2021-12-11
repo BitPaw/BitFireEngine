@@ -2,6 +2,8 @@
 
 #include "../OSDefine.h"
 
+#define SocketBufferSize 2048u
+
 #ifdef OSUnix
 #include <sys/types.h> 
 #include <sys/socket.h>
@@ -20,25 +22,19 @@
 #define AdressInfoType ADDRINFOA
 #endif
 
+#include "../Async/Thread.h"
 #include "SocketActionResult.h"
 #include "IPVersion.h"
-#include "ISocketListener.h"
 #include "IPAdressFamily.h"
 #include "ProtocolMode.h"
 #include "SocketType.h"
-#include "../Async/Thread.h"
 #include "IPAdressInfo.h"
-
-#define SocketBufferSize 2048u
+#include "ISocketListener.h"
 
 namespace BF
 {
 	class IOSocket
-	{
-		private:
-		int GetAdressFamily(IPVersion ipVersion);
-		
-
+	{	
 		public:
 		//---<Data>-------------------
 		IPAdressInfo AdressInfo;
@@ -56,7 +52,7 @@ namespace BF
 
 		IOSocket();
 
-		char IsCurrentlyUsed();
+		bool IsCurrentlyUsed();
 		void Close();
 		
 		static SocketActionResult Create(IPAdressFamily adressFamily, SocketType socketType, ProtocolMode protocolMode, unsigned int& socketID);

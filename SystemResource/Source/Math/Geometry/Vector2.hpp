@@ -26,8 +26,9 @@ namespace BF
 		virtual void CalculateAngle()
 		{
 			//Angle = atanf(Y / X);
+			NumberType numberType = this->Y / this->X;
 
-			Angle = atanf(this->Y / this->X) * 180 / PI;
+			Angle = atanf(numberType) * 180 / PI;
 		}
 
 		public:
