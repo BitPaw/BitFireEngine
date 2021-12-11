@@ -10,8 +10,8 @@ BF::FileStream::FileStream()
 
 BF::FileStream::FileStream(size_t dataSize)
 {
-	Data = (Byte*)malloc(DataSize * sizeof(Byte));
 	DataSize = dataSize;
+	Data = (Byte*)malloc(DataSize * sizeof(Byte));
 }
 
 BF::FileStream::~FileStream()

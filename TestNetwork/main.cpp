@@ -8,6 +8,7 @@
 #include "../SystemResource/Source/Font/TTF/TTF.h"
 
 #include "../SystemResource/Source/Network/SocketActionResult.h"
+#include "../SystemResource/Source/File/FileStream.h"
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -97,6 +98,19 @@ int main(int amountOFParameters, char** parameter)
 	MainSt serverCallBack;
 	MainSt clientCallBack;
 
+	/*
+	BF::FileStream fs2(20480);
+
+	for (int i = 0; i < 1000; ++i)
+	{
+		printf("%i\n", i);
+
+		fs2.Write("a\n", 3u);
+	}
+
+	fs2.WriteToDisk("A:/_WorkSpace/out.result");
+
+	printf("d");*/
 
 	//BF::DictionaryStatic<char[4], BF::SocketActionResult, 20> dict;
 

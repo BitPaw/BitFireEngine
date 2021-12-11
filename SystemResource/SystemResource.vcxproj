@@ -287,6 +287,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\File\ProgramExecuteInfo.cpp" />
     <ClCompile Include="Source\Network\ServerListeningThreadInfo.cpp" />
     <ClCompile Include="Source\Network\IPAdressInfo.cpp" />
     <ClCompile Include="Source\Network\SocketType.cpp" />
@@ -473,6 +474,7 @@
     <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFKerningPair.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\File\ProgramExecuteInfo.h" />
     <ClInclude Include="Source\Network\ServerListeningThreadInfo.h" />
     <ClInclude Include="Source\Network\IClientListener.hpp" />
     <ClInclude Include="Source\Network\IPAdressInfo.h" />

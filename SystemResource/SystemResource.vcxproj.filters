@@ -567,6 +567,9 @@
     <ClCompile Include="Source\Network\ServerListeningThreadInfo.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\File\ProgramExecuteInfo.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp">
@@ -1329,6 +1332,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Network\ServerListeningThreadInfo.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\File\ProgramExecuteInfo.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
