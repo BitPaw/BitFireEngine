@@ -54,9 +54,8 @@ BF::SocketActionResult BF::Client::ConnectToServer(const char* ip, unsigned shor
                 }
 
                 wasSucessful = true;
+                break;
             }
-
-            break;
         }
     }
 

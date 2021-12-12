@@ -1,9 +1,17 @@
 #pragma once
 
+#include "ProgramExecuteResultListener.hpp"
+
 namespace BF
 {
-	class ProgramExecuteInfo
+	struct ProgramExecuteInfo
 	{
+		public:
+		char FilePath[260];
+		char ParameterList[1024];
 
+		ProgramExecuteResultListener* CallBack;
+
+		ProgramExecuteInfo();
 	};
 }

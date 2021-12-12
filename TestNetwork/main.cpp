@@ -37,7 +37,7 @@ struct MainSt : public ISocketListener, public IClientListener, public IServerLi
 	}
 
 	// Geerbt über ProgramExecuteResultListener
-	void OnProgramExecuted(bool succesful, size_t returnResult, ErrorCode errorCode)
+	void OnProgramExecuted(bool succesful, intptr_t returnResult, ErrorCode errorCode)
 	{
 		printf("Heelp");
 	}
@@ -90,13 +90,33 @@ struct MainSt : public ISocketListener, public IClientListener, public IServerLi
 	}		
 };
 
+struct ExeLis : BF::ProgramExecuteResultListener
+{
+	virtual void OnProgramExecuted(bool succesful, intptr_t returnResult, ErrorCode errorCode) override
+	{
+		printf("Sucess exe \n");
+	}
+};
+
 int main(int amountOFParameters, char** parameter)
 {
 	printf("[i][Core] Working Directory <%s>\n", parameter[0]);
 
-
 	MainSt serverCallBack;
 	MainSt clientCallBack;
+	ExeLis axeLis;
+
+	{
+		char bufA[260];
+		char bufb[260];
+
+		strncpy_s(bufb, "C:\\Users\\BitPaw\\Videos\\E\\Server.exe", 420);
+		strncpy_s(bufA, "C:\\Users\\BitPaw\\Videos\\E\\PP.input", 420);
+
+		BF::Program::Execute(bufA, bufb, &axeLis);
+	}
+	
+
 
 	/*
 	BF::FileStream fs2(20480);

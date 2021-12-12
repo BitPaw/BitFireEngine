@@ -14,45 +14,63 @@
 #define ExecuteProgram _spawnl
 #endif
 
+#include "ProgramExecuteInfo.h"
+
+ThreadFunctionReturnType BF::Program::ExecuteThreadFunction(void* data)
+{
+    ProgramExecuteInfo* info = (ProgramExecuteInfo*)data;
+
+    intptr_t programReturnresult = ExecuteProgram(_P_WAIT, info->FilePath, info->FilePath, info->ParameterList, nullptr);
+    bool programExecutionSuccesfull = programReturnresult == 0;
+    ErrorCode errorCode = ErrorCode::Successful;
+
+    if (!programExecutionSuccesfull)
+    {
+        errorCode = GetCurrentError();
+    }
+
+    if (info->CallBack)
+    {
+        info->CallBack->OnProgramExecuted(programExecutionSuccesfull, programReturnresult, errorCode);
+    }
+
+    delete info;
+ 
+    return 0;
+}
+
 BF::FileActionResult BF::Program::Execute(const char* programPath, const char* parameterList, ProgramExecuteResultListener* callback)
 {
+    ProgramExecuteInfo* programExecuteInfo = new ProgramExecuteInfo();
+
+    strncpy_s(programExecuteInfo->FilePath, programPath, 260);
+    strncpy_s(programExecuteInfo->ParameterList, parameterList, 1024);
+
     if (callback)
-    {
-        std::thread* modelLoaderThread = new std::thread([](const char* programPath, const char* parameterList, ProgramExecuteResultListener* callback)
-        {
-            size_t programReturnresult = ExecuteProgram(_P_WAIT, programPath, programPath, parameterList);
-            bool programExecutionSuccesfull = programReturnresult >= 0;
-            ErrorCode errorCode = ErrorCode::Successful;
+    {       
+        ThreadID threadID;
 
-            if (!programExecutionSuccesfull)
-            {
-                errorCode = GetCurrentError();
-            }     
+        programExecuteInfo->CallBack = callback;    
 
-            callback->OnProgramExecuted(programExecutionSuccesfull, programReturnresult, errorCode);
-
-        }, programPath, parameterList, callback);
+        Thread::Run(threadID, Program::ExecuteThreadFunction, programExecuteInfo);
     }
     else
     {
-        size_t programReturnresult = ExecuteProgram(_P_WAIT, programPath, programPath, parameterList);
-        bool programExecutionSuccesfull = programReturnresult != -1;
-        ErrorCode errorCode = ErrorCode::UnkownError;
-
-        if (!programExecutionSuccesfull)
-        {
-            errorCode = GetCurrentError();
-        }
-
-        printf("[Extrenal Program] <%s> returned with <%zi>.\n", programPath, programReturnresult);
+        Program::ExecuteThreadFunction(programExecuteInfo);
     }   
 
     return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::Program::Execute(const wchar_t* programPath, const char* parameterList, ProgramExecuteResultListener* callback)
+BF::FileActionResult BF::Program::Execute(const wchar_t* programPath, const wchar_t* parameterList, ProgramExecuteResultListener* callback)
 {
-    return FileActionResult::Successful;
+    char programPathA[1024];
+    char parameterListA[1024];
+
+    wcstombs(programPathA, programPath, 1024);
+    wcstombs(parameterListA, parameterList, 1024);
+
+    return Program::Execute(programPathA, parameterListA, callback);
 }
 
 void* BF::Program::CurrentProcess()

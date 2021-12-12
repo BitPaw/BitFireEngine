@@ -257,6 +257,15 @@ BF::SocketActionResult BF::Server::SendFileToClient(int clientID, const char* fi
     return client->SendFile(filePath);
 }
 
+BF::SocketActionResult BF::Server::SendFileToClient(int clientID, const wchar_t* filePath)
+{
+    char filePathA[512];
+
+    wcstombs(filePathA, filePath, 512);
+
+    return SendFileToClient(clientID, filePathA);
+}
+
 BF::SocketActionResult BF::Server::BroadcastMessageToClients(char* message, size_t messageLength)
 {
     SocketActionResult errorCode = SocketActionResult::InvalidResult;

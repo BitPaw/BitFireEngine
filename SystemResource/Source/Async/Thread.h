@@ -27,6 +27,7 @@ namespace BF
 		Thread();
 
 		void Run(ThreadFunction threadFunction, void* parameter);
+		static void Run(ThreadID& threadID, ThreadFunction threadFunction, void* parameter);
 
 		void WaitForFinish();
 	};

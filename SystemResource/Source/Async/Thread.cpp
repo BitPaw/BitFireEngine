@@ -5,16 +5,16 @@ BF::Thread::Thread()
 	ThreadHandle = nullptr;
 }
 
-
-#ifdef OSUnix
-void BF::Thread::ThreadCreate(ThreadFunction threadFunction, void* parameter)
-{
-	int result = pthread_create(&thread->ThreadHandle, 0, threadTask, parameter);
-}
-#elif defined(OSWindows)
-
 void BF::Thread::Run(ThreadFunction threadFunction, void* parameter)
 {
+	Thread::Run(ThreadHandle, threadFunction, parameter);
+}
+
+void BF::Thread::Run(ThreadID& threadID, ThreadFunction threadFunction, void* parameter)
+{
+#ifdef OSUnix
+	threadID = pthread_create(&thread->ThreadHandle, 0, threadTask, parameter);
+#elif defined(OSWindows)
 	const LPSECURITY_ATTRIBUTES lpThreadAttributes = NULL;
 	const SIZE_T dwStackSize = NULL;
 	const LPTHREAD_START_ROUTINE lpStartAddress = (LPTHREAD_START_ROUTINE)threadFunction;
@@ -22,9 +22,9 @@ void BF::Thread::Run(ThreadFunction threadFunction, void* parameter)
 	const DWORD dwCreationFlags = NULL;
 	const LPDWORD lpThreadId = NULL;
 
-	ThreadHandle = CreateThread(lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
-}
+	threadID = CreateThread(lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
 #endif
+}
 
 void BF::Thread::WaitForFinish()
 {

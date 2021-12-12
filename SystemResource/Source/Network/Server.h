@@ -43,6 +43,7 @@ namespace BF
 
         SocketActionResult SendMessageToClient(int clientID, char* message, size_t messageLength);
         SocketActionResult SendFileToClient(int clientID, const char* filePath);
+        SocketActionResult SendFileToClient(int clientID, const wchar_t* filePath);
 
         SocketActionResult BroadcastMessageToClients(char* message, size_t messageLength);
         SocketActionResult BroadcastFileToClients(const char* filePath);
