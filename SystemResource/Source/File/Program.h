@@ -12,7 +12,10 @@ namespace BF
 		public:
 		static ThreadFunctionReturnType ExecuteThreadFunction(void* data);
 
-		static FileActionResult Execute(const char* programPath, const char* parameterList, ProgramExecuteResultListener* callback);
+		// Execute function Asyncroinusly in another Thread.
+		static FileActionResult Execute(const char* programPath, const char* parameterString, ProgramExecuteResultListener* callback);
+		static FileActionResult Execute(const char* programPath, const char** parameterList, size_t parameterListSize, ProgramExecuteResultListener* callback);
+
 		static FileActionResult Execute(const wchar_t* programPath, const wchar_t* parameterList, ProgramExecuteResultListener* callback);
 
 

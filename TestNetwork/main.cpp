@@ -1,4 +1,6 @@
-﻿
+﻿#define _CRT_SECURE_NO_WARNINGS
+
+
 #include "../SystemResource/Source/Network/Server.h"
 #include "../SystemResource/Source/Network/Client.h"
 #include "../SystemResource/Source/File/FileTemporary.h"
@@ -105,6 +107,29 @@ int main(int amountOFParameters, char** parameter)
 	MainSt serverCallBack;
 	MainSt clientCallBack;
 	ExeLis axeLis;
+	
+
+
+
+
+
+	wchar_t** list = nullptr;
+	size_t listSite = 0;
+
+
+	BF::File::FilesInFolder("N:/Schule/Studium/Semester/Semester 5/[VS] Verteilte Systeme/Aufgabe/ClusterWorker/Program/UserInterface/WorkFolder_Server/*.chunk", &list, listSite);
+
+
+
+
+
+
+
+	FILE* fielQQ = 0;
+	
+	fielQQ = fopen("A:\\_Cache\\H E L L O.txt", "wb");
+
+	printf("\n");
 
 	{
 		char bufA[260];
@@ -113,7 +138,18 @@ int main(int amountOFParameters, char** parameter)
 		strncpy_s(bufb, "C:\\Users\\BitPaw\\Videos\\E\\Server.exe", 420);
 		strncpy_s(bufA, "C:\\Users\\BitPaw\\Videos\\E\\PP.input", 420);
 
-		BF::Program::Execute(bufA, bufb, &axeLis);
+		const char* dummy = "A:\\_Cache\\DummyProgram.exe";
+
+		const char* a = "0";
+		const char* exe = "N:\\Schule\\Studium\\Semester\\Semester 5\\[VS] Verteilte Systeme\\Aufgabe\\ClusterWorker\\Program\\x64\\Release\\VSServerDelegatorPrimes.exe";
+		
+		const char* b = "N:\\Schule\\Studium\\Semester\\Semester 5\\[VS] Verteilte Systeme\\Aufgabe\\ClusterWorker\\Program\\x64\\Release\\_InputServer.txt";
+		const char* parameter[2] = {a, b};
+		const char** ww = (const char**)&parameter;
+
+		BF::Program::Execute(dummy, "0 \"LigmaBallz\"", &axeLis);
+
+	//	BF::Program::Execute(dummy, ww, 2, &axeLis);
 	}
 	
 

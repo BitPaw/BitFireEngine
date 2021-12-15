@@ -8,7 +8,9 @@ namespace BF
 	{
 		public:
 		char FilePath[260];
-		char ParameterList[1024];
+
+		char** ParameterList;
+		size_t ParameterListSize;
 
 		ProgramExecuteResultListener* CallBack;
 

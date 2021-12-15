@@ -1,6 +1,7 @@
 #include "PNG.h"
 
 #include "PNGColorCompressor.h"
+#include "Chunk/PNGChunk.h"
 
 #include "../../File/FileStream.h"
 #include "../../Compression/ZLIB/ZLIBHeader.h"
@@ -14,9 +15,9 @@
 
 unsigned int BF::PNG::BitsPerPixel()
 {
-    unsigned int numberOfColorChannels = NumberOfColorChannels(ColorType);
+    unsigned int numberOfColorChannels = NumberOfColorChannels(ImageHeader.ColorType);
 
-    return BitDepth * numberOfColorChannels;
+    return ImageHeader.BitDepth * numberOfColorChannels;
 }
 
 BF::FileActionResult BF::PNG::Load(const char* filePath)
@@ -98,17 +99,17 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
                     unsigned char colorTypeRaw = 0;
                     unsigned char interlaceMethodRaw = 0;
 
-                    fileStream.Read(Width, Endian::Big); // 4 Bytes
-                    fileStream.Read(Height, Endian::Big); // 4 Bytes
+                    fileStream.Read(ImageHeader.Width, Endian::Big); // 4 Bytes
+                    fileStream.Read(ImageHeader.Height, Endian::Big); // 4 Bytes
 
-                    fileStream.Read(BitDepth); // 1 Byte
+                    fileStream.Read(ImageHeader.BitDepth); // 1 Byte
                     fileStream.Read(colorTypeRaw); // 1 Byte
-                    fileStream.Read(CompressionMethod); // 1 Byte
-                    fileStream.Read(FilterMethod); // 1 Byte
+                    fileStream.Read(ImageHeader.CompressionMethod); // 1 Byte
+                    fileStream.Read(ImageHeader.FilterMethod); // 1 Byte
                     fileStream.Read(interlaceMethodRaw); // 1 Byte
 
-                    ColorType = ConvertColorType(colorTypeRaw);
-                    InterlaceMethod = ConvertPNGInterlaceMethod(interlaceMethodRaw);
+                    ImageHeader.ColorType = ConvertColorType(colorTypeRaw);
+                    ImageHeader.InterlaceMethod = ConvertPNGInterlaceMethod(interlaceMethodRaw);
 
                     break;
                 }
@@ -118,7 +119,7 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
                     // Green 1 byte
                     // Blue 	1 byte
 
-                    fileStream.Read(Palette, 3u);
+                    fileStream.Read(&Palette, 3u);
 
                     break;
                 }
@@ -189,14 +190,14 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
                 }
                 case PNGChunkType::PrimaryChromaticities:
                 {
-                    fileStream.Read(CromaWhite[0], Endian::Big);
-                    fileStream.Read(CromaWhite[1], Endian::Big);
-                    fileStream.Read(CromaRed[0], Endian::Big);
-                    fileStream.Read(CromaRed[1], Endian::Big);
-                    fileStream.Read(CromaGreen[0], Endian::Big);
-                    fileStream.Read(CromaGreen[1], Endian::Big);
-                    fileStream.Read(CromaBlue[0], Endian::Big);
-                    fileStream.Read(CromaBlue[1], Endian::Big);
+                    fileStream.Read(PrimaryChromatics.WhiteX, Endian::Big);
+                    fileStream.Read(PrimaryChromatics.WhiteY, Endian::Big);
+                    fileStream.Read(PrimaryChromatics.RedX, Endian::Big);
+                    fileStream.Read(PrimaryChromatics.RedY, Endian::Big);
+                    fileStream.Read(PrimaryChromatics.GreenX, Endian::Big);
+                    fileStream.Read(PrimaryChromatics.GreenY, Endian::Big);
+                    fileStream.Read(PrimaryChromatics.BlueX, Endian::Big);
+                    fileStream.Read(PrimaryChromatics.BlueY, Endian::Big);
 
                     break;
                 }
@@ -237,7 +238,7 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
                 }
                 case PNGChunkType::BackgroundColor:
                 {
-                    switch (ColorType)
+                    switch (ImageHeader.ColorType)
                     {
                         default:
                         case BF::PNGColorType::InvalidColorType:
@@ -365,7 +366,7 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
     }   
 
     //---<Allocate>------------------------------------------------------------
-    PixelDataSize = Width * Height * NumberOfColorChannels(ColorType);
+    PixelDataSize = ImageHeader.Width * ImageHeader.Height * NumberOfColorChannels(ImageHeader.ColorType);
     PixelData = (Byte*)malloc(PixelDataSize * sizeof(Byte));   
     //-------------------------------------------------------------------------
     
@@ -383,8 +384,8 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
 
             size_t zlibDataCache = 0;
             size_t bitsPerPixel = BitsPerPixel();
-            size_t expectedzlibCacheSize = ZLIB::CalculateExpectedSize(Width, Height, bitsPerPixel, InterlaceMethod);
-            size_t expectedadam7CacheSize = ADAM7::CaluclateExpectedSize(Width, Height, bitsPerPixel);
+            size_t expectedzlibCacheSize = ZLIB::CalculateExpectedSize(ImageHeader.Width, ImageHeader.Height, bitsPerPixel, ImageHeader.InterlaceMethod);
+            size_t expectedadam7CacheSize = ADAM7::CaluclateExpectedSize(ImageHeader.Width, ImageHeader.Height, bitsPerPixel);
             Byte* zlibCache = (Byte*)malloc(expectedzlibCacheSize * sizeof(Byte));
             Byte* adam7Cache = nullptr;
 
@@ -397,11 +398,11 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
 
             adam7Cache = (Byte*)malloc(expectedadam7CacheSize * sizeof(Byte));
 
-            ADAM7::ProcessScanlines(adam7Cache, zlibCache, Width, Height, bitsPerPixel, InterlaceMethod);
+            ADAM7::ProcessScanlines(adam7Cache, zlibCache, ImageHeader.Width, ImageHeader.Height, bitsPerPixel, ImageHeader.InterlaceMethod);
 
             free(zlibCache);
 
-            PNGColorCompressor::Decompress(adam7Cache, PixelData, Width, Height, BitDepth, ColorType);
+            PNGColorCompressor::Decompress(adam7Cache, PixelData, ImageHeader.Width, ImageHeader.Height, ImageHeader.BitDepth, ImageHeader.ColorType);
        
             free(adam7Cache);
 
@@ -430,19 +431,19 @@ BF::FileActionResult BF::PNG::Save(const char* filePath)
 
     // Header
     {
-        unsigned char colorType = ConvertColorType(ColorType);
-        unsigned char interlaceMethod = ConvertPNGInterlaceMethod(InterlaceMethod);
+        unsigned char colorType = ConvertColorType(ImageHeader.ColorType);
+        unsigned char interlaceMethod = ConvertPNGInterlaceMethod(ImageHeader.InterlaceMethod);
 
         fileStream.Write(13u, Endian::Big);
         fileStream.Write("IHDR", 4u);
 
-        fileStream.Write(Width, Endian::Big);
-        fileStream.Write(Height, Endian::Big);
+        fileStream.Write(ImageHeader.Width, Endian::Big);
+        fileStream.Write(ImageHeader.Height, Endian::Big);
 
-        fileStream.Write(BitDepth);
+        fileStream.Write(ImageHeader.BitDepth);
         fileStream.Write(colorType);
-        fileStream.Write(CompressionMethod);
-        fileStream.Write(FilterMethod);
+        fileStream.Write(ImageHeader.CompressionMethod);
+        fileStream.Write(ImageHeader.FilterMethod);
         fileStream.Write(interlaceMethod);
 
         fileStream.Write(0u, Endian::Big);
@@ -463,7 +464,7 @@ BF::FileActionResult BF::PNG::Save(const char* filePath)
 
 BF::FileActionResult BF::PNG::ConvertTo(Image& image)
 {    
-    switch (ColorType)
+    switch (ImageHeader.ColorType)
     {
         case BF::PNGColorType::Grayscale:
             image.Format = ImageDataFormat::AlphaMask;
@@ -485,7 +486,7 @@ BF::FileActionResult BF::PNG::ConvertTo(Image& image)
     }
 
 
-	image.Resize(Width, Height);
+	image.Resize(ImageHeader.Width, ImageHeader.Height);
 
     memcpy(image.PixelData, PixelData, PixelDataSize);
 

@@ -287,6 +287,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGPrimaryChromatics.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGPalette.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGImageHeader.cpp" />
     <ClCompile Include="Source\File\ProgramExecuteInfo.cpp" />
     <ClCompile Include="Source\Network\ServerListeningThreadInfo.cpp" />
     <ClCompile Include="Source\Network\IPAdressInfo.cpp" />
@@ -295,11 +298,11 @@
     <ClCompile Include="Source\Network\ProtocolMode.cpp" />
     <ClCompile Include="Source\Network\IOSocketMessage.cpp" />
     <ClCompile Include="Source\File\OpenFileDialog.cpp" />
-    <ClCompile Include="Source\Image\PNG\PNGInterlaceMethod.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGInterlaceMethod.cpp" />
     <ClCompile Include="Source\Font\TTF\Chunks\CMAP\EncodingID.cpp" />
     <ClCompile Include="Source\Compression\HUFFMAN\HuffmanNumberCode.cpp" />
     <ClCompile Include="Source\Compression\HUFFMAN\HuffmanCodeType.cpp" />
-    <ClCompile Include="Source\Image\PNG\PNGChunkType.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGChunkType.cpp" />
     <ClCompile Include="Source\Image\PNG\PNGColorTree.cpp" />
     <ClCompile Include="Source\Image\PNG\PNGColorCompressor.cpp" />
     <ClCompile Include="Source\Compression\ADAM7\ADAM7.cpp" />
@@ -315,7 +318,7 @@
     <ClCompile Include="Source\Model\MeshStructure.cpp" />
     <ClCompile Include="Source\Font\FNT\FNTCommonData.cpp" />
     <ClCompile Include="Source\Font\FNT\FNTInfo.cpp" />
-    <ClCompile Include="Source\Image\PNG\PNGColorType.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGColorType.cpp" />
     <ClCompile Include="Source\Model\Model.cpp" />
     <ClCompile Include="Source\Network\SocketActionResult.cpp" />
     <ClCompile Include="Source\Shader\ShaderType.cpp" />
@@ -373,7 +376,7 @@
     <ClCompile Include="Source\Image\Image.cpp" />
     <ClCompile Include="Source\Image\JPEG\JPEG.cpp" />
     <ClCompile Include="Source\Image\PNG\PNG.cpp" />
-    <ClCompile Include="Source\Image\PNG\PNGChunk.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGChunk.cpp" />
     <ClCompile Include="Source\Image\TGA\TGA.cpp" />
     <ClCompile Include="Source\Image\TIFF\TIFF.cpp" />
     <ClCompile Include="Source\Level\Level.cpp" />
@@ -474,6 +477,9 @@
     <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFKerningPair.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGPrimaryChromatics.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGPalette.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGImageHeader.h" />
     <ClInclude Include="Source\File\ProgramExecuteInfo.h" />
     <ClInclude Include="Source\Network\ServerListeningThreadInfo.h" />
     <ClInclude Include="Source\Network\IClientListener.hpp" />
@@ -485,7 +491,7 @@
     <ClInclude Include="Source\File\OpenFileDialog.h" />
     <ClInclude Include="Source\Container\Dictionary.hpp" />
     <ClInclude Include="Source\Dictionary.hpp" />
-    <ClInclude Include="Source\Image\PNG\PNGInterlaceMethod.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGInterlaceMethod.h" />
     <ClInclude Include="Source\Font\TTF\Chunks\CMAP\EncodingID.h" />
     <ClInclude Include="Source\Compression\HUFFMAN\HuffmanNumberCode.h" />
     <ClInclude Include="Source\Image\PNG\PNGColorTree.h" />
@@ -605,9 +611,9 @@
     <ClInclude Include="Source\Image\ImageWrap.h" />
     <ClInclude Include="Source\Image\JPEG\JPEG.h" />
     <ClInclude Include="Source\Image\PNG\PNG.h" />
-    <ClInclude Include="Source\Image\PNG\PNGChunk.h" />
-    <ClInclude Include="Source\Image\PNG\PNGChunkType.h" />
-    <ClInclude Include="Source\Image\PNG\PNGColorType.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGChunk.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGChunkType.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGColorType.h" />
     <ClInclude Include="Source\Image\TGA\TGA.h" />
     <ClInclude Include="Source\Image\TGA\TGABitsPerPixel.h" />
     <ClInclude Include="Source\Image\TGA\TGAColorType.h" />

@@ -1,54 +1,23 @@
 #pragma once
 
-#include "PNGColorType.h"
-#include "PNGChunk.h"
-
 #include "../IImageFormat.h"
 
-#include "../../Compression/ZLIB/ZLIBHeader.h"
-#include "PNGInterlaceMethod.h"
+#include "Chunk/PNGImageHeader.h"
+#include "Chunk/PNGPalette.h"
+#include "Chunk/PNGPrimaryChromatics.h"
 
 namespace BF
 {
 	struct PNG : public IImageFormat
 	{
 		public:
-		//---[ IHDR - Image Header ]----------------------------------------------
-		unsigned int Width;
-		unsigned int Height;
-
-		/*
-			Bit depth is a single-byte integer giving the number of bits per sample or per palette index (not per pixel).
-			Valid values are 1, 2, 4, 8, and 16, although not all values are allowed for all color types.
-		*/
-		unsigned char BitDepth;
-
-		/*
-			Color type is a single-byte integer that describes the interpretation of the image data.
-			Color type codes represent sums of the following values: 1 (palette used), 2 (color used),
-			and 4 (alpha channel used). Valid values are 0, 2, 3, 4, and 6.
-		*/
-		PNGColorType ColorType;
-		unsigned char CompressionMethod;
-		unsigned char FilterMethod;
-		PNGInterlaceMethod InterlaceMethod;
-		//---------------------------------------------------------------------------
-
+		PNGImageHeader ImageHeader;
 		//---[ IDAT - Image Data (Compressed)]---------------------------------------
 		//size_t ZLIBHeaderListSize;
 		//ZLIBHeader* ZLIBHeaderList;
 		//---------------------------------------------------------------------------
-
-		//---[ PLTE - Palette ]------------------------------------------------------
-		unsigned char Palette[3];
-		//---------------------------------------------------------------------------
-
-		//---[ cHRM - PrimaryChromaticities ]----------------------------------------
-		unsigned int CromaWhite[2];
-		unsigned int CromaRed[2];
-		unsigned int CromaGreen[2];
-		unsigned int CromaBlue[2];
-		//---------------------------------------------------------------------------
+		PNGPalette Palette;
+		PNGPrimaryChromatics PrimaryChromatics;	
 
 		//---[ sBIT - SignificantBits]-----------------------------------------------
 		unsigned int SignificantBits;

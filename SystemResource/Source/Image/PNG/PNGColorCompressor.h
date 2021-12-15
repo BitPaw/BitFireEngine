@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PNGColorType.h"
+#include "Chunk/PNGColorType.h"
 #include "PNGColorTree.h"
 
 namespace BF

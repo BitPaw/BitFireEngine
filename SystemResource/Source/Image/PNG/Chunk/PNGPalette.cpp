@@ -1,0 +1,1 @@
+#include "PNGPalette.h"

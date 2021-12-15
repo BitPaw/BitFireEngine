@@ -189,7 +189,7 @@ BF::Client* BF::Server::GetClientViaID(int socketID)
     for (unsigned int i = 0; i < NumberOfMaximalClients; i++)
     {
         Client* client = &ClientList[i];
-        int clientSocketID = 0;// client->ID; //TODO
+        int clientSocketID = client->AdressInfo.SocketID;
         char foundTarget = clientSocketID == socketID;
 
         if (foundTarget)

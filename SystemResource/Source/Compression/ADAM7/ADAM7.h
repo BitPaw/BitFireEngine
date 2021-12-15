@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Image/PNG/PNGInterlaceMethod.h"
+#include "../../Image/PNG/Chunk/PNGInterlaceMethod.h"
 
 namespace BF
 {

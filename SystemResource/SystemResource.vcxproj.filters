@@ -60,9 +60,6 @@
     <ClCompile Include="Source\Image\PNG\PNG.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\PNG\PNGChunk.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Image\TGA\TGA.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -366,9 +363,6 @@
     <ClCompile Include="Source\Video\MP4\MP4.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\PNG\PNGColorType.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Font\FNT\FNTCommonData.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -424,9 +418,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Image\PNG\PNGColorTree.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Image\PNG\PNGChunkType.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Compression\HUFFMAN\HuffmanCodeType.cpp">
@@ -513,9 +504,6 @@
     <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFWeight.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\PNG\PNGInterlaceMethod.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Font\TTF\Chunks\TTFPostScript.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -568,6 +556,27 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\File\ProgramExecuteInfo.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGImageHeader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGChunkType.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGInterlaceMethod.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGColorType.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGPalette.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGPrimaryChromatics.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGChunk.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -660,15 +669,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Image\PNG\PNG.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Image\PNG\PNGChunk.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Image\PNG\PNGChunkType.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Image\PNG\PNGColorType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Image\TGA\TGA.h">
@@ -1265,9 +1265,6 @@
     <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFWeight.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\PNG\PNGInterlaceMethod.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Container\DictionaryStatic.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -1335,6 +1332,27 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\File\ProgramExecuteInfo.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGImageHeader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGChunkType.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGInterlaceMethod.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGColorType.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGPalette.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGPrimaryChromatics.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGChunk.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,6 +6,8 @@ namespace BF
 	{
 		Successful,
 
+		EmptyPath,
+
 		// Classic
 		FileNotFound,
 		OutOfMemory,
