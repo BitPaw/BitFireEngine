@@ -22,6 +22,7 @@ const char* _server = "Server";
 #include "commdlg.h"
 
 #include "../SystemResource/Source/File/OpenFileDialog.h"
+#include "../SystemResource/Source/Service/HTTPServer.h"
 
 struct MainSt : public ISocketListener, public IClientListener, public IServerListener, BF::ProgramExecuteResultListener
 {
@@ -110,8 +111,20 @@ int main(int amountOFParameters, char** parameter)
 	
 
 
+	HTTPServer httpServer;
+
+	httpServer.EventCallBackServer = &httpServer;
+	httpServer.EventCallBackSocket = &httpServer;
+	httpServer.Start(PortHTTP);
+
+	while (true)
+	{
+	
+	}
 
 
+
+	/*
 
 	wchar_t** list = nullptr;
 	size_t listSite = 0;
@@ -200,7 +213,7 @@ int main(int amountOFParameters, char** parameter)
 	memset(&fileNameBuffer, 0, sizeof(OPENFILENAMEA));
 
 	bool hello = GetOpenFileNameA(&fileNameBuffer);
-	*/
+	* /
 
 	Server server;
 
@@ -225,7 +238,7 @@ int main(int amountOFParameters, char** parameter)
 	while (true)
 	{
 
-	}*/
+	}* /
 
 	Sleep(100);
 
@@ -245,7 +258,7 @@ int main(int amountOFParameters, char** parameter)
 
 	client.Disconnect();
 
-	server.Stop();
+	server.Stop();*/
 
 	return 0;
 }

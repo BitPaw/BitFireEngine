@@ -287,6 +287,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Service\HTTP\HTTPError.cpp" />
+    <ClCompile Include="Source\Service\HTTP\HTTPRequestMethod.cpp" />
     <ClCompile Include="Source\Image\PNG\Chunk\PNGPrimaryChromatics.cpp" />
     <ClCompile Include="Source\Image\PNG\Chunk\PNGPalette.cpp" />
     <ClCompile Include="Source\Image\PNG\Chunk\PNGImageHeader.cpp" />
@@ -475,8 +477,11 @@
     <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat0.cpp" />
     <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat2.cpp" />
     <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFKerningPair.cpp" />
+    <ClCompile Include="Source\Service\HTTP\HTTPServer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Service\HTTP\HTTPError.h" />
+    <ClInclude Include="Source\Service\HTTP\HTTPRequestMethod.h" />
     <ClInclude Include="Source\Image\PNG\Chunk\PNGPrimaryChromatics.h" />
     <ClInclude Include="Source\Image\PNG\Chunk\PNGPalette.h" />
     <ClInclude Include="Source\Image\PNG\Chunk\PNGImageHeader.h" />
@@ -735,6 +740,7 @@
     <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat0.h" />
     <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat2.h" />
     <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFKerningPair.h" />
+    <ClInclude Include="Source\Service\HTTP\HTTPServer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
