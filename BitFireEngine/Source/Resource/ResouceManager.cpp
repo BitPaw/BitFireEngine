@@ -623,7 +623,7 @@ void BF::ResourceManager::Load
 
 void BF::ResourceManager::Add(Sprite& sprite)
 {
-    Image& image = sprite.Texture;
+    Image& image = sprite.MaterialList[0].Texture;
     Model& model = (Model&)sprite; 
 
     Add(image, false);
@@ -635,11 +635,10 @@ void BF::ResourceManager::Add(Sprite& sprite)
     float xPos = model.MatrixModel.Data[TransformX] * scalingPos;
     float yPos = model.MatrixModel.Data[TransformY] * scalingPos * yScaling;
     float zPos = model.MatrixModel.Data[TransformZ];
+ 
 
     if (sprite.ID == ResourceIDShared)
     {
-        sprite.SharedRenderInfoOverride.MaterialID = image.ID;    
-
         model.MatrixModel.Scale(xScaling, yScaling, 1.0f);
     }
     else
@@ -661,7 +660,7 @@ void BF::ResourceManager::Add(Sprite& sprite)
 
         sprite.ConvertFrom(rectangle.VertexList, rectangle.VertexListSize, rectangle.IndexList, rectangle.IndexListSize, RenderMode::Square, sprite.TextureScale[0], sprite.TextureScale[1]);
         
-        sprite.MeshList[0].RenderInfo.MaterialID = image.ID;
+        sprite.MeshList[0].RenderInfo.MaterialID = 0;
     }
    
     model.MatrixModel.MoveTo(xPos, yPos, zPos);

@@ -194,7 +194,7 @@ void BF::Model::ConvertFrom(float* vertexList, size_t vertexListSize, unsigned i
             float x = vertexList[i++];
             float y = vertexList[i++];
             float z = vertexList[i++];
-            float xNorm = x != 0 ? 1 : 0;
+            float xNorm = x != 0 ? 0 : 1;
             float yNorm = y != 0 ? 0 : 1;
             float tx = (xNorm) * textureScaleX; // [-1,1] -> [0,2] -> [0,1] // ((-x + 1) / 2.0f) * textureScale
             float ty = yNorm * textureScaleY;

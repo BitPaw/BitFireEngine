@@ -35,16 +35,20 @@ void BF::DeflateBlock::Inflate(BitStreamHusk& bitStream, unsigned char* dataOut,
         case DeflateEncodingMethod::LiteralRaw:
         {
             // Skip remaining Bytes
-            unsigned char* literalData = bitStream.StartAdress + bitStream.CurrentPosition;
-            unsigned short length = literalData[1] << 8 | literalData[2];
-            unsigned short lengthInverse = literalData[3] << 8 | literalData[4];
-            unsigned char* sourceAdress = literalData + 5u;
+            bitStream.SkipBitsToNextByte();
 
-            assert(length == !lengthInverse);
+            unsigned short length = bitStream.ExtractBitsAndMove(16);
+            unsigned short lengthInverse = bitStream.ExtractBitsAndMove(16);
+            unsigned char* sourceAdress = bitStream.StartAdress + bitStream.CurrentPosition;
+            bool validLength = (length + lengthInverse) == 65535;
+            size_t bitsToJump = (size_t)length * 8;
+
+            assert(validLength);          
+                        
+            memcpy(dataOut + dataOutSize, sourceAdress, length);
 
             dataOutSize += length;
-
-            memcpy(dataOut, sourceAdress, length);
+            bitStream.Move(bitsToJump);
 
             break;
         }

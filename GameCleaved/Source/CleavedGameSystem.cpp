@@ -26,6 +26,7 @@ BF::ShaderProgram hudShaderID;
 
 BF::Camera* _camera = nullptr;
 BF::Sprite _playerCharacterLuna;
+BF::Sprite _backGround;
 BF::Sprite _playerCharacterNyte;
 BF::Sprite _lamp;
 BF::Sprite _fireplace;
@@ -77,35 +78,36 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     _rectangleModel.NameChange("Rectangle");
     _cubeBotlane.NameChange("Cube");
   
-    
-    _playerCharacterNyte.Set(10, 0, 0.4, "Sprite_Nyte", "Texture/Nyte.bmp");
-    GameSystem.Resource.Add(_playerCharacterNyte);
 
-    _fireplace.Set(20, 0, 0.2, "Sprite_FirePlace", "Texture/FirePlace.bmp");
-    GameSystem.Resource.Add(_fireplace);
+    _backGround.Set(20, -0.2, 5, "Sprite_backGround", "Texture/BackGround.png");
+    _backGround.MatrixModel.Scale(12);
+    GameSystem.Resource.Add(_backGround);
 
-    _playerCharacterLuna.Set(23, 0, 0.5, "Sprite_Luna", "Texture/Luna.bmp");
+    _playerCharacterNyte.Set(10, 0, 0.4, "Sprite_Nyte", "Texture/Nyte.png");
+    GameSystem.Resource.Add(_playerCharacterNyte);    
+
+    _playerCharacterLuna.Set(23, 0, 0.5, "Sprite_Luna", "Texture/Theia.png");
     GameSystem.Resource.Add(_playerCharacterLuna);
     _playerCharacterLuna.MatrixModel.Scale(0.5);
    // GameSystem.Resource.Add(_playerCharacterLuna);
     _playerCharacterLuna.EnablePhysics = true;
 
-    _sign.Set(24, 0, 0.1, "Sprite_Sign", "Texture/Sign.bmp");
-    GameSystem.Resource.Add(_sign);
+#if 0
+    _fireplace.Set(20, 0, 0.2, "Sprite_FirePlace", "Texture/Fireplace.png");
+    GameSystem.Resource.Add(_fireplace);
 
-    _lamp.Set(25, 0, 0.3, "Sprite_Lamp", "Texture/Lamp_A.bmp");
+    _lamp.Set(26, 0, 0.3, "Sprite_Lamp", "Texture/LampA.png");
     GameSystem.Resource.Add(_lamp);
 
+    _sign.Set(24, 0, 0.1, "Sprite_Sign", "Texture/Sign.png");
+    GameSystem.Resource.Add(_sign);
 
-    _floor.Set(0, 0, 0.0, "Floor", "Texture/Brick.bmp");
-    _floor.Texture.ImageWrapSet(ImageWrap::Repeat);
-
-    _floor.MatrixModel.Scale(200, 50, 1);   
-
-     GameSystem.Resource.Add(_floor);  
-
-     _floor.MatrixModel.Move(100, -63, 0);
-    
+    //_floor.Set(0, 0, 0.0, "Floor", "Texture/Brick.bmp");
+    //_floor.MaterialList[0].Texture.ImageWrapSet(ImageWrap::Repeat);
+    //_floor.MatrixModel.Scale(200, 50, 1);   
+    //_floor.MatrixModel.Move(100, -63, 0);
+    // GameSystem.Resource.Add(_floor);        
+#endif 
 
 
     GameSystem.Resource.PrintContent(true);
@@ -119,7 +121,6 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     _camera->CurrentRotation.Set(90, 0, 0);
     _camera->Rotate(0, 0);
     //_camera->MatrixModel.Rotate(90, 0, 0);
-
 }
 
 void Cleaved::CleavedGameSystem::OnShutDown()
@@ -175,6 +176,7 @@ void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
 
     movementCharacter.X *= -1;  // Flip X-Axis
 
+    _camera->MatrixModel.Move(movementCharacter);
     _playerCharacterLuna.MatrixModel.Move(movementCharacter);
     _camera->MatrixModel.Move(movementCamera);
 }
