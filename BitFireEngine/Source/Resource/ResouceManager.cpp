@@ -5,10 +5,10 @@
 #include "../../../SystemResource/Source/Game/SkyBox.h"
 #include "../../../SystemResource/Source/Math/Physic/GravityField.h"
 #include "../../../SystemRender/Source/OpenGLAPI.h"
-#include <thread>
 #include "../../../SystemResource/Source/Math/Geometry/Form/Cube.h"
 #include "../../../SystemResource/Source/Math/Geometry/Shape/Rectangle.h"
 
+#include "../../../SystemResource/Source/OSDefine.h"
 
 int _matrixModelID;
 int _matrixViewID;
@@ -789,8 +789,7 @@ void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
         for (LinkedListNode<Model*>* modelNode = _modelList.GetFirst(); modelNode != nullptr; modelNode = modelNode->Next)
         {
             Model* model = modelNode->Element;
-            Vector4<float> modelPositionx4 = model->MatrixModel.CurrentPosition();
-            Vector3<float> modelPosition(modelPositionx4.X, modelPositionx4.Y, modelPositionx4.Z);
+            Vector3<float> modelPosition = model->MatrixModel.PositionXYZ();
             bool isColliding = collider->IsColliding(modelPosition);            
 
             if (isColliding && model->EnablePhysics)

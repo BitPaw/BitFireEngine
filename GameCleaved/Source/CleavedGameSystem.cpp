@@ -12,8 +12,6 @@
 #include "../../SystemResource/Source/Game/Sprite.h"
 #include "../../SystemResource/Source/File/FileTemporary.h"
 
-
-
 using namespace BF;
 
 float _deltaTime = 0;
@@ -121,6 +119,11 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     _camera->CurrentRotation.Set(90, 0, 0);
     _camera->Rotate(0, 0);
     //_camera->MatrixModel.Rotate(90, 0, 0);
+
+
+    _camera->Target = &_playerCharacterLuna.MatrixModel;
+    _camera->Offset.Set(0, 20, -60);
+    _camera->FollowSpeed = 30;
 }
 
 void Cleaved::CleavedGameSystem::OnShutDown()
@@ -131,6 +134,8 @@ void Cleaved::CleavedGameSystem::OnShutDown()
 void Cleaved::CleavedGameSystem::OnUpdateGameLogic(float deltaTime)
 {
     _deltaTime = deltaTime;
+
+    _camera->Follow(deltaTime);
 }
 
 void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
@@ -176,9 +181,11 @@ void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
 
     movementCharacter.X *= -1;  // Flip X-Axis
 
-    _camera->MatrixModel.Move(movementCharacter);
+    //_camera->MatrixModel.Move(movementCharacter);
     _playerCharacterLuna.MatrixModel.Move(movementCharacter);
-    _camera->MatrixModel.Move(movementCamera);
+    //_camera->MatrixModel.Move(movementCamera);
+
+ 
 }
 
 void Cleaved::CleavedGameSystem::OnUpdateUI()

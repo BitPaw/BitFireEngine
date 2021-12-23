@@ -101,35 +101,41 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)__Export__/x86 Debug/</OutDir>
     <IntDir>$(SolutionDir)__Temp__/x86 Debug/$(ProjectName)/</IntDir>
+    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_32_Debug/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)__Export__/x86 Release/</OutDir>
     <IntDir>$(SolutionDir)__Temp__/x86 Release/$(ProjectName)/</IntDir>
+    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_32_Release/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
+    <IntDir>$(SolutionDir)__Temp__/x86 XP/$(ProjectName)</IntDir>
+    <OutDir>$(SolutionDir)__Export__/x86 XP</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)__Export__/x64 Debug/</OutDir>
     <IntDir>$(SolutionDir)__Temp__/x64 Debug/$(ProjectName)/</IntDir>
+    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_64_Debug/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)__Export__/x64 Release/</OutDir>
     <IntDir>$(SolutionDir)__Temp__/x64 Release/$(ProjectName)/</IntDir>
+    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_64_Release/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -163,7 +169,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <SmallerTypeCheck>false</SmallerTypeCheck>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -175,7 +181,6 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <CallingConvention>StdCall</CallingConvention>
       <DisableSpecificWarnings>4464;4577;4820;9002;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -192,7 +197,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>OSWindowsXP;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <Optimization>Disabled</Optimization>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
@@ -200,6 +205,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DisableSpecificWarnings>4464;4577;4820;9002;</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -253,7 +259,6 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <CallingConvention>StdCall</CallingConvention>
       <DisableSpecificWarnings>4464;4577;4820;9002;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -287,6 +292,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\Service\HTTP\HTTPError.cpp" />
     <ClCompile Include="Source\Service\HTTP\HTTPRequestMethod.cpp" />
     <ClCompile Include="Source\Image\PNG\Chunk\PNGPrimaryChromatics.cpp" />
@@ -355,7 +361,6 @@
     <ClCompile Include="Source\Video\AVI\AVI.cpp" />
     <ClCompile Include="Source\Sound\WAV\FMT.cpp" />
     <ClCompile Include="Source\Sound\WAV\RIFF.cpp" />
-    <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\Game\SkyBox.cpp" />
     <ClCompile Include="Source\Image\ImageType.cpp" />
     <ClCompile Include="Source\Async\AsyncLock.cpp" />
@@ -480,6 +485,7 @@
     <ClCompile Include="Source\Service\HTTP\HTTPServer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Camera\Camera.h" />
     <ClInclude Include="Source\Service\HTTP\HTTPError.h" />
     <ClInclude Include="Source\Service\HTTP\HTTPRequestMethod.h" />
     <ClInclude Include="Source\Image\PNG\Chunk\PNGPrimaryChromatics.h" />
@@ -569,7 +575,6 @@
     <ClInclude Include="Source\Event\Event.hpp" />
     <ClInclude Include="Source\Math\Geometry\AngleDegree.hpp" />
     <ClInclude Include="Source\Math\Geometry\AngleRadians.hpp" />
-    <ClInclude Include="Source\Camera\Camera.h" />
     <ClInclude Include="Source\Camera\CameraPerspective.hpp" />
     <ClInclude Include="Source\Game\SkyBox.h" />
     <ClInclude Include="Source\Image\ImageType.h" />

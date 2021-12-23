@@ -21,5 +21,7 @@ namespace BF
 		// Client Only
 		virtual void OnConnectionEstablished(const IPAdressInfo& adressInfo) = 0;
 		virtual void OnConnectionTerminated(const IPAdressInfo& adressInfo) = 0;
+
+
 	};
 }

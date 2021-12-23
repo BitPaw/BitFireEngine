@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define SocketPackageIDFileBegin 'F'
+#define SocketPackageIDFileEnd '/'
+
 #include "IOSocketMessage.h"
 
 #include "../ErrorCode.h"
@@ -139,7 +142,7 @@ BF::IOSocket::IOSocket()
 {
     EventCallBackSocket = 0;
 
-    memset(BufferMessage, 0, SocketBufferSize);
+    memset(BufferMessage, 0, SocketBufferSize); 
 }
 
 void BF::IOSocket::Close()

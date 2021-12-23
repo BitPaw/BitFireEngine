@@ -3,10 +3,7 @@
 #include <stdio.h>
 
 #include "../VideoConfig.h"
-
 #include "../../../SystemResource/Source/Math/Interpolate.h"
-#include "../../../Dependencies/include/GL/glew.h"
-#include "../../../Dependencies/include/GLFW/glfw3.h"
 
 BF::Dictionary<GLFWwindow*, BF::Window*> BF::Window::WindowLookup;
 

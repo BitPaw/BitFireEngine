@@ -5,9 +5,9 @@
 
 #include "AngleRadians.hpp"
 
-#include "../../../../Dependencies/include/glm/ext/matrix_transform.hpp"
-#include "../../../../Dependencies/include/glm/glm.hpp"
-#include "../../../../Dependencies/include/glm/ext.hpp"
+#include <GLM/glm.hpp>
+#include <GLM/ext.hpp>
+#include <GLM/ext/matrix_transform.hpp>
 
 #include <string>
 
@@ -497,7 +497,11 @@ namespace BF
 			*/
 		}
 
-		Vector4<NumberType> CurrentPosition()
+		Vector3<NumberType> PositionXYZ()
+		{
+			return Vector3<NumberType>(Data[TransformX], Data[TransformY], Data[TransformZ]);
+		}
+		Vector4<NumberType> PositionXYZW()
 		{
 			return Vector4<NumberType>(Data[TransformX], Data[TransformY], Data[TransformZ], Data[TransformW]);
 		}

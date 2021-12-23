@@ -22,7 +22,7 @@ const char* _server = "Server";
 #include "commdlg.h"
 
 #include "../SystemResource/Source/File/OpenFileDialog.h"
-#include "../SystemResource/Source/Service/HTTPServer.h"
+#include "../SystemResource/Source/Service/HTTP/HTTPServer.h"
 
 struct MainSt : public ISocketListener, public IClientListener, public IServerListener, BF::ProgramExecuteResultListener
 {
@@ -105,12 +105,18 @@ int main(int amountOFParameters, char** parameter)
 {
 	printf("[i][Core] Working Directory <%s>\n", parameter[0]);
 
+	
+
+
+
+
 	MainSt serverCallBack;
 	MainSt clientCallBack;
 	ExeLis axeLis;
 	
 
 
+#if 0 // Server
 	HTTPServer httpServer;
 
 	httpServer.EventCallBackServer = &httpServer;
@@ -121,25 +127,18 @@ int main(int amountOFParameters, char** parameter)
 	{
 	
 	}
+#endif
 
-
-
-	/*
-
+#if 0 // List all files
 	wchar_t** list = nullptr;
 	size_t listSite = 0;
 
-
 	BF::File::FilesInFolder("N:/Schule/Studium/Semester/Semester 5/[VS] Verteilte Systeme/Aufgabe/ClusterWorker/Program/UserInterface/WorkFolder_Server/*.chunk", &list, listSite);
+#endif 
 
-
-
-
-
-
-
+#if 0 // Execute program
 	FILE* fielQQ = 0;
-	
+
 	fielQQ = fopen("A:\\_Cache\\H E L L O.txt", "wb");
 
 	printf("\n");
@@ -155,19 +154,42 @@ int main(int amountOFParameters, char** parameter)
 
 		const char* a = "0";
 		const char* exe = "N:\\Schule\\Studium\\Semester\\Semester 5\\[VS] Verteilte Systeme\\Aufgabe\\ClusterWorker\\Program\\x64\\Release\\VSServerDelegatorPrimes.exe";
-		
+
 		const char* b = "N:\\Schule\\Studium\\Semester\\Semester 5\\[VS] Verteilte Systeme\\Aufgabe\\ClusterWorker\\Program\\x64\\Release\\_InputServer.txt";
-		const char* parameter[2] = {a, b};
+		const char* parameter[2] = { a, b };
 		const char** ww = (const char**)&parameter;
 
 		BF::Program::Execute(dummy, "0 \"LigmaBallz\"", &axeLis);
 
-	//	BF::Program::Execute(dummy, ww, 2, &axeLis);
+		//	BF::Program::Execute(dummy, ww, 2, &axeLis);
 	}
-	
+#endif // 0
+
+#if 0 // Other
+	Program::Execute
+	(
+		"N:/Schule/Studium/Semester/Semester 5/[VS] Verteilte Systeme/Aufgabe/ClusterWorker/Program/VSClient/DummyProgram.exe",
+		nullptr,
+		&serverCallBack
+	);*/
 
 
-	/*
+	Program program;
+
+	FileActionResult fileActionResult = program.Execute("DummyProgram.exe", 0, 0);
+
+	//char fileNameBuffer[255];
+	//OpenFileDialog::Open(fileNameBuffer);
+		
+	OPENFILENAMEA fileNameBuffer;
+
+	memset(&fileNameBuffer, 0, sizeof(OPENFILENAMEA));
+
+	bool hello = GetOpenFileNameA(&fileNameBuffer);
+#endif
+
+
+#if 0 // Write file
 	BF::FileStream fs2(20480);
 
 	for (int i = 0; i < 1000; ++i)
@@ -178,52 +200,28 @@ int main(int amountOFParameters, char** parameter)
 	}
 
 	fs2.WriteToDisk("A:/_WorkSpace/out.result");
-
-	printf("d");*/
-
-	//BF::DictionaryStatic<char[4], BF::SocketActionResult, 20> dict;
-
-	//dict.Add();
+#endif // 0
 
 
-//	BF::TTF ttf;
-//	ttf.Load("A:/_WorkSpace/BOOKOSI.TTF");
+#if 0// Dictionary
+	BF::DictionaryStatic<char[4], BF::SocketActionResult, 20> dict;
 
-	/*
-	Program::Execute
-	(
-		"N:/Schule/Studium/Semester/Semester 5/[VS] Verteilte Systeme/Aufgabe/ClusterWorker/Program/VSClient/DummyProgram.exe",
-		nullptr,
-		&serverCallBack
-	);*/
+	dict.Add();
+#endif
 
 
-	/*
-	Program program;	
-
-	FileActionResult fileActionResult = program.Execute("DummyProgram.exe", 0, 0);
-
-	return 1;*/
-	//char fileNameBuffer[255];
-	//OpenFileDialog::Open(fileNameBuffer);
-
-	/*
-	OPENFILENAMEA fileNameBuffer;
-
-	memset(&fileNameBuffer, 0, sizeof(OPENFILENAMEA));
-
-	bool hello = GetOpenFileNameA(&fileNameBuffer);
-	* /
+#if 0 // TTF load
+	BF::TTF ttf;
+	ttf.Load("A:/_WorkSpace/BOOKOSI.TTF");
+#endif 	
 
 	Server server;
 
 	serverCallBack.stringAdress = _server;
 	server.EventCallBackServer = &serverCallBack;
 	server.EventCallBackSocket = &serverCallBack;
-
 	
 	SocketActionResult serverCreateResult = server.Start(25666);
-
 
 	Client client;
 	clientCallBack.stringAdress = _client;
@@ -238,15 +236,14 @@ int main(int amountOFParameters, char** parameter)
 	while (true)
 	{
 
-	}* /
+	}*/
 
 	Sleep(100);
 
 	SocketActionResult socketActionResult = client.ConnectToServer("localhost", 25666);
-
-	//client.Send("U\0\0\0\11BOOKOSI.TTF",17);
-	//client.SendFile("A:/_WorkSpace/BOOKOSI.TTF");
 		
+	client.SendFile("N:/Cache/2021-11-28 03-02-47.mp4");
+	/*
 	while (counter < (int)-1 && socketActionResult == SocketActionResult::Successful)
 	{
 		size_t readSize = sprintf_s(buffer,50,"Hello x%i", ++counter);
@@ -254,11 +251,11 @@ int main(int amountOFParameters, char** parameter)
 		client.Send(buffer, readSize);
 
 		Sleep(500);
-	}
+	}*/
 
 	client.Disconnect();
 
-	server.Stop();*/
+	server.Stop();
 
 	return 0;
 }

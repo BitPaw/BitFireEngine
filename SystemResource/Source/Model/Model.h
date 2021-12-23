@@ -40,6 +40,9 @@ namespace BF
 		FileActionResult Load();
 		FileActionResult Load(const char* filePath);
 
+		void Position(Vector3<float> position);
+		Vector3<float> Position();
+
 		void ConvertFrom(float* vertexList, size_t vertexListSize, unsigned int* indexList, size_t indexListSize, RenderMode renderMode, float textureScaleX = 1, float textureScaleY = 1, bool rawPositions = false);
 	
 		virtual size_t FullSizeInMemory() override;

@@ -42,6 +42,22 @@ void BF::Camera::PerspectiveChange(CameraPerspective cmeraPerspective)
 	}
 }
 
+void BF::Camera::Follow(float deltaTime)
+{
+	const Vector3<float> cameraPos = MatrixModel.PositionXYZ();
+
+	if (!Target)
+	{
+		return;
+	}
+
+	Vector3<float> targetPos = Target->PositionXYZ();
+	Vector3<float> desiredPosition = targetPos + Offset;
+	Vector3<float> smoothedPosition = Vector3<float>::Interpolate(cameraPos, desiredPosition, FollowSpeed * deltaTime);
+
+	MatrixModel.MoveTo(smoothedPosition);	
+}
+
 BF::Camera::Camera()
 {
 	_walkSpeed = 0.3;
@@ -111,7 +127,7 @@ void BF::Camera::Move(Vector3<float> movement)
 
 void BF::Camera::Update(float deltaTime)
 {
-	Vector4<float> currentPositionx4 = MatrixModel.CurrentPosition();
+	Vector4<float> currentPositionx4 = MatrixModel.PositionXYZW();
 	Vector3<float> currentPosition = Vector3<float>(currentPositionx4.X, currentPositionx4.Y, currentPositionx4.Z);
 
 	float walkSpeedSmoothed = deltaTime * _walkSpeed;

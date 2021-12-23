@@ -20,6 +20,11 @@ namespace BF
 
 		Matrix4x4<float> MatrixView;
 		Matrix4x4<float> MatrixProjection;		
+			
+		//---<Follow>---
+		Vector3<float> Offset;
+		Matrix4x4<float>* Target;
+		float FollowSpeed = 0.98f; // Ranges from 0 to 1
 
 		CameraPerspective Perspective;
 
@@ -37,5 +42,7 @@ namespace BF
 		float AspectRatioGet();
 		void AspectRatioSet(float width, float height);
 		void PerspectiveChange(CameraPerspective cmeraPerspective);
+
+		void Follow(float deltaTime);
 	};
 }

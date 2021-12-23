@@ -4,7 +4,11 @@
 
 #if defined(OSUnix)
 #elif defined(OSWindows)
-#include <WinSock2.h>
+#include <winSock2.h>
+#endif
+
+#if defined(OSWindowsXP)
+#define AF_HYPERV 34
 #endif
 
 #define AF_Invalid 0xFF

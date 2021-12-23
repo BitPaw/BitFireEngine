@@ -7,7 +7,6 @@
 #include <semaphore.h>
 #define AsyncLockID sem_t
 #elif defined(OSWindows)
-typedef struct IUnknown IUnknown;
 #include <windows.h>
 //#include <process.h>
 #define AsyncLockID HANDLE

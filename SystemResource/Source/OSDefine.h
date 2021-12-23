@@ -2,6 +2,7 @@
 	#include <SdkDdkVer.h>
 	#if defined(_WIN32) || defined(_WIN64)
 		#define OSWindows
+typedef struct IUnknown IUnknown;
 	#endif
 
 	#if WINVER == _WIN32_WINNT_WINXP

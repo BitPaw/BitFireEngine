@@ -39,7 +39,7 @@ bool BF::OpenFileDialog::Open(wchar_t* filePathOutput)
     ofn.lStructSize = sizeof(OPENFILENAME);
     ofn.hwndOwner = owner;
     ofn.lpstrFilter = filter;
-    ofn.lpstrFile = fileName;
+    ofn.lpstrFile = filePathOutput;
     ofn.nMaxFile = MAX_PATH;
     ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
     ofn.lpstrDefExt = L"";

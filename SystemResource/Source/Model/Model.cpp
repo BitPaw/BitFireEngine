@@ -72,6 +72,16 @@ BF::FileActionResult BF::Model::Load()
     return Load(FilePath);
 }
 
+void BF::Model::Position(Vector3<float> position)
+{
+    MatrixModel.MoveTo(position);
+}
+
+BF::Vector3<float> BF::Model::Position()
+{
+    return MatrixModel.PositionXYZ();
+}
+
 BF::FileActionResult BF::Model::Load(const char* filePath)
 {
     if (!File::DoesFileExist(filePath))

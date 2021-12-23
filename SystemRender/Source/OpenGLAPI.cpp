@@ -1,7 +1,7 @@
 #include "OpenGLAPI.h"
 
-#include <GL/glew.h>
 #include <cassert>
+#include <GL/glew.h>
 
 void BF::OpenGLAPI::RegisterImage(Image& image)
 {
@@ -47,7 +47,7 @@ void BF::OpenGLAPI::RegisterModel(Model& model)
     glGenVertexArrays(numberOfMeshes, vaoIDList);
     glGenBuffers(numberOfMeshes * 2, bufferIDList); // Create Buffers
 
-    printf("[OpenGL] Register Mesh <%s> from <%s>. Sub-Meshes <%i>\n", model.Name, model.FilePath, model.MeshListSize);
+    printf("[OpenGL] Register Mesh <%s> from <%s>. Sub-Meshes <%zu>\n", model.Name, model.FilePath, model.MeshListSize);
        
     for (size_t meshIndex = 0; meshIndex < numberOfMeshes; meshIndex++)
     {

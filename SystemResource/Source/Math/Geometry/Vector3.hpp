@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../../Dependencies/include/glm/glm.hpp"
+#include <GLM/glm.hpp>
 #include "../Math.h"
 
 namespace BF
@@ -244,6 +244,12 @@ namespace BF
 			 X = x;
 			 Y = y;
 			 Z = z;
+		}
+	
+		static Vector3<NumberType> Interpolate(Vector3<NumberType> positionCurrent, Vector3<NumberType> positionDesired, NumberType factor)
+		{
+			// A * t + (1 - t) * B
+			return positionCurrent * (1-factor) + positionDesired * factor;
 		}
 	};
 }
