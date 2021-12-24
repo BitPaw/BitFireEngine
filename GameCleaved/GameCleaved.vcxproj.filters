@@ -31,6 +31,8 @@
     <None Include="Shader\SkyBox.frag" />
     <None Include="Shader\HUD.vert" />
     <None Include="Shader\HUD.frag" />
+    <None Include="Shader\HitBox.vert" />
+    <None Include="Shader\HitBox.frag" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\CleavedGameSystem.h">

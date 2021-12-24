@@ -52,6 +52,19 @@ BF::ResourceManager::ResourceManager()
 
     _imageAdd.Create();
     _modelAdd.Create();
+
+
+
+
+
+
+
+    BF::Cube cube;
+
+    _cubeHitBoxView.ConvertFrom(cube.VertexList, cube.VertexListSize, cube.IndexList, cube.IndexListSize, RenderMode::Square);
+    _cubeHitBoxView.NameChange("Cube-HitBoxView");
+
+    Add(_cubeHitBoxView);
 }
 
 BF::ResourceManager::~ResourceManager()
@@ -660,7 +673,7 @@ void BF::ResourceManager::Add(Sprite& sprite)
 
         sprite.ConvertFrom(rectangle.VertexList, rectangle.VertexListSize, rectangle.IndexList, rectangle.IndexListSize, RenderMode::Square, sprite.TextureScale[0], sprite.TextureScale[1]);
         
-        sprite.MeshList[0].RenderInfo.MaterialID = 0;
+        sprite.MeshList[0].RenderInfo.MaterialID = 0;    
     }
    
     model.MatrixModel.MoveTo(xPos, yPos, zPos);
@@ -874,6 +887,8 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
             model = model->SharedModel;
         }        
 
+        
+
         for (size_t meshIndex = 0; meshIndex < model->MeshListSize; meshIndex++)
         {
             Mesh& mesh = model->MeshList[meshIndex];
@@ -890,7 +905,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
                 continue;
             }
 
-            assert(isRegistered);     
+            assert(isRegistered);    
 
             //-----[Shader Lookup]---------------------------------------------
             {
@@ -929,6 +944,28 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
             //-----[RenderStyle]-----------------------------------------------                      
             OpenGLAPI::Render(mesh.Structure.RenderType, 0, mesh.Structure.IndexDataSize);
             //-----------------------------------------------------------------
+
+#if 0 // Show HitBoxes
+           //-----[HitBox Renderer]-------------------------------------------
+            Vector3<float> position = model->MatrixModel.PositionXYZ();
+            Vector3<float> scalingModf = model->MatrixModel.ScaleXYZ();
+            Vector3<float> scaling(mesh.Structure.Width, mesh.Structure.Height, mesh.Structure.Depth);
+
+            // scaling *= scalingModf;
+
+            position.Z += 6;
+
+            _cubeHitBoxView.MatrixModel.MoveTo(position);
+            //_cubeHitBoxView.MatrixModel.Scale(scalingModf);
+
+            OpenGLAPI::UseShaderProgram(ShaderHitBox.ID);
+            //OpenGLAPI::TextureUse(ImageType::Texture2D, 0);
+            OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, _cubeHitBoxView.MatrixModel.Data);
+            OpenGLAPI::VertexArrayBind(_cubeHitBoxView.MeshList[0].Structure.VertexArrayID);
+            OpenGLAPI::Render(RenderMode::Point, 0, mesh.Structure.IndexDataSize);
+            //-----------------------------------------------------------------
+#endif
+       
         }       
     }
 }
@@ -992,14 +1029,55 @@ void BF::ResourceManager::PrintContent(bool detailed)
             printf(line, model->ID, model->Name, model->FilePath, sizeof(*model));
 
             for (size_t i = 0; i < meshListSize; i++)
-            {
+            {           
                 Mesh& mesh = model->MeshList[i];
+                unsigned int vaoID = mesh.Structure.VertexArrayID;
+                char subMeshTagBuffer[60];
 
-                // mesh.RenderInfo.MaterialID
-                char buffer[60];
-                sprintf(buffer, "(Sub-Mesh) [%2i/%2i]", i+1, meshListSize);
+                sprintf(subMeshTagBuffer, "(Sub-Mesh) [%2zu/%2zu]", i + 1, meshListSize);
 
-                printf(line, mesh.Structure.VertexArrayID, mesh.Name, buffer, sizeof(mesh));
+                if ((int)mesh.Structure.VertexArrayID > 0)
+                {   
+                    printf(line, vaoID, mesh.Name, subMeshTagBuffer, sizeof(mesh));
+                }
+                else
+                {
+                    const char* idTag = nullptr;
+
+                    switch (vaoID)
+                    {
+                        case ResourceIDUndefined:
+                            idTag = "UDF";
+                            break;
+
+                        case ResourceIDLoading:
+                            idTag = "LOA";
+                            break;
+
+                        case ResourceIDLoaded:
+                            idTag = "O K";
+                            break;
+
+                        case ResourceIDShared:
+                            idTag = "SHA";
+                            break;
+
+                        case ResourceIDFileNotFound:
+                            idTag = "MIS";
+                            break;
+
+                        case ResourceIDOutOfMemory:
+                            idTag = "ErM";
+                            break;
+
+                        case ResourceIDUnsuportedFormat:
+                            idTag = "ErF";
+                            break;
+                    }
+
+                    printf("| %3s | %-21s | %-36s | %4i B |\n", idTag, mesh.Name, subMeshTagBuffer, sizeof(mesh));
+                }     
+               
             }
         }
 

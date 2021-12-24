@@ -48,6 +48,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shader\HitBox.frag" />
+    <None Include="Shader\HitBox.vert" />
     <None Include="Shader\HUD.frag" />
     <None Include="Shader\HUD.vert" />
     <None Include="Shader\SkyBox.frag" />

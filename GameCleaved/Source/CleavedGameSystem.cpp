@@ -31,12 +31,6 @@ BF::Sprite _fireplace;
 BF::Sprite _sign;
 BF::Sprite _floor;
 
-BF::Rectangle _rectangle;
-BF::Cube _cube;
-
-BF::Model _rectangleModel;
-BF::Model _cubeBotlane;
-
 bool moveCamera = false;
 
 Cleaved::CleavedGameSystem::CleavedGameSystem()
@@ -51,6 +45,8 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     GameSystem.Resource.Load(worldShader, "Shader/WS.vert", "Shader/WS.frag");
     GameSystem.Resource.Load(hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
     
+    GameSystem.Resource.Load(GameSystem.Resource.ShaderHitBox, "Shader/HitBox.frag", "Shader/HitBox.frag");
+
     GameSystem.Resource.Load
     (
         skybox,
@@ -63,21 +59,9 @@ void Cleaved::CleavedGameSystem::OnStartUp()
         "Texture/SkyBox_Back.bmp",
         "Texture/SkyBox_Front.bmp"
     );  
+      
 
-    _cubeBotlane.ConvertFrom(_cube.VertexList, _cube.VertexListSize, _cube.IndexList, _cube.IndexListSize, RenderMode::Square);
-    _rectangleModel.ConvertFrom(_rectangle.VertexList, _rectangle.VertexListSize, _rectangle.IndexList, _rectangle.IndexListSize, RenderMode::Square);
-
-    GameSystem.Resource.Add(_rectangleModel);
-    GameSystem.Resource.Add(_cubeBotlane);
-
-    _rectangleModel.MatrixModel.Move(0,5,0);
-    _cubeBotlane.MatrixModel.Move(0, 3, 0);
-
-    _rectangleModel.NameChange("Rectangle");
-    _cubeBotlane.NameChange("Cube");
-  
-
-    _backGround.Set(20, -0.2, 5, "Sprite_backGround", "Texture/BackGround.png");
+    _backGround.Set(13.5, -0.2, 5, "Sprite_backGround", "Texture/BackGround_.png");
     _backGround.MatrixModel.Scale(12);
     GameSystem.Resource.Add(_backGround);
 
@@ -90,21 +74,21 @@ void Cleaved::CleavedGameSystem::OnStartUp()
    // GameSystem.Resource.Add(_playerCharacterLuna);
     _playerCharacterLuna.EnablePhysics = true;
 
-#if 0
-    _fireplace.Set(20, 0, 0.2, "Sprite_FirePlace", "Texture/Fireplace.png");
-    GameSystem.Resource.Add(_fireplace);
+#if 1
+   // _fireplace.Set(20, 0, 0.2, "Sprite_FirePlace", "Texture/Fireplace.png");
+   // GameSystem.Resource.Add(_fireplace);
 
-    _lamp.Set(26, 0, 0.3, "Sprite_Lamp", "Texture/LampA.png");
+    _lamp.Set(26, 0.008, 0.3, "Sprite_Lamp", "Texture/LampA.png");
     GameSystem.Resource.Add(_lamp);
 
     _sign.Set(24, 0, 0.1, "Sprite_Sign", "Texture/Sign.png");
     GameSystem.Resource.Add(_sign);
 
-    //_floor.Set(0, 0, 0.0, "Floor", "Texture/Brick.bmp");
-    //_floor.MaterialList[0].Texture.ImageWrapSet(ImageWrap::Repeat);
-    //_floor.MatrixModel.Scale(200, 50, 1);   
-    //_floor.MatrixModel.Move(100, -63, 0);
-    // GameSystem.Resource.Add(_floor);        
+    _floor.Set(0, 0, 0.0, "Floor", "Texture/Brick.bmp");
+    _floor.MaterialList[0].Texture.ImageWrapSet(ImageWrap::Repeat);
+    _floor.MatrixModel.Scale(200, 50, 1);   
+    _floor.MatrixModel.Move(100, -83, 0);
+    GameSystem.Resource.Add(_floor);        
 #endif 
 
 
@@ -123,7 +107,7 @@ void Cleaved::CleavedGameSystem::OnStartUp()
 
     _camera->Target = &_playerCharacterLuna.MatrixModel;
     _camera->Offset.Set(0, 20, -60);
-    _camera->FollowSpeed = 30;
+    _camera->FollowSpeed = 1;
 }
 
 void Cleaved::CleavedGameSystem::OnShutDown()

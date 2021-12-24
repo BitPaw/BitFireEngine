@@ -227,6 +227,9 @@ void BF::Model::ConvertFrom(float* vertexList, size_t vertexListSize, unsigned i
         }
     }   
 
+    mesh.Structure.SizeCheck();
+    strcpy(mesh.Name, "<Sprite-Mesh>");
+
     ID = ResourceIDLoaded;
 }
 

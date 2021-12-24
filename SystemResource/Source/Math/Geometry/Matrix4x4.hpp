@@ -342,6 +342,12 @@ namespace BF
 			Data[ScaleY] *= y;
 			Data[ScaleZ] *= z;
 		}
+		void ScaleSet(NumberType x, NumberType y, NumberType z)
+		{
+			Data[ScaleX] = x;
+			Data[ScaleY] = y;
+			Data[ScaleZ] = z;
+		}
 		void Scale(Vector3<NumberType> vector)
 		{
 			Data[ScaleX] *= vector.X;
@@ -496,7 +502,14 @@ namespace BF
 			Data[14] = -1;			
 			*/
 		}
-
+		Vector3<NumberType> ScaleXYZ()
+		{
+			return Vector3<NumberType>(Data[ScaleX], Data[ScaleY], Data[ScaleZ]);
+		}
+		Vector4<NumberType> ScaleXYZW()
+		{
+			return Vector4<NumberType>(Data[ScaleX], Data[ScaleY], Data[ScaleZ], Data[ScaleW]);
+		}
 		Vector3<NumberType> PositionXYZ()
 		{
 			return Vector3<NumberType>(Data[TransformX], Data[TransformY], Data[TransformZ]);

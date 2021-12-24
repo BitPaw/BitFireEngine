@@ -47,13 +47,22 @@ namespace BF
         AsyncLock _imageAdd;
         AsyncLock _modelAdd;
 
+
+        BF::Model _cubeHitBoxView;
+
+
         public:
         Camera MainCamera;
         Font* DefaultFont;
         SkyBox* DefaultSkyBox;
 
+        ShaderProgram ShaderHitBox;
+
+
+
         ResourceManager();
         ~ResourceManager();
+
 
         Model* GetModel(unsigned int index);
 

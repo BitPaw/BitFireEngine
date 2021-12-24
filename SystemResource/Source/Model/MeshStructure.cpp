@@ -25,6 +25,11 @@ BF::MeshStructure::MeshStructure()
 	IndexData = nullptr;
 
 	RenderType = RenderMode::Invalid;
+
+
+	Height = 0;
+	Width = 0;
+	Depth = 0;
 }
 
 BF::MeshStructure::~MeshStructure()
@@ -73,6 +78,22 @@ void BF::MeshStructure::MeshLink(MeshStructure& mesh)
 	IndexData = nullptr;
 
 	RenderType = mesh.RenderType;
+
+	SizeCheck();
+}
+
+void BF::MeshStructure::SizeCheck()
+{
+	for (size_t index = 0; index < VertexDataSize; )
+	{
+		float x = VertexData[index++];
+		float y = VertexData[index++];
+		float z = VertexData[index++];
+
+		if (x > Width) Width = x;
+		if (y > Height) Height = y;
+		if (z > Depth) Depth = z;
+	}
 }
 
 void BF::MeshStructure::TexturePointScale(float scale)
