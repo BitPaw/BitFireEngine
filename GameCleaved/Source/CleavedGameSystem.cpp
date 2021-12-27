@@ -45,7 +45,7 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     GameSystem.Resource.Load(worldShader, "Shader/WS.vert", "Shader/WS.frag");
     GameSystem.Resource.Load(hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
     
-    GameSystem.Resource.Load(GameSystem.Resource.ShaderHitBox, "Shader/HitBox.frag", "Shader/HitBox.frag");
+    GameSystem.Resource.Load(GameSystem.Resource.ShaderHitBox, "Shader/HitBox.vert", "Shader/HitBox.frag");
 
     GameSystem.Resource.Load
     (
@@ -61,7 +61,7 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     );  
       
 
-    _backGround.Set(13.5, -0.2, 5, "Sprite_backGround", "Texture/BackGround_.png");
+    _backGround.Set(13.5, -0.2, 5, "Sprite_backGround", "Texture/BackGround.png");
     _backGround.MatrixModel.Scale(12);
     GameSystem.Resource.Add(_backGround);
 
@@ -69,10 +69,9 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     GameSystem.Resource.Add(_playerCharacterNyte);    
 
     _playerCharacterLuna.Set(23, 0, 0.5, "Sprite_Luna", "Texture/Theia.png");
-    GameSystem.Resource.Add(_playerCharacterLuna);
     _playerCharacterLuna.MatrixModel.Scale(0.5);
-   // GameSystem.Resource.Add(_playerCharacterLuna);
     _playerCharacterLuna.EnablePhysics = true;
+    GameSystem.Resource.Add(_playerCharacterLuna);
 
 #if 1
    // _fireplace.Set(20, 0, 0.2, "Sprite_FirePlace", "Texture/Fireplace.png");
@@ -90,6 +89,16 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     _floor.MatrixModel.Move(100, -83, 0);
     GameSystem.Resource.Add(_floor);        
 #endif 
+
+
+#if 1
+    BF::Cube cube;
+
+    GameSystem.Resource.CubeHitBoxViewModel.ConvertFrom(cube.VertexList, cube.VertexListSize, cube.IndexList, cube.IndexListSize, RenderMode::Square);
+    GameSystem.Resource.CubeHitBoxViewModel.NameChange("Cube-HitBoxView");
+
+    GameSystem.Resource.PushToGPU(GameSystem.Resource.CubeHitBoxViewModel);
+#endif // 1
 
 
     GameSystem.Resource.PrintContent(true);

@@ -1,9 +1,5 @@
 #version 330
 
-#extension GL_ARB_separate_shader_objects : enable
-#extension GL_ARB_explicit_uniform_location : enable
-#extension GL_ARB_explicit_attrib_location : enable
-
 precision mediump float;
 
 layout(location = 0) out vec4 fragcolor;
@@ -25,7 +21,8 @@ in struct Vertex
 
 void main()
 {
-    vec3 color = vertex.Color.xyz;
+   vec4 hitboxColor = vec4(0.0f, 1.0f, 0.0f, 0.8f);
+   vec3 color = vertex.Color.xyz;
 
-   fragcolor =vec4(0.0f,1.0f,0.0f,0.5f); //vec4(color, 1.0f);
+   fragcolor = hitboxColor;// + vec4(color, 1.0f);
 }

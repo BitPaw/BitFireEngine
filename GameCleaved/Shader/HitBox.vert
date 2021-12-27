@@ -1,10 +1,5 @@
 #version 330
 
-#extension GL_ARB_separate_shader_objects : enable
-#extension GL_ARB_explicit_uniform_location : enable
-#extension GL_ARB_explicit_attrib_location : enable
-
-
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
 layout(location = 2) in vec4 color;
@@ -18,16 +13,19 @@ out struct Vertex
   vec2 TexturePosition;
 } vertex;
 
-uniform mat4 ModelView;
-uniform mat4 InverseModelView;
-uniform mat4 ModelViewProjection;
+uniform mat4 MatrixModel;
+uniform mat4 MatrixView;
+uniform mat4 MatrixProjection;
 
 void main() 
 {
-    vertex.Position = vec3(ModelView) * position;
-    vertex.Color = color;
-    vertex.Normal = mat3(InverseModelView) * normal;
-    vertex.TexturePosition = texturePosition;
+    vec4 position4x = vec4(position, 1.0f);
+    vec4 matrixModelViewProjection = MatrixProjection * MatrixView * MatrixModel * position4x;
 
-    gl_Position = (ModelViewProjection * vec4(position, 1.0f));
+    vertex.Position = vec3(MatrixModel * position4x);
+    vertex.Color = color;
+    vertex.Normal = normal; // (model_matrix * vec4(normal, 1.0f)).xyz;
+    vertex.TexturePosition = texturePosition; //* tcMultiplier
+
+    gl_Position = matrixModelViewProjection;
 }

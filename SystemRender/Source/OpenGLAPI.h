@@ -40,7 +40,8 @@ namespace BF
 		// Getter
 		static int TextureMaxSlots();
 		static int TextureMaxLoaded();
-		static const char* VersionName();
+		static const char* GLSLVersionPrimary();
+		static void GLSLVersionsSupported(const char*** shaderList, int shaderListSize);
 		static const char* GPUVendorName();
 		static const char* GPUModel();
 

@@ -52,19 +52,6 @@ BF::ResourceManager::ResourceManager()
 
     _imageAdd.Create();
     _modelAdd.Create();
-
-
-
-
-
-
-
-    BF::Cube cube;
-
-    _cubeHitBoxView.ConvertFrom(cube.VertexList, cube.VertexListSize, cube.IndexList, cube.IndexListSize, RenderMode::Square);
-    _cubeHitBoxView.NameChange("Cube-HitBoxView");
-
-    Add(_cubeHitBoxView);
 }
 
 BF::ResourceManager::~ResourceManager()
@@ -885,9 +872,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
         {
             parentModel = model;
             model = model->SharedModel;
-        }        
-
-        
+        }               
 
         for (size_t meshIndex = 0; meshIndex < model->MeshListSize; meshIndex++)
         {
@@ -945,24 +930,28 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
             OpenGLAPI::Render(mesh.Structure.RenderType, 0, mesh.Structure.IndexDataSize);
             //-----------------------------------------------------------------
 
-#if 0 // Show HitBoxes
+#if 1 // Show HitBoxes
            //-----[HitBox Renderer]-------------------------------------------
             Vector3<float> position = model->MatrixModel.PositionXYZ();
             Vector3<float> scalingModf = model->MatrixModel.ScaleXYZ();
             Vector3<float> scaling(mesh.Structure.Width, mesh.Structure.Height, mesh.Structure.Depth);
 
-            // scaling *= scalingModf;
+            scaling *= (scalingModf / 2.0f);
+            position.X += (scaling.X);
+            position.Y += (scaling.Y);
+            position.Z -= 2;
 
-            position.Z += 6;
-
-            _cubeHitBoxView.MatrixModel.MoveTo(position);
-            //_cubeHitBoxView.MatrixModel.Scale(scalingModf);
+            CubeHitBoxViewModel.MatrixModel.MoveTo(position);
+            CubeHitBoxViewModel.MatrixModel.ScaleSet(scaling.X, scaling.Y, 1);
 
             OpenGLAPI::UseShaderProgram(ShaderHitBox.ID);
+            _lastUsedShaderProgram = ShaderHitBox.ID;
+            CameraDataGet(ShaderHitBox.ID);
             //OpenGLAPI::TextureUse(ImageType::Texture2D, 0);
-            OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, _cubeHitBoxView.MatrixModel.Data);
-            OpenGLAPI::VertexArrayBind(_cubeHitBoxView.MeshList[0].Structure.VertexArrayID);
-            OpenGLAPI::Render(RenderMode::Point, 0, mesh.Structure.IndexDataSize);
+            CameraDataUpdate(MainCamera);
+            OpenGLAPI::VertexArrayBind(CubeHitBoxViewModel.MeshList[0].Structure.VertexArrayID);
+            OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, CubeHitBoxViewModel.MatrixModel.Data);
+            OpenGLAPI::Render(RenderMode::LineLoop, 0, mesh.Structure.IndexDataSize);
             //-----------------------------------------------------------------
 #endif
        

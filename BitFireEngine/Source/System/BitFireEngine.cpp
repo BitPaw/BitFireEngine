@@ -52,7 +52,7 @@ void BF::BitFireEngine::Start()
         "+------------------------------------------------------+\n",
         OpenGLAPI::GPUVendorName(),
         OpenGLAPI::GPUModel(),
-        OpenGLAPI::VersionName(),
+        OpenGLAPI::GLSLVersionPrimary(),
         OpenGLAPI::TextureMaxSlots(),
         OpenGLAPI::TextureMaxLoaded()
     );

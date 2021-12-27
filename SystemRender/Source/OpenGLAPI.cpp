@@ -208,7 +208,7 @@ void BF::OpenGLAPI::Render(RenderMode renderMode, int startIndex, int amount)
     unsigned int mode = -1;
 
     glPointSize(10);
-    glLineWidth(30);
+    glLineWidth(3);
 
     switch (renderMode)
     {
@@ -310,19 +310,33 @@ int BF::OpenGLAPI::TextureMaxLoaded()
     return value;
 }
 
-const char* BF::OpenGLAPI::VersionName()
+const char* BF::OpenGLAPI::GLSLVersionPrimary()
 {
     return (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
 }
 
+void BF::OpenGLAPI::GLSLVersionsSupported(const char*** shaderList, int shaderListSize)
+{
+    glGetIntegerv(GL_NUM_SHADING_LANGUAGE_VERSIONS, &shaderListSize);
+
+    (*shaderList) = (const char**)malloc(shaderListSize * sizeof(const char**));
+
+    for (size_t i = 0; i < shaderListSize; i++)
+    {
+        const char* shaderVersion = (const char*)glGetStringi(GL_SHADING_LANGUAGE_VERSION, i);
+
+        (*shaderList)[i] = shaderVersion;
+    }
+}
+
 const char* BF::OpenGLAPI::GPUVendorName()
 {
-    return (const char*)glGetString(GL_VENDOR);;
+    return (const char*)glGetString(GL_VENDOR);
 }
 
 const char* BF::OpenGLAPI::GPUModel()
 {
-    return (const char*)glGetString(GL_RENDERER);;
+    return (const char*)glGetString(GL_RENDERER);
 }
 
 void BF::OpenGLAPI::VertexArrayUpdate(int vertexArrayID, int size, void* data)

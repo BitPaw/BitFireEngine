@@ -48,7 +48,7 @@ namespace BF
         AsyncLock _modelAdd;
 
 
-        BF::Model _cubeHitBoxView;
+
 
 
         public:
@@ -58,7 +58,7 @@ namespace BF
 
         ShaderProgram ShaderHitBox;
 
-
+        BF::Model CubeHitBoxViewModel;
 
         ResourceManager();
         ~ResourceManager();

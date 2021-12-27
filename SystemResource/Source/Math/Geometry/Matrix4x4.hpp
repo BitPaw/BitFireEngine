@@ -348,6 +348,12 @@ namespace BF
 			Data[ScaleY] = y;
 			Data[ScaleZ] = z;
 		}
+		void ScaleSet(Vector3<NumberType> vector)
+		{
+			Data[ScaleX] = vector.X;
+			Data[ScaleY] = vector.Y;
+			Data[ScaleZ] = vector.Z;
+		}
 		void Scale(Vector3<NumberType> vector)
 		{
 			Data[ScaleX] *= vector.X;
