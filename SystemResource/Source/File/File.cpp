@@ -367,8 +367,8 @@ void BF::File::SetFilePath(const wchar_t* filePath)
 
 void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& listSize)
 {
-	wchar_t folderPathW[MAX_PATH];
-	size_t writtenBytes = mbstowcs(folderPathW, folderPath, MAX_PATH);	
+	wchar_t folderPathW[_MAX_PATH];
+	size_t writtenBytes = mbstowcs(folderPathW, folderPath, _MAX_PATH);	
 
 #if defined(OSUnix)		
 	DIR* directory = opendir(folderPath);
