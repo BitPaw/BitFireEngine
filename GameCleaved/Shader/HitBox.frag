@@ -19,10 +19,11 @@ in struct Vertex
   vec2 TexturePosition;
 } vertex;
 
+uniform vec4 HitBoxColor;
+
 void main()
 {
-   vec4 hitboxColor = vec4(0.0f, 1.0f, 0.0f, 0.8f);
    vec3 color = vertex.Color.xyz;
 
-   fragcolor = hitboxColor;// + vec4(color, 1.0f);
+   fragcolor = HitBoxColor;// + vec4(color, 1.0f);
 }

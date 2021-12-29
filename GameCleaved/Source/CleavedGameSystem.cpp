@@ -11,6 +11,7 @@
 #include "../../SystemResource/Source/Math/Geometry/Form/Cube.h"
 #include "../../SystemResource/Source/Game/Sprite.h"
 #include "../../SystemResource/Source/File/FileTemporary.h"
+#include "../../SystemResource/Source/Math/Physic/GravityCube.h"
 
 using namespace BF;
 
@@ -21,6 +22,8 @@ BF::UIText* text;
 BF::SkyBox skybox;
 BF::ShaderProgram worldShader;
 BF::ShaderProgram hudShaderID;
+
+BF::GravityCube _gravityField;
 
 BF::Camera* _camera = nullptr;
 BF::Sprite _playerCharacterLuna;
@@ -60,18 +63,25 @@ void Cleaved::CleavedGameSystem::OnStartUp()
         "Texture/SkyBox_Front.bmp"
     );  
       
+    // Gravity
+    _gravityField.PullForce = -GravityForceEarth;
+    _gravityField.PullDirection.Set(0, -1, 0);
+    _gravityField.BoundingBox.Set(170, 0, 30, 70);
+    GameSystem.Resource.Add(&_gravityField);
 
     _backGround.Set(13.5, -0.2, 5, "Sprite_backGround", "Texture/BackGround.png");
     _backGround.MatrixModel.Scale(12);
     GameSystem.Resource.Add(_backGround);
 
     _playerCharacterNyte.Set(10, 0, 0.4, "Sprite_Nyte", "Texture/Nyte.png");
-    GameSystem.Resource.Add(_playerCharacterNyte);    
+    _playerCharacterNyte.MatrixModel.Scale(0.5);
+    GameSystem.Resource.Add(_playerCharacterNyte);
 
     _playerCharacterLuna.Set(23, 0, 0.5, "Sprite_Luna", "Texture/Theia.png");
     _playerCharacterLuna.MatrixModel.Scale(0.5);
     _playerCharacterLuna.EnablePhysics = true;
     GameSystem.Resource.Add(_playerCharacterLuna);
+    //GameSystem.Resource.Add(_playerCharacterLuna);
 
 #if 1
    // _fireplace.Set(20, 0, 0.2, "Sprite_FirePlace", "Texture/Fireplace.png");
@@ -83,10 +93,10 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     _sign.Set(24, 0, 0.1, "Sprite_Sign", "Texture/Sign.png");
     GameSystem.Resource.Add(_sign);
 
-    _floor.Set(0, 0, 0.0, "Floor", "Texture/Brick.bmp");
+    _floor.Set(10, -2, 0.0, "Floor", "Texture/Brick.bmp");
     _floor.MaterialList[0].Texture.ImageWrapSet(ImageWrap::Repeat);
-    _floor.MatrixModel.Scale(200, 50, 1);   
-    _floor.MatrixModel.Move(100, -83, 0);
+    _floor.MatrixModel.Scale(200, 20, 1);   
+   // _floor.MatrixModel.Move(100, -83, 0);
     GameSystem.Resource.Add(_floor);        
 #endif 
 

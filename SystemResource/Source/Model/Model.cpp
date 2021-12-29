@@ -13,7 +13,7 @@
 #include "../../../SystemResource/Source/Math/Geometry/Shape/Triangle.h"
 #include "../../../SystemResource/Source/Math/Geometry/Shape/Rectangle.h"
 
-BF::Model::Model()
+BF::Model::Model() : Collider(ColliderType::HitBox)
 {
     ShouldItBeRendered = false;
 
@@ -228,6 +228,9 @@ void BF::Model::ConvertFrom(float* vertexList, size_t vertexListSize, unsigned i
     }   
 
     mesh.Structure.SizeCheck();
+
+    BoundingBox.Set(mesh.Structure.Width, mesh.Structure.Height);
+
     strcpy(mesh.Name, "<Sprite-Mesh>");
 
     ID = ResourceIDLoaded;

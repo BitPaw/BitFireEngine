@@ -500,12 +500,21 @@ void BF::OpenGLAPI::ShaderSetUniformMatrix4x4(int matrixUniformID, float* matrix
     }
 }
 
+void BF::OpenGLAPI::ShaderSetUniformVector3(int vector3UniformID, float x, float y, float z)
+{
+    if (vector3UniformID != -1)
+    {
+        glUniform3f(vector3UniformID, x, y, z);
+    }
+}
 
-
-
-
-
-
+void BF::OpenGLAPI::ShaderSetUniformVector4(int vector3UniformID, float x, float y, float z, float w)
+{
+    if (vector3UniformID != -1)
+    {
+        glUniform4f(vector3UniformID, x, y, z, w);
+    }
+}
 
 BF::ShaderType BF::OpenGLAPI::ToShaderType(unsigned int token)
 {

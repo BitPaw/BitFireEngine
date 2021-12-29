@@ -60,3 +60,31 @@ bool BF::Cube::IsPointInObject(float x, float y, float z)
 
 	return false;
 }
+
+bool IsInLinar(float min, float max, float targetMin, float tagetMax)
+{
+	return (min - tagetMax) <= targetMin && (targetMin + tagetMax) <= (min+max);
+}
+
+bool BF::Cube::IsPointInObject
+(
+	float ancerPositionX,
+	float ancerPositionY,
+	float ancerPositionZ,
+	float ancerSizeX, 
+	float ancerSizeY,
+	float ancerSizeZ,
+	float targetPositionX, 
+	float targetPositionY,
+	float targetPositionZ,
+	float targetSizeX,
+	float targetSizeY,
+	float targetSizeZ
+)
+{
+	bool isInX = targetSizeX == INFINITY || IsInLinar(ancerPositionX, ancerSizeX, targetPositionX, targetSizeX);
+	bool isInY = targetSizeY == INFINITY || IsInLinar(ancerPositionY, ancerSizeY, targetPositionY, targetSizeY);
+	bool isInZ = targetSizeZ == INFINITY || IsInLinar(ancerPositionZ, ancerSizeZ, targetPositionZ, targetSizeZ);
+
+	return isInX && isInY && isInZ;
+}

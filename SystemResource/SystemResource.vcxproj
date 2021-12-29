@@ -501,7 +501,6 @@
     <ClInclude Include="Source\Network\IOSocketMessage.h" />
     <ClInclude Include="Source\File\OpenFileDialog.h" />
     <ClInclude Include="Source\Container\Dictionary.hpp" />
-    <ClInclude Include="Source\Dictionary.hpp" />
     <ClInclude Include="Source\Image\PNG\Chunk\PNGInterlaceMethod.h" />
     <ClInclude Include="Source\Font\TTF\Chunks\CMAP\EncodingID.h" />
     <ClInclude Include="Source\Compression\HUFFMAN\HuffmanNumberCode.h" />

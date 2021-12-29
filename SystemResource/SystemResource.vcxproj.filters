@@ -1274,9 +1274,6 @@
     <ClInclude Include="Source\Container\DictionaryStatic.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Dictionary.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Container\Dictionary.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>

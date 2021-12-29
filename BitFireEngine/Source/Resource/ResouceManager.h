@@ -78,6 +78,7 @@ namespace BF
         Resource* Load(const char* filePathString);
 
         //void Load(Sprite& sprite, const char* model, const char* texturePath);
+        Matrix4x4<float> TransformBoundingBox(Matrix4x4<float> modelMatrix, Vector3<float> boundingBox);
 
         void Load(Model& model);
         void Load(Model& model, const char* filePath);
@@ -115,6 +116,7 @@ namespace BF
         void ModelsPhysicsApply(float deltaTime);
 
         void ModelsRender(float deltaTime);
+        void BoundingBoxRender(Matrix4x4<float> modelMatrix, Vector3<float> boundingBox, Vector3<float> color);
 
         void PrintContent(bool detailed);
     };

@@ -51,6 +51,8 @@ namespace BF
 
 		static int ShaderGetUniformLocationID(int shaderID, const char* UniformName);
 		static void ShaderSetUniformMatrix4x4(int matrixUniformID, float* matrix);
+		static void ShaderSetUniformVector3(int vector3UniformID, float x, float y, float z);
+		static void ShaderSetUniformVector4(int vector3UniformID, float x, float y, float z, float w);
 
 		static char UseShaderProgram(int shaderProgramID);
 		static void VertexArrayBind(int vertexArrayID);

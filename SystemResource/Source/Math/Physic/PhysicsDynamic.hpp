@@ -36,7 +36,7 @@ namespace BF
 			// Force = Mass * Acceleration
 
 			assert(Mass > 0);
-			assert(gravityForce > 0);
+			assert(gravityForce != 0);
 
 			Force += gravityDircetion * gravityForce;
 

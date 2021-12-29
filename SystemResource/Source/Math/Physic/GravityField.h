@@ -20,10 +20,10 @@ namespace BF
 {
 	class GravityField : public Collider
 	{
-		public:
-		Vector3<bool> IgnoreAxis;
+		public:	
 		float PullForce;
 		Vector3<float> PullDirection;
+		Vector3<bool> IgnoreAxis;
 
 		GravityField();
 	};

@@ -37,6 +37,11 @@ void BF::BitFireEngine::Start()
         __TIME__
     );
 
+    
+    //SYSTEM_INFO systemInfo; // Windows SystemInfo
+    //GetSystemInfo(&systemInfo);
+
+
     _mainWindow.Create(1000, 1000, "[BFE] <BitFireEngine>");
 
     printf
@@ -90,18 +95,21 @@ void BF::BitFireEngine::Update()
     UpdateInput(inputPool);
 
     _callbackListener->OnUpdateInput(inputPool);
+
+    OpenGLAPI::RenderClear();
+    //---------------------------------------------------------------------
+
+       //---[Render World]----------------------------------------------------
+    Resource.ModelsRender(deltaTime);
     //---------------------------------------------------------------------
 
     //---[Game-Logic]------------------------------------------------------
     Resource.ModelsPhysicsApply(deltaTime);
-    //Resource.Models
 
     _callbackListener->OnUpdateGameLogic(deltaTime);
     //---------------------------------------------------------------------
 
-    //---[Render World]----------------------------------------------------
-    Resource.ModelsRender(deltaTime);
-    //---------------------------------------------------------------------
+ 
 
     IsRunning = !_mainWindow.ShouldCloseWindow;
 }
@@ -137,11 +145,10 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
     if (keyboard.K.IsShortPressed())
     {
         Image image;
-        const char* fileName = "ScreenShot.bmp";
 
         _mainWindow.TakeScreenShot(image);
 
-        image.Save(fileName, ImageFileFormat::BitMap);
+        image.Save("ScreenShot.bmp", ImageFileFormat::BitMap);
     }
 
     if (keyboard.F.IsLongPressed())

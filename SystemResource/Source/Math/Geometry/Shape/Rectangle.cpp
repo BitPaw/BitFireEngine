@@ -20,14 +20,9 @@ BF::Rectangle::Rectangle(Vector2<float> a, Vector2<float> b)
 	Set(a, b);
 }
 
-BF::Rectangle::Rectangle(Vector2<float> a, Vector2<float> b, Vector2<float> c, Vector2<float> d)
-{
-	Set(a, b, c, d);
-}
-
 float BF::Rectangle::Width()
 {
-	return 0;// Math::Absolute(PointA.X + PointC.X);
+	return 0;
 }
 
 float BF::Rectangle::Height()
@@ -91,35 +86,36 @@ void BF::Rectangle::Set(float width, float height)
 
 void BF::Rectangle::Set(float x, float y, float width, float height)
 {
-	float vertexData[] =
+	Position.X = x;
+	Position.Y = y;
+	Size.X = width;
+	Size.Y = height;	
+}
+
+void BF::Rectangle::Set(Vector2<float> position, Vector2<float> size)
+{
+	Position = position;
+	Size = size;
+}
+
+void BF::Rectangle::GenerateVertexData(float* vertexData, size_t vertexDataSize, unsigned int* indexData, size_t indexDataSize)
+{
+	float vertexDataInput[] =
 	{
-		width,  height, 0,  // top right
-		width, y, 0,  // bottom right
-		x, y, 0,  // bottom left
-		x, height, 0   // top left 
+		Size.X, Size.Y, 0,  // top right
+		Size.X, Position.Y, 0,  // bottom right
+		Position.X, Position.Y, 0,  // bottom left
+		Position.X, Size.Y, 0   // top left 
 	};
 
-	const unsigned int indexList[] =
+	const unsigned int indexListInput[] =
 	{
 		0, 1, 2, 3
 	};
 
-	memcpy(VertexList, vertexData, VertexListSize * sizeof(float));
-	memcpy(IndexList, indexList, IndexListSize * sizeof(unsigned int));
-}
+	const size_t vertexDataInputSize = sizeof(vertexDataInput);
+	const size_t indexDataInputSize = sizeof(indexListInput);
 
-void BF::Rectangle::Set(Vector2<float> a, Vector2<float> b)
-{
-	//PointA.Set(a);
-	//PointB.Set(b.X, a.Y);
-	//PointC.Set(b);
-	//PointD.Set(a.X, b.Y);
-}
-
-void BF::Rectangle::Set(Vector2<float> a, Vector2<float> b, Vector2<float> c, Vector2<float> d)
-{
-	//PointA.Set(a);
-	//PointB.Set(b);
-	//PointC.Set(c);
-	//PointD.Set(d);
+	memcpy(vertexData, vertexDataInput, vertexDataInputSize);
+	memcpy(indexData, indexListInput, indexDataInputSize);
 }
