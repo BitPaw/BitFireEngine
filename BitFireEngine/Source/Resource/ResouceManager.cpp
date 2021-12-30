@@ -799,7 +799,7 @@ void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
 
         boundingBoxModel.Move(position.X, position.Y, 0);
 
-        Matrix4x4<float> boundingBoxScaled = TransformBoundingBox(boundingBoxModel, boundingBox);
+        Matrix4x4<float> boundingBoxScaled = TransformBoundingBox(boundingBoxModel, boundingBox, false);
         Vector3<float> colliderPosition = boundingBoxScaled.PositionXYZ();
         Vector3<float> colliderScaling = boundingBoxScaled.ScaleXYZ();
 
@@ -810,10 +810,15 @@ void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
             Model* model = modelNode->Element;
             Matrix4x4<float> modelMatrix = model->MatrixModel;
             Vector3<float> modelBoundingBox(model->MeshList[0].Structure.Width, model->MeshList[0].Structure.Height, model->MeshList[0].Structure.Depth);
-            Vector3<float> modelPosition = modelMatrix.PositionXYZ();
-            Vector3<float> modelScaling = modelMatrix.ScaleXYZ();
+            //Vector3<float> modelPosition = modelMatrix.PositionXYZ();
+            //Vector3<float> modelScaling = modelMatrix.ScaleXYZ() * (modelBoundingBox);
+            Matrix4x4<float> boundingBoxModelScaled = TransformBoundingBox(modelMatrix, modelBoundingBox, false);
+            Vector3<float> modelPosition = boundingBoxModelScaled.PositionXYZ();
+            Vector3<float> modelScaling = boundingBoxModelScaled.ScaleXYZ() ;
 
-            modelScaling.Z = INFINITY;
+            Vector3<float>& drawShit = modelBoundingBox;
+
+            modelScaling.Z = INFINITY;       
 
             bool isColliding = ((GravityCube*)collider)->IsColliding(colliderPosition, colliderScaling, modelPosition, modelScaling);
 
@@ -825,7 +830,7 @@ void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
                     {
                         GravityField* gravityField = (GravityField*)collider;
 
-                        BoundingBoxRender(modelMatrix, modelBoundingBox, color);
+                        BoundingBoxRender(modelMatrix, drawShit, color);
                        
                         model->ApplyGravity(gravityField->PullDirection, gravityField->PullForce*0.001f, deltaTime);
                         break;
@@ -842,7 +847,7 @@ void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
             }
             else
             {
-                BoundingBoxRender(modelMatrix, modelBoundingBox, Vector3<float>(1,1,0));
+                BoundingBoxRender(modelMatrix, drawShit, Vector3<float>(1,1,0));
             }
         }
     }  
@@ -1002,16 +1007,29 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
     }
 }
 
-BF::Matrix4x4<float> BF::ResourceManager::TransformBoundingBox(Matrix4x4<float> modelMatrix, Vector3<float> boundingBox)
+BF::Matrix4x4<float> BF::ResourceManager::TransformBoundingBox(Matrix4x4<float> modelMatrix, Vector3<float> boundingBox, bool half)
 {
     Matrix4x4<float> matrixResult;
     Vector3<float> position = modelMatrix.PositionXYZ();
     Vector3<float> scalingModf = modelMatrix.ScaleXYZ();
 
-    boundingBox *= (scalingModf / 2.0f);
+    if (half)
+    {
+        scalingModf = scalingModf / 2.0f;
+    }
 
-    position.X += (boundingBox.X);
-    position.Y += (boundingBox.Y);
+    boundingBox *= scalingModf;
+
+    if (half)
+    {
+        position.X += (boundingBox.X);
+        position.Y += (boundingBox.Y);
+    }
+    else
+    {
+        //position.X -= (boundingBox.X);
+        //position.Y -= (boundingBox.Y);
+    }
 
     matrixResult.MoveTo(position);
     matrixResult.ScaleSet(boundingBox.X, boundingBox.Y, 1);
@@ -1021,16 +1039,15 @@ BF::Matrix4x4<float> BF::ResourceManager::TransformBoundingBox(Matrix4x4<float> 
 
 void BF::ResourceManager::BoundingBoxRender(Matrix4x4<float> modelMatrix, Vector3<float> boundingBox, Vector3<float> color)
 {
-    Matrix4x4<float> boundingBoxScaled = TransformBoundingBox(modelMatrix, boundingBox);
-    Vector3<float> pos = boundingBoxScaled.PositionXYZ();
-    Vector3<float> sca = boundingBoxScaled.ScaleXYZ();
+    Matrix4x4<float> boundingBoxScaled = TransformBoundingBox(modelMatrix, boundingBox, true);
+    unsigned int shaderID = ShaderHitBox.ID;
 
-    OpenGLAPI::UseShaderProgram(ShaderHitBox.ID);
-    _lastUsedShaderProgram = ShaderHitBox.ID;
-    CameraDataGet(ShaderHitBox.ID);
+    OpenGLAPI::UseShaderProgram(shaderID);
+    _lastUsedShaderProgram = shaderID;
+    CameraDataGet(shaderID);
     //OpenGLAPI::TextureUse(ImageType::Texture2D, 0);
     CameraDataUpdate(MainCamera);
-    int shaderColorID = OpenGLAPI::ShaderGetUniformLocationID(ShaderHitBox.ID, "HitBoxColor");
+    int shaderColorID = OpenGLAPI::ShaderGetUniformLocationID(shaderID, "HitBoxColor");
 
     boundingBoxScaled.Move(0, 0, -2);
 

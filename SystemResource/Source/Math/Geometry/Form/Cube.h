@@ -29,5 +29,7 @@ namespace BF
 			float targetSizeY,
 			float targetSizeZ
 		);
+
+		static bool IsInLinar(float ancerPosition, float ancerSize, float targetPosition, float targetSize);
 	};
 }

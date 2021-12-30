@@ -96,8 +96,8 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
             {
                 case PNGChunkType::ImageHeader:
                 {
-                    unsigned char colorTypeRaw = 0;
-                    unsigned char interlaceMethodRaw = 0;
+                    Byte colorTypeRaw = 0;
+                    Byte interlaceMethodRaw = 0;
 
                     fileStream.Read(ImageHeader.Width, Endian::Big); // 4 Bytes
                     fileStream.Read(ImageHeader.Height, Endian::Big); // 4 Bytes

@@ -118,8 +118,8 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     //GameSystem.Resource.Add(*text);
 
     _camera->Rotate(0,0);
-    _camera->MatrixModel.Move(240,15,-60);
-    _camera->CurrentRotation.Set(90, 0, 0);
+    _camera->MatrixModel.Move(240,15,60);
+    _camera->CurrentRotation.Set(-90, 0, 0);
     _camera->Rotate(0, 0);
     //_camera->MatrixModel.Rotate(90, 0, 0);
 
@@ -143,6 +143,49 @@ void Cleaved::CleavedGameSystem::OnUpdateGameLogic(float deltaTime)
 
 void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
 {
+#if 1
+    KeyBoard& keyboard = input.KeyBoardInput;
+    Mouse& mouse = input.MouseInput;
+    Camera& camera = GameSystem.Resource.MainCamera;
+    Vector3<float> movement;
+
+    if (keyboard.ShitftLeft.IsPressed()) { movement.Add(0, -1, 0); }
+    if (keyboard.W.IsPressed()) { movement.Add(0, 0, 1); }
+    if (keyboard.A.IsPressed()) { movement.Add(-1, 0, 0); }
+    if (keyboard.S.IsPressed()) { movement.Add(0, 0, -1); }
+    if (keyboard.D.IsPressed()) { movement.Add(1, 0, 0); }
+    if (keyboard.SpaceBar.IsPressed())
+    {
+        camera.Velocity.Set(0.0f, 6.0f, .0f);
+
+        movement.Add(0, 1, 0);
+    }
+    if (keyboard.F.IsLongPressed())
+    {
+        switch (camera.Perspective)
+        {
+            case CameraPerspective::Orthographic:
+                camera.PerspectiveChange(CameraPerspective::Perspective);
+                break;
+
+            case CameraPerspective::Perspective:
+                camera.PerspectiveChange(CameraPerspective::Orthographic);
+                break;
+        }
+
+        keyboard.F.Value = 0;
+    }
+
+    _playerCharacterLuna.MatrixModel.Move(movement);
+
+    //camera.Move(movement);
+
+    camera.Rotate(mouse.InputAxis[0], mouse.InputAxis[1]);
+
+    camera.Update(_deltaTime);
+    keyboard.IncrementButtonTick();
+    mouse.ResetAxis();
+#else
     KeyBoard& keyboard = input.KeyBoardInput;
     Mouse& mouse = input.MouseInput;
     Camera& camera = *_camera;
@@ -187,6 +230,10 @@ void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
     //_camera->MatrixModel.Move(movementCharacter);
     _playerCharacterLuna.MatrixModel.Move(movementCharacter);
     //_camera->MatrixModel.Move(movementCamera);
+#endif // 1
+
+
+    
 
  
 }

@@ -78,7 +78,7 @@ namespace BF
         Resource* Load(const char* filePathString);
 
         //void Load(Sprite& sprite, const char* model, const char* texturePath);
-        Matrix4x4<float> TransformBoundingBox(Matrix4x4<float> modelMatrix, Vector3<float> boundingBox);
+        Matrix4x4<float> TransformBoundingBox(Matrix4x4<float> modelMatrix, Vector3<float> boundingBox, bool half);
 
         void Load(Model& model);
         void Load(Model& model, const char* filePath);
