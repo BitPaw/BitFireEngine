@@ -1,9 +1,17 @@
 #include "Camera.h"
 #include <stdio.h>
 
-float BF::Camera::GetAspectRatio()
+float BF::Camera::AspectRatioGet()
 {
 	return (float)Width / (float)Height;
+}
+
+void BF::Camera::AspectRatioSet(float width, float height)
+{
+	Width = width;
+	Height = height;
+
+	PerspectiveChange(Perspective);
 }
 
 void BF::Camera::PerspectiveChange(CameraPerspective cmeraPerspective)
@@ -26,7 +34,7 @@ void BF::Camera::PerspectiveChange(CameraPerspective cmeraPerspective)
 
 		case CameraPerspective::Perspective:
 		{
-			float aspectRatio = GetAspectRatio();
+			float aspectRatio = AspectRatioGet();
 
 			MatrixProjection.Perspective(FieldOfView, aspectRatio, Near, Far);
 			break;
@@ -34,12 +42,28 @@ void BF::Camera::PerspectiveChange(CameraPerspective cmeraPerspective)
 	}
 }
 
+void BF::Camera::Follow(float deltaTime)
+{
+	const Vector3<float> cameraPos = MatrixModel.PositionXYZ();
+
+	if (!Target)
+	{
+		return;
+	}
+
+	Vector3<float> targetPos = Target->PositionXYZ();
+	Vector3<float> desiredPosition = targetPos + Offset;
+	Vector3<float> smoothedPosition = Vector3<float>::Interpolate(cameraPos, desiredPosition, FollowSpeed * deltaTime);
+
+	MatrixModel.MoveTo(smoothedPosition);	
+}
+
 BF::Camera::Camera()
 {
 	_walkSpeed = 0.3;
 	_viewSpeed = 2.5;
 
-	FieldOfView = 90;
+	FieldOfView = 75;
 	Height = 1000;
 	Width = 1000;
 	Near = 0.01;
@@ -72,8 +96,6 @@ void BF::Camera::Rotate(float x, float y)
 
 	float pitchRAD = glm::radians(CurrentRotation.Y);
 	float yawRAD = glm::radians(CurrentRotation.X);
-
-
 	float rx = cos(pitchRAD) * cos(yawRAD);
 	float ry = sin(pitchRAD);
 	float rz = cos(pitchRAD) * sin(yawRAD);
@@ -105,7 +127,7 @@ void BF::Camera::Move(Vector3<float> movement)
 
 void BF::Camera::Update(float deltaTime)
 {
-	Vector4<float> currentPositionx4 = MatrixModel.CurrentPosition();
+	Vector4<float> currentPositionx4 = MatrixModel.PositionXYZW();
 	Vector3<float> currentPosition = Vector3<float>(currentPositionx4.X, currentPositionx4.Y, currentPositionx4.Z);
 
 	float walkSpeedSmoothed = deltaTime * _walkSpeed;

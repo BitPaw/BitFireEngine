@@ -33,6 +33,7 @@ namespace BF
 		void Read(unsigned int& value, Endian endian);
 		void Read(unsigned long long& value, Endian endian);
 		void Read(void* value, size_t length);
+		bool ReadAndCompare(const Byte* value, size_t length);
 		bool ReadAndCompare(const char* value, size_t length);
 		bool ReadAndCompare(void* value, size_t length);
 

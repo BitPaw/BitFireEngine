@@ -382,7 +382,7 @@ BF::FileActionResult BF::FNT::Save(const char* filePath)
 		(
 			file,
 			"page id=%i file=\"%s\"\n"
-			"chars count=%i",
+			"chars count=%zi",
 			page.PageID,
 			page.PageFileName,
 			page.CharacteListSize
@@ -472,7 +472,7 @@ void BF::FNT::PrintData()
 		//printf(" |          |       |       |       |       |       |       |       |\n");
 		printf("\n");
 		printf(" +----------+-------+-------+-------+-------+-------+-------+-------|\n");
-		printf(" | Page <%u/%u> %s\n", pageIndex + 1, FontPageListSize, page.PageFileName);
+		printf(" | Page <%zu/%zu> %s\n", pageIndex + 1, FontPageListSize, page.PageFileName);
 		printf(" +----------+-------+-------+-------+-------+-------+-------+-------|\n");
 		printf(" | Letter   | X-Pos | Y-Pos | Width | Height| X-Off | Y-Off | X-Step|\n");
 		printf(" +----------+-------+-------+-------+-------+-------+-------+-------|\n");
@@ -483,7 +483,7 @@ void BF::FNT::PrintData()
 
 			printf
 			(
-				" | %3u -> %c | %5.1f | %5.1f | %5.1f | %5.1f | %5.1f | %5.1f | %5.1f |\n",
+				" | %3i -> %c | %5.1f | %5.1f | %5.1f | %5.1f | %5.1f | %5.1f | %5c |\n",
 				character.ID,
 				character.ID,
 				character.Position[0],

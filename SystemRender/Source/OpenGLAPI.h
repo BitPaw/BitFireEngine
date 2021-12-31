@@ -19,6 +19,7 @@ namespace BF
 
 		static void DepthMaskEnable(bool enable);
 		static void DrawOrder(bool clockwise);
+		static void RenderBothSides(bool renderBothSides);
 
 		static void TextureUse(ImageType imageType, int textureID);
 
@@ -39,7 +40,8 @@ namespace BF
 		// Getter
 		static int TextureMaxSlots();
 		static int TextureMaxLoaded();
-		static const char* VersionName();
+		static const char* GLSLVersionPrimary();
+		static void GLSLVersionsSupported(const char*** shaderList, int shaderListSize);
 		static const char* GPUVendorName();
 		static const char* GPUModel();
 
@@ -49,6 +51,8 @@ namespace BF
 
 		static int ShaderGetUniformLocationID(int shaderID, const char* UniformName);
 		static void ShaderSetUniformMatrix4x4(int matrixUniformID, float* matrix);
+		static void ShaderSetUniformVector3(int vector3UniformID, float x, float y, float z);
+		static void ShaderSetUniformVector4(int vector3UniformID, float x, float y, float z, float w);
 
 		static char UseShaderProgram(int shaderProgramID);
 		static void VertexArrayBind(int vertexArrayID);

@@ -101,32 +101,42 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)Dependencies\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)Dependencies\lib32\GLFW;$(ProjectDir)Dependencies\lib32\GL;$(LibraryPath);$(ProjectDir)Dependencies\lib32</LibraryPath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_32_Debug/;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)__Export__/x86 Debug</OutDir>
+    <IntDir>$(SolutionDir)__Temp__/x86 Debug/$(ProjectName)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)Dependencies\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)Dependencies\lib32\GLFW;$(ProjectDir)Dependencies\lib32\GL;$(LibraryPath);$(ProjectDir)Dependencies\lib32</LibraryPath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_32_Release/;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)__Export__/x86 Release</OutDir>
+    <IntDir>$(SolutionDir)__Temp__/x86 Release/$(ProjectName)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)Dependencies\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)Dependencies\lib32\GL\glew32.lib;$(ProjectDir)Dependencies\lib32\GLFW;$(ProjectDir)Dependencies\lib32\GL;$(LibraryPath);$(ProjectDir)Dependencies\lib32</LibraryPath>
+    <IntDir>$(SolutionDir)__Temp__/x86 XP/$(ProjectName)</IntDir>
+    <OutDir>$(SolutionDir)__Export__/x86 XP</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)Dependencies\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)Dependencies\lib64\GLFW;$(ProjectDir)Dependencies\lib32\GL;$(LibraryPath);$(ProjectDir)Dependencies\lib32</LibraryPath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_64_Debug/;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)__Export__/x64 Debug</OutDir>
+    <IntDir>$(SolutionDir)__Temp__/x64 Debug/$(ProjectName)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)Dependencies\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)Dependencies\lib64\GLFW;$(ProjectDir)Dependencies\lib64\GL;$(LibraryPath);$(ProjectDir)Dependencies\lib64</LibraryPath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_64_Release/;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)__Export__/x64 Release</OutDir>
+    <IntDir>$(SolutionDir)__Temp__/x64 Release/$(ProjectName)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)Dependencies\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)Dependencies\lib32\GL\glew32.lib;$(ProjectDir)Dependencies\lib64\GLFW;$(ProjectDir)Dependencies\lib32\GL;$(LibraryPath);$(ProjectDir)Dependencies\lib32</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -135,7 +145,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -176,6 +185,7 @@
       <Optimization>Disabled</Optimization>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -191,7 +201,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -211,7 +221,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -253,6 +263,7 @@
     <ClInclude Include="Source\VideoConfig.h" />
     <ClInclude Include="Source\VulcanAPI.h" />
     <ClInclude Include="Source\Device\InputContainer.h" />
+    <ClInclude Include="Source\Window\IWindowListener.h" />
     <ClInclude Include="Source\Window\Key.h" />
     <ClInclude Include="Source\Window\Window.h" />
   </ItemGroup>

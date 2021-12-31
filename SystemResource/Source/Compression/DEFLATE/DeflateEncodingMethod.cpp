@@ -20,3 +20,25 @@ BF::DeflateEncodingMethod BF::ConvertDeflateEncodingMethod(unsigned char deflate
 			return DeflateEncodingMethod::Invalid;
 	}
 }
+
+const char* BF::DeflateEncodingMethodToString(DeflateEncodingMethod deflateEncodingMethod)
+{
+	switch (deflateEncodingMethod)
+	{
+		default:
+		case BF::DeflateEncodingMethod::Invalid:
+			return "Invalid";
+
+		case BF::DeflateEncodingMethod::LiteralRaw:
+			return "Literal Raw";
+
+		case BF::DeflateEncodingMethod::HuffmanStatic:
+			return "Huffman Static";
+
+		case BF::DeflateEncodingMethod::HuffmanDynamic:
+			return "Huffman Dynamic";
+
+		case BF::DeflateEncodingMethod::Reserverd:
+			return "Reserverd";
+	}
+}

@@ -30,3 +30,19 @@ unsigned char BF::ConvertCompressionMethod(ZLIBCompressionMethod compressionMeth
             return 15u;
     }
 }
+
+const char* BF::CompressionMethodToString(ZLIBCompressionMethod compressionMethod)
+{
+    switch (compressionMethod)
+    {
+        default:
+        case BF::ZLIBCompressionMethod::Invalid:
+            return "Invalid";
+
+        case BF::ZLIBCompressionMethod::Deflate:
+            return "Deflate";
+
+        case BF::ZLIBCompressionMethod::Reserved:
+            return "Reserved";
+    }
+}

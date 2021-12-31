@@ -24,24 +24,23 @@ void BF::BitFireEngine::SetCallBack(IBitFireEngineListener* callbackListener)
 
 void BF::BitFireEngine::Start()
 {    
-    unsigned int versionMajor = 0;
-    unsigned int versionMinor = 0;
-    unsigned int versionPatch = 1;
-
     printf
     (
         "+------------------------------------------------------+----------------------+\n"
-        "| __________ .__   __  ___________.__                  | Version    v.%i.%i.%03i |\n"
-        "| \\______   \\|__|_/  |_\\_   _____/|__|_______   ____   | Date     02 Sep 2021 |\n"
-        "|  |    |  _/|  |\\   __\\|   __)   |  |\\_  __ \\_/ __ \\  |                      |\n"
+        "| __________ .__   __  ___________.__                  |                      |\n"
+        "| \\______   \\|__|_/  |_\\_   _____/|__|_______   ____   | Date %15s |\n"
+        "|  |    |  _/|  |\\   __\\|   __)   |  |\\_  __ \\_/ __ \\  | Time %15s |\n"
         "|  |    |   \\|  | |  |  |   |     |  | |  | \\/\\  ___/  |                      |\n"
         "|  |________/|__| |__|  \\___|     |__| |__|    \\_____> |                      |\n"
-        "+------------------------------------------------------+----------------------+\n"
-    ,
-        versionMajor,
-        versionMinor,
-        versionPatch
-        );
+        "+------------------------------------------------------+----------------------+\n",
+        __DATE__,
+        __TIME__
+    );
+
+    
+    //SYSTEM_INFO systemInfo; // Windows SystemInfo
+    //GetSystemInfo(&systemInfo);
+
 
     _mainWindow.Create(1000, 1000, "[BFE] <BitFireEngine>");
 
@@ -58,11 +57,12 @@ void BF::BitFireEngine::Start()
         "+------------------------------------------------------+\n",
         OpenGLAPI::GPUVendorName(),
         OpenGLAPI::GPUModel(),
-        OpenGLAPI::VersionName(),
+        OpenGLAPI::GLSLVersionPrimary(),
         OpenGLAPI::TextureMaxSlots(),
         OpenGLAPI::TextureMaxLoaded()
     );
 
+    _mainWindow.Callback = this;
     _callbackListener->OnStartUp();
    
     IsRunning = true;
@@ -90,23 +90,26 @@ void BF::BitFireEngine::Update()
 
     //---[User-Input]------------------------------------------------------
     _mainWindow.Update(); // Pull inputs from window
-    InputContainer& inputPool = *_mainWindow.GetInput();
+    InputContainer& inputPool = _mainWindow.Input;
 
     UpdateInput(inputPool);
 
     _callbackListener->OnUpdateInput(inputPool);
+
+    OpenGLAPI::RenderClear();
+    //---------------------------------------------------------------------
+
+       //---[Render World]----------------------------------------------------
+    Resource.ModelsRender(deltaTime);
     //---------------------------------------------------------------------
 
     //---[Game-Logic]------------------------------------------------------
     Resource.ModelsPhysicsApply(deltaTime);
-    //Resource.Models
 
     _callbackListener->OnUpdateGameLogic(deltaTime);
     //---------------------------------------------------------------------
 
-    //---[Render World]----------------------------------------------------
-    Resource.ModelsRender(deltaTime);
-    //---------------------------------------------------------------------
+ 
 
     IsRunning = !_mainWindow.ShouldCloseWindow;
 }
@@ -142,11 +145,10 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
     if (keyboard.K.IsShortPressed())
     {
         Image image;
-        const char fileName[] = "ScreenShot.bmp";
 
         _mainWindow.TakeScreenShot(image);
 
-        image.Save(fileName, ImageFileFormat::BitMap);
+        image.Save("ScreenShot.bmp", ImageFileFormat::BitMap);
     }
 
     if (keyboard.F.IsLongPressed())
@@ -171,4 +173,24 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
 void BF::BitFireEngine::Stop()
 {
     IsRunning = false;
+}
+
+void BF::BitFireEngine::OnKeyPressed(int key, int scancode, int action, int mods)
+{
+
+}
+
+void BF::BitFireEngine::OnMouseButtonClick(int button, int action, int mods)
+{
+
+}
+
+void BF::BitFireEngine::OnMousePositionChanged(double positionX, double positionY)
+{
+
+}
+
+void BF::BitFireEngine::OnWindowSizeChanged(int width, int height)
+{
+    Resource.MainCamera.AspectRatioSet(width, height);
 }

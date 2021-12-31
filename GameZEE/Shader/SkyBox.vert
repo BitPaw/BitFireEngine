@@ -12,7 +12,7 @@ void main()
 
     vec4 pos = MatrixProjection *  MatrixView * vec4(position, 1.0);
    
-    TexturePosition = position;
+    TexturePosition = vec3(position.x, position.y, position.z);
 
    gl_Position = pos;
 }

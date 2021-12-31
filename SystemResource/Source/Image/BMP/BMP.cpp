@@ -31,7 +31,7 @@ BF::FileActionResult BF::BMP::Load(const char* filePath)
 
     //---[ Parsing Header ]----------------------------------------------------
     {
-        unsigned char type[2];
+        Byte type[2];
         unsigned int sizeOfFile = 0;
         unsigned int reservedBlock = 0;
         unsigned int dataOffset = 0;
@@ -103,14 +103,14 @@ BF::FileActionResult BF::BMP::Load(const char* filePath)
     //-----------------------------------------------------------    
 
     PixelDataSize = InfoHeader.Width * InfoHeader.Height * (InfoHeader.NumberOfBitsPerPixel / 8);
-    PixelData = (unsigned char*)malloc(PixelDataSize * sizeof(unsigned char));
+    PixelData = (Byte*)malloc(PixelDataSize * sizeof(Byte));
 
 
     //---[ Pixel Data ]--------------------------------------------------------    
-    unsigned int dataRowSize = InfoHeader.Width * (InfoHeader.NumberOfBitsPerPixel / 8);
-    unsigned int fullRowSize = Math::Floor((InfoHeader.NumberOfBitsPerPixel * InfoHeader.Width + 31) / 32.0f) * 4;
-    unsigned int padding = Math::Absolute((int)fullRowSize - (int)dataRowSize);
-    unsigned int amountOfRows = PixelDataSize / fullRowSize;
+    size_t dataRowSize = InfoHeader.Width * (InfoHeader.NumberOfBitsPerPixel / 8);
+    size_t fullRowSize = Math::Floor((InfoHeader.NumberOfBitsPerPixel * InfoHeader.Width + 31) / 32.0f) * 4;
+    size_t padding = Math::Absolute((int)fullRowSize - (int)dataRowSize);
+    size_t amountOfRows = PixelDataSize / fullRowSize;
     size_t pixelDataOffset = 0;
 
     while (amountOfRows-- > 0)

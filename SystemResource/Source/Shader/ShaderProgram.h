@@ -5,13 +5,16 @@
 #include "../Container/List.hpp"
 #include "../Container/AsciiString.h"
 
+#define ShaderListSize 2
+
 namespace BF
 {
 	class ShaderProgram
 	{
 		public:
 		unsigned int ID;
-		Shader ShaderList[2];
+		//size_t ShaderListSize;
+		Shader ShaderList[ShaderListSize];
 
 		ShaderProgram();
 

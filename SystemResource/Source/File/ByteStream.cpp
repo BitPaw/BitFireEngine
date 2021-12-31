@@ -107,7 +107,7 @@ void BF::ByteStream::Read(unsigned short& value, Endian endian)
 			break;
 	}
 
-	assert(value < 65408);
+	//assert(value < 65408);
 }
 
 void BF::ByteStream::Read(int& value, Endian endian)
@@ -182,9 +182,14 @@ void BF::ByteStream::Read(unsigned long long& value, Endian endian)
 
 void BF::ByteStream::Read(void* value, size_t length)
 {
-	memcpy(value, &Data[DataCursorPosition], length);
+	memcpy(value, Data + DataCursorPosition, length);
 
 	DataCursorPosition += length;
+}
+
+bool BF::ByteStream::ReadAndCompare(const Byte* value, size_t length)
+{
+	return ReadAndCompare((void*)value, length);
 }
 
 bool BF::ByteStream::ReadAndCompare(const char* value, size_t length)

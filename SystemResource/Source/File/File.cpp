@@ -2,21 +2,36 @@
 
 #include "../Container/AsciiString.h"
 #include "../OSDefine.h"
+
 #include <cassert>
 #include <cstdlib>
+#include <cstdio>
 #include <cwchar>
+#include <direct.h>
 
-#if  defined(OSUnix)
-#define FileRemove remove 
+#if defined(OSUnix)
+#define FileRemoveA remove 
 #define FileRemoveW wremove 
-#define FileRename rename 
-#define FileRenameW wrename 
+#define FileRenameA rename 
+#define FileRenameW wrename
+#define FileDirectoryCreate(string) mkdir(string, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)
+#define FileDirectoryCreateW wmkdir
+#define WorkingDirectoryCurrentA getcwd
+#define WorkingDirectoryCurrentW wgetcwd
+#define WorkingDirectoryChangeA chdir
+#define WorkingDirectoryChangeW wchdir
 #elif defined(OSWindows)
-#include <Windows.h>
-#define FileRemove remove 
+#define FileRemoveA remove 
 #define FileRemoveW _wremove 
-#define FileRename rename 
-#define FileRenameW _wrename 
+#define FileRenameA rename 
+#define FileRenameW _wrename
+#define FileDirectoryCreateA _mkdir
+#define FileDirectoryCreateW _wmkdir
+#define WorkingDirectoryCurrentA _getcwd
+#define WorkingDirectoryCurrentW _wgetcwd
+#define WorkingDirectoryChangeA _chdir
+#define WorkingDirectoryChangeW _wchdir
+#include <Windows.h>
 #endif
 
 BF::FileActionResult BF::File::CheckFile()
@@ -29,10 +44,9 @@ BF::FileActionResult BF::File::CheckFile()
 	return BF::FileActionResult::Successful;
 }
 
-
 BF::File::File()
 {
-	FileMarker = nullptr;
+	SetFilePath((wchar_t*)nullptr);
 }
 
 BF::File::File(const char* filePath)
@@ -110,7 +124,7 @@ BF::ErrorCode BF::File::Remove()
 
 BF::ErrorCode BF::File::Remove(const char* filePath)
 {
-	int removeResult = FileRemove(filePath);
+	int removeResult = FileRemoveA(filePath);
 	ErrorCode errorCode = ConvertErrorCode(removeResult);
 
 	return errorCode;
@@ -136,7 +150,7 @@ BF::ErrorCode BF::File::Rename(const char* name)
 
 BF::ErrorCode BF::File::Rename(const char* oldName, const char* newName)
 {
-	int renameResult = FileRename(oldName, newName);
+	int renameResult = FileRenameA(oldName, newName);
 	ErrorCode errorCode = ConvertErrorCode(renameResult);
 
 	return errorCode;
@@ -150,9 +164,146 @@ BF::ErrorCode BF::File::Rename(const wchar_t* name)
 BF::ErrorCode BF::File::Rename(const wchar_t* oldName, const wchar_t* newName)
 {
 	int renameResult = FileRenameW(oldName, newName);
-	ErrorCode errorCode = ConvertErrorCode(renameResult);
+	bool wasSuccesful = renameResult == 0;
 
-	return errorCode;
+	if (!wasSuccesful)
+	{
+		return GetCurrentError();
+	}
+
+	return ErrorCode::Successful;
+}
+
+BF::FileActionResult BF::File::Copy(const char* sourceFilePath, const char* destinationFilePath, char* swapBuffer, size_t swapBufferSize)
+{
+	if (!sourceFilePath || !destinationFilePath)
+	{
+		return FileActionResult::EmptyPath;
+	}
+
+	FILE* fileSource = fopen(sourceFilePath, FileReadMode);
+	FILE* fileDestination = fopen(destinationFilePath, FileWriteMode);
+	bool fileOpenSuccesful = fileSource && fileDestination;
+
+	if (!fileOpenSuccesful)
+	{
+		return FileActionResult::FileOpenFailure;
+	}
+
+	while (!feof(fileSource))
+	{
+		size_t readBytes = fread(swapBuffer, sizeof(char), swapBufferSize, fileSource);
+		size_t writtenBytes = fwrite(swapBuffer, sizeof(char), readBytes, fileDestination);
+	}
+
+	fclose(fileSource);
+	fclose(fileDestination);
+
+	return FileActionResult::Successful;
+}
+
+BF::ErrorCode BF::File::DirectoryCreate(const char* directoryName)
+{
+	int creationResult = FileDirectoryCreateA(directoryName);
+	bool wasSuccesful = creationResult == 0;
+
+	if (!wasSuccesful)
+	{
+		return GetCurrentError();
+	}
+
+	return ErrorCode::Successful;
+}
+
+BF::ErrorCode BF::File::DirectoryCreate(const wchar_t* directoryName)
+{
+	int creationResult = FileDirectoryCreateW(directoryName);
+	bool wasSuccesful = creationResult == 0;
+
+	if (!wasSuccesful)
+	{
+		return GetCurrentError();
+	}
+
+	return ErrorCode::Successful;
+}
+
+BF::ErrorCode BF::File::WorkingDirectoryGet(char* workingDirectory, size_t workingDirectorySize)
+{
+	char* workingDirectoryResult = WorkingDirectoryCurrentA(workingDirectory, workingDirectorySize);
+	bool wasSuccesful = workingDirectoryResult != nullptr;
+
+	if (!wasSuccesful)
+	{
+		return GetCurrentError();
+	}
+
+	return ErrorCode::Successful;
+}
+
+BF::ErrorCode BF::File::WorkingDirectoryGet(wchar_t* workingDirectory, size_t workingDirectorySize)
+{
+	wchar_t* workingDirectoryResult = WorkingDirectoryCurrentW(workingDirectory, workingDirectorySize);
+	bool wasSuccesful = workingDirectoryResult != nullptr;
+
+	if (!wasSuccesful)
+	{
+		return GetCurrentError();
+	}
+
+	return ErrorCode::Successful;
+}
+
+BF::ErrorCode BF::File::WorkingDirectoryChange(const char* directoryName)
+{
+	int creationResult = WorkingDirectoryChangeA(directoryName);
+	bool wasSuccesful = creationResult == 0;
+
+	if (!wasSuccesful)
+	{
+		return GetCurrentError();
+	}
+
+	return ErrorCode::Successful;
+}
+
+BF::ErrorCode BF::File::WorkingDirectoryChange(const wchar_t* directoryName)
+{
+	int creationResult = WorkingDirectoryChangeW(directoryName);
+	bool wasSuccesful = creationResult == 0;
+
+	if (!wasSuccesful)
+	{
+		return GetCurrentError();
+	}
+
+	return ErrorCode::Successful;
+}
+
+BF::ErrorCode BF::File::DirectoryDelete(const char* directoryName)
+{
+	int creationResult = FileRemoveA(directoryName);
+	bool wasSuccesful = creationResult == 0;
+
+	if (!wasSuccesful)
+	{
+		return GetCurrentError();
+	}
+
+	return ErrorCode::Successful;
+}
+
+BF::ErrorCode BF::File::DirectoryDelete(const wchar_t* directoryName)
+{
+	int creationResult = FileRemoveW(directoryName);
+	bool wasSuccesful = creationResult == 0;
+
+	if (!wasSuccesful)
+	{
+		return GetCurrentError();
+	}
+
+	return ErrorCode::Successful;
 }
 
 void BF::File::SetFilePath(const char* filePath)
@@ -173,6 +324,8 @@ void BF::File::SetFilePath(const char* filePath)
 
 void BF::File::SetFilePath(const wchar_t* filePath)
 {
+	FileMarker = nullptr;
+
 	if (filePath == nullptr)
 	{
 		Path[0] = '\0';
@@ -194,12 +347,16 @@ void BF::File::SetFilePath(const wchar_t* filePath)
 		Extension, _MAX_EXT
 	);
 
-	wchar_t buffer[_MAX_EXT];
+	if (Extension[0] != '\0')
+	{
+		wchar_t buffer[_MAX_EXT];
 
-	memcpy(buffer, Extension, _MAX_EXT);
-	memset(Extension, 0, _MAX_EXT);
-	lstrcpyW(Extension, buffer + 1);
+		memcpy(buffer, Extension, _MAX_EXT);
+		memset(Extension, 0, _MAX_EXT);
+		lstrcpyW(Extension, buffer + 1);
+	}
 
+	
 	// Fix stuff
 	//AsciiString fileName(Extension);
 	//AsciiString extension(Extension);
@@ -210,13 +367,51 @@ void BF::File::SetFilePath(const wchar_t* filePath)
 
 void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& listSize)
 {
-#if  defined(OSUnix)
+	wchar_t folderPathW[_MAX_PATH];
+	size_t writtenBytes = mbstowcs(folderPathW, folderPath, _MAX_PATH);	
 
+#if defined(OSUnix)		
+	DIR* directory = opendir(folderPath);
+
+	if (directory)
+	{
+		struct dirent* directoryInfo = nullptr;
+
+		while (directoryInfo = readdir(directory))
+		{
+			++listSize;
+		}
+
+		rewinddir(directory);
+
+		(*list) = (wchar_t**)malloc(listSize * sizeof(wchar_t*));
+
+		for (size_t index = 0; directoryInfo = readdir(directory); index++)
+		{
+			bool isFile = directoryInfo->d_type == DT_REG || true;
+
+			if (isFile)
+			{
+				const char* fileName = directoryInfo->d_name;
+				size_t length = strlen(fileName);				
+				wchar_t* newString = (wchar_t*)malloc((length + 1) * sizeof(wchar_t));
+				wchar_t** target = &(*list)[index];				
+
+				if (!newString)
+				{
+					return; // Error: OutOfMemory
+				}
+
+				(*target) = newString;
+				size_t writtenBytes = mbstowcs(*target, fileName, 255);
+			}
+		}
+
+		closedir(directory);
+	}
 #elif defined(OSWindows)
-	wchar_t folderPathW[MAX_PATH];
 	WIN32_FIND_DATA dataCursour;
 	HANDLE hFind = 0;
-	size_t writtenBytes = mbstowcs(folderPathW, folderPath, MAX_PATH);
 
 	memset(&dataCursour, 0, sizeof(WIN32_FIND_DATA));
 
@@ -229,12 +424,11 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 		return;
 	}
 
-	listSize++;
+	++listSize;
 
 	for (; FindNextFile(hFind, &dataCursour); listSize++);
 
 	memset(&dataCursour, 0, sizeof(WIN32_FIND_DATA));
-
 
 	(*list) = (wchar_t**)malloc(listSize * sizeof(wchar_t*));
 
@@ -243,15 +437,19 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 
 	do
 	{
-		wchar_t* filePathDestination = 0;
-		wchar_t* filePathSource = dataCursour.cFileName;
-		size_t length = wcslen(filePathSource);
+		size_t length = wcslen(dataCursour.cFileName);
+		wchar_t* filePathSource = dataCursour.cFileName;		
+		wchar_t* newString = (wchar_t*)malloc((length + 1) * sizeof(wchar_t));
+	
+		if (!newString)
+		{
+			return; // Error: OutOfMemory
+		}	
+	
+		memcpy(newString, filePathSource, sizeof(wchar_t) * length);
+		newString[length] = L'\0';
 
-		(*list)[fileIndex] = (wchar_t*)calloc(length + 1, sizeof(wchar_t));
-
-		filePathDestination = (*list)[fileIndex];
-
-		wcsncpy(filePathDestination, filePathSource, length);
+		(*list)[fileIndex] = newString;
 
 		fileIndex++;
 	}
@@ -280,9 +478,16 @@ bool BF::File::DoesFileExist()
 
 bool BF::File::DoesFileExist(const char* filePath)
 {
-	File file(filePath);
-	
-	return file.DoesFileExist();
+	FILE* file = fopen(filePath, "rb"); 
+
+	if (file)
+	{
+		fclose(file);
+
+		return true;
+	}
+
+	return false;
 }
 
 bool BF::File::DoesFileExist(const wchar_t* filePath)

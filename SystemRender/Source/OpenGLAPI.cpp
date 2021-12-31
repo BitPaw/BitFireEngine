@@ -1,7 +1,7 @@
 #include "OpenGLAPI.h"
 
-#include <GL/glew.h>
 #include <cassert>
+#include <GL/glew.h>
 
 void BF::OpenGLAPI::RegisterImage(Image& image)
 {
@@ -37,23 +37,54 @@ void BF::OpenGLAPI::RegisterImage(Image& image)
 
 void BF::OpenGLAPI::RegisterModel(Model& model)
 {
-    OpenGLAPI::VertexArrayDefine(&model.ID);
-    OpenGLAPI::VertexArrayBind(model.ID);
+    size_t bufferIndexCounter = 0;
+    size_t numberOfMeshes = model.MeshListSize;
+    unsigned int vaoIDList[128u];
+    unsigned int bufferIDList[128u];
+    memset(vaoIDList, -1, 128u * sizeof(unsigned int));
+    memset(bufferIDList, -1, 128u * sizeof(unsigned int));
 
-    for (size_t meshIndex = 0; meshIndex < model.MeshListSize; meshIndex++)
+    glGenVertexArrays(numberOfMeshes, vaoIDList);
+    glGenBuffers(numberOfMeshes * 2, bufferIDList); // Create Buffers
+
+    printf("[OpenGL] Register Mesh <%s> from <%s>. Sub-Meshes <%zu>\n", model.Name, model.FilePath, model.MeshListSize);
+       
+    for (size_t meshIndex = 0; meshIndex < numberOfMeshes; meshIndex++)
     {
+        unsigned int vertexArrayID = vaoIDList[meshIndex];
+        unsigned int vertexBufferID = bufferIDList[bufferIndexCounter++];
+        unsigned int indexBufferID = bufferIDList[bufferIndexCounter++];
         Mesh& mesh = model.MeshList[meshIndex];
-        MeshStructure& structure = mesh.Structure;
+        MeshStructure& structure = mesh.Structure;      
 
-        structure.PrintData();
+        assert(structure.VertexDataSize > 0);
+        assert(structure.IndexDataSize > 0);
+       
+        // Link Dara
+        structure.VertexArrayID = vertexArrayID;
+        structure.VertexBufferID = vertexBufferID;
+        structure.IndexBufferID = indexBufferID;
 
-        OpenGLAPI::VertexDataDefine(&structure.VertexBufferID, structure.VertexDataSize * sizeof(float), structure.VertexData);
+        glBindVertexArray(vertexArrayID);
+
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID); // Select Buffer
+        glBufferData(GL_ARRAY_BUFFER, structure.VertexDataSize * sizeof(float), structure.VertexData, GL_STATIC_DRAW);
+
         OpenGLAPI::VertexAttributeArrayDefine(sizeof(float), structure.VertexDataBlockListSize, structure.VertexDataBlockList);
-        OpenGLAPI::IndexDataDefine(&structure.IndexBufferID, structure.IndexDataSize * sizeof(unsigned int), structure.IndexData);
+        
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, structure.IndexDataSize * sizeof(unsigned int), structure.IndexData, GL_STATIC_DRAW);
+        
+       // structure.PrintData();
 
         mesh.RenderInfo.ShouldBeRendered = true;
     }
 
+    //glBindBuffer(GL_ARRAY_BUFFER, 0);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    model.ID = ResourceIDStored;
     model.ShouldItBeRendered = true;
 }
 
@@ -98,7 +129,7 @@ void BF::OpenGLAPI::DepthMaskEnable(bool enable)
     }
     else
     {
-        glDepthMask(GL_FALSE);
+        glDepthMask(GL_FALSE);     
     }
 }
 
@@ -111,6 +142,18 @@ void BF::OpenGLAPI::DrawOrder(bool clockwise)
     else
     {
         glFrontFace(GL_CCW);
+    }
+}
+
+void BF::OpenGLAPI::RenderBothSides(bool renderBothSides)
+{
+    if (renderBothSides)
+    {
+        glDisable(GL_CULL_FACE);
+    }
+    else
+    {
+        glEnable(GL_CULL_FACE);
     }
 }
 
@@ -153,6 +196,9 @@ void BF::OpenGLAPI::VertexArrayBind(int vertexArrayID)
 
 void BF::OpenGLAPI::VertexBufferBind(int vertexBufferID, int indexBuffer)
 {
+    assert(vertexBufferID != -1);
+    assert(indexBuffer != -1);
+
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 }
@@ -161,8 +207,8 @@ void BF::OpenGLAPI::Render(RenderMode renderMode, int startIndex, int amount)
 {
     unsigned int mode = -1;
 
-    glPointSize(40);
-    glLineWidth(30);
+    glPointSize(10);
+    glLineWidth(3);
 
     switch (renderMode)
     {
@@ -264,19 +310,33 @@ int BF::OpenGLAPI::TextureMaxLoaded()
     return value;
 }
 
-const char* BF::OpenGLAPI::VersionName()
+const char* BF::OpenGLAPI::GLSLVersionPrimary()
 {
     return (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
 }
 
+void BF::OpenGLAPI::GLSLVersionsSupported(const char*** shaderList, int shaderListSize)
+{
+    glGetIntegerv(GL_NUM_SHADING_LANGUAGE_VERSIONS, &shaderListSize);
+
+    (*shaderList) = (const char**)malloc(shaderListSize * sizeof(const char**));
+
+    for (size_t i = 0; i < shaderListSize; i++)
+    {
+        const char* shaderVersion = (const char*)glGetStringi(GL_SHADING_LANGUAGE_VERSION, i);
+
+        (*shaderList)[i] = shaderVersion;
+    }
+}
+
 const char* BF::OpenGLAPI::GPUVendorName()
 {
-    return (const char*)glGetString(GL_VENDOR);;
+    return (const char*)glGetString(GL_VENDOR);
 }
 
 const char* BF::OpenGLAPI::GPUModel()
 {
-    return (const char*)glGetString(GL_RENDERER);;
+    return (const char*)glGetString(GL_RENDERER);
 }
 
 void BF::OpenGLAPI::VertexArrayUpdate(int vertexArrayID, int size, void* data)
@@ -424,7 +484,7 @@ void BF::OpenGLAPI::IndexDataDefine(unsigned int* indexID, int size, void* data)
 {
     glGenBuffers(1, indexID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *indexID); 
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
 }
 
 int BF::OpenGLAPI::ShaderGetUniformLocationID(int shaderID, const char* UniformName)
@@ -440,12 +500,21 @@ void BF::OpenGLAPI::ShaderSetUniformMatrix4x4(int matrixUniformID, float* matrix
     }
 }
 
+void BF::OpenGLAPI::ShaderSetUniformVector3(int vector3UniformID, float x, float y, float z)
+{
+    if (vector3UniformID != -1)
+    {
+        glUniform3f(vector3UniformID, x, y, z);
+    }
+}
 
-
-
-
-
-
+void BF::OpenGLAPI::ShaderSetUniformVector4(int vector3UniformID, float x, float y, float z, float w)
+{
+    if (vector3UniformID != -1)
+    {
+        glUniform4f(vector3UniformID, x, y, z, w);
+    }
+}
 
 BF::ShaderType BF::OpenGLAPI::ToShaderType(unsigned int token)
 {

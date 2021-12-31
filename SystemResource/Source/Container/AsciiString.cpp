@@ -115,7 +115,7 @@ void BF::AsciiString::SetAsReference(const char* stringAdress, unsigned int size
 	_size = size;
 }
 
-void BF::AsciiString::ReSize(unsigned int size)
+void BF::AsciiString::ReSize(size_t size)
 {
 	size_t newSize = size + 1;
 	char* newData = (char*)realloc(_data, newSize);

@@ -5,10 +5,11 @@
 #include "../../../SystemResource/Source/Game/SkyBox.h"
 #include "../../../SystemResource/Source/Math/Physic/GravityField.h"
 #include "../../../SystemRender/Source/OpenGLAPI.h"
-#include <thread>
 #include "../../../SystemResource/Source/Math/Geometry/Form/Cube.h"
 #include "../../../SystemResource/Source/Math/Geometry/Shape/Rectangle.h"
 
+#include "../../../SystemResource/Source/OSDefine.h"
+#include "../../../SystemResource/Source/Math/Physic/GravityCube.h"
 
 int _matrixModelID;
 int _matrixViewID;
@@ -150,6 +151,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePath)
 {
     Resource* resource = nullptr;
     ResourceType resourceType = ResourceType::Unknown;
+    bool loadAsync = true;
 
     {
         bool isModel = Model::FileFormatPeek(filePath) != ModelType::UnKown;
@@ -197,7 +199,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePath)
         {
             Image* image = new Image();
 
-            Load(*image, filePath);
+            Add(*image, filePath, loadAsync);
 
             resource = image;
 
@@ -219,7 +221,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePath)
         {
             Model* model = new Model();
 
-            Load(*model, filePath);
+            Add(*model, filePath, true);
 
             resource = model;
 
@@ -232,7 +234,7 @@ BF::Resource* BF::ResourceManager::Load(const char* filePath)
         case ResourceType::Sound:
         {
             Sound* sound = new Sound();
-
+               
             Load(*sound, filePath);
 
             resource = sound;
@@ -258,9 +260,7 @@ void BF::ResourceManager::Load(Model& model)
             image.ID = ResourceIDLoading;
             image.FilePathChange(modelMaterial.FilePath);
 
-            Add(image);
-
-            image.Load();
+            Add(image, true);
         }
 
         model.ShouldItBeRendered = true;        
@@ -347,8 +347,6 @@ void BF::ResourceManager::Load(Dialog& resource, const char* filePath)
 
 void BF::ResourceManager::Load(Level& level, const char* filePath)
 {
-
-
     const char _modelToken = 'O';
     const char _textureToken = 'T';
     const char _musicToken = 'M';
@@ -365,7 +363,7 @@ void BF::ResourceManager::Load(Level& level, const char* filePath)
     unsigned int dialogCounter = 0;
 
     FileStream file;
-    FileActionResult FileActionResult = file.ReadFromDisk(filePath);
+    FileActionResult FileActionResult = file.ReadFromDisk(filePath, true);
     char currentLineBuffer[200];
 
     if (FileActionResult != FileActionResult::Successful)
@@ -447,10 +445,16 @@ void BF::ResourceManager::Load(Level& level, const char* filePath)
                 Vector3<float> rotation;
                 Vector3<float> scale;
 
-                sscanf(currentLineBuffer, "%s %s %s %s %s", dummyBuffer, path, positionText, rotationText, scaleText);
-
-
-                
+                sscanf
+                (
+                    currentLineBuffer, 
+                    "%s %s %s %s %s", 
+                    dummyBuffer,
+                    path, 
+                    positionText,
+                    rotationText, 
+                    scaleText
+                );                
 
                 // Get raw Data-------------------------                         
 
@@ -487,13 +491,13 @@ void BF::ResourceManager::Load(Level& level, const char* filePath)
                 // Load Model----------------
                 Model* loadedModel = new Model(); 
 
-                Load(*loadedModel, path);
+                Add(*loadedModel, path, false);
 
-                if (loadedModel == nullptr)
+                /*
+                for (size_t i = 0; i < loadedModel->MeshListSize; i++)
                 {
-                    printf("[Warning] Loading failed!\n");
-                    break;
-                }
+                    loadedModel->MeshList[i].Structure.RenderType = RenderMode::Point;
+                }*/                
 
                 level.ModelList[modelCounter++] = loadedModel;
                 //-------------------
@@ -515,13 +519,11 @@ void BF::ResourceManager::Load(Level& level, const char* filePath)
             }
             case _textureToken:
             {
-                sscanf(currentLineBuffer, "%s %s", dummyBuffer, path);
-
                 Image* image = new Image();
 
-                Add(*image);
+                sscanf(currentLineBuffer, "%s %s", dummyBuffer, image->FilePath);
 
-                Load(*image, path);      
+                Add(*image, true);
 
                 level.ImageList[imageCounter++] = image;
                 break;
@@ -598,6 +600,7 @@ void BF::ResourceManager::Load
     const char* textureFront)
 {
     skyBox.NameChange("SkyBox");
+    strcpy(skyBox.MeshList[0].Name, "SkyBox");
 
     Load(skyBox.Faces[0], textureRight);
     Load(skyBox.Faces[1], textureLeft);
@@ -606,6 +609,14 @@ void BF::ResourceManager::Load
     Load(skyBox.Faces[4], textureBack);
     Load(skyBox.Faces[5], textureFront);
 
+    skyBox.Faces[0].FlipHorizontal();
+    skyBox.Faces[1].FlipHorizontal();
+    //skyBox.Faces[2].FlipHorizontal();
+    //skyBox.Faces[2].FlipVertical();
+    skyBox.Faces[3].FlipHorizontal();
+    skyBox.Faces[4].FlipHorizontal();
+    skyBox.Faces[5].FlipHorizontal();
+
     Load(skyBox.Shader, shaderVertex, shaderFragment);
 
     Add(skyBox);
@@ -613,13 +624,13 @@ void BF::ResourceManager::Load
 
 void BF::ResourceManager::Add(Sprite& sprite)
 {
-    Image& image = sprite.Texture;
+    Image& image = sprite.MaterialList[0].Texture;
     Model& model = (Model&)sprite; 
 
     Add(image, false);
 
     float scaling = 0.01f;
-    float scalingPos = 10;
+    float scalingPos =  10;
     float xScaling = image.Width * scaling;
     float yScaling = image.Height * scaling;
     float xPos = model.MatrixModel.Data[TransformX] * scalingPos;
@@ -628,14 +639,17 @@ void BF::ResourceManager::Add(Sprite& sprite)
 
     if (sprite.ID == ResourceIDShared)
     {
-        sprite.SharedRenderInfoOverride.MaterialID = image.ID;    
-
         model.MatrixModel.Scale(xScaling, yScaling, 1.0f);
     }
     else
     {
         BF::Rectangle rectangle(image.Width, image.Height);       
-     
+        float vertexData[3*4];
+        size_t vertexDataSize = 3 * 4;
+        unsigned int indexData[4];
+        size_t indexDataSize = 4;
+
+        rectangle.GenerateVertexData(vertexData, vertexDataSize, indexData, indexDataSize);
 
         if (image.WrapWidth == ImageWrap::Repeat)
         {
@@ -649,9 +663,9 @@ void BF::ResourceManager::Add(Sprite& sprite)
 
         model.MatrixModel.Scale(scaling);
 
-        sprite.ConvertFrom(rectangle.VertexList, rectangle.VertexListSize, rectangle.IndexList, rectangle.IndexListSize, RenderMode::Square, sprite.TextureScale[0], sprite.TextureScale[1]);
+        sprite.ConvertFrom(vertexData, vertexDataSize, indexData, indexDataSize, RenderMode::Square, sprite.TextureScale[0], sprite.TextureScale[1]);
         
-        sprite.MeshList[0].RenderInfo.MaterialID = image.ID;
+        sprite.MeshList[0].RenderInfo.MaterialID = 0;    
     }
    
     model.MatrixModel.MoveTo(xPos, yPos, zPos);
@@ -777,12 +791,36 @@ void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
     {
         Collider* collider = colliderNode->Element;
 
+        Vector3<float> color(1.0f, 0.0f, 0.0f);
+        Vector2<float> position = collider->BoundingBox.Position;
+        Vector2<float> size = collider->BoundingBox.Size;
+        Vector3<float> boundingBox(size.X, size.Y, 0);
+        Matrix4x4<float> boundingBoxModel;
+
+        boundingBoxModel.Move(position.X, position.Y, 0);
+
+        Matrix4x4<float> boundingBoxScaled = TransformBoundingBox(boundingBoxModel, boundingBox, false);
+        Vector3<float> colliderPosition = boundingBoxScaled.PositionXYZ();
+        Vector3<float> colliderScaling = boundingBoxScaled.ScaleXYZ();
+
+        BoundingBoxRender(boundingBoxModel, boundingBox, color);
+
         for (LinkedListNode<Model*>* modelNode = _modelList.GetFirst(); modelNode != nullptr; modelNode = modelNode->Next)
         {
             Model* model = modelNode->Element;
-            Vector4<float> modelPositionx4 = model->MatrixModel.CurrentPosition();
-            Vector3<float> modelPosition(modelPositionx4.X, modelPositionx4.Y, modelPositionx4.Z);
-            bool isColliding = collider->IsColliding(modelPosition);            
+            Matrix4x4<float> modelMatrix = model->MatrixModel;
+            Vector3<float> modelBoundingBox(model->MeshList[0].Structure.Width, model->MeshList[0].Structure.Height, model->MeshList[0].Structure.Depth);
+            //Vector3<float> modelPosition = modelMatrix.PositionXYZ();
+            //Vector3<float> modelScaling = modelMatrix.ScaleXYZ() * (modelBoundingBox);
+            Matrix4x4<float> boundingBoxModelScaled = TransformBoundingBox(modelMatrix, modelBoundingBox, false);
+            Vector3<float> modelPosition = boundingBoxModelScaled.PositionXYZ();
+            Vector3<float> modelScaling = boundingBoxModelScaled.ScaleXYZ() ;
+
+            Vector3<float>& drawShit = modelBoundingBox;
+
+            modelScaling.Z = INFINITY;       
+
+            bool isColliding = ((GravityCube*)collider)->IsColliding(colliderPosition, colliderScaling, modelPosition, modelScaling);
 
             if (isColliding && model->EnablePhysics)
             {
@@ -792,7 +830,9 @@ void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
                     {
                         GravityField* gravityField = (GravityField*)collider;
 
-                        model->ApplyGravity(gravityField->PullDirection, gravityField->PullForce, deltaTime);
+                        BoundingBoxRender(modelMatrix, drawShit, color);
+                       
+                        model->ApplyGravity(gravityField->PullDirection, gravityField->PullForce*0.001f, deltaTime);
                         break;
                     }
                     case ColliderType::HitBox:
@@ -805,14 +845,16 @@ void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
                     }
                 }           
             }
+            else
+            {
+                BoundingBoxRender(modelMatrix, drawShit, Vector3<float>(1,1,0));
+            }
         }
     }  
 }
 
 void BF::ResourceManager::ModelsRender(float deltaTime)
 {
-    OpenGLAPI::RenderClear();
-
     MainCamera.Update(deltaTime);
 
     // Render Skybox first, if it is used
@@ -823,11 +865,13 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
         {
             unsigned int shaderID = DefaultSkyBox->Shader.ID;
             Matrix4x4<float> viewTri(MainCamera.MatrixView);
+            Mesh& skyMesh = DefaultSkyBox->MeshList[0];
 
             viewTri.ResetForthAxis();
 
+            OpenGLAPI::RenderBothSides(true);
             OpenGLAPI::DepthMaskEnable(false);
-            OpenGLAPI::DrawOrder(true);
+            //OpenGLAPI::DrawOrder(true);
 
             OpenGLAPI::UseShaderProgram(shaderID);
             _lastUsedShaderProgram = shaderID;
@@ -837,24 +881,21 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
 
             OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixViewID, viewTri.Data);
 
-            OpenGLAPI::SkyBoxUse(*DefaultSkyBox);
-
-            Mesh& skyMesh = DefaultSkyBox->MeshList[0];
+            OpenGLAPI::SkyBoxUse(*DefaultSkyBox);          
 
             OpenGLAPI::Render(skyMesh.Structure.RenderType, 0, skyMesh.Structure.IndexDataSize);
 
             OpenGLAPI::DepthMaskEnable(true);
-            OpenGLAPI::DrawOrder(false);
+            //OpenGLAPI::DrawOrder(false);
         }
     }
 
-    for (LinkedListNode<Model*>* currentModel = _modelList.GetFirst() ; currentModel != nullptr ; currentModel = currentModel->Next)
+    for (LinkedListNode<Model*>* currentModel = _modelList.GetFirst() ; currentModel ; currentModel = currentModel->Next)
     {
         Model* model = currentModel->Element;
         Model* parentModel = nullptr;
         bool isSharedModel = model->SharedModel != nullptr;
-        unsigned int vaoID = isSharedModel ? model->SharedModel->ID : model->ID;
-        bool skipRendering = !model->ShouldItBeRendered || vaoID == -1;       
+        bool skipRendering = !model->ShouldItBeRendered;       
 
         if (skipRendering)
         {
@@ -865,9 +906,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
         {
             parentModel = model;
             model = model->SharedModel;
-        }      
-
-        OpenGLAPI::VertexArrayBind(vaoID);
+        }               
 
         for (size_t meshIndex = 0; meshIndex < model->MeshListSize; meshIndex++)
         {
@@ -877,15 +916,15 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
             bool changeShader = shaderProgramID != _lastUsedShaderProgram;
             bool isRegistered = ((int)model->ID) >= 0;
             bool skipRendering = !(mesh.RenderInfo.ShouldBeRendered && isRegistered) || mesh.Structure.RenderType == RenderMode::Invalid;
+            unsigned int vaoID = isSharedModel ? model->SharedModel->ID : mesh.Structure.VertexArrayID;
+            Matrix4x4<float>& modelMatrix = isSharedModel ? parentModel->MatrixModel : model->MatrixModel;
 
             if (skipRendering) // Skip to next mesh.
             {
                 continue;
             }
 
-            assert(isRegistered);       
-
-            OpenGLAPI::VertexBufferBind(mesh.Structure.VertexBufferID, mesh.Structure.IndexBufferID);
+            assert(isRegistered);    
 
             //-----[Shader Lookup]---------------------------------------------
             {
@@ -908,49 +947,150 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
             }           
             //-----------------------------------------------------------------
 
-            if (isSharedModel)
+            OpenGLAPI::VertexArrayBind(vaoID);
+
+            //-----[Position]--------------------------------------------------
+            OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, modelMatrix.Data);
+            //-----------------------------------------------------------------  
+
+            //-----[Texture Lookup]--------------------------------------------
+            unsigned int materialIndex = parentModel ? parentModel->SharedRenderInfoOverride.MaterialID : mesh.RenderInfo.MaterialID;
+            unsigned int textureID = materialIndex != -1 ? model->MaterialList[materialIndex].Texture.ID : _defaultTextureID;
+
+            OpenGLAPI::TextureUse(ImageType::Texture2D, textureID);
+            //-----------------------------------------------------------------           
+
+            //-----[RenderStyle]-----------------------------------------------                      
+            OpenGLAPI::Render(mesh.Structure.RenderType, 0, mesh.Structure.IndexDataSize);
+            //-----------------------------------------------------------------
+
+#if 1// Show HitBoxes
+            Vector3<float> boundingBox(mesh.Structure.Width, mesh.Structure.Height, mesh.Structure.Depth);
+
+            //BoundingBoxRender(model->MatrixModel, boundingBox, Vector3<float>(0, 1, 1));
+#endif
+       
+        }       
+    }
+
+    for (LinkedListNode<Collider*>* colliderCurrent = _physicList.GetFirst(); colliderCurrent ; colliderCurrent = colliderCurrent->Next)
+    {
+        Collider* collider = colliderCurrent->Element;
+        Vector3<float> color(1.0f,1.0f,1.0f);
+        Vector2<float> position = collider->BoundingBox.Position;
+        Vector2<float> size = collider->BoundingBox.Size;
+        Vector3<float> boundingBox(size.X, size.Y, 0);
+        Matrix4x4<float> model;
+
+        model.Move(position.X, position.Y, 0);
+
+        switch (collider->Type)
+        {
+            case ColliderType::Gravity:
             {
-                OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, parentModel->MatrixModel.Data);
+                color.Set(0.69f, 0.0f, 1.0f);
+                break;
+            }
+            case ColliderType::HitBox:
+            {
+                color.Set(0.69f, 1.0f, 0.0f);
+                break;
+            }
+            case ColliderType::EffectBox:
+            {
+                color.Set(1.0f, 1.0f, 0.0f);
+                break;
+            }
+        }
+
+        //BoundingBoxRender(model, boundingBox, color);
+    }
+}
+
+BF::Matrix4x4<float> BF::ResourceManager::TransformBoundingBox(Matrix4x4<float> modelMatrix, Vector3<float> boundingBox, bool half)
+{
+    Matrix4x4<float> matrixResult;
+    Vector3<float> position = modelMatrix.PositionXYZ();
+    Vector3<float> scalingModf = modelMatrix.ScaleXYZ();
+
+    if (half)
+    {
+        scalingModf = scalingModf / 2.0f;
+    }
+
+    boundingBox *= scalingModf;
+
+    if (half)
+    {
+        position.X += (boundingBox.X);
+        position.Y += (boundingBox.Y);
+    }
+    else
+    {
+        //position.X -= (boundingBox.X);
+        //position.Y -= (boundingBox.Y);
+    }
+
+    matrixResult.MoveTo(position);
+    matrixResult.ScaleSet(boundingBox.X, boundingBox.Y, 1);
+
+    return matrixResult;
+}
+
+void BF::ResourceManager::BoundingBoxRender(Matrix4x4<float> modelMatrix, Vector3<float> boundingBox, Vector3<float> color)
+{
+    Matrix4x4<float> boundingBoxScaled = TransformBoundingBox(modelMatrix, boundingBox, true);
+    unsigned int shaderID = ShaderHitBox.ID;
+
+    OpenGLAPI::UseShaderProgram(shaderID);
+    _lastUsedShaderProgram = shaderID;
+    CameraDataGet(shaderID);
+    //OpenGLAPI::TextureUse(ImageType::Texture2D, 0);
+    CameraDataUpdate(MainCamera);
+    int shaderColorID = OpenGLAPI::ShaderGetUniformLocationID(shaderID, "HitBoxColor");
+
+    boundingBoxScaled.Move(0, 0, -2);
+
+    OpenGLAPI::VertexArrayBind(CubeHitBoxViewModel.MeshList[0].Structure.VertexArrayID);
+    OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, boundingBoxScaled.Data);
+    // Render middle
+    OpenGLAPI::ShaderSetUniformVector4(shaderColorID , color.X, color.Y, color.Z, 0.05f);
+    OpenGLAPI::Render(RenderMode::Square, 0, 4);
+    // Render outLine
+    OpenGLAPI::ShaderSetUniformVector4(shaderColorID, color.X, color.Y, color.Z, 1);
+    OpenGLAPI::Render(RenderMode::LineLoop, 0, 4);
+}
+
+void ByteToString(char* string, size_t value)
+{
+    if (value > 1000)
+    {
+        value /= 1000;
+
+        if (value > 1000)
+        {
+            value /= 1000;
+
+            if (value > 1000)
+            {
+                value /= 1000;
+
+                sprintf(string, "%i GB", value);
             }
             else
             {
-                OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, model->MatrixModel.Data);
+                sprintf(string, "%i MB", value);
             }
-
-            //-----[Texture Lookup]--------------------------------------------
-            {
-                unsigned int materialID = parentModel ? parentModel->SharedRenderInfoOverride.MaterialID : mesh.RenderInfo.MaterialID;
-                bool hasMaterial = materialID != -1;
-                unsigned int textureID = hasMaterial ? materialID : _defaultTextureID;
-
-                OpenGLAPI::TextureUse(ImageType::Texture2D, textureID);
-/*
-                if (hasMaterial)
-                {      
-
-                    Image* texture = mesh.;
-                    bool hasTexture = texture != nullptr;
-
-                    if (hasTexture)
-                    {
-                        textureID = texture->ID;
-
-                        OpenGLAPI::TextureUse(texture->Type, textureID);
-                    }
-                }
-                else
-                {
-                    OpenGLAPI::TextureUse(ImageType::Texture2D, textureID);
-                }
-            */
-            }
-            //-----------------------------------------------------------------           
-
-            //-----[RenderStyle]-----------------------------------------------
-            OpenGLAPI::Render(mesh.Structure.RenderType, 0, mesh.Structure.IndexDataSize);
-            //-----------------------------------------------------------------
-        }       
+        }
+        else
+        {
+            sprintf(string, "%i KB", value);
+        }
     }
+    else
+    {
+        sprintf(string, "%i B", value);
+    } 
 }
 
 void BF::ResourceManager::PrintContent(bool detailed)
@@ -960,7 +1100,7 @@ void BF::ResourceManager::PrintContent(bool detailed)
         const char* noValue = "| %-73s |\n";
         const char* message =
             "+-----------------------------------------------------------------------------+\r\n"
-            "|   %-73s |\n"
+            "|  %-74s |\n"
             "+-----+-----------------------+--------------------------------------+--------+\n"
             "|  ID | Name                  | Source - FilePath                    | Size   |\n"
             "+-----+-----------------------+--------------------------------------+--------+\n";
@@ -975,8 +1115,61 @@ void BF::ResourceManager::PrintContent(bool detailed)
         for (LinkedListNode<Model*>* currentModel = _modelList.GetFirst(); currentModel ; currentModel = currentModel->Next)
         {
             Model* model = currentModel->Element;
+            unsigned int meshListSize = model->MeshListSize;
 
             printf(line, model->ID, model->Name, model->FilePath, sizeof(*model));
+
+            for (size_t i = 0; i < meshListSize; i++)
+            {           
+                Mesh& mesh = model->MeshList[i];
+                unsigned int vaoID = mesh.Structure.VertexArrayID;
+                char subMeshTagBuffer[60];
+
+                sprintf(subMeshTagBuffer, "(Sub-Mesh) [%2zu/%2zu]", i + 1, meshListSize);
+
+                if ((int)mesh.Structure.VertexArrayID > 0)
+                {   
+                    printf(line, vaoID, mesh.Name, subMeshTagBuffer, sizeof(mesh));
+                }
+                else
+                {
+                    const char* idTag = nullptr;
+
+                    switch (vaoID)
+                    {
+                        case ResourceIDUndefined:
+                            idTag = "UDF";
+                            break;
+
+                        case ResourceIDLoading:
+                            idTag = "LOA";
+                            break;
+
+                        case ResourceIDLoaded:
+                            idTag = "O K";
+                            break;
+
+                        case ResourceIDShared:
+                            idTag = "SHA";
+                            break;
+
+                        case ResourceIDFileNotFound:
+                            idTag = "MIS";
+                            break;
+
+                        case ResourceIDOutOfMemory:
+                            idTag = "ErM";
+                            break;
+
+                        case ResourceIDUnsuportedFormat:
+                            idTag = "ErF";
+                            break;
+                    }
+
+                    printf("| %3s | %-21s | %-36s | %4i B |\n", idTag, mesh.Name, subMeshTagBuffer, sizeof(mesh));
+                }     
+               
+            }
         }
 
         printf(endLine);
@@ -985,8 +1178,11 @@ void BF::ResourceManager::PrintContent(bool detailed)
         for (LinkedListNode<Image*>* currentImage = _imageList.GetFirst() ;  currentImage ; currentImage = currentImage->Next)
         {
             Image* image = currentImage->Element;
+            char byteStringBuffer[40];
 
-            printf(line, image->ID, image->Name, image->FilePath, sizeof(*image));             
+            ByteToString(byteStringBuffer, image->FullSizeInMemory());
+
+            printf("| %3i | %-21s | %-36.36s | %6s |\n", image->ID, image->Name, image->FilePath, byteStringBuffer);
         }
 
         printf(endLine);
@@ -1015,14 +1211,19 @@ void BF::ResourceManager::PrintContent(bool detailed)
         for (LinkedListNode<ShaderProgram*>* currentChaderProgram = _shaderProgramList.GetFirst(); currentChaderProgram ; currentChaderProgram = currentChaderProgram->Next)
         {
             ShaderProgram* shaderProgram = currentChaderProgram->Element;
+            unsigned int shaderListSize = ShaderListSize;
+            char buffer[50];
 
-            printf("| ID:%u ShaderProgram\n", shaderProgram->ID);
+            sprintf(buffer, "(ShaderContainer) [%i]", shaderListSize);
 
-            for (size_t i = 0; i < 2; i++)
+            printf(line, shaderProgram->ID, buffer, "<Internal>", sizeof(ShaderProgram));
+
+            for (size_t i = 0; i < shaderListSize; i++)
             {
                 Shader& shader = shaderProgram->ShaderList[i];
+                const char* shaderTypeString = ShaderTypeToString(shader.Type);
 
-                printf("| - Sub-Shader ID:%u Type:%u Source:%s\n", shader.ID, shader.Type, &shader.FilePath[0]);
+                printf(line, shader.ID, shaderTypeString, shader.FilePath, sizeof(shader));
             }
         }
 

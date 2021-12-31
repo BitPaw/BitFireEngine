@@ -1,9 +1,10 @@
 #pragma once
 
 #include "AudioSource.h"
-#include "../../Dependencies/include/AL/al.h"
-#include "../../Dependencies/include/AL/alc.h"
 #include "../../SystemResource/Source/Sound/Sound.h"
+
+#include <AL/al.h>
+#include <AL/alc.h>
 
 namespace BF
 {

@@ -60,3 +60,51 @@ bool BF::Cube::IsPointInObject(float x, float y, float z)
 
 	return false;
 }
+
+bool BF::Cube::IsInLinar(float ancerPosition, float ancerSize, float targetPosition, float targetSize)
+{
+	float a = ancerPosition;
+	float b = ancerPosition + ancerSize;
+	float x = targetPosition;
+	float y = targetPosition + targetSize;
+	bool isInA = a <= x && x <= b;
+	bool isInB = a <= y && y <= b;
+	bool isInField = isInA || isInB;
+
+	/*
+	float targetX = targetPosition + targetSize;
+
+	float lowerBound = ancerPosition;
+	float upperBound = ancerPosition + ancerSize;
+	bool isInLower = targetPosition >= lowerBound || targetX >= lowerBound;
+	bool isInUpperBoujnd = targetPosition <= upperBound || targetX <= upperBound;
+	bool isInField = isInLower && isInUpperBoujnd;
+	*/
+
+	//  (min - tagetMax) <= targetMin && (targetMin + tagetMax) <= (min+max);
+
+	return isInField;
+}
+
+bool BF::Cube::IsPointInObject
+(
+	float ancerPositionX,
+	float ancerPositionY,
+	float ancerPositionZ,
+	float ancerSizeX, 
+	float ancerSizeY,
+	float ancerSizeZ,
+	float targetPositionX, 
+	float targetPositionY,
+	float targetPositionZ,
+	float targetSizeX,
+	float targetSizeY,
+	float targetSizeZ
+)
+{
+	bool isInX = targetSizeX == INFINITY || IsInLinar(ancerPositionX, ancerSizeX, targetPositionX, targetSizeX);
+	bool isInY = targetSizeY == INFINITY || IsInLinar(ancerPositionY, ancerSizeY, targetPositionY, targetSizeY);
+	bool isInZ = targetSizeZ == INFINITY || IsInLinar(ancerPositionZ, ancerSizeZ, targetPositionZ, targetSizeZ);
+
+	return isInX && isInY && isInZ;
+}

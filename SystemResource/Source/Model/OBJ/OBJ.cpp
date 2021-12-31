@@ -24,6 +24,101 @@ BF::OBJ::~OBJ()
     //delete[] ElementList;
 }
 
+BF::Vector3<float>* BF::OBJ::GlobalVertexPosition(size_t index)
+{
+    for (size_t i = 0; i < ElementListSize; i++)
+    {
+        OBJElement& objElement = ElementList[i];
+        size_t arraySize = objElement.VertexPositionList.Size();
+        bool isInThisElement = index <= arraySize;
+
+        if (isInThisElement)
+        {
+            return &objElement.VertexPositionList[index];
+        }
+
+        index -= arraySize;
+    }
+
+    return nullptr;
+}
+
+BF::Vector2<float>* BF::OBJ::GlobalTextureCoordinate(size_t index)
+{
+    for (size_t i = 0; i < ElementListSize; i++)
+    {
+        OBJElement& objElement = ElementList[i];
+        size_t arraySize = objElement.TextureCoordinateList.Size();
+        bool isInThisElement = index <= arraySize;
+
+        if (isInThisElement)
+        {
+            return &objElement.TextureCoordinateList[index];
+        }
+
+        index -= arraySize;
+    }
+
+    return nullptr;
+}
+
+BF::Vector3<float>* BF::OBJ::GlobalVertexNormalPosition(size_t index)
+{
+    for (size_t i = 0; i < ElementListSize; i++)
+    {
+        OBJElement& objElement = ElementList[i];
+        size_t arraySize = objElement.VertexNormalPositionList.Size();
+        bool isInThisElement = index <= arraySize;
+
+        if (isInThisElement)
+        {
+            return &objElement.VertexNormalPositionList[index];
+        }
+
+        index -= arraySize;
+    }
+
+    return nullptr;
+}
+
+BF::Vector3<float>* BF::OBJ::GlobalVertexParameter(size_t index)
+{
+    for (size_t i = 0; i < ElementListSize; i++)
+    {
+        OBJElement& objElement = ElementList[i];
+        size_t arraySize = objElement.VertexParameterList.Size();
+        bool isInThisElement = index <= arraySize;
+
+        if (isInThisElement)
+        {
+            return &objElement.VertexParameterList[index];
+        }
+
+        index -= arraySize;
+    }
+
+    return nullptr;
+}
+
+BF::Vector3<unsigned int>* BF::OBJ::GlobalFaceElement(size_t index)
+{
+    for (size_t i = 0; i < ElementListSize; i++)
+    {
+        OBJElement& objElement = ElementList[i];
+        size_t arraySize = objElement.FaceElementList.Size();
+        bool isInThisElement = index <= arraySize;
+
+        if (isInThisElement)
+        {
+            return &objElement.FaceElementList[index];
+        }
+
+        index -= arraySize;
+    }
+
+    return nullptr;
+}
+
 bool BF::OBJ::ShouldCreateNewMesh(OBJLineCommand objLineCommand, bool isCurrentlyInFaces)
 {
     if (!isCurrentlyInFaces)
@@ -109,19 +204,19 @@ BF::OBJLineCommand BF::OBJ::PeekCommandLine(const char* commandLine)
     }
 }
 
-
-
 BF::FileActionResult BF::OBJ::Load(const char* filePath)
 {
     bool isFirstVertex = true;
     char currentLineBuffer[300];
     FileStream file; 
-    FileActionResult FileActionResult = file.ReadFromDisk(filePath);
+    FileActionResult FileActionResult = file.ReadFromDisk(filePath, true);
 
     if (FileActionResult != FileActionResult::Successful)
     {
         return FileActionResult;
     }   
+
+    strncpy(Name, filePath, OBJNameSize);
 
     //---<Cound needed Space and allocate>----------------------------------
     {
@@ -220,11 +315,14 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
 
                 newElement = OBJElement();
 
-                oldElement.VertexPositionList.ReSize(vertexPositionListSize);
-                oldElement.TextureCoordinateList.ReSize(vertexTextureCoordinateListSize);
-                oldElement.VertexNormalPositionList.ReSize(vertexNormalPositionListSize);
-                oldElement.VertexParameterList.ReSize(vertexParameterListSize);
-                oldElement.FaceElementList.ReSize(faceElementListSize);
+                oldElement.Allocate
+                (
+                    vertexPositionListSize,
+                    vertexTextureCoordinateListSize,
+                    vertexNormalPositionListSize,
+                    vertexParameterListSize,
+                    faceElementListSize
+                );
 
                 vertexPositionListSize = 0;
                 vertexTextureCoordinateListSize = 0;
@@ -234,8 +332,17 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
 
                 isInMesh = false;
             }
-        }                
-   
+        } 
+
+        ElementList[ElementListSize - 1].Allocate
+        (
+            vertexPositionListSize,
+            vertexTextureCoordinateListSize,
+            vertexNormalPositionListSize,
+            vertexParameterListSize,
+            faceElementListSize
+        );
+
         if (MaterialFileListSize > 0)
         {
             MaterialFileList = new MTL[MaterialFileListSize];
@@ -364,7 +471,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
 
                 case OBJLineCommand::ObjectName:
                 {
-                    strcpy_s(elemtent->Name, OBJElementNameLength, currentLineBuffer + 2);
+                    strncpy_s(elemtent->Name, currentLineBuffer + 2, OBJElementNameLength);
                     break;
                 }
 
@@ -372,7 +479,9 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                 case OBJLineCommand::VertexNormal:
                 case OBJLineCommand::VertexGeometric:
                 {
-                    Vector3<float>* currentVectorValue;
+                    Vector3<float>* currentVectorValue = nullptr;
+
+                    assert(elemtent);
 
                     switch (command)
                     {
@@ -387,10 +496,9 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                         case OBJLineCommand::VertexGeometric:
                             currentVectorValue = &elemtent->VertexPositionList[currentPositionElement++];
                             break;
-
-                        default:
-                            throw "Error";
                     }
+
+                    assert(currentVectorValue);
 
                     AsciiString::Parse
                     (
@@ -502,10 +610,7 @@ BF::FileActionResult BF::OBJ::Save(const char* filePath)
 
 BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
 {
-    bool usedNormals = false;
-
-    model.MeshListSize = ElementListSize;
-    model.MeshList = new Mesh[ElementListSize];
+    bool usedNormals = false;     
   
     for (size_t materialFileIndex = 0; materialFileIndex < MaterialFileListSize; materialFileIndex++)
     {
@@ -529,6 +634,11 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
         }
     }
 
+    model.MeshListSize = ElementListSize;
+    model.MeshList = new Mesh[ElementListSize];
+
+    strncpy_s(model.Name, Name, OBJNameSize);
+
     for (size_t elementIndex = 0; elementIndex < model.MeshListSize; elementIndex++)
     {
         OBJElement& element = ElementList[elementIndex]; // Get current source Mesh
@@ -538,40 +648,57 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
         unsigned int normalListSize = element.VertexNormalPositionList.Size();
         unsigned int textureCoordinateListSize = element.TextureCoordinateList.Size();
 
-       // TODO: strncpy(mesh.Name, element.Name, ResourceNameSize);
-    
         mesh.Structure.RenderType = VertexStructureSize == 4 ? RenderMode::Square : RenderMode::Triangle;
 
-        mesh.Structure.Allocate(faceElementListSize * (3+3+4+2), faceElementListSize);
+        mesh.Structure.Allocate(faceElementListSize * (3 + 3 + 4 + 2), faceElementListSize);
         mesh.RenderInfo.MaterialID = element.MaterialListIndex;
+
+        strncpy_s(mesh.Name, element.Name, OBJElementNameLength);
 
         size_t vertecDataIndex = 0;
         float* vertexDataArray = mesh.Structure.VertexData;
-
+             
         for (size_t i = 0; i < faceElementListSize; i++)
         {
             Vector3<unsigned int>& indexPosition = element.FaceElementList[i];
             unsigned int vertexPositionID = indexPosition.X - 1;
             unsigned int texturePointID = indexPosition.Y - 1;
             unsigned int normalVectorID = indexPosition.Z - 1;
+            Vector3<float>* vertexData = GlobalVertexPosition(vertexPositionID);
+            Vector2<float>* textureData = GlobalTextureCoordinate(texturePointID);
+            Vector3<float>* normalData = GlobalVertexNormalPosition(normalVectorID);
+            Vector4<float> color(1.0f,1.0f,1.0f,1.0f);
+            bool vertexPositionIDValid = vertexData;
+            bool texturePointIDValid = textureData;
+            bool normalVectorIDValid = normalData;
 
-            Vector3<float>& vertexData = element.VertexPositionList[vertexPositionID];
-            Vector2<float>& textureData = element.TextureCoordinateList[vertexPositionID];
-            Vector3<float>& normalData = element.VertexNormalPositionList[vertexPositionID];
+            assert(vertexPositionIDValid);
+            assert(texturePointIDValid);
+            assert(normalVectorIDValid);
+
+
+            const unsigned int dataSize = 12u;
+            float data[dataSize]
+            {             
+                vertexData->X,          
+                vertexData->Y,         
+                vertexData->Z,       
+                normalData->X,         
+                normalData->Y,         
+                normalData->Z,         
+                color.X,
+                color.Y,             
+                color.Z,           
+                color.W,          
+                textureData->X,   
+                textureData->Y
+            };       
 
             mesh.Structure.IndexData[i] = i;
-            vertexDataArray[vertecDataIndex++] = vertexData.X;
-            vertexDataArray[vertecDataIndex++] = vertexData.Y;
-            vertexDataArray[vertecDataIndex++] = vertexData.Z;
-            vertexDataArray[vertecDataIndex++] = normalData.X;
-            vertexDataArray[vertecDataIndex++] = normalData.Y;
-            vertexDataArray[vertecDataIndex++] = normalData.Z;
-            vertexDataArray[vertecDataIndex++] = 1;
-            vertexDataArray[vertecDataIndex++] = 1;
-            vertexDataArray[vertecDataIndex++] = 1;
-            vertexDataArray[vertecDataIndex++] = 1;
-            vertexDataArray[vertecDataIndex++] = normalData.X;
-            vertexDataArray[vertecDataIndex++] = normalData.Y;
+
+            memcpy(vertexDataArray + vertecDataIndex, data, sizeof(float) * dataSize);
+
+            vertecDataIndex += dataSize;
         }
     }
 
@@ -597,11 +724,16 @@ void BF::OBJ::Clear()
 
 void BF::OBJ::PrintData()
 {
-    printf(" +-------+-------+-------+-------+-------+-------\n");
-    printf(" | Object: %-30s |\n", Name);
-    printf(" +-------+-------+-------+-------+-------+-------\n");
-    printf(" | %5s | %5s | %5s | %5s | %5s | %s\n", "Vert", "Norm", "Text", "Para", "Face", "Name");
-    printf(" +-------+-------+-------+-------+-------+-------\n");
+    const char* line = "+-------+-------+-------+-------+-------+-------------------+------------------|\n";
+
+    printf(line);
+    printf("| (OBJ) Name: %-64s |\n", Name);
+    printf(line);
+    printf
+    (
+        "| %5s | %5s | %5s | %5s | %5s | %-17s | %-16s |\n",
+        "VertP", "NormP", "TextC", "ParaV", "Face", "Mesh-Name", "Material-Name");
+    printf(line);
 
     for (unsigned int i = 0; i < ElementListSize; i++)
     {
@@ -611,33 +743,47 @@ void BF::OBJ::PrintData()
         unsigned int sizeNormal = waveFrontElement->VertexNormalPositionList.Size();
         unsigned int sizeText = waveFrontElement->TextureCoordinateList.Size();
         unsigned int sizePara = waveFrontElement->VertexParameterList.Size();
-        unsigned int sizeFace = waveFrontElement->FaceElementList.Size();
+        unsigned int sizeFace = waveFrontElement->FaceElementList.Size();                
+        char* materialName = nullptr;
 
-        printf(" | %5u | %5u | %5u | %5u | %5u | %s\n", sizePos, sizeNormal, sizeText, sizePara, sizeFace, &waveFrontElement->Name[0]);
+        if (waveFrontElement->MaterialListIndex != -1)
+        {
+            materialName = MaterialFileList[0].MaterialList[waveFrontElement->MaterialListIndex].Name;
+        }
+
+        printf
+        (
+            "| %5u | %5u | %5u | %5u | %5u | %-17s | %-16s |\n", 
+            sizePos, 
+            sizeNormal, 
+            sizeText,
+            sizePara, 
+            sizeFace, 
+            &waveFrontElement->Name[0],
+            materialName
+        );
     }
 
-    printf(" +-------+-------+-------+-------+-------+-------\n");
+    printf(line);
 
     if (MaterialFileListSize == 0)
     {
-        printf(" +-------+-------+-------+-------+-------+-------\n");
-        printf(" | No Materials  |\n");
+        printf("| %-76s |\n", "---<No Materials>---");
+        printf(line);
     }
 
     for (unsigned int i = 0; i < MaterialFileListSize; i++)
     {
-        MTL& mtl = MaterialFileList[i];
+        MTL& mtl = MaterialFileList[i];        
 
         for (unsigned int j = 0; j < mtl.MaterialListSize; j++)
         {
             MTLMaterial& material = mtl.MaterialList[j];
-
-            printf(" Material <%u> : %s\n", j, material.Name);
-            printf(" - Ambient  [%4.4f|%4.4f|%4.4f]\n", material.Ambient[0], material.Ambient[1], material.Ambient[2]);
-            printf(" - Diffuse  [%4.4f|%4.4f|%4.4f]\n", material.Diffuse[0], material.Ambient[1], material.Ambient[2]);
-            printf(" - Specular [%4.4f|%4.4f|%4.4f]\n", material.Specular[0], material.Ambient[1], material.Ambient[2]);
+            
+            printf("| Material ID   | %-29u | Ambient  [%4.3f|%4.3f|%4.3f] |\n", j, material.Ambient[0], material.Ambient[1], material.Ambient[2]);
+            printf("| Material Name | %-29s | Diffuse  [%4.3f|%4.3f|%4.3f] |\n", material.Name, material.Diffuse[0], material.Diffuse[1], material.Diffuse[2]);
+            printf("| Texture Path  | %-29.29s | Specular [%4.3f|%4.3f|%4.3f] |\n", material.TextureFilePath, material.Specular[0], material.Specular[1], material.Specular[2]);
+            printf("+---------------+-------------------------------+------------------------------+\n");
         }
-
-        printf(" +-------+-------+-------+-------+-------+-------\n");
-    }
+    }  
 }

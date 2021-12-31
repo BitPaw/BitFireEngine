@@ -13,11 +13,12 @@
 #include "../Math/Geometry/Shape/Shape.h"
 #include "../Math/Geometry/Matrix4x4.hpp"
 #include "../Math/Physic/PhysicsDynamic.hpp"
+#include "../Math/Physic/Collider.h"
 
 namespace BF
 {
 	// Renderable Object used as core element for the rendersystem.
-	class Model : public Resource, public PhysicsDynamic<float>
+	class Model : public Resource, public PhysicsDynamic<float>, public Collider
 	{
 		public:
 		bool ShouldItBeRendered;
@@ -40,6 +41,14 @@ namespace BF
 		FileActionResult Load();
 		FileActionResult Load(const char* filePath);
 
+		void Position(Vector3<float> position);
+		Vector3<float> Position();
+
 		void ConvertFrom(float* vertexList, size_t vertexListSize, unsigned int* indexList, size_t indexListSize, RenderMode renderMode, float textureScaleX = 1, float textureScaleY = 1, bool rawPositions = false);
+	
+		virtual size_t FullSizeInMemory() override;
+
+		virtual bool IsColliding(Vector2<float> position) { return false; };
+		virtual bool IsColliding(Vector3<float> position) { return false; };
 	};
 }

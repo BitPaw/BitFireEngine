@@ -101,27 +101,41 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)__Export__/x86 Debug/</OutDir>
+    <IntDir>$(SolutionDir)__Temp__/x86 Debug/$(ProjectName)/</IntDir>
+    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_32_Debug/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)__Export__/x86 Release/</OutDir>
+    <IntDir>$(SolutionDir)__Temp__/x86 Release/$(ProjectName)/</IntDir>
+    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_32_Release/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
+    <IntDir>$(SolutionDir)__Temp__/x86 XP/$(ProjectName)</IntDir>
+    <OutDir>$(SolutionDir)__Export__/x86 XP</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)__Export__/x64 Debug/</OutDir>
+    <IntDir>$(SolutionDir)__Temp__/x64 Debug/$(ProjectName)/</IntDir>
+    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_64_Debug/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)__Export__/x64 Release/</OutDir>
+    <IntDir>$(SolutionDir)__Temp__/x64 Release/$(ProjectName)/</IntDir>
+    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_64_Release/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -140,6 +154,8 @@
       <ControlFlowGuard>false</ControlFlowGuard>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <DisableSpecificWarnings>4464;4577;4820;9002;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <BasicRuntimeChecks>StackFrameRuntimeCheck</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,12 +164,12 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <SmallerTypeCheck>false</SmallerTypeCheck>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -165,7 +181,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <CallingConvention>StdCall</CallingConvention>
+      <DisableSpecificWarnings>4464;4577;4820;9002;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -177,15 +193,19 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>OSWindowsXP;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <Optimization>Disabled</Optimization>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DisableSpecificWarnings>4464;4577;4820;9002;</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -200,8 +220,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <ExceptionHandling>false</ExceptionHandling>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>StackFrameRuntimeCheck</BasicRuntimeChecks>
       <ControlFlowGuard>false</ControlFlowGuard>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
@@ -213,6 +233,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <DisableSpecificWarnings>4464;4577;4820;9002;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -221,7 +242,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -238,7 +259,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <CallingConvention>StdCall</CallingConvention>
+      <DisableSpecificWarnings>4464;4577;4820;9002;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -250,7 +271,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
@@ -259,6 +280,9 @@
       <Optimization>Disabled</Optimization>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DisableSpecificWarnings>4464;4577;4820;9002;</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -268,6 +292,35 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGTransparency.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGPhysicalPixelDimension.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGSuggestedPalette.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGPaletteHistogram.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGBackgroundColor.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGLastModificationTime.cpp" />
+    <ClCompile Include="Source\Camera\Camera.cpp" />
+    <ClCompile Include="Source\Service\HTTP\HTTPError.cpp" />
+    <ClCompile Include="Source\Service\HTTP\HTTPRequestMethod.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGPrimaryChromatics.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGPalette.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGImageHeader.cpp" />
+    <ClCompile Include="Source\File\ProgramExecuteInfo.cpp" />
+    <ClCompile Include="Source\Network\ServerListeningThreadInfo.cpp" />
+    <ClCompile Include="Source\Network\IPAdressInfo.cpp" />
+    <ClCompile Include="Source\Network\SocketType.cpp" />
+    <ClCompile Include="Source\Network\IPAdressFamily.cpp" />
+    <ClCompile Include="Source\Network\ProtocolMode.cpp" />
+    <ClCompile Include="Source\Network\IOSocketMessage.cpp" />
+    <ClCompile Include="Source\File\OpenFileDialog.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGInterlaceMethod.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\CMAP\EncodingID.cpp" />
+    <ClCompile Include="Source\Compression\HUFFMAN\HuffmanNumberCode.cpp" />
+    <ClCompile Include="Source\Compression\HUFFMAN\HuffmanCodeType.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGChunkType.cpp" />
+    <ClCompile Include="Source\Image\PNG\PNGColorTree.cpp" />
+    <ClCompile Include="Source\Image\PNG\PNGColorCompressor.cpp" />
+    <ClCompile Include="Source\Compression\ADAM7\ADAM7.cpp" />
+    <ClCompile Include="Source\Compression\HUFFMAN\HuffmanTree.cpp" />
     <ClCompile Include="Source\ErrorCode.cpp" />
     <ClCompile Include="Source\File\Program.cpp" />
     <ClCompile Include="Source\File\Bash.cpp" />
@@ -279,9 +332,10 @@
     <ClCompile Include="Source\Model\MeshStructure.cpp" />
     <ClCompile Include="Source\Font\FNT\FNTCommonData.cpp" />
     <ClCompile Include="Source\Font\FNT\FNTInfo.cpp" />
-    <ClCompile Include="Source\Image\PNG\PNGColorType.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGColorType.cpp" />
     <ClCompile Include="Source\Model\Model.cpp" />
     <ClCompile Include="Source\Network\SocketActionResult.cpp" />
+    <ClCompile Include="Source\Shader\ShaderType.cpp" />
     <ClCompile Include="Source\Video\MP4\MP4.cpp" />
     <ClCompile Include="Source\Image\JPEG\JPEGScanSelector.cpp" />
     <ClCompile Include="Source\Image\JPEG\JPEGScanStart.cpp" />
@@ -293,7 +347,6 @@
     <ClCompile Include="Source\Image\TGA\TGABitsPerPixel.cpp" />
     <ClCompile Include="Source\Image\TGA\TGAImageDataType.cpp" />
     <ClCompile Include="Source\Video\AVI\AVIHeader.cpp" />
-    <ClCompile Include="Source\Compression\HUFFMAN\HuffmanCodeBlock.cpp" />
     <ClCompile Include="Source\Compression\HUFFMAN\HuffmanSymbol.cpp" />
     <ClCompile Include="Source\Compression\DEFLATE\DeflateEncodingMethod.cpp" />
     <ClCompile Include="Source\Compression\DEFLATE\DeflateBlock.cpp" />
@@ -314,7 +367,6 @@
     <ClCompile Include="Source\Video\AVI\AVI.cpp" />
     <ClCompile Include="Source\Sound\WAV\FMT.cpp" />
     <ClCompile Include="Source\Sound\WAV\RIFF.cpp" />
-    <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\Game\SkyBox.cpp" />
     <ClCompile Include="Source\Image\ImageType.cpp" />
     <ClCompile Include="Source\Async\AsyncLock.cpp" />
@@ -337,8 +389,7 @@
     <ClCompile Include="Source\Image\Image.cpp" />
     <ClCompile Include="Source\Image\JPEG\JPEG.cpp" />
     <ClCompile Include="Source\Image\PNG\PNG.cpp" />
-    <ClCompile Include="Source\Image\PNG\PNGChunk.cpp" />
-    <ClCompile Include="Source\Image\PNG\PNGChunkTypeBlock.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGChunk.cpp" />
     <ClCompile Include="Source\Image\TGA\TGA.cpp" />
     <ClCompile Include="Source\Image\TIFF\TIFF.cpp" />
     <ClCompile Include="Source\Level\Level.cpp" />
@@ -402,8 +453,74 @@
     <ClCompile Include="Source\Compression\ZLIB\ZLIBCompressionLevel.cpp" />
     <ClCompile Include="Source\Compression\ZLIB\ZLIBCompressionMethod.cpp" />
     <ClCompile Include="Source\Game\Sprite.cpp" />
+    <ClCompile Include="Source\Compression\ZLIB\ZLIB.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFOffsetTable.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFVersion.cpp" />
+    <ClCompile Include="Source\Font\TTF\TTFTableEntry.cpp" />
+    <ClCompile Include="Source\Font\TTF\TTFTableEntryType.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFHorizontalHeader.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFHeader.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFMaximumProfile.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\OS2\TTFCompatibility.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFPanose.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFWeight.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFFamilyType.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFSerifStyle.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFArmStyle.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFContrast.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFHeightX.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFLetterform.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFMidline.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFProportion.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFStrokeVariatoon.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\DSIG\TTFDigitalSignature.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\DSIG\TTFDigitalSignatureRecord.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\DSIG\TTFDigitalSignatureBlock.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFLinearThreshold.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFVerticalDeviceMetrics.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\CMAP\TTFCharacterMapping.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\CMAP\EncodingRecord.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\CMAP\PlatformID.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFPostScript.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\TTFVersionType.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFKerning.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFKerningSubtable.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat0.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat2.cpp" />
+    <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFKerningPair.cpp" />
+    <ClCompile Include="Source\Service\HTTP\HTTPServer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGTransparency.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGPhysicalPixelDimension.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGSuggestedPalette.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGPaletteHistogram.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGBackgroundColor.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGLastModificationTime.h" />
+    <ClInclude Include="Source\Camera\Camera.h" />
+    <ClInclude Include="Source\Service\HTTP\HTTPError.h" />
+    <ClInclude Include="Source\Service\HTTP\HTTPRequestMethod.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGPrimaryChromatics.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGPalette.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGImageHeader.h" />
+    <ClInclude Include="Source\File\ProgramExecuteInfo.h" />
+    <ClInclude Include="Source\Network\ServerListeningThreadInfo.h" />
+    <ClInclude Include="Source\Network\IClientListener.hpp" />
+    <ClInclude Include="Source\Network\IPAdressInfo.h" />
+    <ClInclude Include="Source\Network\SocketType.h" />
+    <ClInclude Include="Source\Network\IPAdressFamily.h" />
+    <ClInclude Include="Source\Network\ProtocolMode.h" />
+    <ClInclude Include="Source\Network\IOSocketMessage.h" />
+    <ClInclude Include="Source\File\OpenFileDialog.h" />
+    <ClInclude Include="Source\Container\Dictionary.hpp" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGInterlaceMethod.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\CMAP\EncodingID.h" />
+    <ClInclude Include="Source\Compression\HUFFMAN\HuffmanNumberCode.h" />
+    <ClInclude Include="Source\Image\PNG\PNGColorTree.h" />
+    <ClInclude Include="Source\Image\PNG\PNGColorCompressor.h" />
+    <ClInclude Include="Source\Compression\ADAM7\ADAM7.h" />
+    <ClInclude Include="Source\Compression\HUFFMAN\HuffmanCodeType.h" />
+    <ClInclude Include="Source\Compression\HUFFMAN\HuffmanTree.h" />
     <ClInclude Include="Source\ErrorCode.h" />
     <ClInclude Include="Source\File\Program.h" />
     <ClInclude Include="Source\File\Bash.h" />
@@ -418,6 +535,7 @@
     <ClInclude Include="Source\File\FileTemporary.h" />
     <ClInclude Include="Source\Container\QuadTree\QuadTree.hpp" />
     <ClInclude Include="Source\File\ProgramExecuteResultListener.hpp" />
+    <ClInclude Include="Source\Image\Image.h" />
     <ClInclude Include="Source\Model\MeshRenderInfo.h" />
     <ClInclude Include="Source\Model\MeshStructure.h" />
     <ClInclude Include="Source\Font\FNT\FNTCommonData.h" />
@@ -425,6 +543,7 @@
     <ClInclude Include="Source\Font\IFontFormat.hpp" />
     <ClInclude Include="Source\Model\IModelFormat.hpp" />
     <ClInclude Include="Source\Model\Model.h" />
+    <ClInclude Include="Source\Network\IServerListener.h" />
     <ClInclude Include="Source\Network\ISocketListener.h" />
     <ClInclude Include="Source\Network\SocketActionResult.h" />
     <ClInclude Include="Source\Sound\ISoundFormat.hpp" />
@@ -442,7 +561,6 @@
     <ClInclude Include="Source\Math\Physic\PhysicsStatic.hpp" />
     <ClInclude Include="Source\Math\Physic\PhysicsDynamic.hpp" />
     <ClInclude Include="Source\Video\AVI\AVIHeader.h" />
-    <ClInclude Include="Source\Compression\HUFFMAN\HuffmanCodeBlock.h" />
     <ClInclude Include="Source\Compression\HUFFMAN\HuffmanSymbol.h" />
     <ClInclude Include="Source\Compression\DEFLATE\DeflateEncodingMethod.h" />
     <ClInclude Include="Source\Compression\DEFLATE\DeflateBlock.h" />
@@ -468,7 +586,6 @@
     <ClInclude Include="Source\Event\Event.hpp" />
     <ClInclude Include="Source\Math\Geometry\AngleDegree.hpp" />
     <ClInclude Include="Source\Math\Geometry\AngleRadians.hpp" />
-    <ClInclude Include="Source\Camera\Camera.h" />
     <ClInclude Include="Source\Camera\CameraPerspective.hpp" />
     <ClInclude Include="Source\Game\SkyBox.h" />
     <ClInclude Include="Source\Image\ImageType.h" />
@@ -483,7 +600,7 @@
     <ClInclude Include="Source\Container\BinaryTree\BinaryTreeDirection.h" />
     <ClInclude Include="Source\Container\BinaryTree\BinaryTreeNode.hpp" />
     <ClInclude Include="Source\Container\BitStreamHusk.h" />
-    <ClInclude Include="Source\Container\Dictionary.hpp" />
+    <ClInclude Include="Source\Container\DictionaryStatic.hpp" />
     <ClInclude Include="Source\Container\LinkedList.hpp" />
     <ClInclude Include="Source\Container\LinkedListNode.hpp" />
     <ClInclude Include="Source\Container\List.hpp" />
@@ -508,7 +625,6 @@
     <ClInclude Include="Source\Image\BMP\BMPInfoHeaderType.h" />
     <ClInclude Include="Source\Image\BMP\BMPInfoHeader.h" />
     <ClInclude Include="Source\Image\GIF\GIF.h" />
-    <ClInclude Include="Source\Image\Image.h" />
     <ClInclude Include="Source\Image\ImageFileFormat.h" />
     <ClInclude Include="Source\Image\ImageFilter.h" />
     <ClInclude Include="Source\Image\ImageDataFormat.h" />
@@ -516,10 +632,9 @@
     <ClInclude Include="Source\Image\ImageWrap.h" />
     <ClInclude Include="Source\Image\JPEG\JPEG.h" />
     <ClInclude Include="Source\Image\PNG\PNG.h" />
-    <ClInclude Include="Source\Image\PNG\PNGChunk.h" />
-    <ClInclude Include="Source\Image\PNG\PNGChunkType.h" />
-    <ClInclude Include="Source\Image\PNG\PNGChunkTypeBlock.h" />
-    <ClInclude Include="Source\Image\PNG\PNGColorType.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGChunk.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGChunkType.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGColorType.h" />
     <ClInclude Include="Source\Image\TGA\TGA.h" />
     <ClInclude Include="Source\Image\TGA\TGABitsPerPixel.h" />
     <ClInclude Include="Source\Image\TGA\TGAColorType.h" />
@@ -606,9 +721,42 @@
     <ClInclude Include="Source\Compression\ZLIB\ZLIBCompressionLevel.h" />
     <ClInclude Include="Source\Compression\ZLIB\ZLIBCompressionMethod.h" />
     <ClInclude Include="Source\Game\Sprite.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
+    <ClInclude Include="Source\Compression\ZLIB\ZLIB.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFOffsetTable.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFVersion.h" />
+    <ClInclude Include="Source\Font\TTF\TTFTableEntry.h" />
+    <ClInclude Include="Source\Font\TTF\TTFTableEntryType.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFHorizontalHeader.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFHeader.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFMaximumProfile.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\OS2\TTFCompatibility.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFPanose.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFWeight.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFFamilyType.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFSerifStyle.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFArmStyle.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFContrast.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFHeightX.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFLetterform.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFMidline.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFProportion.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFStrokeVariatoon.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\DSIG\TTFDigitalSignature.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\DSIG\TTFDigitalSignatureRecord.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\DSIG\TTFDigitalSignatureBlock.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFLinearThreshold.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFVerticalDeviceMetrics.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\CMAP\TTFCharacterMapping.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\CMAP\EncodingRecord.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\CMAP\PlatformID.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFPostScript.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\TTFVersionType.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFKerning.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFKerningSubtable.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat0.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat2.h" />
+    <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFKerningPair.h" />
+    <ClInclude Include="Source\Service\HTTP\HTTPServer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

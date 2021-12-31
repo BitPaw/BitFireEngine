@@ -10,7 +10,6 @@ namespace BF
 		public:
 		Sprite();
 
-		Image Texture;
 		float TextureScale[2];
 
 		void TextureScaleSet(float x, float y);

@@ -13,4 +13,6 @@ namespace BF
 	};
 
 	DeflateEncodingMethod ConvertDeflateEncodingMethod(unsigned char deflateEncodingMethod);
+
+	const char* DeflateEncodingMethodToString(DeflateEncodingMethod deflateEncodingMethod);
 }

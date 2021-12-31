@@ -17,8 +17,30 @@ namespace BF
 		SocketRecieveFailure,
 		SocketRecieveConnectionClosed,
 
+		SocketFlagsInvalid,
+		NameServerReturnedTemporaryFailureIndication,
+		NameServerReturnedPermanentFailureIndication,
+		SocketTypeNotSupported,
+		RequestedAddressFamilyNotSupported,
+		OutOfMemory,
+		HostExistsButHasNoData,
+		HostHasNoNetworkAddresses,
+
+		IPOrPortNotKnown,
+
+		SocketIsNotConnected,
+
+		RequestedServiceNotAvailableForSocket,
+
 		// Client
 		SocketConnectionFailure,
+
+
+		// Server
+		NoClientWithThisID,
+		NoSendEmptyData,
+
+
 
 
 		//---[ Windows Only (WindowsSocketAgent) ]-------
@@ -29,8 +51,13 @@ namespace BF
 		InvalidParameter,
 		SubSystemNotInitialised,
 		SubSystemNetworkFailed,
-		SocketIsBlocking
+		SocketIsBlocking,
+
+		WindowsSocketSystemNotInitialized,
 		//----------------------------------------
+
+		// File IO
+		FileNotFound
 	};
 
 	const char* SocketActionResultToString(SocketActionResult SocketActionResult);

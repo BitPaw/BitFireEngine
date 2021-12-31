@@ -13,5 +13,23 @@ namespace BF
 		float SurfaceArea() override;
 		float Perimeter() override;
 		bool IsPointInObject(float x, float y, float z);
+
+		static bool IsPointInObject
+		(
+			float ancerPositionX,
+			float ancerPositionY,
+			float ancerPositionZ,
+			float ancerSizeX,
+			float ancerSizeY,
+			float ancerSizeZ,
+			float targetPositionX,
+			float targetPositionY,
+			float targetPositionZ,
+			float targetSizeX,
+			float targetSizeY,
+			float targetSizeZ
+		);
+
+		static bool IsInLinar(float ancerPosition, float ancerSize, float targetPosition, float targetSize);
 	};
 }

@@ -24,4 +24,6 @@ namespace BF
         // .comp - a compute shader
         Compute,
 	};
+
+    const char* ShaderTypeToString(ShaderType shaderType);
 }

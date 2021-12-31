@@ -7,13 +7,13 @@ namespace BF
 		InvalidCompressionLevel,
 
 		Default,
-
 		Slowest,
-
 		Fast,
 		Fastest	
 	};
 
 	ZLIBCompressionLevel ConvertCompressionLevel(unsigned char compressionLevel);
 	unsigned char ConvertCompressionLevel(ZLIBCompressionLevel compressionLevel);
+
+	const char* CompressionLevelToString(ZLIBCompressionLevel compressionLevel);
 }

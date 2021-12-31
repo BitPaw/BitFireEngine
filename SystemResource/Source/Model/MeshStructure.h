@@ -9,6 +9,14 @@ namespace BF
 		public:
 		bool Original;
 
+		unsigned int VertexArrayID; // VAO
+
+		//---------------------------------------
+		size_t Height;
+		size_t Width;
+		size_t Depth;
+		//---------------------------------------
+
 		//---<Vertex Data>-----------------------
 		unsigned int VertexBufferID; // VBO
 		size_t VertexDataSize;
@@ -27,6 +35,8 @@ namespace BF
 		RenderMode RenderType;
 		//---------------------------------------
 
+
+
 		MeshStructure();
 		~MeshStructure();
 
@@ -34,6 +44,7 @@ namespace BF
 		void DeAllocate();
 
 		void MeshLink(MeshStructure& mesh);
+		void SizeCheck();
 
 		void PrintData();
 

@@ -13,7 +13,7 @@
 #include "../../../SystemResource/Source/Math/Geometry/Shape/Triangle.h"
 #include "../../../SystemResource/Source/Math/Geometry/Shape/Rectangle.h"
 
-BF::Model::Model()
+BF::Model::Model() : Collider(ColliderType::HitBox)
 {
     ShouldItBeRendered = false;
 
@@ -35,7 +35,23 @@ BF::Model::Model(const char* modelName) : Model()
 
 void BF::Model::PrintModelData()
 {
-    printf("Meshes %u\n", MeshListSize);
+    printf("+--------------------------------------------+\n");
+    printf("| Meshes %u |\n", MeshListSize);
+
+    for (size_t i = 0; i < MeshListSize; i++)
+    {
+        Mesh& mesh = MeshList[i];
+        MeshRenderInfo& info = mesh.RenderInfo;
+        MeshStructure& structure = mesh.Structure;
+
+        printf("+--------------------------------------------+\n");
+        printf("| Mesh <%u/%u>\n", i, MeshListSize);
+        printf("| Vertex   : ID:%u, Size:%u |\n", structure.VertexBufferID, structure.VertexDataSize);
+        printf("| Index    : ID:%u, Size:%u |\n", structure.IndexBufferID, structure.IndexDataSize);
+        printf("| Material : ID:%u, ShaderID:%u, Render:%u |\n", info.MaterialID, info.ShaderProgramID, info.ShouldBeRendered);
+    }
+
+    printf("+--------------------------------------------+");
 }
 
 BF::ModelType BF::Model::FileFormatPeek(const char* fileExtension)
@@ -56,6 +72,16 @@ BF::FileActionResult BF::Model::Load()
     return Load(FilePath);
 }
 
+void BF::Model::Position(Vector3<float> position)
+{
+    MatrixModel.MoveTo(position);
+}
+
+BF::Vector3<float> BF::Model::Position()
+{
+    return MatrixModel.PositionXYZ();
+}
+
 BF::FileActionResult BF::Model::Load(const char* filePath)
 {
     if (!File::DoesFileExist(filePath))
@@ -68,7 +94,7 @@ BF::FileActionResult BF::Model::Load(const char* filePath)
 
     ID = ResourceIDLoading;
 
-    strncpy(FilePath, filePath, ResourceFilePathSize);
+    FilePathChange(filePath);
 
     switch (modelType)
     {
@@ -180,7 +206,7 @@ void BF::Model::ConvertFrom(float* vertexList, size_t vertexListSize, unsigned i
             float z = vertexList[i++];
             float xNorm = x != 0 ? 0 : 1;
             float yNorm = y != 0 ? 0 : 1;
-            float tx = xNorm * textureScaleX; // [-1,1] -> [0,2] -> [0,1] // ((-x + 1) / 2.0f) * textureScale
+            float tx = (xNorm) * textureScaleX; // [-1,1] -> [0,2] -> [0,1] // ((-x + 1) / 2.0f) * textureScale
             float ty = yNorm * textureScaleY;
 
             vertexFullData[vertexFullDataIndex++] = x;
@@ -200,6 +226,12 @@ void BF::Model::ConvertFrom(float* vertexList, size_t vertexListSize, unsigned i
             vertexFullData[vertexFullDataIndex++] = ty; 
         }
     }   
+
+    mesh.Structure.SizeCheck();
+
+    BoundingBox.Set(mesh.Structure.Width, mesh.Structure.Height);
+
+    strcpy(mesh.Name, "<Sprite-Mesh>");
 
     ID = ResourceIDLoaded;
 }
@@ -249,3 +281,8 @@ void BF::Model::ConvertFrom(Shape& shape)
     UpdateGlobalMesh();*
 }
 */
+
+size_t BF::Model::FullSizeInMemory()
+{
+    return sizeof(Model);
+}

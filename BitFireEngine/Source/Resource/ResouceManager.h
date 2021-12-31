@@ -47,13 +47,22 @@ namespace BF
         AsyncLock _imageAdd;
         AsyncLock _modelAdd;
 
+
+
+
+
         public:
         Camera MainCamera;
         Font* DefaultFont;
         SkyBox* DefaultSkyBox;
 
+        ShaderProgram ShaderHitBox;
+
+        BF::Model CubeHitBoxViewModel;
+
         ResourceManager();
         ~ResourceManager();
+
 
         Model* GetModel(unsigned int index);
 
@@ -69,6 +78,7 @@ namespace BF
         Resource* Load(const char* filePathString);
 
         //void Load(Sprite& sprite, const char* model, const char* texturePath);
+        Matrix4x4<float> TransformBoundingBox(Matrix4x4<float> modelMatrix, Vector3<float> boundingBox, bool half);
 
         void Load(Model& model);
         void Load(Model& model, const char* filePath);
@@ -106,6 +116,7 @@ namespace BF
         void ModelsPhysicsApply(float deltaTime);
 
         void ModelsRender(float deltaTime);
+        void BoundingBoxRender(Matrix4x4<float> modelMatrix, Vector3<float> boundingBox, Vector3<float> color);
 
         void PrintContent(bool detailed);
     };

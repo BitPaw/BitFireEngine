@@ -19,9 +19,14 @@ void BF::Sprite::Set(float x, float y, float z, const char* name, const char* te
     MatrixModel.Move(x, y, z);
     NameChange(name);    
 
-    Texture.NameChange("<Used Sprite Texture>");
-    Texture.FilePathChange(textureFilePath);
-    Texture.ImageWrapSet(ImageWrap::StrechEdges);
+    MaterialListSize = 1;
+    MaterialList = new Material();
+
+    Material& material = MaterialList[0];
+
+    material.Texture.NameChange("<Used Sprite Texture>");
+    material.Texture.FilePathChange(textureFilePath);
+    material.Texture.ImageWrapSet(ImageWrap::StrechEdges);
 
     if (model)
     {

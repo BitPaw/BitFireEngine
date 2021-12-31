@@ -5,9 +5,10 @@
 #include "../../../../SystemResource/Source/Math/Geometry/Vector2.hpp"
 #include "../../../../SystemResource/Source/Math/Geometry/Vector3.hpp"
 
+#define OBJElementNameLength 50u
+
 namespace BF
 {
-#define OBJElementNameLength 50u
 	struct OBJElement
 	{
 		public:
@@ -31,5 +32,7 @@ namespace BF
 		List<Vector3<unsigned int>> FaceElementList;
 
 		OBJElement();
+
+		void Allocate(size_t vertexSize, size_t texturePointSize, size_t normalPointSize, size_t vertexParameterSize, size_t faceElementSize);
 	};
 }

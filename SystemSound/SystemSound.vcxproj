@@ -101,33 +101,43 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(ProjectDir)Dependencies\lib32\AL;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_32_Debug/;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)__Export__/x86 Debug</OutDir>
+    <IntDir>$(SolutionDir)__Temp__/x86 Debug/$(ProjectName)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(ProjectDir)Dependencies\lib32\AL;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_32_Release/;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)__Export__/x86 Release</OutDir>
+    <IntDir>$(SolutionDir)__Temp__/x86 Release/$(ProjectName)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(ProjectDir)Dependencies\lib32_xp;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_XP_32_Release</LibraryPath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
+    <IntDir>$(SolutionDir)__Temp__/x86 XP/$(ProjectName)</IntDir>
+    <OutDir>$(SolutionDir)__Export__/x86 XP</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(ProjectDir)Dependencies\lib32\AL\Deb;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_64_Debug/;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)__Export__/x64 Debug</OutDir>
+    <IntDir>$(SolutionDir)__Temp__/x64 Debug/$(ProjectName)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(ProjectDir)Dependencies\lib32\AL\Deb;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_64_Release/;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)__Export__/x64 Release</OutDir>
+    <IntDir>$(SolutionDir)__Temp__/x64 Release/$(ProjectName)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(ProjectDir)Dependencies\lib32_xp;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_XP_32_Release</LibraryPath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -176,6 +186,7 @@
       <Optimization>Disabled</Optimization>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

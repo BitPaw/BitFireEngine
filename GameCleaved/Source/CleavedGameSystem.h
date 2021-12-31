@@ -2,6 +2,7 @@
 
 #include "../../BitFireEngine/Source/System/BitFireEngine.h"
 #include "../../SystemRender/Source/Device/InputContainer.h"
+#include "../../SystemResource/Source/Camera/Camera.h"
 
 namespace Cleaved
 {

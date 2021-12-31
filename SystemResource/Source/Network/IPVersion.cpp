@@ -147,17 +147,6 @@ BF::IPVersion BF::AnalyseIPVersion(const char* ip)
 
         if (isDoubleDot)
             containsDoubleDot++;
-
-
-        if (isDot)
-        {
-            return IPVersion::IPVersion4;
-        }
-
-        if (isDoubleDot)
-        {
-            return IPVersion::IPVersion6;
-        }
     }
 
     if (containsNumbers && containsDot && !containsDoubleDot && !containsHexadezimal && !textChars)

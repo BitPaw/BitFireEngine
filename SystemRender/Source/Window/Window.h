@@ -1,10 +1,7 @@
 #pragma once
 
-//#include <GL/glew.h>
-//#include <GLFW/glfw3.h>
-
-#include "../../../Dependencies/include/GL/glew.h"
-#include "../../../Dependencies/include/GLFW/glfw3.h"
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 #include "../../../SystemResource/Source/Container/Dictionary.hpp"
 #include "../../../SystemResource/Source/Container/AsciiString.h"
@@ -12,6 +9,7 @@
 #include "../RefreshRateMode.h"
 #include "../Device/Mouse/CursorMode.h"
 #include "../Device/InputContainer.h"
+#include "IWindowListener.h"
 
 namespace BF
 {
@@ -20,22 +18,23 @@ namespace BF
 		private:
 		GLFWwindow* _window;
 		GLFWcursor* _cursor;
-		GLFWmonitor* _montor;	
+		GLFWmonitor* _montor;		
 
 		public:
+		static Dictionary<GLFWwindow*, Window*> WindowLookup;
+
+		InputContainer Input;
+
 		float ActiveTime;
 		bool ShouldCloseWindow;
 
-		static int Width;
-		static int Height;
-
-		// Events
-		//OnWindowCloseEvent OnWindowClose;
+		unsigned int Width;
+		unsigned int Height;	
 
 		Window();
 		~Window();		
 
-		static Dictionary<GLFWwindow*, InputContainer> WindowsInput;
+		IWindowListener* Callback;		
 
 		static void OnKeyPressed(GLFWwindow* window, int key, int scancode, int action, int mods);
 		static void OnMouseButton(GLFWwindow* window, int button, int action, int mods);
@@ -43,9 +42,16 @@ namespace BF
 		static void OnWindowSizeChanged(GLFWwindow* window, int _width, int _height);
 		static void OnGLFWError(int errorCode, const char* description);
 
-		InputContainer* GetInput()
+		static Window* GetWindow(GLFWwindow* window)
 		{
-			return WindowsInput.GetValue(_window);
+			Window** result = WindowLookup.GetValue(window);
+
+			if (result)
+			{
+				return *result;
+			}
+
+			return nullptr;
 		}
 
 		bool Create(int width, int height, const char* title);

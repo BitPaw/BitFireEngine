@@ -1,17 +1,11 @@
 #pragma once
 
-#include "OSDefine.h"
-
-#if defined(OSUnix)
-#include <unistd.h>
-#elif defined(OSWindows)
-#include <windows.h>
-#endif
-
 namespace BF
 {
 	enum class ErrorCode
 	{
+		Successful,
+
 		UnkownError, // OTHER
 
 		PermissionDenied, // ACCES
@@ -60,7 +54,7 @@ namespace BF
 		ExecutableFileFormatError, // NOEXEC
 		NoLocksAvailable, // NOLCK
 		LinkHasBeenSevered, // NOLINK
-		NotEnoughSpace, // NOMEM
+		OutOfMemory, // NOMEM
 		NoMessageOfTheDesiredType, // NOMSG
 		ProtocolNotAvailable, // NOPROTOOPT
 		NoSpaceLeftOnDevice, // NOSPC

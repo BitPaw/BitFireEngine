@@ -13,6 +13,10 @@
 #include "../../SystemResource/Source/Image/PNG/PNG.h"
 #include "../../SystemResource/Source/Math/Physic/GravityCube.h"
 #include "../../SystemResource/Source/Image/JPEG/JPEG.h"
+#include "../../SystemResource/Source/Font/TTF/TTF.h"
+
+
+using namespace BF;
 
 BF::UIText* text;
 //BF::Model* sphere;
@@ -30,6 +34,8 @@ float _deltaTime = 0;
 BF::Model* model;
 BF::Model textureBix;
 
+#define EnableMusic 0
+
 ZEE::ZEEGameSystem::ZEEGameSystem()
 {
     GameSystem.SetCallBack(this);
@@ -37,15 +43,10 @@ ZEE::ZEEGameSystem::ZEEGameSystem()
 
 void ZEE::ZEEGameSystem::OnStartUp()
 {   
-    /*
-    BF::JPEG jpeg;
-    jpeg.Load("B:/Daten/Bilder/_garbage/KN.jpg");
+   //TTF fnt;
 
+   //fnt.Load("A:/_WorkSpace/BOOKOSI.TTF");
 
-    BF::PNG png;
-
-    png.Load("Wb.png");
-    png.Save("Wb_EE.png");*/
 
     BF::StopWatch stopwatch;
 
@@ -54,42 +55,54 @@ void ZEE::ZEEGameSystem::OnStartUp()
     GameSystem.Resource.Load(worldShader, "Shader/WS.vert", "Shader/WS.frag");
     GameSystem.Resource.Load(hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
 
-    GameSystem.Resource.Load(textureBix, "Model/Dialog/DialogBox.obj");
-
-    GameSystem.Resource.Load("Texture/Block.bmp");
-   
-    GameSystem.Resource.Load("Model/Triangle.obj");
-    
-    _worldGravity.IgnoreAxis.Set(true, true, true);
-    _worldGravity.PullForce = GravityForceEarth;
-    _worldGravity.PullDirection.Set(0, -1, 0);
-    GameSystem.Resource.Add(&_worldGravity);
-
-    GameSystem.Resource.Load(cube, "Model/Cube.obj");
-    cube.MatrixModel.Scale(10.0f);
-    cube.EnablePhysics = true;
-    cube.Mass = 1000;
-
-    
-    //GameSystem.Resource.Load("Level/MainMenu.lev");
-
-
-    textureBix.MatrixModel.Scale(10, 2, 1);
-
-
-
     GameSystem.Resource.Load
     (
         skybox,
         "Shader/SkyBox.vert",
         "Shader/SkyBox.frag",
-        "Texture/SkyBox/Right.bmp",
-        "Texture/SkyBox/Left.bmp",
-        "Texture/SkyBox/Top.bmp",
-        "Texture/SkyBox/Bottom.bmp",
-        "Texture/SkyBox/Back.bmp",
-        "Texture/SkyBox/Front.bmp"
-    );           
+        "Texture/SkyBox/Right.png",
+        "Texture/SkyBox/Left.png",
+        "Texture/SkyBox/Top.png",
+        "Texture/SkyBox/Bottom.png",
+        "Texture/SkyBox/Back.png",
+        "Texture/SkyBox/Front.png"
+    );
+
+  
+
+    //GameSystem.Resource.Load(textureBix, "Model/Dialog/DialogBox.obj");
+
+    //GameSystem.Resource.Load("Texture/Block.bmp");   
+    //GameSystem.Resource.Load("Model/Triangle.obj");
+    
+   // _worldGravity.IgnoreAxis.Set(true, true, true);
+   // _worldGravity.PullForce = GravityForceEarth;
+   // _worldGravity.PullDirection.Set(0, -1, 0);
+   // GameSystem.Resource.Add(&_worldGravity);
+
+    GameSystem.Resource.Load("Level/MainMenu.lev");
+
+    GameSystem.Resource.Add(cube, "Model/Cube.obj", false);
+    cube.MatrixModel.Move(0,50,0);
+    cube.MatrixModel.Scale(10.0f);
+    //cube.EnablePhysics = true;
+    //cube.Mass = 1000;
+ 
+    cube.MaterialListSize++;
+    cube.MaterialList = new Material();
+
+    //GameSystem.Resource.Add(cube.MaterialList[0].Texture, "C:/Users/BitPaw/Videos/TEST_PNG3.png", false);
+    //cube.MeshList[0].RenderInfo.MaterialID = 0;
+    
+
+    
+
+   // textureBix.MatrixModel.Scale(10, 2, 1);
+
+ 
+
+
+        
 
     //text = new BF::UIText("SampleText", *GameSystem.Resource.DefaultFont, -1, -0.8);
     //text->MeshList[0].RenderInformation.ShaderProgramID = hudShaderID.ID;
@@ -100,11 +113,14 @@ void ZEE::ZEEGameSystem::OnStartUp()
 
     printf("[i][Info] Loading took %.2fs\n", stopwatch.Stop());
 
+    GameSystem.Resource.MainCamera.Update(0);
+    GameSystem.Resource.MainCamera.Move(BF::Vector3<float>(0, 0, -100));
+
     GameSystem.Resource.PrintContent(true);    
 
     
 
-#if 0 // Sound Enable
+#if EnableMusic // Sound Enable
     //BF::MID midi;
     //midi.Load("Sound/CaveStory.mid");
     //midi.Save("Sound/CaveStory_NEW.mid");
@@ -136,18 +152,19 @@ BF::Vector3<float> rot(0.0349066,0,0);
 
 void ZEE::ZEEGameSystem::OnUpdateGameLogic(float deltaTime)
 {    
+    /*
     if (cube.MatrixModel.CurrentPosition().Y <= 0)
     {
-        //cube.ModelMatrix.Move(0, tcap, 0);
-        //cube.Force.Add(0, 50, 0);
-    }
+       // cube.MatrixModel.Move(0, 200, 0);
+        cube.Force.Add(0, 50, 0);
+    }*/
 
     _deltaTime = deltaTime;
 }
 
 void ZEE::ZEEGameSystem::OnUpdateInput(BF::InputContainer& input)
 {
-#if 0
+#if EnableMusic
     bool changed = false;
     float value = 0.01f;
 
@@ -170,6 +187,31 @@ void ZEE::ZEEGameSystem::OnUpdateInput(BF::InputContainer& input)
         GameSystem.SoundPlayer.Update(audioSource);
     }
 #endif
+
+    KeyBoard& keyboard = input.KeyBoardInput;
+    Mouse& mouse = input.MouseInput;
+    Camera& camera = GameSystem.Resource.MainCamera;
+    Vector3<float> movement;
+
+    if (keyboard.ShitftLeft.IsPressed()) { movement.Add(0, -1, 0); }
+    if (keyboard.W.IsPressed()) { movement.Add(0, 0, 1); }
+    if (keyboard.A.IsPressed()) { movement.Add(-1, 0, 0); }
+    if (keyboard.S.IsPressed()) { movement.Add(0, 0, -1); }
+    if (keyboard.D.IsPressed()) { movement.Add(1, 0, 0); }
+    if (keyboard.SpaceBar.IsPressed())
+    {
+        camera.Velocity.Set(0.0f, 6.0f, .0f);
+
+        movement.Add(0, 1, 0);
+    }
+
+    camera.Move(movement);
+
+    camera.Rotate(mouse.InputAxis[0], mouse.InputAxis[1]);
+
+    camera.Update(_deltaTime);
+    keyboard.IncrementButtonTick();
+    mouse.ResetAxis();
 }
 
 void ZEE::ZEEGameSystem::OnUpdateUI()

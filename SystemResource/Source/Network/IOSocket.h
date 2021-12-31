@@ -1,11 +1,8 @@
 #pragma once
 
-#include "SocketActionResult.h"
-#include "IPVersion.h"
-#include "ISocketListener.h"
 #include "../OSDefine.h"
 
-#include <thread>
+#define SocketBufferSize 2048u
 
 #ifdef OSUnix
 #include <sys/types.h> 
@@ -14,6 +11,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#define AdressInfoType struct addrinfo
 #elif defined(OSWindows)
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #define WIN32_LEAN_AND_MEAN
@@ -21,50 +19,62 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <iphlpapi.h>
-#include <stdio.h>
+#define AdressInfoType ADDRINFOA
 #endif
 
-#define SocketBufferSize 2048u
+#include "../Async/Thread.h"
+#include "SocketActionResult.h"
+#include "IPVersion.h"
+#include "IPAdressFamily.h"
+#include "ProtocolMode.h"
+#include "SocketType.h"
+#include "IPAdressInfo.h"
+#include "ISocketListener.h"
 
 namespace BF
 {
 	class IOSocket
-	{
-		private:
-		int GetAdressFamily(IPVersion ipVersion);
-		SocketActionResult SetupAdress(IPVersion ipVersion, const  char* ip, unsigned short port);
-
-#if defined(OSWindows)
-		SocketActionResult WindowsSocketAgentStartup();
-		SocketActionResult WindowsSocketAgentShutdown();
-#endif
-
+	{	
 		public:
-		unsigned int ID;
-		unsigned short Port;
+		//---<Data>-------------------
+		IPAdressInfo AdressInfo;
+		//----------------------------
+
+		//---<Internal IO>------------
 		char BufferMessage[SocketBufferSize];
-		IPVersion IPMode;
+		Thread CommunicationThread;
+		//----------------------------
 
-		ISocketListener* Callback;
-		std::thread* CommunicationThread;	
+		//---<Event CallBack>---------
+		ISocketListener* EventCallBackSocket;
+		//----------------------------
 
-		struct sockaddr_in AdressIPv4; // Used only in IPv4
-
-#if defined(OSUnix)
-		struct addrinfo AdressIPv6;
-#elif defined(OSWindows)
-		ADDRINFO AdressIPv6;
-#endif		
 
 		IOSocket();
 
-		char IsCurrentlyUsed();
-
+		bool IsCurrentlyUsed();
 		void Close();
-		void AwaitConnection(IOSocket& clientSocket);
-		SocketActionResult Open(IPVersion ipVersion, unsigned short port);	
-		SocketActionResult Connect(IOSocket& serverSocket, const char* ipAdress, unsigned short port);
-		SocketActionResult Read();
-		SocketActionResult Write(const char* message);
+		
+		static SocketActionResult Create(IPAdressFamily adressFamily, SocketType socketType, ProtocolMode protocolMode, unsigned int& socketID);
+
+		static SocketActionResult SetupAdress
+		(
+			char* ip, // null for any ipAdress
+			unsigned short port, // -1 for no port
+			IPAdressFamily ipMode,
+			SocketType socketType,
+			ProtocolMode protocolMode,
+			size_t& adressInfoListSize,
+			IPAdressInfo** adressInfoList
+		);
+
+		SocketActionResult Receive();
+		SocketActionResult Send(const char* message, size_t messageLength);
+		SocketActionResult SendFile(const char* filePath, size_t sendBufferSize = 2048);		
+
+#if defined(OSWindows)
+		static SocketActionResult WindowsSocketAgentStartup();
+		static SocketActionResult WindowsSocketAgentShutdown();
+#endif
 	};
 }
