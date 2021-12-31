@@ -5,97 +5,58 @@
 #include "Chunk/PNGImageHeader.h"
 #include "Chunk/PNGPalette.h"
 #include "Chunk/PNGPrimaryChromatics.h"
+#include "Chunk/PNGLastModificationTime.h"
+#include "Chunk/PNGBackgroundColor.h"
+#include "Chunk/PNGPaletteHistogram.h"
+#include "Chunk/PNGSuggestedPalette.h"
+#include "Chunk/PNGPhysicalPixelDimension.h"
+#include "Chunk/PNGTransparency.h"
 
 namespace BF
 {
 	struct PNG : public IImageFormat
 	{
 		public:
-		PNGImageHeader ImageHeader;
+		//---[Important Data]--------------------------------------------------------
+		PNGImageHeader ImageHeader; 
+		PNGPalette Palette;
+		PNGPrimaryChromatics PrimaryChromatics;
+		//---------------------------------------------------------------------------
+
+		//---[Optional Data]---------------------------------------------------------
+		unsigned int SignificantBits; // sBIT
+		unsigned int Gamma; // gAMA
+		PNGBackgroundColor BackgroundColor; // bKGD
+		PNGPaletteHistogram PaletteHistogram; // hIST
+		// XXXXXXXXXXXXXX XXXXXXXXXXXXXX // cHRM
+		// XXXXXXXXXXXXXX XXXXXXXXXXXXXX // iCCP
+		// XXXXXXXXXXXXXX XXXXXXXXXXXXXX // cHRM
+		unsigned char RenderingIntent; // sRGB
+		PNGTransparency Transparency; // tRNS
+		PNGPhysicalPixelDimension PhysicalPixelDimension; // pHYs
+		PNGSuggestedPalette SuggestedPalette; // sPLT
+		PNGLastModificationTime LastModificationTime; // tIME
+		// XXXXXXXXXXXXXX XXXXXXXXXXXXXX // iTXt
+		// 
+		//---[ oFFs - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
+		//---[ sCAL - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
+		//---[ tEXt - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
+		//---[ zTXt - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
+		//---[ fRAc - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
+		//---[ gIFg - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
+		//---[ gIFt - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
+		//---[ gIFx - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
+		//---------------------------------------------------------------------------
+
 		//---[ IDAT - Image Data (Compressed)]---------------------------------------
 		//size_t ZLIBHeaderListSize;
 		//ZLIBHeader* ZLIBHeaderList;
 		//---------------------------------------------------------------------------
-		PNGPalette Palette;
-		PNGPrimaryChromatics PrimaryChromatics;	
-
-		//---[ sBIT - SignificantBits]-----------------------------------------------
-		unsigned int SignificantBits;
-		//---------------------------------------------------------------------------
-
-		//---[ gAMA - ImageGamma ]---------------------------------------------------
-		unsigned int Gamma;
-		//---------------------------------------------------------------------------
-
-		//---[ bKGD - BackgroundColor]-----------------------------------------------
-		unsigned short BackgroundColorGreyScale; 
-		unsigned short BackgroundColorRed;
-		unsigned short BackgroundColorGreen;
-		unsigned short BackgroundColorBlue;
-		unsigned char BackgroundColorPaletteIndex;
-		//---------------------------------------------------------------------------
-
-		//---[ hIST - PaletteHistogram]----------------------------------------------
-		size_t ColorFrequencyListSize;
-		unsigned short* ColorFrequencyList;
-		//---------------------------------------------------------------------------
-
-		//---[ tRNS - Transparency ]-------------------------------------------------
-		// Depends on colorType
-		//---------------------------------------------------------------------------
-
-		//---[ sRGB - StandardRGBColorSpace ]----------------------------------------
-		unsigned char RenderingIntent;
-		//---------------------------------------------------------------------------
-
-		//---[ pHYs - PhysicalPixelDimensions ]--------------------------------------
-		unsigned int PixelsPerUnit[2];
-		unsigned char UnitSpecifier;
-		//---------------------------------------------------------------------------
-
-		//---[ oFFs - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
-
-		//---------------------------------------------------------------------------
-
-		//---[ sCAL - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
-	
-		//---------------------------------------------------------------------------
-
-		//---[ tIME - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
-		unsigned short Year;
-		unsigned char Month;
-		unsigned char Day;
-		unsigned char Hour;
-		unsigned char Minute;
-		unsigned char Second;
-		//---------------------------------------------------------------------------
-
-		//---[ tEXt - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
-
-		//---------------------------------------------------------------------------
-
-		//---[ zTXt - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
-
-		//---------------------------------------------------------------------------
-
-		//---[ fRAc - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
-
-		//---------------------------------------------------------------------------
-
-		//---[ gIFg - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
-
-		//---------------------------------------------------------------------------
-
-		//---[ gIFt - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
-
-		//---------------------------------------------------------------------------
-
-		//---[ gIFx - xxxxxxxxxxxxxxxxxxxxxxx ]--------------------------------------
-
-		//---------------------------------------------------------------------------
 
 		size_t PixelDataSize;
 		Byte* PixelData;
+
+		//---------------------------------------------------------------------------
 
 		unsigned int BitsPerPixel();
 
@@ -104,5 +65,7 @@ namespace BF
 
 		FileActionResult ConvertTo(Image& image);
 		FileActionResult ConvertFrom(Image& image);		
+
+		//---------------------------------------------------------------------------
 	};
 }

@@ -588,6 +588,24 @@
     <ClCompile Include="Source\Camera\Camera.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGLastModificationTime.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGBackgroundColor.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGPaletteHistogram.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGSuggestedPalette.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGPhysicalPixelDimension.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGTransparency.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp">
@@ -1368,6 +1386,24 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Camera\Camera.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGLastModificationTime.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGBackgroundColor.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGPaletteHistogram.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGSuggestedPalette.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGPhysicalPixelDimension.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGTransparency.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

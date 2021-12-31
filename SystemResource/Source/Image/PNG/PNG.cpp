@@ -27,6 +27,8 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
     size_t imageDataChunkCacheSizeMAX = 0u;
     Byte* imageDataChunkCache = nullptr;
 
+    memset(this, 0, sizeof(PNG));
+
     //---<Parse PNG File>------------------------------------------------------
     {
         FileStream fileStream;
@@ -246,24 +248,21 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
                      
                         case BF::PNGColorType::Grayscale:
                         case BF::PNGColorType::GrayscaleWithAlphaChannel:
-                        {
-                            // 2 Byte
-                            fileStream.Read(BackgroundColorGreyScale, Endian::Big);
+                        {   
+                            fileStream.Read(BackgroundColor.GreyScale, Endian::Big);
                             break;
                         }
                         case BF::PNGColorType::Truecolor:
                         case BF::PNGColorType::TruecolorWithAlphaChannel: 
                         {
-                            // 2 Byte each RGB
-                            fileStream.Read(BackgroundColorRed, Endian::Big);
-                            fileStream.Read(BackgroundColorGreen, Endian::Big);
-                            fileStream.Read(BackgroundColorBlue, Endian::Big);
+                            fileStream.Read(BackgroundColor.Red, Endian::Big);
+                            fileStream.Read(BackgroundColor.Green, Endian::Big);
+                            fileStream.Read(BackgroundColor.Blue, Endian::Big);
                             break;
                         }
                         case BF::PNGColorType::IndexedColor:
                         {
-                            // 1 Byte
-                            fileStream.Read(BackgroundColorPaletteIndex);
+                            fileStream.Read(BackgroundColor.PaletteIndex);
                             break;
                         }   
                     }
@@ -272,9 +271,9 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
                 }
                 case PNGChunkType::PhysicalPixelDimensions:
                 {
-                    fileStream.Read(PixelsPerUnit[0], Endian::Big);
-                    fileStream.Read(PixelsPerUnit[1], Endian::Big);
-                    fileStream.Read(UnitSpecifier);
+                    fileStream.Read(PhysicalPixelDimension.PixelsPerUnit[0], Endian::Big);
+                    fileStream.Read(PhysicalPixelDimension.PixelsPerUnit[1], Endian::Big);
+                    fileStream.Read(PhysicalPixelDimension.UnitSpecifier);
 
                     break;
                 }
@@ -327,24 +326,25 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
                 }
                 case PNGChunkType::PaletteHistogram:
                 {
-                    ColorFrequencyListSize = chunk.Lengh / 2;
-                    ColorFrequencyList = (unsigned short*)malloc(ColorFrequencyListSize * sizeof(unsigned short));
+                    size_t listSize = chunk.Lengh / 2;
+                    PaletteHistogram.ColorFrequencyListSize = listSize;
+                    PaletteHistogram.ColorFrequencyList = (unsigned short*)malloc(listSize * sizeof(unsigned short));
 
-                    for (size_t i = 0; i < ColorFrequencyListSize; i++)
+                    for (size_t i = 0; i < listSize; i++)
                     {
-                        fileStream.Read(ColorFrequencyList[i], Endian::Big);
+                        fileStream.Read(PaletteHistogram.ColorFrequencyList[i], Endian::Big);
                     }
 
                     break;
                 }
                 case PNGChunkType::LastModificationTime:
                 {
-                    fileStream.Read(Year, Endian::Big);
-                    fileStream.Read(Month);
-                    fileStream.Read(Day);
-                    fileStream.Read(Hour);
-                    fileStream.Read(Minute);
-                    fileStream.Read(Second);
+                    fileStream.Read(LastModificationTime.Year, Endian::Big);
+                    fileStream.Read(LastModificationTime.Month);
+                    fileStream.Read(LastModificationTime.Day);
+                    fileStream.Read(LastModificationTime.Hour);
+                    fileStream.Read(LastModificationTime.Minute);
+                    fileStream.Read(LastModificationTime.Second);
 
                     break;
                 }

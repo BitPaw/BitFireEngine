@@ -292,6 +292,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGTransparency.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGPhysicalPixelDimension.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGSuggestedPalette.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGPaletteHistogram.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGBackgroundColor.cpp" />
+    <ClCompile Include="Source\Image\PNG\Chunk\PNGLastModificationTime.cpp" />
     <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\Service\HTTP\HTTPError.cpp" />
     <ClCompile Include="Source\Service\HTTP\HTTPRequestMethod.cpp" />
@@ -485,6 +491,12 @@
     <ClCompile Include="Source\Service\HTTP\HTTPServer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGTransparency.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGPhysicalPixelDimension.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGSuggestedPalette.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGPaletteHistogram.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGBackgroundColor.h" />
+    <ClInclude Include="Source\Image\PNG\Chunk\PNGLastModificationTime.h" />
     <ClInclude Include="Source\Camera\Camera.h" />
     <ClInclude Include="Source\Service\HTTP\HTTPError.h" />
     <ClInclude Include="Source\Service\HTTP\HTTPRequestMethod.h" />
