@@ -1,5 +1,6 @@
 #include "Resource.h"
-#include <string>
+#include <string.h>
+#include "OSDefine.h"
 
 BF::Resource::Resource()
 {
@@ -19,10 +20,18 @@ void BF::Resource::MarkAsLoading(const char* name, const char* filePath)
 
 void BF::Resource::NameChange(const char* name)
 {
-	strncpy_s(Name, name, ResourceNameSize);
+#if defined(OSUnix)
+strncpy(Name, name, ResourceNameSize);
+#elif  defined(OSWindows)
+strncpy_s(Name, name, ResourceNameSize);
+#endif
 }
 
 void BF::Resource::FilePathChange(const char* filePath)
 {
+#if defined(OSUnix)
+	strncpy(FilePath, filePath, ResourceNameSize);
+#elif  defined(OSWindows)
 	strncpy_s(FilePath, filePath, ResourceNameSize);
+#endif
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 #ifndef Byte
 #define Byte unsigned char
 #endif
