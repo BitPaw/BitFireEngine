@@ -3,9 +3,10 @@
 #include "OSDefine.h"
 
 #if defined(OSUnix)
-#include <unistd.h>
+	#include <errno.h>
+	#define EOTHER -1
 #elif defined(OSWindows)
-#include <windows.h>
+	#include <windows.h>
 #endif
 
 int BF::ConvertErrorCode(ErrorCode errorCode)
@@ -272,8 +273,7 @@ BF::ErrorCode BF::ConvertErrorCode(int errorCode)
 		case EAFNOSUPPORT:
 			return  BF::ErrorCode::AddressFamilyNotSupported;
 
-		case EAGAIN:
-			return  BF::ErrorCode::ResourceUnavailableTryAgain;
+		
 
 		case EALREADY:
 			return  BF::ErrorCode::ConnectionAlreadyInProgress;
@@ -434,17 +434,37 @@ BF::ErrorCode BF::ConvertErrorCode(int errorCode)
 		case ENOTSOCK:
 			return  BF::ErrorCode::NotASocket;
 
-		case ENOTSUP:
-			return  BF::ErrorCode::NotSupported;
-
 		case ENOTTY:
 			return  BF::ErrorCode::InappropriateIOControlOperation;
 
 		case ENXIO:
 			return  BF::ErrorCode::NoSuchDeviceOrAddress;
 
-		case EOPNOTSUPP:
+#if defined(OSUnix)
+
+//case EAGAIN:
+case EWOULDBLOCK:
+			return  BF::ErrorCode::OperationWouldBlock;
+
+//case ENOTSUP: // fall throu, same ID unser unix.
+case ENOTSUP:
+			return  BF::ErrorCode::NotSupported;
+
+#elif defined(OSWindows)
+case EAGAIN:
+			return  BF::ErrorCode::ResourceUnavailableTryAgain;
+
+	case EWOULDBLOCK:
+			return  BF::ErrorCode::OperationWouldBlock;
+
+case ENOTSUP:
+			return  BF::ErrorCode::NotSupported;
+
+case EOPNOTSUPP:
 			return  BF::ErrorCode::OperationNotSupportedOnSocket;
+#endif
+
+		
 
 		case EOVERFLOW:
 			return  BF::ErrorCode::ValueTooLargeToBeStoredInDataType;
@@ -488,8 +508,7 @@ BF::ErrorCode BF::ConvertErrorCode(int errorCode)
 		case ETXTBSY:
 			return  BF::ErrorCode::TextFileBusy;
 
-		case EWOULDBLOCK:
-			return  BF::ErrorCode::OperationWouldBlock;
+	
 
 		case EXDEV:
 			return  BF::ErrorCode::CrossDeviceLink;
