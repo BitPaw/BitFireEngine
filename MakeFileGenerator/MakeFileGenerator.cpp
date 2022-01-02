@@ -73,7 +73,7 @@ void _splitpath
 		{
 			strcpy(extension, fileName + i);
 
-			fileName[i] == '\0';
+			fileName[i] = '\0';
 			break;
 		}
 
@@ -236,8 +236,6 @@ void DetectFiles(const char* directory)
 				printf(" [OK]\n");
 
 				WriteCompileFile(fileName, pathA);			
-
-
 			}				
 			else
 			{
@@ -326,7 +324,7 @@ void WriteCompileFile(const char* fileName, const char* fileNameFull)
 
 		_currentFile,
 		"\t@echo \"[#] Compiling file %s\"\n"
-		"\t$(Compiler) -c \"%s\" -o $(DirTemp)/%s.o\n",
+		"\t-$(Compiler) -c \"%s\" -o $(DirTemp)/%s.o\n",
 		fileNameFull,
 		fileNameFull,
 		fileName
