@@ -7,11 +7,11 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cwchar>
-#include <dirent.h>
 
 #if defined(OSUnix)
 #include <sys/stat.h>
 #include <unistd.h>
+#include <dirent.h>
 #define FileRemoveA remove 
 #define FileRemoveW(string) remove((const char*)string)
 #define FileRenameA rename 
@@ -23,6 +23,7 @@
 #define WorkingDirectoryChangeA chdir
 #define WorkingDirectoryChangeW(string) WorkingDirectoryChangeA((const char*)string)
 #elif defined(OSWindows)
+#include <direct.h>
 #define FileRemoveA remove 
 #define FileRemoveW _wremove 
 #define FileRenameA rename 
