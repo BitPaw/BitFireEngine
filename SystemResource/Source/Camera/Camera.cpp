@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include <stdio.h>
+#include <cmath>
 
 float BF::Camera::AspectRatioGet()
 {

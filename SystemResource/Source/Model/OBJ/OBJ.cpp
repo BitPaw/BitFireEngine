@@ -5,10 +5,11 @@
 #include "../../Container/AsciiString.h"
 
 #include <cassert>
+#include <cstring>
 
 BF::OBJ::OBJ()
 {
-    strcpy_s(Name, OBJNameSize, "[N/A]");
+    strncpy(Name, "[N/A]", OBJNameSize);
 
     VertexStructureSize = 0;
 
@@ -396,7 +397,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                     AsciiString::Parse
                     (
                         currentLineBuffer,
-                        "§s",
+                        "ï¿½s",
                         materialFilePath
                     );
 
@@ -443,7 +444,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                     AsciiString::Parse
                     (
                         currentLineBuffer,
-                        "§s",
+                        "ï¿½s",
                         usedMaterialName
                     );
 
@@ -473,7 +474,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
 
                 case OBJLineCommand::ObjectName:
                 {
-                    strncpy_s(elemtent->Name, currentLineBuffer + 2, OBJElementNameLength);
+                    strncpy(elemtent->Name, currentLineBuffer + 2, OBJElementNameLength);
                     break;
                 }
 
@@ -505,7 +506,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                     AsciiString::Parse
                     (
                         currentLineBuffer,
-                        "§fff",
+                        "ï¿½fff",
                         &currentVectorValue->X, 
                         &currentVectorValue->Y,
                         &currentVectorValue->Z
@@ -520,7 +521,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                     AsciiString::Parse
                     (
                         currentLineBuffer,
-                        "§ff",
+                        "ï¿½ff",
                         &point.X, &point.Y 
                     );
 
@@ -563,7 +564,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                             AsciiString::Parse
                             (
                                 currentLineBuffer,
-                                "§uuuuuuuuu",
+                                "ï¿½uuuuuuuuu",
                                 &vectorA.X, &vectorA.Y, &vectorA.Z,
                                 &vectorB.X, &vectorB.Y, &vectorB.Z,
                                 &vectorC.X, &vectorC.Y, &vectorC.Z
@@ -577,7 +578,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                             AsciiString::Parse
                             (
                                 currentLineBuffer,
-                                "§uuuuuuuuuuuu",
+                                "ï¿½uuuuuuuuuuuu",
                                 &vectorA.X, &vectorA.Y, &vectorA.Z,
                                 &vectorB.X, &vectorB.Y, &vectorB.Z,
                                 &vectorC.X, &vectorC.Y, &vectorC.Z,
@@ -639,7 +640,7 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
     model.MeshListSize = ElementListSize;
     model.MeshList = new Mesh[ElementListSize];
 
-    strncpy_s(model.Name, Name, OBJNameSize);
+    strncpy(model.Name, Name, OBJNameSize);
 
     for (size_t elementIndex = 0; elementIndex < model.MeshListSize; elementIndex++)
     {
@@ -655,7 +656,7 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
         mesh.Structure.Allocate(faceElementListSize * (3 + 3 + 4 + 2), faceElementListSize);
         mesh.RenderInfo.MaterialID = element.MaterialListIndex;
 
-        strncpy_s(mesh.Name, element.Name, OBJElementNameLength);
+        strncpy(mesh.Name, element.Name, OBJElementNameLength);
 
         size_t vertecDataIndex = 0;
         float* vertexDataArray = mesh.Structure.VertexData;

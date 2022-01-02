@@ -4,10 +4,11 @@
 
 #include <stdio.h>
 
-#if defined(OSWindows)
+#if defined(OSUnix)
+#define _MAX_PATH 260
+#elif defined(OSWindows)
 #include <windows.h>
 #include <shobjidl.h> 
-#elif defined(OSUnix)
 #endif
 
 bool BF::OpenFileDialog::Open(char* filePathOutput)

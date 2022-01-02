@@ -7,19 +7,21 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cwchar>
-#include <direct.h>
+#include <dirent.h>
 
 #if defined(OSUnix)
+#include <sys/stat.h>
+#include <unistd.h>
 #define FileRemoveA remove 
-#define FileRemoveW wremove 
+#define FileRemoveW(string) remove((const char*)string)
 #define FileRenameA rename 
-#define FileRenameW wrename
-#define FileDirectoryCreate(string) mkdir(string, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)
-#define FileDirectoryCreateW wmkdir
+#define FileRenameW(oldName, newName) rename((const char*)oldName, (const char*)newName)
+#define FileDirectoryCreateA(string) mkdir(string, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)
+#define FileDirectoryCreateW(string) FileDirectoryCreateA((const char*)string)
 #define WorkingDirectoryCurrentA getcwd
-#define WorkingDirectoryCurrentW wgetcwd
+#define WorkingDirectoryCurrentW(string, size) (wchar_t*)WorkingDirectoryCurrentA((char*)string, size)
 #define WorkingDirectoryChangeA chdir
-#define WorkingDirectoryChangeW wchdir
+#define WorkingDirectoryChangeW(string) WorkingDirectoryChangeA((const char*)string)
 #elif defined(OSWindows)
 #define FileRemoveA remove 
 #define FileRemoveW _wremove 
@@ -98,7 +100,7 @@ BF::FileActionResult BF::File::Open(const wchar_t* filePath, FileOpenMode fileOp
 
 	assert(readMode != nullptr);
 
-	FileMarker = _wfopen(filePath, readMode);
+//	FileMarker = _wfopen(filePath, readMode);
 
 	return FileMarker ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
 }
@@ -141,9 +143,8 @@ BF::ErrorCode BF::File::Remove(const wchar_t* filePath)
 BF::ErrorCode BF::File::Rename(const char* name)
 {
 	wchar_t nameW[_MAX_FNAME];
-	size_t changedCharacters = 0;
 
-	mbstowcs_s(&changedCharacters, nameW, _MAX_FNAME - 1, name, _MAX_FNAME - 1);
+	mbstowcs(nameW, name, _MAX_FNAME - 1);
 
 	return File::Rename(Path, nameW);
 }
@@ -315,9 +316,8 @@ void BF::File::SetFilePath(const char* filePath)
 	}
 
 	wchar_t filePathW[_MAX_PATH];
-	size_t changedCharacters = 0;
 
-	mbstowcs_s(&changedCharacters, filePathW, _MAX_PATH-1, filePath, _MAX_PATH-1);
+	mbstowcs(filePathW, filePath, _MAX_PATH-1);
 
 	SetFilePath(filePathW);
 }
@@ -335,7 +335,7 @@ void BF::File::SetFilePath(const wchar_t* filePath)
 		Extension[0] = '\0';
 		return;
 	}
-
+/*
 	lstrcpyW(Path, filePath);
 
 	_wsplitpath_s
@@ -345,7 +345,7 @@ void BF::File::SetFilePath(const wchar_t* filePath)
 		Directory, _MAX_DIR,
 		FileName, _MAX_FNAME,
 		Extension, _MAX_EXT
-	);
+	);*/
 
 	if (Extension[0] != '\0')
 	{
@@ -353,7 +353,7 @@ void BF::File::SetFilePath(const wchar_t* filePath)
 
 		memcpy(buffer, Extension, _MAX_EXT);
 		memset(Extension, 0, _MAX_EXT);
-		lstrcpyW(Extension, buffer + 1);
+	//	lstrcpyW(Extension, buffer + 1);
 	}
 
 	
@@ -500,7 +500,7 @@ bool BF::File::DoesFileExist(const wchar_t* filePath)
 void BF::File::GetFileExtension(const char* filePath, const char* fileExtension)
 {
 	char dummyBuffer[_MAX_PATH];
-
+/*
 	_splitpath_s
 	(
 		filePath,
@@ -508,20 +508,21 @@ void BF::File::GetFileExtension(const char* filePath, const char* fileExtension)
 		dummyBuffer, _MAX_DIR,
 		dummyBuffer, _MAX_FNAME,
 		(char*)fileExtension, _MAX_EXT
-	);
+	);*/
 }
 
 bool BF::File::ExtensionEquals(const char* extension)
 {
 	wchar_t extensionW[_MAX_EXT];
-	size_t changedCharacters = 0;
 
-	mbstowcs_s(&changedCharacters, extensionW, _MAX_EXT, extension, _MAX_EXT);
+	mbstowcs(extensionW, extension, _MAX_EXT);
 
 	return ExtensionEquals(extensionW);
 }
 
 bool BF::File::ExtensionEquals(const wchar_t* extension)
 {
-	return lstrcmpiW(Extension, extension) == 0;
+	//return lstrcmpiW(Extension, extension) == 0;
+
+	return false;
 }

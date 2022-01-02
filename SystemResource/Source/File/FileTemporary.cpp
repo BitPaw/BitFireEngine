@@ -6,7 +6,7 @@
 
 #if defined(OSUnix)
 #define PipeOpen popen
-#define PipeOpenW wpopen
+#define PipeOpenW(wchar, mode) popen((char*)wchar, (const char*) mode) // TODO: instable
 #define PipeClose pclose
 #elif defined(OSWindows)
 #define PipeOpen _popen

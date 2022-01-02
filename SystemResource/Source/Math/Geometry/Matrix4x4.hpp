@@ -5,7 +5,7 @@
 
 #include "AngleRadians.hpp"
 
-#include <string>
+#include <cstring>
 
 #define XAxisX 0
 #define XAxisY 4

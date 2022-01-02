@@ -1,5 +1,7 @@
 #pragma once
 
+#include "BinaryTreeDirection.h"
+
 namespace BF
 {
 	template<class T>
@@ -13,7 +15,7 @@ namespace BF
 
 		BinaryTreeNode() 
 		{
-			NodeID = nullptr;
+			Data = nullptr;
 			LeftNode = nullptr;
 			RightNode = nullptr;
 		}
