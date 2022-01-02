@@ -1,5 +1,7 @@
 #include "Rectangle.h"
 
+#include <cstring>
+
 BF::Rectangle::Rectangle()
 {
 	Set(1, 1);

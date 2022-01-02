@@ -458,7 +458,7 @@ unsigned char BF::MPEGGenreConvert(MPEGGenre mpegGenre)
 			break;
 		case BF::MPEGGenre::Fusion:
 			break;
-		case BF::MPEGGenre::Trance´:
+		case BF::MPEGGenre::Trance:
 			break;
 		case BF::MPEGGenre::Classical:
 			break;

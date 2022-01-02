@@ -94,8 +94,8 @@ void BF::Camera::Rotate(float x, float y)
 		CurrentRotation.Y = minValue;
 	}
 
-	float pitchRAD = glm::radians(CurrentRotation.Y);
-	float yawRAD = glm::radians(CurrentRotation.X);
+	float pitchRAD = Math::DegreeToRadians(CurrentRotation.Y);
+	float yawRAD = Math::DegreeToRadians(CurrentRotation.X);
 	float rx = cos(pitchRAD) * cos(yawRAD);
 	float ry = sin(pitchRAD);
 	float rz = cos(pitchRAD) * sin(yawRAD);

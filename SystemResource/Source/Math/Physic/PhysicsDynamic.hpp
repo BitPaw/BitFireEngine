@@ -3,6 +3,8 @@
 #include "PhysicsStatic.hpp"
 #include "../Geometry/Vector3.hpp"
 
+#include <cassert>
+
 namespace BF
 {
 	template<class NumberType>

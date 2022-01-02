@@ -11,6 +11,8 @@
 #include "../../../SystemResource/Source/OSDefine.h"
 #include "../../../SystemResource/Source/Math/Physic/GravityCube.h"
 
+#include <cassert>
+
 int _matrixModelID;
 int _matrixViewID;
 int _matrixProjectionID;

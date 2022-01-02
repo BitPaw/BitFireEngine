@@ -2,6 +2,8 @@
 
 #include "../Geometry/Form/Cube.h"
 
+#include <cassert>
+
 bool BF::GravityCube::IsColliding(Vector2<float> position)
 {
     return false;

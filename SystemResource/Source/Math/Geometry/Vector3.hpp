@@ -1,6 +1,5 @@
 #pragma once
 
-#include <GLM/glm.hpp>
 #include "../Math.h"
 
 namespace BF
@@ -41,11 +40,20 @@ namespace BF
 			Z += vector3.Z;
 		}
 
-		Vector3 operator+(Vector3<NumberType> vector3)
+		Vector3<NumberType> operator+(Vector3<NumberType> vector)
 		{
-			NumberType rx = X + vector3.X;
-			NumberType ry = Y + vector3.Y;
-			NumberType rz = Z + vector3.Z;
+			NumberType rx = X + vector.X;
+			NumberType ry = Y + vector.Y;
+			NumberType rz = Z + vector.Z;
+
+			return Vector3<NumberType>(rx, ry, rz);
+		}
+
+		Vector3<NumberType> operator-(Vector3<NumberType> vector)
+		{
+			NumberType rx = X - vector.X;
+			NumberType ry = Y - vector.Y;
+			NumberType rz = Z - vector.Z;
 
 			return Vector3<NumberType>(rx, ry, rz);
 		}
@@ -181,6 +189,18 @@ namespace BF
 			X = vectorA.Y * vectorB.Z - vectorA.Z * vectorB.Y;
 			Y = vectorA.Z * vectorB.X - vectorA.X * vectorB.Z;
 			Z = vectorA.X * vectorB.Y - vectorA.Y * vectorB.X;
+		}
+
+		static void CrossProduct(Vector3<NumberType> vectorA, Vector3<NumberType> vectorB, Vector3<NumberType>& result)
+		{
+			result.X = vectorA.Y * vectorB.Z - vectorA.Z * vectorB.Y;
+			result.Y = vectorA.Z * vectorB.X - vectorA.X * vectorB.Z;
+			result.Z = vectorA.X * vectorB.Y - vectorA.Y * vectorB.X;
+		}
+
+		static NumberType DotProduct(Vector3<NumberType> vectorA, Vector3<NumberType> vectorB)
+		{
+			return vectorA.X * vectorB.X + vectorA.Y * vectorB.Y + vectorA.Z * vectorB.Z;
 		}
 
 		void Rotate(Vector3<NumberType> rotation)

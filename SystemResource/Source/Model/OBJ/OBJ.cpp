@@ -4,6 +4,8 @@
 #include "../../File/FileStream.h"
 #include "../../Container/AsciiString.h"
 
+#include <cassert>
+
 BF::OBJ::OBJ()
 {
     strcpy_s(Name, OBJNameSize, "[N/A]");

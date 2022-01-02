@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Matrix4x4.hpp"
-
 namespace BF
 {
 	template<class NumberType>

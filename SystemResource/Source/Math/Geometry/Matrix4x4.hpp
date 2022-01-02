@@ -5,14 +5,8 @@
 
 #include "AngleRadians.hpp"
 
-#include <GLM/glm.hpp>
-#include <GLM/ext.hpp>
-#include <GLM/ext/matrix_transform.hpp>
-
 #include <string>
 
-namespace BF
-{
 #define XAxisX 0
 #define XAxisY 4
 #define XAxisZ 8
@@ -28,6 +22,11 @@ namespace BF
 #define ZAxisZ 10
 #define ZAxisW 14
 
+#define WAxisX 6
+#define WAxisY 7
+#define WAxisZ 11
+#define WAxisW 15
+
 #define ScaleX 0
 #define ScaleY 5
 #define ScaleZ 10
@@ -38,6 +37,8 @@ namespace BF
 #define TransformZ 14
 #define TransformW 15
 
+namespace BF
+{
 	template<class NumberType>	
 	struct Matrix4x4
 	{
@@ -53,6 +54,11 @@ namespace BF
 
 
 		Matrix4x4()
+		{
+			Reset();
+		}
+
+		void Reset()
 		{
 			memset(Data, 0, sizeof(NumberType) * 16);
 
@@ -367,14 +373,33 @@ namespace BF
 		}
 
 		void LookAt(Vector3<NumberType> eye, Vector3<NumberType> center, Vector3<NumberType> up)
-		{
-			glm::vec3 eyeEE(eye.X, eye.Y, eye.Z);
-			glm::vec3 centerEE(center.X, center.Y, center.Z);
-			glm::vec3 upEE(up.X, up.Y, up.Z);
+		{		
+			Vector3<NumberType> centereye = center - eye;
+			Vector3<NumberType> f = Vector3<NumberType>::Normalize(centereye);
+			Vector3<NumberType> frontUpCross;
 
-			 glm::mat4 view = glm::lookAt(eyeEE, centerEE, upEE);
+			Vector3<NumberType>::CrossProduct(f, up, frontUpCross);
 
-			 Set(view);
+			Vector3<NumberType> s = Vector3<NumberType>::Normalize(frontUpCross);
+			Vector3<NumberType> u;
+
+			Vector3<NumberType>::CrossProduct(s, f, u);
+
+			Data[XAxisX] = s.X;
+			Data[XAxisY] = s.Y;
+			Data[XAxisZ] = s.Z;
+
+			Data[YAxisX] = u.X;
+			Data[YAxisY] = u.Y;
+			Data[YAxisZ] = u.Z;
+
+			Data[ZAxisX] = -f.X;
+			Data[ZAxisY] = -f.Y;
+			Data[ZAxisZ] = -f.Z;
+
+			Data[TransformX] = -Vector3<NumberType>::DotProduct(s, eye);
+			Data[TransformY] = -Vector3<NumberType>::DotProduct(u, eye);
+			Data[TransformZ] = Vector3<NumberType>::DotProduct(f, eye);
 		}
 
 		// Flip matrix diagonally
@@ -421,92 +446,74 @@ namespace BF
 			//this->Data[15] = p;
 		}
 
-		void Inverse()
+		// returns sucessful
+		bool Inverse()
 		{
-			glm::mat4 matrixA = glm::mat4();
+			Matrix4x4<NumberType> result;
+			double det = 0;
 
-			memcpy(&matrixA[0][0], this->Data, 16 * sizeof(NumberType));
-		
-			glm::mat4 matrixB = glm::inverse(matrixA);
+			result[0] = Data[5] * Data[10] * Data[15] - Data[5] * Data[11] * Data[14] - Data[9] * Data[6] * Data[15] + Data[9] * Data[7] * Data[14] + Data[13] * Data[6] * Data[11] - Data[13] * Data[7] * Data[10];
+			result[4] = -Data[4] * Data[10] * Data[15] + Data[4] * Data[11] * Data[14] + Data[8] * Data[6] * Data[15] - Data[8] * Data[7] * Data[14] - Data[12] * Data[6] * Data[11] + Data[12] * Data[7] * Data[10];
+			result[8] = Data[4] * Data[9] * Data[15] - Data[4] * Data[11] * Data[13] - Data[8] * Data[5] * Data[15] + Data[8] * Data[7] * Data[13] + Data[12] * Data[5] * Data[11] - Data[12] * Data[7] * Data[9];
+			result[12] = -Data[4] * Data[9] * Data[14] + Data[4] * Data[10] * Data[13] + Data[8] * Data[5] * Data[14] - Data[8] * Data[6] * Data[13] - Data[12] * Data[5] * Data[10] + Data[12] * Data[6] * Data[9];
+			result[1] = -Data[1] * Data[10] * Data[15] + Data[1] * Data[11] * Data[14] + Data[9] * Data[2] * Data[15] - Data[9] * Data[3] * Data[14] - Data[13] * Data[2] * Data[11] + Data[13] * Data[3] * Data[10];
+			result[5] = Data[0] * Data[10] * Data[15] - Data[0] * Data[11] * Data[14] - Data[8] * Data[2] * Data[15] + Data[8] * Data[3] * Data[14] + Data[12] * Data[2] * Data[11] - Data[12] * Data[3] * Data[10];
+			result[9] = -Data[0] * Data[9] * Data[15] + Data[0] * Data[11] * Data[13] + Data[8] * Data[1] * Data[15] - Data[8] * Data[3] * Data[13] - Data[12] * Data[1] * Data[11] + Data[12] * Data[3] * Data[9];
+			result[13] = Data[0] * Data[9] * Data[14] - Data[0] * Data[10] * Data[13] - Data[8] * Data[1] * Data[14] + Data[8] * Data[2] * Data[13] + Data[12] * Data[1] * Data[10] - Data[12] * Data[2] * Data[9];
+			result[2] = Data[1] * Data[6] * Data[15] - Data[1] * Data[7] * Data[14] - Data[5] * Data[2] * Data[15] + Data[5] * Data[3] * Data[14] + Data[13] * Data[2] * Data[7] - Data[13] * Data[3] * Data[6];
+			result[6] = -Data[0] * Data[6] * Data[15] + Data[0] * Data[7] * Data[14] + Data[4] * Data[2] * Data[15] - Data[4] * Data[3] * Data[14] - Data[12] * Data[2] * Data[7] + Data[12] * Data[3] * Data[6];
+			result[10] = Data[0] * Data[5] * Data[15] - Data[0] * Data[7] * Data[13] - Data[4] * Data[1] * Data[15] + Data[4] * Data[3] * Data[13] + Data[12] * Data[1] * Data[7] - Data[12] * Data[3] * Data[5];
+			result[14] = -Data[0] * Data[5] * Data[14] + Data[0] * Data[6] * Data[13] + Data[4] * Data[1] * Data[14] - Data[4] * Data[2] * Data[13] - Data[12] * Data[1] * Data[6] + Data[12] * Data[2] * Data[5];
+			result[3] = -Data[1] * Data[6] * Data[11] + Data[1] * Data[7] * Data[10] + Data[5] * Data[2] * Data[11] - Data[5] * Data[3] * Data[10] - Data[9] * Data[2] * Data[7] + Data[9] * Data[3] * Data[6];
+			result[7] = Data[0] * Data[6] * Data[11] - Data[0] * Data[7] * Data[10] - Data[4] * Data[2] * Data[11] + Data[4] * Data[3] * Data[10] + Data[8] * Data[2] * Data[7] - Data[8] * Data[3] * Data[6];
+			result[11] = -Data[0] * Data[5] * Data[11] + Data[0] * Data[7] * Data[9] + Data[4] * Data[1] * Data[11] - Data[4] * Data[3] * Data[9] - Data[8] * Data[1] * Data[7] + Data[8] * Data[3] * Data[5];
+			result[15] = Data[0] * Data[5] * Data[10] - Data[0] * Data[6] * Data[9] - Data[4] * Data[1] * Data[10] + Data[4] * Data[2] * Data[9] + Data[8] * Data[1] * Data[6] - Data[8] * Data[2] * Data[5];
 
-			Set(matrixB);
+			det = Data[0] * result[0] + Data[1] * result[4] + Data[2] * result[8] + Data[3] * result[12];
+
+			if (det == 0)
+				return false;
+
+			det = 1.0 / det;
+
+			for (int i = 0; i < 16; i++)
+			{
+				Data[i] = result[i] * det;
+			}				
+
+			return true;
 		}
 
 		void Set(NumberType value)
 		{
 			memset(this->Data, value, 16 * sizeof(NumberType));
-		} 
+		} 		
 
-		void Set(glm::mat4 matrix)
-		{
-			Set(0);
+		void Orthographic(NumberType left, NumberType right, NumberType bottom, NumberType top, NumberType zNear, NumberType zFar)
+		{		
+			Reset();
 
-			memcpy(this->Data, &matrix[0][0], 16 * sizeof(NumberType));
-
-			/*
-			return;
-
-			this->Data[0] = matrix[0][0];
-			this->Data[1] = matrix[1][0];
-			this->Data[2] = matrix[2][0];
-			this->Data[3] = matrix[3][0];
-			this->Data[4] = matrix[0][1];
-			this->Data[5] = matrix[1][1];
-			this->Data[6] = matrix[2][1];
-			this->Data[7] = matrix[3][1];
-			this->Data[8] = matrix[0][2];
-			this->Data[9] = matrix[1][2];
-			this->Data[10] = matrix[2][2];
-			this->Data[11] = matrix[3][2];
-			this->Data[12] = matrix[0][3];
-			this->Data[13] = matrix[1][3];
-			this->Data[14] = matrix[2][3];
-			this->Data[15] = matrix[3][3];
-
-			printf("\n\n\n%2.2c %2.2c %2.2c 2.2c\n", this->Data[0], this->Data[1], this->Data[2], this->Data[3]);
-			printf("%2.2c %2.2c %2.2c 2.2c\n", this->Data[4], this->Data[5], this->Data[6], this->Data[7]);
-			printf("%2.2c %2.2c %2.2c 2.2c\n", this->Data[8], this->Data[9], this->Data[10], this->Data[11]);
-			printf("%2.2c %2.2c %2.2c 2.2c\n\n", this->Data[12], this->Data[13], this->Data[14], this->Data[15]);*/
-
-			//this->Transpose();
-
-
-		}
-
-		void Orthographic(NumberType left, NumberType right, NumberType bottom, NumberType top, NumberType near, NumberType far)
-		{
-			glm::mat4 matrix = glm::ortho(left, right, bottom, top, near, far);
-
-			Set(matrix);
-
-			/*
-			Data[0] = 2 / (right - left);
-			Data[3] = -(right + left) / (right - left);
-			Data[5] = 2 / (top - bottom);
-			Data[7] = -(top + bottom) / (top - bottom);
-			Data[10] = -2 / (far - near);
-			Data[11] = -(far + near) / (far - near);
-			*/
+			Data[ScaleX] = (2) / (NumberType)(right - left);
+			Data[ScaleY] = (2) / (NumberType)(top - bottom);
+			Data[ScaleZ] = -(2) / (NumberType)(zFar - zNear);
+			Data[TransformX] = -(right + left) / (NumberType)(right - left);
+			Data[TransformY] = -(top + bottom) / (NumberType)(top - bottom);
+			Data[TransformZ] = -(zFar + zNear) / (NumberType)(zFar - zNear);
 		}
 
 		void Perspective(NumberType fielfOfView, NumberType aspectRatio, NumberType near, NumberType far)
 		{
-			glm::mat4 matrix = glm::perspective(glm::radians(fielfOfView), aspectRatio, near, far);
-
-			Set(matrix);
-
-			/*
 			NumberType fielfOfViewRadians = Math::DegreeToRadians(fielfOfView);
-			NumberType tanHalfFovy = Math::Tangens(fielfOfView / 2.0f);
+			float tanHalfFovy = Math::Tangens(fielfOfViewRadians / 2.0f);
 
 			memset(Data, 0, 16 * sizeof(float));
 
-			Data[0] = 1 / (aspectRatio * tanHalfFovy);
-			Data[5] = 1 / (tanHalfFovy);
-			Data[10] = -(far + near) / (far - near);
-			Data[11] = (-2 * far * near) / (far - near);
-			Data[14] = -1;			
-			*/
+			Data[ScaleX] = (1) / (aspectRatio * tanHalfFovy);
+			Data[ScaleY] = (1) / (tanHalfFovy);
+			Data[ScaleZ] = -(far + near) / (far - near);
+			Data[11] = -(1);
+			Data[TransformZ] = -((2) * far * near) / (far - near);
+			
 		}
 		Vector3<NumberType> ScaleXYZ()
 		{

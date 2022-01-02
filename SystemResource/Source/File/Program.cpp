@@ -78,8 +78,8 @@ BF::FileActionResult BF::Program::Execute(const char* programPath, const char* p
     programExecuteInfo->ParameterList[1] = (char*)malloc(1024 * sizeof(char));
     programExecuteInfo->ParameterList[2] = nullptr;
 
-    sprintf(programExecuteInfo->ParameterList[0], 260,"\"%s\"", programPath);
-    strncpy(programExecuteInfo->ParameterList[1], 1024, parameterString, 1024);
+    sprintf(programExecuteInfo->ParameterList[0], "\"%s\"", programPath);
+    strncpy(programExecuteInfo->ParameterList[1], parameterString, 1024);
 
     if (callback)
     {       
