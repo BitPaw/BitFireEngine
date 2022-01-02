@@ -271,9 +271,7 @@ BF::ErrorCode BF::ConvertErrorCode(int errorCode)
 			return  BF::ErrorCode::AddressNotAvailable;
 
 		case EAFNOSUPPORT:
-			return  BF::ErrorCode::AddressFamilyNotSupported;
-
-		
+			return  BF::ErrorCode::AddressFamilyNotSupported;		
 
 		case EALREADY:
 			return  BF::ErrorCode::ConnectionAlreadyInProgress;
@@ -441,30 +439,27 @@ BF::ErrorCode BF::ConvertErrorCode(int errorCode)
 			return  BF::ErrorCode::NoSuchDeviceOrAddress;
 
 #if defined(OSUnix)
-
-//case EAGAIN:
-case EWOULDBLOCK:
+		//case EAGAIN:
+		case EWOULDBLOCK:
 			return  BF::ErrorCode::OperationWouldBlock;
 
-//case ENOTSUP: // fall throu, same ID unser unix.
-case ENOTSUP:
+		//case ENOTSUP: // fall throu, same ID unser unix.
+		case ENOTSUP:
 			return  BF::ErrorCode::NotSupported;
 
 #elif defined(OSWindows)
-case EAGAIN:
+		case EAGAIN:
 			return  BF::ErrorCode::ResourceUnavailableTryAgain;
 
-	case EWOULDBLOCK:
+		case EWOULDBLOCK:
 			return  BF::ErrorCode::OperationWouldBlock;
 
-case ENOTSUP:
+		case ENOTSUP:
 			return  BF::ErrorCode::NotSupported;
 
-case EOPNOTSUPP:
+		case EOPNOTSUPP:
 			return  BF::ErrorCode::OperationNotSupportedOnSocket;
-#endif
-
-		
+#endif	
 
 		case EOVERFLOW:
 			return  BF::ErrorCode::ValueTooLargeToBeStoredInDataType;
