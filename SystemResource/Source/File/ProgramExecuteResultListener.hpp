@@ -2,7 +2,8 @@
 
 #include "../ErrorCode.h"
 
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstdint>
 
 namespace BF
 {

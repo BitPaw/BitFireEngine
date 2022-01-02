@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include "FNTCharacter.h"
 
 #define FNTPageFileNameSize 30

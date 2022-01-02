@@ -7,6 +7,7 @@
 
 #include "Interpolate.h"
 
+#include "../OSDefine.h"
 
 
 bool BF::Math::_timerSet = false;
@@ -190,7 +191,13 @@ double BF::Math::PythagorasReverse(double biggestSide, double smalerSide)
 
 double BF::Math::Logarithmus(int base, double exponent)
 {
+	#if defined(OSUnix)
+	return 0; // TODO: not implemented?
+	#elif defined(OSWindows)
 	return _dlog(exponent, base);
+	#endif
+
+	
 }
 
 double BF::Math::LogarithmusBase2(double exponent)

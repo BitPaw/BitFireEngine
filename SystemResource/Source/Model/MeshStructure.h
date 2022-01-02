@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 #include "../../../SystemRender/Source/RenderMode.h"
 
 namespace BF

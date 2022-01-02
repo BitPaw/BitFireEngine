@@ -164,7 +164,7 @@ namespace BF
 		Vocal,
 		JazzFunk,
 		Fusion,
-		Trance´,
+		Trance,
 		Classical,
 		Instrumental,
 		Acid,

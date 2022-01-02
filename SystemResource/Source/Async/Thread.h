@@ -7,10 +7,12 @@
 #include <pthread.h>
 #define ThreadFunctionReturnType void*
 #define ThreadID pthread_t
+#define ThreadIDUnused 0
 #elif defined(OSWindows)
 #include <windows.h>
 #define ThreadFunctionReturnType unsigned long
 #define ThreadID HANDLE
+#define ThreadIDUnused nullptr
 typedef struct IUnknown IUnknown;
 #endif
 

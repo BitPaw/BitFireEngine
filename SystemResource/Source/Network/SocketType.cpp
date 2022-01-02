@@ -3,6 +3,7 @@
 #include "../OSDefine.h"
 
 #if defined(OSUnix)
+#include <sys/socket.h>
 #elif defined(OSWindows)
 #include <WinSock2.h>
 #endif

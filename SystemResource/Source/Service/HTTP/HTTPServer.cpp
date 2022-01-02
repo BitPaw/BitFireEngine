@@ -1,5 +1,5 @@
 #include "HTTPServer.h"
-#include <string>
+#include <cstring>
 
 void BF::HTTPServer::MessageParse(const char* message)
 {

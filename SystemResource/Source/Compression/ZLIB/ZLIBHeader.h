@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 #include "ZLIBCompressionLevel.h"
 #include "ZLIBCompressionMethod.h"
 

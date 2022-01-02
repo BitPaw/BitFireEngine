@@ -2,7 +2,7 @@
 
 BF::Thread::Thread()
 {
-	ThreadHandle = nullptr;
+	ThreadHandle = ThreadIDUnused;
 }
 
 void BF::Thread::Run(ThreadFunction threadFunction, void* parameter)
@@ -13,7 +13,7 @@ void BF::Thread::Run(ThreadFunction threadFunction, void* parameter)
 void BF::Thread::Run(ThreadID& threadID, ThreadFunction threadFunction, void* parameter)
 {
 #ifdef OSUnix
-	threadID = pthread_create(&thread->ThreadHandle, 0, threadTask, parameter);
+	threadID = pthread_create(&threadID, 0, threadFunction, parameter);
 #elif defined(OSWindows)
 	const LPSECURITY_ATTRIBUTES lpThreadAttributes = NULL;
 	const SIZE_T dwStackSize = NULL;

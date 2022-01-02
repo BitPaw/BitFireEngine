@@ -33,8 +33,8 @@ BF::SocketActionResult BF::IOSocket::SetupAdress
 {
     char portNumberString[30];
     char* portNumberStringAdress = nullptr;
-    ADDRINFOA adressHints { 0 };
-    ADDRINFOA* adressResult = nullptr;    
+    AdressInfoType adressHints { 0 };
+    AdressInfoType* adressResult = nullptr;    
     // ADRRINFOW?
 
 #if defined(OSWindows)
@@ -98,9 +98,10 @@ BF::SocketActionResult BF::IOSocket::SetupAdress
         case EAI_SOCKTYPE:
             return SocketActionResult::SocketTypeNotSupported;
 
+#if defined(OSWindows)
         case WSANOTINITIALISED:
             return SocketActionResult::WindowsSocketSystemNotInitialized;
-
+#endif
         default:
        // case EAI_SYSTEM:
         {
@@ -110,7 +111,7 @@ BF::SocketActionResult BF::IOSocket::SetupAdress
         }
     }
 
-    for (ADDRINFOA* adressInfo = adressResult; adressInfo ; adressInfo = adressInfo->ai_next)
+    for (AdressInfoType* adressInfo = adressResult; adressInfo ; adressInfo = adressInfo->ai_next)
     {
         ++adressInfoListSize;
     }
@@ -120,20 +121,20 @@ BF::SocketActionResult BF::IOSocket::SetupAdress
 
     if (!(*adressInfoList))
     {
-        FreeAddrInfoA(adressResult);
+        AdressInfoDelete(adressResult);
         return SocketActionResult::OutOfMemory;
     }
 
     size_t index = 0;
 
-    for (ADDRINFOA* rp = adressResult; rp ; rp = rp->ai_next)
+    for (AdressInfoType* rp = adressResult; rp ; rp = rp->ai_next)
     {
         IPAdressInfo& adressInfo = (*adressInfoList)[index++];
 
         adressInfo.ConvertFrom(*rp);    
     }
 
-    FreeAddrInfoA(adressResult);
+    AdressInfoDelete(adressResult);
 
     return SocketActionResult::Successful;
 }

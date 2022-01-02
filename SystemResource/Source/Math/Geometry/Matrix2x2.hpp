@@ -18,12 +18,7 @@ namespace BF
 		{
 			Set(xx, yx, xy, yy);
 		}
-
-		List<Numbertype>& operator[](int index)
-		{
-			return _matrixData[index];
-		}
-
+		
 		Matrix2x2<Numbertype> operator+(Matrix2x2 matrix)
 		{
 			Matrix2x2 newMatrix(*this);

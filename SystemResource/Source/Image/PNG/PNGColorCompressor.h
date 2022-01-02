@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 #include "Chunk/PNGColorType.h"
 #include "PNGColorTree.h"
 

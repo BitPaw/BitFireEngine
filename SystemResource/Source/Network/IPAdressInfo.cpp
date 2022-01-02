@@ -1,5 +1,7 @@
 #include "IPAdressInfo.h"
 
+#include <string.h>
+
 BF::IPAdressInfo::IPAdressInfo()
 {
     SocketID = -1;
@@ -18,12 +20,12 @@ BF::IPAdressInfo::IPAdressInfo()
     IPRawByteSize = 0;
 }
 
-BF::IPAdressInfo::IPAdressInfo(ADDRINFOA& adressInfo)
+BF::IPAdressInfo::IPAdressInfo(AdressInfoType& adressInfo)
 {
     ConvertFrom(adressInfo);
 }
 
-void BF::IPAdressInfo::ConvertFrom(ADDRINFOA& adressInfo)
+void BF::IPAdressInfo::ConvertFrom(AdressInfoType& adressInfo)
 {
     struct sockaddr_in6* ipv6 = (struct sockaddr_in6*)adressInfo.ai_addr;
     const char* result = nullptr;
@@ -58,7 +60,7 @@ void BF::IPAdressInfo::ConvertFrom(ADDRINFOA& adressInfo)
     memcpy(IPRawByte, adressInfo.ai_addr, adressInfo.ai_addrlen);
 }
 
-void BF::IPAdressInfo::ConvertTo(ADDRINFOA& adressInfo)
+void BF::IPAdressInfo::ConvertTo(AdressInfoType& adressInfo)
 {
     // TODO: implement
 }

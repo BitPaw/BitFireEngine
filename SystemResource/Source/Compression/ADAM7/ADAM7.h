@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 #include "../../Image/PNG/Chunk/PNGInterlaceMethod.h"
 
 namespace BF

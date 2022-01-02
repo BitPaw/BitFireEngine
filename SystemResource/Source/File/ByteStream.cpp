@@ -1,6 +1,6 @@
 #include "ByteStream.h"
 #include <cassert>
-#include <string>
+#include <cstring>
 
 BF::ByteStream::ByteStream()
 {

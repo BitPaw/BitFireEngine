@@ -3,10 +3,19 @@
 #include <cstdlib>
 
 #include "IFile.h"
+#include "../OSDefine.h"
 #include "../File/FileActionResult.hpp"
 #include "../ErrorCode.h"
 
 #define FileLineBufferSize 255u
+
+#if defined(OSUnix)
+	#define _MAX_PATH 260
+	#define _MAX_DRIVE 3
+	#define _MAX_DIR 256
+	#define _MAX_FNAME 256
+	#define _MAX_EXT 256
+#endif
 
 namespace BF
 {

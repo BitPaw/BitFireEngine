@@ -46,7 +46,7 @@ namespace BF
 
 
 		char IPRawByte[IPv6LengthMax];
-		size_t IPRawByteSize;
+		unsigned int IPRawByteSize; // unsigned int is needed, size_t is to big, not defined
 
 		int                 ai_flags;       // AI_PASSIVE, AI_CANONNAME, AI_NUMERICHOST
 		//size_t              ai_addrlen;     // Length of ai_addr
@@ -55,10 +55,10 @@ namespace BF
 		//struct addrinfo* ai_next;        // Next structure in linked list
 
 		IPAdressInfo();
-		IPAdressInfo(ADDRINFOA& adressInfo);
+		IPAdressInfo(AdressInfoType& adressInfo);
 
-		void ConvertFrom(ADDRINFOA& adressInfo);
-		void ConvertTo(ADDRINFOA& adressInfo);
+		void ConvertFrom(AdressInfoType& adressInfo);
+		void ConvertTo(AdressInfoType& adressInfo);
 
 		void IPFromBinaryFormat();
 		void IPToBinaryFormat();

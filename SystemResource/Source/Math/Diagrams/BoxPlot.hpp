@@ -1,5 +1,8 @@
 #pragma once
 
+#include <limits>
+#include <cstdlib>
+
 namespace BF
 {
     template<class NumberType>

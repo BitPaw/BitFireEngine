@@ -4,7 +4,8 @@
 #include "MPEGAudioTag.h"
 
 #include "../../File/FileStream.h"
-#include <string>
+#include <cstddef>
+#include <cstring>
 
 BF::FileActionResult BF::MP3::Load(const char* filePath)
 {

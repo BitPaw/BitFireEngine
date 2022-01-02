@@ -1,6 +1,6 @@
 #include "WAV.h"
 #include "../../File/FileStream.h"
-#include <string>
+#include <cstring>
 
 BF::WAV::WAV()
 {

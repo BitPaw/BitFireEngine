@@ -12,6 +12,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #define AdressInfoType struct addrinfo
+#define AdressInfoDelete freeaddrinfo
 #elif defined(OSWindows)
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #define WIN32_LEAN_AND_MEAN
@@ -20,6 +21,7 @@
 #include <ws2tcpip.h>
 #include <iphlpapi.h>
 #define AdressInfoType ADDRINFOA
+#define AdressInfoDelete FreeAddrInfoA
 #endif
 
 #include "../Async/Thread.h"

@@ -332,7 +332,11 @@ ThreadFunctionReturnType BF::Server::ClientListeningThread(void* data)
         (
             serverSocket->AdressInfo.SocketID,
             (struct sockaddr*)clientSocket.AdressInfo.IPRawByte,
-            (int*)&clientSocket.AdressInfo.IPRawByteSize
+#if defined(OSUnix)
+           (socklen_t*)&clientSocket.AdressInfo.IPRawByteSize
+#elif defined(OSWindows)
+           (int*)&clientSocket.AdressInfo.IPRawByteSize
+#endif        
         );
 
         bool sucessful = clientSocket.IsCurrentlyUsed();

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 #include "Endian.h"
 
 #define Byte unsigned char

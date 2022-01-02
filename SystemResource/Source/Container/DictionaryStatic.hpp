@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 namespace BF
 {
 	template <class Key, class Value, size_t FullSize>
