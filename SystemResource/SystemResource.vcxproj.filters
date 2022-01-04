@@ -606,6 +606,9 @@
     <ClCompile Include="Source\Image\PNG\Chunk\PNGTransparency.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\File\Text.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp">
@@ -1404,6 +1407,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Image\PNG\Chunk\PNGTransparency.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\File\Text.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

@@ -36,6 +36,7 @@
 #define WorkingDirectoryChangeW _wchdir
 #include <Windows.h>
 #endif
+#include "Text.h"
 
 BF::FileActionResult BF::File::CheckFile()
 {
@@ -86,6 +87,9 @@ BF::FileActionResult BF::File::Open(const char* filePath, FileOpenMode fileOpenM
 
 BF::FileActionResult BF::File::Open(const wchar_t* filePath, FileOpenMode fileOpenMode)
 {
+#if defined(OSUnix)
+	File::Open((const char*)filePath, fileOpenMode);
+#elif defined(OSWindows)
 	const wchar_t* readMode = nullptr;
 
 	switch (fileOpenMode)
@@ -101,9 +105,10 @@ BF::FileActionResult BF::File::Open(const wchar_t* filePath, FileOpenMode fileOp
 
 	assert(readMode != nullptr);
 
-//	FileMarker = _wfopen(filePath, readMode);
+	FileMarker = _wfopen(filePath, readMode);
 
 	return FileMarker ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
+#endif
 }
 
 BF::FileActionResult BF::File::Close()
@@ -336,34 +341,10 @@ void BF::File::SetFilePath(const wchar_t* filePath)
 		Extension[0] = '\0';
 		return;
 	}
-/*
-	lstrcpyW(Path, filePath);
 
-	_wsplitpath_s
-	(
-		filePath,
-		Drive, _MAX_DRIVE,
-		Directory, _MAX_DIR,
-		FileName, _MAX_FNAME,
-		Extension, _MAX_EXT
-	);*/
+	Text::Copy(Path, filePath, PathMaxSize);
 
-	if (Extension[0] != '\0')
-	{
-		wchar_t buffer[_MAX_EXT];
-
-		memcpy(buffer, Extension, _MAX_EXT);
-		memset(Extension, 0, _MAX_EXT);
-	//	lstrcpyW(Extension, buffer + 1);
-	}
-
-	
-	// Fix stuff
-	//AsciiString fileName(Extension);
-	//AsciiString extension(Extension);
-
-	//extension.Remove('.');
-	//fileName.Remove('/');
+	PathSplitt(filePath, Drive, Directory, FileName, Extension);
 }
 
 void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& listSize)
@@ -461,6 +442,126 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 #endif
 }
 
+void BF::File::PathSplitt(const char* fullPath, char* drive, char* directory, char* fileName, char* extension)
+{
+	PathSplitt
+	(
+		fullPath, PathMaxSize,
+		drive, DriveMaxSize,
+		directory, DirectoryMaxSize,
+		fileName, FileNameMaxSize,
+		extension, ExtensionMaxSize
+	);
+}
+
+void BF::File::PathSplitt
+(
+	const char* fullPath, size_t fullPathMaxSize,
+	char* drive, size_t driveMaxSize,
+	char* directory, size_t directoryMaxSize,
+	char* fileName, size_t fileNameMaxSize,
+	char* extension, size_t extensionMaxSize
+)
+{
+#if defined(OSUnix)
+	char directoryNameCache[PathMaxSize];
+	char baseNameCache[FileNameMaxSize];
+
+	strncpy(baseNameCache, fullPath, FileNameMaxSize);
+
+	char* dirNameResult = dirname(directoryNameCache);
+	char* baseNameResult = basename(baseNameCache);
+
+	strncpy(directory, dirNameResult, DirectoryMaxSize);
+	strncpy(fileName, baseNameResult, FileNameMaxSize);
+
+	for (size_t i = 0; fileName[i] != '\0'; i++)
+	{
+		bool isDot = fileName[i] == '.';
+
+		if (isDot)
+		{
+			strcpy(extension, fileName + i);
+
+			fileName[i] = '\0';
+			break;
+		}
+	}
+#elif defined(OSWindows)
+	char fileNameCache[FileNameMaxSize];
+
+	_splitpath_s
+	(
+		fullPath,
+		drive, driveMaxSize,
+		directory, directoryMaxSize,
+		fileName, fileNameMaxSize,
+		extension, extensionMaxSize
+	);
+
+	for (size_t i = 0; fileName[i] != '\0'; i++)
+	{
+		bool isDot = fileName[i] == '.';
+
+		if (isDot)
+		{			
+			Text::Copy(fileNameCache, extension + i, FileNameMaxSize);
+			Text::Copy(extension, fileNameCache, FileNameMaxSize);
+			break;
+		}
+	}
+#endif 
+}
+
+void BF::File::PathSplitt(const wchar_t* fullPath, wchar_t* drive, wchar_t* directory, wchar_t* fileName, wchar_t* extension)
+{
+	PathSplitt
+	(
+		fullPath, PathMaxSize,
+		drive, DriveMaxSize,
+		directory, DirectoryMaxSize,
+		fileName, FileNameMaxSize,
+		extension, ExtensionMaxSize
+	);
+}
+
+void BF::File::PathSplitt(const wchar_t* fullPath, size_t fullPathMaxSize, wchar_t* drive, size_t driveMaxSize, wchar_t* directory, size_t directoryMaxSize, wchar_t* fileName, size_t fileNameMaxSize, wchar_t* extension, size_t extensionMaxSize)
+{
+#if defined(OSUnix)
+	PathSplitt
+	(
+		(const char*)fullPath, PathMaxSize,
+		(char*)drive, DriveMaxSize,
+		(char*)directory, DirectoryMaxSize,
+		(char*)fileName, FileNameMaxSize,
+		(char*)extension, ExtensionMaxSize
+	);
+#elif defined(OSWindows)
+	wchar_t extensionCache[FileNameMaxSize];
+
+	_wsplitpath_s
+	(
+		fullPath,
+		drive, driveMaxSize,
+		directory, directoryMaxSize,
+		fileName, fileNameMaxSize,
+		extension, extensionMaxSize
+	);
+
+	for (size_t i = 0; extension[i] != '\0'; i++)
+	{
+		bool isDot = extension[i] == '.';
+
+		if (isDot)
+		{
+			Text::Copy(extensionCache, extension + i + 1, FileNameMaxSize);
+			Text::Copy(extension, extensionCache, FileNameMaxSize);
+			break;
+		}
+	}
+#endif 
+}
+
 bool BF::File::DoesFileExist()
 {
 	FileActionResult fileActionResult = Open(Path, FileOpenMode::Read);
@@ -498,32 +599,19 @@ bool BF::File::DoesFileExist(const wchar_t* filePath)
 	return file.DoesFileExist();
 }
 
-void BF::File::GetFileExtension(const char* filePath, const char* fileExtension)
+void BF::File::GetFileExtension(const char* filePath, char* fileExtension)
 {
-	char dummyBuffer[_MAX_PATH];
-/*
-	_splitpath_s
-	(
-		filePath,
-		dummyBuffer, _MAX_DRIVE,
-		dummyBuffer, _MAX_DIR,
-		dummyBuffer, _MAX_FNAME,
-		(char*)fileExtension, _MAX_EXT
-	);*/
+	char dummyBuffer[PathMaxSize];
+
+	PathSplitt(filePath, dummyBuffer, dummyBuffer, dummyBuffer, fileExtension);
 }
 
 bool BF::File::ExtensionEquals(const char* extension)
 {
-	wchar_t extensionW[_MAX_EXT];
-
-	mbstowcs(extensionW, extension, _MAX_EXT);
-
-	return ExtensionEquals(extensionW);
+	return Text::CompareIgnoreCase(Extension, extension, ExtensionMaxSize);
 }
 
 bool BF::File::ExtensionEquals(const wchar_t* extension)
 {
-	//return lstrcmpiW(Extension, extension) == 0;
-
-	return false;
+	return Text::CompareIgnoreCase(Extension, extension, ExtensionMaxSize);
 }

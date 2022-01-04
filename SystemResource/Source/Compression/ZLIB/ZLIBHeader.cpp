@@ -22,6 +22,42 @@ BF::ZLIBHeader::ZLIBHeader(unsigned char compressionFormatByte, unsigned char fl
     Parse(compressionFormatByte, flagByte);
 }
 
+BF::ZLIBHeader::ZLIBHeader(ZLIBCompressionMethod compressionMethod)
+{
+    Set(compressionMethod);
+}
+
+void BF::ZLIBHeader::Set(unsigned char compressionFormatByte, unsigned char flagByte)
+{
+    Parse(compressionFormatByte, flagByte);
+}
+
+void BF::ZLIBHeader::Set(ZLIBCompressionMethod compressionMethod)
+{
+    switch (compressionMethod)
+    {
+        case BF::ZLIBCompressionMethod::Deflate:
+        {
+            CompressionMethod = ZLIBCompressionMethod::Deflate;
+            CompressionInfo = 7;
+            CheckFlag = 0;
+            DictionaryPresent = false;
+            CompressionLevel = ZLIBCompressionLevel::Fastest;
+
+            WindowSize = 0;
+
+            break;
+        }
+           
+        case BF::ZLIBCompressionMethod::Invalid:
+        case BF::ZLIBCompressionMethod::Reserved:
+        default:
+            break;
+    }
+
+
+}
+
 void BF::ZLIBHeader::Parse(unsigned char compressionFormatByte, unsigned char flagByte)
 {
     // Valid Check
@@ -58,4 +94,27 @@ void BF::ZLIBHeader::Parse(unsigned char compressionFormatByte, unsigned char fl
         CompressionLevel = ConvertCompressionLevel(compressionLevelValue);
     }
     //-------------------------------------------------------------------------      
+}
+
+void BF::ZLIBHeader::Serialize(unsigned char& compressionFormatByte, unsigned char& flagByte)
+{
+    //---<Parse First Byte - Compression Info>---------------------------------
+    {
+        unsigned char WindowSizeValue = Math::LogarithmusBase2(WindowSize) - 8;
+        unsigned char compressionMethodValue = ConvertCompressionMethod(CompressionMethod);
+
+        compressionFormatByte = compressionMethodValue << 4; // 0b11110000
+        compressionFormatByte += WindowSizeValue; // 0b00001111 
+    }
+    //-------------------------------------------------------------------------
+
+    //---<Parse Second Byte - Flags>-------------------------------------------
+    {
+        unsigned char compressionLevelValue = ConvertCompressionLevel(CompressionLevel);
+
+        flagByte |= compressionLevelValue << 6;
+        flagByte |= DictionaryPresent << 5;
+        flagByte |= CheckFlag;
+    }
+    //-------------------------------------------------------------------------    
 }

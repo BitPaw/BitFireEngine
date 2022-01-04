@@ -397,7 +397,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                     AsciiString::Parse
                     (
                         currentLineBuffer,
-                        "�s",
+                        "$s",
                         materialFilePath
                     );
 
@@ -444,7 +444,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                     AsciiString::Parse
                     (
                         currentLineBuffer,
-                        "�s",
+                        "$s",
                         usedMaterialName
                     );
 
@@ -506,7 +506,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                     AsciiString::Parse
                     (
                         currentLineBuffer,
-                        "�fff",
+                        "$fff",
                         &currentVectorValue->X, 
                         &currentVectorValue->Y,
                         &currentVectorValue->Z
@@ -521,7 +521,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                     AsciiString::Parse
                     (
                         currentLineBuffer,
-                        "�ff",
+                        "$ff",
                         &point.X, &point.Y 
                     );
 
@@ -564,7 +564,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                             AsciiString::Parse
                             (
                                 currentLineBuffer,
-                                "�uuuuuuuuu",
+                                "$uuuuuuuuu",
                                 &vectorA.X, &vectorA.Y, &vectorA.Z,
                                 &vectorB.X, &vectorB.Y, &vectorB.Z,
                                 &vectorC.X, &vectorC.Y, &vectorC.Z
@@ -578,7 +578,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                             AsciiString::Parse
                             (
                                 currentLineBuffer,
-                                "�uuuuuuuuuuuu",
+                                "$uuuuuuuuuuuu",
                                 &vectorA.X, &vectorA.Y, &vectorA.Z,
                                 &vectorB.X, &vectorB.Y, &vectorB.Z,
                                 &vectorC.X, &vectorC.Y, &vectorC.Z,
@@ -665,8 +665,8 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
         {
             Vector3<unsigned int>& indexPosition = element.FaceElementList[i];
             unsigned int vertexPositionID = indexPosition.X - 1;
-            unsigned int texturePointID = indexPosition.Y - 1;
-            unsigned int normalVectorID = indexPosition.Z - 1;
+            unsigned int texturePointID = indexPosition.Y - 1; // TODO: REMOVED -1 form all positions
+            unsigned int normalVectorID = indexPosition.Z -1;
             Vector3<float>* vertexData = GlobalVertexPosition(vertexPositionID);
             Vector2<float>* textureData = GlobalTextureCoordinate(texturePointID);
             Vector3<float>* normalData = GlobalVertexNormalPosition(normalVectorID);
@@ -675,9 +675,34 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
             bool texturePointIDValid = textureData;
             bool normalVectorIDValid = normalData;
 
+#if 1 // failsafe
+            if (!vertexPositionIDValid)
+            {
+                ++vertexPositionID;
+                vertexData = GlobalVertexPosition(vertexPositionID);
+            }
+               
+
+            if (!texturePointIDValid)
+            {
+
+                ++texturePointID;
+                textureData = GlobalTextureCoordinate(texturePointID);
+            }
+
+            if (!normalVectorIDValid)
+            {
+                ++normalVectorID;
+                normalData = GlobalVertexNormalPosition(normalVectorID);
+            }
+     
+       
+           
+#elif
             assert(vertexPositionIDValid);
             assert(texturePointIDValid);
             assert(normalVectorIDValid);
+#endif // failsafe         
 
 
             const unsigned int dataSize = 12u;

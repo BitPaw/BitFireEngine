@@ -762,6 +762,8 @@ void BF::AsciiString::Cut(unsigned int startPosition, unsigned int endPosition, 
 	cuttedString.ReSize(cuttedStringSize);	 
 
 	memcpy(&cuttedString[0], startAdress, cuttedStringByteSize);
+
+	cuttedString[cuttedStringByteSize] = '\0';
 }
 
 unsigned int BF::AsciiString::FindFirst(char character)

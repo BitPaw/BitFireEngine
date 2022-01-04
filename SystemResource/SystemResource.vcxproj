@@ -292,6 +292,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\File\Text.cpp" />
     <ClCompile Include="Source\Image\PNG\Chunk\PNGTransparency.cpp" />
     <ClCompile Include="Source\Image\PNG\Chunk\PNGPhysicalPixelDimension.cpp" />
     <ClCompile Include="Source\Image\PNG\Chunk\PNGSuggestedPalette.cpp" />
@@ -491,6 +492,7 @@
     <ClCompile Include="Source\Service\HTTP\HTTPServer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\File\Text.h" />
     <ClInclude Include="Source\Image\PNG\Chunk\PNGTransparency.h" />
     <ClInclude Include="Source\Image\PNG\Chunk\PNGPhysicalPixelDimension.h" />
     <ClInclude Include="Source\Image\PNG\Chunk\PNGSuggestedPalette.h" />

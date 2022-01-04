@@ -32,9 +32,12 @@ namespace BF
 
 		ZLIBHeader();
 		ZLIBHeader(unsigned char compressionFormatByte, unsigned char flagByte);
+		ZLIBHeader(ZLIBCompressionMethod compressionMethod);
+
+		void Set(unsigned char compressionFormatByte, unsigned char flagByte);
+		void Set(ZLIBCompressionMethod compressionMethod);
 
 		void Parse(unsigned char compressionFormatByte, unsigned char flagByte);
-
-		
+		void Serialize(unsigned char& compressionFormatByte, unsigned char& flagByte);		
 	};
 }

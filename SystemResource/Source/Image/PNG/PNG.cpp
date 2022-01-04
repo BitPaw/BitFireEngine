@@ -9,6 +9,7 @@
 #include "../../Compression/ZLIB/ZLIB.h"
 #include "../../Compression/DEFLATE/DeflateBlock.h"
 #include "../../Container/BitStreamHusk.h"
+#include "../../Algorithm/CRC32.h"
 
 #define PNGHeaderSequenz { 0x89, 'P', 'N', 'G', '\r', '\n', 0x1A, '\n' }
 #define PNGDebugInfo false
@@ -398,7 +399,7 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
 
             adam7Cache = (Byte*)malloc(expectedadam7CacheSize * sizeof(Byte));
 
-            ADAM7::ProcessScanlines(adam7Cache, zlibCache, ImageHeader.Width, ImageHeader.Height, bitsPerPixel, ImageHeader.InterlaceMethod);
+            ADAM7::ScanlinesDecode(adam7Cache, zlibCache, ImageHeader.Width, ImageHeader.Height, bitsPerPixel, ImageHeader.InterlaceMethod);
 
             free(zlibCache);
 
@@ -422,17 +423,23 @@ BF::FileActionResult BF::PNG::Save(const char* filePath)
     size_t fileLength = 500;
     FileStream fileStream(fileLength);
 
-    // Write Header
+
+
+
+
+    //---<Signature>---
     {
         const Byte pngFileHeader[8] = PNGHeaderSequenz;
 
-        fileStream.Write((void*)pngFileHeader, 8u);
+        fileStream.Write((char*)pngFileHeader, 8u);
     }
 
-    // Header
+    //---<IHDR> (Image Header)---
     {
         unsigned char colorType = ConvertColorType(ImageHeader.ColorType);
         unsigned char interlaceMethod = ConvertPNGInterlaceMethod(ImageHeader.InterlaceMethod);
+        unsigned int crc = 0;
+        unsigned char* chunkStart = fileStream.Data + fileStream.DataCursorPosition;
 
         fileStream.Write(13u, Endian::Big);
         fileStream.Write("IHDR", 4u);
@@ -446,8 +453,31 @@ BF::FileActionResult BF::PNG::Save(const char* filePath)
         fileStream.Write(ImageHeader.FilterMethod);
         fileStream.Write(interlaceMethod);
 
-        fileStream.Write(0u, Endian::Big);
+        crc = CRC32::Generate(chunkStart, 13+4);
+
+        fileStream.Write(crc, Endian::Big);
     }
+
+    // iCCP
+    // sRGB
+    // gAMA
+    // cHRM
+    // PLTE
+    // tRNS
+    // bKGD
+    // pHYs
+    // IDAT
+    {
+   
+
+        // ZLIB comprssion
+    }   
+     
+    // tIME
+    // zTXt
+    // tEXt
+
+
 
 
     //---<>---

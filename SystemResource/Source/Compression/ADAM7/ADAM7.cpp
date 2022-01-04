@@ -13,7 +13,7 @@ static const unsigned ADAM7_IY[7] = { 0, 0, 4, 0, 2, 0, 1 }; /*y start values*/
 static const unsigned ADAM7_DX[7] = { 8, 8, 4, 4, 2, 2, 1 }; /*x delta values*/
 static const unsigned ADAM7_DY[7] = { 8, 8, 8, 4, 4, 2, 2 }; /*y delta values*/
 
-unsigned int BF::ADAM7::ProcessScanlines(unsigned char* out, unsigned char* in, size_t width, size_t height, size_t bpp, PNGInterlaceMethod interlaceMethod)
+unsigned int BF::ADAM7::ScanlinesDecode(unsigned char* out, unsigned char* in, size_t width, size_t height, size_t bpp, PNGInterlaceMethod interlaceMethod)
 {
     /*
      This function converts the filtered-padded-interlaced data into pure 2D image buffer with the PNG's colortype.
@@ -70,6 +70,11 @@ unsigned int BF::ADAM7::ProcessScanlines(unsigned char* out, unsigned char* in, 
         }
     }
 
+    return 0;
+}
+
+unsigned int BF::ADAM7::ScanlinesEncode(unsigned char* out, unsigned char* in, size_t width, size_t height, size_t bbp, PNGInterlaceMethod interlaceMethod)
+{
     return 0;
 }
 

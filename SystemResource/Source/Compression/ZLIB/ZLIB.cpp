@@ -46,6 +46,20 @@ void BF::ZLIB::Parse(unsigned char* inputData, size_t inputDataSize)
     //AdlerChecksum.;
 }
 
+void BF::ZLIB::Serialize(unsigned char* outputData, size_t& outputDataSize)
+{
+    const size_t headerSize = 2u;
+    const size_t adlerSize = 4u;
+    unsigned char compressionFormatByte = outputData[0];
+    unsigned char flagByte = outputData[1];
+
+    Header.Parse(compressionFormatByte, flagByte);
+
+    //Adler32::
+
+    outputDataSize += headerSize + adlerSize;
+}
+
 size_t BF::ZLIB::CalculateExpectedSize(size_t width, size_t height, size_t bpp, PNGInterlaceMethod interlaceMethod)
 {
     size_t expected_size = 0;

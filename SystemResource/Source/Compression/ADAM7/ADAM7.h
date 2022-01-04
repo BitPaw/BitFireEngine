@@ -20,7 +20,7 @@ namespace BF
 		static void Adam7_deinterlace(unsigned char* out, const unsigned char* in, size_t w, unsigned h, unsigned bpp);
 
 		public:
-		static unsigned int ProcessScanlines
+		static unsigned int ScanlinesDecode
 		(
 			unsigned char* out, 
 			unsigned char* in, 
@@ -29,6 +29,17 @@ namespace BF
 			size_t bbp,
 			PNGInterlaceMethod interlaceMethod
 		);		
+
+		static unsigned int ScanlinesEncode
+		(
+			unsigned char* out,
+			unsigned char* in,
+			size_t width,
+			size_t height,
+			size_t bbp,
+			PNGInterlaceMethod interlaceMethod
+		);
+
 
 		static size_t CaluclateExpectedSize(size_t width, size_t height, size_t bpp);
 	};

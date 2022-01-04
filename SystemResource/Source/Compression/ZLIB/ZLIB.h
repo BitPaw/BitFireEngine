@@ -17,8 +17,11 @@ namespace BF
 		Adler32 AdlerChecksum;
 
 		ZLIB(unsigned char* inputData, size_t inputDataSize);
+		//ZLIB();
 
 		void Parse(unsigned char* inputData, size_t inputDataSize);
+		void Serialize(unsigned char* outputData, size_t& outputDataSize);
+
 
 		static size_t CalculateExpectedSize(size_t width, size_t height, size_t bpp, PNGInterlaceMethod interlaceMethod);
 
