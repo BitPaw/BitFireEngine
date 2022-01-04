@@ -392,7 +392,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
             {
                 case OBJLineCommand::MaterialLibraryInclude:
                 { 
-                    char materialFilePath[_MAX_PATH];
+                    char materialFilePath[PathMaxSize];
 
                     AsciiString::Parse
                     (

@@ -7,8 +7,8 @@ namespace BF
 	struct Text
 	{
 		public:
-		static size_t AsciiToUnicode(char* input, size_t inputSize, wchar_t* output, size_t outputSize);
-		static size_t UnicodeToAscii(wchar_t* input, size_t inputSize, char* output, size_t outputSize);
+		static size_t AsciiToUnicode(const char* input, const size_t inputSize, wchar_t* output, const size_t outputSize);
+		static size_t UnicodeToAscii(const wchar_t* input, const size_t inputSize, char* output, const size_t outputSize);
 
 		static void Clear(char* string, const size_t stringSize);
 		static void Clear(wchar_t* string, const size_t stringSize);

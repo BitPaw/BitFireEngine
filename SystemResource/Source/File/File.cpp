@@ -12,6 +12,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <dirent.h>
+#include <libgen.h>
 #define FileRemoveA remove 
 #define FileRemoveW(string) remove((const char*)string)
 #define FileRenameA rename 
@@ -148,9 +149,9 @@ BF::ErrorCode BF::File::Remove(const wchar_t* filePath)
 
 BF::ErrorCode BF::File::Rename(const char* name)
 {
-	wchar_t nameW[_MAX_FNAME];
+	wchar_t nameW[FileNameMaxSize];
 
-	mbstowcs(nameW, name, _MAX_FNAME - 1);
+	mbstowcs(nameW, name, FileNameMaxSize - 1);
 
 	return File::Rename(Path, nameW);
 }
@@ -321,9 +322,9 @@ void BF::File::SetFilePath(const char* filePath)
 		return;
 	}
 
-	wchar_t filePathW[_MAX_PATH];
+	wchar_t filePathW[PathMaxSize];
 
-	mbstowcs(filePathW, filePath, _MAX_PATH-1);
+	Text::AsciiToUnicode(filePath, PathMaxSize, filePathW,PathMaxSize);
 
 	SetFilePath(filePathW);
 }
@@ -349,8 +350,8 @@ void BF::File::SetFilePath(const wchar_t* filePath)
 
 void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& listSize)
 {
-	wchar_t folderPathW[_MAX_PATH];
-	size_t writtenBytes = mbstowcs(folderPathW, folderPath, _MAX_PATH);	
+	wchar_t folderPathW[PathMaxSize];
+	size_t writtenBytes = mbstowcs(folderPathW, folderPath, PathMaxSize);
 
 #if defined(OSUnix)		
 	DIR* directory = opendir(folderPath);

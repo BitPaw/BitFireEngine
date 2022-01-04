@@ -1,6 +1,8 @@
 #include "Text.h"
 
-size_t BF::Text::AsciiToUnicode(char* input, size_t inputSize, wchar_t* output, size_t outputSize)
+#include <cstring>
+
+size_t BF::Text::AsciiToUnicode(const char* input, const size_t inputSize, wchar_t* output, const  size_t outputSize)
 {
 	size_t i = 0;
 
@@ -14,7 +16,7 @@ size_t BF::Text::AsciiToUnicode(char* input, size_t inputSize, wchar_t* output, 
 	return i;
 }
 
-size_t BF::Text::UnicodeToAscii(wchar_t* input, size_t inputSize, char* output, size_t outputSize)
+size_t BF::Text::UnicodeToAscii(const wchar_t* input, const size_t inputSize, char* output, const size_t outputSize)
 {
 	size_t i = 0;
 
