@@ -1,11 +1,33 @@
 #include "Text.h"
 
-void BF::Text::AsciiToUnicode(char* input, size_t inputSize, wchar_t* output, size_t outputSize)
+size_t BF::Text::AsciiToUnicode(char* input, size_t inputSize, wchar_t* output, size_t outputSize)
 {
+	size_t i = 0;
+
+	for (; (i < inputSize) && (input[i] != '\0') && (i < outputSize); ++i)
+	{
+		output[i] = input[i];
+	}
+
+	output[i] = L'\0';
+
+	return i;
 }
 
-void BF::Text::UnicodeToAscii(wchar_t* input, size_t inputSize, char* output, size_t outputSize)
+size_t BF::Text::UnicodeToAscii(wchar_t* input, size_t inputSize, char* output, size_t outputSize)
 {
+	size_t i = 0;
+
+	for (; (i < inputSize) && (output[i] != L'\0') && (i < outputSize); ++i)
+	{
+		const bool isToBig = input[i] > 255u;
+
+		output[i] = (!isToBig * input[i]) + (isToBig * '?');
+	}
+
+	output[i] = '\0';
+
+	return i;
 }
 
 void BF::Text::Clear(char* string, const size_t stringSize)
@@ -18,7 +40,7 @@ void BF::Text::Clear(wchar_t* string, const size_t stringSize)
 	memset(string, 0, sizeof(wchar_t) * stringSize);
 }
 
-void BF::Text::Copy(char* destination, const char* source, const size_t stringSize)
+size_t BF::Text::Copy(char* destination, const char* source, const size_t stringSize)
 {
 	size_t i = 0;
 
@@ -28,9 +50,11 @@ void BF::Text::Copy(char* destination, const char* source, const size_t stringSi
 	}
 
 	destination[i] = '\0';
+
+	return i;
 }
 
-void BF::Text::Copy(wchar_t* destination, const wchar_t* source, const size_t stringSize)
+size_t BF::Text::Copy(wchar_t* destination, const wchar_t* source, const size_t stringSize)
 {
 	// lstrcpyW(Path, filePath);
 
@@ -42,6 +66,8 @@ void BF::Text::Copy(wchar_t* destination, const wchar_t* source, const size_t st
 	}
 
 	destination[i] = '\0';
+
+	return i;
 }
 
 int BF::Text::Compare(const char* a, const char* b, const size_t stringSize)

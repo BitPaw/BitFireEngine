@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <wchar.h>
+#include "../File/Text.h"
 
 BF::Vector4<unsigned char> BF::Image::GetPixel(unsigned int x, unsigned int y)
 {
@@ -368,9 +369,9 @@ BF::FileActionResult BF::Image::Load()
             bitmap.ConvertTo(*this);
 
             bool foundAlphaFile = false;
-            wchar_t alphaMaskFile[_MAX_FNAME];
+            wchar_t alphaMaskFile[FileNameMaxSize];
 
-            wmemset(alphaMaskFile, 0, _MAX_FNAME);
+            Text::Clear(alphaMaskFile, FileNameMaxSize);
 
             // Search for Alphafile
             {
@@ -379,20 +380,20 @@ BF::FileActionResult BF::Image::Load()
 
                 File::FilesInFolder("Texture/*Alpha.bmp", &list, listSize);
            
-                size_t writtenBytes = mbstowcs(alphaMaskFile, FilePath + 8, _MAX_FNAME) - 4;
+                size_t writtenBytes = Text::AsciiToUnicode(FilePath + 8, FileNameMaxSize, alphaMaskFile, FileNameMaxSize);
 
                 for (size_t i = 0; i < listSize; i++)
                 {
                     wchar_t* file = list[i];
                     std::wstring text(file);
 
-                    bool isTargetedFile = wmemcmp(alphaMaskFile, file, writtenBytes) == 0;
+                    bool isTargetedFile = Text::Compare(alphaMaskFile, file, writtenBytes);
 
                     if (isTargetedFile)
                     {
                         foundAlphaFile = true;
-                        wmemcpy(alphaMaskFile, L"Texture/", 8);
-                        wmemcpy(alphaMaskFile + 8, file, text.length());     
+                        Text::Copy(alphaMaskFile, L"Texture/", 8);
+                        Text::Copy(alphaMaskFile + 8, file, text.length());
                         break;
                     }
                 }
