@@ -55,12 +55,12 @@ void Cleaved::CleavedGameSystem::OnStartUp()
         skybox,
         "Shader/SkyBox.vert",
         "Shader/SkyBox.frag",
-        "Texture/SkyBox_Right.bmp",
-        "Texture/SkyBox_Left.bmp",
-        "Texture/SkyBox_Top.bmp",
-        "Texture/SkyBox_Bottom.bmp",
-        "Texture/SkyBox_Back.bmp",
-        "Texture/SkyBox_Front.bmp"
+        "Texture/SkyBox_Side.png",
+        "Texture/SkyBox_Side.png",
+        "Texture/SkyBox_Top.png",
+        "Texture/SkyBox_Bottom.png",
+        "Texture/SkyBox_Side.png",
+        "Texture/SkyBox_Side.png"
     );  
       
     // Gravity
@@ -69,7 +69,7 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     _gravityField.BoundingBox.Set(170, 0, 30, 70);
     GameSystem.Resource.Add(&_gravityField);
 
-    _backGround.Set(13.5, -0.2, 5, "Sprite_backGround", "Texture/BackGround.png");
+    _backGround.Set(13.5, -0.2, -5, "Sprite_backGround", "Texture/BackGround.png");
     _backGround.MatrixModel.Scale(12);
     GameSystem.Resource.Add(_backGround);
 
@@ -120,12 +120,13 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     _camera->Rotate(0,0);
     _camera->MatrixModel.Move(240,15,60);
     _camera->CurrentRotation.Set(-90, 0, 0);
+    _camera->Move(Vector3<float>(0, 0, -60));
     _camera->Rotate(0, 0);
     //_camera->MatrixModel.Rotate(90, 0, 0);
 
 
     _camera->Target = &_playerCharacterLuna.MatrixModel;
-    _camera->Offset.Set(0, 20, -60);
+    _camera->Offset.Set(0, 20, 60);
     _camera->FollowSpeed = 1;
 }
 
