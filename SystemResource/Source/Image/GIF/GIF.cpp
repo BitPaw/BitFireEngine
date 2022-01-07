@@ -5,12 +5,12 @@ BF::GIF::GIF()
 
 }
 
-BF::FileActionResult BF::GIF::Load(const char* filePath)
+BF::FileActionResult BF::GIF::Load(const wchar_t* filePath)
 {
     return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::GIF::Save(const char* filePath)
+BF::FileActionResult BF::GIF::Save(const wchar_t* filePath)
 {
     return FileActionResult::Successful;
 }

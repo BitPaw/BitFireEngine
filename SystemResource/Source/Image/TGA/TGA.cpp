@@ -32,7 +32,7 @@ BF::TGA::~TGA()
 	free(ImageData);
 }
 
-BF::FileActionResult BF::TGA::Load(const char* filePath)
+BF::FileActionResult BF::TGA::Load(const wchar_t* filePath)
 {
 	unsigned short colorPaletteChunkEntryIndex = 0;
 	unsigned short colorPaletteChunkSize = 0;
@@ -211,7 +211,7 @@ BF::FileActionResult BF::TGA::Load(const char* filePath)
 	return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::TGA::Save(const char* filePath)
+BF::FileActionResult BF::TGA::Save(const wchar_t* filePath)
 {
 	const char footer[18] = TGAFileIdentifier;
 	unsigned int fileLength = 500;

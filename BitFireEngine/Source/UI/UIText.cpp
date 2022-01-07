@@ -1,6 +1,7 @@
 #include "UIText.h"
 #include "../../../SystemResource/Source/Font/FNT/FNT.h"
 #include "../../../SystemResource/Source/Math/Interpolate.h"
+#include "../../../SystemResource/Source/File/Text.h"
 
 void BF::UIText::Setup(AsciiString& text, Font& font, float x, float y)
 {
@@ -8,7 +9,7 @@ void BF::UIText::Setup(AsciiString& text, Font& font, float x, float y)
 	Width = 0;
 	Height = 0;
 
-	strcpy(Name, "<Internal Text>");
+	Text::Copy(Name, "<Internal Text>", ResourceNameSize);
 
 	MeshList = new Mesh[1];
 

@@ -45,22 +45,22 @@ void Cleaved::CleavedGameSystem::OnStartUp()
 {
     _camera = &GameSystem.Resource.MainCamera;
 
-    GameSystem.Resource.Load(worldShader, "Shader/WS.vert", "Shader/WS.frag");
-    GameSystem.Resource.Load(hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
+    GameSystem.Resource.Load(worldShader, L"Shader/WS.vert", L"Shader/WS.frag");
+    GameSystem.Resource.Load(hudShaderID, L"Shader/HUD.vert", L"Shader/HUD.frag");
     
-    GameSystem.Resource.Load(GameSystem.Resource.ShaderHitBox, "Shader/HitBox.vert", "Shader/HitBox.frag");
+    GameSystem.Resource.Load(GameSystem.Resource.ShaderHitBox, L"Shader/HitBox.vert", L"Shader/HitBox.frag");
 
     GameSystem.Resource.Load
     (
         skybox,
-        "Shader/SkyBox.vert",
-        "Shader/SkyBox.frag",
-        "Texture/SkyBox_Side.png",
-        "Texture/SkyBox_Side.png",
-        "Texture/SkyBox_Top.png",
-        "Texture/SkyBox_Bottom.png",
-        "Texture/SkyBox_Side.png",
-        "Texture/SkyBox_Side.png"
+        L"Shader/SkyBox.vert",
+        L"Shader/SkyBox.frag",
+        L"Texture/SkyBox_Side.png",
+        L"Texture/SkyBox_Side.png",
+        L"Texture/SkyBox_Top.png",
+        L"Texture/SkyBox_Bottom.png",
+        L"Texture/SkyBox_Side.png",
+        L"Texture/SkyBox_Side.png"
     );  
       
     // Gravity

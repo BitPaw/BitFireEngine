@@ -2,12 +2,15 @@
 
 #include <cstddef>
 
+#include "ResourceInfo.h"
+
 #ifndef Byte
 #define Byte unsigned char
 #endif
 
-#define ResourceNameSize 64u
-#define ResourceFilePathSize 64u
+
+#define StringAscii char*
+#define StringUnicode wchar_t*
 
 #define ResourceIDStored 999
 
@@ -27,30 +30,16 @@ namespace BF
 	Base class to all resources that can be loaded/saved
 	that will be used in any way with the graphics card.
 	*/
-	struct Resource
+	struct Resource : public ResourceInfo
 	{
 		protected:
 		Resource(); // Prevent that this can be an instance on its own (abstract class)
 
 		public:
-		/*
-		Resource index. This Value shall be used as key for dictionarys. Faster lookup.
-		*/
-		unsigned int ID;
+		// Resource index. This Value shall be used as key for dictionarys. Faster lookup.
+		size_t ID;		
 
-		// Name
-		char Name[ResourceNameSize];
-
-		/*
-		Path from where the resource was loaded from.
-		Can be used to prevent double loading.
-		*/
-		char FilePath[ResourceFilePathSize];
-
-		void MarkAsLoading(const char* name, const char* filePath);
-
-		void NameChange(const char* name);
-		void FilePathChange(const char* filePath);
+		void MarkAsLoading(const StringUnicode* name, const StringUnicode* filePath);
 
 		bool IsLoaded() 
 		{

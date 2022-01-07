@@ -5,7 +5,7 @@ BF::ShaderProgram::ShaderProgram()
     ID = -1;
 }
 
-void BF::ShaderProgram::AddShader(const char* vertexShaderPath, const char* fragmentShaderFilePath)
+void BF::ShaderProgram::AddShader(const wchar_t* vertexShaderPath, const wchar_t* fragmentShaderFilePath)
 {
     ShaderList[0] = Shader(ShaderType::Vertex, vertexShaderPath);
     ShaderList[1] = Shader(ShaderType::Fragment, fragmentShaderFilePath);

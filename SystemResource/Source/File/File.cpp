@@ -348,6 +348,23 @@ void BF::File::SetFilePath(const wchar_t* filePath)
 	PathSplitt(filePath, Drive, Directory, FileName, Extension);
 }
 
+void BF::File::PathSwapFile(const wchar_t* currnetPath, wchar_t* targetPath, const wchar_t* newFileName)
+{
+	size_t inputLength = Text::Length(currnetPath);
+
+	for (size_t i = inputLength; 0 < i; --i)
+	{
+		if (currnetPath[i] == '/')
+		{
+			size_t copyedBytes = Text::Copy(targetPath, currnetPath, i - 1);
+
+			Text::Copy(targetPath + copyedBytes, newFileName, 260 - copyedBytes);
+
+			break;
+		}
+	}
+}
+
 void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& listSize)
 {
 	wchar_t folderPathW[PathMaxSize];

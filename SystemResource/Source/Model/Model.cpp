@@ -28,11 +28,6 @@ BF::Model::Model() : Collider(ColliderType::HitBox)
     NameChange("<Unnamed Model>");
 }
 
-BF::Model::Model(const char* modelName) : Model()
-{
-    NameChange(modelName);
-}
-
 void BF::Model::PrintModelData()
 {
     printf("+--------------------------------------------+\n");
@@ -54,7 +49,7 @@ void BF::Model::PrintModelData()
     printf("+--------------------------------------------+");
 }
 
-BF::ModelType BF::Model::FileFormatPeek(const char* fileExtension)
+BF::ModelType BF::Model::FileFormatPeek(const wchar_t* fileExtension)
 {
     File file(fileExtension);
 
@@ -82,7 +77,7 @@ BF::Vector3<float> BF::Model::Position()
     return MatrixModel.PositionXYZ();
 }
 
-BF::FileActionResult BF::Model::Load(const char* filePath)
+BF::FileActionResult BF::Model::Load(const wchar_t* filePath)
 {
     if (!File::DoesFileExist(filePath))
     {

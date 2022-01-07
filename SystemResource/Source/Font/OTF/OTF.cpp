@@ -1,11 +1,11 @@
 #include "OTF.h"
 
-BF::FileActionResult BF::OTF::Load(const char* filePath)
+BF::FileActionResult BF::OTF::Load(const wchar_t* filePath)
 {
     return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::OTF::Save(const char* filePath)
+BF::FileActionResult BF::OTF::Save(const wchar_t* filePath)
 {
     return FileActionResult::Successful;
 }

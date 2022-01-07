@@ -75,39 +75,39 @@ namespace BF
 
         void CheckUncachedData();
 
-        Resource* Load(const char* filePathString);
+        Resource* Load(const wchar_t* filePathString);
 
         //void Load(Sprite& sprite, const char* model, const char* texturePath);
         Matrix4x4<float> TransformBoundingBox(Matrix4x4<float> modelMatrix, Vector3<float> boundingBox, bool half);
 
         void Load(Model& model);
-        void Load(Model& model, const char* filePath);
+        void Load(Model& model, const wchar_t* filePath);
         void Load(Image& image);
-        void Load(Image& image, const char* filePath);
-        void Load(Sound& sound, const char* filePath);
-        void Load(Font& font, const char* filePath);
-        void Load(ShaderProgram& shaderProgram, const char* filePath);
-        void Load(Dialog& dialog, const char* filePath);
-        void Load(Level& level, const char* filePath);
-        void Load(ShaderProgram& shaderProgram, const char* vertexShader, const char* fragmentShader);
+        void Load(Image& image, const wchar_t* filePath);
+        void Load(Sound& sound, const wchar_t* filePath);
+        void Load(Font& font, const wchar_t* filePath);
+        void Load(ShaderProgram& shaderProgram, const wchar_t* filePath);
+        void Load(Dialog& dialog, const wchar_t* filePath);
+        void Load(Level& level, const wchar_t* filePath);
+        void Load(ShaderProgram& shaderProgram, const wchar_t* vertexShader, const wchar_t* fragmentShader);
         void Load
         (
             SkyBox& skyBox, 
-            const char* shaderVertex, 
-            const char* shaderFragment,
-            const char* textureRight,
-            const char* textureLeft,
-            const char* textureTop,
-            const char* textureBottom,
-            const char* textureBack,
-            const char* textureFront
+            const wchar_t* shaderVertex,
+            const wchar_t* shaderFragment,
+            const wchar_t* textureRight,
+            const wchar_t* textureLeft,
+            const wchar_t* textureTop,
+            const wchar_t* textureBottom,
+            const wchar_t* textureBack,
+            const wchar_t* textureFront
          );
 
         void Add(Sprite& sprite);
         void Add(Model& model, bool loadAsynchronously = true);
-        void Add(Model& model, const char* filePath, bool loadAsynchronously = true);
+        void Add(Model& model, const wchar_t* filePath, bool loadAsynchronously = true);
         void Add(Image& image, bool loadAsynchronously = true);
-        void Add(Image& image, const char* filePath, bool loadAsynchronously = true);
+        void Add(Image& image, const wchar_t* filePath, bool loadAsynchronously = true);
         void Add(Font& font);
         void Add(ShaderProgram& shaderProgram);
         void Add(SkyBox& skyBox);

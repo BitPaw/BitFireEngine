@@ -1,11 +1,11 @@
 #include "AAC.h"
 
-BF::FileActionResult BF::AAC::Load(const char* filePath)
+BF::FileActionResult BF::AAC::Load(const wchar_t* filePath)
 {
 	return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::AAC::Save(const char* filePath)
+BF::FileActionResult BF::AAC::Save(const wchar_t* filePath)
 {
 	return FileActionResult::Successful;
 }

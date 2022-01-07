@@ -11,9 +11,10 @@
 #include "../File/File.h"
 #include "../Math/Math.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <wchar.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cwchar>
+
 #include "../File/Text.h"
 
 BF::Vector4<unsigned char> BF::Image::GetPixel(unsigned int x, unsigned int y)
@@ -223,7 +224,7 @@ void BF::Image::Resize(unsigned int width, unsigned height)
     }
 
     PixelDataSize = width * height * pixelSize;
-    PixelData = (unsigned char*)realloc(PixelData, PixelDataSize);
+    PixelData = (Byte*)realloc(PixelData, PixelDataSize * sizeof(Byte));
 }
 
 void BF::Image::FillRandome()
@@ -334,9 +335,9 @@ void BF::Image::FormatChange(ImageDataFormat imageFormat)
     }
 }
 
-BF::ImageFileFormat BF::Image::FileFormatPeek(const char* filePath)
+BF::ImageFileFormat BF::Image::FileFormatPeek(const wchar_t* filePath)
 {
-    File file(filePath); 
+    File file(filePath);
 
     if (file.ExtensionEquals("BMP"))  return ImageFileFormat::BitMap;
     if (file.ExtensionEquals("GIF"))  return ImageFileFormat::GIF;
@@ -363,7 +364,7 @@ BF::FileActionResult BF::Image::Load()
     switch (imageFileFormat)
     {
         case ImageFileFormat::BitMap:
-        {            
+        {   
             BMP bitmap;
             bitmap.Load(FilePath);
             bitmap.ConvertTo(*this);
@@ -380,7 +381,7 @@ BF::FileActionResult BF::Image::Load()
 
                 File::FilesInFolder("Texture/*Alpha.bmp", &list, listSize);
            
-                size_t writtenBytes = Text::AsciiToUnicode(FilePath + 8, FileNameMaxSize, alphaMaskFile, FileNameMaxSize);
+                size_t writtenBytes = Text::Copy(alphaMaskFile, FilePath + 8, FileNameMaxSize);
 
                 for (size_t i = 0; i < listSize; i++)
                 {
@@ -401,12 +402,9 @@ BF::FileActionResult BF::Image::Load()
 
             if(foundAlphaFile)// Load Alpha Mask
             {
-                BMP bitmapAlpha;
-                char bitmapAlphaFilePath[255];               
-             
-                sprintf(bitmapAlphaFilePath, "%ws", alphaMaskFile);                
+                BMP bitmapAlpha;           
                 
-                bitmapAlpha.Load(bitmapAlphaFilePath);
+                bitmapAlpha.Load(alphaMaskFile);
 
                 bitmap.ConvertTo(*this, bitmapAlpha);
             }      
@@ -466,7 +464,7 @@ BF::FileActionResult BF::Image::Load()
     return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::Image::Load(const char* filePath)
+BF::FileActionResult BF::Image::Load(const wchar_t* filePath)
 {
     FilePathChange(filePath);
 
@@ -475,7 +473,7 @@ BF::FileActionResult BF::Image::Load(const char* filePath)
     return fileActionResult;
 }
 
-BF::FileActionResult BF::Image::Save(const char* filePath, ImageFileFormat imageFileFormat)
+BF::FileActionResult BF::Image::Save(const wchar_t* filePath, ImageFileFormat imageFileFormat)
 {
     switch (imageFileFormat)
     {

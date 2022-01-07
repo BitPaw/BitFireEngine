@@ -1,7 +1,7 @@
 #include "WMA.h"
 #include "../../File/FileStream.h"
 
-BF::FileActionResult BF::WMA::Load(const char* filePath)
+BF::FileActionResult BF::WMA::Load(const wchar_t* filePath)
 {
 	FileStream file;
 	FileActionResult loadingResult = file.ReadFromDisk(filePath);
@@ -14,7 +14,7 @@ BF::FileActionResult BF::WMA::Load(const char* filePath)
 	return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::WMA::Save(const char* filePath)
+BF::FileActionResult BF::WMA::Save(const wchar_t* filePath)
 {
 	return FileActionResult::Successful;
 }

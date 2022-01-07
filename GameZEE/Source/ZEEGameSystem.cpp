@@ -52,20 +52,20 @@ void ZEE::ZEEGameSystem::OnStartUp()
 
     stopwatch.Start();
 
-    GameSystem.Resource.Load(worldShader, "Shader/WS.vert", "Shader/WS.frag");
-    GameSystem.Resource.Load(hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
+    GameSystem.Resource.Load(worldShader, L"Shader/WS.vert", L"Shader/WS.frag");
+    GameSystem.Resource.Load(hudShaderID, L"Shader/HUD.vert", L"Shader/HUD.frag");
 
     GameSystem.Resource.Load
     (
         skybox,
-        "Shader/SkyBox.vert",
-        "Shader/SkyBox.frag",
-        "Texture/SkyBox/Right.png",
-        "Texture/SkyBox/Left.png",
-        "Texture/SkyBox/Top.png",
-        "Texture/SkyBox/Bottom.png",
-        "Texture/SkyBox/Back.png",
-        "Texture/SkyBox/Front.png"
+        L"Shader/SkyBox.vert",
+        L"Shader/SkyBox.frag",
+        L"Texture/SkyBox/Right.png",
+        L"Texture/SkyBox/Left.png",
+        L"Texture/SkyBox/Top.png",
+        L"Texture/SkyBox/Bottom.png",
+        L"Texture/SkyBox/Back.png",
+        L"Texture/SkyBox/Front.png"
     );
 
   
@@ -80,9 +80,9 @@ void ZEE::ZEEGameSystem::OnStartUp()
    // _worldGravity.PullDirection.Set(0, -1, 0);
    // GameSystem.Resource.Add(&_worldGravity);
 
-    GameSystem.Resource.Load("Level/MainMenu.lev");
+    GameSystem.Resource.Load(L"Level/MainMenu.lev");
 
-    GameSystem.Resource.Add(cube, "Model/Cube.obj", false);
+    GameSystem.Resource.Add(cube, L"Model/Cube.obj", false);
     cube.MatrixModel.Move(0,50,0);
     cube.MatrixModel.Scale(10.0f);
     //cube.EnablePhysics = true;

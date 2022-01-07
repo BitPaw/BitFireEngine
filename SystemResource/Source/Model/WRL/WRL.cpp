@@ -1,11 +1,11 @@
 #include "WRL.h"
 
-BF::FileActionResult BF::WRL::Load(const char* filePath)
+BF::FileActionResult BF::WRL::Load(const wchar_t* filePath)
 {
     return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::WRL::Save(const char* filePath)
+BF::FileActionResult BF::WRL::Save(const wchar_t* filePath)
 {
     return FileActionResult::Successful;
 }

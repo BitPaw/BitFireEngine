@@ -6,7 +6,7 @@
 
 #include "../File/File.h"
 
-BF::FileActionResult BF::Font::Load(const char* filePath)
+BF::FileActionResult BF::Font::Load(const wchar_t* filePath)
 {
     File file(filePath);
     FontFormat fontFormat = FileFormatPeek(filePath);
@@ -50,7 +50,7 @@ BF::FileActionResult BF::Font::Load(const char* filePath)
     return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::Font::Save(const char* filePath, FontFormat fontFormat)
+BF::FileActionResult BF::Font::Save(const wchar_t* filePath, FontFormat fontFormat)
 {
     switch (fontFormat)
     {
@@ -85,7 +85,7 @@ BF::FileActionResult BF::Font::Save(const char* filePath, FontFormat fontFormat)
     return FileActionResult::Successful;
 }
 
-BF::FontFormat BF::Font::FileFormatPeek(const char* filePath)
+BF::FontFormat BF::Font::FileFormatPeek(const wchar_t* filePath)
 {
     File file(filePath);
 

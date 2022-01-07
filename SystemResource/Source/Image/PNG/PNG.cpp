@@ -21,7 +21,7 @@ unsigned int BF::PNG::BitsPerPixel()
     return ImageHeader.BitDepth * numberOfColorChannels;
 }
 
-BF::FileActionResult BF::PNG::Load(const char* filePath)
+BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
 {   
     size_t imageDataCounter = 0;
     size_t imageDataChunkCacheSizeUSED = 0;
@@ -418,7 +418,7 @@ BF::FileActionResult BF::PNG::Load(const char* filePath)
     }
 }
 
-BF::FileActionResult BF::PNG::Save(const char* filePath)
+BF::FileActionResult BF::PNG::Save(const wchar_t* filePath)
 {
     size_t fileLength = 500;
     FileStream fileStream(fileLength);

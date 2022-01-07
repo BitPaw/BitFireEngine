@@ -10,6 +10,7 @@
 
 #include "../../../SystemResource/Source/OSDefine.h"
 #include "../../../SystemResource/Source/Math/Physic/GravityCube.h"
+#include "../../../SystemResource/Source/File/Text.h"
 
 #include <cassert>
 
@@ -149,7 +150,7 @@ void BF::ResourceManager::CheckUncachedData()
     }
 }
 
-BF::Resource* BF::ResourceManager::Load(const char* filePath)
+BF::Resource* BF::ResourceManager::Load(const wchar_t* filePath)
 {
     Resource* resource = nullptr;
     ResourceType resourceType = ResourceType::Unknown;
@@ -269,7 +270,7 @@ void BF::ResourceManager::Load(Model& model)
     }
 }
 
-void BF::ResourceManager::Load(Model& model, const char* filePath)
+void BF::ResourceManager::Load(Model& model, const wchar_t* filePath)
 {
     model.FilePathChange(filePath);
 
@@ -281,19 +282,19 @@ void BF::ResourceManager::Load(Image& image)
     image.Load();
 }
 
-void BF::ResourceManager::Load(Image& image, const char* filePath)
+void BF::ResourceManager::Load(Image& image, const wchar_t* filePath)
 {
     image.FilePathChange(filePath);
 
     Load(image);
 }
 
-void BF::ResourceManager::Load(Sound& sound, const char* filePath)
+void BF::ResourceManager::Load(Sound& sound, const wchar_t* filePath)
 {
     //Add(sound);
 }
 
-void BF::ResourceManager::Load(Font& font, const char* filePath)
+void BF::ResourceManager::Load(Font& font, const wchar_t* filePath)
 {
     Add(font);
 
@@ -303,15 +304,17 @@ void BF::ResourceManager::Load(Font& font, const char* filePath)
     {
         for (unsigned int i = 0; i < font.AdditionalResourceListSize; i++)
         {
-            AsciiString path(filePath);
+            AsciiString path;
             char* resourcePath = &font.AdditionalResourceList[i];          
             char textureFilePath[50];
             memset(textureFilePath, 0, 50);
 
+            Text::Copy(&path[0], filePath, 260);
+
             int resourcePathSize = strlen(resourcePath);
             int startIndex = path.FindLast('/') + 1;
 
-            memcpy(textureFilePath, filePath, startIndex);
+            Text::Copy(textureFilePath, filePath + startIndex, 260);
 
             int length = strlen(textureFilePath);
 
@@ -321,8 +324,11 @@ void BF::ResourceManager::Load(Font& font, const char* filePath)
 
             font.Texture = new Image();
 
+            wchar_t textureFilePathW[260];
+            Text::Copy(textureFilePathW, textureFilePath, 260);
+
            // errorCode = ErrorCode::FileNotFound;
-            Load(*font.Texture, textureFilePath);
+            Load(*font.Texture, textureFilePathW);
 
             if (errorCode != FileActionResult::Successful)
             {
@@ -333,21 +339,21 @@ void BF::ResourceManager::Load(Font& font, const char* filePath)
 
         font.ID = _fontList.Size();
 
-        strcpy(font.FilePath, filePath);
+        Text::Copy(font.FilePath, filePath, ResourceFilePathSize);
     }
 }
 
-void BF::ResourceManager::Load(ShaderProgram& resource, const char* filePath)
+void BF::ResourceManager::Load(ShaderProgram& resource, const wchar_t* filePath)
 {
 
 }
 
-void BF::ResourceManager::Load(Dialog& resource, const char* filePath)
+void BF::ResourceManager::Load(Dialog& resource, const wchar_t* filePath)
 {
 
 }
 
-void BF::ResourceManager::Load(Level& level, const char* filePath)
+void BF::ResourceManager::Load(Level& level, const wchar_t* filePath)
 {
     const char _modelToken = 'O';
     const char _textureToken = 'T';
@@ -493,7 +499,11 @@ void BF::ResourceManager::Load(Level& level, const char* filePath)
                 // Load Model----------------
                 Model* loadedModel = new Model(); 
 
-                Add(*loadedModel, path, false);
+
+                wchar_t pathW[260];
+                Text::Copy(pathW, path, 260);
+
+                Add(*loadedModel, pathW, false);
 
                 /*
                 for (size_t i = 0; i < loadedModel->MeshListSize; i++)
@@ -534,9 +544,12 @@ void BF::ResourceManager::Load(Level& level, const char* filePath)
             {
                 sscanf(currentLineBuffer, "%s %s", dummyBuffer, path);
 
+                wchar_t pathW[260];
+                Text::Copy(pathW, path, 260);
+
                 Sound* sound = new Sound();
                 
-                Load(*sound, path);
+                Load(*sound, pathW);
 
                 level.SoundList[soundCounter++] = sound;
                 break;
@@ -545,9 +558,12 @@ void BF::ResourceManager::Load(Level& level, const char* filePath)
             {
                 sscanf(currentLineBuffer, "%s %s", dummyBuffer, path);
 
+                wchar_t pathW[260];
+                Text::Copy(pathW, path, 260);
+
                 Font* font = new Font();
                 
-                Load(*font, path);          
+                Load(*font, pathW);
 
                 level.FontList[fontCounter++] = font;
 
@@ -576,7 +592,7 @@ void BF::ResourceManager::Load(Level& level, const char* filePath)
     }
 }
 
-void BF::ResourceManager::Load(ShaderProgram& shaderProgram, const char* vertexShader, const char* fragmentShader)
+void BF::ResourceManager::Load(ShaderProgram& shaderProgram, const wchar_t* vertexShader, const wchar_t* fragmentShader)
 {
     shaderProgram.AddShader(vertexShader, fragmentShader);
     shaderProgram.Load();
@@ -592,14 +608,14 @@ void BF::ResourceManager::Load(ShaderProgram& shaderProgram, const char* vertexS
 void BF::ResourceManager::Load
 (
     SkyBox& skyBox, 
-    const char* shaderVertex,
-    const char* shaderFragment,
-    const char* textureRight,
-    const char* textureLeft, 
-    const char* textureTop, 
-    const char* textureBottom, 
-    const char* textureBack, 
-    const char* textureFront)
+    const wchar_t* shaderVertex,
+    const wchar_t* shaderFragment,
+    const wchar_t* textureRight,
+    const wchar_t* textureLeft,
+    const wchar_t* textureTop,
+    const wchar_t* textureBottom,
+    const wchar_t* textureBack,
+    const wchar_t* textureFront)
 {
     skyBox.NameChange("SkyBox");
     strcpy(skyBox.MeshList[0].Name, "SkyBox");
@@ -703,7 +719,7 @@ void BF::ResourceManager::Add(Model& model, bool loadAsynchronously)
     }
 }
 
-void BF::ResourceManager::Add(Model& model, const char* filePath, bool loadAsynchronously)
+void BF::ResourceManager::Add(Model& model, const wchar_t* filePath, bool loadAsynchronously)
 {
     model.FilePathChange(filePath);
 
@@ -730,7 +746,7 @@ void BF::ResourceManager::Add(Image& image, bool loadAsynchronously)
     }
 }
 
-void BF::ResourceManager::Add(Image& image, const char* filePath, bool loadAsynchronously)
+void BF::ResourceManager::Add(Image& image, const wchar_t* filePath, bool loadAsynchronously)
 {
     image.FilePathChange(filePath);
 
@@ -1109,7 +1125,7 @@ void BF::ResourceManager::PrintContent(bool detailed)
 
         const char* endLine = "+-----+-----------------------+--------------------------------------+--------+\n\n";
 
-        const char* line = "| %3i | %-21s | %-36s | %4i B |\n";
+        const char* line = "| %3i | %-21ls | %-36ls | %4i B |\n";
 
     
         printf(message, "Models");
@@ -1184,7 +1200,7 @@ void BF::ResourceManager::PrintContent(bool detailed)
 
             ByteToString(byteStringBuffer, image->FullSizeInMemory());
 
-            printf("| %3i | %-21s | %-36.36s | %6s |\n", image->ID, image->Name, image->FilePath, byteStringBuffer);
+            printf("| %3i | %-21ls | %-36.36ls | %6s |\n", image->ID, image->Name, image->FilePath, byteStringBuffer);
         }
 
         printf(endLine);
@@ -1204,7 +1220,7 @@ void BF::ResourceManager::PrintContent(bool detailed)
         {
             Font* font = currentFont->Element;
 
-            printf("| ID:%u Font Source: %s\n", font->ID, &font->FilePath[0]);
+            printf("| ID:%u Font Source: %ls\n", font->ID, font->FilePath);
         }
 
         printf(endLine);
@@ -1216,16 +1232,22 @@ void BF::ResourceManager::PrintContent(bool detailed)
             unsigned int shaderListSize = ShaderListSize;
             char buffer[50];
 
-            sprintf(buffer, "(ShaderContainer) [%i]", shaderListSize);
+            sprintf(buffer, "(ShaderContainer) [%i]", shaderListSize);    
+            wchar_t bufferW[260];
 
-            printf(line, shaderProgram->ID, buffer, "<Internal>", sizeof(ShaderProgram));
+            Text::Copy(bufferW, buffer, 260);
+
+            printf(line, shaderProgram->ID, bufferW, L"<Internal>", sizeof(ShaderProgram));
 
             for (size_t i = 0; i < shaderListSize; i++)
             {
                 Shader& shader = shaderProgram->ShaderList[i];
                 const char* shaderTypeString = ShaderTypeToString(shader.Type);
+                wchar_t shaderTypeStringW[260];
 
-                printf(line, shader.ID, shaderTypeString, shader.FilePath, sizeof(shader));
+                Text::Copy(shaderTypeStringW, shaderTypeString, 260);
+
+                printf(line, shader.ID, shaderTypeStringW, shader.FilePath, sizeof(shader));
             }
         }
 

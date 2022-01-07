@@ -11,7 +11,7 @@ BF::Shader::Shader()
     ContentSize = 0;
 }
 
-BF::Shader::Shader(ShaderType type, const char* filePath)
+BF::Shader::Shader(ShaderType type, const wchar_t* filePath)
 {
     ID = -1;
     Type = type;

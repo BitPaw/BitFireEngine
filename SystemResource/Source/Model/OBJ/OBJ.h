@@ -38,8 +38,8 @@ namespace BF
 		Vector3<unsigned int>* GlobalFaceElement(size_t index);
 		//------------------
 
-		FileActionResult Load(const char* filePath);
-		FileActionResult Save(const char* filePath);
+		FileActionResult Load(const wchar_t* filePath);
+		FileActionResult Save(const wchar_t* filePath);
 		FileActionResult ConvertTo(Model& model);
 		FileActionResult ConvertFrom(Model& model);
 		void Clear();

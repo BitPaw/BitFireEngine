@@ -18,7 +18,7 @@ BF::MID::~MID()
 	delete[] TrackList;
 }
 
-BF::FileActionResult BF::MID::Load(const char* filePath)
+BF::FileActionResult BF::MID::Load(const wchar_t* filePath)
 {
 	
 	const char midiTrackEndIndicator[5] = "\x00\xFF\x2F\x00";
@@ -62,7 +62,7 @@ BF::FileActionResult BF::MID::Load(const char* filePath)
 	return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::MID::Save(const char* filePath)
+BF::FileActionResult BF::MID::Save(const wchar_t* filePath)
 {	
 	unsigned int fileSize = 14u;
 

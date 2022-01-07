@@ -93,7 +93,7 @@ BF::FileActionResult BF::FileStream::ReadFromDisk(FILE* file, Byte** targetBuffe
 	return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::FileStream::ReadFromDisk(const char* filePath, Byte** targetBuffer, size_t& bufferSize, bool addNullTerminator, FilePersistence filePersistence)
+BF::FileActionResult BF::FileStream::ReadFromDisk(const wchar_t* filePath, Byte** targetBuffer, size_t& bufferSize, bool addNullTerminator, FilePersistence filePersistence)
 {
 	File file;
 	FileActionResult result = file.Open(filePath, FileOpenMode::Read);

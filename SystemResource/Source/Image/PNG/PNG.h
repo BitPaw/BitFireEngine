@@ -60,8 +60,8 @@ namespace BF
 
 		unsigned int BitsPerPixel();
 
-		FileActionResult Load(const char* filePath);
-		FileActionResult Save(const char* filePath);
+		FileActionResult Load(const wchar_t* filePath);
+		FileActionResult Save(const wchar_t* filePath);
 
 		FileActionResult ConvertTo(Image& image);
 		FileActionResult ConvertFrom(Image& image);		

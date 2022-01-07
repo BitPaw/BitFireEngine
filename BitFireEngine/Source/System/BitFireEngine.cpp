@@ -148,7 +148,7 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
 
         _mainWindow.TakeScreenShot(image);
 
-        image.Save("ScreenShot.bmp", ImageFileFormat::BitMap);
+        image.Save(L"ScreenShot.bmp", ImageFileFormat::BitMap);
     }
 
     if (keyboard.F.IsLongPressed())

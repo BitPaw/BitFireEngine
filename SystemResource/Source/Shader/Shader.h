@@ -14,7 +14,7 @@ namespace BF
 		size_t ContentSize;
 
 		Shader();
-		Shader(ShaderType type, const char* content);
+		Shader(ShaderType type, const wchar_t* content);
 
 		void Load();
 	};

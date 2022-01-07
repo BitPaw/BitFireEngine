@@ -16,7 +16,7 @@ BF::JPEG::JPEG()
     CompressedImageData = 0;
 }
 
-BF::FileActionResult BF::JPEG::Load(const char* filePath)
+BF::FileActionResult BF::JPEG::Load(const wchar_t* filePath)
 {
     FileStream file;
     FileActionResult FileActionResult = file.ReadFromDisk(filePath);
@@ -189,7 +189,7 @@ BF::FileActionResult BF::JPEG::Load(const char* filePath)
     return FileActionResult::FormatNotAsExpected;
 }
 
-BF::FileActionResult BF::JPEG::Save(const char* filePath)
+BF::FileActionResult BF::JPEG::Save(const wchar_t* filePath)
 {
     return FileActionResult::Successful;
 }

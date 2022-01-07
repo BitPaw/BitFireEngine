@@ -7,7 +7,7 @@
 #include <cassert>
 #include "Chunks/OS2/Panose/TTFPanose.h"
 
-BF::FileActionResult BF::TTF::TTF::Load(const char* filePath)
+BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
 {
 	FileStream file;
 	FileActionResult fileActionResult = file.ReadFromDisk(filePath);
@@ -421,7 +421,7 @@ BF::FileActionResult BF::TTF::TTF::Load(const char* filePath)
     return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::TTF::TTF::Save(const char* filePath)
+BF::FileActionResult BF::TTF::TTF::Save(const wchar_t* filePath)
 {
     return FileActionResult::Successful;
 }

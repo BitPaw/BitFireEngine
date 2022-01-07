@@ -19,7 +19,7 @@ BF::BMP::~BMP()
     free(PixelData);	
 }
 
-BF::FileActionResult BF::BMP::Load(const char* filePath)
+BF::FileActionResult BF::BMP::Load(const wchar_t* filePath)
 {
     FileStream file; 
     FileActionResult FileActionResult = file.ReadFromDisk(filePath);
@@ -126,7 +126,7 @@ BF::FileActionResult BF::BMP::Load(const char* filePath)
     return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::BMP::Save(const char* filePath)
+BF::FileActionResult BF::BMP::Save(const wchar_t* filePath)
 {
     unsigned int fileSize = InfoHeader.Width * InfoHeader.Height * 3 + 54u;
     FileStream file(fileSize);

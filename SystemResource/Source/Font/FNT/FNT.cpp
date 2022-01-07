@@ -2,6 +2,8 @@
 #include "FNTCommand.h"
 
 #include "../../File/FileStream.h"
+#include "../../File/File.h"
+#include "../../File/Text.h"
 
 BF::FNTCharacter* BF::FNT::GetCharacterPosition(unsigned char character)
 {
@@ -34,7 +36,7 @@ BF::FNT::~FNT()
 	delete[] FontPageList;
 }
 
-BF::FileActionResult BF::FNT::Load(const char* filePath)
+BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 {
 	AsciiString dataString;
 	AsciiString referenceSting;
@@ -335,15 +337,16 @@ BF::FileActionResult BF::FNT::Load(const char* filePath)
 	return BF::FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::FNT::Save(const char* filePath)
+BF::FileActionResult BF::FNT::Save(const wchar_t* filePath)
 {
 	int characterWritten = 0;
-
-	FILE* file = fopen(filePath, "wb");
+	
+	File file;
+	file.Open(filePath, FileOpenMode::Write);
 
 	characterWritten = fprintf
 	(
-		file,
+		file.FileMarker,
 		"info face=\"%s\" size=%i bold=%i italic=%i charset=%s unicode=%i stretchH=%i smooth=%i aa=%i padding=%i,%i,%i,%i spacing=%i,%i\n",
 		Info.Name,
 		Info.Size,
@@ -364,7 +367,7 @@ BF::FileActionResult BF::FNT::Save(const char* filePath)
 
 	characterWritten = fprintf
 	(
-		file,
+		file.FileMarker,
 		"common lineHeight=%i base=%i scaleW=%i scaleH=%i pages=%i packed=%i\n",
 		CommonData.LineHeight,
 		CommonData.Base,
@@ -380,7 +383,7 @@ BF::FileActionResult BF::FNT::Save(const char* filePath)
 
 		characterWritten = fprintf
 		(
-			file,
+			file.FileMarker,
 			"page id=%i file=\"%s\"\n"
 			"chars count=%zi",
 			page.PageID,
@@ -394,7 +397,7 @@ BF::FileActionResult BF::FNT::Save(const char* filePath)
 
 			characterWritten = fprintf
 			(
-				file,
+				file.FileMarker,
 				"char id=%i x=%f y=%f width=%f height=%f xoffset=%f yoffset=%f xadvance=%i page=%i chnl=%i\n",
 				character.ID,
 				character.Position[0],
@@ -410,16 +413,16 @@ BF::FileActionResult BF::FNT::Save(const char* filePath)
 		}
 	}
 
-	int closingResult = fclose(file);
+	FileActionResult closingResult = file.Close();
 
-	return BF::FileActionResult::Successful;
+	return closingResult;
 }
 
 BF::FileActionResult BF::FNT::ConvertTo(Font& font)
 {
 	unsigned int amountOfResources = FontPageListSize;
 
-	strncpy(font.Name, Info.Name, FNTPageFileNameSize);
+	Text::Copy(font.Name, Info.Name, FNTPageFileNameSize);
 
 	font.BitMapFont = this;
 	font.AdditionalResourceListSize = amountOfResources;

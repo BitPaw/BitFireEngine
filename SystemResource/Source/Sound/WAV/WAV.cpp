@@ -13,7 +13,7 @@ BF::WAV::~WAV()
 	free(SoundData);
 }
 
-BF::FileActionResult BF::WAV::Load(const char* filePath)
+BF::FileActionResult BF::WAV::Load(const wchar_t* filePath)
 {
 	FileStream file;
 	FileActionResult FileActionResult = file.ReadFromDisk(filePath);
@@ -92,7 +92,7 @@ BF::FileActionResult BF::WAV::Load(const char* filePath)
 	return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::WAV::Save(const char* filePath)
+BF::FileActionResult BF::WAV::Save(const wchar_t* filePath)
 {
 	// Note: The sample data must end on an even byte boundary. Whatever that means. 
 

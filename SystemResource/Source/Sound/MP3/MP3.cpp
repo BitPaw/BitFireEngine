@@ -7,7 +7,7 @@
 #include <cstddef>
 #include <cstring>
 
-BF::FileActionResult BF::MP3::Load(const char* filePath)
+BF::FileActionResult BF::MP3::Load(const wchar_t* filePath)
 {
 	FileStream file;
 	FileActionResult loadingResult = file.ReadFromDisk(filePath);
@@ -63,7 +63,7 @@ BF::FileActionResult BF::MP3::Load(const char* filePath)
 	return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::MP3::Save(const char* filePath)
+BF::FileActionResult BF::MP3::Save(const wchar_t* filePath)
 {
 	return BF::FileActionResult::Successful;
 }

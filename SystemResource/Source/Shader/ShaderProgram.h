@@ -18,7 +18,7 @@ namespace BF
 
 		ShaderProgram();
 
-		void AddShader(const char* vertexShaderPath, const char* fragmentShaderFilePath);
+		void AddShader(const wchar_t* vertexShaderPath, const wchar_t* fragmentShaderFilePath);
 		void Load();
 
 		bool IsLoaded();

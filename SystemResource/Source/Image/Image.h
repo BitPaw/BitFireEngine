@@ -53,11 +53,11 @@ namespace BF
 
 		void FormatChange(ImageDataFormat imageFormat);
 
-		static ImageFileFormat FileFormatPeek(const char* filePath);
+		static ImageFileFormat FileFormatPeek(const wchar_t* filePath);
 
 		FileActionResult Load();
-		FileActionResult Load(const char* filePath);
-		FileActionResult Save(const char* filePath, ImageFileFormat imageFileFormat);
+		FileActionResult Load(const wchar_t* filePath);
+		FileActionResult Save(const wchar_t* filePath, ImageFileFormat imageFileFormat);
 
 		virtual size_t FullSizeInMemory() override;
 	};

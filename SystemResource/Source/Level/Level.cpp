@@ -6,7 +6,7 @@ BF::Level::Level()
 	ID = -1;
 }
 
-bool BF::Level::IsLevelFile(const char* filePath)
+bool BF::Level::IsLevelFile(const wchar_t* filePath)
 {
 	File file(filePath);
 

@@ -4,6 +4,8 @@
 #include "../../File/FileStream.h"
 #include "../../Container/AsciiString.h"
 
+#include "../../File/Text.h"
+
 #include <cassert>
 #include <cstring>
 
@@ -207,10 +209,10 @@ BF::OBJLineCommand BF::OBJ::PeekCommandLine(const char* commandLine)
     }
 }
 
-BF::FileActionResult BF::OBJ::Load(const char* filePath)
+BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
 {
     bool isFirstVertex = true;
-    char currentLineBuffer[300];
+    char currentLineBuffer[1024];
     FileStream file; 
     FileActionResult FileActionResult = file.ReadFromDisk(filePath, true);
 
@@ -219,7 +221,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
         return FileActionResult;
     }   
 
-    strncpy(Name, filePath, OBJNameSize);
+    Text::Copy(Name, filePath, OBJNameSize);
 
     //---<Cound needed Space and allocate>----------------------------------
     {
@@ -402,8 +404,13 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
                     );
 
                     AsciiString materialFileFolder;
-                    AsciiString filePathS(filePath);
+                    AsciiString filePathS;
                     AsciiString materialPathS(materialFilePath);
+
+                    filePathS.ReSize(260);
+
+                    Text::Copy(&filePathS[0], filePath, 260);
+
                     int position = filePathS.FindLast('/');
                     bool hasSlash = position != -1;
                     bool doesFileExist = false;
@@ -606,7 +613,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
     }
 }
 
-BF::FileActionResult BF::OBJ::Save(const char* filePath)
+BF::FileActionResult BF::OBJ::Save(const wchar_t* filePath)
 {
     return FileActionResult::Successful;
 }
@@ -628,8 +635,8 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
             MTLMaterial& mtlMaterial = mtl.MaterialList[materialIndex];
             Material& material = model.MaterialList[materialIndex];
 
-            strncpy(material.Name, mtlMaterial.Name, MTLNameSize);
-            strncpy(material.FilePath, mtlMaterial.TextureFilePath, MTLFilePath);
+            Text::Copy(material.Name, mtlMaterial.Name, MTLNameSize);
+            Text::Copy(material.FilePath, mtlMaterial.TextureFilePath, MTLFilePath);
             memcpy(material.Ambient, mtlMaterial.Ambient, 3 * sizeof(float));
             memcpy(material.Diffuse, mtlMaterial.Diffuse, 3 * sizeof(float));
             memcpy(material.Specular, mtlMaterial.Specular, 3 * sizeof(float));
@@ -640,7 +647,7 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
     model.MeshListSize = ElementListSize;
     model.MeshList = new Mesh[ElementListSize];
 
-    strncpy(model.Name, Name, OBJNameSize);
+    Text::Copy(model.Name, Name, OBJNameSize);
 
     for (size_t elementIndex = 0; elementIndex < model.MeshListSize; elementIndex++)
     {

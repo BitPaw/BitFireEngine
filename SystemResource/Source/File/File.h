@@ -84,6 +84,8 @@ namespace BF
 		void SetFilePath(const wchar_t* filePath);
 		//---------------------------------------------------------------------
 
+		static void PathSwapFile(const wchar_t* currnetPath, wchar_t* targetPath, const wchar_t* newFileName);
+
 		static void FilesInFolder(const char* folderPath, wchar_t*** list, size_t& listSize);
 
 		static void PathSplitt(const char* fullPath, char* drive, char* directory, char* fileName, char* extension);

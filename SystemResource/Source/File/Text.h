@@ -7,13 +7,21 @@ namespace BF
 	struct Text
 	{
 		public:
+		static wchar_t AsciiToUnicode(char character);
+		static char UnicodeToAscii(wchar_t character);
+
 		static size_t AsciiToUnicode(const char* input, const size_t inputSize, wchar_t* output, const size_t outputSize);
 		static size_t UnicodeToAscii(const wchar_t* input, const size_t inputSize, char* output, const size_t outputSize);
 
 		static void Clear(char* string, const size_t stringSize);
 		static void Clear(wchar_t* string, const size_t stringSize);
 
+		static size_t Length(const char* string);
+		static size_t Length(const wchar_t* string);
+
 		static size_t Copy(char* destination, const char* source, const size_t stringSize);
+		static size_t Copy(char* destination, const wchar_t* source, const size_t stringSize);
+		static size_t Copy(wchar_t* destination, const char* source, const size_t stringSize);
 		static size_t Copy(wchar_t* destination, const wchar_t* source, const size_t stringSize);
 
 		static int Compare(const char* a, const char* b, const size_t stringSize);

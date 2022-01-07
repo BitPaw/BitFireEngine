@@ -24,6 +24,6 @@ namespace BF
 
 		Level();
 
-		static bool IsLevelFile(const char* filePath);
+		static bool IsLevelFile(const wchar_t* filePath);
 	};
 }

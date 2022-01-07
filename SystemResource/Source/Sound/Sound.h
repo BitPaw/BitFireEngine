@@ -20,8 +20,8 @@ namespace BF
 
 		Sound();
 
-		static SoundFormat FileFormatPeek(const char* filePath);
-		void Load(const char* filePath);
-		void Save(const char* filePath, SoundFormat soundFormat);
+		static SoundFormat FileFormatPeek(const wchar_t* filePath);
+		void Load(const wchar_t* filePath);
+		void Save(const wchar_t* filePath, SoundFormat soundFormat);
 	};
 }

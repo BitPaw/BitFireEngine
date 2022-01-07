@@ -5,12 +5,12 @@ BF::TIFF::TIFF()
 
 }
 
-BF::FileActionResult BF::TIFF::Load(const char* filePath)
+BF::FileActionResult BF::TIFF::Load(const wchar_t* filePath)
 {
     return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::TIFF::Save(const char* filePath)
+BF::FileActionResult BF::TIFF::Save(const wchar_t* filePath)
 {
     return FileActionResult::Successful;
 }

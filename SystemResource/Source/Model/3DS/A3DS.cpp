@@ -1,11 +1,11 @@
 #include "A3DS.h"
 
-BF::FileActionResult BF::A3DS::Load(const char* filePath)
+BF::FileActionResult BF::A3DS::Load(const wchar_t* filePath)
 {
     return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::A3DS::Save(const char* filePath)
+BF::FileActionResult BF::A3DS::Save(const wchar_t* filePath)
 {
     return FileActionResult::Successful;
 }

@@ -33,13 +33,12 @@ namespace BF
 		MeshRenderInfo SharedRenderInfoOverride;
 
 		Model();
-		Model(const char* modelName);
 
 		void PrintModelData();
 		
-		static ModelType FileFormatPeek(const char* filePath);
+		static ModelType FileFormatPeek(const wchar_t* filePath);
 		FileActionResult Load();
-		FileActionResult Load(const char* filePath);
+		FileActionResult Load(const wchar_t* filePath);
 
 		void Position(Vector3<float> position);
 		Vector3<float> Position();

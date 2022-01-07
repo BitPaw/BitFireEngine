@@ -1,7 +1,7 @@
 #include "OGG.h"
 #include "../../File/File.h"
 
-BF::FileActionResult BF::OGG::Load(const char* filePath)
+BF::FileActionResult BF::OGG::Load(const wchar_t* filePath)
 {
 	/*
 	File file(filePath);
@@ -26,7 +26,7 @@ BF::FileActionResult BF::OGG::Load(const char* filePath)
 	return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::OGG::Save(const char* filePath)
+BF::FileActionResult BF::OGG::Save(const wchar_t* filePath)
 {
 	return FileActionResult::Successful;
 }

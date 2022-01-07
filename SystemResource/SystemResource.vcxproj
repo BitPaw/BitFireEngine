@@ -292,6 +292,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\ResourceInfo.cpp" />
     <ClCompile Include="Source\File\Text.cpp" />
     <ClCompile Include="Source\Image\PNG\Chunk\PNGTransparency.cpp" />
     <ClCompile Include="Source\Image\PNG\Chunk\PNGPhysicalPixelDimension.cpp" />
@@ -492,6 +493,8 @@
     <ClCompile Include="Source\Service\HTTP\HTTPServer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="Source\ResourceInfo.h" />
     <ClInclude Include="Source\File\Text.h" />
     <ClInclude Include="Source\Image\PNG\Chunk\PNGTransparency.h" />
     <ClInclude Include="Source\Image\PNG\Chunk\PNGPhysicalPixelDimension.h" />
@@ -759,6 +762,9 @@
     <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat2.h" />
     <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFKerningPair.h" />
     <ClInclude Include="Source\Service\HTTP\HTTPServer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SystemResource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

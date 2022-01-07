@@ -1,11 +1,11 @@
 #include "FBX.h"
 
-BF::FileActionResult BF::FBX::Load(const char* filePath)
+BF::FileActionResult BF::FBX::Load(const wchar_t* filePath)
 {
     return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::FBX::Save(const char* filePath)
+BF::FileActionResult BF::FBX::Save(const wchar_t* filePath)
 {
     return FileActionResult::Successful;
 }

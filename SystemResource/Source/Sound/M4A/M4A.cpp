@@ -1,11 +1,11 @@
 #include "M4A.h"
 
-BF::FileActionResult BF::M4A::Load(const char* filePath)
+BF::FileActionResult BF::M4A::Load(const wchar_t* filePath)
 {
 	return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::M4A::Save(const char* filePath)
+BF::FileActionResult BF::M4A::Save(const wchar_t* filePath)
 {
 	return FileActionResult::Successful;
 }
