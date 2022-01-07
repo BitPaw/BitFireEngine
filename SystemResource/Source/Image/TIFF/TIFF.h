@@ -4,6 +4,7 @@
 
 namespace BF
 {
+	// Tag Image File Format
 	struct TIFF : public IImageFormat
 	{
 		public:

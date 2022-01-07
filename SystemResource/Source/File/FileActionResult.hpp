@@ -18,6 +18,9 @@ namespace BF
 		FileCloseFailure,
 
 		// Parsing
+		InvalidHeaderSignature,
+		InvalidVersion,
+
 		FormatNotSupported,
 		FormatNotAsExpected		
 	};

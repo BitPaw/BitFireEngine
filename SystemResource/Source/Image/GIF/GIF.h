@@ -4,9 +4,22 @@
 
 namespace BF
 {
+	// Graphics Interchange Format
 	struct GIF : public IImageFormat
 	{
 		public:
+		unsigned short Width;
+		unsigned short Height;
+
+		unsigned char GlobalColorTableSize;
+		bool IsSorted;
+		unsigned char ColorResolution;
+		bool IsGlobalColorTablePresent;
+
+		unsigned char BackgroundColorIndex;
+		unsigned char PixelAspectRatio;
+
+
 		GIF();
 
 		FileActionResult Load(const wchar_t* filePath);
