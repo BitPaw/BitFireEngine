@@ -69,8 +69,11 @@ void BF::SystemSound::Register(AudioSource& audioSource)
 void BF::SystemSound::Register(Sound& sound)
 {
 	const ALuint numberOfBuffers = 1;
+	unsigned int id = 0;
 
-	alGenBuffers(numberOfBuffers, &sound.ID);
+	alGenBuffers(numberOfBuffers, &id);
+
+	sound.ID = id;
 }
 
 void BF::SystemSound::UnRegister(AudioSource& audioSource)
@@ -80,7 +83,11 @@ void BF::SystemSound::UnRegister(AudioSource& audioSource)
 
 void BF::SystemSound::UnRegister(Sound& sound)
 {
-	alDeleteBuffers(1, &sound.ID);
+	unsigned int id = 0;
+
+	alDeleteBuffers(1, &id);
+
+	sound.ID = id;
 }
 
 void BF::SystemSound::Update(AudioSource& audioSource)

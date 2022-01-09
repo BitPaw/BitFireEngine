@@ -1,5 +1,6 @@
 #include "FNT.h"
 #include "FNTCommand.h"
+#include "FNTLineType.h"
 
 #include "../../File/FileStream.h"
 #include "../../File/File.h"
@@ -36,20 +37,10 @@ BF::FNT::~FNT()
 	delete[] FontPageList;
 }
 
+
+
 BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 {
-	AsciiString dataString;
-	AsciiString referenceSting;
-	FNTPage* currentPage = nullptr;
-
-	char currentCursor[2048];
-	char textCharacter[120];
-	int pageCounter = 0;
-	char hasCommas = 0;
-	bool stopFlag = false;
-	int characterCounter = 0;
-	int dynamicIndex = 0;
-
 	FileStream file;
 	FileActionResult fileActionResult = file.ReadFromDisk(filePath);
 
@@ -58,279 +49,171 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 		return fileActionResult;
 	}
 
-	// HARD CODED
-	FontPageListSize = 1;
-	FontPageList = new FNTPage[FontPageListSize];
-	//----
+	size_t bufferSize = 512;
+	char currentCursor[512];
+	FNTPage* currentPage = nullptr;
+	size_t characterIndex = 0;
 
-	while (true)
+	while (file.ReadNextLineInto(currentCursor))
 	{
-		bool hasLine = file.ReadNextLineInto(currentCursor);
-
-		if (!hasLine)
+		const FNTLineType lineType = ConvertFNTLineType(currentCursor);
+				
+		switch (lineType)
 		{
-			break;
-		}
+			case BF::FNTLineType::Info:
+			{	
+				const char faceText[] = "face";
+				const char sizeText[] = "size";
+				const char scaleWText[] = "scaleW";
+				const char boldText[] = "bold";
+				const char italicText[] = "italic";
+				const char charsetText[] = "charset";
+				const char unicodeText[] = "unicode";
+				const char stretchHText[] = "stretchH";
+				const char smoothText[] = "smooth";
+				const char aaText[] = "aa";
+				const char paddingText[] = "padding";
+				const char spacingText[] = "spacing";
+				const char outlineThicknessText[] = "xxxxx";
 
-		bool isInfoLine = memcmp(currentCursor, "info", 4) == 0;
-		bool isCommonLine = memcmp(currentCursor, "common", 6) == 0;
-		bool isPageLine = memcmp(currentCursor, "page", 4) == 0;
-		bool isCharacterCountLine = memcmp(currentCursor, "chars", 5) == 0;
-		bool isCharacterDeclareLine = memcmp(currentCursor, "char ", 5) == 0;
 
-		dataString.SetAsReference(currentCursor);
+				char* face = Text::FindPosition(currentCursor, bufferSize, faceText, sizeof(faceText));
+				char* size = Text::FindPosition(currentCursor, bufferSize, sizeText, sizeof(sizeText));
+				char* scaleW = Text::FindPosition(currentCursor, bufferSize, scaleWText, sizeof(scaleWText));
+				char* bold = Text::FindPosition(currentCursor, bufferSize, boldText, sizeof(boldText));
+				char* italic = Text::FindPosition(currentCursor, bufferSize, italicText, sizeof(italicText));
+				char* charset = Text::FindPosition(currentCursor, bufferSize, charsetText, sizeof(charsetText));
+				char* unicode = Text::FindPosition(currentCursor, bufferSize, unicodeText, sizeof(unicodeText));
+				char* stretchH = Text::FindPosition(currentCursor, bufferSize, stretchHText, sizeof(stretchHText));
+				char* smooth = Text::FindPosition(currentCursor, bufferSize, smoothText, sizeof(smoothText));
+				char* aa = Text::FindPosition(currentCursor, bufferSize, aaText, sizeof(aaText));
+				char* padding = Text::FindPosition(currentCursor, bufferSize, paddingText, sizeof(paddingText));
+				char* spacing = Text::FindPosition(currentCursor, bufferSize, spacingText, sizeof(spacingText));
+				char* outlineThickness = Text::FindPosition(currentCursor, bufferSize, outlineThicknessText, sizeof(outlineThicknessText));
 
-		if (isInfoLine)
-		{
-			char textName[20];
-			char textCharSet[10];
-			char size[20];
-			char bold[20];
-			char italic[20];
-			char unicode[20];
-			char stretchH[20];
-			char smooth[20];
-			char aa[20];
-			char padding[20];
-			char spacing[20];
-			char outlineThickness[20];
+				Text::Copy(Info.Name, face + sizeof(faceText) + 1, FontNameSize);
+				Text::ToInt(size + sizeof(sizeText), bufferSize - sizeof(sizeText), Info.Size);
+				//Text::ToBool(scaleW + sizeof(scaleWText), bufferSize - sizeof(scaleWText), Info.);
+				Text::ToBool(bold + sizeof(boldText), bufferSize - sizeof(boldText), Info.Bold);
+				Text::ToBool(italic + sizeof(italicText), bufferSize - sizeof(italicText), Info.Italic);
+				Text::Copy(Info.CharSet, charset + sizeof(charsetText) + 1, CharSetNameSize);
+				Text::ToBool(unicode + sizeof(unicodeText), bufferSize - sizeof(unicodeText), Info.Unicode);
+				Text::ToInt(stretchH + sizeof(stretchHText), bufferSize - sizeof(stretchHText), Info.StretchH);
+				Text::ToBool(smooth + sizeof(smoothText), bufferSize - sizeof(smoothText), Info.Smooth);
+				Text::ToBool(aa + sizeof(aaText), bufferSize - sizeof(aaText), Info.Supersampling);
+				//Text::ToInt(padding + sizeof(paddingText), bufferSize - sizeof(paddingText), Info.CharacterPadding);
+				//Text::ToInt(spacing + sizeof(spacingText), bufferSize - sizeof(spacingText), Info.SpacerOffset);
+				//Text::ToInt(outlineThickness + sizeof(outlineThicknessText), bufferSize - sizeof(outlineThicknessText), Info.OutlineThickness);
 
-			dataString.ReplaceWhiteSpaceInQuotes('\xFE', false);
+				Text::TerminateBeginFromFirst(Info.Name, FontNameSize, '\"');
+				Text::TerminateBeginFromFirst(Info.CharSet, CharSetNameSize, '\"');
 
-			memset(Info.Name, 0, 30);
-			memset(Info.CharSet, 0, 10);
-
-			//AsciiString::Parse
-			int scannedObjects = sscanf
-			(
-				currentCursor,
-				"%s %s %s %s %s %s %s %s %s %s %s %s %s",
-				textCharacter,
-				textName,
-				size,
-				bold,
-				italic,
-				textCharSet,
-				unicode,
-				stretchH,
-				smooth,
-				aa,
-				padding,
-				spacing,
-				outlineThickness
-			);
-
-			AsciiString reData;
-
-			referenceSting.SetAsReference(textName);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			referenceSting.ReplaceWhiteSpaceInQuotes('\xFE', true);
-
-			memcpy(Info.Name, &referenceSting[1], referenceSting.Size() - 2);
-
-			referenceSting.SetAsReference(textCharSet);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			referenceSting.ReplaceWhiteSpaceInQuotes('\xFE', true);
-
-			memcpy(Info.CharSet, &referenceSting[1], referenceSting.Size() - 2);
-
-			referenceSting.SetAsReference(size);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			Info.Size = referenceSting.ToInt();
-
-			referenceSting.SetAsReference(bold);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			Info.Bold = referenceSting.ToBool();
-
-			referenceSting.SetAsReference(italic);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			Info.Italic = referenceSting.ToBool();
-
-			referenceSting.SetAsReference(unicode);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			Info.Unicode = referenceSting.ToBool();
-
-			referenceSting.SetAsReference(stretchH);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			Info.StretchH = referenceSting.ToInt();
-
-			referenceSting.SetAsReference(smooth);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			Info.Smooth = referenceSting.ToBool();
-
-			referenceSting.SetAsReference(aa);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			Info.Supersampling = referenceSting.ToBool();
-
-			if (scannedObjects == 13)
+				break;
+			}	
+			case BF::FNTLineType::Common:
 			{
-				referenceSting.SetAsReference(outlineThickness);
-				referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-				Info.OutlineThickness = referenceSting.ToInt();
+				const char lineHeightText[] = "lineHeight";
+				const char baseText[] = "base";
+				const char scaleWText[] = "scaleW";
+				const char scaleHText[] = "scaleH";
+				const char pagesText[] = "pages";
+				const char packedText[] = "packed";
+
+				char* lineHeight = Text::FindPosition(currentCursor, bufferSize, lineHeightText, sizeof(lineHeightText));
+				char* base = Text::FindPosition(currentCursor, bufferSize, baseText, sizeof(baseText));
+				char* scaleW = Text::FindPosition(currentCursor, bufferSize, scaleWText, sizeof(scaleWText));
+				char* scaleH = Text::FindPosition(currentCursor, bufferSize, scaleHText, sizeof(scaleHText));
+				char* pages	= Text::FindPosition(currentCursor, bufferSize, pagesText, sizeof(pagesText));
+				char* packed = Text::FindPosition(currentCursor, bufferSize, packedText, sizeof(packedText));
+
+				Text::ToInt(lineHeight + sizeof(lineHeightText), bufferSize - sizeof(lineHeightText), CommonData.LineHeight);
+				Text::ToInt(base + sizeof(baseText), bufferSize - sizeof(baseText), CommonData.Base);
+				Text::ToInt(scaleW + sizeof(scaleWText), bufferSize - sizeof(scaleWText), CommonData.ScaleWidth);
+				Text::ToInt(scaleH + sizeof(scaleHText), bufferSize - sizeof(scaleHText), CommonData.ScaleHeight);
+				Text::ToInt(pages + sizeof(pagesText), bufferSize - sizeof(pagesText), CommonData.AmountOfPages);
+				Text::ToBool(packed + sizeof(packedText), bufferSize - sizeof(packedText), CommonData.Packed);
+
+				FontPageListSize = CommonData.AmountOfPages;
+				FontPageList = new FNTPage[FontPageListSize];
+
+				currentPage = FontPageList;
+
+				break;
 			}
-		}
+			case BF::FNTLineType::Page:
+			{
+				const char idText[] = "id";
+				const char fileText[] = "file";
 
-		if (isCommonLine)
-		{
-			char lineHeight[20];
-			char base[20];
-			char scaleW[20];
-			char scaleH[20];
-			char pages[20];
-			char packed[20];
+				char* id = Text::FindPosition(currentCursor, bufferSize, idText, sizeof(idText));
+				char* file = Text::FindPosition(currentCursor, bufferSize, fileText, sizeof(fileText));
 
-			int scannedObjects = sscanf
-			(
-				currentCursor,
-				"%s %s %s %s %s %s %s",
-				textCharacter,
-				lineHeight,
-				base,
-				scaleW,
-				scaleH,
-				pages,
-				packed
-			);
+				Text::ToInt(id + sizeof(idText), bufferSize - sizeof(idText), currentPage->PageID);
+				Text::Copy(currentPage->PageFileName, file + sizeof(fileText) + 1, FNTPageFileNameSize);
 
-			referenceSting.SetAsReference(lineHeight);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			CommonData.LineHeight = referenceSting.ToInt();
+				Text::TerminateBeginFromFirst(currentPage->PageFileName, FNTPageFileNameSize, '\"');				
 
-			referenceSting.SetAsReference(base);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			CommonData.Base = referenceSting.ToInt();
+				break;
+			}
+			case BF::FNTLineType::CharacterCount:
+			{
+				const char countText[] = "count";
+				char* count = Text::FindPosition(currentCursor, bufferSize, countText, sizeof(countText));
+			
+				Text::ToInt(count + sizeof(countText), bufferSize - sizeof(countText), currentPage->PageID);
+	
+				currentPage->CharacteListSize = currentPage->PageID;
+				currentPage->CharacteList = new FNTCharacter[currentPage->CharacteListSize];
 
-			referenceSting.SetAsReference(scaleW);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			CommonData.ScaleWidth = referenceSting.ToInt();
+				characterIndex = 0;
 
-			referenceSting.SetAsReference(scaleH);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			CommonData.ScaleHeight = referenceSting.ToInt();
+				break;
+			}
+			case BF::FNTLineType::CharacterDefinition:
+			{				
+				FNTCharacter& character = currentPage->CharacteList[characterIndex++];
+		
+				const char idText[] = "id";
+				const char xText[] = "x";
+				const char yText[] = "y";
+				const char widthText[] = "width";
+				const char heightText[] = "height";
+				const char xoffsetText[] = "xoffset";
+				const char yoffsetText[] = "yoffset";
+				const char xadvanceText[] = "xadvance";
+				const char pageText[] = "page";
+				const char chnlText[] = "chnl";
 
-			referenceSting.SetAsReference(pages);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			CommonData.AmountOfPages = referenceSting.ToInt();
-
-			referenceSting.SetAsReference(packed);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			CommonData.Packed = referenceSting.ToBool();
-		}
-
-		if (isPageLine)
-		{
-			char textPageID[30];
-			char imageFileName[40];
-
-			currentPage = &FontPageList[pageCounter++];
-
-			dataString.ReplaceWhiteSpaceInQuotes('\xFE', false);
-
-			int scannedObjects = sscanf(currentCursor, "%s %s %s", textCharacter, textPageID, imageFileName);
-
-			dataString.ReplaceWhiteSpaceInQuotes('\xFE', true);
-
-			referenceSting.SetAsReference(textPageID);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			currentPage->PageID = referenceSting.ToInt();
-
-
-			AsciiString nameExtract(imageFileName);
-
-			int startIndex = nameExtract.FindFirst('\"') + 1;
-			int endIndex = nameExtract.FindLast('\"');
-			int length = endIndex - startIndex;
-
-			memcpy(currentPage->PageFileName, &imageFileName[startIndex], length);
-			currentPage->PageFileName[length] = '\0';
-		}
-
-		if (isCharacterCountLine)
-		{
-			char count[12];
-			int numberOfChars = 0;
-
-			int scannedObjects = sscanf(currentCursor, "%s %s", textCharacter, count);
-
-			referenceSting.SetAsReference(count);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			numberOfChars = referenceSting.ToInt();
-
-			currentPage->CharacteListSize = numberOfChars;
-			currentPage->CharacteList = new FNTCharacter[numberOfChars];
-		}
-
-		if (isCharacterDeclareLine)
-		{
-			FNTCharacter& character = currentPage->CharacteList[characterCounter++];
-			char textID[20];
-			char textX[20];
-			char textY[20];
-			char textWidth[20];
-			char textHeiht[20];
-			char textXOffset[20];
-			char textYOffset[20];
-			char textXAdvance[20];
-			char textPage[20];
-			char textChanel[20];
-
-			int scannedObjects = sscanf
-			(
-				currentCursor,
-				"%s %s %s %s %s %s %s %s %s %s %s",
-				textCharacter,
-				textID,
-				textX,
-				textY,
-				textWidth,
-				textHeiht,
-				textXOffset,
-				textYOffset,
-				textXAdvance,
-				textPage,
-				textChanel
-			);
-
-			referenceSting.SetAsReference(textID);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			character.ID = referenceSting.ToInt();
-
-			referenceSting.SetAsReference(textX);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			character.Position[0] = referenceSting.ToFloat();
-
-			referenceSting.SetAsReference(textY);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			character.Position[1] = referenceSting.ToFloat();
-
-			referenceSting.SetAsReference(textWidth);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			character.Size[0] = referenceSting.ToFloat();
-
-			referenceSting.SetAsReference(textHeiht);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			character.Size[1] = referenceSting.ToFloat();
-
-			referenceSting.SetAsReference(textXOffset);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			character.Offset[0] = referenceSting.ToFloat();
-
-			referenceSting.SetAsReference(textYOffset);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			character.Offset[1] = referenceSting.ToFloat();
-
-			referenceSting.SetAsReference(textXAdvance);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			character.XAdvance = referenceSting.ToFloat();
-
-			referenceSting.SetAsReference(textPage);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			character.Page = referenceSting.ToInt();
-
-			referenceSting.SetAsReference(textChanel);
-			referenceSting.PonterMoveBy(referenceSting.FindFirst('=') + 1);
-			character.Chanal = referenceSting.ToInt();
-
+				char* id = Text::FindPosition(currentCursor, bufferSize, idText, sizeof(idText));
+				char* x = Text::FindPosition(currentCursor, bufferSize, xText, sizeof(xText));
+				char* y = Text::FindPosition(currentCursor, bufferSize, yText, sizeof(yText));
+				char* width = Text::FindPosition(currentCursor, bufferSize, widthText, sizeof(widthText));
+				char* height = Text::FindPosition(currentCursor, bufferSize, heightText, sizeof(heightText));
+				char* xoffset = Text::FindPosition(currentCursor, bufferSize, xoffsetText, sizeof(xoffsetText));
+				char* yoffset = Text::FindPosition(currentCursor, bufferSize, yoffsetText, sizeof(yoffsetText));
+				char* xadvance = Text::FindPosition(currentCursor, bufferSize, xadvanceText, sizeof(xadvanceText));
+				char* page = Text::FindPosition(currentCursor, bufferSize, pageText, sizeof(pageText));
+				char* chnl = Text::FindPosition(currentCursor, bufferSize, chnlText, sizeof(chnlText));
+									
+				Text::ToInt(id + sizeof(idText), bufferSize - sizeof(idText), character.ID);
+				Text::ToFloat(x + sizeof(xText), bufferSize - sizeof(xText), character.Position[0]);
+				Text::ToFloat(y + sizeof(yText), bufferSize - sizeof(yText), character.Position[1]);
+				Text::ToFloat(width + sizeof(widthText), bufferSize - sizeof(widthText), character.Size[0]);
+				Text::ToFloat(height + sizeof(heightText), bufferSize - sizeof(heightText), character.Size[1]);
+				Text::ToFloat(xoffset + sizeof(xoffsetText), bufferSize - sizeof(xoffsetText), character.Offset[0]);
+				Text::ToFloat(yoffset + sizeof(yoffsetText), bufferSize - sizeof(yoffsetText), character.Offset[1]);
+				Text::ToInt(xadvance + sizeof(xadvanceText), bufferSize - sizeof(xadvanceText), character.XAdvance);
+				Text::ToInt(page + sizeof(pageText), bufferSize - sizeof(pageText), character.Page);
+				Text::ToInt(chnl + sizeof(chnlText), bufferSize - sizeof(chnlText), character.Chanal);
+							
+				break;
+			}
+			case BF::FNTLineType::Unkown:
+			default:
+			{
+				// Ignore
+				break;
+			}			
 		}
 	}
 
@@ -428,15 +311,17 @@ BF::FileActionResult BF::FNT::ConvertTo(Font& font)
 	font.AdditionalResourceListSize = amountOfResources;
 	font.CharacterSize = Info.Size;
 	font.SizeBetweenLines = CommonData.LineHeight;
-	font.AdditionalResourceList = new char[amountOfResources, 30];
+	font.AdditionalResourceList = (char**)malloc(amountOfResources * sizeof(char*));
 
 	for (size_t i = 0; i < amountOfResources; i++)
 	{
 		FNTPage& page = FontPageList[i];
 		char* pageFileName = page.PageFileName;
-		char* string = &font.AdditionalResourceList[i];
+		char* string = (char*)malloc(FNTPageFileNameSize * sizeof(char));
 
-		strcpy(string, pageFileName);
+		font.AdditionalResourceList[i] = string;
+
+		Text::Copy(string, pageFileName, FNTPageFileNameSize);
 	}
 
 	return BF::FileActionResult::Successful;

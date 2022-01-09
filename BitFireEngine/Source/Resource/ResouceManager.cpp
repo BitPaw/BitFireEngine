@@ -10,6 +10,7 @@
 
 #include "../../../SystemResource/Source/OSDefine.h"
 #include "../../../SystemResource/Source/Math/Physic/GravityCube.h"
+#include "../../../SystemResource/Source/File/File.h"
 #include "../../../SystemResource/Source/File/Text.h"
 
 #include <cassert>
@@ -89,7 +90,7 @@ void BF::ResourceManager::UnloadAll()
 
 void BF::ResourceManager::PushToGPU(Model& model)
 {
-    unsigned int& modelID = model.ID;
+    size_t& modelID = model.ID;
     bool isAlreadyLinked = (int)modelID > 0;
     bool isUsable = modelID == ResourceIDLoaded || isAlreadyLinked;
 
@@ -296,50 +297,47 @@ void BF::ResourceManager::Load(Sound& sound, const wchar_t* filePath)
 
 void BF::ResourceManager::Load(Font& font, const wchar_t* filePath)
 {
+    Text::Copy(font.FilePath, filePath, ResourceFilePathSize);
+
     Add(font);
+   
+    StopWatch x;
+
+    x.Start();
 
     FileActionResult errorCode = font.Load(filePath);
+    
+    double ww = x.Stop();
+
+    printf("\n\n%lf\n\n",ww);
 
     if (errorCode == FileActionResult::Successful)
     {
+        font.ID = _fontList.Size();
+
+        Text::Copy(font.FilePath, filePath, ResourceFilePathSize);
+
         for (unsigned int i = 0; i < font.AdditionalResourceListSize; i++)
-        {
-            AsciiString path;
-            char* resourcePath = &font.AdditionalResourceList[i];          
-            char textureFilePath[50];
-            memset(textureFilePath, 0, 50);
+        {   
+            char* resourcePath = font.AdditionalResourceList[i];          
+            wchar_t textureFilePath[PathMaxSize];   
 
-            Text::Copy(&path[0], filePath, 260);
-
-            int resourcePathSize = strlen(resourcePath);
-            int startIndex = path.FindLast('/') + 1;
-
-            Text::Copy(textureFilePath, filePath + startIndex, 260);
-
-            int length = strlen(textureFilePath);
-
-            memcpy(&textureFilePath[length], &resourcePath[0], resourcePathSize);
+            size_t pathIndex = Text::FindLast(filePath, PathMaxSize, '/');
+            size_t copyedBytes = Text::Copy(textureFilePath, filePath, pathIndex+1);
+            Text::Copy(textureFilePath + copyedBytes, resourcePath, PathMaxSize);
+            
             
             // Does file exist?
 
             font.Texture = new Image();
-
-            wchar_t textureFilePathW[260];
-            Text::Copy(textureFilePathW, textureFilePath, 260);
-
-           // errorCode = ErrorCode::FileNotFound;
-            Load(*font.Texture, textureFilePathW);
+            Load(*font.Texture, textureFilePath);
 
             if (errorCode != FileActionResult::Successful)
             {
                 delete font.Texture;
                 font.Texture = nullptr;
             }
-        }
-
-        font.ID = _fontList.Size();
-
-        Text::Copy(font.FilePath, filePath, ResourceFilePathSize);
+        }          
     }
 }
 
@@ -760,6 +758,7 @@ void BF::ResourceManager::Add(Font& font)
 
     if (!isRegistered)
     {
+        font.ID = _fontList.Size();
         _fontList.Add(&font);
     }
 

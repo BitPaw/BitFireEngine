@@ -19,6 +19,9 @@ float _deltaTime = 0;
 
 BF::UIText* text;
 
+BF::FNT fnt;
+BF::Font font;
+
 BF::SkyBox skybox;
 BF::ShaderProgram worldShader;
 BF::ShaderProgram hudShaderID;
@@ -61,8 +64,12 @@ void Cleaved::CleavedGameSystem::OnStartUp()
         L"Texture/SkyBox_Bottom.png",
         L"Texture/SkyBox_Side.png",
         L"Texture/SkyBox_Side.png"
-    );  
-      
+    ); 
+
+
+    //fnt.Load();
+    GameSystem.Resource.Load(font, L"Font/harrington.fnt");
+
     // Gravity
     _gravityField.PullForce = -GravityForceEarth;
     _gravityField.PullDirection.Set(0, -1, 0);

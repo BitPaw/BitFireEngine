@@ -32,5 +32,17 @@ namespace BF
 		static int CompareIgnoreCase(const wchar_t* a, const wchar_t* b, const size_t stringSize);
 		static int CompareIgnoreCase(const char* a, const wchar_t* b, const size_t stringSize);
 		static int CompareIgnoreCase(const wchar_t* a, const char* b, const size_t stringSize);
+
+		static char* FindPosition(const char* data, size_t dataSize, const char* target, size_t targetSize);
+		static void ToInt(const char* string, const size_t dataSize, int& number);
+		static void ToBool(const char* string, const size_t dataSize, bool& number);
+		static void ToFloat(const char* string, const size_t dataSize, float& number);
+		static void ToDouble(const char* string, const size_t dataSize, double& number);
+
+		static size_t FindFirst(const char* string, const size_t dataSize, const char character);
+		static size_t FindLast(const char* string, const size_t dataSize, const char character);
+		static size_t FindLast(const wchar_t* string, const size_t dataSize, const wchar_t character);
+
+		static void TerminateBeginFromFirst(char* string, const size_t dataSize, const char character);
 	};
 }

@@ -615,6 +615,9 @@
     <ClCompile Include="Source\Image\GIF\GIFImageDescriptor.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Font\FNT\FNTLineType.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp">
@@ -1425,6 +1428,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Image\GIF\GIFImageDescriptor.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Font\FNT\FNTLineType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

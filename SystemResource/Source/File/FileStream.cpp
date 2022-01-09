@@ -17,6 +17,7 @@ BF::FileStream::FileStream(size_t dataSize)
 BF::FileStream::~FileStream()
 {
 	free(Data);
+	Data = nullptr;
 }
 
 BF::FileActionResult BF::FileStream::ReadFromDisk(const char* filePath, bool addNullTerminator, FilePersistence filePersistence)

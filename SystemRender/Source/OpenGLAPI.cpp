@@ -8,15 +8,18 @@ void BF::OpenGLAPI::RegisterImage(Image& image)
     unsigned int format = ToImageFormat(image.Format);
     unsigned int textureType = ToImageType(image.Type);
    // bool validFormat = image.Type == ImageType::Texture2D || image.Type == ImageType::Texture3D;
+    unsigned int id = 0;
 
     if (image.PixelData == nullptr)
     {
         return;
     }
 
-    glGenTextures(1, &image.ID);
+    glGenTextures(1, &id);
 
-    glBindTexture(textureType, image.ID);
+    glBindTexture(textureType, id);
+
+    image.ID = id;
 
     glTexParameteri(textureType, GL_TEXTURE_WRAP_S, ImageWrapToOpenGLFormat(image.WrapWidth));
     glTexParameteri(textureType, GL_TEXTURE_WRAP_T, ImageWrapToOpenGLFormat(image.WrapHeight));
@@ -96,8 +99,12 @@ void BF::OpenGLAPI::SkyBoxUse(SkyBox& skybox)
 
 void BF::OpenGLAPI::SkyBoxSet(SkyBox& skybox)
 {
-    glGenTextures(1, &skybox.ID);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.ID);
+    unsigned int id = 0;
+
+    glGenTextures(1, &id);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+
+    skybox.ID = id;
 
     for (unsigned int i = 0; i < 6; i++)
     {   

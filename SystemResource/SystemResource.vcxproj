@@ -292,6 +292,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Font\FNT\FNTLineType.cpp" />
     <ClCompile Include="Source\Image\GIF\GIFImageDescriptor.cpp" />
     <ClCompile Include="Source\ResourceInfo.cpp" />
     <ClCompile Include="Source\File\Text.cpp" />
@@ -494,6 +495,7 @@
     <ClCompile Include="Source\Service\HTTP\HTTPServer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Font\FNT\FNTLineType.h" />
     <ClInclude Include="Source\Image\GIF\GIFImageDescriptor.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Source\ResourceInfo.h" />

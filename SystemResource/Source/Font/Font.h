@@ -15,8 +15,8 @@ namespace BF
 		unsigned short CharacterSize;
 		unsigned short SizeBetweenCharacters;
 		unsigned short SizeBetweenLines;
-		unsigned int AdditionalResourceListSize;
-		char* AdditionalResourceList;
+		size_t AdditionalResourceListSize;
+		char** AdditionalResourceList;
 		Image* Texture;
 		void* BitMapFont;		
 		//---------------------------------------------------------------------

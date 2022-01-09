@@ -5,13 +5,13 @@ namespace BF
 	struct FNTCharacter
 	{
 		public:
-		unsigned char ID;		
+		int ID;		
 		float Position[2]; // Position of the character image in the texture.
 		float Size[2];	// Size of the character image in the texture.		
 		float Offset[2];// Offset from the position-center.				
-		unsigned char XAdvance; // How much the current position should be advanced after drawing the character.		
-		unsigned int Page; // The texture page where the character image is found.		
-		unsigned int Chanal;// The texture channel where the character image is found (1 = blue, 2 = green, 4 = red, 8 = alpha, 15 = all channels).
+		int XAdvance; // How much the current position should be advanced after drawing the character.		
+		int Page; // The texture page where the character image is found.		
+		int Chanal;// The texture channel where the character image is found (1 = blue, 2 = green, 4 = red, 8 = alpha, 15 = all channels).
 
 		FNTCharacter();
 		FNTCharacter
