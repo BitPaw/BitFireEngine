@@ -67,6 +67,15 @@ size_t BF::Text::Length(const char* string)
 	return index;
 }
 
+size_t BF::Text::LengthUntil(const char* string, const size_t stringSize, const char character)
+{
+	size_t index = 0;
+
+	for (; (index < stringSize) && (string[index] != '\0') && (string[index] != character); ++index);
+
+	return index;
+}
+
 size_t BF::Text::Length(const wchar_t* string)
 {
 	size_t index = 0;
@@ -258,16 +267,16 @@ char* BF::Text::FindPosition(const char* data, size_t dataSize, const char* targ
 	return (char*)(found * (size_t)source);
 }
 
-void BF::Text::ToInt(const char* string, size_t dataSize, int& number)
+size_t BF::Text::ToInt(const char* string, size_t dataSize, int& number)
 {
-	unsigned int index = 0;
+	size_t index = 0;
 	bool isNegative = false;	
 
 	number = 0;
 
 	if (!string)
 	{
-		return;
+		return 0;
 	}
 
 	if (string[0] == '-')
@@ -295,9 +304,11 @@ void BF::Text::ToInt(const char* string, size_t dataSize, int& number)
 	{
 		number *= -1;
 	}
+
+	return index;
 }
 
-void BF::Text::ToBool(const char* string, size_t dataSize, bool& number)
+size_t BF::Text::ToBool(const char* string, size_t dataSize, bool& number)
 {
 	switch (string[0])
 	{
@@ -314,18 +325,22 @@ void BF::Text::ToBool(const char* string, size_t dataSize, bool& number)
 			number = true;
 			break;
 	}
+
+	return 1;
 }
 
-void BF::Text::ToFloat(const char* string, const size_t dataSize, float& number)
+size_t BF::Text::ToFloat(const char* string, const size_t dataSize, float& number)
 {
 	double x = 0;
 
-	Text::ToDouble(string, dataSize, x);
+	size_t readBytes = Text::ToDouble(string, dataSize, x);
 
 	number = x;
+
+	return readBytes;
 }
 
-void BF::Text::ToDouble(const char* string, const size_t dataSize, double& number)
+size_t BF::Text::ToDouble(const char* string, const size_t dataSize, double& number)
 {
 	unsigned int digitsAfterDot = 1;
 	bool isWholeNumberChunk = true;
@@ -337,7 +352,7 @@ void BF::Text::ToDouble(const char* string, const size_t dataSize, double& numbe
 
 	if (!string)
 	{
-		return;
+		return 0;
 	}
 
 	if (string[0] == '-')
@@ -381,6 +396,8 @@ void BF::Text::ToDouble(const char* string, const size_t dataSize, double& numbe
 
 	//double stdResult = std::strtof(string, 0); // STD Method
 	number /= (double)digitsAfterDot;
+
+	return index;
 }
 
 size_t BF::Text::FindFirst(const char* string, const size_t dataSize, const char character)
@@ -432,5 +449,45 @@ void BF::Text::TerminateBeginFromFirst(char* string, const size_t dataSize, cons
 	if (index != -1)
 	{
 		string[index] = '\0';
+	}
+}
+
+void BF::Text::FindAll(const char* string, const size_t stringSize, const ParsingToken* parsingTokenList, const size_t parsingTokenListSize)
+{
+	bool finished = false;
+	bool foundItem = false;
+	size_t foundTargets = 0;
+
+	for (size_t i = 0; (i < stringSize) && (string[i] != '\0') && !finished; ++i)
+	{
+		foundItem = false;
+
+		for (size_t t = 0; (t < parsingTokenListSize) && (string[i] != ' ') && !foundItem; t++)
+		{
+			const ParsingToken& parsingToken = parsingTokenList[t];
+			const char* targetString = parsingToken.String;
+			const char* sourceString = string + i;
+
+			foundItem = Compare(sourceString, targetString, stringSize); // Compare whole word
+
+			if (foundItem)
+			{
+				size_t lengthTag = LengthUntil(sourceString, stringSize, '=');
+				const char* valueString = sourceString + lengthTag + 1;
+
+				i += lengthTag + 1;				
+
+				(*parsingToken.Value) = valueString;
+
+				for (size_t i = 0; (string[i] != '\0') && string[i] != ' '; i++) // Skip data
+				{
+					++i;
+				}
+
+				++foundTargets;
+			}
+		}
+
+		finished = foundTargets == parsingTokenListSize;
 	}
 }

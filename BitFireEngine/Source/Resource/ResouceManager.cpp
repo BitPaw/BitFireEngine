@@ -309,7 +309,7 @@ void BF::ResourceManager::Load(Font& font, const wchar_t* filePath)
     
     double ww = x.Stop();
 
-    printf("\n\n%lf\n\n",ww);
+    printf("\n\n%f\n\n",ww);
 
     if (errorCode == FileActionResult::Successful)
     {

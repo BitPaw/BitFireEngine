@@ -5,6 +5,23 @@
 #include "../../File/FileStream.h"
 #include "../../File/File.h"
 #include "../../File/Text.h"
+#include "../../File/ParsingToken.h"
+
+
+#define InfoLineFace "face"
+#define InfoLineSizzeText "size"
+#define InfoLineScaleWText "scaleW"
+#define InfoLineBoldText "bold"
+#define InfoLineItalicText "italic"
+#define InfoLineCharsetText "charset"
+#define InfoLineUnicodeText "unicode"
+#define InfoLineStretchHText "stretchH"
+#define InfoLineSmoothText "smooth"
+#define InfoLineAAText "aa"
+#define InfoLinePaddingText "padding"
+#define InfoLineSpacingText "spacing"
+#define InfoLineOutlineThicknessText "xxxxx"
+
 
 BF::FNTCharacter* BF::FNT::GetCharacterPosition(unsigned char character)
 {
@@ -37,8 +54,6 @@ BF::FNT::~FNT()
 	delete[] FontPageList;
 }
 
-
-
 BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 {
 	FileStream file;
@@ -62,45 +77,35 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 		{
 			case BF::FNTLineType::Info:
 			{	
-				const char faceText[] = "face";
-				const char sizeText[] = "size";
-				const char scaleWText[] = "scaleW";
-				const char boldText[] = "bold";
-				const char italicText[] = "italic";
-				const char charsetText[] = "charset";
-				const char unicodeText[] = "unicode";
-				const char stretchHText[] = "stretchH";
-				const char smoothText[] = "smooth";
-				const char aaText[] = "aa";
-				const char paddingText[] = "padding";
-				const char spacingText[] = "spacing";
-				const char outlineThicknessText[] = "xxxxx";
+				const char parsingData[] = "face=\0size=\0bold=\0italic\0charset=\0unicode=\0stretchH=\0smooth=\0aa=\0padding=\0spacing=\0";
+				const char* indexPosition[11];
+				const ParsingToken parsingTokenList[] =
+				{
+					{parsingData + 0, &indexPosition[0]},
+					{parsingData + 6, &indexPosition[1]},
+					{parsingData + 12, &indexPosition[2]},
+					{parsingData + 18, &indexPosition[3]},
+					{parsingData + 25, &indexPosition[4]},
+					{parsingData + 34, &indexPosition[5]},
+					{parsingData + 43, &indexPosition[6]},
+					{parsingData + 53, &indexPosition[7]},
+					{parsingData + 61, &indexPosition[8]},
+					{parsingData + 65, &indexPosition[9]},
+					{parsingData + 74, &indexPosition[10]}
+				};
+				const size_t values = sizeof(parsingTokenList) / sizeof(ParsingToken);
 
+				Text::FindAll(currentCursor + 5, bufferSize, parsingTokenList, values);
 
-				char* face = Text::FindPosition(currentCursor, bufferSize, faceText, sizeof(faceText));
-				char* size = Text::FindPosition(currentCursor, bufferSize, sizeText, sizeof(sizeText));
-				char* scaleW = Text::FindPosition(currentCursor, bufferSize, scaleWText, sizeof(scaleWText));
-				char* bold = Text::FindPosition(currentCursor, bufferSize, boldText, sizeof(boldText));
-				char* italic = Text::FindPosition(currentCursor, bufferSize, italicText, sizeof(italicText));
-				char* charset = Text::FindPosition(currentCursor, bufferSize, charsetText, sizeof(charsetText));
-				char* unicode = Text::FindPosition(currentCursor, bufferSize, unicodeText, sizeof(unicodeText));
-				char* stretchH = Text::FindPosition(currentCursor, bufferSize, stretchHText, sizeof(stretchHText));
-				char* smooth = Text::FindPosition(currentCursor, bufferSize, smoothText, sizeof(smoothText));
-				char* aa = Text::FindPosition(currentCursor, bufferSize, aaText, sizeof(aaText));
-				char* padding = Text::FindPosition(currentCursor, bufferSize, paddingText, sizeof(paddingText));
-				char* spacing = Text::FindPosition(currentCursor, bufferSize, spacingText, sizeof(spacingText));
-				char* outlineThickness = Text::FindPosition(currentCursor, bufferSize, outlineThicknessText, sizeof(outlineThicknessText));
-
-				Text::Copy(Info.Name, face + sizeof(faceText) + 1, FontNameSize);
-				Text::ToInt(size + sizeof(sizeText), bufferSize - sizeof(sizeText), Info.Size);
-				//Text::ToBool(scaleW + sizeof(scaleWText), bufferSize - sizeof(scaleWText), Info.);
-				Text::ToBool(bold + sizeof(boldText), bufferSize - sizeof(boldText), Info.Bold);
-				Text::ToBool(italic + sizeof(italicText), bufferSize - sizeof(italicText), Info.Italic);
-				Text::Copy(Info.CharSet, charset + sizeof(charsetText) + 1, CharSetNameSize);
-				Text::ToBool(unicode + sizeof(unicodeText), bufferSize - sizeof(unicodeText), Info.Unicode);
-				Text::ToInt(stretchH + sizeof(stretchHText), bufferSize - sizeof(stretchHText), Info.StretchH);
-				Text::ToBool(smooth + sizeof(smoothText), bufferSize - sizeof(smoothText), Info.Smooth);
-				Text::ToBool(aa + sizeof(aaText), bufferSize - sizeof(aaText), Info.Supersampling);
+				Text::Copy(Info.Name, indexPosition[0] + 1, FontNameSize);
+				Text::ToInt(indexPosition[1], 5, Info.Size);
+				Text::ToBool(indexPosition[2], 5, Info.Bold);
+				Text::ToBool(indexPosition[3], 5, Info.Italic);
+				Text::Copy(Info.CharSet, indexPosition[4] + 1, CharSetNameSize);
+				Text::ToBool(indexPosition[5], 5, Info.Unicode);
+				Text::ToInt(indexPosition[6], 5, Info.StretchH);
+				Text::ToBool(indexPosition[7], 5, Info.Smooth);
+				Text::ToBool(indexPosition[8], 5, Info.Supersampling);
 				//Text::ToInt(padding + sizeof(paddingText), bufferSize - sizeof(paddingText), Info.CharacterPadding);
 				//Text::ToInt(spacing + sizeof(spacingText), bufferSize - sizeof(spacingText), Info.SpacerOffset);
 				//Text::ToInt(outlineThickness + sizeof(outlineThicknessText), bufferSize - sizeof(outlineThicknessText), Info.OutlineThickness);
@@ -112,26 +117,27 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 			}	
 			case BF::FNTLineType::Common:
 			{
-				const char lineHeightText[] = "lineHeight";
-				const char baseText[] = "base";
-				const char scaleWText[] = "scaleW";
-				const char scaleHText[] = "scaleH";
-				const char pagesText[] = "pages";
-				const char packedText[] = "packed";
+				const char parsingData[] = "lineHeight=\0base=\0scaleW=\0scaleH=\0pages=\0packed=\0";
+				const char* indexPosition[6];
+				const ParsingToken parsingTokenList[] =
+				{
+					{parsingData + 0, &indexPosition[0]},
+					{parsingData + 12, &indexPosition[1]},
+					{parsingData + 18, &indexPosition[2]},
+					{parsingData + 26, &indexPosition[3]},
+					{parsingData + 34, &indexPosition[4]},
+					{parsingData + 41, &indexPosition[5]}
+				};
+				const size_t values = sizeof(parsingTokenList) / sizeof(ParsingToken);
 
-				char* lineHeight = Text::FindPosition(currentCursor, bufferSize, lineHeightText, sizeof(lineHeightText));
-				char* base = Text::FindPosition(currentCursor, bufferSize, baseText, sizeof(baseText));
-				char* scaleW = Text::FindPosition(currentCursor, bufferSize, scaleWText, sizeof(scaleWText));
-				char* scaleH = Text::FindPosition(currentCursor, bufferSize, scaleHText, sizeof(scaleHText));
-				char* pages	= Text::FindPosition(currentCursor, bufferSize, pagesText, sizeof(pagesText));
-				char* packed = Text::FindPosition(currentCursor, bufferSize, packedText, sizeof(packedText));
+				Text::FindAll(currentCursor + 6, bufferSize, parsingTokenList, values);
 
-				Text::ToInt(lineHeight + sizeof(lineHeightText), bufferSize - sizeof(lineHeightText), CommonData.LineHeight);
-				Text::ToInt(base + sizeof(baseText), bufferSize - sizeof(baseText), CommonData.Base);
-				Text::ToInt(scaleW + sizeof(scaleWText), bufferSize - sizeof(scaleWText), CommonData.ScaleWidth);
-				Text::ToInt(scaleH + sizeof(scaleHText), bufferSize - sizeof(scaleHText), CommonData.ScaleHeight);
-				Text::ToInt(pages + sizeof(pagesText), bufferSize - sizeof(pagesText), CommonData.AmountOfPages);
-				Text::ToBool(packed + sizeof(packedText), bufferSize - sizeof(packedText), CommonData.Packed);
+				Text::ToInt(indexPosition[0], bufferSize, CommonData.LineHeight);
+				Text::ToInt(indexPosition[1], bufferSize, CommonData.Base);
+				Text::ToInt(indexPosition[2], bufferSize, CommonData.ScaleWidth);
+				Text::ToInt(indexPosition[3], bufferSize, CommonData.ScaleHeight);
+				Text::ToInt(indexPosition[4], bufferSize, CommonData.AmountOfPages);
+				Text::ToBool(indexPosition[5], bufferSize, CommonData.Packed);
 
 				FontPageListSize = CommonData.AmountOfPages;
 				FontPageList = new FNTPage[FontPageListSize];
@@ -173,38 +179,35 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 			{				
 				FNTCharacter& character = currentPage->CharacteList[characterIndex++];
 		
-				const char idText[] = "id";
-				const char xText[] = "x";
-				const char yText[] = "y";
-				const char widthText[] = "width";
-				const char heightText[] = "height";
-				const char xoffsetText[] = "xoffset";
-				const char yoffsetText[] = "yoffset";
-				const char xadvanceText[] = "xadvance";
-				const char pageText[] = "page";
-				const char chnlText[] = "chnl";
+				const char parsingData[] = "id=\0x=\0y=\0width=\0height=\0xoffset=\0yoffset=\0xadvance=\0page=\0chnl=";
+				const char* indexPosition[10];
+				const ParsingToken parsingTokenList[] =
+				{
+					{parsingData + 0, &indexPosition[0]},
+					{parsingData + 4, &indexPosition[1]},
+					{parsingData + 7, &indexPosition[2]},
+					{parsingData + 10, &indexPosition[3]},
+					{parsingData + 17, &indexPosition[4]},
+					{parsingData + 25, &indexPosition[5]},
+					{parsingData + 34, &indexPosition[6]},
+					{parsingData + 43, &indexPosition[7]},
+					{parsingData + 53, &indexPosition[8]},
+					{parsingData + 59, &indexPosition[9]}
+				};	
+				const size_t values = sizeof(parsingTokenList) / sizeof(ParsingToken);
 
-				char* id = Text::FindPosition(currentCursor, bufferSize, idText, sizeof(idText));
-				char* x = Text::FindPosition(currentCursor, bufferSize, xText, sizeof(xText));
-				char* y = Text::FindPosition(currentCursor, bufferSize, yText, sizeof(yText));
-				char* width = Text::FindPosition(currentCursor, bufferSize, widthText, sizeof(widthText));
-				char* height = Text::FindPosition(currentCursor, bufferSize, heightText, sizeof(heightText));
-				char* xoffset = Text::FindPosition(currentCursor, bufferSize, xoffsetText, sizeof(xoffsetText));
-				char* yoffset = Text::FindPosition(currentCursor, bufferSize, yoffsetText, sizeof(yoffsetText));
-				char* xadvance = Text::FindPosition(currentCursor, bufferSize, xadvanceText, sizeof(xadvanceText));
-				char* page = Text::FindPosition(currentCursor, bufferSize, pageText, sizeof(pageText));
-				char* chnl = Text::FindPosition(currentCursor, bufferSize, chnlText, sizeof(chnlText));
-									
-				Text::ToInt(id + sizeof(idText), bufferSize - sizeof(idText), character.ID);
-				Text::ToFloat(x + sizeof(xText), bufferSize - sizeof(xText), character.Position[0]);
-				Text::ToFloat(y + sizeof(yText), bufferSize - sizeof(yText), character.Position[1]);
-				Text::ToFloat(width + sizeof(widthText), bufferSize - sizeof(widthText), character.Size[0]);
-				Text::ToFloat(height + sizeof(heightText), bufferSize - sizeof(heightText), character.Size[1]);
-				Text::ToFloat(xoffset + sizeof(xoffsetText), bufferSize - sizeof(xoffsetText), character.Offset[0]);
-				Text::ToFloat(yoffset + sizeof(yoffsetText), bufferSize - sizeof(yoffsetText), character.Offset[1]);
-				Text::ToInt(xadvance + sizeof(xadvanceText), bufferSize - sizeof(xadvanceText), character.XAdvance);
-				Text::ToInt(page + sizeof(pageText), bufferSize - sizeof(pageText), character.Page);
-				Text::ToInt(chnl + sizeof(chnlText), bufferSize - sizeof(chnlText), character.Chanal);
+				Text::FindAll(currentCursor + 5, bufferSize, parsingTokenList, values);
+
+				Text::ToInt(indexPosition[0], 5, character.ID);
+				Text::ToFloat(indexPosition[1], 5, character.Position[0]);
+				Text::ToFloat(indexPosition[2], 5, character.Position[1]);
+				Text::ToFloat(indexPosition[3], 5, character.Size[1]);
+				Text::ToFloat(indexPosition[4], 5, character.Size[0]);
+				Text::ToFloat(indexPosition[5], 5, character.Offset[0]);
+				Text::ToFloat(indexPosition[6], 5, character.Offset[1]);
+				Text::ToInt(indexPosition[7], 5, character.XAdvance);
+				Text::ToInt(indexPosition[8], 5, character.Page);
+				Text::ToInt(indexPosition[9], 5, character.Chanal);
 							
 				break;
 			}

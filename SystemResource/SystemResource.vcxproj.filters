@@ -618,6 +618,9 @@
     <ClCompile Include="Source\Font\FNT\FNTLineType.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\File\ParsingToken.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp">
@@ -1431,6 +1434,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Font\FNT\FNTLineType.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\File\ParsingToken.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
