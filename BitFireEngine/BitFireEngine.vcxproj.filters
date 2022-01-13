@@ -45,6 +45,9 @@
     <ClCompile Include="Source\Collision\SystemPhysics.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Entity\Sign.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Player\Player.h">
@@ -87,6 +90,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Collision\SystemPhysics.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Entity\Sign.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

@@ -621,6 +621,9 @@
     <ClCompile Include="Source\File\ParsingToken.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Math\Physic\CollisionListener.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp">
@@ -1424,9 +1427,6 @@
     <ClInclude Include="Source\File\Text.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ResourceInfo.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -1439,10 +1439,8 @@
     <ClInclude Include="Source\File\ParsingToken.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="SystemResource.rc">
-      <Filter>Ressourcendateien</Filter>
-    </ResourceCompile>
+    <ClInclude Include="Source\Math\Physic\CollisionListener.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -301,15 +301,7 @@ void BF::ResourceManager::Load(Font& font, const wchar_t* filePath)
 
     Add(font);
    
-    StopWatch x;
-
-    x.Start();
-
     FileActionResult errorCode = font.Load(filePath);
-    
-    double ww = x.Stop();
-
-    printf("\n\n%f\n\n",ww);
 
     if (errorCode == FileActionResult::Successful)
     {
@@ -642,8 +634,11 @@ void BF::ResourceManager::Add(Sprite& sprite)
 {
     Image& image = sprite.MaterialList[0].Texture;
     Model& model = (Model&)sprite; 
+    Collider* collider = (Collider*)&sprite;
 
     Add(image, false);
+
+
 
     float scaling = 0.01f;
     float scalingPos =  10;
@@ -687,6 +682,7 @@ void BF::ResourceManager::Add(Sprite& sprite)
     model.MatrixModel.MoveTo(xPos, yPos, zPos);
 
     Add(model);
+    Add(collider);
 }
 
 void BF::ResourceManager::Add(Model& model, bool loadAsynchronously)
@@ -808,7 +804,6 @@ void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
     {
         Collider* collider = colliderNode->Element;
 
-        Vector3<float> color(1.0f, 0.0f, 0.0f);
         Vector2<float> position = collider->BoundingBox.Position;
         Vector2<float> size = collider->BoundingBox.Size;
         Vector3<float> boundingBox(size.X, size.Y, 0);
@@ -820,24 +815,99 @@ void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
         Vector3<float> colliderPosition = boundingBoxScaled.PositionXYZ();
         Vector3<float> colliderScaling = boundingBoxScaled.ScaleXYZ();
 
-        BoundingBoxRender(boundingBoxModel, boundingBox, color);
+        {
+            // Color
 
-        for (LinkedListNode<Model*>* modelNode = _modelList.GetFirst(); modelNode != nullptr; modelNode = modelNode->Next)
+            Matrix4x4<float>* bordermatrix = nullptr;
+            Vector3<float>* borderSize = nullptr;
+            Vector3<float> borderColor;
+
+
+            switch (collider->Type)
+            {
+                case ColliderType::Gravity:
+                {
+                    bordermatrix = &boundingBoxModel;
+                    borderSize = &boundingBox;
+                    borderColor.Set(1, 0, 1);
+
+                    BoundingBoxRender(*bordermatrix, *borderSize, borderColor);
+                    break;
+                }
+                case ColliderType::HitBox:
+                {
+                    bordermatrix = &boundingBoxModel;
+                    borderSize = &boundingBox;
+                    borderColor.Set(0, 1, 0);
+                    break;
+                }
+                case ColliderType::EffectBox:
+                {
+                    bordermatrix = &boundingBoxModel;
+                    borderSize = &boundingBox;
+                    borderColor.Set(0, 0, 1);
+                    break;
+                }
+                default:
+                {
+                    bordermatrix = &boundingBoxModel;
+                    borderSize = &boundingBox;
+                    borderColor.Set(1, 1, 1);
+                    break;
+                }
+            }
+
+        }
+    
+
+        for (LinkedListNode<Model*>* modelNode = _modelList.GetFirst(); modelNode ; modelNode = modelNode->Next)
         {
             Model* model = modelNode->Element;
             Matrix4x4<float> modelMatrix = model->MatrixModel;
             Vector3<float> modelBoundingBox(model->MeshList[0].Structure.Width, model->MeshList[0].Structure.Height, model->MeshList[0].Structure.Depth);
-            //Vector3<float> modelPosition = modelMatrix.PositionXYZ();
-            //Vector3<float> modelScaling = modelMatrix.ScaleXYZ() * (modelBoundingBox);
             Matrix4x4<float> boundingBoxModelScaled = TransformBoundingBox(modelMatrix, modelBoundingBox, false);
             Vector3<float> modelPosition = boundingBoxModelScaled.PositionXYZ();
-            Vector3<float> modelScaling = boundingBoxModelScaled.ScaleXYZ() ;
+            Vector3<float> modelScaling = boundingBoxModelScaled.ScaleXYZ();
 
-            Vector3<float>& drawShit = modelBoundingBox;
+           // modelScaling.Z = INFINITY;       
 
-            modelScaling.Z = INFINITY;       
+            bool isColliding = collider->IsInBoundingBox(colliderPosition, colliderScaling, modelPosition, modelScaling);
 
-            bool isColliding = ((GravityCube*)collider)->IsColliding(colliderPosition, colliderScaling, modelPosition, modelScaling);
+
+            {
+                // Color
+
+                Matrix4x4<float>* bordermatrix = bordermatrix = &modelMatrix;
+                Vector3<float>* borderSize = borderSize = &modelBoundingBox;
+                Vector3<float> borderColor;
+
+                switch (model->Type)
+                {
+                    case ColliderType::Gravity:
+                    {
+                        borderColor.Set(1, 0, 1);
+                        break;
+                    }
+                    case ColliderType::HitBox:
+                    {
+                        borderColor.Set(0, 1, 0);
+                        break;
+                    }
+                    case ColliderType::EffectBox:
+                    {
+                        borderColor.Set(0, 0, 1);
+                        break;
+                    }
+                    default:
+                    {
+                        borderColor.Set(1, 1, 1);
+                        break;
+                    }
+                }
+
+                BoundingBoxRender(*bordermatrix, *borderSize, borderColor);
+            }
+
 
             if (isColliding && model->EnablePhysics)
             {
@@ -846,25 +916,25 @@ void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
                     case ColliderType::Gravity:
                     {
                         GravityField* gravityField = (GravityField*)collider;
-
-                        BoundingBoxRender(modelMatrix, drawShit, color);
                        
-                        model->ApplyGravity(gravityField->PullDirection, gravityField->PullForce*0.001f, deltaTime);
+                        model->ApplyGravity(gravityField->PullDirection, gravityField->PullForce, deltaTime);
                         break;
                     }
                     case ColliderType::HitBox:
                     {
+                        // Avoid Collsion / Bounce?   
                         break;
                     }
                     case ColliderType::EffectBox:
                     {
+                        if (collider->OnCollisionCallBack)
+                        {
+                            collider->OnCollisionCallBack->OnCollisionDetected(collider, model);
+                        }
+
                         break;
                     }
                 }           
-            }
-            else
-            {
-                BoundingBoxRender(modelMatrix, drawShit, Vector3<float>(1,1,0));
             }
         }
     }  

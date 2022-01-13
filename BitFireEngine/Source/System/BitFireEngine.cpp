@@ -151,8 +151,10 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
         image.Save(L"ScreenShot.bmp", ImageFileFormat::BitMap);
     }
 
-    if (keyboard.F.IsLongPressed())
+    if (keyboard.E.IsShortPressed())
     {
+        keyboard.E.Value = 0xFF;
+
         switch (camera.Perspective)
         {
             case CameraPerspective::Orthographic:

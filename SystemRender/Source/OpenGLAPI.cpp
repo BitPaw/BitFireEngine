@@ -215,7 +215,7 @@ void BF::OpenGLAPI::Render(RenderMode renderMode, int startIndex, int amount)
     unsigned int mode = -1;
 
     glPointSize(10);
-    glLineWidth(3);
+    glLineWidth(5);
 
     switch (renderMode)
     {

@@ -12,6 +12,7 @@
 #include "../../SystemResource/Source/Game/Sprite.h"
 #include "../../SystemResource/Source/File/FileTemporary.h"
 #include "../../SystemResource/Source/Math/Physic/GravityCube.h"
+#include "../../BitFireEngine/Source/Entity/Sign.h"
 
 using namespace BF;
 
@@ -34,7 +35,7 @@ BF::Sprite _backGround;
 BF::Sprite _playerCharacterNyte;
 BF::Sprite _lamp;
 BF::Sprite _fireplace;
-BF::Sprite _sign;
+BF::Sign _sign;
 BF::Sprite _floor;
 
 bool moveCamera = false;
@@ -71,7 +72,7 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     GameSystem.Resource.Load(font, L"Font/harrington.fnt");
 
     // Gravity
-    _gravityField.PullForce = -GravityForceEarth;
+    _gravityField.PullForce = -GravityForceEarth * 0.001;
     _gravityField.PullDirection.Set(0, -1, 0);
     _gravityField.BoundingBox.Set(170, 0, 30, 70);
     GameSystem.Resource.Add(&_gravityField);
@@ -95,9 +96,10 @@ void Cleaved::CleavedGameSystem::OnStartUp()
    // GameSystem.Resource.Add(_fireplace);
 
     _lamp.Set(26, 0.008, 0.3, "Sprite_Lamp", "Texture/LampA.png");
-    GameSystem.Resource.Add(_lamp);
+    GameSystem.Resource.Add(_lamp); 
 
     _sign.Set(24, 0, 0.1, "Sprite_Sign", "Texture/Sign.png");
+    _sign.Type = ColliderType::EffectBox;
     GameSystem.Resource.Add(_sign);
 
     _floor.Set(10, -2, 0.0, "Floor", "Texture/Brick.bmp");
@@ -168,20 +170,15 @@ void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
 
         movement.Add(0, 1, 0);
     }
-    if (keyboard.F.IsLongPressed())
+
+    if (keyboard.F.IsShortPressed())
     {
-        switch (camera.Perspective)
+        keyboard.F.Value = 0xFF;
+
+        if (_sign.Interactable)
         {
-            case CameraPerspective::Orthographic:
-                camera.PerspectiveChange(CameraPerspective::Perspective);
-                break;
-
-            case CameraPerspective::Perspective:
-                camera.PerspectiveChange(CameraPerspective::Orthographic);
-                break;
+            printf("[Event] Clicked Sign\n");
         }
-
-        keyboard.F.Value = 0;
     }
 
     _playerCharacterLuna.MatrixModel.Move(movement);

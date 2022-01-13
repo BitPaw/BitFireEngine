@@ -148,14 +148,19 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 			}
 			case BF::FNTLineType::Page:
 			{
-				const char idText[] = "id";
-				const char fileText[] = "file";
+				const char parsingData[] = "id=\0file=";
+				const char* indexPosition[2];
+				const ParsingToken parsingTokenList[] =
+				{
+					{parsingData + 0, &indexPosition[0]},
+					{parsingData + 4, &indexPosition[1]}
+				};
+				const size_t values = sizeof(parsingTokenList) / sizeof(ParsingToken);
 
-				char* id = Text::FindPosition(currentCursor, bufferSize, idText, sizeof(idText));
-				char* file = Text::FindPosition(currentCursor, bufferSize, fileText, sizeof(fileText));
+				Text::FindAll(currentCursor + 5, bufferSize, parsingTokenList, values);
 
-				Text::ToInt(id + sizeof(idText), bufferSize - sizeof(idText), currentPage->PageID);
-				Text::Copy(currentPage->PageFileName, file + sizeof(fileText) + 1, FNTPageFileNameSize);
+				Text::ToInt(indexPosition[0], 5, currentPage->PageID);
+				Text::Copy(currentPage->PageFileName, indexPosition[1] + 1, FNTPageFileNameSize);
 
 				Text::TerminateBeginFromFirst(currentPage->PageFileName, FNTPageFileNameSize, '\"');				
 
@@ -164,12 +169,13 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 			case BF::FNTLineType::CharacterCount:
 			{
 				const char countText[] = "count";
-				char* count = Text::FindPosition(currentCursor, bufferSize, countText, sizeof(countText));
-			
-				Text::ToInt(count + sizeof(countText), bufferSize - sizeof(countText), currentPage->PageID);
-	
-				currentPage->CharacteListSize = currentPage->PageID;
-				currentPage->CharacteList = new FNTCharacter[currentPage->CharacteListSize];
+				char* count = Text::FindPosition(currentCursor + 6, bufferSize, countText, sizeof(countText));
+				int size = 0;
+
+				Text::ToInt(count + sizeof(countText), bufferSize - sizeof(countText), size);
+
+				currentPage->CharacteListSize = size;
+				currentPage->CharacteList = new FNTCharacter[size];
 
 				characterIndex = 0;
 

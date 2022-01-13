@@ -292,6 +292,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Math\Physic\CollisionListener.cpp" />
     <ClCompile Include="Source\File\ParsingToken.cpp" />
     <ClCompile Include="Source\Font\FNT\FNTLineType.cpp" />
     <ClCompile Include="Source\Image\GIF\GIFImageDescriptor.cpp" />
@@ -496,10 +497,10 @@
     <ClCompile Include="Source\Service\HTTP\HTTPServer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Math\Physic\CollisionListener.h" />
     <ClInclude Include="Source\File\ParsingToken.h" />
     <ClInclude Include="Source\Font\FNT\FNTLineType.h" />
     <ClInclude Include="Source\Image\GIF\GIFImageDescriptor.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="Source\ResourceInfo.h" />
     <ClInclude Include="Source\File\Text.h" />
     <ClInclude Include="Source\Image\PNG\Chunk\PNGTransparency.h" />
@@ -768,9 +769,6 @@
     <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat2.h" />
     <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFKerningPair.h" />
     <ClInclude Include="Source\Service\HTTP\HTTPServer.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="SystemResource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
