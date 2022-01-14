@@ -4,6 +4,8 @@
 #include "../../../SystemResource/Source/Math/Geometry/Shape/Rectangle.h"
 #include "../../../SystemResource/Source/Font/Font.h"
 
+#define TextSizeMax 1024
+
 namespace BF
 {
 	class UIText : public UIElement
@@ -15,19 +17,19 @@ namespace BF
 
 		public:
 		Vector2<float> AncerPosition;
-		unsigned int FontID;
-		char TextContent[255];
+		size_t FontID;
+		size_t TextSizeCurrent;
+		wchar_t TextContent[TextSizeMax];
 
-		UIText(const char* text, Font& font, float x, float y);
-		UIText(AsciiString& text, Font& font, float x, float y);
+		UIText();
 
-		void Setup(AsciiString& text, Font& font, float x, float y);
+		void Setup(const wchar_t* text, Font* font, float x, float y);
 
 		void SetFont(Font& font);
 		void SetTextPosition(float x, float y);
-
 		void SetText(const char* text);
-		void SetText(AsciiString& text);
+		void SetText(const wchar_t* text);
+		
 		void UpdateText(); 
 		void PrintObjectData();		
 	};

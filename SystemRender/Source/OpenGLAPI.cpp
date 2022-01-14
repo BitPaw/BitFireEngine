@@ -50,7 +50,7 @@ void BF::OpenGLAPI::RegisterModel(Model& model)
     glGenVertexArrays(numberOfMeshes, vaoIDList);
     glGenBuffers(numberOfMeshes * 2, bufferIDList); // Create Buffers
 
-    printf("[OpenGL] Register Mesh <%s> from <%s>. Sub-Meshes <%zu>\n", model.Name, model.FilePath, model.MeshListSize);
+    printf("[OpenGL] Register Mesh <%ls> from <%ls>. Sub-Meshes <%zu>\n", model.Name, model.FilePath, model.MeshListSize);
        
     for (size_t meshIndex = 0; meshIndex < numberOfMeshes; meshIndex++)
     {
@@ -78,7 +78,9 @@ void BF::OpenGLAPI::RegisterModel(Model& model)
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, structure.IndexDataSize * sizeof(unsigned int), structure.IndexData, GL_STATIC_DRAW);
         
-       // structure.PrintData();
+#if 0 // Print data structe
+        structure.PrintData();
+#endif       
 
         mesh.RenderInfo.ShouldBeRendered = true;
     }

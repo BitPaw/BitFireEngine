@@ -18,7 +18,7 @@ using namespace BF;
 
 float _deltaTime = 0;
 
-BF::UIText* text;
+BF::UIText text;
 
 BF::FNT fnt;
 BF::Font font;
@@ -70,6 +70,15 @@ void Cleaved::CleavedGameSystem::OnStartUp()
 
     //fnt.Load();
     GameSystem.Resource.Load(font, L"Font/harrington.fnt");
+    text.SetFont(font);
+    text.SetText("SampleText");
+    text.MatrixModel.Scale(100);
+    text.MatrixModel.MoveTo(-0.25, 0.25, 0);
+    text.UpdateText();
+
+    //text.MeshList[0].RenderInfo.ShaderProgramID = hudShaderID.ID;
+
+
 
     // Gravity
     _gravityField.PullForce = -GravityForceEarth * 0.001;
@@ -81,15 +90,7 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     _backGround.MatrixModel.Scale(12);
     GameSystem.Resource.Add(_backGround);
 
-    _playerCharacterNyte.Set(10, 0, 0.4, "Sprite_Nyte", "Texture/Nyte.png");
-    _playerCharacterNyte.MatrixModel.Scale(0.5);
-    GameSystem.Resource.Add(_playerCharacterNyte);
 
-    _playerCharacterLuna.Set(23, 0, 0.5, "Sprite_Luna", "Texture/Theia.png");
-    _playerCharacterLuna.MatrixModel.Scale(0.5);
-    _playerCharacterLuna.EnablePhysics = true;
-    GameSystem.Resource.Add(_playerCharacterLuna);
-    //GameSystem.Resource.Add(_playerCharacterLuna);
 
 #if 1
    // _fireplace.Set(20, 0, 0.2, "Sprite_FirePlace", "Texture/Fireplace.png");
@@ -103,11 +104,21 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     GameSystem.Resource.Add(_sign);
 
     _floor.Set(10, -2, 0.0, "Floor", "Texture/Brick.bmp");
-    _floor.MaterialList[0].Texture.ImageWrapSet(ImageWrap::Repeat);
+    _floor.MaterialList[0].Texture->ImageWrapSet(ImageWrap::Repeat);
     _floor.MatrixModel.Scale(200, 20, 1);   
    // _floor.MatrixModel.Move(100, -83, 0);
     GameSystem.Resource.Add(_floor);        
 #endif 
+
+    _playerCharacterNyte.Set(10, 0, 0.4, "Sprite_Nyte", "Texture/Nyte.png");
+    _playerCharacterNyte.MatrixModel.Scale(0.5);
+    GameSystem.Resource.Add(_playerCharacterNyte);
+
+    _playerCharacterLuna.Set(23, 0, 0.5, "Sprite_Luna", "Texture/Theia.png");
+    _playerCharacterLuna.MatrixModel.Scale(0.5);
+    _playerCharacterLuna.EnablePhysics = true;
+    GameSystem.Resource.Add(_playerCharacterLuna);
+    //GameSystem.Resource.Add(_playerCharacterLuna);
 
 
 #if 1
@@ -118,6 +129,9 @@ void Cleaved::CleavedGameSystem::OnStartUp()
 
     GameSystem.Resource.PushToGPU(GameSystem.Resource.CubeHitBoxViewModel);
 #endif // 1
+
+    GameSystem.Resource.PushToGPU(text);
+    GameSystem.Resource.Add(text);
 
 
     GameSystem.Resource.PrintContent(true);
@@ -245,7 +259,11 @@ void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
 
 void Cleaved::CleavedGameSystem::OnUpdateUI()
 {
-  // sprintf_s(text->TextContent, "FPS: %4i", (BF::Math::Ceiling(1 / _deltaTime)));
+    wsprintfW(text.TextContent,L"FPS: %4i", (BF::Math::Ceiling(1 / _deltaTime)));
+
+    //text.UpdateText();
+
+ // wsprintf_s(text.TextContent, "FPS: %4i", );
 
   // printf("FPS: %4i", (BF::Math::Ceiling(1 / _deltaTime));
 

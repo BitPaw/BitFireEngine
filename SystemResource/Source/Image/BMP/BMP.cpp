@@ -193,7 +193,8 @@ BF::FileActionResult BF::BMP::ConvertTo(Image& image)
 
     memcpy(image.PixelData, PixelData, image.PixelDataSize);
 
-    image.FlipHorizontal();
+    //image.FlipHorizontal(); ??
+    
     //image.RemoveColor(0,0,0);
 
     return FileActionResult::Successful;

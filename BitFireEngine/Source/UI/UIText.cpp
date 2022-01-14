@@ -3,7 +3,7 @@
 #include "../../../SystemResource/Source/Math/Interpolate.h"
 #include "../../../SystemResource/Source/File/Text.h"
 
-void BF::UIText::Setup(AsciiString& text, Font& font, float x, float y)
+void BF::UIText::Setup(const wchar_t* text, Font* font, float x, float y)
 {
 	AncerPosition.Set(x, y);
 	Width = 0;
@@ -11,29 +11,24 @@ void BF::UIText::Setup(AsciiString& text, Font& font, float x, float y)
 
 	Text::Copy(Name, "<Internal Text>", ResourceNameSize);
 
+	MeshListSize = 1;
 	MeshList = new Mesh[1];
 
 	Mesh& mesh = MeshList[0];
+	//mesh.Structure.RenderType = RenderMode::Square;
 	mesh.Structure.RenderType = RenderMode::Square;
 
 	//strcpy(mesh.Name, "<Text-Mesh>");
 	//strcpy(mesh.FilePath, "<Internal>");
 
-	SetFont(font);
+	SetFont(*font);
 	SetText(text);
 	SetTextPosition(x, y);
 }
 
-BF::UIText::UIText(const char* text, Font& font, float x, float y)
+BF::UIText::UIText()
 {
-	AsciiString asciiText(text);
-
-	Setup(asciiText, font, x, y);
-}
-
-BF::UIText::UIText(AsciiString& text, Font& font, float x, float y)
-{
-	Setup(text, font, x, y);
+	Setup(L"-----------------------", nullptr, 0, 0);
 }
 
 void BF::UIText::SetFont(Font& font)
@@ -53,38 +48,50 @@ void BF::UIText::SetTextPosition(float x, float y)
 
 void BF::UIText::SetText(const char* text)
 {
-	AsciiString asciiText(text);
+	if (!text)
+	{
+		return;
+	}
 
-	SetText(asciiText);
+	TextSizeCurrent = Text::Copy(TextContent, text, TextSizeMax);
 }
 
-void BF::UIText::SetText(AsciiString& text)
-{	
-	if (_font == nullptr || true)
+void BF::UIText::SetText(const wchar_t* text)
+{
+	if (!text)
 	{
 		return;
 	}
 
-	if(_font->CharacterSize == 0)
-	{
-		return;
-	}
+	TextSizeCurrent = Text::Copy(TextContent, text, TextSizeMax);
+}
 
+void BF::UIText::UpdateText()
+{
 	ID = ResourceIDLoading;
-
-	AsciiString currentText(TextContent);
 
 	FNT& bitmapFont = *((FNT*)(_font->BitMapFont));
 
-	bool hasTextChanged = !currentText.Compare(text) || true;
-	bool isDifferentSize = (currentText.Size() != text.Size()) || true;
+#if 0 // Print font data
+	bitmapFont.PrintData();
+#endif 
 
-	strcpy(TextContent, &text[0]);
+	bool hasTextChanged = true;// Text::Compare(TextContent);
+	//bool isDifferentSize = true;// (currentText.Size() != text.Size()) || true;
 
-	Mesh& mesh = MeshList[0];
-	unsigned int textSize = strlen(TextContent);//currentText.Size();
-	unsigned int amountOfVertices = 4 * textSize;
+	Mesh & mesh = MeshList[0];
+	unsigned int textSize = TextSizeCurrent; //strlen(TextContent);//currentText.Size();
+
+	MaterialListSize = 1;
+	MaterialList = new Material();
+	MaterialList->Texture = this->_font->Texture;
+
+	Image& image = *MaterialList->Texture;
+
+	mesh.RenderInfo.MaterialID = 0;
+
 	//mesh.MeshMaterial->Texture = _font->Texture;
+	bool isDifferentSize = (mesh.Structure.IndexDataSize / 4) < TextSizeCurrent;
 
 	if (!hasTextChanged)
 	{
@@ -97,10 +104,19 @@ void BF::UIText::SetText(AsciiString& text)
 		//mesh.TexturePointList.DeleteAll();
 	//	mesh.IndexList.DeleteAll();
 
+		size_t indexDataSize = 4 * textSize;
+		size_t amountOfVertices = indexDataSize * (3+3+4+2);
+
+		mesh.Structure.Allocate(amountOfVertices, indexDataSize);
+
+
+
 		//mesh.VertexList.ReSize(amountOfVertices);
 		//mesh.TexturePointList.ReSize(amountOfVertices);
 	//	mesh.IndexList.ReSize(amountOfVertices);
 	}
+
+
 
 	// Put Data
 	unsigned int vertexIndex = 0;
@@ -125,6 +141,8 @@ void BF::UIText::SetText(AsciiString& text)
 		Vector2<float> charSize;
 		Vector2<float> interpulatedTexturePointXY;
 		Vector2<float> interpulatedTexturePoinWidthHeight;
+		float characterOffsetX = fntCharacter->Offset[0];
+		float characterOffsetY = fntCharacter->Offset[1];
 
 		if (fntCharacter == nullptr)
 		{
@@ -137,36 +155,36 @@ void BF::UIText::SetText(AsciiString& text)
 		{
 			xPos.Set
 			(
-				fntCharacter->Position[0], 
-				fntCharacter->Position[1]			
+				fntCharacter->Position[0],
+				fntCharacter->Position[1]
 			);
 
 			charSize.Set
-			(				
+			(
 				fntCharacter->Size[0],
 				fntCharacter->Size[1]
 			);
-			
+
 			interpulatedTexturePointXY.Set
 			(
-				Interpolate::Normalize(0, 512, fntCharacter->Position[0]),
-				Interpolate::Normalize(0, 512, fntCharacter->Position[1])
+				Interpolate::Normalize(0, image.Width, fntCharacter->Position[0]),
+				Interpolate::Normalize(0, image.Height, fntCharacter->Position[1])
 			);
 
 			interpulatedTexturePoinWidthHeight.Set
 			(
-				Interpolate::Normalize(0, 512, fntCharacter->Size[0]),
-				Interpolate::Normalize(0, 512, fntCharacter->Size[1])
+				Interpolate::Normalize(0, image.Width, fntCharacter->Size[0]),
+				Interpolate::Normalize(0, image.Height, fntCharacter->Size[1])
 			);
 		}
 
 		Rectangle objectPosition
 		(
 			// Start-Position + ((CharOffset + (Size) + LastPos) * fontSize)
-			AncerPosition.X + fontSize * lastPosition,
-			AncerPosition.Y + fontSize,
-			AncerPosition.X + fontSize * (charSize.X + lastPosition),
-			AncerPosition.Y + fontSize * (charSize.Y)
+			AncerPosition.X + fontSize * (-characterOffsetX + lastPosition ),
+			AncerPosition.Y + fontSize * (-characterOffsetY),
+			AncerPosition.X + fontSize * (-characterOffsetX + charSize.X + lastPosition),
+			AncerPosition.Y + fontSize * (-characterOffsetY + charSize.Y)
 		);
 
 		Rectangle texturePosition
@@ -194,33 +212,97 @@ void BF::UIText::SetText(AsciiString& text)
 		//-------------------------------------
 
 		// Vertex data (no change do to not pointer?)
-		float z = 0;
+		float z = 0;	
+		float* vertexData = mesh.Structure.VertexData;
+		Vector3<float> normal(0,0,-1);
+		Vector4<float> color(1, 1, 1, 1);
 
-		/*
-		mesh.IndexList[faceIndex++].Set(vertexIndex, textureIndex, 0);
-		mesh.VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointA.X, objectPosition.PointA.Y, z);
-		mesh.TexturePointList[textureIndex++].Set(texturePosition.PointD);// 00
+		// indexData
+		{
+			unsigned int* indexData = mesh.Structure.IndexData;
 
-		mesh.IndexList[faceIndex++].Set(vertexIndex, textureIndex, 0);
-		mesh.VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointB.X, objectPosition.PointB.Y, z);
-		mesh.TexturePointList[textureIndex++].Set(texturePosition.PointC);
+			for (size_t i = 0; i < mesh.Structure.IndexDataSize; i++)
+			{
+				indexData[faceIndex++] = i;
+			}
+		}
 
-		mesh.IndexList[faceIndex++].Set(vertexIndex, textureIndex, 0);
-		mesh.VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointC.X, objectPosition.PointC.Y, z);
-		mesh.TexturePointList[textureIndex++].Set(texturePosition.PointB); // 11
+//		texturePosition.Position.Set(0, 0);
+	  // texturePosition.Size.Set(1,1);
 
-		mesh.IndexList[faceIndex++].Set(vertexIndex, textureIndex, 0);
-		mesh.VertexList[vertexIndex++].CurrentPosition.Set(objectPosition.PointD.X, objectPosition.PointD.Y, z);
-		mesh.TexturePointList[textureIndex++].Set(texturePosition.PointA);
-		*/
+		//texturePosition.Position.Add(-0.5, -0.5);
+		//texturePosition.Size.Add(0.5,0.5);
+
+		// Flip Y Axis because the fileformat is like this		
+		{
+			Vector2<float> positionUnswapped = texturePosition.Position;
+			Vector2<float> sizeUnswapped = texturePosition.Size;
+
+			float overflowOffset = 0.000f;
+
+			texturePosition.Position.Set(positionUnswapped.X  + overflowOffset, sizeUnswapped.Y - overflowOffset);
+			texturePosition.Size.Set(sizeUnswapped.X + overflowOffset,positionUnswapped.Y + overflowOffset);
+
+
+		}
+
+		vertexData[vertexIndex++] = objectPosition.Position.X; // (objectPosition.PointA.X, objectPosition.PointA.Y, z);
+		vertexData[vertexIndex++] = objectPosition.Position.Y;
+		vertexData[vertexIndex++] = z;
+		vertexData[vertexIndex++] = normal.X;
+		vertexData[vertexIndex++] = normal.Y;
+		vertexData[vertexIndex++] = normal.Z;
+		vertexData[vertexIndex++] = 1;
+		vertexData[vertexIndex++] = 0;
+		vertexData[vertexIndex++] = 0;
+		vertexData[vertexIndex++] = color.W;
+		vertexData[vertexIndex++] = texturePosition.Position.X;
+		vertexData[vertexIndex++] = texturePosition.Position.Y; // texturePosition.PointD);// 00
+
+
+		vertexData[vertexIndex++] = objectPosition.Size.X; //et(objectPosition.PointB.X, objectPosition.PointB.Y, z);
+		vertexData[vertexIndex++] = objectPosition.Position.Y;
+		vertexData[vertexIndex++] = z;
+		vertexData[vertexIndex++] = normal.X;
+		vertexData[vertexIndex++] = normal.Y;
+		vertexData[vertexIndex++] = normal.Z;
+		vertexData[vertexIndex++] = 1;
+		vertexData[vertexIndex++] = 1;
+		vertexData[vertexIndex++] = 0;
+		vertexData[vertexIndex++] = color.W;
+		vertexData[vertexIndex++] = texturePosition.Size.X;
+		vertexData[vertexIndex++] = texturePosition.Position.Y; //t(texturePosition.PointC);
+
+
+		vertexData[vertexIndex++] = objectPosition.Size.X; // (objectPosition.PointC.X, objectPosition.PointC.Y, z);
+		vertexData[vertexIndex++] = objectPosition.Size.Y;
+		vertexData[vertexIndex++] = z;
+		vertexData[vertexIndex++] = normal.X;
+		vertexData[vertexIndex++] = normal.Y;
+		vertexData[vertexIndex++] = normal.Z;
+		vertexData[vertexIndex++] = 0;
+		vertexData[vertexIndex++] = color.Y;
+		vertexData[vertexIndex++] = 0;
+		vertexData[vertexIndex++] = color.W;
+		vertexData[vertexIndex++] = texturePosition.Size.X;
+		vertexData[vertexIndex++] = texturePosition.Size.Y; // (texturePosition.PointB); // 11
+
+
+		vertexData[vertexIndex++] = objectPosition.Position.X; // t(objectPosition.PointD.X, objectPosition.PointD.Y, z);
+		vertexData[vertexIndex++] = objectPosition.Size.Y;
+		vertexData[vertexIndex++] = z;
+		vertexData[vertexIndex++] = normal.X;
+		vertexData[vertexIndex++] = normal.Y;
+		vertexData[vertexIndex++] = normal.Z;
+		vertexData[vertexIndex++] =0;
+		vertexData[vertexIndex++] = 0;
+		vertexData[vertexIndex++] = color.Z;
+		vertexData[vertexIndex++] = color.W;
+		vertexData[vertexIndex++] = texturePosition.Position.X;
+		vertexData[vertexIndex++] = texturePosition.Size.Y; // texturePosition.PointA);		
 	}
 
 	ID = ResourceIDLoaded;
-}
-
-void BF::UIText::UpdateText()
-{
-	
 }
 
 void BF::UIText::PrintObjectData()

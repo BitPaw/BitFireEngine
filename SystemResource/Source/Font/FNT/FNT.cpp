@@ -207,8 +207,8 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 				Text::ToInt(indexPosition[0], 5, character.ID);
 				Text::ToFloat(indexPosition[1], 5, character.Position[0]);
 				Text::ToFloat(indexPosition[2], 5, character.Position[1]);
-				Text::ToFloat(indexPosition[3], 5, character.Size[1]);
-				Text::ToFloat(indexPosition[4], 5, character.Size[0]);
+				Text::ToFloat(indexPosition[3], 5, character.Size[0]);
+				Text::ToFloat(indexPosition[4], 5, character.Size[1]);
 				Text::ToFloat(indexPosition[5], 5, character.Offset[0]);
 				Text::ToFloat(indexPosition[6], 5, character.Offset[1]);
 				Text::ToInt(indexPosition[7], 5, character.XAdvance);
@@ -380,7 +380,7 @@ void BF::FNT::PrintData()
 
 			printf
 			(
-				" | %3i -> %c | %5.1f | %5.1f | %5.1f | %5.1f | %5.1f | %5.1f | %5c |\n",
+				" | %3i -> %c | %5.1f | %5.1f | %5.1f | %5.1f | %5.1f | %5.1f | %5i |\n",
 				character.ID,
 				character.ID,
 				character.Position[0],

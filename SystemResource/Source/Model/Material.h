@@ -12,7 +12,7 @@ namespace BF
 		float Specular[3];
 		float Emission[3];
 
-		Image Texture;
+		Image* Texture;
 
 		Material();
 	};

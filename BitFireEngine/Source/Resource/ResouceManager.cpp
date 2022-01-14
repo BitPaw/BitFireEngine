@@ -259,12 +259,12 @@ void BF::ResourceManager::Load(Model& model)
         for (unsigned int i = 0; i < model.MaterialListSize; i++)
         {
             Material& modelMaterial = model.MaterialList[i];
-            Image& image = modelMaterial.Texture;
+            Image* image = modelMaterial.Texture;
 
-            image.ID = ResourceIDLoading;
-            image.FilePathChange(modelMaterial.FilePath);
+            image->ID = ResourceIDLoading;
+            image->FilePathChange(modelMaterial.FilePath);
 
-            Add(image, true);
+            Add(*image, true);
         }
 
         model.ShouldItBeRendered = true;        
@@ -324,11 +324,15 @@ void BF::ResourceManager::Load(Font& font, const wchar_t* filePath)
             font.Texture = new Image();
             Load(*font.Texture, textureFilePath);
 
-            if (errorCode != FileActionResult::Successful)
+            if (errorCode == FileActionResult::Successful)
+            {
+                Add(*font.Texture, false);
+            }
+            else
             {
                 delete font.Texture;
                 font.Texture = nullptr;
-            }
+            }     
         }          
     }
 }
@@ -632,18 +636,18 @@ void BF::ResourceManager::Load
 
 void BF::ResourceManager::Add(Sprite& sprite)
 {
-    Image& image = sprite.MaterialList[0].Texture;
+    Image* image = sprite.MaterialList[0].Texture;
     Model& model = (Model&)sprite; 
     Collider* collider = (Collider*)&sprite;
 
-    Add(image, false);
+    Add(*image, false);
 
 
 
     float scaling = 0.01f;
     float scalingPos =  10;
-    float xScaling = image.Width * scaling;
-    float yScaling = image.Height * scaling;
+    float xScaling = image->Width * scaling;
+    float yScaling = image->Height * scaling;
     float xPos = model.MatrixModel.Data[TransformX] * scalingPos;
     float yPos = model.MatrixModel.Data[TransformY] * scalingPos * yScaling;
     float zPos = model.MatrixModel.Data[TransformZ];
@@ -654,7 +658,7 @@ void BF::ResourceManager::Add(Sprite& sprite)
     }
     else
     {
-        BF::Rectangle rectangle(image.Width, image.Height);       
+        BF::Rectangle rectangle(image->Width, image->Height);
         float vertexData[3*4];
         size_t vertexDataSize = 3 * 4;
         unsigned int indexData[4];
@@ -662,12 +666,12 @@ void BF::ResourceManager::Add(Sprite& sprite)
 
         rectangle.GenerateVertexData(vertexData, vertexDataSize, indexData, indexDataSize);
 
-        if (image.WrapWidth == ImageWrap::Repeat)
+        if (image->WrapWidth == ImageWrap::Repeat)
         {
             sprite.TextureScale[0] = model.MatrixModel.Data[ScaleX] / 10;
         }
 
-        if (image.WrapHeight == ImageWrap::Repeat)
+        if (image->WrapHeight == ImageWrap::Repeat)
         {
             sprite.TextureScale[1] = model.MatrixModel.Data[ScaleY] / 10;
         }
@@ -1001,7 +1005,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
             unsigned int shaderProgramID = parentModel ? parentModel->SharedRenderInfoOverride.ShaderProgramID : mesh.RenderInfo.ShaderProgramID ;
             bool useDefaultShader = shaderProgramID == -1;
             bool changeShader = shaderProgramID != _lastUsedShaderProgram;
-            bool isRegistered = ((int)model->ID) >= 0;
+            bool isRegistered = ((int)1) >= 0;
             bool skipRendering = !(mesh.RenderInfo.ShouldBeRendered && isRegistered) || mesh.Structure.RenderType == RenderMode::Invalid;
             unsigned int vaoID = isSharedModel ? model->SharedModel->ID : mesh.Structure.VertexArrayID;
             Matrix4x4<float>& modelMatrix = isSharedModel ? parentModel->MatrixModel : model->MatrixModel;
@@ -1042,7 +1046,7 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
 
             //-----[Texture Lookup]--------------------------------------------
             unsigned int materialIndex = parentModel ? parentModel->SharedRenderInfoOverride.MaterialID : mesh.RenderInfo.MaterialID;
-            unsigned int textureID = materialIndex != -1 ? model->MaterialList[materialIndex].Texture.ID : _defaultTextureID;
+            unsigned int textureID = materialIndex != -1 ? model->MaterialList[materialIndex].Texture->ID : _defaultTextureID;
 
             OpenGLAPI::TextureUse(ImageType::Texture2D, textureID);
             //-----------------------------------------------------------------           

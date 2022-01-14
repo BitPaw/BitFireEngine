@@ -43,6 +43,7 @@ namespace BF
 		~MeshStructure();
 
 		void Allocate(size_t vertecDataSize, size_t indexDataSize);
+		void Reallocate(size_t vertecDataSize, size_t indexDataSize);
 		void DeAllocate();
 
 		void MeshLink(MeshStructure& mesh);

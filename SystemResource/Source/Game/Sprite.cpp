@@ -23,10 +23,12 @@ void BF::Sprite::Set(float x, float y, float z, const char* name, const char* te
     MaterialList = new Material();
 
     Material& material = MaterialList[0];
+    Image* image = new Image();
+    image->NameChange("<Used Sprite Texture>");
+    image->FilePathChange(textureFilePath);
+    image->ImageWrapSet(ImageWrap::StrechEdges);
 
-    material.Texture.NameChange("<Used Sprite Texture>");
-    material.Texture.FilePathChange(textureFilePath);
-    material.Texture.ImageWrapSet(ImageWrap::StrechEdges);
+    material.Texture = image;
 
     if (model)
     {
