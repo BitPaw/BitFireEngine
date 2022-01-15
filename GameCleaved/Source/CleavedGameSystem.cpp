@@ -13,6 +13,7 @@
 #include "../../SystemResource/Source/File/FileTemporary.h"
 #include "../../SystemResource/Source/Math/Physic/GravityCube.h"
 #include "../../BitFireEngine/Source/Entity/Sign.h"
+#include "../../BitFireEngine/Source/UI/DialogBox/UIDialogBox.h"
 
 using namespace BF;
 
@@ -37,6 +38,9 @@ BF::Sprite _lamp;
 BF::Sprite _fireplace;
 BF::Sign _sign;
 BF::Sprite _floor;
+
+BF::UIDialogBox _dialogBox;
+BF::Sprite _dialogBoxTexture;
 
 bool moveCamera = false;
 
@@ -74,10 +78,9 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     text.SetText("SampleText");
     text.MatrixModel.Scale(100);
     text.MatrixModel.MoveTo(-0.25, 0.25, 0);
-    text.UpdateText();
+    //text.UpdateText();
 
     //text.MeshList[0].RenderInfo.ShaderProgramID = hudShaderID.ID;
-
 
 
     // Gravity
@@ -132,6 +135,24 @@ void Cleaved::CleavedGameSystem::OnStartUp()
 
     GameSystem.Resource.PushToGPU(text);
     GameSystem.Resource.Add(text);
+
+
+
+
+
+
+    
+
+
+
+
+
+    _dialogBoxTexture.Set(-0.05f, -0.05f, 0, "DialogBoxBorder", "Texture/DialogBoxBorder.png");
+    GameSystem.Resource.Add(_dialogBoxTexture);
+    _dialogBoxTexture.MeshList[0].RenderInfo.ShaderProgramID = hudShaderID.ID;
+
+
+
 
 
     GameSystem.Resource.PrintContent(true);
