@@ -2,6 +2,8 @@
 
 #include "../../../../SystemResource/Source/Container/Queue.hpp"
 #include "../../../../SystemResource/Source/Dialog/Dialog.h"
+#include "../../../../SystemResource/Source/Game/Sprite.h"
+#include "../UIText.h"
 
 namespace BF
 {
@@ -17,7 +19,8 @@ namespace BF
 		//OpenEvent OnOpen;
 		//CloseEvent OnClose;
 		//NewPageEvent OnNewPage;
-		
+		Sprite BackGroundTexture;
+		UIText Content;
 
 		void Open();
 		void Close();

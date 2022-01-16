@@ -19,8 +19,6 @@ using namespace BF;
 
 float _deltaTime = 0;
 
-BF::UIText text;
-
 BF::FNT fnt;
 BF::Font font;
 
@@ -40,7 +38,6 @@ BF::Sign _sign;
 BF::Sprite _floor;
 
 BF::UIDialogBox _dialogBox;
-BF::Sprite _dialogBoxTexture;
 
 bool moveCamera = false;
 
@@ -72,15 +69,7 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     ); 
 
 
-    //fnt.Load();
-    GameSystem.Resource.Load(font, L"Font/harrington.fnt");
-    text.SetFont(font);
-    text.SetText("SampleText");
-    text.MatrixModel.Scale(100);
-    text.MatrixModel.MoveTo(-0.25, 0.25, 0);
-    //text.UpdateText();
 
-    //text.MeshList[0].RenderInfo.ShaderProgramID = hudShaderID.ID;
 
 
     // Gravity
@@ -133,8 +122,7 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     GameSystem.Resource.PushToGPU(GameSystem.Resource.CubeHitBoxViewModel);
 #endif // 1
 
-    GameSystem.Resource.PushToGPU(text);
-    GameSystem.Resource.Add(text);
+ 
 
 
 
@@ -143,15 +131,25 @@ void Cleaved::CleavedGameSystem::OnStartUp()
 
     
 
+    //---<DialogBox>-----------------------------------------------------------
 
 
+    _dialogBox.BackGroundTexture.Set(-0.07f, -0.05f, 0, "DialogBoxBorder", "Texture/DialogBoxBorder.png");
+    GameSystem.Resource.Add(_dialogBox.BackGroundTexture);
+    _dialogBox.BackGroundTexture.MeshList[0].RenderInfo.ShaderProgramID = hudShaderID.ID;
 
 
-    _dialogBoxTexture.Set(-0.05f, -0.05f, 0, "DialogBoxBorder", "Texture/DialogBoxBorder.png");
-    GameSystem.Resource.Add(_dialogBoxTexture);
-    _dialogBoxTexture.MeshList[0].RenderInfo.ShaderProgramID = hudShaderID.ID;
+    GameSystem.Resource.Load(font, L"Font/harrington.fnt");
+    _dialogBox.Content.SetFont(font);
+    _dialogBox.Content.SetText("Soon...");
+    _dialogBox.Content.MatrixModel.Scale(1);
+    _dialogBox.Content.MatrixModel.MoveTo(-0.3, 0.0025, -1);
+    _dialogBox.Content.UpdateText();
+    GameSystem.Resource.Add(_dialogBox.Content);
+    GameSystem.Resource.PushToGPU(_dialogBox.Content);
+    _dialogBox.Content.MeshList[0].RenderInfo.ShaderProgramID = hudShaderID.ID;
 
-
+    //-------------------------------------------------------------------------
 
 
 
@@ -280,7 +278,7 @@ void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
 
 void Cleaved::CleavedGameSystem::OnUpdateUI()
 {
-    wsprintfW(text.TextContent,L"FPS: %4i", (BF::Math::Ceiling(1 / _deltaTime)));
+    wsprintfW(_dialogBox.Content.TextContent, L"FPS: %4i", (BF::Math::Ceiling(1 / _deltaTime)));
 
     //text.UpdateText();
 
