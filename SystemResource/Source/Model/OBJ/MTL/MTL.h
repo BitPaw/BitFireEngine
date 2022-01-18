@@ -3,6 +3,8 @@
 #include <cstddef>
 #include "MTLMaterial.h"
 
+#include "../../../File/FileActionResult.hpp"
+
 namespace BF
 {	
 	// [.MTL]
@@ -15,7 +17,7 @@ namespace BF
 		MTL();
 		~MTL();
 
-		void Load(const char* filePath);
+		FileActionResult Load(const wchar_t* filePath);
 
 		void PrintContent();
 	};

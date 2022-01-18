@@ -437,7 +437,7 @@
     <ClCompile Include="Source\Model\PLY\PLY.cpp" />
     <ClCompile Include="Source\Model\STL\STL.cpp" />
     <ClCompile Include="Source\Model\Vertex.cpp" />
-    <ClCompile Include="Source\Model\WRL\WRL.cpp" />
+    <ClCompile Include="Source\Model\VRML\VRML.cpp" />
     <ClCompile Include="Source\Network\Client.cpp" />
     <ClCompile Include="Source\Network\IOSocket.cpp" />
     <ClCompile Include="Source\Network\IPVersion.cpp" />
@@ -705,7 +705,7 @@
     <ClInclude Include="Source\Model\PLY\PLY.h" />
     <ClInclude Include="Source\Model\STL\STL.h" />
     <ClInclude Include="Source\Model\Vertex.h" />
-    <ClInclude Include="Source\Model\WRL\WRL.h" />
+    <ClInclude Include="Source\Model\VRML\VRML.h" />
     <ClInclude Include="Source\Network\Client.h" />
     <ClInclude Include="Source\Network\IOSocket.h" />
     <ClInclude Include="Source\Network\IPVersion.h" />

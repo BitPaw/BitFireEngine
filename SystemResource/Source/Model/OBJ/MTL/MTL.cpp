@@ -1,6 +1,7 @@
 #include "MTL.h"
 
 #include "../../../File/FileStream.h"
+#include "../../../File/Text.h"
 #include "../../../Container/AsciiString.h"
 
 BF::MTL::MTL()
@@ -14,9 +15,9 @@ BF::MTL::~MTL()
 	free(MaterialList);
 }
 
-void BF::MTL::Load(const char* filePath)
+BF::FileActionResult BF::MTL::Load(const wchar_t* filePath)
 {
-	unsigned int materialIndex = 0;
+	size_t materialIndex = 0;
 	const char _newMaterialCharacter = 'n';
 	const char _colorCharacter = 'K';
 	const char _ambientCharacter = 'a';
@@ -33,28 +34,28 @@ void BF::MTL::Load(const char* filePath)
 
 	if (fileActionResult != FileActionResult::Successful)
 	{
-		return;
+		return fileActionResult;
 	}
 	
-	char currentLineBuffer[200];
+	const size_t currentLineBufferSize = 512;
+	char currentLineBuffer[currentLineBufferSize];
 
 	// Count How many materials are needed
 	{
 
 		while (file.ReadNextLineInto(currentLineBuffer))
 		{			
-			char commandChar = currentLineBuffer[0];
+			const char commandChar = currentLineBuffer[0];
+			const bool isNewMaterialUsed = commandChar == 'n';
 
-			if (commandChar == 'n')
+			if (isNewMaterialUsed)
 			{
 				MaterialListSize++;
 			}
 		}
 
-		MaterialList = reinterpret_cast<MTLMaterial*>(calloc(MaterialListSize, sizeof(MTLMaterial)));
+		MaterialList = new MTLMaterial[MaterialListSize];
 	}
-
-
 
 	// Raw Parse
 	MTLMaterial* material = nullptr; // current material, has to be here, its state dependend
@@ -69,7 +70,7 @@ void BF::MTL::Load(const char* filePath)
 		{
 			case 'm':
 			{
-				AsciiString::Parse(currentLineBuffer, "§s", material->TextureFilePath);
+				Text::Parse(currentLineBuffer, currentLineBufferSize, "§s", material->TextureFilePath);
 				break;
 			}
 
@@ -77,9 +78,9 @@ void BF::MTL::Load(const char* filePath)
 			{
 				material = &MaterialList[materialIndex++];
 
-				strncpy(material->TextureFilePath, "<internal>", MTLFilePath);
+				Text::Copy(material->TextureFilePath, "<internal>", MTLFilePath);
 
-				AsciiString::Parse(currentLineBuffer, "§s", material->Name);
+				Text::Parse(currentLineBuffer, currentLineBufferSize, "§s", material->Name);
 
 				break;
 			}
@@ -104,7 +105,7 @@ void BF::MTL::Load(const char* filePath)
 					}					
 				}
 
-				AsciiString::Parse(currentLineBuffer, "§f", value);
+				Text::Parse(currentLineBuffer, currentLineBufferSize, "§f", value);
 
 				break;
 			}
@@ -142,14 +143,14 @@ void BF::MTL::Load(const char* filePath)
 					}
 				}
 
-				AsciiString::Parse(currentLineBuffer, "§fff", &colorVector[0], &colorVector[1], &colorVector[2]);
+				Text::Parse(currentLineBuffer, currentLineBufferSize, "§fff", &colorVector[0], &colorVector[1], &colorVector[2]);
 
 				break;
 			}
 
 			case 'd':
 			{
-				AsciiString::Parse(currentLineBuffer, "§f", &material->Dissolved);
+				Text::Parse(currentLineBuffer, currentLineBufferSize, "§f", &material->Dissolved);
 				break;
 			}
 
@@ -158,7 +159,7 @@ void BF::MTL::Load(const char* filePath)
 				IlluminationMode mode = IlluminationMode::None;
 				int number = -1;
 
-				AsciiString::Parse(currentLineBuffer, "§i", &number);
+				Text::Parse(currentLineBuffer, currentLineBufferSize, "§i", &number);
 
 				switch (number)
 				{
@@ -218,6 +219,8 @@ void BF::MTL::Load(const char* filePath)
 				break;
 		}
 	}
+
+	return FileActionResult::Successful;
 }
 
 

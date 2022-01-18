@@ -48,7 +48,7 @@ namespace BF
 
 		static void TerminateBeginFromFirst(char* string, const size_t dataSize, const char character);
 
-
+		static void Parse(char* buffer, size_t bufferSize, const char* syntax, ...);
 
 		static void FindAll(const char* string, const size_t stringSize, const ParsingToken* parsingTokenList, const size_t parsingTokenListSize);
 	};

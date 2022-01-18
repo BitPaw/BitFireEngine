@@ -13,7 +13,9 @@
 #define ThreadFunctionReturnType unsigned long
 #define ThreadID HANDLE
 #define ThreadIDUnused nullptr
+#if defined(OSWindowsXP)
 typedef struct IUnknown IUnknown;
+#endif
 #endif
 
 namespace BF

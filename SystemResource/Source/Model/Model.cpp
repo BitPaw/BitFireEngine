@@ -7,7 +7,7 @@
 #include "OBJ/OBJ.h"
 #include "PLY/PLY.h"
 #include "STL/STL.h"
-#include "WRL/WRL.h"
+#include "VRML/VRML.h"
 
 #include "../File/File.h"
 #include "../../../SystemResource/Source/Math/Geometry/Shape/Triangle.h"
@@ -135,9 +135,9 @@ BF::FileActionResult BF::Model::Load(const wchar_t* filePath)
 
         case ModelType::WRL:
         {
-            WRL wrl;
-            wrl.Load(filePath);
-            wrl.ConvertTo(*this);
+            VRML vrml;
+            vrml.Load(filePath);
+            vrml.ConvertTo(*this);
             break;
         }
 

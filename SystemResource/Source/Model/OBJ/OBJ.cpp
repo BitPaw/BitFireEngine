@@ -11,7 +11,7 @@
 
 BF::OBJ::OBJ()
 {
-    strncpy(Name, "[N/A]", OBJNameSize);
+    Text::Copy(Name, "[N/A]", OBJNameSize);
 
     VertexStructureSize = 0;
 
@@ -211,8 +211,9 @@ BF::OBJLineCommand BF::OBJ::PeekCommandLine(const char* commandLine)
 
 BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
 {
+    const size_t currentLineBufferSize = 1024;
+    char currentLineBuffer[currentLineBufferSize];
     bool isFirstVertex = true;
-    char currentLineBuffer[1024];
     FileStream file; 
     FileActionResult FileActionResult = file.ReadFromDisk(filePath, true);
 
@@ -227,18 +228,18 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
     {
         bool isInMesh = false;  
 
-        unsigned int vertexPositionListSize = 0;
-        unsigned int vertexTextureCoordinateListSize = 0;
-        unsigned int vertexNormalPositionListSize = 0;
-        unsigned int vertexParameterListSize = 0;
-        unsigned int faceElementListSize = 0;
+        size_t vertexPositionListSize = 0;
+        size_t vertexTextureCoordinateListSize = 0;
+        size_t vertexNormalPositionListSize = 0;
+        size_t vertexParameterListSize = 0;
+        size_t faceElementListSize = 0;
 
         ElementListSize = 1;
         ElementList = new OBJElement();
 
         while (file.ReadNextLineInto(currentLineBuffer))
         {                
-            OBJLineCommand command = PeekCommandLine(currentLineBuffer);
+            const OBJLineCommand command = PeekCommandLine(currentLineBuffer);
 
             switch (command)
             {
@@ -359,14 +360,14 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
 
     // Exact Parse
     {    
-        unsigned int elementIndex = 0;
-        unsigned int currentPositionElement = 0;
-        unsigned int currentTextureElement = 0;
-        unsigned int currentNormalElement = 0;
-        unsigned int currentParameterElement = 0;
-        unsigned int currentFaceElement = 0;
-        unsigned int materialIndex = 0;
-        unsigned int materialIDCounter = 0;
+        size_t elementIndex = 0;
+        size_t currentPositionElement = 0;
+        size_t currentTextureElement = 0;
+        size_t currentNormalElement = 0;
+        size_t currentParameterElement = 0;
+        size_t currentFaceElement = 0;
+        size_t materialIndex = 0;
+        size_t materialIDCounter = 0;
 
         OBJElement* elemtent = &ElementList[elementIndex++];
         bool isInMesh = false;      
@@ -376,71 +377,55 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
         // Parse
         while (file.ReadNextLineInto(currentLineBuffer))
         {
-            OBJLineCommand command = PeekCommandLine(currentLineBuffer);
-            bool fetchNextMesh = ShouldCreateNewMesh(command, isInMesh);
-                      
-            if (fetchNextMesh)
+            const OBJLineCommand command = PeekCommandLine(currentLineBuffer);            
+            
             {
-                elemtent = &ElementList[elementIndex++];    
+                const bool fetchNextMesh = ShouldCreateNewMesh(command, isInMesh);
 
-                currentPositionElement = 0;
-                currentTextureElement = 0;
-                currentNormalElement = 0;
-                currentParameterElement = 0;
-                currentFaceElement = 0;
-            }
+                if (fetchNextMesh)
+                {
+                    elemtent = &ElementList[elementIndex++];
+
+                    currentPositionElement = 0;
+                    currentTextureElement = 0;
+                    currentNormalElement = 0;
+                    currentParameterElement = 0;
+                    currentFaceElement = 0;
+                }
+            }           
 
             switch (command)
             {
                 case OBJLineCommand::MaterialLibraryInclude:
                 { 
-                    char materialFilePath[PathMaxSize];
+                    wchar_t materialFilePath[PathMaxSize];
+                    MTL& material = MaterialFileList[materialIndex++];
 
-                    AsciiString::Parse
-                    (
-                        currentLineBuffer,
-                        "$s",
-                        materialFilePath
-                    );
-
-                    AsciiString materialFileFolder;
-                    AsciiString filePathS;
-                    AsciiString materialPathS(materialFilePath);
-
-                    filePathS.ReSize(260);
-
-                    Text::Copy(&filePathS[0], filePath, 260);
-
-                    int position = filePathS.FindLast('/');
-                    bool hasSlash = position != -1;
-                    bool doesFileExist = false;
-
-                    if (hasSlash)
+                    // Parse materialPath
                     {
-                        filePathS.Cut(0, position + 1, materialFileFolder);
-                        materialFileFolder.AttachToBack(materialPathS);
-                    }
-                    else
+                        char materialFilePathTempA[PathMaxSize];
+                        wchar_t materialFilePathTempW[PathMaxSize];
+
+                        Text::Parse
+                        (
+                            currentLineBuffer,
+                            currentLineBufferSize,
+                            "$s",
+                            materialFilePathTempA
+                        );
+
+                        Text::AsciiToUnicode(materialFilePathTempA, PathMaxSize, materialFilePathTempW, PathMaxSize);
+
+                        File::PathSwapFile(filePath, materialFilePath, materialFilePathTempW);
+                    }              
+
+                    const BF::FileActionResult materialLoadResult = material.Load(materialFilePath);
+
+                    if (materialLoadResult != FileActionResult::Successful)
                     {
-                        materialFileFolder.Copy(materialPathS);
+                        printf("[Warning] Material (.mtl) file is missing at path <%ls>\n", materialFilePath);
                     }
 
-                    const char* filePath = &materialFileFolder[0];
-                    FileStream fileStreamMaterial;
-                    doesFileExist = File::DoesFileExist(filePath);
-
-                    if (doesFileExist)
-                    {
-                        MTL& material = MaterialFileList[materialIndex++];
-                   
-                        material.Load(filePath);
-
-                        //material.PrintContent();
-                    }
-                    else
-                    {
-                        printf("[Warning] Material (.mtl) file is missing at path <%s>\n", &materialFileFolder[0]);
-                    }
                     break;
                 }
                 case OBJLineCommand::MaterialLibraryUse:
@@ -448,27 +433,27 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
                     char usedMaterialName[MTLNameSize];
                     unsigned int materialID = -1;
                  
-                    AsciiString::Parse
+                    Text::Parse
                     (
                         currentLineBuffer,
+                        currentLineBufferSize,
                         "$s",
                         usedMaterialName
                     );
 
-                    for (unsigned int i = 0; i < MaterialFileListSize; i++)
+                    for (size_t i = 0; i < MaterialFileListSize; i++)
                     {
-                        MTL& mtl = MaterialFileList[i];
-                        unsigned int materialListSize = mtl.MaterialListSize;
+                        const MTL& mtl = MaterialFileList[i];
+                        const size_t materialListSize = mtl.MaterialListSize;
 
-                        for (unsigned int j = 0; j < materialListSize; j++)
+                        for (size_t j = 0; j < materialListSize; j++)
                         {
-                            MTLMaterial& material = mtl.MaterialList[j];                            
-                            bool isSameName = strncmp(material.Name, usedMaterialName, MTLNameSize) == 0;
+                            const MTLMaterial& material = mtl.MaterialList[j];                            
+                            const bool isSameName = Text::Compare(material.Name, usedMaterialName, MTLNameSize);
 
                             if (isSameName)
                             {
                                 materialID = j;
-                                //printf("%s == %s >> %i\n", material->Name.c_str(), materialName.c_str(), materialID);
                                 break;
                             }
                         }
@@ -481,7 +466,7 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
 
                 case OBJLineCommand::ObjectName:
                 {
-                    strncpy(elemtent->Name, currentLineBuffer + 2, OBJElementNameLength);
+                    Text::Copy(elemtent->Name, currentLineBuffer + 2, OBJElementNameLength);
                     break;
                 }
 
@@ -510,9 +495,10 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
 
                     assert(currentVectorValue);
 
-                    AsciiString::Parse
+                    Text::Parse
                     (
                         currentLineBuffer,
+                        currentLineBufferSize,
                         "$fff",
                         &currentVectorValue->X, 
                         &currentVectorValue->Y,
@@ -525,9 +511,10 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
                 {
                     Vector2<float>& point = elemtent->TextureCoordinateList[currentTextureElement++];
 
-                    AsciiString::Parse
+                    Text::Parse
                     (
                         currentLineBuffer,
+                        currentLineBufferSize,
                         "$ff",
                         &point.X, &point.Y 
                     );
@@ -538,39 +525,21 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
                     break;
 
                 case OBJLineCommand::FaceElement:
-                {
-                    /*
-                    line.Splitt(' ', faceTextCache);
-                    unsigned int amountOfValuesline = line.Count(' ');
-                    for (unsigned int i = 1; i <= amountOfValuesline; i++)
-                    {
-                        faceTextCache[i].Splitt('/', trippelTextCache);
-                        // Possiple error if char is '/'
-
-                        elemtent->FaceElementList[currentFaceElement++].Set
-                        (
-                            trippelTextCache[0].ToInt(),
-                            trippelTextCache[1].ToInt(),
-                            trippelTextCache[2].ToInt()
-                        );
-
-                         usedFacesBefore = true;
-                    }*/                   
-
+                {     
                     assert(currentFaceElement < elemtent->FaceElementList.Size());
 
                     Vector3<unsigned int>& vectorA = elemtent->FaceElementList[currentFaceElement++];
                     Vector3<unsigned int>& vectorB = elemtent->FaceElementList[currentFaceElement++];
                     Vector3<unsigned int>& vectorC = elemtent->FaceElementList[currentFaceElement++];
 
-
                     switch (VertexStructureSize)
                     {
                         case 3:
                         {
-                            AsciiString::Parse
+                            Text::Parse
                             (
                                 currentLineBuffer,
+                                currentLineBufferSize,
                                 "$uuuuuuuuu",
                                 &vectorA.X, &vectorA.Y, &vectorA.Z,
                                 &vectorB.X, &vectorB.Y, &vectorB.Z,
@@ -582,10 +551,11 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
                         {
                             Vector3<unsigned int>& vectorD = elemtent->FaceElementList[currentFaceElement++];
 
-                            AsciiString::Parse
+                            Text::Parse
                             (
                                 currentLineBuffer,
-                                "$uuuuuuuuuuuu",
+                                currentLineBufferSize,
+                                "$uuuuuuuuuuuu",                                
                                 &vectorA.X, &vectorA.Y, &vectorA.Z,
                                 &vectorB.X, &vectorB.Y, &vectorB.Z,
                                 &vectorC.X, &vectorC.Y, &vectorC.Z,

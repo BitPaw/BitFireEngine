@@ -350,18 +350,14 @@ void BF::File::SetFilePath(const wchar_t* filePath)
 
 void BF::File::PathSwapFile(const wchar_t* currnetPath, wchar_t* targetPath, const wchar_t* newFileName)
 {
-	size_t inputLength = Text::Length(currnetPath);
+	const size_t index = Text::FindLast(currnetPath, PathMaxSize, '/');
+	const bool found = index != -1;
 
-	for (size_t i = inputLength; 0 < i; --i)
+	if (found)
 	{
-		if (currnetPath[i] == '/')
-		{
-			size_t copyedBytes = Text::Copy(targetPath, currnetPath, i - 1);
+		size_t copyedBytes = Text::Copy(targetPath, currnetPath, index + 1);
 
-			Text::Copy(targetPath + copyedBytes, newFileName, 260 - copyedBytes);
-
-			break;
-		}
+		Text::Copy(targetPath + copyedBytes, newFileName, 260 - copyedBytes);
 	}
 }
 

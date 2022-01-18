@@ -17,4 +17,6 @@ BF::Material::Material()
 	Emission[0] = 0;
 	Emission[1] = 0;
 	Emission[2] = 0;
+
+	Texture = nullptr;
 }

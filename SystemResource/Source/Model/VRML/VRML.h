@@ -4,7 +4,7 @@
 
 namespace BF
 {
-	struct WRL : public IModelFormat
+	struct VRML : public IModelFormat
 	{
 		public:
 		FileActionResult Load(const wchar_t* filePath);

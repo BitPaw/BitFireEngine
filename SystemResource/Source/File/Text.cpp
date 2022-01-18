@@ -2,6 +2,7 @@
 
 #include <cstring>
 #include <cassert>
+#include <cstdarg>
 
 #define MakeLetterCaseLower(character) (character | 0b00100000)
 #define MakeLetterCaseUpper(character) (character & 0b11011111)
@@ -157,7 +158,7 @@ int BF::Text::Compare(const char* a, const char* b, const size_t stringSize)
 	for (; (index < stringSize) && (a[index] != '\0') && (b[index] != '\0'); ++index)
 		samecounter += a[index] == b[index];
 
-	return index == samecounter;
+	return (index == samecounter) && (a[index] == b[index]);
 }
 
 int BF::Text::Compare(const wchar_t* a, const wchar_t* b, const size_t stringSize)
@@ -168,7 +169,7 @@ int BF::Text::Compare(const wchar_t* a, const wchar_t* b, const size_t stringSiz
 	for (; (index < stringSize) && (a[index] != '\0') && (b[index] != '\0'); ++index)
 		samecounter += a[index] == b[index];
 
-	return index == samecounter;
+	return (index == samecounter) && (a[index] == b[index]);
 }
 
 int BF::Text::Compare(const char* a, const wchar_t* b, const size_t stringSize)
@@ -179,7 +180,7 @@ int BF::Text::Compare(const char* a, const wchar_t* b, const size_t stringSize)
 	for (; (index < stringSize) && (a[index] != '\0') && (b[index] != '\0'); ++index)
 		samecounter += (wchar_t)a[index] == b[index];	
 
-	return index == samecounter;
+	return (index == samecounter) && (a[index] == b[index]);
 }
 
 int BF::Text::Compare(const wchar_t* a, const char* b, const size_t stringSize)
@@ -190,7 +191,7 @@ int BF::Text::Compare(const wchar_t* a, const char* b, const size_t stringSize)
 	for (; (index < stringSize) && (a[index] != '\0') && (b[index] != '\0'); ++index)
 		samecounter += a[index] == (wchar_t)b[index];
 
-	return index == samecounter;
+	return (index == samecounter) && (a[index] == b[index]);
 }
 
 int BF::Text::CompareIgnoreCase(const char* a, const char* b, const size_t stringSize)
@@ -450,6 +451,82 @@ void BF::Text::TerminateBeginFromFirst(char* string, const size_t dataSize, cons
 	{
 		string[index] = '\0';
 	}
+}
+
+void BF::Text::Parse(char* buffer, size_t bufferSize, const char* syntax, ...)
+{
+	va_list args;
+	va_start(args, syntax);
+
+	int startIndex = 0;
+	int stopIndex = 0;
+	int command = 0;
+	bool finished = false;
+
+	while (!finished)
+	{
+		char commandKey = syntax[command++];
+		bool commandIsNumber = commandKey == 'i' || commandKey == 'f' || commandKey == 'u';
+
+		while (true)
+		{
+			char current = buffer[stopIndex++];
+			finished = current == '\0';
+
+			if (commandIsNumber && current == '/' || current == ' ' || finished)
+			{
+				break;
+			}
+		}
+
+		switch (commandKey)
+		{
+			case 's':
+			{
+				char* destination = va_arg(args, char*);
+				char* source = &buffer[startIndex];
+				unsigned int length = stopIndex - startIndex - 1;
+
+				memcpy(destination, source, length);
+				destination[length] = '\0';
+				break;
+			}
+			case 'i':
+			case 'd':
+			case 'u':
+			{
+				int* i = va_arg(args, int*);
+				char* source = &buffer[startIndex];
+
+				ToInt(source, 5, *i);
+
+				break;
+			}
+			case 'f':
+			{
+				float* number = va_arg(args, float*);
+				char* source = &buffer[startIndex];
+
+				ToFloat(source, 5, (*number));
+
+				break;
+			}
+			case 'c':
+			{
+				char* character = va_arg(args, char*);
+
+				*character = buffer[startIndex];
+
+				break;
+			}
+			default:
+				break;
+		}
+
+		startIndex = stopIndex;
+	}
+
+	va_end(args);
 }
 
 void BF::Text::FindAll(const char* string, const size_t stringSize, const ParsingToken* parsingTokenList, const size_t parsingTokenListSize)

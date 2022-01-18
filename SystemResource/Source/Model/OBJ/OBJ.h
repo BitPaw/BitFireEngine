@@ -18,7 +18,7 @@ namespace BF
 		static inline OBJLineCommand PeekCommandLine(const char* commandLine);
 
 		public:
-		char Name[OBJNameSize];
+		wchar_t Name[OBJNameSize];
 		unsigned char VertexStructureSize;
 
 		size_t MaterialFileListSize;

@@ -259,12 +259,23 @@ void BF::ResourceManager::Load(Model& model)
         for (unsigned int i = 0; i < model.MaterialListSize; i++)
         {
             Material& modelMaterial = model.MaterialList[i];
-            Image* image = modelMaterial.Texture;
+            Image* newImage = new Image();
 
-            image->ID = ResourceIDLoading;
-            image->FilePathChange(modelMaterial.FilePath);
+            if (newImage)
+            {
+                Image& image = *newImage;
 
-            Add(*image, true);
+                modelMaterial.Texture = newImage;
+
+                image.ID = ResourceIDLoading;
+                image.FilePathChange(modelMaterial.FilePath);
+
+                Add(image, true);
+            }
+            else
+            {
+                printf("[!] Texture missing! <ls>\n");
+            }           
         }
 
         model.ShouldItBeRendered = true;        
