@@ -27,6 +27,8 @@ namespace BF
 		static size_t Copy(wchar_t* destination, const char* source, const size_t stringSize);
 		static size_t Copy(wchar_t* destination, const wchar_t* source, const size_t stringSize);
 
+		static int Compare(const char* a, const size_t aSize, const char* b, const size_t bSize);
+
 		static int Compare(const char* a, const char* b, const size_t stringSize);
 		static int Compare(const wchar_t* a, const wchar_t* b, const size_t stringSize);
 		static int Compare(const char* a, const wchar_t* b, const size_t stringSize);

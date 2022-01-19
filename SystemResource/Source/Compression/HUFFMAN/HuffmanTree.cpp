@@ -24,28 +24,27 @@ int BF::HuffmanTree::GenerateFromLengths(const unsigned int* bitlen, size_t numc
 	//-----------
 
 	//------------------------------------ HuffmanTree_makeFromLengths2()
-	unsigned* blcount;
-	unsigned* nextcode;
+	unsigned int* blcount = (unsigned int*)malloc((maxbitlen + 1) * sizeof(unsigned int));
+	unsigned int* nextcode = (unsigned int*)malloc((maxbitlen + 1) * sizeof(unsigned int));
 	unsigned error = 0;
-	unsigned bits, n;
 
 	codes = (unsigned int*)malloc(numcodes * sizeof(unsigned int));
-	blcount = (unsigned int*)malloc((maxbitlen + 1) * sizeof(unsigned int));
-	nextcode = (unsigned int*)malloc((maxbitlen + 1) * sizeof(unsigned int));
+	
+	
 	if (!codes || !blcount || !nextcode) error = 83; /*alloc fail*/
 
 	if (!error)
 	{
-		for (n = 0; n != maxbitlen + 1; n++) blcount[n] = nextcode[n] = 0;
+		for (size_t n = 0; n != maxbitlen + 1; n++) blcount[n] = nextcode[n] = 0;
 		/*step 1: count number of instances of each code length*/
-		for (bits = 0; bits != numcodes; ++bits) ++blcount[lengths[bits]];
+		for (size_t bits = 0; bits != numcodes; ++bits) ++blcount[lengths[bits]];
 		/*step 2: generate the nextcode values*/
-		for (bits = 1; bits <= maxbitlen; ++bits)
+		for (size_t bits = 1; bits <= maxbitlen; ++bits)
 		{
 			nextcode[bits] = (nextcode[bits - 1] + blcount[bits - 1]) << 1u;
 		}
 		/*step 3: generate all the codes*/
-		for (n = 0; n != numcodes; ++n)
+		for (size_t n = 0; n != numcodes; ++n)
 		{
 			if (lengths[n] != 0)
 			{
@@ -133,8 +132,8 @@ int BF::HuffmanTree::GenerateFromLengths(const unsigned int* bitlen, size_t numc
 		{
 			/*short symbol, fully in first table, replicated num times if l < FIRSTBITS*/
 			unsigned num = 1u << (FIRSTBITS - l);
-			unsigned j;
-			for (j = 0; j < num; ++j)
+		
+			for (size_t j = 0; j < num; ++j)
 			{
 				/*bit reader will read the l bits of symbol first, the remaining FIRSTBITS - l bits go to the MSB's*/
 				unsigned index = reverse | (j << l);
@@ -153,9 +152,9 @@ int BF::HuffmanTree::GenerateFromLengths(const unsigned int* bitlen, size_t numc
 			unsigned tablelen = maxlen - FIRSTBITS;
 			unsigned start = table_value[index]; /*starting index in secondary table*/
 			unsigned num = 1u << (tablelen - (l - FIRSTBITS)); /*amount of entries of this symbol in secondary table*/
-			unsigned j;
+	
 			if (maxlen < l) return 55; /*invalid tree: long symbol shares prefix with short symbol*/
-			for (j = 0; j < num; ++j)
+			for (size_t j = 0; j < num; ++j)
 			{
 				unsigned reverse2 = reverse >> FIRSTBITS; /* l - FIRSTBITS bits */
 				unsigned index2 = start + (reverse2 | (j << (l - FIRSTBITS)));
@@ -207,11 +206,11 @@ unsigned int BF::HuffmanTree::GenerateDynamicTree(BitStreamHusk& bitStreamHusk, 
 
 	/*the order in which "code length alphabet code lengths" are stored as specified by deflate, out of this the huffman
 tree of the dynamic huffman tree lengths is generated*/
-	const unsigned CLCL_ORDER[NUM_CODE_LENGTH_CODES]= { 16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15 };
+	const unsigned char CLCL_ORDER[NUM_CODE_LENGTH_CODES]= { 16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15 };
 
 	/*make sure that length values that aren't filled in will be 0, or a wrong tree will be generated*/
 	unsigned error = 0;
-	unsigned n, HLIT, HDIST, HCLEN, i;
+	unsigned n, HLIT, HDIST, HCLEN;
 
 	/*see comments in deflateDynamic for explanation of the context and these variables, it is analogous*/
 	unsigned* bitlen_ll = 0; /*lit,len code lengths*/
@@ -250,14 +249,14 @@ tree of the dynamic huffman tree lengths is generated*/
 		{
 			throw(50); /*error: the bit pointer is or will go past the memory* /
 		}*/
-		for (i = 0; i != HCLEN; ++i)
+		for (size_t index = 0; index != HCLEN; ++index)
 		{
 			//ensureBits9(reader, 3); /*out of bounds already checked above */
-			bitlen_cl[CLCL_ORDER[i]] = bitStreamHusk.ExtractBitsAndMove(3);
+			bitlen_cl[CLCL_ORDER[index]] = bitStreamHusk.ExtractBitsAndMove(3);
 		}
-		for (i = HCLEN; i != NUM_CODE_LENGTH_CODES; ++i)
+		for (size_t index = HCLEN; index != NUM_CODE_LENGTH_CODES; ++index)
 		{
-			bitlen_cl[CLCL_ORDER[i]] = 0;
+			bitlen_cl[CLCL_ORDER[index]] = 0;
 		}
 
 		error = tree_cl.GenerateFromLengths(bitlen_cl, NUM_CODE_LENGTH_CODES, 7);
@@ -271,8 +270,8 @@ tree of the dynamic huffman tree lengths is generated*/
 		memset(bitlen_d, 0, NUM_DISTANCE_SYMBOLS * sizeof(*bitlen_d));
 
 		/*i is the current symbol we're reading in the part that contains the code lengths of lit/len and dist codes*/
-		i = 0;
-		while (i < HLIT + HDIST)
+		
+		for (size_t i = 0; i < HLIT + HDIST; )
 		{
 			unsigned code;
 			//ensureBits25(reader, 22); /* up to 15 bits for huffman code, up to 7 extra bits below*/

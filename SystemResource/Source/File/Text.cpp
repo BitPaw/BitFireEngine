@@ -150,6 +150,17 @@ size_t BF::Text::Copy(wchar_t* destination, const wchar_t* source, const size_t 
 	return i;
 }
 
+int BF::Text::Compare(const char* a, const size_t aSize, const char* b, const size_t bSize)
+{
+	size_t index = 0;
+	int samecounter = 0;
+
+	for (; (index < aSize) && (index < bSize) && (a[index] != '\0') && (b[index] != '\0'); ++index)
+		samecounter += a[index] == b[index];
+
+	return (index == samecounter) && ((index == aSize) && (index == bSize));
+}
+
 int BF::Text::Compare(const char* a, const char* b, const size_t stringSize)
 {
 	size_t index = 0;
@@ -158,7 +169,7 @@ int BF::Text::Compare(const char* a, const char* b, const size_t stringSize)
 	for (; (index < stringSize) && (a[index] != '\0') && (b[index] != '\0'); ++index)
 		samecounter += a[index] == b[index];
 
-	return (index == samecounter) && (a[index] == b[index]);
+	return (index == samecounter);
 }
 
 int BF::Text::Compare(const wchar_t* a, const wchar_t* b, const size_t stringSize)
@@ -169,7 +180,7 @@ int BF::Text::Compare(const wchar_t* a, const wchar_t* b, const size_t stringSiz
 	for (; (index < stringSize) && (a[index] != '\0') && (b[index] != '\0'); ++index)
 		samecounter += a[index] == b[index];
 
-	return (index == samecounter) && (a[index] == b[index]);
+	return index == samecounter;
 }
 
 int BF::Text::Compare(const char* a, const wchar_t* b, const size_t stringSize)
@@ -180,7 +191,7 @@ int BF::Text::Compare(const char* a, const wchar_t* b, const size_t stringSize)
 	for (; (index < stringSize) && (a[index] != '\0') && (b[index] != '\0'); ++index)
 		samecounter += (wchar_t)a[index] == b[index];	
 
-	return (index == samecounter) && (a[index] == b[index]);
+	return index == samecounter;
 }
 
 int BF::Text::Compare(const wchar_t* a, const char* b, const size_t stringSize)
@@ -191,7 +202,7 @@ int BF::Text::Compare(const wchar_t* a, const char* b, const size_t stringSize)
 	for (; (index < stringSize) && (a[index] != '\0') && (b[index] != '\0'); ++index)
 		samecounter += a[index] == (wchar_t)b[index];
 
-	return (index == samecounter) && (a[index] == b[index]);
+	return index == samecounter;
 }
 
 int BF::Text::CompareIgnoreCase(const char* a, const char* b, const size_t stringSize)
@@ -262,7 +273,7 @@ char* BF::Text::FindPosition(const char* data, size_t dataSize, const char* targ
 	for (size_t i = 0; (data[i] != '\0') && (i + targetSize) < dataSize && !found; i++)
 	{
 		source = data + i;
-		found = Text::Compare(source, target, dataSize - i);
+		found = Text::Compare(source, target, targetSize);
 	}
 
 	return (char*)(found * (size_t)source);
@@ -536,16 +547,17 @@ void BF::Text::FindAll(const char* string, const size_t stringSize, const Parsin
 	size_t foundTargets = 0;
 
 	for (size_t i = 0; (i < stringSize) && (string[i] != '\0') && !finished; ++i)
-	{
+	{	
 		foundItem = false;
 
 		for (size_t t = 0; (t < parsingTokenListSize) && (string[i] != ' ') && !foundItem; t++)
 		{
 			const ParsingToken& parsingToken = parsingTokenList[t];
 			const char* targetString = parsingToken.String;
-			const char* sourceString = string + i;
+			const size_t targetStringSize = Length(targetString);
+			const char* sourceString = string + i;		
 
-			foundItem = Compare(sourceString, targetString, stringSize); // Compare whole word
+			foundItem = Compare(sourceString, targetString, targetStringSize); // Compare whole word
 
 			if (foundItem)
 			{
@@ -556,10 +568,7 @@ void BF::Text::FindAll(const char* string, const size_t stringSize, const Parsin
 
 				(*parsingToken.Value) = valueString;
 
-				for (size_t i = 0; (string[i] != '\0') && string[i] != ' '; i++) // Skip data
-				{
-					++i;
-				}
+				for (; (string[i] != '\0') && string[i] != ' '; i++); // Skip data	
 
 				++foundTargets;
 			}

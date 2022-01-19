@@ -109,33 +109,33 @@ unsigned BF::ADAM7::unfilterScanline(unsigned char* recon, const unsigned char* 
  recon and scanline MAY be the same memory address! precon must be disjoint.
  */
 
-    size_t i;
     switch (filterType)
     {
         case 0:
-            for (i = 0; i != length; ++i) recon[i] = scanline[i];
+            for (size_t i = 0; i != length; ++i) recon[i] = scanline[i];
             break;
         case 1:
         {
             size_t j = 0;
-            for (i = 0; i != bytewidth; ++i) recon[i] = scanline[i];
-            for (i = bytewidth; i != length; ++i, ++j) recon[i] = scanline[i] + recon[j];
+            for (size_t i = 0; i != bytewidth; ++i) recon[i] = scanline[i];
+            for (size_t i = bytewidth; i != length; ++i, ++j) recon[i] = scanline[i] + recon[j];
             break;
         }
         case 2:
             if (precon)
             {
-                for (i = 0; i != length; ++i) recon[i] = scanline[i] + precon[i];
+                for (size_t i = 0; i != length; ++i) recon[i] = scanline[i] + precon[i];
             }
             else
             {
-                for (i = 0; i != length; ++i) recon[i] = scanline[i];
+                for (size_t i = 0; i != length; ++i) recon[i] = scanline[i];
             }
             break;
         case 3:
             if (precon)
             {
                 size_t j = 0;
+                size_t i = 0;
                 for (i = 0; i != bytewidth; ++i) recon[i] = scanline[i] + (precon[i] >> 1u);
                 /* Unroll independent paths of this predictor. A 6x and 8x version is also possible but that adds
                 too much code. Whether this speeds up anything depends on compiler and settings. */
@@ -180,14 +180,15 @@ unsigned BF::ADAM7::unfilterScanline(unsigned char* recon, const unsigned char* 
             else
             {
                 size_t j = 0;
-                for (i = 0; i != bytewidth; ++i) recon[i] = scanline[i];
-                for (i = bytewidth; i != length; ++i, ++j) recon[i] = scanline[i] + (recon[j] >> 1u);
+                for (size_t i = 0; i != bytewidth; ++i) recon[i] = scanline[i];
+                for (size_t i = bytewidth; i != length; ++i, ++j) recon[i] = scanline[i] + (recon[j] >> 1u);
             }
             break;
         case 4:
             if (precon)
             {
                 size_t j = 0;
+                size_t i = 0;
                 for (i = 0; i != bytewidth; ++i)
                 {
                     recon[i] = (scanline[i] + precon[i]); /*paethPredictor(0, precon[i], 0) is always precon[i]*/
@@ -243,11 +244,11 @@ unsigned BF::ADAM7::unfilterScanline(unsigned char* recon, const unsigned char* 
             else
             {
                 size_t j = 0;
-                for (i = 0; i != bytewidth; ++i)
+                for (size_t i = 0; i != bytewidth; ++i)
                 {
                     recon[i] = scanline[i];
                 }
-                for (i = bytewidth; i != length; ++i, ++j)
+                for (size_t i = bytewidth; i != length; ++i, ++j)
                 {
                     /*paethPredictor(recon[i - bytewidth], 0, 0) is always recon[i - bytewidth]*/
                     recon[i] = (scanline[i] + recon[j]);

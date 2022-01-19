@@ -448,8 +448,10 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
 
                         for (size_t j = 0; j < materialListSize; j++)
                         {
-                            const MTLMaterial& material = mtl.MaterialList[j];                            
-                            const bool isSameName = Text::Compare(material.Name, usedMaterialName, MTLNameSize);
+                            const MTLMaterial& material = mtl.MaterialList[j];     
+                            const size_t matertalALength = Text::Length(material.Name);
+                            const size_t matertalBLength = Text::Length(usedMaterialName);
+                            const bool isSameName = Text::Compare(material.Name, matertalALength, usedMaterialName, matertalBLength);
 
                             if (isSameName)
                             {

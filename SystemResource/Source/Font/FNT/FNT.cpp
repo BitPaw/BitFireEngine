@@ -168,11 +168,11 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 			}
 			case BF::FNTLineType::CharacterCount:
 			{
-				const char countText[] = "count";
-				char* count = Text::FindPosition(currentCursor + 6, bufferSize, countText, sizeof(countText));
+				const char countText[] = "count=";
+				char* count = Text::FindPosition(currentCursor + 6, bufferSize, countText, sizeof(countText)-1);
 				int size = 0;
 
-				Text::ToInt(count + sizeof(countText), bufferSize - sizeof(countText), size);
+				Text::ToInt(count + sizeof(countText) -1, bufferSize - sizeof(countText), size);
 
 				currentPage->CharacteListSize = size;
 				currentPage->CharacteList = new FNTCharacter[size];
