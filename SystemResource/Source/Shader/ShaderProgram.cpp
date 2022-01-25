@@ -19,7 +19,12 @@ void BF::ShaderProgram::Load()
     {
         Shader& shader = ShaderList[i];
 
-        shader.Load();
+        FileActionResult shaderLoadResult = shader.Load();
+
+        if (shaderLoadResult != FileActionResult::Successful)
+        {
+            printf("[x][Shader] Loading failure <%ls> <%i> \n", shader.FilePath, shaderLoadResult);
+        }
     }
 }
 

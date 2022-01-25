@@ -6,6 +6,7 @@
 #include "../OSDefine.h"
 #include "../File/FileActionResult.hpp"
 #include "../ErrorCode.h"
+#include "FileCachingMode.h"
 
 #define FileLineBufferSize 2048
 
@@ -43,8 +44,8 @@ namespace BF
 		File(const char* filePath);		
 		File(const wchar_t* filePath);
 
-		FileActionResult Open(const char* filePath, FileOpenMode fileOpenMode);
-		FileActionResult Open(const wchar_t* filePath, FileOpenMode fileOpenMode);
+		FileActionResult Open(const char* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode = FileCachingMode::Default);
+		FileActionResult Open(const wchar_t* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode = FileCachingMode::Default);
 
 		FileActionResult Close();
 
@@ -87,6 +88,7 @@ namespace BF
 		static void PathSwapFile(const wchar_t* currnetPath, wchar_t* targetPath, const wchar_t* newFileName);
 
 		static void FilesInFolder(const char* folderPath, wchar_t*** list, size_t& listSize);
+		static void FilesInFolder(const wchar_t* folderPath, wchar_t*** list, size_t& listSize);
 
 		static void PathSplitt(const char* fullPath, char* drive, char* directory, char* fileName, char* extension);
 		static void PathSplitt

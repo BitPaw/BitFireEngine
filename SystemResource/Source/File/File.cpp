@@ -64,7 +64,7 @@ BF::File::File(const wchar_t* filePath)
 	SetFilePath(filePath);
 }
 
-BF::FileActionResult BF::File::Open(const char* filePath, FileOpenMode fileOpenMode)
+BF::FileActionResult BF::File::Open(const char* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode)
 {
 	const char* readMode = nullptr;
 
@@ -81,12 +81,72 @@ BF::FileActionResult BF::File::Open(const char* filePath, FileOpenMode fileOpenM
 
 	assert(readMode != nullptr);
 
+	// Use this somewhere here
+	// int posix_fadvise(int fd, off_t offset, off_t len, int advice);
+	// int posix_fadvise64(int fd, off_t offset, off_t len, int advice);
+
 	FileMarker = fopen(filePath, readMode);
+
+	/* -------- TESTING --------------
+#if defined(OSUnix)
+#elif defined(OSWindows)
+	DWORD dwDesiredAccess = 0;
+	DWORD dwShareMode = 0;
+	SECURITY_ATTRIBUTES securityAttributes;
+	DWORD dwCreationDisposition = 0;
+	DWORD dwFlagsAndAttributes = 0;
+	HANDLE hTemplateFile = 0;
+
+	switch (fileCachingMode)
+	{
+		default:
+		case BF::FileCachingMode::Default:
+			dwFlagsAndAttributes = 0;
+			break;
+
+		case BF::FileCachingMode::NoBuffering:
+			dwFlagsAndAttributes = FILE_FLAG_NO_BUFFERING;
+			break;
+
+		case BF::FileCachingMode::Random:
+			dwFlagsAndAttributes = FILE_FLAG_RANDOM_ACCESS;
+			break;
+
+		case BF::FileCachingMode::Sequential:
+			dwFlagsAndAttributes = FILE_FLAG_SEQUENTIAL_SCAN;
+			break;
+
+		case BF::FileCachingMode::WriteThrough:
+			dwFlagsAndAttributes = FILE_FLAG_WRITE_THROUGH;
+			break;
+
+		case BF::FileCachingMode::Temporary:
+			dwFlagsAndAttributes = FILE_ATTRIBUTE_TEMPORARY;
+			break;
+	}
+
+	FileMarker = CreateFileA
+	(
+		filePath, 
+		dwDesiredAccess,
+		dwShareMode, 
+		&securityAttributes,
+		dwCreationDisposition,
+		dwFlagsAndAttributes,
+		hTemplateFile
+	);
+	
+	ReadFile();
+
+	CloseHandle(file);
+#endif
+	*/
+
 
 	return FileMarker ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
 }
 
-BF::FileActionResult BF::File::Open(const wchar_t* filePath, FileOpenMode fileOpenMode)
+BF::FileActionResult BF::File::Open(const wchar_t* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode)
 {
 #if defined(OSUnix)
 	File::Open((const char*)filePath, fileOpenMode);
@@ -364,7 +424,7 @@ void BF::File::PathSwapFile(const wchar_t* currnetPath, wchar_t* targetPath, con
 void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& listSize)
 {
 	wchar_t folderPathW[PathMaxSize];
-	size_t writtenBytes = mbstowcs(folderPathW, folderPath, PathMaxSize);
+	size_t writtenBytes = Text::Copy(folderPathW, folderPath, PathMaxSize);
 
 #if defined(OSUnix)		
 	DIR* directory = opendir(folderPath);
@@ -389,7 +449,7 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 			if (isFile)
 			{
 				const char* fileName = directoryInfo->d_name;
-				size_t length = strlen(fileName);				
+				size_t length = Text::Length(fileName);
 				wchar_t* newString = (wchar_t*)malloc((length + 1) * sizeof(wchar_t));
 				wchar_t** target = &(*list)[index];				
 
@@ -399,7 +459,7 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 				}
 
 				(*target) = newString;
-				size_t writtenBytes = mbstowcs(*target, fileName, 255);
+				size_t writtenBytes = Text::Copy(*target, fileName, PathMaxSize);
 			}
 		}
 
@@ -433,7 +493,7 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 
 	do
 	{
-		size_t length = wcslen(dataCursour.cFileName);
+		size_t length = Text::Length(dataCursour.cFileName);
 		wchar_t* filePathSource = dataCursour.cFileName;		
 		wchar_t* newString = (wchar_t*)malloc((length + 1) * sizeof(wchar_t));
 	
@@ -442,8 +502,7 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 			return; // Error: OutOfMemory
 		}	
 	
-		memcpy(newString, filePathSource, sizeof(wchar_t) * length);
-		newString[length] = L'\0';
+		Text::Copy(newString, filePathSource, length);
 
 		(*list)[fileIndex] = newString;
 
@@ -451,9 +510,13 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 	}
 	while (FindNextFile(hFind, &dataCursour));
 
-	FindClose(hFind);
-	
+	FindClose(hFind);	
 #endif
+}
+
+void BF::File::FilesInFolder(const wchar_t* folderPath, wchar_t*** list, size_t& listSize)
+{
+
 }
 
 void BF::File::PathSplitt(const char* fullPath, char* drive, char* directory, char* fileName, char* extension)

@@ -14,7 +14,7 @@
 #define PipeClose _pclose
 #endif  
 
-BF::FileActionResult BF::FileTemporary::Open(const char* filePath, FileOpenMode fileOpenMode)
+BF::FileActionResult BF::FileTemporary::Open(const char* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode)
 {
     const char* readMode = nullptr;
 
@@ -41,7 +41,7 @@ BF::FileActionResult BF::FileTemporary::Open(const char* filePath, FileOpenMode 
     return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::FileTemporary::Open(const wchar_t* filePath, FileOpenMode fileOpenMode)
+BF::FileActionResult BF::FileTemporary::Open(const wchar_t* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode)
 {
     const wchar_t* readMode = nullptr;
 

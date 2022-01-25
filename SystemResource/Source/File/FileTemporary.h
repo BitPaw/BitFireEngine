@@ -10,8 +10,8 @@ namespace BF
 	struct FileTemporary : public IFile
 	{
 		public:
-		FileActionResult Open(const char* filePath, FileOpenMode fileOpenMode);
-		FileActionResult Open(const wchar_t* filePath, FileOpenMode fileOpenMode);
+		FileActionResult Open(const char* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode = FileCachingMode::Default);
+		FileActionResult Open(const wchar_t* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode = FileCachingMode::Default);
 
 		FileActionResult ReadAll();
 

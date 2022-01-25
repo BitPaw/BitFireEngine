@@ -21,7 +21,7 @@ BF::Shader::Shader(ShaderType type, const wchar_t* filePath)
     FilePathChange(filePath);
 }
 
-void BF::Shader::Load()
+BF::FileActionResult BF::Shader::Load()
 {
 	/*
 	    bool isVertexType = fileExtension.CompareIgnoreCase("vert");
@@ -52,6 +52,5 @@ void BF::Shader::Load()
     return ShaderType::Unkown;
 	*/
 
-
-     FileStream::ReadFromDisk(FilePath, (Byte**)&Content, ContentSize, true);
+     return FileStream::ReadFromDisk(FilePath, (Byte**)&Content, ContentSize, true);
 }

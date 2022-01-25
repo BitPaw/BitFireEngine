@@ -624,6 +624,9 @@
     <ClCompile Include="Source\Math\Physic\CollisionListener.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\File\FileCachingMode.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp">
@@ -1440,6 +1443,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Math\Physic\CollisionListener.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\File\FileCachingMode.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

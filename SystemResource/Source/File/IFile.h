@@ -3,6 +3,7 @@
 #include <cstdio>
 #include "FileOpenMode.hpp"
 #include "FileActionResult.hpp"
+#include "FileCachingMode.h"
 
 #define FileReadMode "rb"
 #define FileReadModeW L"rb"
@@ -17,8 +18,8 @@ namespace BF
 		public:
 		FILE* FileMarker = nullptr;
 
-		virtual FileActionResult Open(const char* filePath, FileOpenMode fileOpenMode) = 0;
-		virtual FileActionResult Open(const wchar_t* filePath, FileOpenMode fileOpenMode) = 0;
+		virtual FileActionResult Open(const char* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode = FileCachingMode::Default) = 0;
+		virtual FileActionResult Open(const wchar_t* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode = FileCachingMode::Default) = 0;
 		virtual FileActionResult Close() = 0;
 	};
 }
