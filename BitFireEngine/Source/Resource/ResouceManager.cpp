@@ -284,6 +284,8 @@ void BF::ResourceManager::Load(Model& model)
 
 void BF::ResourceManager::Load(Model& model, const wchar_t* filePath)
 {
+    printf("[+][Resource] Model <%ls> loading...\n", filePath);
+
     model.FilePathChange(filePath);
 
     Load(model);   
@@ -296,6 +298,8 @@ void BF::ResourceManager::Load(Image& image)
 
 void BF::ResourceManager::Load(Image& image, const wchar_t* filePath)
 {
+    printf("[+][Resource] Image <%ls> loading...\n", filePath);
+
     image.FilePathChange(filePath);
 
     Load(image);
@@ -303,11 +307,15 @@ void BF::ResourceManager::Load(Image& image, const wchar_t* filePath)
 
 void BF::ResourceManager::Load(Sound& sound, const wchar_t* filePath)
 {
+    printf("[+][Resource] Font <%ls> loading...\n", filePath);
+
     //Add(sound);
 }
 
 void BF::ResourceManager::Load(Font& font, const wchar_t* filePath)
 {
+    printf("[+][Resource] Font <%ls> loading...\n", filePath);
+
     Text::Copy(font.FilePath, filePath, ResourceFilePathSize);
 
     Add(font);
@@ -350,12 +358,12 @@ void BF::ResourceManager::Load(Font& font, const wchar_t* filePath)
 
 void BF::ResourceManager::Load(ShaderProgram& resource, const wchar_t* filePath)
 {
-
+    printf("[+][Resource] ShaderProgram <%ls> loading...\n", filePath);
 }
 
 void BF::ResourceManager::Load(Dialog& resource, const wchar_t* filePath)
 {
-
+    printf("[+][Resource] Dialog <%ls> loading...\n", filePath);
 }
 
 void BF::ResourceManager::Load(Level& level, const wchar_t* filePath)
@@ -374,6 +382,8 @@ void BF::ResourceManager::Load(Level& level, const wchar_t* filePath)
     unsigned int fontCounter = 0;
     unsigned int shaderCounter = 0;
     unsigned int dialogCounter = 0;
+
+    printf("[+][Resource] Level <%ls> loading...\n", filePath);
 
     FileStream file;
     FileActionResult FileActionResult = file.ReadFromDisk(filePath, true);
