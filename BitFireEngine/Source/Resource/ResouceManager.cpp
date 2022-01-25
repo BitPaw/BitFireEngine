@@ -245,6 +245,12 @@ BF::Resource* BF::ResourceManager::Load(const wchar_t* filePath)
 
             break;
         }
+        default:
+        {
+            printf("[!][Resource] Unkown file format detected! <%ls>\n", filePath);
+
+            break;
+        }
     }
 
     return resource;
@@ -280,6 +286,10 @@ void BF::ResourceManager::Load(Model& model)
 
         model.ShouldItBeRendered = true;        
     }
+    else
+    {
+        printf("[x][Model] Loading failed! <%i>\n", errorCode);
+    }
 }
 
 void BF::ResourceManager::Load(Model& model, const wchar_t* filePath)
@@ -293,14 +303,19 @@ void BF::ResourceManager::Load(Model& model, const wchar_t* filePath)
 
 void BF::ResourceManager::Load(Image& image)
 {
-    image.Load();
+    FileActionResult imageLoadingResult = image.Load();
+
+    if (imageLoadingResult != FileActionResult::Successful)
+    {
+        printf("[x][Model] Loading failed! <%i>\n", imageLoadingResult);
+    }
 }
 
 void BF::ResourceManager::Load(Image& image, const wchar_t* filePath)
 {
     printf("[+][Resource] Image <%ls> loading...\n", filePath);
 
-    image.FilePathChange(filePath);
+   image.FilePathChange(filePath);
 
     Load(image);
 }
