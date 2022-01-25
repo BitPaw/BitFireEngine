@@ -149,7 +149,10 @@ BF::FileActionResult BF::File::Open(const char* filePath, FileOpenMode fileOpenM
 BF::FileActionResult BF::File::Open(const wchar_t* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode)
 {
 #if defined(OSUnix)
-	File::Open((const char*)filePath, fileOpenMode);
+	char filePathA[PathMaxSize];
+
+	Text::Copy(filePathA, filePath, PathMaxSize);
+	File::Open(filePathA, fileOpenMode);
 #elif defined(OSWindows)
 	const wchar_t* readMode = nullptr;
 

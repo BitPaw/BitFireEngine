@@ -54,8 +54,8 @@ unsigned int BF::ConvertFileCachingMode(FileCachingMode fileCachingMode)
        // case BF::FileCachingMode::UseOnce:
        //     break;
 
-        case BF::FileCachingMode::NoBuffering:
-            return FileCachingModeNoBuffering;
+       // case BF::FileCachingMode::NoBuffering:
+       //     return FileCachingModeNoBuffering;
 
        // case BF::FileCachingMode::NeedLater:
        //     return FileCachingModeDontNeed;
