@@ -547,8 +547,8 @@ void BF::File::PathSplitt
 	char directoryNameCache[PathMaxSize];
 	char baseNameCache[FileNameMaxSize];
 
+	Text::Copy(directoryNameCache, fullPath, FileNameMaxSize);
 	Text::Copy(baseNameCache, fullPath, FileNameMaxSize);
-	memset(baseNameCache, 0, FileNameMaxSize);
 
 	char* dirNameResult = dirname(directoryNameCache);
 	char* baseNameResult = basename(baseNameCache);
@@ -562,7 +562,7 @@ void BF::File::PathSplitt
 
 		if (isDot)
 		{
-			Text::Copy(extension, fileName + i, ExtensionMaxSize - i);
+			Text::Copy(extension, fileName + i + 1, ExtensionMaxSize - i);
 			break;
 		}
 	}
