@@ -547,23 +547,22 @@ void BF::File::PathSplitt
 	char directoryNameCache[PathMaxSize];
 	char baseNameCache[FileNameMaxSize];
 
-	strncpy(baseNameCache, fullPath, FileNameMaxSize);
+	Text::Copy(baseNameCache, fullPath, FileNameMaxSize);
+	memset(baseNameCache, 0, FileNameMaxSize);
 
 	char* dirNameResult = dirname(directoryNameCache);
 	char* baseNameResult = basename(baseNameCache);
 
-	strncpy(directory, dirNameResult, DirectoryMaxSize);
-	strncpy(fileName, baseNameResult, FileNameMaxSize);
+	size_t directoryLength = Text::Copy(directory, dirNameResult, DirectoryMaxSize);
+	size_t fileNameLength = Text::Copy(fileName, baseNameResult, FileNameMaxSize);
 
-	for (size_t i = 0; fileName[i] != '\0'; i++)
+	for (size_t i = fileNameLength - 1; i > 0; --i)
 	{
 		bool isDot = fileName[i] == '.';
 
 		if (isDot)
 		{
-			strcpy(extension, fileName + i);
-
-			fileName[i] = '\0';
+			Text::Copy(extension, fileName + i, ExtensionMaxSize - i);
 			break;
 		}
 	}

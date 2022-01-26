@@ -648,8 +648,9 @@ void BF::ResourceManager::Load
     const wchar_t* textureFront)
 {
     skyBox.NameChange("SkyBox");
-    strcpy(skyBox.MeshList[0].Name, "SkyBox");
-
+    
+    Text::Copy(skyBox.MeshList[0].Name, "SkyBox", 50);
+    
     Load(skyBox.Faces[0], textureRight);
     Load(skyBox.Faces[1], textureLeft);
     Load(skyBox.Faces[2], textureTop);
