@@ -260,6 +260,8 @@ void BF::ResourceManager::Load(Model& model)
 {
     FileActionResult errorCode = model.Load();
 
+    printf("[>][Model] Loading <%ls> ...\n", model.FilePath);
+
     if (errorCode == FileActionResult::Successful)
     {
         for (unsigned int i = 0; i < model.MaterialListSize; i++)
@@ -294,8 +296,6 @@ void BF::ResourceManager::Load(Model& model)
 
 void BF::ResourceManager::Load(Model& model, const wchar_t* filePath)
 {
-    printf("[+][Resource] Model <%ls> loading...\n", filePath);
-
     model.FilePathChange(filePath);
 
     Load(model);   
@@ -305,6 +305,8 @@ void BF::ResourceManager::Load(Image& image)
 {
     FileActionResult imageLoadingResult = image.Load();
 
+    printf("[>][Model] Loading <%ls> ...\n", image.FilePath);
+
     if (imageLoadingResult != FileActionResult::Successful)
     {
         printf("[x][Model] Loading failed! <%i>\n", imageLoadingResult);
@@ -313,8 +315,6 @@ void BF::ResourceManager::Load(Image& image)
 
 void BF::ResourceManager::Load(Image& image, const wchar_t* filePath)
 {
-    printf("[+][Resource] Image <%ls> loading...\n", filePath);
-
    image.FilePathChange(filePath);
 
     Load(image);
@@ -402,7 +402,7 @@ void BF::ResourceManager::Load(Level& level, const wchar_t* filePath)
 
     FileStream file;
     FileActionResult FileActionResult = file.ReadFromDisk(filePath, true);
-    char currentLineBuffer[200];
+    char currentLineBuffer[256];
 
     if (FileActionResult != FileActionResult::Successful)
     {
@@ -470,7 +470,7 @@ void BF::ResourceManager::Load(Level& level, const wchar_t* filePath)
     {
         char character = currentLineBuffer[0];
         char dummyBuffer[30];
-        char path[120];
+        char path[PathMaxSize];
 
         switch (character)
         {
@@ -530,8 +530,8 @@ void BF::ResourceManager::Load(Level& level, const wchar_t* filePath)
                 Model* loadedModel = new Model(); 
 
 
-                wchar_t pathW[260];
-                Text::Copy(pathW, path, 260);
+                wchar_t pathW[PathMaxSize];
+                Text::Copy(pathW, path, PathMaxSize);
 
                 Add(*loadedModel, pathW, false);
 

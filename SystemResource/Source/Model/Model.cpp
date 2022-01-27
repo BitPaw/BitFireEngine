@@ -119,9 +119,9 @@ BF::FileActionResult BF::Model::Load(const wchar_t* filePath)
 
         case ModelType::PLY:
         {
-            OBJ obj;
-            obj.Load(filePath);
-            obj.ConvertTo(*this);
+            PLY pyl;
+            pyl.Load(filePath);
+            pyl.ConvertTo(*this);
             break;
         }
 
