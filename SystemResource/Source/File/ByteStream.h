@@ -26,6 +26,8 @@ namespace BF
 
 		unsigned int ReadNextLineInto(char* exportBuffer);
 
+		void SkipEndOfLineCharacters();
+
 		void Read(bool& value);
 		void Read(char& value);
 		void Read(unsigned char& value);

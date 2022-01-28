@@ -482,7 +482,7 @@ void BF::ResourceManager::Load(Level& level, const wchar_t* filePath)
                 Vector3<float> position;
                 Vector3<float> rotation;
                 Vector3<float> scale;
-
+  
                 sscanf
                 (
                     currentLineBuffer, 

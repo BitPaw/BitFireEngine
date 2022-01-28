@@ -278,7 +278,7 @@ void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
 
 void Cleaved::CleavedGameSystem::OnUpdateUI()
 {
-    wsprintfW(_dialogBox.Content.TextContent, L"FPS: %4i", (BF::Math::Ceiling(1 / _deltaTime)));
+    //wsprintfW(_dialogBox.Content.TextContent, L"FPS: %4i", (BF::Math::Ceiling(1 / _deltaTime)));
 
     //text.UpdateText();
 

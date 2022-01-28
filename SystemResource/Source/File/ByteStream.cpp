@@ -2,6 +2,8 @@
 #include <cassert>
 #include <cstring>
 
+#include "Text.h"
+
 BF::ByteStream::ByteStream()
 {
 	DataSet(nullptr, 0);
@@ -26,30 +28,46 @@ void BF::ByteStream::CursorToBeginning()
 
 unsigned int BF::ByteStream::ReadNextLineInto(char* exportBuffer)
 {
-	int length = 0;
-	int index = DataCursorPosition;
+	SkipEndOfLineCharacters();
 
-	while (index < DataSize && Data[index] != '\n' && Data[index] != '\0')
-	{
-		index = DataCursorPosition + length++;
-	}
+	const size_t beginningPosition = DataCursorPosition;	
+	const char* input = (char*)Data + beginningPosition;
+	size_t length = 0;
 
-	if (length <= 1)
+	for 
+	(
+		; 
+		DataCursorPosition < DataSize && // End of length
+		Data[DataCursorPosition] != '\r' && // Windows additional "Return cursor"
+		Data[DataCursorPosition] != '\n' && // Line-End
+		Data[DataCursorPosition] != '\0' // End Of String
+		;
+		++DataCursorPosition
+	);
+
+	length = DataCursorPosition - beginningPosition;
+
+	if (length == 0)
 	{
 		return 0;
 	}
 
-	memcpy(exportBuffer, Data + DataCursorPosition, length);
-	exportBuffer[length - 1] = '\0';
+	Text::Copy(exportBuffer, input, length);
 
-	DataCursorPosition += length;
-
-	while (Data[DataCursorPosition] == '\n' && DataCursorPosition < DataSize)
-	{
-		DataCursorPosition++;
-	}
+	SkipEndOfLineCharacters();
 
 	return length;
+}
+
+void BF::ByteStream::SkipEndOfLineCharacters()
+{
+	for
+		(
+			;
+			DataCursorPosition < DataSize && (Data[DataCursorPosition] == '\r' || Data[DataCursorPosition] == '\n') && Data[DataCursorPosition] != '\0'
+			;
+			++DataCursorPosition
+			);
 }
 
 void BF::ByteStream::Read(bool& value)
