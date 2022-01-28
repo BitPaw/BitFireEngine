@@ -22,6 +22,6 @@ namespace BF
         DontNeedNow // Data will not be cached. "I dont need it yet"  
 	};
 
-    static FileCachingMode ConvertFileCachingMode(unsigned int value);
-    static unsigned int ConvertFileCachingMode(FileCachingMode fileCachingMode);
+    FileCachingMode ConvertFileCachingMode(unsigned int value);
+    unsigned int ConvertFileCachingMode(FileCachingMode fileCachingMode);
 }

@@ -23,7 +23,7 @@ BF::FileStream::~FileStream()
 BF::FileActionResult BF::FileStream::ReadFromDisk(const char* filePath, bool addNullTerminator, FilePersistence filePersistence)
 {
 	File file;
-	FileActionResult result = file.Open(filePath, FileOpenMode::Read);
+	FileActionResult result = file.Open(filePath, FileOpenMode::Read, FileCachingMode::Sequential);
 
 	if (result != FileActionResult::Successful)
 	{
@@ -40,14 +40,14 @@ BF::FileActionResult BF::FileStream::ReadFromDisk(const char* filePath, bool add
 BF::FileActionResult BF::FileStream::ReadFromDisk(const wchar_t* filePath, bool addNullTerminator, FilePersistence filePersistence)
 {
 	File file;
-	FileActionResult result = file.Open(filePath, FileOpenMode::Read);
+	FileActionResult result = file.Open(filePath, FileOpenMode::Read, FileCachingMode::Sequential);
 
 	if (result != FileActionResult::Successful)
 	{
 		return result;
 	}
 
-	result = ReadFromDisk(file.FileMarker, &Data, DataSize, addNullTerminator);
+	file.ReadFromDisk(&Data, DataSize, addNullTerminator);// ReadFromDisk(file.FileMarker, &Data, DataSize, addNullTerminator);
 
 	result = file.Close();
 
@@ -104,7 +104,9 @@ BF::FileActionResult BF::FileStream::ReadFromDisk(const wchar_t* filePath, Byte*
 		return result;
 	}	
 
-	result = ReadFromDisk(file.FileMarker, targetBuffer, bufferSize, addNullTerminator);
+	//result = ReadFromDisk(file.FileMarker, targetBuffer, bufferSize, addNullTerminator);
+
+	file.ReadFromDisk(targetBuffer, bufferSize, addNullTerminator);
 
 	result = file.Close();
 

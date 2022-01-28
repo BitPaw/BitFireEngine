@@ -25,6 +25,8 @@
 #define WorkingDirectoryChangeW(string) WorkingDirectoryChangeA((const char*)string)
 #elif defined(OSWindows)
 #include <direct.h>
+#define FileOpenA fopen
+#define FileOpenW _wfopen
 #define FileRemoveA remove 
 #define FileRemoveW _wremove 
 #define FileRenameA rename 
@@ -66,6 +68,7 @@ BF::File::File(const wchar_t* filePath)
 
 BF::FileActionResult BF::File::Open(const char* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode)
 {
+#if defined(OSUnix)
 	const char* readMode = nullptr;
 
 	switch (fileOpenMode)
@@ -87,63 +90,49 @@ BF::FileActionResult BF::File::Open(const char* filePath, FileOpenMode fileOpenM
 
 	FileMarker = fopen(filePath, readMode);
 
-	/* -------- TESTING --------------
-#if defined(OSUnix)
+	return FileMarker ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
+
 #elif defined(OSWindows)
 	DWORD dwDesiredAccess = 0;
 	DWORD dwShareMode = 0;
-	SECURITY_ATTRIBUTES securityAttributes;
+	//SECURITY_ATTRIBUTES securityAttributes = 0;
 	DWORD dwCreationDisposition = 0;
-	DWORD dwFlagsAndAttributes = 0;
+	DWORD dwFlagsAndAttributes = FILE_ATTRIBUTE_NORMAL;
 	HANDLE hTemplateFile = 0;
 
-	switch (fileCachingMode)
+	switch (fileOpenMode)
 	{
-		default:
-		case BF::FileCachingMode::Default:
-			dwFlagsAndAttributes = 0;
+		case FileOpenMode::Read:
+		{
+			dwCreationDisposition = OPEN_EXISTING;
+			dwDesiredAccess = GENERIC_READ;
 			break;
-
-		case BF::FileCachingMode::NoBuffering:
-			dwFlagsAndAttributes = FILE_FLAG_NO_BUFFERING;
+		}
+		case  FileOpenMode::Write:
+		{
+			dwCreationDisposition = CREATE_ALWAYS;
+			dwDesiredAccess = GENERIC_WRITE;
 			break;
-
-		case BF::FileCachingMode::Random:
-			dwFlagsAndAttributes = FILE_FLAG_RANDOM_ACCESS;
-			break;
-
-		case BF::FileCachingMode::Sequential:
-			dwFlagsAndAttributes = FILE_FLAG_SEQUENTIAL_SCAN;
-			break;
-
-		case BF::FileCachingMode::WriteThrough:
-			dwFlagsAndAttributes = FILE_FLAG_WRITE_THROUGH;
-			break;
-
-		case BF::FileCachingMode::Temporary:
-			dwFlagsAndAttributes = FILE_ATTRIBUTE_TEMPORARY;
-			break;
+		}
 	}
 
-	FileMarker = CreateFileA
+	dwFlagsAndAttributes |= ConvertFileCachingMode(fileCachingMode);
+
+	FileHandle = CreateFileA
 	(
 		filePath, 
 		dwDesiredAccess,
 		dwShareMode, 
-		&securityAttributes,
+		nullptr,
 		dwCreationDisposition,
 		dwFlagsAndAttributes,
 		hTemplateFile
 	);
-	
-	ReadFile();
 
-	CloseHandle(file);
+	bool successful = FileHandle != INVALID_HANDLE_VALUE;
+
+	return successful ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
 #endif
-	*/
-
-
-	return FileMarker ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
 }
 
 BF::FileActionResult BF::File::Open(const wchar_t* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode)
@@ -153,30 +142,54 @@ BF::FileActionResult BF::File::Open(const wchar_t* filePath, FileOpenMode fileOp
 
 	Text::Copy(filePathA, filePath, PathMaxSize);
 	File::Open(filePathA, fileOpenMode);
+
+	return FileMarker ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
 #elif defined(OSWindows)
-	const wchar_t* readMode = nullptr;
+	DWORD dwDesiredAccess = 0;
+	DWORD dwShareMode = 0;
+	//SECURITY_ATTRIBUTES securityAttributes = 0;
+	DWORD dwCreationDisposition = 0;
+	DWORD dwFlagsAndAttributes = FILE_ATTRIBUTE_NORMAL;
+	HANDLE hTemplateFile = nullptr;
 
 	switch (fileOpenMode)
 	{
-		case BF::FileOpenMode::Read:
-			readMode = FileReadModeW;
+		case FileOpenMode::Read:
+		{
+			dwCreationDisposition = OPEN_EXISTING;
+			dwDesiredAccess = GENERIC_READ;
 			break;
-
-		case BF::FileOpenMode::Write:
-			readMode = FileWriteModeW;
+		}
+		case  FileOpenMode::Write:
+		{
+			dwCreationDisposition = CREATE_ALWAYS;
+			dwDesiredAccess = GENERIC_WRITE;
 			break;
+		}
 	}
 
-	assert(readMode != nullptr);
+	dwFlagsAndAttributes |= ConvertFileCachingMode(fileCachingMode);
 
-	FileMarker = _wfopen(filePath, readMode);
+	FileHandle = CreateFileW
+	(
+		filePath,
+		dwDesiredAccess,
+		dwShareMode,
+		nullptr,
+		dwCreationDisposition,
+		dwFlagsAndAttributes,
+		hTemplateFile
+	);
 
-	return FileMarker ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
+	bool successful = FileHandle != INVALID_HANDLE_VALUE;
+
+	return successful ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
 #endif
 }
 
 BF::FileActionResult BF::File::Close()
 {
+#if defined(OSUnix)
 	int closeResult = fclose(FileMarker);
 
 	switch (closeResult)
@@ -187,6 +200,13 @@ BF::FileActionResult BF::File::Close()
 		default:
 			return FileActionResult::FileCloseFailure;
 	}
+#elif defined(OSWindows)
+	bool successful = CloseHandle(FileHandle);
+
+	FileHandle = nullptr;
+	
+	return successful ? FileActionResult::Successful : FileActionResult::FileCloseFailure;
+#endif
 }
 
 BF::ErrorCode BF::File::Remove()
@@ -409,6 +429,86 @@ void BF::File::SetFilePath(const wchar_t* filePath)
 	Text::Copy(Path, filePath, PathMaxSize);
 
 	PathSplitt(filePath, Drive, Directory, FileName, Extension);
+}
+
+BF::FileActionResult BF::File::ReadFromDisk(unsigned char** outPutBuffer, size_t& outPutBufferSize, bool addTerminatorByte)
+{
+#if defined(OSUnix)
+	fseek(FileMarker, 0, SEEK_END); // Jump to end of file
+	outPutBufferSize = ftell(FileMarker); // Get current 'data-cursor' position
+
+	if (!outPutBufferSize) // If no bytes in file, exit.
+	{
+		return FileActionResult::FileEmpty;
+	}
+
+	rewind(FileMarker); // Jump to the begining of the file
+
+	if (addTerminatorByte)
+	{
+		++outPutBufferSize;
+	}
+
+	unsigned char* dataBuffer = (unsigned char*)malloc(outPutBufferSize * sizeof(unsigned char));
+
+	if (!dataBuffer) // If malloc failed
+	{
+		return BF::FileActionResult::OutOfMemory;
+	}
+
+	*outPutBuffer = dataBuffer;
+
+	if (addTerminatorByte)
+	{
+		dataBuffer[outPutBufferSize - 1] = '\0';
+		--outPutBufferSize;
+	}
+
+	size_t readBytes = fread(dataBuffer, 1u, outPutBufferSize, FileMarker);
+	size_t overAllocatedBytes = outPutBufferSize - readBytes; // if overAllocatedBytes > 0 there was a reading error.	
+
+	assert(outPutBufferSize == readBytes);
+
+	return FileActionResult::Successful;
+#elif defined(OSWindows)
+	const DWORD fileSize = GetFileSize(FileHandle, nullptr);
+	DWORD numberOfBytesRead = 0;
+	OVERLAPPED* overlapped = nullptr;
+	//LARGE_INTEGER size;
+	//bool succesSize = GetFileSizeEx(FileHandle, &size);
+	size_t allocationSize = fileSize;
+
+	if (addTerminatorByte)
+	{
+		++allocationSize;
+	}
+
+	unsigned char* buffer = (unsigned char*)malloc(sizeof(char) * allocationSize);
+
+	if (!buffer)
+	{
+		return FileActionResult::OutOfMemory;
+	}
+
+	bool sucessful = ReadFile
+	(
+		FileHandle, // file
+		buffer, // input
+		fileSize, // Shall read
+		&numberOfBytesRead, // Has read
+		overlapped
+	);
+
+	if (!sucessful)
+	{
+		return FileActionResult::FileReadFailure;
+	}
+
+	buffer[allocationSize - 1] = '\0';
+
+	(*outPutBuffer) = buffer;
+	outPutBufferSize = numberOfBytesRead;
+#endif	
 }
 
 void BF::File::PathSwapFile(const wchar_t* currnetPath, wchar_t* targetPath, const wchar_t* newFileName)

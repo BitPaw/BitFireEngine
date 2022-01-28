@@ -33,6 +33,7 @@ namespace BF
 
 		public:	
 		FILE* FileMarker;
+		void* FileHandle;
 
 		wchar_t Path[PathMaxSize];
 		wchar_t Drive[DriveMaxSize];
@@ -84,6 +85,9 @@ namespace BF
 		void SetFilePath(const char* filePath);
 		void SetFilePath(const wchar_t* filePath);
 		//---------------------------------------------------------------------
+
+		FileActionResult ReadFromDisk(unsigned char** outPutBuffer, size_t& outPutBufferSize, bool addTerminatorByte = false);
+
 
 		static void PathSwapFile(const wchar_t* currnetPath, wchar_t* targetPath, const wchar_t* newFileName);
 
