@@ -4,7 +4,7 @@
 | OS | x86 | x64 | 
 |:--:|:--:|:--:|
 | Windows | :heavy_check_mark:  | :heavy_check_mark: |
-| Linux | :warning: | :warning: |
+| Linux | :heavy_check_mark: | :heavy_check_mark: |
 | OSX |:x: | :x: |
 
 ### Current Minimal Systemrequirements 
@@ -32,7 +32,7 @@
 |:--:|:--:|
 | BMP | :heavy_check_mark: | 
 | GIF | :x: |
-| PNG | :warning:|
+| PNG | :heavy_check_mark:|
 | JPEG | :warning: |
 | TGA | :heavy_check_mark: |
 | TIFF | :x: |
