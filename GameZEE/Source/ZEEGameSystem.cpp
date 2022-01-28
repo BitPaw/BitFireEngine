@@ -82,6 +82,8 @@ void ZEE::ZEEGameSystem::OnStartUp()
 
     GameSystem.Resource.Load(L"Level/MainMenu.lev");
 
+    //GameSystem.Resource.Load(L"B:/Daten/Textures/PR/Countrry/Neo/FI/Country.obj");
+
     GameSystem.Resource.Add(cube, L"Model/Cube.obj", false);
     cube.MatrixModel.Move(0,50,0);
     cube.MatrixModel.Scale(10.0f);

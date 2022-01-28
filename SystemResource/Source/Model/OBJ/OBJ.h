@@ -8,7 +8,7 @@
 
 namespace BF
 {
-#define OBJNameSize 50u
+#define OBJNameSize 64u
 
 	// [.OBJ] Wavefront - 3D model format
 	struct OBJ : public IModelFormat

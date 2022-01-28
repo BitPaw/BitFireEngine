@@ -70,6 +70,7 @@ void Cleaved::CleavedGameSystem::OnStartUp()
 
 
 
+   
 
 
     // Gravity
@@ -126,11 +127,6 @@ void Cleaved::CleavedGameSystem::OnStartUp()
 
 
 
-
-
-
-    
-
     //---<DialogBox>-----------------------------------------------------------
 
 
@@ -141,9 +137,11 @@ void Cleaved::CleavedGameSystem::OnStartUp()
 
     GameSystem.Resource.Load(font, L"Font/harrington.fnt");
     _dialogBox.Content.SetFont(font);
-    _dialogBox.Content.SetText("Soon...");
+    _dialogBox.Content.SetText("Text...");
     _dialogBox.Content.MatrixModel.Scale(1);
-    _dialogBox.Content.MatrixModel.MoveTo(-0.3, 0.0025, -1);
+    _dialogBox.Content.MatrixModel.MoveTo(-0.3, -0.5, -1);
+    _dialogBox.BackGroundTexture.MatrixModel.Scale(1, 0.75, 1);
+    _dialogBox.BackGroundTexture.MatrixModel.Move(0, -0.5, 0);
     _dialogBox.Content.UpdateText();
     GameSystem.Resource.Add(_dialogBox.Content);
     GameSystem.Resource.PushToGPU(_dialogBox.Content);
@@ -152,8 +150,12 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     //-------------------------------------------------------------------------
 
 
+    
 
-    GameSystem.Resource.PrintContent(true);
+
+
+
+    GameSystem.Resource.PrintContent(false);
     //text = new BF::UIText("SampleText", *GameSystem.Resource.DefaultFont, -1, -0.8);
     //text->RenderInformation.ShaderProgramID = hudShaderID.ID;
     //text->SetFont(*Resource.DefaultFont);
