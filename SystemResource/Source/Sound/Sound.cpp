@@ -40,9 +40,9 @@ BF::SoundFormat BF::Sound::FileFormatPeek(const wchar_t* filePath)
     return SoundFormat::Unkown;
 }
 
-void BF::Sound::Load(const wchar_t* filePath)
-{   
-    SoundFormat soundFormat = FileFormatPeek(filePath);
+BF::FileActionResult BF::Sound::Load()
+{
+    SoundFormat soundFormat = FileFormatPeek(FilePath);
 
     ID = ResourceIDLoading;
 
@@ -51,56 +51,56 @@ void BF::Sound::Load(const wchar_t* filePath)
         case SoundFormat::AAC:
         {
             AAC aac;
-            aac.Load(filePath);
+            aac.Load(FilePath);
             aac.ConvertTo(*this);
             break;
         }
         case SoundFormat::FLAC:
         {
             FLAC flac;
-            flac.Load(filePath);
+            flac.Load(FilePath);
             flac.ConvertTo(*this);
             break;
         }
         case SoundFormat::M4A:
         {
             M4A m4a;
-            m4a.Load(filePath);
+            m4a.Load(FilePath);
             m4a.ConvertTo(*this);
             break;
         }
         case SoundFormat::MID:
         {
             MID mid;
-            mid.Load(filePath);
+            mid.Load(FilePath);
             mid.ConvertTo(*this);
             break;
         }
         case SoundFormat::MP3:
         {
             MP3 mp3;
-            mp3.Load(filePath);
+            mp3.Load(FilePath);
             mp3.ConvertTo(*this);
             break;
         }
         case SoundFormat::OGG:
         {
-            OGG ogg;            
-            ogg.Load(filePath);
+            OGG ogg;
+            ogg.Load(FilePath);
             ogg.ConvertTo(*this);
             break;
         }
         case SoundFormat::WAV:
         {
             WAV wav;
-            wav.Load(filePath);
+            wav.Load(FilePath);
             wav.ConvertTo(*this);
             break;
         }
         case SoundFormat::WMA:
         {
             WMA wma;
-            wma.Load(filePath);
+            wma.Load(FilePath);
             wma.ConvertTo(*this);
             break;
         }
@@ -108,14 +108,23 @@ void BF::Sound::Load(const wchar_t* filePath)
         default:
         {
             ID = ResourceIDUnsuportedFormat;
-            return;
-        }        
+            return FileActionResult::FormatNotSupported;
+        }
     }
 
     ID = ResourceIDLoaded;
+
+    return FileActionResult::Successful;
 }
 
-void BF::Sound::Save(const wchar_t* filePath, SoundFormat soundFormat)
+BF::FileActionResult BF::Sound::Load(const wchar_t* filePath)
+{   
+    FilePathChange(filePath);
+
+    return Load();
+}
+
+BF::FileActionResult BF::Sound::Save(const wchar_t* filePath, SoundFormat soundFormat)
 {
     switch (soundFormat)
     {
@@ -181,4 +190,6 @@ void BF::Sound::Save(const wchar_t* filePath, SoundFormat soundFormat)
             break;
         }
     }
+
+    return FileActionResult::Successful;
 }

@@ -6,10 +6,10 @@
 
 #include "../File/File.h"
 
-BF::FileActionResult BF::Font::Load(const wchar_t* filePath)
+BF::FileActionResult BF::Font::Load()
 {
-    File file(filePath);
-    FontFormat fontFormat = FileFormatPeek(filePath);
+    File file(FilePath);
+    FontFormat fontFormat = FileFormatPeek(FilePath);
 
     if (!file.DoesFileExist())
     {
@@ -22,21 +22,21 @@ BF::FileActionResult BF::Font::Load(const wchar_t* filePath)
         {
             // TODO: this is pointer for no reason. I use it at another place -> No delete needed
             FNT* fnt = new FNT();
-            fnt->Load(filePath);
+            fnt->Load(FilePath);
             fnt->ConvertTo(*this);
             break;
         }
         case FontFormat::FormatOFT:
         {
             OTF otf;
-            otf.Load(filePath);
+            otf.Load(FilePath);
             otf.ConvertTo(*this);
             break;
         }
         case FontFormat::FormatTTF:
         {
             TTF ttf;
-            ttf.Load(filePath);
+            ttf.Load(FilePath);
             ttf.ConvertTo(*this);
             break;
         }
@@ -48,6 +48,13 @@ BF::FileActionResult BF::Font::Load(const wchar_t* filePath)
     }
 
     return FileActionResult::Successful;
+}
+
+BF::FileActionResult BF::Font::Load(const wchar_t* filePath)
+{
+    FilePathChange(filePath);
+
+    return Load();
 }
 
 BF::FileActionResult BF::Font::Save(const wchar_t* filePath, FontFormat fontFormat)

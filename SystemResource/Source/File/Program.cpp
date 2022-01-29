@@ -82,12 +82,10 @@ BF::FileActionResult BF::Program::Execute(const char* programPath, const char* p
     strncpy(programExecuteInfo->ParameterList[1], parameterString, 1024);
 
     if (callback)
-    {       
-        ThreadID threadID;
-
+    {          
         programExecuteInfo->CallBack = callback;    
 
-        Thread::Run(threadID, Program::ExecuteThreadFunction, programExecuteInfo);
+        ThreadID threadID = Thread::Run(Program::ExecuteThreadFunction, programExecuteInfo);
     }
     else
     {
@@ -135,11 +133,9 @@ BF::FileActionResult BF::Program::Execute(const char* programPath, const char** 
 
     if (callback)
     {
-        ThreadID threadID;
-
         programExecuteInfo->CallBack = callback;
 
-        Thread::Run(threadID, Program::ExecuteThreadFunction, programExecuteInfo);
+        ThreadID threadID = Thread::Run(Program::ExecuteThreadFunction, programExecuteInfo);
     }
     else
     {

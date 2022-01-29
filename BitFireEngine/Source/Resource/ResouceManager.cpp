@@ -256,14 +256,27 @@ BF::Resource* BF::ResourceManager::Load(const wchar_t* filePath)
     return resource;
 }
 
+ThreadFunctionReturnType BF::ResourceManager::LoadResourceAsync(void* resourceAdress)
+{
+    Resource* resource = (Resource*)resourceAdress;
+
+    printf("[#][Resource][ASYNC] Loading <%ls> ...\n", resource->FilePath);
+
+    FileActionResult loadingResult = resource->Load();
+
+    return 0;
+}
+
 void BF::ResourceManager::Load(Model& model)
 {
     FileActionResult errorCode = model.Load();
 
-    printf("[>][Model] Loading <%ls> ...\n", model.FilePath);
+    printf("[>][Resource][Model] Loading <%ls> ... ", model.FilePath);
 
     if (errorCode == FileActionResult::Successful)
     {
+        printf("[OK]\n");
+
         for (unsigned int i = 0; i < model.MaterialListSize; i++)
         {
             Material& modelMaterial = model.MaterialList[i];
@@ -279,18 +292,14 @@ void BF::ResourceManager::Load(Model& model)
                 image.FilePathChange(modelMaterial.FilePath);
 
                 Add(image, true);
-            }
-            else
-            {
-                printf("[!] Texture missing! <ls>\n");
-            }           
-        }
+            }       
+        }    
 
         model.ShouldItBeRendered = true;        
     }
     else
     {
-        printf("[x][Model] Loading failed! <%i>\n", errorCode);
+        printf("[ERROR] <%i>\n", errorCode);
     }
 }
 
@@ -303,13 +312,17 @@ void BF::ResourceManager::Load(Model& model, const wchar_t* filePath)
 
 void BF::ResourceManager::Load(Image& image)
 {
-    FileActionResult imageLoadingResult = image.Load();
+    printf("[>][Resource][Image] Loading <%ls> ... ", image.FilePath);
 
-    printf("[>][Model] Loading <%ls> ...\n", image.FilePath);
+    FileActionResult imageLoadingResult = image.Load();  
 
-    if (imageLoadingResult != FileActionResult::Successful)
+    if (imageLoadingResult == FileActionResult::Successful)
     {
-        printf("[x][Model] Loading failed! <%i>\n", imageLoadingResult);
+        printf("[OK]\n");
+    }
+    else
+    {
+        printf("[Error] <%i>\n", imageLoadingResult);            
     }
 }
 
@@ -679,8 +692,6 @@ void BF::ResourceManager::Add(Sprite& sprite)
 
     Add(*image, false);
 
-
-
     float scaling = 0.01f;
     float scalingPos =  10;
     float xScaling = image->Width * scaling;
@@ -743,10 +754,7 @@ void BF::ResourceManager::Add(Model& model, bool loadAsynchronously)
 
     if (loadAsynchronously)
     {
-        std::thread* modelLoaderThread = new std::thread([](ResourceManager* resourceManager, Model* model)
-        {
-            resourceManager->Load(*model);
-        }, this, &model);
+        Thread::Run(LoadResourceAsync, &model);
     }
     else
     {
@@ -769,10 +777,7 @@ void BF::ResourceManager::Add(Image& image, bool loadAsynchronously)
 
     if (loadAsynchronously)
     {
-        std::thread* imageLoaderThread = new std::thread([](ResourceManager* resourceManager, Image* image)
-        {
-            image->Load();
-        }, this, &image);
+        Thread::Run(LoadResourceAsync, &image);
     }
     else
     {

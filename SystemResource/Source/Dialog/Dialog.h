@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Resource.h"
+#include "../File/FileActionResult.hpp"
 
 namespace BF
 {
@@ -8,5 +9,10 @@ namespace BF
 	{
 		public:
 		char Message[300];		
+
+		FileActionResult Load()
+		{
+			return FileActionResult::Successful;
+		};
 	};
 }

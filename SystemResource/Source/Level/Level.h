@@ -8,6 +8,8 @@
 #include "../Camera/Camera.h"
 #include "../Shader/Shader.h"
 
+#include "../File/FileActionResult.hpp"
+
 namespace BF
 {
 	class Level : public Resource
@@ -25,5 +27,7 @@ namespace BF
 		Level();
 
 		static bool IsLevelFile(const wchar_t* filePath);
+
+		FileActionResult Load();
 	};
 }

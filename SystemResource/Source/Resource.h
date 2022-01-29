@@ -3,6 +3,7 @@
 #include <cstddef>
 
 #include "ResourceInfo.h"
+#include "File/FileActionResult.hpp"
 
 #ifndef Byte
 #define Byte unsigned char
@@ -54,6 +55,8 @@ namespace BF
 		virtual size_t FullSizeInMemory()
 		{
 			return sizeof(Resource);
-		}
+		}		
+
+		virtual FileActionResult Load() = 0;
 	};
 }

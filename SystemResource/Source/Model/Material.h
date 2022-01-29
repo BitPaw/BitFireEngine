@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Image/Image.h"
+#include "../File/FileActionResult.hpp"
 
 namespace BF
 {
@@ -15,5 +16,7 @@ namespace BF
 		Image* Texture;
 
 		Material();
+
+		FileActionResult Load();
 	};
 }

@@ -13,11 +13,12 @@
 #include "../../../SystemResource/Source/Level/Level.h"
 #include "../../../SystemResource/Source/Game/SkyBox.h"
 #include "../../../SystemResource/Source/Container/LinkedList.hpp"
+
+#include "../../../SystemResource/Source/Async/Thread.h"
 #include "../../../SystemResource/Source/Async/AsyncLock.h"
 
 #include "ResourceLoadMode.h"
 
-#include <thread>
 #include "../../../SystemResource/Source/Math/Physic/Collider.h"
 #include "../../../SystemResource/Source/Game/Sprite.h"
 
@@ -79,6 +80,9 @@ namespace BF
 
         //void Load(Sprite& sprite, const char* model, const char* texturePath);
         Matrix4x4<float> TransformBoundingBox(Matrix4x4<float> modelMatrix, Vector3<float> boundingBox, bool half);
+
+
+        static ThreadFunctionReturnType LoadResourceAsync(void* resourceAdress);
 
         void Load(Model& model);
         void Load(Model& model, const wchar_t* filePath);

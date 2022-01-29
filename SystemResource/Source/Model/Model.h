@@ -37,7 +37,7 @@ namespace BF
 		void PrintModelData();
 		
 		static ModelType FileFormatPeek(const wchar_t* filePath);
-		FileActionResult Load();
+		FileActionResult Load() override;
 		FileActionResult Load(const wchar_t* filePath);
 
 		void Position(Vector3<float> position);

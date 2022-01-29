@@ -5,13 +5,10 @@ BF::Thread::Thread()
 	ThreadHandle = ThreadIDUnused;
 }
 
-void BF::Thread::Run(ThreadFunction threadFunction, void* parameter)
+ThreadID BF::Thread::Run(ThreadFunction threadFunction, void* parameter)
 {
-	Thread::Run(ThreadHandle, threadFunction, parameter);
-}
+	ThreadID threadID = 0;
 
-void BF::Thread::Run(ThreadID& threadID, ThreadFunction threadFunction, void* parameter)
-{
 #ifdef OSUnix
 	threadID = pthread_create(&threadID, 0, threadFunction, parameter);
 #elif defined(OSWindows)
@@ -24,6 +21,8 @@ void BF::Thread::Run(ThreadID& threadID, ThreadFunction threadFunction, void* pa
 
 	threadID = CreateThread(lpThreadAttributes, dwStackSize, lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
 #endif
+
+	return threadID;
 }
 
 void BF::Thread::WaitForFinish()

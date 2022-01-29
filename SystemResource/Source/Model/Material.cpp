@@ -20,3 +20,8 @@ BF::Material::Material()
 
 	Texture = nullptr;
 }
+
+BF::FileActionResult BF::Material::Load()
+{
+	return FileActionResult::Successful;
+}
