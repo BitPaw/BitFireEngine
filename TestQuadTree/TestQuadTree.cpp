@@ -43,8 +43,8 @@ int main()
 
     Image image;
 
-    image.Load("C:/Users/BitPaw/Videos/TEST_PNG.png");
-    image.Save("C:/Users/BitPaw/Videos/__Wurst.bmp", ImageFileFormat::BitMap);
+    image.Load((const wchar_t*)"C:/Users/BitPaw/Videos/TEST_PNG.png");
+    image.Save((const wchar_t*)"C:/Users/BitPaw/Videos/__Wurst.bmp", ImageFileFormat::BitMap);
 
 
     /*
