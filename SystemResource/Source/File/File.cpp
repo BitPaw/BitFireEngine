@@ -1,44 +1,7 @@
 #include "File.h"
 
 #include "../Container/AsciiString.h"
-#include "../OSDefine.h"
 
-#include <cassert>
-#include <cstdlib>
-#include <cstdio>
-#include <cwchar>
-
-#if defined(OSUnix)
-#include <sys/stat.h>
-#include <unistd.h>
-#include <dirent.h>
-#include <libgen.h>
-#define FileRemoveA remove 
-#define FileRemoveW(string) remove((const char*)string)
-#define FileRenameA rename 
-#define FileRenameW(oldName, newName) rename((const char*)oldName, (const char*)newName)
-#define FileDirectoryCreateA(string) mkdir(string, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)
-#define FileDirectoryCreateW(string) FileDirectoryCreateA((const char*)string)
-#define WorkingDirectoryCurrentA getcwd
-#define WorkingDirectoryCurrentW(string, size) (wchar_t*)WorkingDirectoryCurrentA((char*)string, size)
-#define WorkingDirectoryChangeA chdir
-#define WorkingDirectoryChangeW(string) WorkingDirectoryChangeA((const char*)string)
-#elif defined(OSWindows)
-#include <direct.h>
-#define FileOpenA fopen
-#define FileOpenW _wfopen
-#define FileRemoveA remove 
-#define FileRemoveW _wremove 
-#define FileRenameA rename 
-#define FileRenameW _wrename
-#define FileDirectoryCreateA _mkdir
-#define FileDirectoryCreateW _wmkdir
-#define WorkingDirectoryCurrentA _getcwd
-#define WorkingDirectoryCurrentW _wgetcwd
-#define WorkingDirectoryChangeA _chdir
-#define WorkingDirectoryChangeW _wchdir
-#include <Windows.h>
-#endif
 #include "Text.h"
 
 BF::FileActionResult BF::File::CheckFile()
@@ -431,7 +394,7 @@ void BF::File::SetFilePath(const wchar_t* filePath)
 	PathSplitt(filePath, Drive, Directory, FileName, Extension);
 }
 
-BF::FileActionResult BF::File::ReadFromDisk(unsigned char** outPutBuffer, size_t& outPutBufferSize, bool addTerminatorByte)
+BF::FileActionResult BF::File::ReadFromDisk(unsigned char** outPutBuffer, size_t& outPutBufferSize, const bool addTerminatorByte)
 {
 #if defined(OSUnix)
 	fseek(FileMarker, 0, SEEK_END); // Jump to end of file
@@ -508,6 +471,8 @@ BF::FileActionResult BF::File::ReadFromDisk(unsigned char** outPutBuffer, size_t
 
 	(*outPutBuffer) = buffer;
 	outPutBufferSize = numberOfBytesRead;
+
+	return FileActionResult::Successful;
 #endif	
 }
 

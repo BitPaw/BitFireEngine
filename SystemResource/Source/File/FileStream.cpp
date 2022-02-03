@@ -30,9 +30,20 @@ BF::FileActionResult BF::FileStream::ReadFromDisk(const char* filePath, bool add
 		return result;
 	}
 
-	result = ReadFromDisk(file.FileMarker, &Data, DataSize, addNullTerminator);
+	result = file.ReadFromDisk(&Data, DataSize, addNullTerminator);
+
+	if (result != FileActionResult::Successful)
+	{
+		file.Close();
+		return result;
+	}
 
 	result = file.Close();
+
+	if (result != FileActionResult::Successful)
+	{
+		return result;
+	}
 
 	return BF::FileActionResult::Successful;
 }
@@ -47,9 +58,20 @@ BF::FileActionResult BF::FileStream::ReadFromDisk(const wchar_t* filePath, bool 
 		return result;
 	}
 
-	file.ReadFromDisk(&Data, DataSize, addNullTerminator);// ReadFromDisk(file.FileMarker, &Data, DataSize, addNullTerminator);
+	result = file.ReadFromDisk(&Data, DataSize, addNullTerminator);
+
+	if (result != FileActionResult::Successful)
+	{
+		file.Close();
+		return result;
+	}
 
 	result = file.Close();
+
+	if (result != FileActionResult::Successful)
+	{
+		return result;
+	}
 
 	return BF::FileActionResult::Successful;
 }

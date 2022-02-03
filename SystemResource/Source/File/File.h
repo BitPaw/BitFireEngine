@@ -1,14 +1,21 @@
 #pragma once
 
 #include <cstdlib>
+#include <cstdio>
+#include <cwchar>
+#include <cassert>
 
 #include "IFile.h"
+#include "FileCachingMode.h"
 #include "../OSDefine.h"
 #include "../File/FileActionResult.hpp"
 #include "../ErrorCode.h"
-#include "FileCachingMode.h"
 
 #define FileLineBufferSize 2048
+
+#ifndef Byte
+#define Byte unsigned char
+#endif
 
 #if defined(OSUnix)
 #define PathMaxSize 260
@@ -16,12 +23,45 @@
 #define DirectoryMaxSize 256
 #define FileNameMaxSize 256
 #define ExtensionMaxSize 256
+#define FileHandleType FILE*
+
+#include <sys/stat.h>
+#include <unistd.h>
+#include <dirent.h>
+#include <libgen.h>
+#define FileRemoveA remove 
+#define FileRemoveW(string) remove((const char*)string)
+#define FileRenameA rename 
+#define FileRenameW(oldName, newName) rename((const char*)oldName, (const char*)newName)
+#define FileDirectoryCreateA(string) mkdir(string, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)
+#define FileDirectoryCreateW(string) FileDirectoryCreateA((const char*)string)
+#define WorkingDirectoryCurrentA getcwd
+#define WorkingDirectoryCurrentW(string, size) (wchar_t*)WorkingDirectoryCurrentA((char*)string, size)
+#define WorkingDirectoryChangeA chdir
+#define WorkingDirectoryChangeW(string) WorkingDirectoryChangeA((const char*)string)
+
 #elif defined(OSWindows)
 #define PathMaxSize _MAX_PATH
 #define DriveMaxSize _MAX_DRIVE
 #define DirectoryMaxSize _MAX_DIR
 #define FileNameMaxSize _MAX_FNAME
 #define ExtensionMaxSize _MAX_EXT
+#define FileHandleType HANDLE
+
+#include <direct.h>
+#include <Windows.h>
+#define FileOpenA fopen
+#define FileOpenW _wfopen
+#define FileRemoveA remove 
+#define FileRemoveW _wremove 
+#define FileRenameA rename 
+#define FileRenameW _wrename
+#define FileDirectoryCreateA _mkdir
+#define FileDirectoryCreateW _wmkdir
+#define WorkingDirectoryCurrentA _getcwd
+#define WorkingDirectoryCurrentW _wgetcwd
+#define WorkingDirectoryChangeA _chdir
+#define WorkingDirectoryChangeW _wchdir
 #endif
 
 namespace BF
@@ -32,8 +72,7 @@ namespace BF
 		FileActionResult CheckFile();
 
 		public:	
-		FILE* FileMarker;
-		void* FileHandle;
+		FileHandleType FileHandle;
 
 		wchar_t Path[PathMaxSize];
 		wchar_t Drive[DriveMaxSize];
@@ -86,7 +125,7 @@ namespace BF
 		void SetFilePath(const wchar_t* filePath);
 		//---------------------------------------------------------------------
 
-		FileActionResult ReadFromDisk(unsigned char** outPutBuffer, size_t& outPutBufferSize, bool addTerminatorByte = false);
+		FileActionResult ReadFromDisk(unsigned char** outPutBuffer, size_t& outPutBufferSize, const bool addTerminatorByte = false);
 
 
 		static void PathSwapFile(const wchar_t* currnetPath, wchar_t* targetPath, const wchar_t* newFileName);

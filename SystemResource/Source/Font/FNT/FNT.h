@@ -19,7 +19,7 @@ namespace BF
 		size_t FontPageListSize;
 		FNTPage* FontPageList;
 
-		FNTCharacter* GetCharacterPosition(unsigned char character);
+		FNTCharacter* GetCharacterPosition(const unsigned char character);
 
 		FNT();
 		~FNT();

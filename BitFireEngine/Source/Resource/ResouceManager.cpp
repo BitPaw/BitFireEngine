@@ -1088,7 +1088,27 @@ void BF::ResourceManager::ModelsRender(float deltaTime)
 
             //-----[Texture Lookup]--------------------------------------------
             unsigned int materialIndex = parentModel ? parentModel->SharedRenderInfoOverride.MaterialID : mesh.RenderInfo.MaterialID;
-            unsigned int textureID = materialIndex != -1 ? model->MaterialList[materialIndex].Texture->ID : _defaultTextureID;
+            unsigned int textureID = -1;
+
+            if (materialIndex != -1)
+            {
+                const Material& material = model->MaterialList[materialIndex];
+
+                if (material.Texture)
+                {
+                    const Image& image = *material.Texture;
+
+                    textureID = image.ID;
+                }
+                else
+                {
+                    textureID = -1;
+                }             
+            }
+            else
+            {
+                textureID = _defaultTextureID;
+            }
 
             OpenGLAPI::TextureUse(ImageType::Texture2D, textureID);
             //-----------------------------------------------------------------           

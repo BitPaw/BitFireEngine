@@ -22,21 +22,24 @@
 #define InfoLineSpacingText "spacing"
 #define InfoLineOutlineThicknessText "xxxxx"
 
-
-BF::FNTCharacter* BF::FNT::GetCharacterPosition(unsigned char character)
+BF::FNTCharacter* BF::FNT::GetCharacterPosition(const unsigned char character)
 {
-	FNTPage& page = FontPageList[0];
-
-	for (unsigned int i = 0; i < page.CharacteListSize; i++)
+	if (FontPageListSize == 0)
 	{
-		FNTCharacter* bitMapFontCharacter = &page.CharacteList[i];
-		unsigned char target = bitMapFontCharacter->ID;
+		return nullptr;
+	}
 
-		bool isSameCharacter = target == character;
+	const FNTPage& page = FontPageList[0];
+
+	for (size_t i = 0; i < page.CharacteListSize; i++)
+	{
+		const FNTCharacter& bitMapFontCharacter = page.CharacteList[i];
+		const unsigned char target = bitMapFontCharacter.ID;
+		const bool isSameCharacter = target == character;
 
 		if (isSameCharacter)
 		{
-			return bitMapFontCharacter;
+			return &(FNTCharacter&)bitMapFontCharacter;
 		}
 	}
 
@@ -106,6 +109,8 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 				Text::ToInt(indexPosition[6], 5, Info.StretchH);
 				Text::ToBool(indexPosition[7], 5, Info.Smooth);
 				Text::ToBool(indexPosition[8], 5, Info.Supersampling);
+
+				// TODO: Implement! Soemthing like "Find ',' ?"
 				//Text::ToInt(padding + sizeof(paddingText), bufferSize - sizeof(paddingText), Info.CharacterPadding);
 				//Text::ToInt(spacing + sizeof(spacingText), bufferSize - sizeof(spacingText), Info.SpacerOffset);
 				//Text::ToInt(outlineThickness + sizeof(outlineThicknessText), bufferSize - sizeof(outlineThicknessText), Info.OutlineThickness);
