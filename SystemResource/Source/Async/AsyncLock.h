@@ -21,6 +21,7 @@ namespace BF
 
 		public:
 		AsyncLock();
+		~AsyncLock();
 
 		int Create();
 		int Delete();

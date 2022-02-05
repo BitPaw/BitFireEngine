@@ -74,9 +74,7 @@ namespace BF
         //void Add(Sound& sound);
         //void RegisterGPU(Font& font);
 
-        void CheckUncachedData();
-
-        Resource* Load(const wchar_t* filePathString);
+        void CheckUncachedData();  
 
         //void Load(Sprite& sprite, const char* model, const char* texturePath);
         Matrix4x4<float> TransformBoundingBox(Matrix4x4<float> modelMatrix, Vector3<float> boundingBox, bool half);
@@ -84,6 +82,7 @@ namespace BF
 
         static ThreadFunctionReturnType LoadResourceAsync(void* resourceAdress);
 
+        Resource* Load(const wchar_t* filePathString);
         void Load(Model& model);
         void Load(Model& model, const wchar_t* filePath);
         void Load(Image& image);

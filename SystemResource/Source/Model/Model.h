@@ -45,6 +45,8 @@ namespace BF
 
 		void ConvertFrom(float* vertexList, size_t vertexListSize, unsigned int* indexList, size_t indexListSize, RenderMode renderMode, float textureScaleX = 1, float textureScaleY = 1, bool rawPositions = false);
 	
+		void BoundingBoxUpdate();
+
 		virtual size_t FullSizeInMemory() override;
 
 		virtual bool IsColliding(Vector2<float> position) { return false; };

@@ -635,7 +635,7 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
         mesh.Structure.Allocate(faceElementListSize * (3 + 3 + 4 + 2), faceElementListSize);
         mesh.RenderInfo.MaterialID = element.MaterialListIndex;
 
-        strncpy(mesh.Name, element.Name, OBJElementNameLength);
+        Text::Copy(mesh.Name, element.Name, OBJElementNameLength);
 
         size_t vertecDataIndex = 0;
         float* vertexDataArray = mesh.Structure.VertexData;

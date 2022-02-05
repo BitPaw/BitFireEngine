@@ -4,12 +4,14 @@
 #include "MeshStructure.h"
 #include "../../../SystemRender/Source/RenderMode.h"
 
+#define MeshNameLength 64
+
 namespace BF
 {
 	struct Mesh
 	{
 		public:
-		char Name[50];
+		wchar_t Name[MeshNameLength];
 		MeshStructure Structure;
 		MeshRenderInfo RenderInfo;	
 	};

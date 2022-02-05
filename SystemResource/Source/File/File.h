@@ -84,16 +84,28 @@ namespace BF
 		File(const char* filePath);		
 		File(const wchar_t* filePath);
 
-		FileActionResult Open(const char* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode = FileCachingMode::Default);
-		FileActionResult Open(const wchar_t* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode = FileCachingMode::Default);
 
-		FileActionResult Close();
-
-
-		//---<Utility>--
 		bool DoesFileExist();
 		static bool DoesFileExist(const char* filePath);
 		static bool DoesFileExist(const wchar_t* filePath);
+
+		FileActionResult Open(const char* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode = FileCachingMode::Default);
+		static FileActionResult Open(FileHandleType& fileHandle, const char* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode = FileCachingMode::Default);
+		FileActionResult Open(const wchar_t* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode = FileCachingMode::Default);
+		static FileActionResult Open(FileHandleType& fileHandle, const wchar_t* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode = FileCachingMode::Default);
+
+		FileActionResult Close();
+		static FileActionResult Close(FileHandleType& fileHandle);
+
+		FileActionResult ReadFromDisk(unsigned char** outPutBuffer, size_t& outPutBufferSize, const bool addTerminatorByte = false);
+
+
+		// Directory
+
+
+
+		//---<Utility>--
+	
 
 		static void GetFileExtension(const char* filePath, char* fileExtension);
 	
@@ -110,7 +122,8 @@ namespace BF
 		static ErrorCode Rename(const wchar_t* oldName, const wchar_t* newName);
 		
 
-		static FileActionResult Copy(const char* sourceFilePath, const char* destinationFilePath, char* swapBuffer, size_t swapBufferSize);
+		static FileActionResult Copy(const char* sourceFilePath, const char* destinationFilePath);
+		static FileActionResult Copy(const wchar_t* sourceFilePath, const wchar_t* destinationFilePath);
 
 		static ErrorCode DirectoryCreate(const char* directoryName);
 		static ErrorCode DirectoryCreate(const wchar_t* directoryName);
@@ -125,7 +138,7 @@ namespace BF
 		void SetFilePath(const wchar_t* filePath);
 		//---------------------------------------------------------------------
 
-		FileActionResult ReadFromDisk(unsigned char** outPutBuffer, size_t& outPutBufferSize, const bool addTerminatorByte = false);
+
 
 
 		static void PathSwapFile(const wchar_t* currnetPath, wchar_t* targetPath, const wchar_t* newFileName);

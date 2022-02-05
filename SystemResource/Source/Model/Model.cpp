@@ -10,6 +10,7 @@
 #include "VRML/VRML.h"
 
 #include "../File/File.h"
+#include "../File/Text.h"
 #include "../../../SystemResource/Source/Math/Geometry/Shape/Triangle.h"
 #include "../../../SystemResource/Source/Math/Geometry/Shape/Rectangle.h"
 
@@ -35,15 +36,15 @@ void BF::Model::PrintModelData()
 
     for (size_t i = 0; i < MeshListSize; i++)
     {
-        Mesh& mesh = MeshList[i];
-        MeshRenderInfo& info = mesh.RenderInfo;
-        MeshStructure& structure = mesh.Structure;
+        const Mesh& mesh = MeshList[i];
+        const MeshRenderInfo& info = mesh.RenderInfo;
+        const MeshStructure& structure = mesh.Structure;
 
         printf("+--------------------------------------------+\n");
-        printf("| Mesh <%u/%u>\n", i, MeshListSize);
-        printf("| Vertex   : ID:%u, Size:%u |\n", structure.VertexBufferID, structure.VertexDataSize);
-        printf("| Index    : ID:%u, Size:%u |\n", structure.IndexBufferID, structure.IndexDataSize);
-        printf("| Material : ID:%u, ShaderID:%u, Render:%u |\n", info.MaterialID, info.ShaderProgramID, info.ShouldBeRendered);
+        printf("| Mesh <%zu/%zu>\n", i, MeshListSize);
+        printf("| Vertex   : ID:%zu, Size:%zu |\n", structure.VertexBufferID, structure.VertexDataSize);
+        printf("| Index    : ID:%zu, Size:%zu |\n", structure.IndexBufferID, structure.IndexDataSize);
+        printf("| Material : ID:%i, ShaderID:%u, Render:%u |\n", info.MaterialID, info.ShaderProgramID, info.ShouldBeRendered);
     }
 
     printf("+--------------------------------------------+");
@@ -222,13 +223,24 @@ void BF::Model::ConvertFrom(float* vertexList, size_t vertexListSize, unsigned i
         }
     }   
 
-    mesh.Structure.SizeCheck();
+    BoundingBoxUpdate();
 
-    BoundingBox.Set(mesh.Structure.Width, mesh.Structure.Height);
-
-    strcpy(mesh.Name, "<Sprite-Mesh>");
+    Text::Copy(mesh.Name, "<Sprite-Mesh>", MeshNameLength);
 
     ID = ResourceIDLoaded;
+}
+
+void BF::Model::BoundingBoxUpdate()
+{
+    Mesh& mesh = MeshList[0];
+
+    mesh.Structure.SizeCheck();
+
+    Vector3<float> position = MatrixModel.PositionXYZ();
+    Vector3<float> size(mesh.Structure.Width, mesh.Structure.Height, mesh.Structure.Depth);
+    Vector3<float> scaling = MatrixModel.ScaleXYZ();
+
+    BoundingBox.Set(position.X, position.Y, size.X * scaling.X, size.Y * scaling.Y);
 }
 
 /*

@@ -17,6 +17,7 @@ namespace BF
 		FileOpenFailure,
 		FileCloseFailure,
 		FileReadFailure,
+		FileCopyFailure,
 
 		// Parsing
 		InvalidHeaderSignature,

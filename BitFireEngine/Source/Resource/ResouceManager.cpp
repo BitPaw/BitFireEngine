@@ -735,6 +735,8 @@ void BF::ResourceManager::Add(Sprite& sprite)
 
     Add(model);
     Add(collider);
+
+    model.BoundingBoxUpdate();
 }
 
 void BF::ResourceManager::Add(Model& model, bool loadAsynchronously)
@@ -876,8 +878,6 @@ void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
                     bordermatrix = &boundingBoxModel;
                     borderSize = &boundingBox;
                     borderColor.Set(1, 0, 1);
-
-                    BoundingBoxRender(*bordermatrix, *borderSize, borderColor);
                     break;
                 }
                 case ColliderType::HitBox:
@@ -903,6 +903,7 @@ void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
                 }
             }
 
+            BoundingBoxRender(*bordermatrix, *borderSize, borderColor);
         }
     
 
@@ -910,7 +911,7 @@ void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
         {
             Model* model = modelNode->Element;
             Matrix4x4<float> modelMatrix = model->MatrixModel;
-            Vector3<float> modelBoundingBox(model->MeshList[0].Structure.Width, model->MeshList[0].Structure.Height, model->MeshList[0].Structure.Depth);
+            Vector3<float> modelBoundingBox(model->MeshList[0].Structure.Width, model->MeshList[0].Structure.Height, model->MeshList[0].Structure.Depth-50);
             Matrix4x4<float> boundingBoxModelScaled = TransformBoundingBox(modelMatrix, modelBoundingBox, false);
             Vector3<float> modelPosition = boundingBoxModelScaled.PositionXYZ();
             Vector3<float> modelScaling = boundingBoxModelScaled.ScaleXYZ();
@@ -922,13 +923,15 @@ void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
 
             {
                 // Color
-
-                Matrix4x4<float>* bordermatrix = bordermatrix = &modelMatrix;
-                Vector3<float>* borderSize = borderSize = &modelBoundingBox;
                 Vector3<float> borderColor;
 
                 switch (model->Type)
                 {
+                    case ColliderType::Undefined:
+                    {
+                        borderColor.Set(1, 1, 1);
+                        break;
+                    }
                     case ColliderType::Gravity:
                     {
                         borderColor.Set(1, 0, 1);
@@ -951,7 +954,7 @@ void BF::ResourceManager::ModelsPhysicsApply(float deltaTime)
                     }
                 }
 
-                BoundingBoxRender(*bordermatrix, *borderSize, borderColor);
+             //   BoundingBoxRender(modelMatrix, modelBoundingBox, borderColor);
             }
 
 
@@ -1206,12 +1209,13 @@ void BF::ResourceManager::BoundingBoxRender(Matrix4x4<float> modelMatrix, Vector
 
     OpenGLAPI::VertexArrayBind(CubeHitBoxViewModel.MeshList[0].Structure.VertexArrayID);
     OpenGLAPI::ShaderSetUniformMatrix4x4(_matrixModelID, boundingBoxScaled.Data);
-    // Render middle
-    OpenGLAPI::ShaderSetUniformVector4(shaderColorID , color.X, color.Y, color.Z, 0.05f);
-    OpenGLAPI::Render(RenderMode::Square, 0, 4);
+
     // Render outLine
     OpenGLAPI::ShaderSetUniformVector4(shaderColorID, color.X, color.Y, color.Z, 1);
     OpenGLAPI::Render(RenderMode::LineLoop, 0, 4);
+    // Render middle
+    OpenGLAPI::ShaderSetUniformVector4(shaderColorID, color.X, color.Y, color.Z, 0.10f);
+    OpenGLAPI::Render(RenderMode::Square, 0, 4);
 }
 
 void ByteToString(char* string, size_t value)

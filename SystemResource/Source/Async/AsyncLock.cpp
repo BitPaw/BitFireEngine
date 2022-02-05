@@ -1,10 +1,13 @@
 #include "AsyncLock.h"
 
-#include <string.h>
-
 BF::AsyncLock::AsyncLock()
 {
-	memset(&HandleID, 0, sizeof(HandleID));
+	HandleID = 0;
+}
+
+BF::AsyncLock::~AsyncLock()
+{
+	Delete();
 }
 
 int BF::AsyncLock::Create()
@@ -20,7 +23,7 @@ int BF::AsyncLock::Create()
 	LPSECURITY_ATTRIBUTES lpSemaphoreAttributes = 0;
 	LONG lInitialCount = 1;
 	LONG lMaximumCount = 1;
-	LPCWSTR lpName = 0;
+	LPCWSTR lpName = L"BFE_ASYNC_LOCK";
 
 	createResult = 0;
 	HandleID = CreateSemaphore(lpSemaphoreAttributes, lInitialCount, lMaximumCount, lpName);
@@ -38,6 +41,8 @@ int BF::AsyncLock::Delete()
 #elif defined(OSWindows)
 	closingResult = CloseHandle(HandleID);
 #endif 
+
+	HandleID = 0;
 
 	return closingResult;
 }

@@ -31,6 +31,11 @@ BF::File::File(const wchar_t* filePath)
 
 BF::FileActionResult BF::File::Open(const char* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode)
 {
+	return File::Open(FileHandle, filePath, fileOpenMode, fileCachingMode);
+}
+
+BF::FileActionResult BF::File::Open(FileHandleType& fileHandle, const char* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode)
+{
 #if defined(OSUnix)
 	const char* readMode = nullptr;
 
@@ -81,24 +86,29 @@ BF::FileActionResult BF::File::Open(const char* filePath, FileOpenMode fileOpenM
 
 	dwFlagsAndAttributes |= ConvertFileCachingMode(fileCachingMode);
 
-	FileHandle = CreateFileA
+	fileHandle = CreateFileA
 	(
-		filePath, 
+		filePath,
 		dwDesiredAccess,
-		dwShareMode, 
+		dwShareMode,
 		nullptr,
 		dwCreationDisposition,
 		dwFlagsAndAttributes,
 		hTemplateFile
 	);
 
-	bool successful = FileHandle != INVALID_HANDLE_VALUE;
+	bool successful = fileHandle != INVALID_HANDLE_VALUE;
 
 	return successful ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
 #endif
 }
 
 BF::FileActionResult BF::File::Open(const wchar_t* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode)
+{
+	return File::Open(FileHandle, filePath, fileOpenMode, fileCachingMode);
+}
+
+BF::FileActionResult BF::File::Open(FileHandleType& fileHandle, const wchar_t* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode)
 {
 #if defined(OSUnix)
 	char filePathA[PathMaxSize];
@@ -133,7 +143,7 @@ BF::FileActionResult BF::File::Open(const wchar_t* filePath, FileOpenMode fileOp
 
 	dwFlagsAndAttributes |= ConvertFileCachingMode(fileCachingMode);
 
-	FileHandle = CreateFileW
+	fileHandle = CreateFileW
 	(
 		filePath,
 		dwDesiredAccess,
@@ -144,13 +154,18 @@ BF::FileActionResult BF::File::Open(const wchar_t* filePath, FileOpenMode fileOp
 		hTemplateFile
 	);
 
-	bool successful = FileHandle != INVALID_HANDLE_VALUE;
+	bool successful = fileHandle != INVALID_HANDLE_VALUE;
 
 	return successful ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
 #endif
 }
 
 BF::FileActionResult BF::File::Close()
+{
+	return File::Close(FileHandle);
+}
+
+BF::FileActionResult BF::File::Close(FileHandleType& fileHandle)
 {
 #if defined(OSUnix)
 	int closeResult = fclose(FileMarker);
@@ -162,12 +177,12 @@ BF::FileActionResult BF::File::Close()
 
 		default:
 			return FileActionResult::FileCloseFailure;
-	}
+}
 #elif defined(OSWindows)
-	bool successful = CloseHandle(FileHandle);
+	bool successful = CloseHandle(fileHandle);
 
-	FileHandle = nullptr;
-	
+	fileHandle = nullptr;
+
 	return successful ? FileActionResult::Successful : FileActionResult::FileCloseFailure;
 #endif
 }
@@ -228,16 +243,19 @@ BF::ErrorCode BF::File::Rename(const wchar_t* oldName, const wchar_t* newName)
 	return ErrorCode::Successful;
 }
 
-BF::FileActionResult BF::File::Copy(const char* sourceFilePath, const char* destinationFilePath, char* swapBuffer, size_t swapBufferSize)
+BF::FileActionResult BF::File::Copy(const char* sourceFilePath, const char* destinationFilePath)
 {
 	if (!sourceFilePath || !destinationFilePath)
 	{
 		return FileActionResult::EmptyPath;
 	}
-
+#if defined (OSUnix)
 	FILE* fileSource = fopen(sourceFilePath, FileReadMode);
 	FILE* fileDestination = fopen(destinationFilePath, FileWriteMode);
 	bool fileOpenSuccesful = fileSource && fileDestination;
+
+	const size_t swapBufferSize = 2048;
+	Byte swapBuffer[swapBufferSize];
 
 	if (!fileOpenSuccesful)
 	{
@@ -252,8 +270,43 @@ BF::FileActionResult BF::File::Copy(const char* sourceFilePath, const char* dest
 
 	fclose(fileSource);
 	fclose(fileDestination);
+#elif defined(OSWindows)
+	bool succesfull = CopyFileA(sourceFilePath, destinationFilePath, false);
+
+	if (!succesfull)
+	{
+		return FileActionResult::FileCopyFailure;
+	}
+#endif
 
 	return FileActionResult::Successful;
+}
+
+BF::FileActionResult BF::File::Copy(const wchar_t* sourceFilePath, const wchar_t* destinationFilePath)
+{
+	if (!sourceFilePath || !destinationFilePath)
+	{
+		return FileActionResult::EmptyPath;
+	}
+
+#if defined (OSUnix)
+	char sourceFilePathA[PathMaxSize];
+	char destinationFilePathA[PathMaxSize];
+
+	Text::Copy(sourceFilePathA, sourceFilePath, PathMaxSize);
+	Text::Copy(destinationFilePathA, destinationFilePath, PathMaxSize);
+
+	return File::Copy(sourceFilePathA, destinationFilePathA);
+#elif defined(OSWindows)
+	bool succesfull = CopyFileW(sourceFilePath, destinationFilePath, false);
+
+	if (!succesfull)
+	{
+		return FileActionResult::FileCopyFailure;
+	}
+
+	return FileActionResult::Successful;
+#endif	
 }
 
 BF::ErrorCode BF::File::DirectoryCreate(const char* directoryName)
@@ -395,7 +448,7 @@ void BF::File::SetFilePath(const wchar_t* filePath)
 }
 
 BF::FileActionResult BF::File::ReadFromDisk(unsigned char** outPutBuffer, size_t& outPutBufferSize, const bool addTerminatorByte)
-{
+{	
 #if defined(OSUnix)
 	fseek(FileMarker, 0, SEEK_END); // Jump to end of file
 	outPutBufferSize = ftell(FileMarker); // Get current 'data-cursor' position
