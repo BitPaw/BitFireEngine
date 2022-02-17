@@ -583,6 +583,8 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
             }
         }
     }
+
+    return FileActionResult::Successful;
 }
 
 BF::FileActionResult BF::OBJ::Save(const wchar_t* filePath)
@@ -608,7 +610,7 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
             Material& material = model.MaterialList[materialIndex];
 
             Text::Copy(material.Name, mtlMaterial.Name, MTLNameSize);
-            Text::Copy(material.FilePath, mtlMaterial.TextureFilePath, MTLFilePath);
+          //  Text::Copy(material.FilePath, mtlMaterial.TextureFilePath, MTLFilePath);
             memcpy(material.Ambient, mtlMaterial.Ambient, 3 * sizeof(float));
             memcpy(material.Diffuse, mtlMaterial.Diffuse, 3 * sizeof(float));
             memcpy(material.Specular, mtlMaterial.Specular, 3 * sizeof(float));
@@ -616,43 +618,64 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
         }
     }
 
-    model.MeshListSize = ElementListSize;
-    model.MeshList = new Mesh[ElementListSize];
+    model.MeshListSize = 1;
+    model.MeshList = new Mesh[1];  
 
-    Text::Copy(model.Name, Name, OBJNameSize);
+    Mesh& mesh = *model.MeshList;
 
-    for (size_t elementIndex = 0; elementIndex < model.MeshListSize; elementIndex++)
+    mesh.VertexDataStructureListSize = 4;
+    mesh.VertexDataStructureList[0] = 3;
+    mesh.VertexDataStructureList[1] = 3;
+    mesh.VertexDataStructureList[2] = 4;
+    mesh.VertexDataStructureList[3] = 2;
+
+    //Text::Copy(mesh.Name, Name, OBJElementNameLength);
+
+    mesh.SegmentListSize = ElementListSize;
+    mesh.SegmentList = new MeshSegment[ElementListSize];
+
+    for (size_t i = 0; i < ElementListSize; i++)
     {
-        OBJElement& element = ElementList[elementIndex]; // Get current source Mesh
-        Mesh& mesh = model.MeshList[elementIndex]; // Get current target Mesh
-        unsigned int vertexListSize = element.VertexPositionList.Size();
-        unsigned int faceElementListSize = element.FaceElementList.Size();
-        unsigned int normalListSize = element.VertexNormalPositionList.Size();
-        unsigned int textureCoordinateListSize = element.TextureCoordinateList.Size();
+        OBJElement& element = ElementList[i];
+        MeshSegment& meshSegment = mesh.SegmentList[i];
+        const size_t faceElementListSize = element.FaceElementList.Size();
 
-        mesh.Structure.RenderType = VertexStructureSize == 4 ? RenderMode::Square : RenderMode::Triangle;
+        Text::Copy(meshSegment.Name, element.Name, OBJElementNameLength);
 
-        mesh.Structure.Allocate(faceElementListSize * (3 + 3 + 4 + 2), faceElementListSize);
-        mesh.RenderInfo.MaterialID = element.MaterialListIndex;
+        
+        const size_t verexDataSize = faceElementListSize * (3 + 3 + 4 + 2);
 
-        Text::Copy(mesh.Name, element.Name, OBJElementNameLength);
+        mesh.VertexDataListSize = verexDataSize;
+        mesh.VertexDataList = (float*)malloc(verexDataSize * sizeof(float));
+       
+
+        // mesh.Structure.RenderType = VertexStructureSize == 4 ? RenderMode::Square : RenderMode::Triangle;
+        //mesh.VertexDataStructureListSize
+
+        meshSegment.IndexDataListSize = faceElementListSize;
+        meshSegment.IndexDataList = (unsigned int*)malloc(faceElementListSize * sizeof(unsigned int));
+
+        //meshSegment. = malloc .Allocate(faceElementListSize * (3 + 3 + 4 + 2), faceElementListSize);
+        //mesh.RenderInfo.MaterialID = element.MaterialListIndex;
+
 
         size_t vertecDataIndex = 0;
-        float* vertexDataArray = mesh.Structure.VertexData;
-             
+        float* vertexDataArray = mesh.VertexDataList;
+
+
         for (size_t i = 0; i < faceElementListSize; i++)
         {
-            Vector3<unsigned int>& indexPosition = element.FaceElementList[i];
+            const Vector3<unsigned int>& indexPosition = element.FaceElementList[i];
             unsigned int vertexPositionID = indexPosition.X - 1;
             unsigned int texturePointID = indexPosition.Y - 1; // TODO: REMOVED -1 form all positions
-            unsigned int normalVectorID = indexPosition.Z -1;
+            unsigned int normalVectorID = indexPosition.Z - 1;
             Vector3<float>* vertexData = GlobalVertexPosition(vertexPositionID);
             Vector2<float>* textureData = GlobalTextureCoordinate(texturePointID);
             Vector3<float>* normalData = GlobalVertexNormalPosition(normalVectorID);
-            Vector4<float> color(1.0f,1.0f,1.0f,1.0f);
-            bool vertexPositionIDValid = vertexData;
-            bool texturePointIDValid = textureData;
-            bool normalVectorIDValid = normalData;
+            Vector4<float> color(1.0f, 1.0f, 1.0f, 1.0f);
+            const bool vertexPositionIDValid = vertexData;
+            const bool texturePointIDValid = textureData;
+            const bool normalVectorIDValid = normalData;
 
 #if 1 // failsafe
             if (!vertexPositionIDValid)
@@ -660,7 +683,7 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
                 ++vertexPositionID;
                 vertexData = GlobalVertexPosition(vertexPositionID);
             }
-               
+
 
             if (!texturePointIDValid)
             {
@@ -674,9 +697,9 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
                 ++normalVectorID;
                 normalData = GlobalVertexNormalPosition(normalVectorID);
             }
-     
-       
-           
+
+
+
 #elif
             assert(vertexPositionIDValid);
             assert(texturePointIDValid);
@@ -686,28 +709,28 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
 
             const unsigned int dataSize = 12u;
             float data[dataSize]
-            {             
-                vertexData->X,          
-                vertexData->Y,         
-                vertexData->Z,       
-                normalData->X,         
-                normalData->Y,         
-                normalData->Z,         
+            {
+                vertexData->X,
+                vertexData->Y,
+                vertexData->Z,
+                normalData->X,
+                normalData->Y,
+                normalData->Z,
                 color.X,
-                color.Y,             
-                color.Z,           
-                color.W,          
-                textureData->X,   
+                color.Y,
+                color.Z,
+                color.W,
+                textureData->X,
                 textureData->Y
-            };       
+            };
 
-            mesh.Structure.IndexData[i] = i;
+            meshSegment.IndexDataList[i] = i;
 
             memcpy(vertexDataArray + vertecDataIndex, data, sizeof(float) * dataSize);
 
-            vertecDataIndex += dataSize;
+            vertecDataIndex += dataSize;        
         }
-    }
+    }   
 
     return FileActionResult::Successful;
 }
@@ -734,7 +757,7 @@ void BF::OBJ::PrintData()
     const char* line = "+-------+-------+-------+-------+-------+-------------------+------------------|\n";
 
     printf(line);
-    printf("| (OBJ) Name: %-64s |\n", Name);
+    printf("| (OBJ) Name: %-64ls |\n", Name);
     printf(line);
     printf
     (

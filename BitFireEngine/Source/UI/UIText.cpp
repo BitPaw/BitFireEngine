@@ -9,14 +9,14 @@ void BF::UIText::Setup(const wchar_t* text, Font* font, float x, float y)
 	Width = 0;
 	Height = 0;
 
-	Text::Copy(Name, "<Internal Text>", ResourceNameSize);
+	//Text::Copy(Name, "<Internal Text>", ResourceNameSize);
 
 	MeshListSize = 1;
 	MeshList = new Mesh[1];
 
 	Mesh& mesh = MeshList[0];
 	//mesh.Structure.RenderType = RenderMode::Square;
-	mesh.Structure.RenderType = RenderMode::Square;
+	//mesh.Structure.RenderType = RenderMode::Square;
 
 	//strcpy(mesh.Name, "<Text-Mesh>");
 	//strcpy(mesh.FilePath, "<Internal>");
@@ -43,7 +43,7 @@ void BF::UIText::SetTextPosition(float x, float y)
 	x = Interpolate::Liniar(-Width* offset, Width* offset, -1, 1, x);
 	y = Interpolate::Liniar(-Height* offset, Height* offset, -1, 1, y);
 
-	MatrixModel.MoveTo(x- Width, y- Height, 0);
+	//MatrixModel.MoveTo(x- Width, y- Height, 0);
 }
 
 void BF::UIText::SetText(const char* text)
@@ -68,13 +68,12 @@ void BF::UIText::SetText(const wchar_t* text)
 
 void BF::UIText::UpdateText()
 {
-	ID = ResourceIDLoading;
-
 	FNT& bitmapFont = *((FNT*)(_font->BitMapFont));
 
 #if 0 // Print font data
 	bitmapFont.PrintData();
 #endif 
+	/*
 
 	bool hasTextChanged = true;// Text::Compare(TextContent);
 	//bool isDifferentSize = true;// (currentText.Size() != text.Size()) || true;
@@ -224,7 +223,7 @@ void BF::UIText::UpdateText()
 		if (true)
 		{
 			continue;
-		}*/
+		}* /
 
 		// Flip Y Axis because the fileformat is like this			
 		{
@@ -301,9 +300,7 @@ void BF::UIText::UpdateText()
 			vertexData[vertexIndex++] = texturePosition.Position.X;
 			vertexData[vertexIndex++] = texturePosition.Size.Y; // texturePosition.PointA);		
 		}		
-	}
-
-	ID = ResourceIDLoaded;
+	}*/
 }
 
 void BF::UIText::PrintObjectData()

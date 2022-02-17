@@ -31,26 +31,16 @@ int main(int amountOFParameters, char** parameter)
     }
     //---------------------------
 
-    try
+    Cleaved::CleavedGameSystem cleavedGameSystem;
+
+    cleavedGameSystem.GameSystem.Start();
+
+    while (cleavedGameSystem.GameSystem.IsRunning)
     {
-        //printf("[i][Core] Working Directory <%s>\n", parameter[0]);
-
-        Cleaved::CleavedGameSystem cleavedGameSystem;       
-
-        cleavedGameSystem.GameSystem.Start();
-
-        while (cleavedGameSystem.GameSystem.IsRunning)
-        {
-            cleavedGameSystem.GameSystem.Update();
-        }
-
-        cleavedGameSystem.GameSystem.Stop();
+        cleavedGameSystem.GameSystem.Update();
     }
-    catch (const std::exception& exception)
-    {
-        printf("[x][Core] System colapsed. Reason : \n%s", exception.what());
-        return EXIT_FAILURE;
-    }
+
+    cleavedGameSystem.GameSystem.Stop();
 
     return EXIT_SUCCESS;
 }

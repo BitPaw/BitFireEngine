@@ -1,5 +1,6 @@
 #include "Level.h"
-#include "../File/File.h"
+
+#include <File/File.h>
 
 BF::Level::Level()
 {
@@ -16,4 +17,9 @@ bool BF::Level::IsLevelFile(const wchar_t* filePath)
 BF::FileActionResult BF::Level::Load()
 {
 	return FileActionResult::Successful;
+}
+
+size_t BF::Level::FullSizeInMemory()
+{
+	return sizeof(*this);
 }

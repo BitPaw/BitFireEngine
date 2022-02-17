@@ -292,16 +292,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Resource.cpp" />
     <ClCompile Include="Source\File\FileCachingMode.cpp" />
-    <ClCompile Include="Source\Math\Physic\CollisionListener.cpp" />
     <ClCompile Include="Source\File\ParsingToken.cpp" />
     <ClCompile Include="Source\Font\FNT\FNTLineType.cpp" />
     <ClCompile Include="Source\Image\GIF\GIFImageDescriptor.cpp" />
-    <ClCompile Include="Source\Math\Uncategorized\Euklid.cpp" />
-    <ClCompile Include="Source\Math\Uncategorized\Körper.cpp" />
-    <ClCompile Include="Source\Math\Uncategorized\Restklassen.cpp" />
-    <ClCompile Include="Source\Math\Uncategorized\RSA.cpp" />
-    <ClCompile Include="Source\ResourceInfo.cpp" />
+    <ClCompile Include="Source\Encryption\RSA\Euklid.cpp" />
+    <ClCompile Include="Source\Encryption\RSA\Körper.cpp" />
+    <ClCompile Include="Source\Encryption\RSA\Restklassen.cpp" />
+    <ClCompile Include="Source\Encryption\RSA\RSA.cpp" />
     <ClCompile Include="Source\File\Text.cpp" />
     <ClCompile Include="Source\Image\PNG\Chunk\PNGTransparency.cpp" />
     <ClCompile Include="Source\Image\PNG\Chunk\PNGPhysicalPixelDimension.cpp" />
@@ -309,7 +308,6 @@
     <ClCompile Include="Source\Image\PNG\Chunk\PNGPaletteHistogram.cpp" />
     <ClCompile Include="Source\Image\PNG\Chunk\PNGBackgroundColor.cpp" />
     <ClCompile Include="Source\Image\PNG\Chunk\PNGLastModificationTime.cpp" />
-    <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\Service\HTTP\HTTPError.cpp" />
     <ClCompile Include="Source\Service\HTTP\HTTPRequestMethod.cpp" />
     <ClCompile Include="Source\Image\PNG\Chunk\PNGPrimaryChromatics.cpp" />
@@ -339,14 +337,12 @@
     <ClCompile Include="Source\File\FileStream.cpp" />
     <ClCompile Include="Source\File\ByteStream.cpp" />
     <ClCompile Include="Source\File\FileTemporary.cpp" />
-    <ClCompile Include="Source\Model\MeshRenderInfo.cpp" />
-    <ClCompile Include="Source\Model\MeshStructure.cpp" />
+    <ClCompile Include="Source\Model\MeshSegment.cpp" />
     <ClCompile Include="Source\Font\FNT\FNTCommonData.cpp" />
     <ClCompile Include="Source\Font\FNT\FNTInfo.cpp" />
     <ClCompile Include="Source\Image\PNG\Chunk\PNGColorType.cpp" />
     <ClCompile Include="Source\Model\Model.cpp" />
     <ClCompile Include="Source\Network\SocketActionResult.cpp" />
-    <ClCompile Include="Source\Shader\ShaderType.cpp" />
     <ClCompile Include="Source\Video\MP4\MP4.cpp" />
     <ClCompile Include="Source\Image\JPEG\JPEGScanSelector.cpp" />
     <ClCompile Include="Source\Image\JPEG\JPEGScanStart.cpp" />
@@ -378,15 +374,12 @@
     <ClCompile Include="Source\Video\AVI\AVI.cpp" />
     <ClCompile Include="Source\Sound\WAV\FMT.cpp" />
     <ClCompile Include="Source\Sound\WAV\RIFF.cpp" />
-    <ClCompile Include="Source\Game\SkyBox.cpp" />
-    <ClCompile Include="Source\Image\ImageType.cpp" />
     <ClCompile Include="Source\Async\AsyncLock.cpp" />
     <ClCompile Include="Source\Async\Thread.cpp" />
     <ClCompile Include="Source\Algorithm\Adler32.cpp" />
     <ClCompile Include="Source\Algorithm\CRC32.cpp" />
     <ClCompile Include="Source\Container\AsciiString.cpp" />
     <ClCompile Include="Source\Container\BitStreamHusk.cpp" />
-    <ClCompile Include="Source\Dialog\Dialog.cpp" />
     <ClCompile Include="Source\Email\EML.cpp" />
     <ClCompile Include="Source\File\File.cpp" />
     <ClCompile Include="Source\Font\FNT\FNT.cpp" />
@@ -403,11 +396,9 @@
     <ClCompile Include="Source\Image\PNG\Chunk\PNGChunk.cpp" />
     <ClCompile Include="Source\Image\TGA\TGA.cpp" />
     <ClCompile Include="Source\Image\TIFF\TIFF.cpp" />
-    <ClCompile Include="Source\Level\Level.cpp" />
     <ClCompile Include="Source\Encryption\Caesar.cpp" />
     <ClCompile Include="Source\Encryption\ICypher.cpp" />
     <ClCompile Include="Source\Algorithm\ISBN.cpp" />
-    <ClCompile Include="Source\Encryption\RSA.cpp" />
     <ClCompile Include="Source\Math\Geometry\Form\Cone.cpp" />
     <ClCompile Include="Source\Math\Geometry\Form\Cube.cpp" />
     <ClCompile Include="Source\Math\Geometry\Form\Cuboid.cpp" />
@@ -426,10 +417,6 @@
     <ClCompile Include="Source\Math\Geometry\Shape\Triangle.cpp" />
     <ClCompile Include="Source\Math\Interpolate.cpp" />
     <ClCompile Include="Source\Math\Math.cpp" />
-    <ClCompile Include="Source\Math\Physic\Collider.cpp" />
-    <ClCompile Include="Source\Math\Physic\GravityCube.cpp" />
-    <ClCompile Include="Source\Math\Physic\GravityField.cpp" />
-    <ClCompile Include="Source\Math\Physic\GravitySphere.cpp" />
     <ClCompile Include="Source\Model\3DS\A3DS.cpp" />
     <ClCompile Include="Source\Model\FBX\FBX.cpp" />
     <ClCompile Include="Source\Model\LinkedMesh.cpp" />
@@ -447,10 +434,7 @@
     <ClCompile Include="Source\Network\IOSocket.cpp" />
     <ClCompile Include="Source\Network\IPVersion.cpp" />
     <ClCompile Include="Source\Network\Server.cpp" />
-    <ClCompile Include="Source\Resource.cpp" />
     <ClCompile Include="Source\Image\ImageDataFormat.cpp" />
-    <ClCompile Include="Source\Shader\Shader.cpp" />
-    <ClCompile Include="Source\Shader\ShaderProgram.cpp" />
     <ClCompile Include="Source\Sound\MID\MID.cpp" />
     <ClCompile Include="Source\Sound\MP3\MP3.cpp" />
     <ClCompile Include="Source\Sound\OGG\OGG.cpp" />
@@ -463,7 +447,6 @@
     <ClCompile Include="Source\Compression\ZLIB\ZLIBHeader.cpp" />
     <ClCompile Include="Source\Compression\ZLIB\ZLIBCompressionLevel.cpp" />
     <ClCompile Include="Source\Compression\ZLIB\ZLIBCompressionMethod.cpp" />
-    <ClCompile Include="Source\Game\Sprite.cpp" />
     <ClCompile Include="Source\Compression\ZLIB\ZLIB.cpp" />
     <ClCompile Include="Source\Font\TTF\Chunks\TTFOffsetTable.cpp" />
     <ClCompile Include="Source\Font\TTF\Chunks\TTFVersion.cpp" />
@@ -502,18 +485,19 @@
     <ClCompile Include="Source\Service\HTTP\HTTPServer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Math\Physic\PhysicsDynamic.hpp" />
+    <ClInclude Include="Source\Math\Physic\PhysicsStatic.hpp" />
+    <ClInclude Include="Source\Resource.h" />
     <ClInclude Include="Source\File\FileCachingMode.h" />
-    <ClInclude Include="Source\Math\Physic\CollisionListener.h" />
     <ClInclude Include="Source\File\ParsingToken.h" />
     <ClInclude Include="Source\Font\FNT\FNTLineType.h" />
     <ClInclude Include="Source\Image\GIF\GIFImageDescriptor.h" />
-    <ClInclude Include="Source\Math\Uncategorized\Euklid.h" />
-    <ClInclude Include="Source\Math\Uncategorized\Euklid_element.h" />
-    <ClInclude Include="Source\Math\Uncategorized\Körper.h" />
-    <ClInclude Include="Source\Math\Uncategorized\Restklassen.h" />
-    <ClInclude Include="Source\Math\Uncategorized\RSA.h" />
-    <ClInclude Include="Source\Math\Uncategorized\RSAKeys.h" />
-    <ClInclude Include="Source\ResourceInfo.h" />
+    <ClInclude Include="Source\Encryption\RSA\Euklid.h" />
+    <ClInclude Include="Source\Encryption\RSA\Euklid_element.h" />
+    <ClInclude Include="Source\Encryption\RSA\Körper.h" />
+    <ClInclude Include="Source\Encryption\RSA\Restklassen.h" />
+    <ClInclude Include="Source\Encryption\RSA\RSA.h" />
+    <ClInclude Include="Source\Encryption\RSA\RSAKeys.h" />
     <ClInclude Include="Source\File\Text.h" />
     <ClInclude Include="Source\Image\PNG\Chunk\PNGTransparency.h" />
     <ClInclude Include="Source\Image\PNG\Chunk\PNGPhysicalPixelDimension.h" />
@@ -521,7 +505,6 @@
     <ClInclude Include="Source\Image\PNG\Chunk\PNGPaletteHistogram.h" />
     <ClInclude Include="Source\Image\PNG\Chunk\PNGBackgroundColor.h" />
     <ClInclude Include="Source\Image\PNG\Chunk\PNGLastModificationTime.h" />
-    <ClInclude Include="Source\Camera\Camera.h" />
     <ClInclude Include="Source\Service\HTTP\HTTPError.h" />
     <ClInclude Include="Source\Service\HTTP\HTTPRequestMethod.h" />
     <ClInclude Include="Source\Image\PNG\Chunk\PNGPrimaryChromatics.h" />
@@ -560,8 +543,7 @@
     <ClInclude Include="Source\Container\QuadTree\QuadTree.hpp" />
     <ClInclude Include="Source\File\ProgramExecuteResultListener.hpp" />
     <ClInclude Include="Source\Image\Image.h" />
-    <ClInclude Include="Source\Model\MeshRenderInfo.h" />
-    <ClInclude Include="Source\Model\MeshStructure.h" />
+    <ClInclude Include="Source\Model\MeshSegment.h" />
     <ClInclude Include="Source\Font\FNT\FNTCommonData.h" />
     <ClInclude Include="Source\Font\FNT\FNTInfo.h" />
     <ClInclude Include="Source\Font\IFontFormat.hpp" />
@@ -581,9 +563,6 @@
     <ClInclude Include="Source\Image\JPEG\JPEGFileInfo.h" />
     <ClInclude Include="Source\Image\JPEG\JPEGMarker.h" />
     <ClInclude Include="Source\Image\IImageFormat.h" />
-    <ClInclude Include="Source\Math\Physic\ColliderType.h" />
-    <ClInclude Include="Source\Math\Physic\PhysicsStatic.hpp" />
-    <ClInclude Include="Source\Math\Physic\PhysicsDynamic.hpp" />
     <ClInclude Include="Source\Video\AVI\AVIHeader.h" />
     <ClInclude Include="Source\Compression\HUFFMAN\HuffmanSymbol.h" />
     <ClInclude Include="Source\Compression\DEFLATE\DeflateEncodingMethod.h" />
@@ -610,9 +589,6 @@
     <ClInclude Include="Source\Event\Event.hpp" />
     <ClInclude Include="Source\Math\Geometry\AngleDegree.hpp" />
     <ClInclude Include="Source\Math\Geometry\AngleRadians.hpp" />
-    <ClInclude Include="Source\Camera\CameraPerspective.hpp" />
-    <ClInclude Include="Source\Game\SkyBox.h" />
-    <ClInclude Include="Source\Image\ImageType.h" />
     <ClInclude Include="Source\Async\AsyncLock.h" />
     <ClInclude Include="Source\Async\Thread.h" />
     <ClInclude Include="Source\Algorithm\Adler32.h" />
@@ -631,7 +607,6 @@
     <ClInclude Include="Source\Container\Queue.hpp" />
     <ClInclude Include="Source\Container\RingBuffer.hpp" />
     <ClInclude Include="Source\Container\Table.hpp" />
-    <ClInclude Include="Source\Dialog\Dialog.h" />
     <ClInclude Include="Source\Email\EML.h" />
     <ClInclude Include="Source\File\FileActionResult.hpp" />
     <ClInclude Include="Source\File\File.h" />
@@ -650,10 +625,7 @@
     <ClInclude Include="Source\Image\BMP\BMPInfoHeader.h" />
     <ClInclude Include="Source\Image\GIF\GIF.h" />
     <ClInclude Include="Source\Image\ImageFileFormat.h" />
-    <ClInclude Include="Source\Image\ImageFilter.h" />
     <ClInclude Include="Source\Image\ImageDataFormat.h" />
-    <ClInclude Include="Source\Image\ImageLayout.h" />
-    <ClInclude Include="Source\Image\ImageWrap.h" />
     <ClInclude Include="Source\Image\JPEG\JPEG.h" />
     <ClInclude Include="Source\Image\PNG\PNG.h" />
     <ClInclude Include="Source\Image\PNG\Chunk\PNGChunk.h" />
@@ -664,13 +636,11 @@
     <ClInclude Include="Source\Image\TGA\TGAColorType.h" />
     <ClInclude Include="Source\Image\TGA\TGAImageDataType.h" />
     <ClInclude Include="Source\Image\TIFF\TIFF.h" />
-    <ClInclude Include="Source\Level\Level.h" />
     <ClInclude Include="Source\Math\Complex.h" />
     <ClInclude Include="Source\Math\Diagrams\BoxPlot.hpp" />
     <ClInclude Include="Source\Encryption\Caesar.h" />
     <ClInclude Include="Source\Encryption\ICypher.h" />
     <ClInclude Include="Source\Algorithm\ISBN.h" />
-    <ClInclude Include="Source\Encryption\RSA.h" />
     <ClInclude Include="Source\Math\Geometry\Form\Cone.h" />
     <ClInclude Include="Source\Math\Geometry\Form\Cube.h" />
     <ClInclude Include="Source\Math\Geometry\Form\Cuboid.h" />
@@ -696,10 +666,6 @@
     <ClInclude Include="Source\Math\Geometry\Vector4.hpp" />
     <ClInclude Include="Source\Math\Interpolate.h" />
     <ClInclude Include="Source\Math\Math.h" />
-    <ClInclude Include="Source\Math\Physic\Collider.h" />
-    <ClInclude Include="Source\Math\Physic\GravityCube.h" />
-    <ClInclude Include="Source\Math\Physic\GravityField.h" />
-    <ClInclude Include="Source\Math\Physic\GravitySphere.h" />
     <ClInclude Include="Source\Model\3DS\A3DS.h" />
     <ClInclude Include="Source\Model\FBX\FBX.h" />
     <ClInclude Include="Source\Model\LinkedMesh.h" />
@@ -723,17 +689,11 @@
     <ClInclude Include="Source\Network\IPVersion.h" />
     <ClInclude Include="Source\Network\Server.h" />
     <ClInclude Include="Source\OSDefine.h" />
-    <ClInclude Include="Source\Resource.h" />
-    <ClInclude Include="Source\ResourceType.hpp" />
-    <ClInclude Include="Source\Shader\Shader.h" />
-    <ClInclude Include="Source\Shader\ShaderProgram.h" />
-    <ClInclude Include="Source\Shader\ShaderType.h" />
     <ClInclude Include="Source\Sound\MID\MID.h" />
     <ClInclude Include="Source\Sound\MP3\MP3.h" />
     <ClInclude Include="Source\Sound\OGG\OGG.h" />
     <ClInclude Include="Source\Sound\Sound.h" />
     <ClInclude Include="Source\Sound\SoundFormat.h" />
-    <ClInclude Include="Source\Sound\SoundPlayStyle.hpp" />
     <ClInclude Include="Source\Sound\WAV\WAV.h" />
     <ClInclude Include="Source\Time\StopWatch.h" />
     <ClInclude Include="Source\File\Endian.h" />
@@ -744,7 +704,6 @@
     <ClInclude Include="Source\Compression\ZLIB\ZLIBHeader.h" />
     <ClInclude Include="Source\Compression\ZLIB\ZLIBCompressionLevel.h" />
     <ClInclude Include="Source\Compression\ZLIB\ZLIBCompressionMethod.h" />
-    <ClInclude Include="Source\Game\Sprite.h" />
     <ClInclude Include="Source\Compression\ZLIB\ZLIB.h" />
     <ClInclude Include="Source\Font\TTF\Chunks\TTFOffsetTable.h" />
     <ClInclude Include="Source\Font\TTF\Chunks\TTFVersion.h" />

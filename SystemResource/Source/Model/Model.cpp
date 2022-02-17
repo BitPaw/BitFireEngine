@@ -14,19 +14,13 @@
 #include "../../../SystemResource/Source/Math/Geometry/Shape/Triangle.h"
 #include "../../../SystemResource/Source/Math/Geometry/Shape/Rectangle.h"
 
-BF::Model::Model() : Collider(ColliderType::HitBox)
+BF::Model::Model()
 {
-    ShouldItBeRendered = false;
-
     MaterialListSize = 0;
     MaterialList = nullptr;
 
     MeshListSize = 0;
     MeshList = nullptr;
-
-    SharedModel = nullptr;
-
-    NameChange("<Unnamed Model>");
 }
 
 void BF::Model::PrintModelData()
@@ -34,6 +28,7 @@ void BF::Model::PrintModelData()
     printf("+--------------------------------------------+\n");
     printf("| Meshes %u |\n", MeshListSize);
 
+    /*
     for (size_t i = 0; i < MeshListSize; i++)
     {
         const Mesh& mesh = MeshList[i];
@@ -47,7 +42,7 @@ void BF::Model::PrintModelData()
         printf("| Material : ID:%i, ShaderID:%u, Render:%u |\n", info.MaterialID, info.ShaderProgramID, info.ShouldBeRendered);
     }
 
-    printf("+--------------------------------------------+");
+    printf("+--------------------------------------------+");*/
 }
 
 BF::ModelType BF::Model::FileFormatPeek(const wchar_t* fileExtension)
@@ -63,34 +58,14 @@ BF::ModelType BF::Model::FileFormatPeek(const wchar_t* fileExtension)
     return ModelType::UnKown;
 }
 
-BF::FileActionResult BF::Model::Load()
-{
-    return Load(FilePath);
-}
-
-void BF::Model::Position(Vector3<float> position)
-{
-    MatrixModel.MoveTo(position);
-}
-
-BF::Vector3<float> BF::Model::Position()
-{
-    return MatrixModel.PositionXYZ();
-}
-
 BF::FileActionResult BF::Model::Load(const wchar_t* filePath)
 {
     if (!File::DoesFileExist(filePath))
     {
-        ID = ResourceIDFileNotFound;
         return FileActionResult::FileNotFound;
     }
 
     ModelType modelType = FileFormatPeek(filePath);
-
-    ID = ResourceIDLoading;
-
-    FilePathChange(filePath);
 
     switch (modelType)
     {
@@ -147,23 +122,24 @@ BF::FileActionResult BF::Model::Load(const wchar_t* filePath)
             return FileActionResult::FormatNotSupported;
     }
 
-    ID = ResourceIDLoaded;
-
     return FileActionResult::Successful;
 }
 
-void BF::Model::ConvertFrom(float* vertexList, size_t vertexListSize, unsigned int* indexList, size_t indexListSize, RenderMode renderMode, float textureScaleX, float textureScaleY, bool rawPositions)
+void BF::Model::ConvertFrom(float* vertexList, size_t vertexListSize, unsigned int* indexList, size_t indexListSize, float textureScaleX, float textureScaleY, bool rawPositions)
 {
-    ID = ResourceIDLoading;
-
+    /*
     MeshListSize = 1;
     MeshList = new Mesh[MeshListSize];
 
     Mesh& mesh = MeshList[0]; // Get current target Mesh
     
-    mesh.Structure.RenderType = renderMode;
+   // mesh.Structure.RenderType = renderMode;
 
-    NameChange("<Shape>");
+    mesh.SegmentList = new MeshSegment();
+    mesh.SegmentListSize = 1;
+    MeshSegment& meshSegment = *mesh.SegmentList;
+
+    meshSegment.IndexDataListSize = malloc();
 
     if (rawPositions)
     {
@@ -223,13 +199,12 @@ void BF::Model::ConvertFrom(float* vertexList, size_t vertexListSize, unsigned i
         }
     }   
 
-    BoundingBoxUpdate();
+   // BoundingBoxUpdate();
 
-    Text::Copy(mesh.Name, "<Sprite-Mesh>", MeshNameLength);
-
-    ID = ResourceIDLoaded;
+    Text::Copy(mesh.Name, "<Sprite-Mesh>", MeshNameLength);*/
 }
 
+/*
 void BF::Model::BoundingBoxUpdate()
 {
     Mesh& mesh = MeshList[0];
@@ -241,7 +216,7 @@ void BF::Model::BoundingBoxUpdate()
     Vector3<float> scaling = MatrixModel.ScaleXYZ();
 
     BoundingBox.Set(position.X, position.Y, size.X * scaling.X, size.Y * scaling.Y);
-}
+}*/
 
 /*
 

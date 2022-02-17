@@ -97,8 +97,8 @@ BF::FileActionResult BF::JPEG::Load(const wchar_t* filePath)
                     file.Read(size);
                     file.Read(frameComponent.Key);
 
-                    frameComponent.Width = (size & 0b11110000) >> 4;
-                    frameComponent.Height = size & 0b00001111;
+                    frameComponent.Width = (unsigned char)((size & 0b11110000) >> 4u);
+                    frameComponent.Height = (unsigned char)(size & 0b00001111);
                 }
 
                 break;
@@ -146,8 +146,8 @@ BF::FileActionResult BF::JPEG::Load(const wchar_t* filePath)
                     file.Read(scanSelector.Selector);
                     file.Read(dcacTable);
 
-                    scanSelector.DC = (dcacTable & 0b11110000) >> 4;
-                    scanSelector.ACTable = dcacTable & 0b00001111;
+                    scanSelector.DC = (unsigned char)((dcacTable & 0b11110000) >> 4u);
+                    scanSelector.ACTable = (unsigned char)(dcacTable & 0b00001111);
                 }
 
                 file.Read(ScanStart.SpectralSelectFrom);
@@ -175,7 +175,7 @@ BF::FileActionResult BF::JPEG::Load(const wchar_t* filePath)
                 
                 if (FileInfo.ThumbnailX > 0 && FileInfo.ThumbnailY > 0)
                 {
-                    FileInfo.ThumbnailDataSize = FileInfo.ThumbnailX * FileInfo.ThumbnailY * 3;
+                    FileInfo.ThumbnailDataSize = FileInfo.ThumbnailX * FileInfo.ThumbnailY * 3u;
                     FileInfo.ThumbnailData = (unsigned char*)malloc(FileInfo.ThumbnailDataSize * sizeof(char));
 
                     file.Read(FileInfo.ThumbnailData, FileInfo.ThumbnailDataSize);

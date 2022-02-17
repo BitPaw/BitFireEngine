@@ -11,17 +11,17 @@ namespace BF
 		protected:
 		virtual void CalculateX()
 		{
-			this->X = Magnitude * Math::Cosinus(Angle);
+			this->X = Magnitude * (NumberType)Math::Cosinus(Angle);
 		}
 
 		virtual void CalculateY()
 		{
-			this->Y = Magnitude * Math::Sinus(Angle);
+			this->Y = Magnitude * (NumberType)Math::Sinus(Angle);
 		}
 
 		virtual void CalculateMagnitude()
 		{
-			Magnitude = Math::Pythagoras(this->X, this->Y);
+			Magnitude = (NumberType)Math::Pythagoras(this->X, this->Y);
 		}
 		virtual void CalculateAngle()
 		{

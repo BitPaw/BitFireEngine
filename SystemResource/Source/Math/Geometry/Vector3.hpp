@@ -2,6 +2,8 @@
 
 #include "../Math.h"
 
+#include <cstdio>
+
 namespace BF
 {
 	template <class NumberType>
@@ -270,6 +272,11 @@ namespace BF
 		{
 			// A * t + (1 - t) * B
 			return positionCurrent * (1-factor) + positionDesired * factor;
+		}
+
+		void Print()
+		{
+			printf("(X:%7.2f | X:%7.2f | X:%7.2f)\n", X, Y, Z);
 		}
 	};
 }

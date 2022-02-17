@@ -6,10 +6,10 @@
 
 #include "../File/File.h"
 
-BF::FileActionResult BF::Font::Load()
+BF::FileActionResult BF::Font::Load(const wchar_t* filePath)
 {
-    File file(FilePath);
-    FontFormat fontFormat = FileFormatPeek(FilePath);
+    File file(filePath);
+    FontFormat fontFormat = FileFormatPeek(filePath);
 
     if (!file.DoesFileExist())
     {
@@ -22,21 +22,21 @@ BF::FileActionResult BF::Font::Load()
         {
             // TODO: this is pointer for no reason. I use it at another place -> No delete needed
             FNT* fnt = new FNT();
-            fnt->Load(FilePath);
+            fnt->Load(filePath);
             fnt->ConvertTo(*this);
             break;
         }
         case FontFormat::FormatOFT:
         {
             OTF otf;
-            otf.Load(FilePath);
+            otf.Load(filePath);
             otf.ConvertTo(*this);
             break;
         }
         case FontFormat::FormatTTF:
         {
             TTF ttf;
-            ttf.Load(FilePath);
+            ttf.Load(filePath);
             ttf.ConvertTo(*this);
             break;
         }
@@ -48,13 +48,6 @@ BF::FileActionResult BF::Font::Load()
     }
 
     return FileActionResult::Successful;
-}
-
-BF::FileActionResult BF::Font::Load(const wchar_t* filePath)
-{
-    FilePathChange(filePath);
-
-    return Load();
 }
 
 BF::FileActionResult BF::Font::Save(const wchar_t* filePath, FontFormat fontFormat)
@@ -101,4 +94,9 @@ BF::FontFormat BF::Font::FileFormatPeek(const wchar_t* filePath)
     if (file.ExtensionEquals("TTF")) return FontFormat::FormatTTF;
 
     return FontFormat::Unkown;
+}
+
+size_t BF::Font::FullSizeInMemory()
+{
+    return sizeof(*this);
 }
