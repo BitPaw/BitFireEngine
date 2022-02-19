@@ -292,6 +292,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Library\Library.cpp" />
+    <ClCompile Include="Source\DataBase\DataBase.cpp" />
     <ClCompile Include="Source\Resource.cpp" />
     <ClCompile Include="Source\File\FileCachingMode.cpp" />
     <ClCompile Include="Source\File\ParsingToken.cpp" />
@@ -485,6 +487,8 @@
     <ClCompile Include="Source\Service\HTTP\HTTPServer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Library\Library.h" />
+    <ClInclude Include="Source\DataBase\DataBase.h" />
     <ClInclude Include="Source\Math\Physic\PhysicsDynamic.hpp" />
     <ClInclude Include="Source\Math\Physic\PhysicsStatic.hpp" />
     <ClInclude Include="Source\Resource.h" />

@@ -7,10 +7,19 @@
 
 #include "../SystemResource/Source/Container/BitStreamHusk.h"
 #include "../SystemResource/Source/Image/Image.h"
+#include "../SystemResource/Source/Library/Library.h"
+
 using namespace BF;
 
 int main()
 {
+    Library library;
+
+    bool suc = library.Open("USER32.dll");
+    LibraryFunction fun = library.GetSymbol("BeginPaint");
+    bool csuc = library.Close();
+ 
+
     unsigned char bitStuff[4] = { 0b11000111, 0b001110001 ,0b10001110 ,0b00001111 };
 
     BitStreamHusk bitStreamHusk(bitStuff, 4);
