@@ -13,8 +13,9 @@
 |:--:|:--:|:--:|
 | OpenGL<br> (Open Graphics Library) | API to be able to render | :heavy_check_mark: In-use |
 | GLFW <br> (OpenGL for Window)| Window creation and OpenGL Context creation, then binding to created window.<br>Has only one header file. |:warning: soon removed <br><br> Alot of code for something thatmost operating systems already provides. It saves only a smal chunk of code. |
-| GLUE | ??? |:x: never used |
-| SOIL | ??? | :x: never used |
+| GLUT<br>OpenGL Utility Toolkit | Manage Window creation, input handling and a hand full of events like a window main loop. |:x: never used<br><br> Undesirable for many programmers, too restricting if you want to have controll. |
+|stb_image<br>| Image Loader | :x: never used<br><br> |
+| SOIL<br>Simple OpenGL Image Library | Load & Save images | :x: never used <br><br> Many formats can be loaded but not saved. <br>It's half assly copyed from "stb_image" Library|
 | GLM <br> (OpenGL Math) | Math calculations needed for object transformation & positioning <br> Library is header only (Just .hpp files)| ↪️ rewritten <br><br> The whole library is very heavy, the compile time is very long. You most likely just need a Matrix4x4, a Vector3 and a Vector4. |
 | SDL <br> (Simple DirectMedia Layer)| Access to Audio, Keyboard & Controller and Rendering with OpenGL | :x: never used |
 | OpenAL<br> (Open Audio Library) | Async audio Interface <br> Syntax useable like OpenGL| :x: removed <br><br> Library written in C++, classes aren't even used <br>Code is nested in itself. |
