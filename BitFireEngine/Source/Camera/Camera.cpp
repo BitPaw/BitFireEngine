@@ -105,6 +105,11 @@ void BF::Camera::Rotate(float x, float y)
 	LookAtPosition.Normalize();
 }
 
+void BF::Camera::Move(const float x, const float y, const float z)
+{
+	Move(Vector3<float>(x, y, z));
+}
+
 void BF::Camera::Move(Vector3<float> movement)
 {
 	Vector3<float> xAxis;
@@ -137,7 +142,7 @@ void BF::Camera::Update(float deltaTime)
 
 	MatrixView.LookAt(currentPosition, currentPosition + LookAtPosition, Vector3<float>(0,1,0));
 
-	//printf("CurrentPosition <%2.2f %2.2f %2.2f>\n", currentPosition.Data[0], currentPosition.Data[1], currentPosition.Data[2]);
+	//printf("CurrentPosition <%2.2f %2.2f %2.2f>\n", currentPosition.X, currentPosition.Y, currentPosition.Z);
 
 	//Width = Window::Width;
 	//Height = Window::Height;

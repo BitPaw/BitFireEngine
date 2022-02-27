@@ -20,6 +20,8 @@ int _matrixProjectionID;
 int _materialTextureID;
 BF::RefreshRateMode RefreshRate;
 
+BF::BitFireEngine* BF::BitFireEngine::_instance = nullptr;
+
 void CameraDataGet(unsigned int shaderID)
 {
     _matrixModelID = BF::OpenGL::ShaderGetUniformLocationID(shaderID, "MatrixModel");
@@ -52,6 +54,7 @@ BF::BitFireEngine::BitFireEngine()
     IsRunning = false;
     _deltaTime = 0;
 
+    _instance = this;
 
     _lastUsedShaderProgram = -1;
     _defaultShaderID = -1;
@@ -63,6 +66,121 @@ BF::BitFireEngine::BitFireEngine()
 void BF::BitFireEngine::SetCallBack(IBitFireEngineListener* callbackListener)
 {
     _callbackListener = callbackListener;
+}
+
+void BF::BitFireEngine::ErrorMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+{
+    bool openGLspecific = type == GL_DEBUG_TYPE_ERROR;
+    const char* sourceText = 0;
+    const char* typeText = 0;
+    const char* servertyText = 0;
+
+    switch (source)
+    {
+        case GL_DEBUG_SOURCE_API:
+            sourceText = "API";
+            break;
+
+        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+            sourceText = "Window";
+            break;
+
+        case GL_DEBUG_SOURCE_SHADER_COMPILER:
+            sourceText = "Shader";
+            break;
+
+        case GL_DEBUG_SOURCE_THIRD_PARTY:
+            sourceText = "3rd Party";
+            break;
+
+        case GL_DEBUG_SOURCE_APPLICATION:
+            sourceText = "Application";
+            break;
+
+        case GL_DEBUG_SOURCE_OTHER:
+            sourceText = "Other";
+            break;
+
+        default:
+            break;
+    }
+
+    switch (type)
+    {
+        case GL_DEBUG_TYPE_ERROR:
+            typeText = "Error";
+            break;
+
+        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+            typeText = "DEPRECATED_BEHAVIOR";
+            break;
+
+        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+            typeText = "UNDEFINED_BEHAVIOR";
+            break;
+
+        case GL_DEBUG_TYPE_PORTABILITY:
+            typeText = "PORTABILITY";
+            break;
+
+        case GL_DEBUG_TYPE_PERFORMANCE:
+            typeText = "PERFORMANCE";
+            break;
+
+        case GL_DEBUG_TYPE_OTHER:
+            typeText = "OTHER";
+            break;
+
+        case GL_DEBUG_TYPE_MARKER:
+            typeText = "MARKER";
+            break;
+
+        case GL_DEBUG_TYPE_PUSH_GROUP:
+            typeText = "PUSH_GROUP";
+            break;
+
+        case GL_DEBUG_TYPE_POP_GROUP:
+            typeText = "POP_GROUP";
+            break;
+
+        default:
+            break;
+    }
+
+    switch (severity)
+    {
+        case GL_DEBUG_SEVERITY_HIGH:
+            servertyText = "High";
+            break;
+
+        case GL_DEBUG_SEVERITY_MEDIUM:
+            servertyText = "Medium";
+            break;
+
+        case GL_DEBUG_SEVERITY_LOW:
+            servertyText = "Low";
+            break;
+
+        case GL_DEBUG_SEVERITY_NOTIFICATION:
+            servertyText = "Info";
+            break;
+
+        default:
+            break;
+    }
+
+
+    // (0x%x)
+
+    fprintf
+    (
+        stderr,
+        "[x][OpenGL][%s][%s][%s] %s\n",
+        sourceText,
+        typeText,
+        servertyText,
+        message
+    );
 }
 
 void BF::BitFireEngine::Start()
@@ -91,28 +209,14 @@ void BF::BitFireEngine::Start()
     //SYSTEM_INFO systemInfo; // Windows SystemInfo
     //GetSystemInfo(&systemInfo);
 
+    _mainWindow.MouseButtonCallBack = OnMouseButton;
+    _mainWindow.MouseMoveCallBack = OnMouseMove;
+    _mainWindow.KeyBoardKeyCallBack = OnKeyBoardKey;
+    _mainWindow.WindowCreatedCallBack = OnWindowCreated;
+    _mainWindow.WindowSizeChangedCallBack = OnWindowSizeChanged;
 
     _mainWindow.Create(600 * 2, 400 * 2, "[BFE] <BitFireEngine>");
 
-    printf
-    (
-        "+------------------------------------------------------+\n"
-        "| Graphics Card - Information                          |\n"
-        "+------------------------------------------------------+\n"
-        "| Vendor           : %-33s |\n"
-        "| Model            : %-33s |\n"
-        "| OpenGL Version   : %-33s |\n"
-        "| Texture Slots    : %-33u |\n"
-        "| Maximal Textures : %-33u |\n"
-        "+------------------------------------------------------+\n",
-        OpenGL::GPUVendorName(),
-        OpenGL::GPUModel(),
-        OpenGL::GLSLVersionPrimary(),
-        OpenGL::TextureMaxSlots(),
-        OpenGL::TextureMaxLoaded()
-    );
-
-    _mainWindow.Callback = this;
 
 
     // Sound
@@ -159,6 +263,9 @@ void BF::BitFireEngine::Start()
         */
     }
 
+    while (!_mainWindow.IsRunning);
+
+    wglMakeCurrent(_mainWindow.HandleDeviceContext, _mainWindow.OpenGLRenderingContext);
 
     _callbackListener->OnStartUp();
 
@@ -182,34 +289,267 @@ void BF::BitFireEngine::Update()
     if (_lastUIUpdate >= .20f)
     {
         _lastUIUpdate = 0;
-        _callbackListener->OnUpdateUI();
+        //_callbackListener->OnUpdateUI();
     }
     //---------------------------------------------------------------------
 
     //---[User-Input]------------------------------------------------------
-    _mainWindow.Update(); // Pull inputs from window
-    InputContainer& inputPool = _mainWindow.Input;
 
-    UpdateInput(inputPool);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    _callbackListener->OnUpdateInput(inputPool);
+#if 0 // Triangle Test       
+        // glClearColor(0.5f, 0.5f, 0.5f, 1);
 
-    OpenGL::RenderClear();
+        glBegin(GL_POLYGON);
+        glColor3f(1, 0, 0); glVertex3f(-0.6, -0.75, 0.5);
+        glColor3f(0, 1, 0); glVertex3f(0.6, -0.75, 0);
+        glColor3f(0, 0, 1); glVertex3f(0, 0.75, 0);
+        glEnd();
+#else
+        //---[Game-Logic]------------------------------------------------------
+        ModelsPhysicsApply(deltaTime);
+
+        _callbackListener->OnUpdateGameLogic(deltaTime);
+        //---------------------------------------------------------------------
+
+        //---[Render World]----------------------------------------------------
+        ModelsRender(deltaTime);
+        //---------------------------------------------------------------------          
+#endif
+
+        glFlush();  // Flush drawing command buffer to make drawing happen as soon as possible.
+
+        SwapBuffers(_mainWindow.HandleDeviceContext);
+
+       //wglMakeCurrent(0, 0);
+    
+
+        UpdateInput(_inputContainer);
+    _callbackListener->OnUpdateInput(_inputContainer);
     //---------------------------------------------------------------------
+}
 
-       //---[Render World]----------------------------------------------------
-    ModelsRender(deltaTime);
-    //---------------------------------------------------------------------
+void BF::BitFireEngine::OnMouseButton(const MouseButton mouseButton, const ButtonState buttonState)
+{
+    BitFireEngine* engine = BitFireEngine::Instance();
+    Mouse& mouse = engine->_inputContainer.MouseInput;
 
-    //---[Game-Logic]------------------------------------------------------
-    ModelsPhysicsApply(deltaTime);
+    switch (mouseButton)
+    {
+        case MouseButton::Left:
+        {
+            mouse.LeftButton.IncrementIfAlreadyPressed();
+            break;
+        }
+        case MouseButton::Middle:
+        {
+            mouse.ScrollButton.IncrementIfAlreadyPressed();
+            break;
+        }
+        case MouseButton::Right:
+        {
+            mouse.RightButton.IncrementIfAlreadyPressed();
+            break;
+        }
+    }
 
-    _callbackListener->OnUpdateGameLogic(deltaTime);
-    //---------------------------------------------------------------------
+    //printf("[#][OnMouseButton]\n");
+}
 
+void BF::BitFireEngine::OnMouseMove(const unsigned short x, const unsigned short y)
+{
+    BitFireEngine* engine = BitFireEngine::Instance();
+    Mouse& mouse = engine->_inputContainer.MouseInput;
+    Camera& camera = engine->MainCamera;
 
+    camera.Rotate(0.1f, 0);
+    camera.Update(0.001);
 
-    IsRunning = !_mainWindow.ShouldCloseWindow;
+    printf("[#][OnMouseMove]\n");
+}
+
+void BF::BitFireEngine::OnKeyBoardKey(const KeyBoardKeyInfo keyBoardKeyInfo)
+{
+    BitFireEngine* engine = BitFireEngine::Instance();
+    InputContainer& input = engine->_inputContainer;
+    KeyBoard& keyBoard = input.KeyBoardInput;
+
+    InputButton* inputButton = nullptr;
+
+    switch (keyBoardKeyInfo.Key)
+    {
+        case KeyBoardKey::KeyA: inputButton = &keyBoard.A; break;
+        case KeyBoardKey::KeyB: inputButton = &keyBoard.B; break;
+        case KeyBoardKey::KeyC: inputButton = &keyBoard.C; break;
+        case KeyBoardKey::KeyD: inputButton = &keyBoard.D; break;
+        case KeyBoardKey::KeyE: inputButton = &keyBoard.E; break;
+        case KeyBoardKey::KeyF: inputButton = &keyBoard.F; break;
+        case KeyBoardKey::KeyG: inputButton = &keyBoard.G; break;
+        case KeyBoardKey::KeyH: inputButton = &keyBoard.H; break;
+        case KeyBoardKey::KeyI: inputButton = &keyBoard.I; break;
+        case KeyBoardKey::KeyJ: inputButton = &keyBoard.J; break;
+        case KeyBoardKey::KeyK: inputButton = &keyBoard.K; break;
+        case KeyBoardKey::KeyL: inputButton = &keyBoard.L; break;
+        case KeyBoardKey::KeyM: inputButton = &keyBoard.M; break;
+        case KeyBoardKey::KeyN: inputButton = &keyBoard.N; break;
+        case KeyBoardKey::KeyO: inputButton = &keyBoard.O; break;
+        case KeyBoardKey::KeyP: inputButton = &keyBoard.P; break;
+        case KeyBoardKey::KeyQ: inputButton = &keyBoard.Q; break;
+        case KeyBoardKey::KeyR: inputButton = &keyBoard.R; break;
+        case KeyBoardKey::KeyS: inputButton = &keyBoard.S; break;
+        case KeyBoardKey::KeyT: inputButton = &keyBoard.T; break;
+        case KeyBoardKey::KeyU: inputButton = &keyBoard.U; break;
+        case KeyBoardKey::KeyV: inputButton = &keyBoard.V; break;
+        case KeyBoardKey::KeyW: inputButton = &keyBoard.W; break;
+        case KeyBoardKey::KeyX: inputButton = &keyBoard.X; break;
+        case KeyBoardKey::KeyY: inputButton = &keyBoard.Y; break;
+        case KeyBoardKey::KeyZ: inputButton = &keyBoard.Z; break;
+    }
+
+    if (!inputButton)
+    {
+        return;
+    }
+
+    switch (keyBoardKeyInfo.Mode)
+    {
+        case ButtonState::Down:
+        {
+            inputButton->Increment();   
+            break;
+        }
+        case ButtonState::Release:
+        {
+            inputButton->Reset();
+            break;
+        }
+    }   
+}
+
+void BF::BitFireEngine::OnWindowCreated(Window& window)
+{
+    const PIXELFORMATDESCRIPTOR pfd =
+    {
+        sizeof(PIXELFORMATDESCRIPTOR),
+        1,
+        PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,    //Flags
+        PFD_TYPE_RGBA,        // The kind of framebuffer. RGBA or palette.
+        32,                   // Colordepth of the framebuffer.
+        0, 0, 0, 0, 0, 0,
+        0,
+        0,
+        0,
+        0, 0, 0, 0,
+        24,                   // Number of bits for the depthbuffer
+        8,                    // Number of bits for the stencilbuffer
+        0,                    // Number of Aux buffers in the framebuffer.
+        PFD_MAIN_PLANE,
+        0,
+        0, 0, 0
+    };
+
+    int letWindowsChooseThisPixelFormat = ChoosePixelFormat(window.HandleDeviceContext, &pfd);
+    SetPixelFormat(window.HandleDeviceContext, letWindowsChooseThisPixelFormat, &pfd);
+
+    window.OpenGLRenderingContext = wglCreateContext(window.HandleDeviceContext);
+    wglMakeCurrent(window.HandleDeviceContext, window.OpenGLRenderingContext);
+
+    //GLEW
+    {
+        printf("[i][GLEW] Initialize... ");
+
+        const GLenum result = glewInit();
+        const bool success = result == GLEW_OK;
+
+        printf("[%s]\n", (success ? "OK" : "Failed"));
+
+        if (!success)
+        {
+            switch (result)
+            {
+                case GLEW_OK: // No Error
+                {
+                    break;
+                }
+                case GLEW_ERROR_NO_GL_VERSION:   /* missing GL version */
+                {
+                    printf("[x][OpenGL] No Version detected. Is the contect created?\n");
+                    break;
+                }
+                case GLEW_ERROR_GL_VERSION_10_ONLY: /* Need at least OpenGL 1.1 */
+                {
+                    printf("[x][OpenGL] Version is outdated. You need al least Version 1.1\n");
+                    break;
+                }
+                case GLEW_ERROR_GLX_VERSION_11_ONLY:  /* Need at least GLX 1.2 */
+                {
+                    printf("[x][OpenGL] Version is outdated. You need al least Version 1.2\n");
+                    break;
+                }
+                case GLEW_ERROR_NO_GLX_DISPLAY:  /* Need GLX display for GLX support */
+                {
+                    printf("[x][OpenGL] No display detected that can support OpenGL\n\n");
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+
+        glDebugMessageCallback(BF::BitFireEngine::ErrorMessageCallback, 0);
+        glEnable(GL_DEBUG_OUTPUT);
+    }
+
+    printf
+    (
+        "+------------------------------------------------------+\n"
+        "| Graphics Card - Information                          |\n"
+        "+------------------------------------------------------+\n"
+        "| Vendor           : %-33s |\n"
+        "| Model            : %-33s |\n"
+        "| OpenGL Version   : %-33s |\n"
+        "| Texture Slots    : %-33u |\n"
+        "| Maximal Textures : %-33u |\n"
+        "+------------------------------------------------------+\n",
+        OpenGL::GPUVendorName(),
+        OpenGL::GPUModel(),
+        OpenGL::GLSLVersionPrimary(),
+        OpenGL::TextureMaxSlots(),
+        OpenGL::TextureMaxLoaded()
+    );
+
+    if (true)
+    {
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+    }
+
+    if (true) // X-RAY
+    {
+        glEnable(GL_DEPTH_TEST);
+    }
+
+    if (true)
+    {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        // glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_COLOR, GL_DST_COLOR);
+
+         //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+         //glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+    }
+
+    wglMakeCurrent(0, 0);
+}
+
+void BF::BitFireEngine::OnWindowSizeChanged(const unsigned int width, const unsigned int height)
+{
+    BitFireEngine* engine = BitFireEngine::Instance();
+    Camera& camera = engine->MainCamera;
+
+    glViewport(0, 0, width, height);
+
+    camera.AspectRatioSet(width, height);
 }
 
 void BF::BitFireEngine::UpdateInput(InputContainer& input)
@@ -217,6 +557,8 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
     KeyBoard& keyboard = input.KeyBoardInput;
     Mouse& mouse = input.MouseInput;
     Camera& camera = MainCamera;
+
+    Vector3<float> movement;
 
     _callbackListener->OnUpdateInput(input);
 
@@ -227,16 +569,21 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
 
     if (keyboard.R.IsShortPressed())
     {
-        bool axisEnabled = mouse.ShoudRegisterInput();
 
-        if (axisEnabled)
+        switch (_mainWindow.CursorCaptureMode())
         {
-            _mainWindow.SetCursorMode(CursorMode::Ignore);
+            case CursorMode::Show:
+            {
+                _mainWindow.CursorCaptureMode(CursorMode::Locked);
+                break;
+            }
+            case CursorMode::Locked:
+            {
+                _mainWindow.CursorCaptureMode(CursorMode::Show);
+                break;
+            }
         }
-        else
-        {
-            _mainWindow.SetCursorMode(CursorMode::Locked);
-        }
+       
         keyboard.R.Value = 0xFF;
     }
 
@@ -244,7 +591,7 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
     {
         Image image;
 
-        _mainWindow.TakeScreenShot(image);
+        //_mainWindow.TakeScreenShot(image);
 
         image.Save(L"ScreenShot.bmp", ImageFileFormat::BitMap);
     }
@@ -265,7 +612,25 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
         }
     }
 
+#if 1 DEBUG
+    if (keyboard.ShitftLeft.IsPressed()) { movement.Add(0, -1, 0); }
+    if (keyboard.W.IsPressed()) { movement.Add(0, 0, 1); }
+    if (keyboard.A.IsPressed()) { movement.Add(-1, 0, 0); }
+    if (keyboard.S.IsPressed()) { movement.Add(0, 0, -1); }
+    if (keyboard.D.IsPressed()) { movement.Add(1, 0, 0); }
+    if (keyboard.SpaceBar.IsPressed())
+    {
+        camera.Velocity.Set(0.0f, 6.0f, .0f);
+
+        movement.Add(0, 1, 0);
+    }
+
+    camera.Move(movement);
+    camera.Rotate(mouse.InputAxis[0], mouse.InputAxis[1]);
+
     camera.Update(_deltaTime);
+#endif
+  
     keyboard.IncrementButtonTick();
     mouse.ResetAxis();
 }
@@ -273,9 +638,6 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
 void BF::BitFireEngine::Stop()
 {
     IsRunning = false;
-
-
-
 
     UnloadAll();
 
@@ -288,26 +650,6 @@ void BF::BitFireEngine::Stop()
 
     _imageAdd.Delete();
     _modelAdd.Delete();
-}
-
-void BF::BitFireEngine::OnKeyPressed(int key, int scancode, int action, int mods)
-{
-
-}
-
-void BF::BitFireEngine::OnMouseButtonClick(int button, int action, int mods)
-{
-
-}
-
-void BF::BitFireEngine::OnMousePositionChanged(double positionX, double positionY)
-{
-
-}
-
-void BF::BitFireEngine::OnWindowSizeChanged(int width, int height)
-{
-    MainCamera.AspectRatioSet(width, height);
 }
 
 void BF::BitFireEngine::Register(Texture& texture)
@@ -385,45 +727,45 @@ void BF::BitFireEngine::Register(TextureCube& textureCube)
 }
 
 void BF::BitFireEngine::Register(Renderable& renderable, const Model& model)
-{   
-  size_t bufferIndexCounter = 0;
-  size_t numberOfMeshes = model.MeshListSize;
-  unsigned int vaoIDList[128u];
-  memset(vaoIDList, -1, 128u * sizeof(unsigned int));
+{
+    size_t bufferIndexCounter = 0;
+    size_t numberOfMeshes = model.MeshListSize;
+    unsigned int vaoIDList[128u];
+    memset(vaoIDList, -1, 128u * sizeof(unsigned int));
 
-  glGenVertexArrays(numberOfMeshes, vaoIDList); // Generate VAOs  
+    glGenVertexArrays(numberOfMeshes, vaoIDList); // Generate VAOs  
 
-  //printf("[OpenGL] Register Mesh <%ls> from <%ls>. Sub-Meshes <%zu>\n", model.Name, model.FilePath, model.MeshListSize);
+    //printf("[OpenGL] Register Mesh <%ls> from <%ls>. Sub-Meshes <%zu>\n", model.Name, model.FilePath, model.MeshListSize);
 
-  for (size_t meshIndex = 0; meshIndex < numberOfMeshes; meshIndex++)
-  {
-      const Mesh& mesh = model.MeshList[meshIndex];
-      const unsigned int amountOfBuffers = mesh.SegmentListSize + 1; // +1 for VertexData
-      
-      const MeshSegment& meshSegment = mesh.SegmentList[meshIndex];
+    for (size_t meshIndex = 0; meshIndex < numberOfMeshes; meshIndex++)
+    {
+        const Mesh& mesh = model.MeshList[meshIndex];
+        const unsigned int amountOfBuffers = mesh.SegmentListSize + 1; // +1 for VertexData
 
-      unsigned int bufferIDList[128u];
-      memset(bufferIDList, -1, 128u * sizeof(unsigned int));
+        const MeshSegment& meshSegment = mesh.SegmentList[meshIndex];
 
-      glGenBuffers(amountOfBuffers, bufferIDList); // Create Buffers
+        unsigned int bufferIDList[128u];
+        memset(bufferIDList, -1, 128u * sizeof(unsigned int));
 
-      unsigned int vao = vaoIDList[meshIndex];
-      unsigned int vbo = bufferIDList[bufferIndexCounter++];
-      unsigned int ibo = bufferIDList[bufferIndexCounter++];
+        glGenBuffers(amountOfBuffers, bufferIDList); // Create Buffers
 
-      renderable.VAO = vao;
-      renderable.VBO = vbo;
-      renderable.IBO = ibo;
- 
-      glBindVertexArray(vao);
+        unsigned int vao = vaoIDList[meshIndex];
+        unsigned int vbo = bufferIDList[bufferIndexCounter++];
+        unsigned int ibo = bufferIDList[bufferIndexCounter++];
 
-      glBindBuffer(GL_ARRAY_BUFFER, vbo); // Select Buffer
-      glBufferData(GL_ARRAY_BUFFER, mesh.VertexDataListSize * sizeof(float), mesh.VertexDataList, GL_STATIC_DRAW);
+        renderable.VAO = vao;
+        renderable.VBO = vbo;
+        renderable.IBO = ibo;
 
-      OpenGL::VertexAttributeArrayDefine(sizeof(float), mesh.VertexDataStructureListSize, mesh.VertexDataStructureList);
+        glBindVertexArray(vao);
 
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-      glBufferData(GL_ELEMENT_ARRAY_BUFFER, meshSegment.IndexDataListSize * sizeof(unsigned int), meshSegment.IndexDataList, GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo); // Select Buffer
+        glBufferData(GL_ARRAY_BUFFER, mesh.VertexDataListSize * sizeof(float), mesh.VertexDataList, GL_STATIC_DRAW);
+
+        OpenGL::VertexAttributeArrayDefine(sizeof(float), mesh.VertexDataStructureListSize, mesh.VertexDataStructureList);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, meshSegment.IndexDataListSize * sizeof(unsigned int), meshSegment.IndexDataList, GL_STATIC_DRAW);
     }
 
     //glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -609,7 +951,7 @@ void BF::BitFireEngine::Register(AudioClip& audioClip, const Sound& sound)
         const ALenum format = ToChannalFormat(sound.NumerOfChannels, sound.BitsPerSample);
 
         alBufferData(audioClip.ID, format, sound.Data, sound.DataSize, sound.SampleRate);
-    }  
+    }
 }
 
 void BF::BitFireEngine::Use(Texture& texture)
@@ -820,7 +1162,7 @@ BF::FileActionResult BF::BitFireEngine::Load(AudioClip& audioClip, const wchar_t
         return FileActionResult::OutOfMemory;
     }
 
-    Sound& sound = *soundAdress;       
+    Sound& sound = *soundAdress;
 
     if (loadAsynchronously)
     {
@@ -838,7 +1180,7 @@ BF::FileActionResult BF::BitFireEngine::Load(AudioClip& audioClip, const wchar_t
         }
 
         Register(audioClip, sound);
-    }   
+    }
 
     return FileActionResult::Successful;
 }
@@ -1070,7 +1412,7 @@ void BF::BitFireEngine::ModelsRender(float deltaTime)
             OpenGL::VertexArrayBind(renderable.VAO);
             OpenGL::VertexBufferBind(renderable.VBO, renderable.IBO);
             Use(ImageType::TextureCubeContainer, renderable.TextureID);
-          
+
             glDrawElements(GL_QUADS, 24, GL_UNSIGNED_INT, 0);
 
             Use(ImageType::TextureCubeContainer, 0);
@@ -1102,11 +1444,6 @@ void BF::BitFireEngine::ModelsRender(float deltaTime)
             continue; // Skip to next model.
         }
 
-
-
-
-
-
         //---<TEST>------------------------------------------------
         OpenGL::UseShaderProgram(shaderID);
         CameraDataGet(shaderID);
@@ -1115,33 +1452,32 @@ void BF::BitFireEngine::ModelsRender(float deltaTime)
         OpenGL::VertexArrayBind(renderable.VAO);
         OpenGL::VertexBufferBind(renderable.VBO, renderable.IBO);
         Use(ImageType::Texture2D, renderable.TextureID);
-            
-        
+
         {
-        const unsigned int renderModeID = ToRenderMode(renderable.Mode);
+            const unsigned int renderModeID = ToRenderMode(renderable.Mode);
 
-        glPointSize(10);
-        glLineWidth(5);
+            glPointSize(10);
+            glLineWidth(5);
 
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glDrawElements(GL_POINTS, 24, GL_UNSIGNED_INT, 0);
-        glDrawElements(renderModeID, 36, GL_UNSIGNED_INT, 0);
-        //glDrawArrays(renderModeID, 0, 24);
+            //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            glDrawElements(GL_POINTS, 24, GL_UNSIGNED_INT, 0);
+            glDrawElements(renderModeID, 36, GL_UNSIGNED_INT, 0);
+            //glDrawArrays(renderModeID, 0, 24);
 
-        /*
-        bool wireFrame = true;
-        if (wireFrame)
-        {
-            glPolygonMode(GL_FRONT, GL_LINE);
-            glPolygonMode(GL_BACK, GL_LINE);
+            /*
+            bool wireFrame = true;
+            if (wireFrame)
+            {
+                glPolygonMode(GL_FRONT, GL_LINE);
+                glPolygonMode(GL_BACK, GL_LINE);
 
-            glDrawArrays(GL_POLYGON, startIndex, amount);
+                glDrawArrays(GL_POLYGON, startIndex, amount);
 
-            glPolygonMode(GL_FRONT, GL_FILL);
-            glPolygonMode(GL_BACK, GL_FILL);
+                glPolygonMode(GL_FRONT, GL_FILL);
+                glPolygonMode(GL_BACK, GL_FILL);
+            }
+            */
         }
-        */
-    }
 
 
         Use(ImageType::Texture2D, 0);
@@ -1855,20 +2191,4 @@ void ByteToString(char* string, size_t value)
         sprintf(string, "%i B", value);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 */
-
-
-
-

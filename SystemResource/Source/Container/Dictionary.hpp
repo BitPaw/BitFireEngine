@@ -37,7 +37,7 @@ namespace BF
 			return nullptr;
 		}
 
-		void Add(Key key, Value value)
+		void Add(const Key key, const Value value)
 		{
 			bool needMoreSpace = (SizeUsed + 1) > SizeAllocated;
 

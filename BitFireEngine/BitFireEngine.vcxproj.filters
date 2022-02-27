@@ -81,12 +81,6 @@
     <ClCompile Include="Source\System\Device\InputSystem.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\System\Window\Key.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Window\Window.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\System\OpenGL.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -218,9 +212,6 @@
     <ClInclude Include="Source\System\Device\KeyBoard\KeyBoard.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\System\Device\Mouse\CursorMode.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\System\Device\Mouse\Mouse.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -231,15 +222,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\System\Device\InputSystem.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Window\IWindowListener.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Window\Key.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Window\Window.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\System\OpenGL.h">

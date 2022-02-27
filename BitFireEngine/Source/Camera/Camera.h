@@ -39,6 +39,7 @@ namespace BF
 		Camera();
 
 		void Rotate(float x, float y);
+		void Move(const float x, const float y, const float z);
 		void Move(Vector3<float> movement);
 		void Update(float deltaTime);
 		float AspectRatioGet();

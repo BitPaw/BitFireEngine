@@ -22,11 +22,17 @@ ThreadID BF::Thread::Run(const ThreadFunction threadFunction, const void* parame
 	return threadID;
 }
 
-void BF::Thread::WaitForFinish()
+void BF::Thread::WaitForFinish(const ThreadID threadID)
 {
 #ifdef OSUnix
     //pthread_join(thread->ID, NULL);
-#elif defined(OSWindows)
-	
+#elif defined(OSWindows)	
+	DWORD exitCode = 0;
+
+	do
+	{
+		GetExitCodeThread(threadID, &exitCode);
+	}
+	while (exitCode == STILL_ACTIVE);
 #endif 
 }

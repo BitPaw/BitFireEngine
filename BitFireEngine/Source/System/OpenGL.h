@@ -20,25 +20,9 @@ namespace BF
 	class OpenGL
 	{
 		public:
-		static void GLAPIENTRY ErrorMessageCallback
-		(
-			GLenum source,
-			GLenum type,
-			GLuint id,
-			GLenum severity,
-			GLsizei length,
-			const GLchar* message,
-			const void* userParam
-		);
-
-		static void CallErrorCheck();		
-
 		static void DepthMaskEnable(bool enable);
 		static void DrawOrder(bool clockwise);
-		static void RenderBothSides(bool renderBothSides);
-	
-		// Render
-		static void RenderClear();
+		static void RenderBothSides(bool renderBothSides);	
 
 		// Data
 		static void VertexAttributeArrayDefine(const unsigned int sizeOfElement, const  unsigned int listSize, const unsigned int* list);
@@ -58,7 +42,6 @@ namespace BF
 		static const char* GPUModel();
 
 		// Shader
-		static bool ShaderCompile(GLID& id, ShaderProgram& shaderProgram);
 		static unsigned int ShaderCompile(unsigned int type, char* shaderString);
 
 		static int ShaderGetUniformLocationID(int shaderID, const char* UniformName);
@@ -68,10 +51,6 @@ namespace BF
 
 		static char UseShaderProgram(int shaderProgramID);
 		static void VertexArrayBind(int vertexArrayID);
-		static void VertexBufferBind(int vertexBufferID, int indexBuffer);
-
-		// Converter
-		private:
-		
+		static void VertexBufferBind(int vertexBufferID, int indexBuffer);		
 	};
 }

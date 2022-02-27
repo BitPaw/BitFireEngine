@@ -1,6 +1,5 @@
 #pragma once
 
-#include "CursorMode.h"
 #include "../InputButton.h"
 
 namespace BF
@@ -10,7 +9,6 @@ namespace BF
 		public:
 		float Position[2];
 		float InputAxis[2];
-		CursorMode Mode;
 
 		InputButton LeftButton;
 		InputButton ScrollButton;
@@ -26,7 +24,5 @@ namespace BF
 
 		void ResetInput();
 		void ResetAxis();
-
-		bool ShoudRegisterInput();
 	};
 }

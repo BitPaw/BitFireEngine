@@ -61,8 +61,6 @@
     <ClCompile Include="Source\Sound\AudioSource.cpp" />
     <ClCompile Include="Source\System\VideoConfig.cpp" />
     <ClCompile Include="Source\System\VulcanAPI.cpp" />
-    <ClCompile Include="Source\System\Window\Key.cpp" />
-    <ClCompile Include="Source\System\Window\Window.cpp" />
     <ClCompile Include="Source\UI\DialogBox\UIDialogBox.cpp" />
     <ClCompile Include="Source\UI\UIButton.cpp" />
     <ClCompile Include="Source\UI\UIElement.cpp" />
@@ -108,7 +106,6 @@
     <ClInclude Include="Source\System\Device\InputContainer.h" />
     <ClInclude Include="Source\System\Device\InputSystem.h" />
     <ClInclude Include="Source\System\Device\KeyBoard\KeyBoard.h" />
-    <ClInclude Include="Source\System\Device\Mouse\CursorMode.h" />
     <ClInclude Include="Source\System\Device\Mouse\Mouse.h" />
     <ClInclude Include="Source\System\IBitFireEngineRenderListener.hpp" />
     <ClInclude Include="Source\System\BitFireEngine.h" />
@@ -121,9 +118,6 @@
     <ClInclude Include="Source\Sound\AudioSource.h" />
     <ClInclude Include="Source\System\VideoConfig.h" />
     <ClInclude Include="Source\System\VulcanAPI.h" />
-    <ClInclude Include="Source\System\Window\IWindowListener.h" />
-    <ClInclude Include="Source\System\Window\Key.h" />
-    <ClInclude Include="Source\System\Window\Window.h" />
     <ClInclude Include="Source\UI\DialogBox\UIDialogBox.h" />
     <ClInclude Include="Source\UI\UIButton.h" />
     <ClInclude Include="Source\UI\UIElement.h" />

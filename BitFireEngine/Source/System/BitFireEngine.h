@@ -19,7 +19,7 @@
 #include <Sound/Sound.h>
 #include <Model/Model.h>
 
-#include "Window/Window.h"
+//#include "Window/Window.h"
 
 #include "../Resource/SkyBox.h"
 #include "../Player/Player.h"
@@ -32,16 +32,22 @@
 #include "../Shader/ShaderType.h"
 #include "../Shader/ShaderProgram.h"
 
+#include <Window/Window.h>
 
 namespace BF
 {
-	class BitFireEngine : protected IWindowListener
+	class BitFireEngine// : protected IWindowListener
 	{
 		private:
 		//---[Elements}---------------------------------
 		StopWatch _stopWatch;
-		Window _mainWindow;
+        Window _mainWindow;
 		float _deltaTime;
+        static BitFireEngine* _instance;
+
+        InputContainer _inputContainer;
+
+        //Queue<> Engine Event
 		//----------------------------------------------
 
         // Resources
@@ -71,30 +77,32 @@ namespace BF
         // ASYNC LOCKS
         AsyncLock _imageAdd;
         AsyncLock _modelAdd;
-        //-------------------------
+        //-------------------------        
 
+        static void ErrorMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 
+        static void OnMouseButton(const MouseButton mouseButton, const ButtonState buttonState);
+        static void OnMouseMove(const unsigned short x, const unsigned short y);
+        static void OnKeyBoardKey(const KeyBoardKeyInfo keyBoardKeyInfo);
+        static void OnWindowCreated(Window& window);
+        static void OnWindowSizeChanged(const unsigned int width, const unsigned int height);
+        static void OnWindowsMouseCaptureChanged();
 
-
-  
-		// Geerbt über IWindowListener
-		virtual void OnKeyPressed(int key, int scancode, int action, int mods) override;
-		virtual void OnMouseButtonClick(int button, int action, int mods) override;
-		virtual void OnMousePositionChanged(double positionX, double positionY) override;
-		virtual void OnWindowSizeChanged(int width, int height) override;
 
 		void UpdateInput(InputContainer& input);
 
         //---------------------------------------------------------------------
 
 		public:
-		bool IsRunning;
+		bool IsRunning;  
         Camera MainCamera;
         Font* DefaultFont;
         SkyBox* DefaultSkyBox;
 		IBitFireEngineListener* _callbackListener;
 
 		BitFireEngine();
+
+        static BitFireEngine* Instance() { return _instance; }
 
 		void SetCallBack(IBitFireEngineListener* callbackListener);
 
