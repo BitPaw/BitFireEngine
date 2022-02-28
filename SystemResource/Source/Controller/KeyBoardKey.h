@@ -118,11 +118,14 @@ namespace BF
 		KeyPadADD,
 		KeyPadENTER,
 		KeyPadEQUAL,
-		KeySHIFTLEFT,
+
+		KeyShiftLeft,
+		KeyShiftRight,
+
 		KeyCONTROLLEFT,
 		KeyALTLEFT,
 		KeySUPERLEFT,
-		KeySHIFTRIGHT,
+	
 		KeyCONTROLRIGHT,
 		KeyALTRIGHT,
 		KeySUPERRIGHT,

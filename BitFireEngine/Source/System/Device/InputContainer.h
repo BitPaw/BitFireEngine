@@ -8,8 +8,8 @@ namespace BF
 	class InputContainer
 	{
 		public:
-		static KeyBoard KeyBoardInput;
-		static Mouse MouseInput;
+		KeyBoard KeyBoardInput;
+		Mouse MouseInput;
 
 		InputContainer();
 	};

@@ -78,9 +78,6 @@
     <ClCompile Include="Source\System\Device\InputContainer.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\System\Device\InputSystem.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\System\OpenGL.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -219,9 +216,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\System\Device\InputContainer.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Device\InputSystem.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\System\OpenGL.h">

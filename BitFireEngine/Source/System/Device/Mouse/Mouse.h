@@ -7,8 +7,8 @@ namespace BF
 	class Mouse
 	{
 		public:
-		float Position[2];
-		float InputAxis[2];
+		unsigned short Position[2]; // Window-Position (0/0 to x/y)
+		short InputAxis[2]; // Relative Input (-x/-y to 0/0 to x/y)
 
 		InputButton LeftButton;
 		InputButton ScrollButton;

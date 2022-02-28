@@ -209,7 +209,7 @@ void BF::BitFireEngine::Start()
     //SYSTEM_INFO systemInfo; // Windows SystemInfo
     //GetSystemInfo(&systemInfo);
 
-    _mainWindow.MouseButtonCallBack = OnMouseButton;
+    _mainWindow.MouseClickCallBack = OnMouseButton;
     _mainWindow.MouseMoveCallBack = OnMouseMove;
     _mainWindow.KeyBoardKeyCallBack = OnKeyBoardKey;
     _mainWindow.WindowCreatedCallBack = OnWindowCreated;
@@ -361,11 +361,16 @@ void BF::BitFireEngine::OnMouseMove(const unsigned short x, const unsigned short
     BitFireEngine* engine = BitFireEngine::Instance();
     Mouse& mouse = engine->_inputContainer.MouseInput;
     Camera& camera = engine->MainCamera;
+ 
+    // Calculate relative input
+    mouse.InputAxis[0] = mouse.Position[0] - x;
+    mouse.InputAxis[1] = mouse.Position[1] - y;
 
-    camera.Rotate(0.1f, 0);
-    camera.Update(0.001);
+    // Update position
+    mouse.Position[0] = x;
+    mouse.Position[1] = y;
 
-    printf("[#][OnMouseMove]\n");
+    //printf("[#][OnMouseMove] X:%5i Y:%5i\n", mouse.InputAxis[0], mouse.InputAxis[1]);
 }
 
 void BF::BitFireEngine::OnKeyBoardKey(const KeyBoardKeyInfo keyBoardKeyInfo)
@@ -375,9 +380,13 @@ void BF::BitFireEngine::OnKeyBoardKey(const KeyBoardKeyInfo keyBoardKeyInfo)
     KeyBoard& keyBoard = input.KeyBoardInput;
 
     InputButton* inputButton = nullptr;
+    
 
     switch (keyBoardKeyInfo.Key)
     {
+        case KeyBoardKey::KeySpace: inputButton = &keyBoard.SpaceBar; break;
+        case KeyBoardKey::KeyShiftLeft: inputButton = &keyBoard.ShitftLeft; break;
+
         case KeyBoardKey::KeyA: inputButton = &keyBoard.A; break;
         case KeyBoardKey::KeyB: inputButton = &keyBoard.B; break;
         case KeyBoardKey::KeyC: inputButton = &keyBoard.C; break;
@@ -569,7 +578,6 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
 
     if (keyboard.R.IsShortPressed())
     {
-
         switch (_mainWindow.CursorCaptureMode())
         {
             case CursorMode::Show:

@@ -4,55 +4,29 @@
 #include <wtypes.h>
 
 #include <windowsx.h>
+#include <WinUser.h>
 #include <GL/GL.h>
 #include <stdio.h>
 
 #include "../File/Text.h"
 
+
+
 using namespace BF;
 
+#define InvokeEvent(FunctionPoniter, ...) if(FunctionPoniter) FunctionPoniter(__VA_ARGS__)
 
 BF::Dictionary<WindowID, Window*> BF::Window::_windowLookup;
 BF::Window* BF::Window::_currentWindow = nullptr;
 
 LRESULT BF::Window::OnWindowEvent(const HWND windowsID, const unsigned int eventID, WPARAM wParam, LPARAM lParam)
 {
-    HDC hdc;                   // handle to device context 
-    TEXTMETRIC tm;             // structure for text metrics 
-    static DWORD dwCharX;      // average width of characters 
-    static DWORD dwCharY;      // height of characters 
-    static DWORD dwClientX;    // width of client area 
-    static DWORD dwClientY;    // height of client area 
-    static DWORD dwLineLen;    // line length 
-    static DWORD dwLines;      // text lines in client area 
-    static int nCaretPosX = 0; // horizontal position of caret 
-    static int nCaretPosY = 0; // vertical position of caret 
-    static int nCharWidth = 0; // width of a character 
-    static int cch = 0;        // characters in buffer 
-    static int nCurChar = 0;   // index of current character 
-    static PTCHAR pchInputBuf; // input buffer 
-    int i, j;                  // loop counters 
-    int cCR = 0;               // count of carriage returns 
-    int nCRIndex = 0;          // index of last carriage return 
-    int nVirtKey;              // virtual-key code 
-    TCHAR szBuf[128];          // temporary buffer 
-    TCHAR ch;                  // current character 
-    PAINTSTRUCT ps;            // required by BeginPaint 
-    RECT rc;                   // output rectangle for DrawText 
-    SIZE sz;                   // string dimensions 
-    COLORREF crPrevText;       // previous text color 
-    COLORREF crPrevBk;         // previous background color
-    size_t* pcch;
-    HRESULT hResult;
-
- 
-
     bool letWindowsHandleEvent = true;
 
     BF::Window* window = nullptr;
     BF::Window** windowAdress = BF::Window::_windowLookup.GetValue(windowsID);
     const bool isRegistered = windowAdress;
-
+    
     if (isRegistered)
     {
         window = *windowAdress;
@@ -60,6 +34,14 @@ LRESULT BF::Window::OnWindowEvent(const HWND windowsID, const unsigned int event
 
     switch (eventID)
     {
+        case WM_SETCURSOR:
+        {
+            const HWND windowsHandle = (HWND)wParam;
+            const WORD hitTestResult = LOWORD(lParam);
+            const WORD sourceMessage = HIWORD(lParam);
+
+            return true; // prevent further processing
+        }
         case WM_GETMINMAXINFO:
         {
             //wParam is unused
@@ -67,25 +49,21 @@ LRESULT BF::Window::OnWindowEvent(const HWND windowsID, const unsigned int event
 
             break;
         }
-
         case WM_CREATE:
         {          
             const HDC windowHandleToDeviceContext = GetDC(windowsID);
 
             if (_currentWindow)
             {
-                window = _currentWindow;
-                _currentWindow = nullptr;
-
+                window = _currentWindow;    
                 window->ID = windowsID;
                 window->HandleDeviceContext = windowHandleToDeviceContext;
 
+                _currentWindow = nullptr;
+
                 _windowLookup.Add(windowsID, window);
 
-                if (window->WindowCreatedCallBack)
-                {
-                    window->WindowCreatedCallBack(*window);
-                }
+                InvokeEvent(window->WindowCreatedCallBack, *window);
 
                 window->IsRunning = true;
             }                
@@ -94,19 +72,13 @@ LRESULT BF::Window::OnWindowEvent(const HWND windowsID, const unsigned int event
         }       
         case WM_CLOSE:
         {
-            if (window->WindowClosingCallBack)
-            {              
-                window->WindowClosingCallBack(letWindowsHandleEvent);
-            }          
+            InvokeEvent(window->WindowClosingCallBack, letWindowsHandleEvent);
 
             if (letWindowsHandleEvent)
             {
                 const LRESULT result = DefWindowProc(windowsID, WM_CLOSE, wParam, lParam);
 
-                if (window->WindowClosedCallBack)
-                {
-                    window->WindowClosedCallBack();
-                }
+                InvokeEvent(window->WindowClosedCallBack);
 
                 return result;
             }
@@ -118,17 +90,43 @@ LRESULT BF::Window::OnWindowEvent(const HWND windowsID, const unsigned int event
             // wParam unused 
             const WindowID id = (WindowID)lParam;
 
-            
+            break;            
+        }
+        case WM_INPUT:
+        {
+            const size_t inputCode = GET_RAWINPUT_CODE_WPARAM(wParam);
+            const HRAWINPUT handle = (HRAWINPUT)lParam;
+
+            const UINT uiCommand = RID_HEADER | RID_INPUT; 
+            RAWINPUT  rawInput{0};
+            unsigned int* rawInputSize = (unsigned int*)sizeof(RAWINPUT);
+
+            const unsigned int result = GetRawInputData(handle, uiCommand, &rawInput, rawInputSize, sizeof(RAWINPUTHEADER));
+            const bool sucessful = result != -1;
+
+            switch (inputCode)
+            {
+                case RIM_INPUT: // Input occurred while the application was in the foreground.
+                {
+                    break;
+                }
+                case RIM_INPUTSINK: // Input occurred while the application was not in the foreground.
+                {
+                    break;
+                }
+
+                default:
+                    break;
+            }
+
+            break;
         }
         case WM_SIZE:
         {
             const DWORD width = LOWORD(lParam);
             const DWORD height = HIWORD(lParam);
 
-            if (window->WindowSizeChangedCallBack)
-            {
-                window->WindowSizeChangedCallBack(width, height);
-            }        
+            InvokeEvent(window->WindowSizeChangedCallBack, width, height);
 
             break;
         }
@@ -137,9 +135,9 @@ LRESULT BF::Window::OnWindowEvent(const HWND windowsID, const unsigned int event
             // Create, position, and display the caret when the 
             // window receives the keyboard focus. 
 
-            //CreateCaret(hwndMain, (HBITMAP)1, 0, dwCharY);
+            //CreateCaret(window->ID, (HBITMAP)1, 0, dwCharY);
             //SetCaretPos(nCaretPosX, nCaretPosY * dwCharY);
-            //ShowCaret(hwndMain);
+            //ShowCaret(window->ID);
             break;
         }     
         case WM_KILLFOCUS:
@@ -147,75 +145,53 @@ LRESULT BF::Window::OnWindowEvent(const HWND windowsID, const unsigned int event
             // Hide and destroy the caret when the window loses the 
             // keyboard focus. 
 
-            //HideCaret(hwndMain);
+            //HideCaret(window->ID);
             //DestroyCaret();
             break;
         }
-
         case WM_LBUTTONDOWN:   
         {
-            if (window->MouseButtonCallBack)
-            {
-                window->MouseButtonCallBack(MouseButton::Left, ButtonState::Down);
-            }
-
+            InvokeEvent(window->MouseClickCallBack, MouseButton::Left, ButtonState::Down);
             break;
         }
         case WM_LBUTTONUP:            
         {
-            if (window->MouseButtonCallBack)
-            {
-                window->MouseButtonCallBack(MouseButton::Left, ButtonState::Release);
-            }
-
+            InvokeEvent(window->MouseClickCallBack, MouseButton::Left, ButtonState::Release);   
             break;
         }
         case WM_LBUTTONDBLCLK:      
         {
+            InvokeEvent(window->MouseClickDoubleCallBack, MouseButton::Left);
             break;
         }
         case WM_RBUTTONDOWN:   
-        {
-            if (window->MouseButtonCallBack)
-            {
-                window->MouseButtonCallBack(MouseButton::Right, ButtonState::Down);
-            }
-
+        { 
+            InvokeEvent(window->MouseClickCallBack, MouseButton::Right, ButtonState::Down);   
             break;
         }
         case WM_RBUTTONUP:         
         {
-            if (window->MouseButtonCallBack)
-            {
-                window->MouseButtonCallBack(MouseButton::Right, ButtonState::Release);
-            }
-
+            InvokeEvent(window->MouseClickCallBack, MouseButton::Right, ButtonState::Release);    
             break;
         }
         case WM_RBUTTONDBLCLK:        
         {
+            InvokeEvent(window->MouseClickDoubleCallBack, MouseButton::Right);
             break;
         }
         case WM_MBUTTONDOWN:           
-        {
-            if (window->MouseButtonCallBack)
-            {
-                window->MouseButtonCallBack(MouseButton::Middle, ButtonState::Down);
-            }
-
+        {       
+            InvokeEvent(window->MouseClickCallBack, MouseButton::Middle, ButtonState::Down);   
             break;
         }
         case WM_MBUTTONUP:           
-        {
-            if (window->MouseButtonCallBack)
-            {
-                window->MouseButtonCallBack(MouseButton::Middle, ButtonState::Release);
-            }
-
+        {  
+            InvokeEvent(window->MouseClickCallBack, MouseButton::Middle, ButtonState::Release);    
             break;
         }
         case WM_MBUTTONDBLCLK:  
         {
+            InvokeEvent(window->MouseClickDoubleCallBack, MouseButton::Middle);
             break;
         }
         case WM_MOUSEMOVE:
@@ -223,14 +199,13 @@ LRESULT BF::Window::OnWindowEvent(const HWND windowsID, const unsigned int event
             const short x = GET_X_LPARAM(lParam);
             const short y = GET_Y_LPARAM(lParam);
 
-            //OnMouseMoveEvent(x, y);
-
+            InvokeEvent(window->MouseMoveCallBack, x, y);
             break;
         }
         case WM_KEYDOWN:
         case WM_KEYUP:
        // case WM_CHAR:    
-        {
+        {            
             ButtonState mode;
 
             switch (eventID)
@@ -252,8 +227,6 @@ LRESULT BF::Window::OnWindowEvent(const HWND windowsID, const unsigned int event
             const size_t character = wParam;
             const size_t characterInfo = lParam;
 
-
-
             KeyBoardKeyInfo buttonInfo;
             buttonInfo.Key = ConvertKeyBoardKey(character);
             buttonInfo.Mode = mode;
@@ -265,10 +238,7 @@ LRESULT BF::Window::OnWindowEvent(const HWND windowsID, const unsigned int event
             buttonInfo.PreState        = (characterInfo & 0b01000000000000000000000000000000) >> 30; // Der vorherige Schlüsselzustand.Der Wert ist immer 1 für eine WM _ KEYUP - Nachricht.
             buttonInfo.GapState        = (characterInfo & 0b10000000000000000000000000000000) >> 31; // Der Übergangszustand.Der Wert ist immer 1 für eine WM _ KEYUP - Nachricht.
             
-            if (window->KeyBoardKeyCallBack)
-            {
-                window->KeyBoardKeyCallBack(buttonInfo);
-            }
+            InvokeEvent(window->KeyBoardKeyCallBack, buttonInfo);
 
             break;
         }          
@@ -422,7 +392,7 @@ LRESULT BF::Window::OnWindowEvent(const HWND windowsID, const unsigned int event
             break;
             */
         case WM_PAINT:
-            if (cch == 0)       // nothing in input buffer 
+           // if (cch == 0)       // nothing in input buffer 
                 break;
 
            // hdc = BeginPaint(hwndMain, &ps);
@@ -469,7 +439,8 @@ BF::Window::Window()
 
     _cursorMode = CursorMode::Show;
 
-    MouseButtonCallBack = 0;
+    MouseClickCallBack = 0;
+    MouseClickDoubleCallBack = 0;
     MouseMoveCallBack = 0;
     KeyBoardKeyCallBack = 0;
     WindowCreatedCallBack = 0;
@@ -690,8 +661,8 @@ void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
             RECT newPOS{0};
             GetWindowRect(ID, &newPOS);            
 
-            unsigned int midX = (newPOS.right - newPOS.left) / 2;
-            unsigned int midY = (newPOS.bottom - newPOS.top) / 2;
+            unsigned int midX = (newPOS.right - newPOS.left);
+            unsigned int midY = (newPOS.bottom - newPOS.top);
 
             desktop.left = midX;
             desktop.right = midX;
@@ -700,9 +671,71 @@ void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
 
             ClipCursor(&desktop);
             SetCursorPos(midX, midY);
+            /*
 
-            while (ShowCursor(false) >= 0);
+            NOT WORKING
+
+
+            {
+                // Save a copy of the default cursor
+                HANDLE arrowHandle = LoadImage(NULL, MAKEINTRESOURCE(IDC_ARROW), IMAGE_CURSOR, 0, 0, LR_SHARED);
+                HCURSOR hcArrow = CopyCursor(arrowHandle);
+
+                // Set the cursor to a transparent one to emulate no cursor
+                HANDLE noCursorHandle = LoadImage(GetModuleHandle(NULL), L"nocursor.cur", IMAGE_CURSOR, 0, 0, LR_LOADFROMFILE); //worked
+                //HANDLE noCursorHandle = LoadCursorFromFile(L"nocursor.cur"); //this also worked
+
+                HCURSOR noCursor = CopyCursor(noCursorHandle);
+                /*SetSystemCursor(noCursor, OCR_NORMAL);
+                int i = 0;
+                while (i++ < 10)
+                {
+                    cout << i << endl;
+                    Sleep(1000);
+                }* /
+                //SetSystemCursor(hcArrow, OCR_NORMAL);
+                DestroyCursor(hcArrow);
+            }*/
+
+          
+
+   
+
+      
+     
+           // int the_win32api_sucks = ShowCursor(false);
+            //while (the_win32api_sucks >= 0) the_win32api_sucks = ShowCursor(false);
+
             
+            int index = 0;
+
+            do
+            {
+                index = ShowCursor(false);
+
+                printf("index %i\n", index);
+            }
+            while (index >= 0);
+            
+
+            SetCursor(NULL);
+
+            //HCURSOR cur = GetCursor();
+
+            //DestroyCursor(cur);
+
+
+            /*
+            CONSOLE_CURSOR_INFO ConCurInf;
+            HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+
+            ConCurInf.dwSize = 10;
+            ConCurInf.bVisible = FALSE;
+
+            SetConsoleCursorInfo(hOut, &ConCurInf);*/
+
+
+           // SetCursor();
             break;
         }
     }

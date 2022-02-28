@@ -45,11 +45,16 @@ namespace BF
 
 	class Window;
 
+	// Mouse
 	typedef void (*MouseScrollEvent)();
-	typedef void (*MouseButtonEvent)(const MouseButton mouseButton, const ButtonState buttonState);
+	typedef void (*MouseClickEvent)(const MouseButton mouseButton, const ButtonState buttonState);
+	typedef void (*MouseClickDoubleEvent)(const MouseButton mouseButton);
 	typedef void (*MouseMoveEvent)(const unsigned short x, const unsigned short y);
+
+	// Keyboard
 	typedef void (*KeyBoardKeyEvent)(const KeyBoardKeyInfo keyBoardKeyInfo);
 
+	// Window
 	//typedef void (*WindowCreatingEvent)();
 	typedef void (*WindowCreatedEvent)(Window& window);
 	typedef void (*WindowSizeChangedEvent)(const unsigned int width, const unsigned int height);
@@ -86,7 +91,9 @@ namespace BF
 		ThreadID MessageThreadID;
 		bool IsRunning;
 
-		MouseButtonEvent MouseButtonCallBack;
+		MouseClickEvent MouseClickCallBack;
+		MouseClickDoubleEvent MouseClickDoubleCallBack;
+
 		MouseMoveEvent MouseMoveCallBack;
 		KeyBoardKeyEvent KeyBoardKeyCallBack;
 		WindowCreatedEvent WindowCreatedCallBack;

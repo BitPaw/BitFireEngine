@@ -53,7 +53,6 @@
     <ClCompile Include="Source\System\BitFireEngine.cpp" />
     <ClCompile Include="Source\System\Device\InputButton.cpp" />
     <ClCompile Include="Source\System\Device\InputContainer.cpp" />
-    <ClCompile Include="Source\System\Device\InputSystem.cpp" />
     <ClCompile Include="Source\System\Device\KeyBoard\KeyBoard.cpp" />
     <ClCompile Include="Source\System\Device\Mouse\Mouse.cpp" />
     <ClCompile Include="Source\System\OpenGL.cpp" />
@@ -104,7 +103,6 @@
     <ClInclude Include="Source\Shader\ShaderType.h" />
     <ClInclude Include="Source\System\Device\InputButton.h" />
     <ClInclude Include="Source\System\Device\InputContainer.h" />
-    <ClInclude Include="Source\System\Device\InputSystem.h" />
     <ClInclude Include="Source\System\Device\KeyBoard\KeyBoard.h" />
     <ClInclude Include="Source\System\Device\Mouse\Mouse.h" />
     <ClInclude Include="Source\System\IBitFireEngineRenderListener.hpp" />

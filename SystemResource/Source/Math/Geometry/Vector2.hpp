@@ -8,39 +8,16 @@ namespace BF
 	template<class NumberType>
 	struct Vector2
 	{
-		protected:
-		virtual void CalculateX()
-		{
-			this->X = Magnitude * (NumberType)Math::Cosinus(Angle);
-		}
-
-		virtual void CalculateY()
-		{
-			this->Y = Magnitude * (NumberType)Math::Sinus(Angle);
-		}
-
-		virtual void CalculateMagnitude()
-		{
-			Magnitude = (NumberType)Math::Pythagoras(this->X, this->Y);
-		}
-		virtual void CalculateAngle()
-		{
-			//Angle = atanf(Y / X);
-			NumberType numberType = this->Y / this->X;
-
-			Angle = atanf(numberType) * 180 / PI;
-		}
-
 		public:
-
 		NumberType X;
 		NumberType Y;
 
-		// Lengh
-		NumberType Magnitude;
 
-		// Degrees
-		NumberType Angle;
+
+
+
+
+
 
 		//---------------------------------------------------------------------
 		// Addition //
@@ -85,38 +62,34 @@ namespace BF
 
 		Vector2()
 		{
-			FromCartesianCoordinates(0, 0);
+			X = 0;
+			Y = 0;
 		}
 
-		Vector2(NumberType x, NumberType y)
-		{
-			FromCartesianCoordinates(x, y);
-		}
-
-		void Set(Vector2<NumberType> vector)
-		{
-			Set(vector.X, vector.Y);
-		}
-
-		void Set(NumberType x, NumberType y)
+		Vector2(const NumberType x, const NumberType y)
 		{
 			X = x;
 			Y = y;
 		}
 
+		void Set(const Vector2<NumberType>& vector)
+		{
+			Set(vector.X, vector.Y);
+		}
 
+		void Set(const NumberType x, const NumberType y)
+		{
+			X = x;
+			Y = y;
+		}
 
-
-
-
-
-		void Add(NumberType x, NumberType y)
+		void Add(const NumberType x, const  NumberType y)
 		{
 			X += x;
 			Y += y;
 		}
 
-		void Add(Vector2<NumberType> point)
+		void Add(const Vector2<NumberType>& point)
 		{
 			Add(point.X, point.Y);
 		}
@@ -190,7 +163,7 @@ namespace BF
 			// d = Root((x2?x1)^2 + (y2?y1)^2)
 			return Math::SquareRoot(Math::PowerOfTwo(point.X - X) + Math::PowerOfTwo(point.Y - Y));
 		}
-
+		/*
 		// a x b
 		Vector2 CrossProduct(Vector2 vector)
 		{
@@ -220,6 +193,54 @@ namespace BF
 
 			CalculateMagnitude();
 			CalculateAngle();
+		}*/
+
+
+
+
+
+
+		protected:
+		/*
+		virtual void CalculateX()
+		{
+			this->X = Magnitude * (NumberType)Math::Cosinus(Angle);
 		}
+
+		virtual void CalculateY()
+		{
+			this->Y = Magnitude * (NumberType)Math::Sinus(Angle);
+		}
+
+		virtual void CalculateMagnitude()
+		{
+			Magnitude = (NumberType)Math::Pythagoras(this->X, this->Y);
+		}
+		virtual void CalculateAngle()
+		{
+			//Angle = atanf(Y / X);
+			NumberType numberType = this->Y / this->X;
+
+			Angle = atanf(numberType) * 180 / PI;
+		}
+		
+		
+		// Lengh
+		NumberType Magnitude;
+
+		// Degrees
+		NumberType Angle;
+		
+			Vector2()
+		{
+			FromCartesianCoordinates(0, 0);
+		}
+
+		Vector2(NumberType x, NumberType y)
+		{
+			FromCartesianCoordinates(x, y);
+		}
+		*/	
+
 	};
 }
