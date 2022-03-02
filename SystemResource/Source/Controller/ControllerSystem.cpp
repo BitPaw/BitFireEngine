@@ -3,6 +3,8 @@
 #include <Windows.h>
 #include <joystickapi.h>
 
+#pragma comment( lib, "winmm.lib" )
+
 void BF::ControllerSystem::ControllerScanDevices(NewControllerDetectedCallback callback)
 {
 	const size_t amountOfJoySticksSupported = joyGetNumDevs();
@@ -116,8 +118,8 @@ bool BF::ControllerSystem::ControllerDataGet(const ControllerID controllerID, Co
 
 bool BF::ControllerSystem::ControllerAttachToWindow(const ControllerID controllerID, const WindowID windowID)
 {
-	UINT uPeriod = 0;
-	BOOL fChanged = false;
+	UINT uPeriod = 1;
+	BOOL fChanged = true;
 
 	const MMRESULT captureResult = joySetCapture(windowID, controllerID, uPeriod, fChanged);
 	const bool successful = captureResult == JOYERR_NOERROR;

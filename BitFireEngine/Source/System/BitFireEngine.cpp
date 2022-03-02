@@ -13,6 +13,7 @@
 #include "../UI/UIText.h"
 
 #include <stdlib.h>
+#include <Controller/ControllerSystem.h>
 
 int _matrixModelID;
 int _matrixViewID;
@@ -356,12 +357,19 @@ void BF::BitFireEngine::OnMouseButton(const MouseButton mouseButton, const Butto
     //printf("[#][OnMouseButton]\n");
 }
 
-void BF::BitFireEngine::OnMouseMove(const unsigned short x, const unsigned short y)
+void BF::BitFireEngine::OnMouseMove(const short x, const short y)
 {
     BitFireEngine* engine = BitFireEngine::Instance();
     Mouse& mouse = engine->_inputContainer.MouseInput;
     Camera& camera = engine->MainCamera;
  
+#if UseRawMouseData
+    mouse.InputAxis[0] = -x;
+    mouse.InputAxis[1] = -y;
+
+    mouse.Position[0] -= x;
+    mouse.Position[1] -= y;
+#else
     // Calculate relative input
     mouse.InputAxis[0] = mouse.Position[0] - x;
     mouse.InputAxis[1] = mouse.Position[1] - y;
@@ -369,6 +377,7 @@ void BF::BitFireEngine::OnMouseMove(const unsigned short x, const unsigned short
     // Update position
     mouse.Position[0] = x;
     mouse.Position[1] = y;
+#endif   
 
     //printf("[#][OnMouseMove] X:%5i Y:%5i\n", mouse.InputAxis[0], mouse.InputAxis[1]);
 }
@@ -634,8 +643,36 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
     }
 
     camera.Move(movement);
-    camera.Rotate(mouse.InputAxis[0], mouse.InputAxis[1]);
 
+    double mouseX = 0;
+    double mouseY = 0;
+
+    // Add joystik
+    {
+        BF::ControllerData controllerData{ 0 };
+        bool successful = BF::ControllerSystem::ControllerDataGet(0, controllerData);
+
+        if (successful)
+        {
+            const int max = 32767;
+            int xi = (int)controllerData.Axis[0] - max;
+            int yi = (int)controllerData.Axis[1] - max;
+
+            if (xi != 0 || yi != 0)
+            {
+                double xf = -xi / 32768.0;
+                double yf = -yi / 32768.0;
+
+                mouseX += xf;
+                mouseY += yf;
+            }
+        }       
+    }
+
+    mouseX += mouse.InputAxis[0];
+    mouseY += mouse.InputAxis[1];
+
+    camera.Rotate(mouseX, mouseY);
     camera.Update(_deltaTime);
 #endif
   

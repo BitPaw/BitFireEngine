@@ -82,7 +82,7 @@ namespace BF
         static void ErrorMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 
         static void OnMouseButton(const MouseButton mouseButton, const ButtonState buttonState);
-        static void OnMouseMove(const unsigned short x, const unsigned short y);
+        static void OnMouseMove(const short x, const short y);
         static void OnKeyBoardKey(const KeyBoardKeyInfo keyBoardKeyInfo);
         static void OnWindowCreated(Window& window);
         static void OnWindowSizeChanged(const unsigned int width, const unsigned int height);

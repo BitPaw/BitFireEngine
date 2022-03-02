@@ -1,25 +1,27 @@
 #include "Window.h"
 
-#include <WinUser.h>
-#include <wtypes.h>
-
-#include <windowsx.h>
-#include <WinUser.h>
 #include <GL/GL.h>
 #include <stdio.h>
 
+#if defined(OSUnix)
+#elif defined(OSWindows)
+#include <windowsx.h>
+#include <WinUser.h>
+#include <wtypes.h>
+#include <hidusage.h>
+#endif
+
 #include "../File/Text.h"
-
-
-
-using namespace BF;
+#include "../Controller/ControllerData.h"
+#include "../Controller/ControllerSystem.h"
 
 #define InvokeEvent(FunctionPoniter, ...) if(FunctionPoniter) FunctionPoniter(__VA_ARGS__)
 
-BF::Dictionary<WindowID, Window*> BF::Window::_windowLookup;
+
+BF::Dictionary<WindowID, BF::Window*> BF::Window::_windowLookup;
 BF::Window* BF::Window::_currentWindow = nullptr;
 
-LRESULT BF::Window::OnWindowEvent(const HWND windowsID, const unsigned int eventID, WPARAM wParam, LPARAM lParam)
+LRESULT BF::Window::OnWindowEvent(const HWND windowsID, const UINT eventID, WPARAM wParam, LPARAM lParam)
 {
     bool letWindowsHandleEvent = true;
 
@@ -34,6 +36,20 @@ LRESULT BF::Window::OnWindowEvent(const HWND windowsID, const unsigned int event
 
     switch (eventID)
     {
+#if 0 // Can be used but is an inferior version of just polling the data with 'joyGetDevData()' as this is also time based (Polling)
+        case MM_JOY1MOVE: 
+        {
+            const WORD fwButtons = wParam;
+            const WORD xPos = LOWORD(lParam);
+            const WORD yPos = HIWORD(lParam);
+            const bool isButton1Pressed = (fwButtons & JOY_BUTTON1) == JOY_BUTTON1;
+            const bool isButton2Pressed = (fwButtons & JOY_BUTTON2) == JOY_BUTTON2;
+            const bool isButton3Pressed = (fwButtons & JOY_BUTTON3) == JOY_BUTTON3;
+            const bool isButton4Pressed = (fwButtons & JOY_BUTTON4) == JOY_BUTTON4;
+
+            break;
+        }
+#endif 
         case WM_SETCURSOR:
         {
             const HWND windowsHandle = (HWND)wParam;
@@ -95,14 +111,37 @@ LRESULT BF::Window::OnWindowEvent(const HWND windowsID, const unsigned int event
         case WM_INPUT:
         {
             const size_t inputCode = GET_RAWINPUT_CODE_WPARAM(wParam);
-            const HRAWINPUT handle = (HRAWINPUT)lParam;
+            const HRAWINPUT handle = (HRAWINPUT)lParam;         
+            const UINT uiCommand = RID_INPUT; // RID_HEADER
+            UINT rawInputSize = sizeof(RAWINPUT); // Can't be 'const' ! 
+           
+            RAWINPUT rawInput{0};           
 
-            const UINT uiCommand = RID_HEADER | RID_INPUT; 
-            RAWINPUT  rawInput{0};
-            unsigned int* rawInputSize = (unsigned int*)sizeof(RAWINPUT);
-
-            const unsigned int result = GetRawInputData(handle, uiCommand, &rawInput, rawInputSize, sizeof(RAWINPUTHEADER));
+            const UINT result = GetRawInputData(handle, uiCommand, &rawInput, &rawInputSize, sizeof(RAWINPUTHEADER));
             const bool sucessful = result != -1;
+
+            if (sucessful)
+            {
+#if UseRawMouseData
+                if (rawInput.header.dwType == RIM_TYPEMOUSE)
+                {
+                    LONG mouseX = rawInput.data.mouse.lLastX;
+                    LONG mouseY = rawInput.data.mouse.lLastY;
+
+                    printf("[>] X:%5i Y:%5i\n", mouseX, mouseY);
+
+                    InvokeEvent(window->MouseMoveCallBack, mouseX, mouseY);
+
+                    // Wheel data needs to be pointer casted to interpret an unsigned short as a short, with no conversion
+                    // otherwise it'll overflow when going negative.
+                    // Didn't happen before some minor changes in the code, doesn't seem to go away
+                    // so it's going to have to be like this.
+                   // if (raw->data.mouse.usButtonFlags & RI_MOUSE_WHEEL)
+                   //     input.mouse.wheel = (*(short*)&raw->data.mouse.usButtonData) / WHEEL_DELTA;
+                }
+#endif               
+            }
+
 
             switch (inputCode)
             {
@@ -196,10 +235,15 @@ LRESULT BF::Window::OnWindowEvent(const HWND windowsID, const unsigned int event
         }
         case WM_MOUSEMOVE:
         {
+            // Do not use this function if you want precise movement!
+            // Windows adds 'mouse acceleration' this will create inconsistent movement.
+
+#if !UseRawMouseData
             const short x = GET_X_LPARAM(lParam);
             const short y = GET_Y_LPARAM(lParam);
 
             InvokeEvent(window->MouseMoveCallBack, x, y);
+#endif
             break;
         }
         case WM_KEYDOWN:
@@ -514,6 +558,30 @@ ThreadFunctionReturnType BF::Window::WindowThead(void* windowCreationInfoAdress)
         wchar_t errorBuffer[1024];
         wsprintf(errorBuffer, L"Error creating window. Error code, decimal %d, hexadecimal %X.", error, error);
         MessageBox(NULL, errorBuffer, L"Error", MB_ICONHAND);
+    }
+
+    {
+        // We're configuring just one RAWINPUTDEVICE, the mouse,
+        // so it's a single-element array (a pointer).
+        RAWINPUTDEVICE rid[1]{0};
+        rid[0].usUsagePage = HID_USAGE_PAGE_GENERIC;
+        rid[0].usUsage = HID_USAGE_GENERIC_MOUSE;
+        rid[0].dwFlags = RIDEV_INPUTSINK;
+        rid[0].hwndTarget = windowID;
+        RegisterRawInputDevices(rid, 1, sizeof(RAWINPUTDEVICE));
+        // End of resgistering.
+
+        // RegisterRawInputDevices should not be used from a library, as it may interfere with any raw input processing logic already present in applications that load it.
+    }
+
+    // contzoller
+    {
+        ControllerID controllerID = 0;
+       // ControllerData controllerData;
+        //bool x = ControllerSystem::ControllerDataGet(controllerID, controllerData);
+        bool y = ControllerSystem::ControllerAttachToWindow(controllerID, windowID);
+
+        printf("\n");
     }
 
     {

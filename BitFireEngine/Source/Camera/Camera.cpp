@@ -73,10 +73,18 @@ BF::Camera::Camera()
 	CurrentRotation.Set(0, 0, 0);
 
 	PerspectiveChange(CameraPerspective::Perspective);
+
+	LookAtPosition.Set(1, 0, 0);
+	LookAtPosition.Normalize();
 }
 
 void BF::Camera::Rotate(float x, float y)
 {
+	if (x == 0 && y == 0)
+	{
+		return;
+	}
+
 	const float maxValue = 85.0f;
 	const float minValue = -85.0f;
 	float movementSpeed = _viewSpeed;

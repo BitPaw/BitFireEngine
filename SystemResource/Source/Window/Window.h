@@ -15,6 +15,8 @@
 #define WindowID HWND
 #endif
 
+#define UseRawMouseData 1
+
 namespace BF
 {
 	enum class ButtonState
@@ -49,7 +51,7 @@ namespace BF
 	typedef void (*MouseScrollEvent)();
 	typedef void (*MouseClickEvent)(const MouseButton mouseButton, const ButtonState buttonState);
 	typedef void (*MouseClickDoubleEvent)(const MouseButton mouseButton);
-	typedef void (*MouseMoveEvent)(const unsigned short x, const unsigned short y);
+	typedef void (*MouseMoveEvent)(const short x, const short y);
 
 	// Keyboard
 	typedef void (*KeyBoardKeyEvent)(const KeyBoardKeyInfo keyBoardKeyInfo);
@@ -104,7 +106,7 @@ namespace BF
 		Window();
 		~Window();
 
-		static LRESULT OnWindowEvent(const HWND windowsID, const unsigned int eventID, WPARAM wParam, LPARAM lParam);
+		static LRESULT OnWindowEvent(const HWND windowsID, const UINT eventID, WPARAM wParam, LPARAM lParam);
 
 		static ThreadFunctionReturnType WindowThead(void* windowCreationInfoAdress);
 	
