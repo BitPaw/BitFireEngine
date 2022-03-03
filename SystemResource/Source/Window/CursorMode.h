@@ -14,7 +14,8 @@ namespace BF
         // Hide Cursor. You can still use it as normal. Not locked.
         Invisible,
 
-        // Hide cursor and lock it at the middle.
-        Locked
+        Lock,
+
+        LockAndHide
     };
 }

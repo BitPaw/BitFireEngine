@@ -15,6 +15,7 @@
 #include <windef.h>
 #define WindowID HWND
 #endif
+#include "CursorIcon.h"
 
 #define UseRawMouseData 1
 
@@ -108,7 +109,9 @@ namespace BF
 		Window();
 		~Window();
 
+#if defined(OSWindows)
 		static LRESULT CALLBACK OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM lParam);
+#endif
 
 		static ThreadFunctionReturnType WindowThead(void* windowCreationInfoAdress);
 	
@@ -125,6 +128,8 @@ namespace BF
 		void PositionChange(const unsigned int x, const unsigned int y);
 		void PositonCenterScreen();
 		
+		void Cursor();
+		void Cursor(const CursorIcon cursorIcon);
 		void CursorTexture();
 		CursorMode CursorCaptureMode();
 		void CursorCaptureMode(const CursorMode cursorMode);

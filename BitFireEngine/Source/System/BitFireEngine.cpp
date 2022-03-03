@@ -592,10 +592,10 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
         {
             case CursorMode::Show:
             {
-                _mainWindow.CursorCaptureMode(CursorMode::Locked);
+                _mainWindow.CursorCaptureMode(CursorMode::LockAndHide);
                 break;
             }
-            case CursorMode::Locked:
+            case CursorMode::LockAndHide:
             {
                 _mainWindow.CursorCaptureMode(CursorMode::Show);
                 break;

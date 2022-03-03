@@ -490,6 +490,7 @@
     <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat2.cpp" />
     <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFKerningPair.cpp" />
     <ClCompile Include="Source\Service\HTTP\HTTPServer.cpp" />
+    <ClCompile Include="Source\Window\CursorIcon.cpp" />
     <ClCompile Include="Source\Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -753,6 +754,7 @@
     <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat2.h" />
     <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFKerningPair.h" />
     <ClInclude Include="Source\Service\HTTP\HTTPServer.h" />
+    <ClInclude Include="Source\Window\CursorIcon.h" />
     <ClInclude Include="Source\Window\CursorMode.h" />
     <ClInclude Include="Source\Window\Window.h" />
   </ItemGroup>

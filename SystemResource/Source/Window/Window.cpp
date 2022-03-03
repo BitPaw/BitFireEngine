@@ -9,6 +9,7 @@
 #include <WinUser.h>
 #include <wtypes.h>
 #include <hidusage.h>
+#include <Dbt.h>
 #endif
 
 #include "../File/Text.h"
@@ -21,6 +22,7 @@
 BF::Dictionary<WindowID, BF::Window*> BF::Window::_windowLookup;
 BF::Window* BF::Window::_currentWindow = nullptr;
 
+#if defined(OSWindows)
 LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM lParam)
 {
     bool letWindowsHandleEvent = true;
@@ -55,6 +57,8 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
             const HWND windowsHandle = (HWND)wParam;
             const WORD hitTestResult = LOWORD(lParam);
             const WORD sourceMessage = HIWORD(lParam);
+
+            SetCursor(NULL);
 
             return true; // prevent further processing
         }
@@ -459,6 +463,86 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
            // GlobalFree((HGLOBAL)pchInputBuf);
             //UnregisterHotKey(hwndMain, 0xAAAA);OpenGL
             break;
+
+        case WM_DISPLAYCHANGE:
+            //_glfwPollMonitorsWin32();
+            break;
+
+        case WM_DEVICECHANGE:
+        {
+           // if (!_glfw.joysticksInitialized)
+            //    break;
+
+            const WORD eventID = wParam;
+
+            switch (eventID)
+            {
+                case DBT_DEVNODES_CHANGED: // A device has been added to or removed from the system.
+                {
+                    break;
+                }
+                case DBT_QUERYCHANGECONFIG: // Permission is requested to change the current configuration(dock or undock).
+                {
+                    break;
+                }
+                case DBT_CONFIGCHANGED: // The current configuration has changed, due to a dock or undock.
+                {
+                    break;
+                }
+                case DBT_CONFIGCHANGECANCELED: // A request to change the current configuration(dock or undock) has been canceled.
+                {
+                    break;
+                }
+                case DBT_DEVICEARRIVAL: // A device or piece of media has been inserted and is now available.
+                {
+                    DEV_BROADCAST_HDR* dbh = (DEV_BROADCAST_HDR*)lParam;
+                    if (dbh && dbh->dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE)
+                    {
+                        // _glfwDetectJoystickConnectionWin32();
+                    }
+
+                    break;
+                }
+                case DBT_DEVICEQUERYREMOVE: // Permission is requested to remove a device or piece of media.Any application can deny this request and cancel the removal.
+                {
+                    break;
+                }
+                case DBT_DEVICEQUERYREMOVEFAILED: // A request to remove a device or piece of media has been canceled.
+                {
+                    break;
+                }
+                case DBT_DEVICEREMOVEPENDING: // A device or piece of media is about to be removed.Cannot be denied.
+                {
+                    break;
+                }
+                case DBT_DEVICEREMOVECOMPLETE: // A device or piece of media has been removed.
+                {
+                    DEV_BROADCAST_HDR* dbh = (DEV_BROADCAST_HDR*)lParam;
+                    if (dbh && dbh->dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE)
+                    //     _glfwDetectJoystickDisconnectionWin32();
+
+                    break;
+                }
+                case DBT_DEVICETYPESPECIFIC: // A device - specific event has occurred.
+                {
+                    break;
+                }
+                case DBT_CUSTOMEVENT: // A custom event has occurred.
+                {
+                    break;
+                }
+                case DBT_USERDEFINED: // The meaning of this message is user - defined.
+                {
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            }
+
+            break;
+        }
     }
 
     if (letWindowsHandleEvent)
@@ -468,6 +552,7 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
 
     return NULL;
 }
+#endif
 
 BF::Window::Window()
 {
@@ -477,6 +562,7 @@ BF::Window::Window()
 
     MessageThreadID = 0;
     IsRunning = 0;
+    CursorID = 0;
 
     _cursorMode = CursorMode::Show;
 
@@ -674,11 +760,28 @@ void BF::Window::PositionChange(const unsigned int x, const unsigned int y)
 
 }
 
-
-
 void BF::Window::PositonCenterScreen()
 {
 
+}
+
+void BF::Window::Cursor()
+{
+
+}
+
+void BF::Window::Cursor(const CursorIcon cursorIcon)
+{
+    const unsigned int cursorID = ToCursorIcon(cursorIcon);
+    const bool validCursorIcon = cursorID != -1;
+
+    if (!validCursorIcon)
+    {
+        return;
+    }
+
+    HANDLE handle = LoadImageW(NULL, MAKEINTRESOURCEW(cursorID), IMAGE_CURSOR, 0, 0, LR_DEFAULTSIZE | LR_SHARED);
+ 
 }
 
 void BF::Window::CursorTexture()
@@ -709,91 +812,46 @@ void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
     {
         case CursorMode::Show:
         {  
-            ClipCursor(&desktop);
-            ShowCursor(true);
+            //ClipCursor(&desktop);
+            //ShowCursor(true);
+
+            SetCursor(LoadCursorW(NULL, IDC_ARROW));
+
+            ClipCursor(NULL);
 
             break;
         }
-        case CursorMode::Locked:
+        case CursorMode::Lock:
         {
-            RECT newPOS{0};
-            GetWindowRect(ID, &newPOS);            
-
-            unsigned int midX = (newPOS.right - newPOS.left);
-            unsigned int midY = (newPOS.bottom - newPOS.top);
-
-            desktop.left = midX;
-            desktop.right = midX;
-            desktop.bottom = midY;
-            desktop.top = midY;         
-
-            ClipCursor(&desktop);
-            SetCursorPos(midX, midY);
-            /*
-
-            NOT WORKING
-
-
-            {
-                // Save a copy of the default cursor
-                HANDLE arrowHandle = LoadImage(NULL, MAKEINTRESOURCE(IDC_ARROW), IMAGE_CURSOR, 0, 0, LR_SHARED);
-                HCURSOR hcArrow = CopyCursor(arrowHandle);
-
-                // Set the cursor to a transparent one to emulate no cursor
-                HANDLE noCursorHandle = LoadImage(GetModuleHandle(NULL), L"nocursor.cur", IMAGE_CURSOR, 0, 0, LR_LOADFROMFILE); //worked
-                //HANDLE noCursorHandle = LoadCursorFromFile(L"nocursor.cur"); //this also worked
-
-                HCURSOR noCursor = CopyCursor(noCursorHandle);
-                /*SetSystemCursor(noCursor, OCR_NORMAL);
-                int i = 0;
-                while (i++ < 10)
-                {
-                    cout << i << endl;
-                    Sleep(1000);
-                }* /
-                //SetSystemCursor(hcArrow, OCR_NORMAL);
-                DestroyCursor(hcArrow);
-            }*/
-
-          
-
-   
-
-      
-     
-           // int the_win32api_sucks = ShowCursor(false);
-            //while (the_win32api_sucks >= 0) the_win32api_sucks = ShowCursor(false);
-
-            
-            int index = 0;
-
-            do
-            {
-                index = ShowCursor(false);
-
-                printf("index %i\n", index);
-            }
-            while (index >= 0);
-            
+            RECT clipRect;
+            GetClientRect(ID, &clipRect);
+            ClientToScreen(ID, (POINT*)&clipRect.left);
+            ClientToScreen(ID, (POINT*)&clipRect.right);
+            ClipCursor(&clipRect);
 
             SetCursor(NULL);
 
-            //HCURSOR cur = GetCursor();
+            break;
+        }
+        case CursorMode::LockAndHide:
+        {
+            RECT clipRect;
+            GetClientRect(ID, &clipRect);
+            ClientToScreen(ID, (POINT*)&clipRect.left);
+            ClientToScreen(ID, (POINT*)&clipRect.right);
 
-            //DestroyCursor(cur);
+            int xOff = (clipRect.right - clipRect.left) / 2;
+            int yoFf = (clipRect.bottom - clipRect.top) / 2;
 
+            clipRect.left += xOff;
+            clipRect.top += yoFf;
+            clipRect.right -= xOff;
+            clipRect.bottom -= yoFf;
 
-            /*
-            CONSOLE_CURSOR_INFO ConCurInf;
-            HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+            ClipCursor(&clipRect);
 
-            ConCurInf.dwSize = 10;
-            ConCurInf.bVisible = FALSE;
+            SetCursor(NULL);
 
-            SetConsoleCursorInfo(hOut, &ConCurInf);*/
-
-
-           // SetCursor();
             break;
         }
     }
