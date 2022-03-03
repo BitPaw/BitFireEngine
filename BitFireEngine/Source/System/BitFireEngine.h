@@ -3,8 +3,8 @@
 #include "IBitFireEngineListener.hpp"
 
 // OpenAL - Sound
-#include <AL/al.h>
-#include <AL/alc.h>
+//#include <AL/al.h>
+//#include <AL/alc.h>
 
 // OpenGL - Graphics
 #include <GL/glew.h>
@@ -69,9 +69,9 @@ namespace BF
         unsigned int _defaultTextureID;
         //-------------------------
 
-        // DOund
-        ALCdevice* _audioDevice;
-        ALCcontext* _audioContext;
+        // Sound
+        //ALCdevice* _audioDevice;
+        //ALCcontext* _audioContext;
         //----
 
         // ASYNC LOCKS
@@ -79,7 +79,7 @@ namespace BF
         AsyncLock _modelAdd;
         //-------------------------        
 
-        static void ErrorMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
+        static void GLAPIENTRY ErrorMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 
         static void OnMouseButton(const MouseButton mouseButton, const ButtonState buttonState);
         static void OnMouseMove(const short x, const short y);
@@ -202,7 +202,7 @@ namespace BF
         static int ImageWrapToOpenGLFormat(ImageWrap imageWrap);
         static int ImageLayoutToOpenGLFormat(ImageLayout layout);
 
-        ALenum ToChannalFormat(const unsigned short numerOfChannels, const unsigned short bitsPerSample);
+        unsigned int ToChannalFormat(const unsigned short numerOfChannels, const unsigned short bitsPerSample);
 
         static const char* ShaderTypeToString(int type);
 	};

@@ -220,7 +220,8 @@ void BF::BitFireEngine::Start()
 
 
 
-    // Sound
+    // Sound 
+    /*
     {
         //---<Select Device>
         _audioDevice = alcOpenDevice(nullptr);
@@ -261,8 +262,8 @@ void BF::BitFireEngine::Start()
         alListenerfv(AL_ORIENTATION, listenerOri);
         // check for errors
 
-        */
-    }
+        * /
+    }*/
 
     while (!_mainWindow.IsRunning);
 
@@ -642,7 +643,7 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
         movement.Add(0, 1, 0);
     }
 
-    camera.Move(movement);
+    
 
     double mouseX = 0;
     double mouseY = 0;
@@ -655,19 +656,31 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
         if (successful)
         {
             const int max = 32767;
-            int xi = (int)controllerData.Axis[0] - max;
-            int yi = (int)controllerData.Axis[1] - max;
+            int viewXi = (int)controllerData.Axis[0] - max;
+            int viewYi = (int)controllerData.Axis[1] - max;
+            int posXi = (int)controllerData.Axis[2] - max;
+            int posYi = (int)controllerData.Axis[3] - max;
 
-            if (xi != 0 || yi != 0)
+            if (posXi != 0 || posYi != 0)
             {
-                double xf = -xi / 32768.0;
-                double yf = -yi / 32768.0;
+                double xf = -posXi / 32768.0;
+                double yf = -posYi / 32768.0;
 
                 mouseX += xf;
                 mouseY += yf;
             }
+
+            if (viewXi != 0 || viewYi != 0)
+            {
+                double xf = viewXi / 32768.0;
+                double yf = -viewYi / 32768.0;
+
+                movement.Add(xf, 0, yf);
+            }
         }       
     }
+
+    camera.Move(movement);
 
     mouseX += mouse.InputAxis[0];
     mouseY += mouse.InputAxis[1];
@@ -687,11 +700,12 @@ void BF::BitFireEngine::Stop()
     UnloadAll();
 
     // Sound
+    /*
     {
         alcMakeContextCurrent(nullptr);
         alcDestroyContext(_audioContext);
         alcCloseDevice(_audioDevice);
-    }
+    }*/
 
     _imageAdd.Delete();
     _modelAdd.Delete();
@@ -916,7 +930,6 @@ bool BF::BitFireEngine::Register(ShaderProgram& shaderProgram, const wchar_t* ve
         {
             return false;
         }
-
     }
     //-----
 
@@ -977,17 +990,21 @@ bool BF::BitFireEngine::Register(ShaderProgram& shaderProgram, const wchar_t* ve
 
 void BF::BitFireEngine::Register(AudioSource& audioSource)
 {
+    /* REWORK THIS
     const unsigned int numberOfBuffers = 1u;
     unsigned int& sourceID = audioSource.ID;
 
     alGenSources(numberOfBuffers, &audioSource.ID);
-    // check for errors
+    // check for errors    
 
     Update(audioSource);
+
+    */
 }
 
 void BF::BitFireEngine::Register(AudioClip& audioClip, const Sound& sound)
 {
+    /* REWORK THIS 
     const ALuint numberOfBuffers = 1;
 
     alGenBuffers(numberOfBuffers, &audioClip.ID);
@@ -996,7 +1013,7 @@ void BF::BitFireEngine::Register(AudioClip& audioClip, const Sound& sound)
         const ALenum format = ToChannalFormat(sound.NumerOfChannels, sound.BitsPerSample);
 
         alBufferData(audioClip.ID, format, sound.Data, sound.DataSize, sound.SampleRate);
-    }
+    }*/
 }
 
 void BF::BitFireEngine::Use(Texture& texture)
@@ -1050,6 +1067,7 @@ void BF::BitFireEngine::Use(SkyBox& skyBox)
 
 void BF::BitFireEngine::Use(const AudioSource& audioSource, const AudioClip& audioClip)
 {
+    /*
     // Bind
     alSourcei(audioSource.ID, AL_BUFFER, audioClip.ID);
     // check for errors
@@ -1068,11 +1086,12 @@ void BF::BitFireEngine::Use(const AudioSource& audioSource, const AudioClip& aud
         //alGetSourcei(audioSource.ID, AL_SOURCE_STATE, &sourceState);
         // check for errors
     //}
-    //---------------------------------
+    //---------------------------------*/
 }
 
 void BF::BitFireEngine::Update(const AudioSource& audioSource)
 {
+    /*
     alSourcef(audioSource.ID, AL_PITCH, audioSource.Pitch);
     // check for errors
     alSourcef(audioSource.ID, AL_GAIN, audioSource.Volume);
@@ -1082,16 +1101,17 @@ void BF::BitFireEngine::Update(const AudioSource& audioSource)
     alSource3f(audioSource.ID, AL_VELOCITY, audioSource.Velocity[0], audioSource.Velocity[1], audioSource.Velocity[2]);
     // check for errors
     alSourcei(audioSource.ID, AL_LOOPING, audioSource.Looping);
+    */
 }
 
 void BF::BitFireEngine::UnRegister(AudioSource& audioSource)
 {
-    alDeleteSources(1, &audioSource.ID);
+   // alDeleteSources(1, &audioSource.ID);
 }
 
 void BF::BitFireEngine::UnRegister(AudioClip& audioClip)
 {
-    alDeleteBuffers(1, &audioClip.ID);
+  //  alDeleteBuffers(1, &audioClip.ID);
 }
 
 ThreadFunctionReturnType BF::BitFireEngine::LoadResourceAsync(void* resourceAdress)
@@ -2055,17 +2075,17 @@ int BF::BitFireEngine::ImageLayoutToOpenGLFormat(ImageLayout layout)
     }
 }
 
-ALenum BF::BitFireEngine::ToChannalFormat(const unsigned short numerOfChannels, const unsigned short bitsPerSample)
+unsigned int BF::BitFireEngine::ToChannalFormat(const unsigned short numerOfChannels, const unsigned short bitsPerSample)
 {
     bool stereo = (numerOfChannels > 1);
 
     switch (bitsPerSample)
     {
-        case 16u:
-            return stereo ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
+        //case 16u:
+        //    return stereo ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
 
-        case 8u:
-            return stereo ? AL_FORMAT_STEREO8 : AL_FORMAT_MONO8;
+        //case 8u:
+        //    return stereo ? AL_FORMAT_STEREO8 : AL_FORMAT_MONO8;
 
         default:
             return -1;

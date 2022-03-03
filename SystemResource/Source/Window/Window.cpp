@@ -21,7 +21,7 @@
 BF::Dictionary<WindowID, BF::Window*> BF::Window::_windowLookup;
 BF::Window* BF::Window::_currentWindow = nullptr;
 
-LRESULT BF::Window::OnWindowEvent(const HWND windowsID, const UINT eventID, WPARAM wParam, LPARAM lParam)
+LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM lParam)
 {
     bool letWindowsHandleEvent = true;
 
@@ -112,41 +112,38 @@ LRESULT BF::Window::OnWindowEvent(const HWND windowsID, const UINT eventID, WPAR
         {
             const size_t inputCode = GET_RAWINPUT_CODE_WPARAM(wParam);
             const HRAWINPUT handle = (HRAWINPUT)lParam;         
-            const UINT uiCommand = RID_INPUT; // RID_HEADER
-            UINT rawInputSize = sizeof(RAWINPUT); // Can't be 'const' ! 
-           
-            RAWINPUT rawInput{0};           
-
-            const UINT result = GetRawInputData(handle, uiCommand, &rawInput, &rawInputSize, sizeof(RAWINPUTHEADER));
-            const bool sucessful = result != -1;
-
-            if (sucessful)
-            {
-#if UseRawMouseData
-                if (rawInput.header.dwType == RIM_TYPEMOUSE)
-                {
-                    LONG mouseX = rawInput.data.mouse.lLastX;
-                    LONG mouseY = rawInput.data.mouse.lLastY;
-
-                    printf("[>] X:%5i Y:%5i\n", mouseX, mouseY);
-
-                    InvokeEvent(window->MouseMoveCallBack, mouseX, mouseY);
-
-                    // Wheel data needs to be pointer casted to interpret an unsigned short as a short, with no conversion
-                    // otherwise it'll overflow when going negative.
-                    // Didn't happen before some minor changes in the code, doesn't seem to go away
-                    // so it's going to have to be like this.
-                   // if (raw->data.mouse.usButtonFlags & RI_MOUSE_WHEEL)
-                   //     input.mouse.wheel = (*(short*)&raw->data.mouse.usButtonData) / WHEEL_DELTA;
-                }
-#endif               
-            }
-
-
+            const UINT uiCommand = RID_INPUT; // RID_HEADER        
+                      
             switch (inputCode)
             {
                 case RIM_INPUT: // Input occurred while the application was in the foreground.
                 {
+                    RAWINPUT rawInput{ 0 };
+                    UINT rawInputSize = sizeof(RAWINPUT); // Can't be 'const' ! 
+
+                    const UINT result = GetRawInputData(handle, uiCommand, &rawInput, &rawInputSize, sizeof(RAWINPUTHEADER));
+                    const bool sucessful = result != -1;
+
+                    if (sucessful)
+                    {
+#if UseRawMouseData
+                        if (rawInput.header.dwType == RIM_TYPEMOUSE)
+                        {
+                            const LONG mouseX = rawInput.data.mouse.lLastX;
+                            const LONG mouseY = rawInput.data.mouse.lLastY;
+
+                            InvokeEvent(window->MouseMoveCallBack, mouseX, mouseY);
+
+                            // Wheel data needs to be pointer casted to interpret an unsigned short as a short, with no conversion
+                            // otherwise it'll overflow when going negative.
+                            // Didn't happen before some minor changes in the code, doesn't seem to go away
+                            // so it's going to have to be like this.
+                           // if (raw->data.mouse.usButtonFlags & RI_MOUSE_WHEEL)
+                           //     input.mouse.wheel = (*(short*)&raw->data.mouse.usButtonData) / WHEEL_DELTA;
+                        }
+#endif               
+                    }
+
                     break;
                 }
                 case RIM_INPUTSINK: // Input occurred while the application was not in the foreground.
@@ -515,20 +512,22 @@ ThreadFunctionReturnType BF::Window::WindowThead(void* windowCreationInfoAdress)
     void* lpParam = 0;
     const wchar_t* lpClassName = L"BFE::Window::AsyncThread";
 
-    WNDCLASS wndclass{ 0 };
 
-    wndclass.style = CS_OWNDC;
+    const HCURSOR cursorID = LoadCursor(NULL, IDC_PERSON);
+    creationInfo.CreatedWindow->CursorID = cursorID;
+
+    WNDCLASS wndclass{ 0 }; 
+    wndclass.style = CS_OWNDC; //  CS_HREDRAW | CS_VREDRAW;
     wndclass.lpfnWndProc = OnWindowEvent;
-    wndclass.hInstance = hInstance;
-    wndclass.lpszClassName = lpClassName;
-    wndclass.hbrBackground = (HBRUSH)GetStockObject(COLOR_BACKGROUND);
-    /*
-    wndclass.style = CS_HREDRAW | CS_VREDRAW;
-    wndclass.cbClsExtra = 0;
+    wndclass.cbClsExtra = 0; // The number of extra bytes to allocate following the window-class structure.
     wndclass.cbWndExtra = 0;
-    wndclass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-    wndclass.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wndclass.lpszMenuName = NULL;*/
+    wndclass.hInstance = hInstance;
+    wndclass.hIcon = LoadIcon(NULL, IDI_HAND);
+    wndclass.hCursor = cursorID;
+    wndclass.hbrBackground = (HBRUSH)GetStockObject(COLOR_BACKGROUND);
+    wndclass.lpszMenuName = 0;
+    wndclass.lpszClassName = lpClassName;
+
 
     WORD classID = RegisterClassW(&wndclass);
 
@@ -561,27 +560,18 @@ ThreadFunctionReturnType BF::Window::WindowThead(void* windowCreationInfoAdress)
     }
 
     {
-        // We're configuring just one RAWINPUTDEVICE, the mouse,
-        // so it's a single-element array (a pointer).
-        RAWINPUTDEVICE rid[1]{0};
-        rid[0].usUsagePage = HID_USAGE_PAGE_GENERIC;
-        rid[0].usUsage = HID_USAGE_GENERIC_MOUSE;
-        rid[0].dwFlags = RIDEV_INPUTSINK;
-        rid[0].hwndTarget = windowID;
-        RegisterRawInputDevices(rid, 1, sizeof(RAWINPUTDEVICE));
-        // End of resgistering.
+        // We're configuring just one RAWINPUTDEVICE, the mouse, so it's a single-element array (a pointer).
+        const RAWINPUTDEVICE rid
+        {
+            HID_USAGE_PAGE_GENERIC,
+            HID_USAGE_GENERIC_MOUSE,
+            RIDEV_INPUTSINK,
+            windowID
+        };
+
+        RegisterRawInputDevices(&rid, 1, sizeof(RAWINPUTDEVICE));
 
         // RegisterRawInputDevices should not be used from a library, as it may interfere with any raw input processing logic already present in applications that load it.
-    }
-
-    // contzoller
-    {
-        ControllerID controllerID = 0;
-       // ControllerData controllerData;
-        //bool x = ControllerSystem::ControllerDataGet(controllerID, controllerData);
-        bool y = ControllerSystem::ControllerAttachToWindow(controllerID, windowID);
-
-        printf("\n");
     }
 
     {

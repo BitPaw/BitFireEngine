@@ -12,6 +12,7 @@
 #define WindowID unsigned int
 #elif defined(OSWindows)
 #include <wtypes.h>
+#include <windef.h>
 #define WindowID HWND
 #endif
 
@@ -86,6 +87,7 @@ namespace BF
 
 		public:
 		WindowID ID;	
+		HCURSOR CursorID;
 		HDC HandleDeviceContext;
 		HGLRC OpenGLRenderingContext;
 
@@ -106,7 +108,7 @@ namespace BF
 		Window();
 		~Window();
 
-		static LRESULT OnWindowEvent(const HWND windowsID, const UINT eventID, WPARAM wParam, LPARAM lParam);
+		static LRESULT CALLBACK OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM lParam);
 
 		static ThreadFunctionReturnType WindowThead(void* windowCreationInfoAdress);
 	
