@@ -319,7 +319,7 @@ BF::FileActionResult BF::FNT::ConvertTo(Font& font)
 {
 	unsigned int amountOfResources = FontPageListSize;
 
-	Text::Copy(font.Name, Info.Name, FNTPageFileNameSize);
+	//Text::Copy(font.Name, Info.Name, FNTPageFileNameSize);
 
 	font.BitMapFont = this;
 	font.AdditionalResourceListSize = amountOfResources;

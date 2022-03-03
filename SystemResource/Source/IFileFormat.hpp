@@ -8,5 +8,6 @@ namespace BF
 	{
 		virtual FileActionResult Load(const wchar_t* filePath) = 0;
 		virtual FileActionResult Save(const wchar_t* filePath) = 0;
+		//virtual ~IFileFormat() = 0;
 	};
 }

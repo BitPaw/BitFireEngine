@@ -4,9 +4,11 @@ out vec4 fragcolor;
 
 in vec3 TexturePosition;
 
-uniform samplerCube Skybox;
+uniform samplerCube SkyBoxTexture;
 
 void main()
 {
-   fragcolor = texture(Skybox, TexturePosition);
+	vec4 textureColor = texture(SkyBoxTexture, TexturePosition);
+
+	fragcolor = textureColor;
 }

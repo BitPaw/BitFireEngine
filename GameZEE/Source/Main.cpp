@@ -1,8 +1,6 @@
 //-----------------------------------------------------------------------------
-#include "../../BitFireEngine/Source/System/BitFireEngine.h"
-#include "../../SystemResource/Source/OSDefine.h"
-#include <stdio.h>
-#include <exception>
+#include <OSDefine.h>
+#include <cstdio>
 #include "ZEEGameSystem.h"
 //-----------------------------------------------------------------------------
 
@@ -15,27 +13,17 @@ int main(int amountOFParameters, char** parameter)
 {
     printf("[i][Core] Working Directory : %s\n", parameter[0]);
 
-    try
+    ZEE::ZEEGameSystem zeeGameSystem;
+
+    zeeGameSystem.GameSystem.Start();
+
+    while (zeeGameSystem.GameSystem.IsRunning)
     {
-        //printf("[i][Core] Working Directory <%s>\n", parameter[0]);
-
-        ZEE::ZEEGameSystem zeeGameSystem;
-
-        zeeGameSystem.GameSystem.Start();
-
-        while (zeeGameSystem.GameSystem.IsRunning)
-        {
-            zeeGameSystem.GameSystem.Update();
-        }
-
-        zeeGameSystem.GameSystem.Stop();
-    }
-    catch (const std::exception& exception)
-    {
-        printf("[x][Core] System colapsed. Reason : \n%s", exception.what());
-        return 1;
+        zeeGameSystem.GameSystem.Update();
     }
 
-    return 0;
+    zeeGameSystem.GameSystem.Stop();
+
+    return EXIT_SUCCESS;
 }
 //-----------------------------------------------------------------------------

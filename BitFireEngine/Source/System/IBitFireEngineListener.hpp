@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../SystemRender/Source/Device/InputContainer.h"
+#include "Device/InputContainer.h"
 
 namespace BF
 {

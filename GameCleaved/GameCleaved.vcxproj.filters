@@ -33,6 +33,8 @@
     <None Include="Shader\HUD.frag" />
     <None Include="Shader\HitBox.vert" />
     <None Include="Shader\HitBox.frag" />
+    <None Include="Shader\Simplex.vert" />
+    <None Include="Shader\Simplex.frag" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\CleavedGameSystem.h">

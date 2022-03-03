@@ -36,37 +36,14 @@ BF::Image::Image()
 {
     Width = 0;
     Height = 0;
-
-    Type = ImageType::Texture2D;
-
-    Format = ImageDataFormat::RGB;
-    Filter = ImageFilter::Trilinear;
-
-    LayoutNear = ImageLayout::Nearest;
-    LayoutFar = ImageLayout::Nearest;
-
-    WrapHeight = ImageWrap::Repeat;
-    WrapWidth = ImageWrap::Repeat;
-
+    Format = ImageDataFormat::Unkown;
     PixelDataSize = 0;
-    PixelData = 0;
+    PixelData = nullptr;
 }
 
 BF::Image::~Image()
 {
     free(PixelData);
-}
-
-void BF::Image::ImageWrapSet(ImageWrap wrap)
-{
-    WrapHeight = wrap;
-    WrapWidth = wrap;
-}
-
-void BF::Image::ImageWrapSet(ImageWrap wrapHeight, ImageWrap wrapWidth)
-{
-    WrapHeight = wrapHeight;
-    WrapWidth = wrapWidth;
 }
 
 void BF::Image::RemoveColor(unsigned char red, unsigned char green, unsigned char blue)
@@ -181,24 +158,6 @@ void BF::Image::FlipVertical()
     }
 
     free(copyBufferRow);
-}
-
-void BF::Image::PrintData()
-{
-    printf
-    (
-        "+------------------------------+\n"
-        "| Registered image ID:%u\n"
-        "| - Width  : %zi\n"
-        "| - Height : %zi\n"
-        "| - Size   : %zi\n"
-        "+------------------------------+\n",
-
-        ID,
-        Width,
-        Height,
-        Width * Height * 4
-    );
 }
 
 void BF::Image::Resize(unsigned int width, unsigned height)
@@ -349,128 +308,67 @@ BF::ImageFileFormat BF::Image::FileFormatPeek(const wchar_t* filePath)
     return ImageFileFormat::Unkown;
 }
 
-BF::FileActionResult BF::Image::Load()
+BF::FileActionResult BF::Image::Load(const wchar_t* filePath)
 {
-    ID = ResourceIDLoading;
-
-    if (!File::DoesFileExist(FilePath))
+    if (!File::DoesFileExist(filePath))
     {
-        ID = ResourceIDFileNotFound;
         return FileActionResult::FileNotFound;
     }
 
-    ImageFileFormat imageFileFormat = FileFormatPeek(FilePath);
+    ImageFileFormat imageFileFormat = FileFormatPeek(filePath);
 
     switch (imageFileFormat)
     {
         case ImageFileFormat::BitMap:
-        {   
+        {
             BMP bitmap;
-            bitmap.Load(FilePath);
-            bitmap.ConvertTo(*this);
-
-            bool foundAlphaFile = false;
-            wchar_t alphaMaskFile[FileNameMaxSize];
-
-            Text::Clear(alphaMaskFile, FileNameMaxSize);
-
-            // Search for Alphafile
-            {
-                wchar_t** list = 0;
-                size_t listSize = 0;
-
-                File::FilesInFolder("Texture/*Alpha.bmp", &list, listSize);
-           
-                size_t writtenBytes = Text::Copy(alphaMaskFile, FilePath + 8, FileNameMaxSize);
-
-                for (size_t i = 0; i < listSize; i++)
-                {
-                    wchar_t* file = list[i];
-                    std::wstring text(file);
-
-                    bool isTargetedFile = Text::Compare(alphaMaskFile, file, writtenBytes);
-
-                    if (isTargetedFile)
-                    {
-                        foundAlphaFile = true;
-                        Text::Copy(alphaMaskFile, L"Texture/", 8);
-                        Text::Copy(alphaMaskFile + 8, file, text.length());
-                        break;
-                    }
-                }
-            }
-
-            if(foundAlphaFile)// Load Alpha Mask
-            {
-                BMP bitmapAlpha;           
-                
-                bitmapAlpha.Load(alphaMaskFile);
-
-                bitmap.ConvertTo(*this, bitmapAlpha);
-            }      
-            else
-            {
-                bitmap.ConvertTo(*this);
-            }
-
+            bitmap.Load(filePath);
+            bitmap.ConvertTo(*this);         
             break;
         }
         case ImageFileFormat::GIF:
         {
             GIF gif;
-            gif.Load(FilePath);
+            gif.Load(filePath);
             gif.ConvertTo(*this);
             break;
         }
         case ImageFileFormat::JPEG:
         {
             JPEG jpeg;
-            jpeg.Load(FilePath);
+            jpeg.Load(filePath);
             jpeg.ConvertTo(*this);
             break;
         }
         case ImageFileFormat::PNG:
         {
             PNG png;
-            png.Load(FilePath);
+            png.Load(filePath);
             png.ConvertTo(*this);
             break;
         }
         case ImageFileFormat::TGA:
         {
             TGA tga;
-            tga.Load(FilePath);
+            tga.Load(filePath);
             tga.ConvertTo(*this);
             break;
         }
         case ImageFileFormat::TIFF:
         {
             TIFF tiff;
-            tiff.Load(FilePath);
+            tiff.Load(filePath);
             tiff.ConvertTo(*this);
             break;
         }
         case ImageFileFormat::Unkown:
         default:
         {
-            ID = ResourceIDUnsuportedFormat;
-
             return FileActionResult::FormatNotSupported;
         }
     }
 
-    ID = ResourceIDLoaded;
-
     return FileActionResult::Successful;
-}
-
-BF::FileActionResult BF::Image::Load(const wchar_t* filePath)
-{
-    FilePathChange(filePath);
-
-    FileActionResult fileActionResult = Load();    
-
-    return fileActionResult;
 }
 
 BF::FileActionResult BF::Image::Save(const wchar_t* filePath, ImageFileFormat imageFileFormat)

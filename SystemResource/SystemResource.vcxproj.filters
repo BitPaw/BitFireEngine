@@ -21,9 +21,6 @@
     <ClCompile Include="Source\Container\BitStreamHusk.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Dialog\Dialog.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Email\EML.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -69,9 +66,6 @@
     <ClCompile Include="Source\Image\Image.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Level\Level.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Model\3DS\A3DS.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -111,12 +105,6 @@
     <ClCompile Include="Source\Model\Vertex.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Shader\Shader.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Shader\ShaderProgram.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Sound\MID\MID.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -133,9 +121,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Types\UUID.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Resource.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Math\Geometry\Form\Cone.cpp">
@@ -186,15 +171,6 @@
     <ClCompile Include="Source\Math\Geometry\Shape\Triangle.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Math\Physic\Collider.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Math\Physic\GravityField.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Math\Physic\GravitySphere.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Math\Interpolate.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -205,9 +181,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Async\AsyncLock.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Image\ImageType.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Time\StopWatch.cpp">
@@ -223,9 +196,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Network\Server.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\SkyBox.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Sound\WAV\FMT.cpp">
@@ -318,13 +288,7 @@
     <ClCompile Include="Source\Encryption\ICypher.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Encryption\RSA.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Algorithm\ISBN.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Math\Physic\GravityCube.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Image\ImageDataFormat.cpp">
@@ -369,13 +333,7 @@
     <ClCompile Include="Source\Network\SocketActionResult.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Sprite.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Model\MeshRenderInfo.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Model\MeshStructure.cpp">
+    <ClCompile Include="Source\Model\MeshSegment.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Model\Model.cpp">
@@ -400,9 +358,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\ErrorCode.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Shader\ShaderType.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Compression\HUFFMAN\HuffmanTree.cpp">
@@ -585,9 +540,6 @@
     <ClCompile Include="Source\Service\HTTP\HTTPServer.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Camera\Camera.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Image\PNG\Chunk\PNGLastModificationTime.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -609,9 +561,6 @@
     <ClCompile Include="Source\File\Text.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ResourceInfo.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Image\GIF\GIFImageDescriptor.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -621,22 +570,43 @@
     <ClCompile Include="Source\File\ParsingToken.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Math\Physic\CollisionListener.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\File\FileCachingMode.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Math\Uncategorized\Euklid.cpp">
+    <ClCompile Include="Source\Encryption\RSA\Euklid.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Math\Uncategorized\Körper.cpp">
+    <ClCompile Include="Source\Encryption\RSA\Körper.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Math\Uncategorized\Restklassen.cpp">
+    <ClCompile Include="Source\Encryption\RSA\Restklassen.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Math\Uncategorized\RSA.cpp">
+    <ClCompile Include="Source\Encryption\RSA\RSA.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Resource.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DataBase\DataBase.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Library\Library.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Controller\ControllerData.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Controller\ControllerSystem.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Controller\KeyBoardKey.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Window\Window.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Window\CursorIcon.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -678,9 +648,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Container\Table.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dialog\Dialog.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Email\EML.h">
@@ -746,15 +713,6 @@
     <ClInclude Include="Source\Image\TIFF\TIFF.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\ImageFilter.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Image\ImageLayout.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Level\Level.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Model\3DS\A3DS.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -809,15 +767,6 @@
     <ClInclude Include="Source\Model\Vertex.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Shader\Shader.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Shader\ShaderProgram.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Shader\ShaderType.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Sound\MID\MID.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -837,9 +786,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Types\UUID.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Resource.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Math\Math.h">
@@ -914,15 +860,6 @@
     <ClInclude Include="Source\Math\Geometry\Vector4.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Physic\Collider.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Math\Physic\GravityField.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Math\Physic\GravitySphere.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Math\Complex.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -941,9 +878,6 @@
     <ClInclude Include="Source\OSDefine.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ResourceType.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Time\StopWatch.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -959,12 +893,6 @@
     <ClInclude Include="Source\Network\Server.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Camera\CameraPerspective.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\SkyBox.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Event\Event.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -972,9 +900,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Math\Geometry\AngleDegree.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Sound\SoundPlayStyle.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Sound\WAV\RIFF.h">
@@ -1079,22 +1004,7 @@
     <ClInclude Include="Source\Encryption\ICypher.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Encryption\RSA.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Algorithm\ISBN.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Math\Physic\PhysicsDynamic.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Math\Physic\PhysicsStatic.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Math\Physic\GravityCube.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Math\Physic\ColliderType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Image\ImageDataFormat.h">
@@ -1104,12 +1014,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Image\IImageFormat.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Image\ImageWrap.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Image\ImageType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Image\JPEG\JPEGMarker.h">
@@ -1169,13 +1073,7 @@
     <ClInclude Include="Source\Network\ISocketListener.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Sprite.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Model\MeshStructure.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Model\MeshRenderInfo.h">
+    <ClInclude Include="Source\Model\MeshSegment.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Model\Model.h">
@@ -1418,9 +1316,6 @@
     <ClInclude Include="Source\Service\HTTP\HTTPRequestMethod.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Camera\Camera.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Image\PNG\Chunk\PNGLastModificationTime.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -1442,9 +1337,6 @@
     <ClInclude Include="Source\File\Text.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ResourceInfo.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Image\GIF\GIFImageDescriptor.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -1454,28 +1346,58 @@
     <ClInclude Include="Source\File\ParsingToken.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Physic\CollisionListener.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\File\FileCachingMode.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Uncategorized\Euklid.h">
+    <ClInclude Include="Source\Encryption\RSA\Euklid.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Uncategorized\Euklid_element.h">
+    <ClInclude Include="Source\Encryption\RSA\Euklid_element.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Uncategorized\Körper.h">
+    <ClInclude Include="Source\Encryption\RSA\Körper.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Uncategorized\Restklassen.h">
+    <ClInclude Include="Source\Encryption\RSA\Restklassen.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Uncategorized\RSA.h">
+    <ClInclude Include="Source\Encryption\RSA\RSA.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Uncategorized\RSAKeys.h">
+    <ClInclude Include="Source\Encryption\RSA\RSAKeys.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Resource.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\Physic\PhysicsStatic.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\Physic\PhysicsDynamic.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DataBase\DataBase.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Library\Library.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Controller\ControllerSystem.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Controller\ControllerData.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Controller\KeyBoardKey.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Window\CursorMode.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Window\Window.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Window\CursorIcon.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

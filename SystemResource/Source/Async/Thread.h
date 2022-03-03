@@ -30,9 +30,9 @@ namespace BF
 		public:
 		Thread();
 
-		static ThreadID Run(ThreadFunction threadFunction, void* parameter);
+		static ThreadID Run(const ThreadFunction threadFunction, const void* parameter);
 
-		void WaitForFinish();
+		static void WaitForFinish(const ThreadID threadID);
 	};
 }
 #endif

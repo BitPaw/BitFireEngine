@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../../SystemResource/Source/Game/Sprite.h"
-#include "../../SystemResource/Source/Math/Physic/CollisionListener.h"
+#include "../Resource/Sprite.h"
+#include "../Physic/CollisionListener.h"
+#include "../Physic/Collider.h"
 
 namespace BF
 {
@@ -14,7 +15,7 @@ namespace BF
 		{
 			Interactable = false;
 
-			OnCollisionCallBack = this;
+			//OnCollisionCallBack = this;
 		}
 
 

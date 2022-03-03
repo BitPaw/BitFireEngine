@@ -17,11 +17,11 @@ BF::Material::Material()
 	Emission[0] = 0;
 	Emission[1] = 0;
 	Emission[2] = 0;
-
-	Texture = nullptr;
 }
 
-BF::FileActionResult BF::Material::Load()
+size_t BF::Material::FullSizeInMemory()
 {
-	return FileActionResult::Successful;
+	size_t size = sizeof(*this);
+
+	return size;
 }

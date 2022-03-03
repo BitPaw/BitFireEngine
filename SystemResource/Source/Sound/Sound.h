@@ -1,6 +1,5 @@
 #pragma once
 
-#include "SoundPlayStyle.hpp"
 #include "SoundFormat.h"
 #include "../Resource.h"
 #include "../File/FileActionResult.hpp"
@@ -15,14 +14,13 @@ namespace BF
 		unsigned short BitsPerSample;
 
 		unsigned int DataSize;
-		unsigned char* Data;
-
-		SoundPlayStyle PlayStyle;
+		unsigned char* Data;	
 
 		Sound();
 
 		static SoundFormat FileFormatPeek(const wchar_t* filePath);
-		FileActionResult Load();
+
+		size_t FullSizeInMemory();
 		FileActionResult Load(const wchar_t* filePath);
 		FileActionResult Save(const wchar_t* filePath, SoundFormat soundFormat);
 	};

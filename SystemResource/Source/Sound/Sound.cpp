@@ -18,8 +18,6 @@ BF::Sound::Sound()
     BitsPerSample = 0;
     SampleRate = 0;
 
-    PlayStyle = SoundPlayStyle::Loop;
-
     DataSize = 0;
     Data = nullptr;
 }
@@ -40,88 +38,81 @@ BF::SoundFormat BF::Sound::FileFormatPeek(const wchar_t* filePath)
     return SoundFormat::Unkown;
 }
 
-BF::FileActionResult BF::Sound::Load()
+size_t BF::Sound::FullSizeInMemory()
 {
-    SoundFormat soundFormat = FileFormatPeek(FilePath);
+    return sizeof(*this);
+}
 
-    ID = ResourceIDLoading;
+BF::FileActionResult BF::Sound::Load(const wchar_t* filePath)
+{   
+    SoundFormat soundFormat = FileFormatPeek(filePath);
 
     switch (soundFormat)
     {
         case SoundFormat::AAC:
         {
             AAC aac;
-            aac.Load(FilePath);
+            aac.Load(filePath);
             aac.ConvertTo(*this);
             break;
         }
         case SoundFormat::FLAC:
         {
             FLAC flac;
-            flac.Load(FilePath);
+            flac.Load(filePath);
             flac.ConvertTo(*this);
             break;
         }
         case SoundFormat::M4A:
         {
             M4A m4a;
-            m4a.Load(FilePath);
+            m4a.Load(filePath);
             m4a.ConvertTo(*this);
             break;
         }
         case SoundFormat::MID:
         {
             MID mid;
-            mid.Load(FilePath);
+            mid.Load(filePath);
             mid.ConvertTo(*this);
             break;
         }
         case SoundFormat::MP3:
         {
             MP3 mp3;
-            mp3.Load(FilePath);
+            mp3.Load(filePath);
             mp3.ConvertTo(*this);
             break;
         }
         case SoundFormat::OGG:
         {
             OGG ogg;
-            ogg.Load(FilePath);
+            ogg.Load(filePath);
             ogg.ConvertTo(*this);
             break;
         }
         case SoundFormat::WAV:
         {
             WAV wav;
-            wav.Load(FilePath);
+            wav.Load(filePath);
             wav.ConvertTo(*this);
             break;
         }
         case SoundFormat::WMA:
         {
             WMA wma;
-            wma.Load(FilePath);
+            wma.Load(filePath);
             wma.ConvertTo(*this);
             break;
         }
         case SoundFormat::Unkown:
         default:
         {
-            ID = ResourceIDUnsuportedFormat;
             return FileActionResult::FormatNotSupported;
         }
     }
 
-    ID = ResourceIDLoaded;
-
     return FileActionResult::Successful;
-}
-
-BF::FileActionResult BF::Sound::Load(const wchar_t* filePath)
-{   
-    FilePathChange(filePath);
-
-    return Load();
 }
 
 BF::FileActionResult BF::Sound::Save(const wchar_t* filePath, SoundFormat soundFormat)

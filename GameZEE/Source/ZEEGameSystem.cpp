@@ -1,20 +1,22 @@
 #include "ZEEGameSystem.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#include "../../BitFireEngine/Source/UI/UIText.h"
-#include "../../SystemResource/Source/Time/StopWatch.h"
-#include "../../SystemResource/Source/Shader/ShaderProgram.h"
-#include "../../SystemResource/Source/Game/SkyBox.h"
-#include "../../SystemResource/Source/Model/Model.h"
-#include "../../SystemResource/Source/Math/Math.h"
-#include "../../SystemResource/Source/Sound/WAV/WAV.h"
-#include "../../SystemResource/Source/Sound/MID/MID.h"
-#include "../../SystemResource/Source/Math/Geometry/Matrix.hpp"
-#include "../../SystemResource/Source/Image/PNG/PNG.h"
-#include "../../SystemResource/Source/Math/Physic/GravityCube.h"
-#include "../../SystemResource/Source/Image/JPEG/JPEG.h"
-#include "../../SystemResource/Source/Font/TTF/TTF.h"
 
+#include <Math/Math.h>
+#include <Math/Geometry/Matrix.hpp>
+#include <Sound/WAV/WAV.h>
+#include <Sound/MID/MID.h>
+#include <Image/PNG/PNG.h>
+#include <Image/JPEG/JPEG.h>
+#include <Font/TTF/TTF.h>
+#include <Time/StopWatch.h>
+
+#include <UI/UIText.h>
+#include <Shader/ShaderProgram.h>
+#include <Resource/SkyBox.h>
+#include <Physic/GravityCube.h>
+#include <Model/Model.h>
 
 using namespace BF;
 
@@ -22,19 +24,20 @@ BF::UIText* text;
 //BF::Model* sphere;
 
 BF::SkyBox skybox;
-BF::Model cube;
+BF::Renderable _cubeModel;
 
-BF::ShaderProgram worldShader;
-BF::ShaderProgram hudShaderID;
+BF::ShaderProgram _worldShader;
+BF::ShaderProgram _hudShaderID;
 
-BF::AudioSource audioSource;
-BF::Sound sound;
+BF::AudioSource _audioSource;
 BF::GravityCube _worldGravity;
 float _deltaTime = 0;
 BF::Model* model;
 BF::Model textureBix;
+//BF::Level _level;
+BF::AudioClip _audioClip;
 
-#define EnableMusic 0
+#define EnableMusic 1
 
 ZEE::ZEEGameSystem::ZEEGameSystem()
 {
@@ -42,20 +45,11 @@ ZEE::ZEEGameSystem::ZEEGameSystem()
 }
 
 void ZEE::ZEEGameSystem::OnStartUp()
-{   
-   //TTF fnt;
+{       
+    GameSystem.Load(_worldShader, L"Shader/WS.vert", L"Shader/WS.frag");
+    GameSystem.Load(_hudShaderID, L"Shader/HUD.vert", L"Shader/HUD.frag");
 
-   //fnt.Load("A:/_WorkSpace/BOOKOSI.TTF");
-
-
-    BF::StopWatch stopwatch;
-
-    stopwatch.Start();
-
-    GameSystem.Resource.Load(worldShader, L"Shader/WS.vert", L"Shader/WS.frag");
-    GameSystem.Resource.Load(hudShaderID, L"Shader/HUD.vert", L"Shader/HUD.frag");
-
-    GameSystem.Resource.Load
+    GameSystem.Load
     (
         skybox,
         L"Shader/SkyBox.vert",
@@ -80,18 +74,21 @@ void ZEE::ZEEGameSystem::OnStartUp()
    // _worldGravity.PullDirection.Set(0, -1, 0);
    // GameSystem.Resource.Add(&_worldGravity);
 
-    GameSystem.Resource.Load(L"Level/MainMenu.lev");
+   // GameSystem.Resource.Add(L"Level/MainMenu.lev"); <--------------------------
 
     //GameSystem.Resource.Load(L"B:/Daten/Textures/PR/Countrry/Neo/FI/Country.obj");
 
-    GameSystem.Resource.Add(cube, L"Model/Cube.obj", false);
-    cube.MatrixModel.Move(0,50,0);
-    cube.MatrixModel.Scale(10.0f);
-    //cube.EnablePhysics = true;
+    GameSystem.Load(_cubeModel, L"Model/Cube.obj", false);
+    _cubeModel.Move(0,50,0);
+    _cubeModel.Scale(10.0f);
+    _cubeModel.ShaderID = _worldShader.ID;
+        
+        
+        //cube.EnablePhysics = true;
     //cube.Mass = 1000;
  
-    cube.MaterialListSize++;
-    cube.MaterialList = new Material();
+   // cube.MaterialListSize++;
+   // cube.MaterialList = new Material();
 
     //GameSystem.Resource.Add(cube.MaterialList[0].Texture, "C:/Users/BitPaw/Videos/TEST_PNG3.png", false);
     //cube.MeshList[0].RenderInfo.MaterialID = 0;
@@ -113,36 +110,26 @@ void ZEE::ZEEGameSystem::OnStartUp()
     //GameSystem.Resource.Add(*text);
     
 
-    printf("[i][Info] Loading took %.2fs\n", stopwatch.Stop());
-
-    GameSystem.Resource.MainCamera.Update(0);
-    GameSystem.Resource.MainCamera.Move(BF::Vector3<float>(0, 0, -100));
-
-    GameSystem.Resource.PrintContent(true);    
-
-    
-
 #if EnableMusic // Sound Enable
-    //BF::MID midi;
-    //midi.Load("Sound/CaveStory.mid");
-    //midi.Save("Sound/CaveStory_NEW.mid");
+//BF::MID midi;
+//midi.Load("Sound/CaveStory.mid");
+//midi.Save("Sound/CaveStory_NEW.mid");
 
-    //sound.Load("Sound/Our.mp3");
-    sound.Load("Sound/CatFeet.wav");
-    //sound.Load("Sound/CaveStory.mid");
+//sound.Load("Sound/Our.mp3");
+//sound.Load("Sound/CaveStory.mid");
 
-    GameSystem.SoundPlayer.Register(audioSource);
-    GameSystem.SoundPlayer.Register(sound);
+    GameSystem.Register(_audioSource);
+    GameSystem.Load(_audioClip, L"Sound/CatFeet.wav", false);
+    GameSystem.Use(_audioSource, _audioClip);
 
-
-
-    GameSystem.SoundPlayer.Play(audioSource, sound);
-
-    GameSystem.SoundPlayer.LoopPart(audioSource, 100, 100);
-
-    GameSystem.SoundPlayer.Play(audioSource, sound);
+    // GameSystem.LoopPart(audioSource, 100, 100);
+    // GameSystem.Play(audioSource, sound);
 
 #endif // Sound Enable
+    GameSystem.MainCamera.Update(0);
+    GameSystem.MainCamera.Move(BF::Vector3<float>(0, 0, -100));
+
+    GameSystem.PrintContent(true);
 }
 
 void ZEE::ZEEGameSystem::OnShutDown()
@@ -172,27 +159,27 @@ void ZEE::ZEEGameSystem::OnUpdateInput(BF::InputContainer& input)
 
     if (input.KeyBoardInput.O.IsPressed())
     {
-        audioSource.PitchIncrease(value);
+        _audioSource.PitchIncrease(value);
 
         changed = true;
     }
 
     if (input.KeyBoardInput.L.IsPressed())
     {
-        audioSource.PitchReduce(value);
+        _audioSource.PitchReduce(value);
 
         changed = true;
     }
 
     if (changed)
     {
-        GameSystem.SoundPlayer.Update(audioSource);
+        GameSystem.Update(_audioSource);
     }
 #endif
 
     KeyBoard& keyboard = input.KeyBoardInput;
     Mouse& mouse = input.MouseInput;
-    Camera& camera = GameSystem.Resource.MainCamera;
+    Camera& camera = GameSystem.MainCamera;
     Vector3<float> movement;
 
     if (keyboard.ShitftLeft.IsPressed()) { movement.Add(0, -1, 0); }

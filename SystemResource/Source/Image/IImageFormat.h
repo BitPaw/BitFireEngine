@@ -9,5 +9,6 @@ namespace BF
 	{
 		virtual FileActionResult ConvertTo(Image& image) = 0;
 		virtual FileActionResult ConvertFrom(Image& image) = 0;
+		//virtual ~IImageFormat() = 0;
 	};
 }

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../BitFireEngine/Source/System/BitFireEngine.h"
-#include "../../SystemRender/Source/Device/InputContainer.h"
-#include "../../SystemResource/Source/Camera/Camera.h"
+#include <System/BitFireEngine.h>
+#include <System/Device/InputContainer.h>
+#include <Camera/Camera.h>
 
 namespace Cleaved
 {

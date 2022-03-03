@@ -1,9 +1,11 @@
 #pragma once
 
-#include "../../../../SystemResource/Source/Container/Queue.hpp"
-#include "../../../../SystemResource/Source/Dialog/Dialog.h"
-#include "../../../../SystemResource/Source/Game/Sprite.h"
+#include <Container/Queue.hpp>
+
 #include "../UIText.h"
+
+#include "../../Dialog/Dialog.h"
+#include "../../Resource/Sprite.h"
 
 namespace BF
 {

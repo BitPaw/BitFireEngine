@@ -38,10 +38,10 @@ BF::FileActionResult BF::TGA::Load(const wchar_t* filePath)
 	unsigned short colorPaletteChunkSize = 0;
 	unsigned char colorPaletteEntrySizeInBits = 0;
 
-	unsigned int footerEntryIndex = 0;	
-	unsigned int extensionOffset = 0;
-	unsigned int developerAreaOffset = 0;
-	unsigned int firstFieldAfterHeader = 0;
+	size_t footerEntryIndex = 0;	
+	size_t extensionOffset = 0;
+	size_t developerAreaOffset = 0;
+	size_t firstFieldAfterHeader = 0;
 	FileStream file;
 	FileActionResult loadingResult = file.ReadFromDisk(filePath);
 
@@ -76,7 +76,7 @@ BF::FileActionResult BF::TGA::Load(const wchar_t* filePath)
 		ImageDataType = ConvertImageDataType(imageTypeValue);
 		PixelDepth = ConvertPixelDepth(pixelDepth);
 
-		ImageDataSize = Width * Height * (pixelDepth / 8);
+		ImageDataSize = Width * Height * (pixelDepth / 8u);
 		ImageData = (Byte*)malloc(ImageDataSize * sizeof(Byte));
 	}	
 	//----------------------------------------------------
@@ -228,8 +228,8 @@ BF::FileActionResult BF::TGA::Save(const wchar_t* filePath)
 BF::FileActionResult BF::TGA::ConvertTo(Image& image)
 {	
 	ImageDataFormat imageFormat = ImageDataFormat::Unkown;
-	unsigned int pixelDataLengh = -1;
-	unsigned int bytesPerPixel = -1;
+	size_t pixelDataLengh = 0;
+	size_t bytesPerPixel = 0;
 	unsigned char* newImageData = nullptr;
 
 	switch (PixelDepth)
@@ -265,6 +265,10 @@ BF::FileActionResult BF::TGA::ConvertTo(Image& image)
 			bytesPerPixel = 4;
 			break;
 		}
+		case TGABitsPerPixel::Invalid:
+		{
+			return FileActionResult::FormatNotSupported;
+		}
 	}
 
 	pixelDataLengh = Width * Height * bytesPerPixel;
@@ -275,7 +279,6 @@ BF::FileActionResult BF::TGA::ConvertTo(Image& image)
 		return FileActionResult::OutOfMemory;
 	}	
 
-	image.Type = ImageType::Texture2D;
 	image.Format = imageFormat;
 	image.Height = Height;
 	image.Width = Width;

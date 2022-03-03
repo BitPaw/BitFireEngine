@@ -9,7 +9,7 @@ namespace BF
 	{
 		private:
 		T* _content;
-		unsigned int _size;
+		size_t _size;
 
 		public:
 		List()
@@ -18,7 +18,7 @@ namespace BF
 			_size = 0;
 		}
 
-		List(const unsigned int size)
+		List(const size_t size)
 		{	
 			ReSize(size);
 		}
@@ -33,7 +33,7 @@ namespace BF
 			return Size() == 0;
 		}
 
-		unsigned int Size()
+		size_t Size()
 		{
 			return _size;
 		}
@@ -53,15 +53,15 @@ namespace BF
 			return oldBuffer;
 		}
 
-		void ReSize(unsigned int size)
+		void ReSize(size_t size)
 		{
 			ReSize(size, false);
 		}
 
-		void ReSize(unsigned int size, bool copyOldContent)
+		void ReSize(size_t size, bool copyOldContent)
 		{
 			T* oldData = _content;
-			int oldSize = _size;
+			size_t oldSize = _size;
 			bool reallocate = true;// oldSize < size || (oldSize - size) > 128;
 			// 200 < 100 && 200 - 128 > 100
 

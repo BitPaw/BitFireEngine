@@ -6,14 +6,14 @@ namespace BF
 	class Event
 	{
 		private:
-		unsigned int SubscriberListSize;
-		FunctionPonter SubscriberList[10];
+		size_t SubscriberListSize;
+		FunctionPonter* SubscriberList;
 
 		public:
 		Event()
 		{
 			SubscriberListSize = 0;
-			//SubscriberList = nullptr;
+			SubscriberList = nullptr;
 		}
 
 		void operator+=(FunctionPonter functionPonter)

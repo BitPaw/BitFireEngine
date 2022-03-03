@@ -1,19 +1,24 @@
 #include "CleavedGameSystem.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#include "../../SystemResource/Source/Time/StopWatch.h"
-#include "../../SystemResource/Source/Shader/ShaderProgram.h"
-#include "../../SystemResource/Source/Game/SkyBox.h"
-#include "../../SystemResource/Source/Model/Model.h"
-#include "../../SystemResource/Source/Math/Math.h"
-#include "../../SystemResource/Source/Math/Geometry/Shape/Rectangle.h"
-#include "../../BitFireEngine/Source/UI/UIText.h"
-#include "../../SystemResource/Source/Math/Geometry/Form/Cube.h"
-#include "../../SystemResource/Source/Game/Sprite.h"
-#include "../../SystemResource/Source/File/FileTemporary.h"
-#include "../../SystemResource/Source/Math/Physic/GravityCube.h"
-#include "../../BitFireEngine/Source/Entity/Sign.h"
-#include "../../BitFireEngine/Source/UI/DialogBox/UIDialogBox.h"
+
+#include <File/FileTemporary.h>
+#include <Model/Model.h>
+#include <Math/Math.h>
+#include <Math/Geometry/Shape/Rectangle.h>
+#include <Math/Geometry/Form/Cube.h>
+#include <Time/StopWatch.h>
+
+#include <Resource/SkyBox.h>
+#include <UI/DialogBox/UIDialogBox.h>
+#include <UI/UIText.h>
+#include <Entity/Sign.h>
+#include <Resource/SkyBox.h>
+#include <Resource/Sprite.h>
+#include <Physic/GravityCube.h>
+#include <Shader/ShaderProgram.h>
+#include <Font/FNT/FNT.h>
 
 using namespace BF;
 
@@ -21,6 +26,7 @@ float _deltaTime = 0;
 
 BF::FNT fnt;
 BF::Font font;
+BF::Texture testTextue;
 
 BF::SkyBox skybox;
 BF::ShaderProgram worldShader;
@@ -41,6 +47,10 @@ BF::UIDialogBox _dialogBox;
 
 bool moveCamera = false;
 
+BF::Renderable _cubeRenderable;
+BF::Model _cubeModel;
+BF::ShaderProgram _simplex;
+
 Cleaved::CleavedGameSystem::CleavedGameSystem()
 {
     GameSystem.SetCallBack(this);
@@ -48,14 +58,14 @@ Cleaved::CleavedGameSystem::CleavedGameSystem()
 
 void Cleaved::CleavedGameSystem::OnStartUp()
 {
-    _camera = &GameSystem.Resource.MainCamera;
+    _camera = &GameSystem.MainCamera;
 
-    GameSystem.Resource.Load(worldShader, L"Shader/WS.vert", L"Shader/WS.frag");
-    GameSystem.Resource.Load(hudShaderID, L"Shader/HUD.vert", L"Shader/HUD.frag");
-    
-    GameSystem.Resource.Load(GameSystem.Resource.ShaderHitBox, L"Shader/HitBox.vert", L"Shader/HitBox.frag");
+    GameSystem.Load(worldShader, L"Shader/WS.vert", L"Shader/WS.frag");
+    GameSystem.Load(hudShaderID, L"Shader/HUD.vert", L"Shader/HUD.frag");
+    GameSystem.Load(_simplex, L"Shader/Simplex.vert", L"Shader/Simplex.frag");
+    //GameSystem.Load(GameSystem.ShaderHitBox, L"Shader/HitBox.vert", L"Shader/HitBox.frag");
 
-    GameSystem.Resource.Load
+    GameSystem.Load
     (
         skybox,
         L"Shader/SkyBox.vert",
@@ -68,9 +78,74 @@ void Cleaved::CleavedGameSystem::OnStartUp()
         L"Texture/SkyBox_Side.png"
     ); 
 
+    GameSystem.Load(testTextue, L"Texture/SkyBox.bmp", false);
 
 
-   
+   // BF::Cube cube;
+
+    //GameSystem.Resource.Add(_cubeRenderable, cube.VertexList, cube.VertexListSize, cube.IndexList, cube.IndexListSize);
+
+    // Test-Cube
+    {
+        const float vtx[12] =
+        {
+            0,0,0,
+            0,1,0,
+            1,1,0,
+            1,0,0     
+        };
+
+        const unsigned int itx[4] =
+        {
+            0,1,2,3
+        };
+
+        GameSystem.Load(_cubeRenderable, vtx, 12, itx, 4);
+        _cubeRenderable.ShaderUse(_simplex);
+        _cubeRenderable.TextureID = testTextue.ID;
+    }
+
+    _backGround.Scale(12);
+    _backGround.MoveTo(13.5, -0.2, -5);
+    _backGround.ShaderUse(_simplex);
+    _backGround.MeshShare(_cubeRenderable);
+    GameSystem.Load(_backGround, L"Texture/BackGround.png");
+
+    _lamp.MoveTo(120, 12, 0.3);
+    _lamp.ShaderUse(_simplex);
+    _lamp.MeshShare(_cubeRenderable);
+    GameSystem.Load(_lamp, L"Texture/LampA.png");
+
+    _sign.MoveTo(110, 12, 0.1);
+    _sign.ShaderUse(_simplex);
+    _sign.MeshShare(_cubeRenderable);
+    GameSystem.Load(_sign, L"Texture/Sign.png");
+    //_sign.Type = ColliderType::EffectBox;
+    
+    _floor.MoveTo(10, -7, 0);
+    _floor.Scale(200, 20, 1);
+    _floor.ShaderUse(_simplex);
+    _floor.MeshShare(_cubeRenderable);   
+    GameSystem.Load(_floor, L"Texture/MissingTexture.bmp");
+    _floor.UsedTexture->TextureWrap(ImageWrap::Repeat);
+
+    _playerCharacterNyte.Scale(0.5);
+    _playerCharacterNyte.MoveTo(100, 12, 0.3);
+    _playerCharacterNyte.ShaderUse(_simplex);
+    _playerCharacterNyte.MeshShare(_cubeRenderable);
+    GameSystem.Load(_playerCharacterNyte, L"Texture/Nyte.png");
+
+    _playerCharacterLuna.Scale(0.5);
+    _playerCharacterLuna.MoveTo(123, 12, 0.1);
+    _playerCharacterLuna.ShaderUse(_simplex);
+    _playerCharacterLuna.MeshShare(_cubeRenderable);
+    GameSystem.Load(_playerCharacterLuna, L"Texture/Theia.png");
+
+   // _playerCharacterLuna.EnablePhysics = true;
+
+
+
+   /*
 
 
     // Gravity
@@ -79,22 +154,12 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     _gravityField.BoundingBox.Set(170, 0, 30, 70);
     GameSystem.Resource.Add(&_gravityField);
 
-    _backGround.Set(13.5, -0.2, -5, "Sprite_backGround", "Texture/BackGround.png");
-    _backGround.MatrixModel.Scale(12);
-    GameSystem.Resource.Add(_backGround);
-
-
 
 #if 1
    // _fireplace.Set(20, 0, 0.2, "Sprite_FirePlace", "Texture/Fireplace.png");
    // GameSystem.Resource.Add(_fireplace);
 
-    _lamp.Set(26, 0.008, 0.3, "Sprite_Lamp", "Texture/LampA.png");
-    GameSystem.Resource.Add(_lamp); 
-
-    _sign.Set(24, 0, 0.1, "Sprite_Sign", "Texture/Sign.png");
-    _sign.Type = ColliderType::EffectBox;
-    GameSystem.Resource.Add(_sign);
+   
 
     _floor.Set(10, -2, 0.0, "Floor", "Texture/Brick.bmp");
     _floor.MaterialList[0].Texture->ImageWrapSet(ImageWrap::Repeat);
@@ -103,15 +168,7 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     GameSystem.Resource.Add(_floor);        
 #endif 
 
-    _playerCharacterNyte.Set(10, 0, 0.4, "Sprite_Nyte", "Texture/Nyte.png");
-    _playerCharacterNyte.MatrixModel.Scale(0.5);
-    GameSystem.Resource.Add(_playerCharacterNyte);
-
-    _playerCharacterLuna.Set(23, 0, 0.5, "Sprite_Luna", "Texture/Theia.png");
-    _playerCharacterLuna.MatrixModel.Scale(0.5);
-    _playerCharacterLuna.EnablePhysics = true;
-    GameSystem.Resource.Add(_playerCharacterLuna);
-    //GameSystem.Resource.Add(_playerCharacterLuna);
+ 
 
 
 #if 1
@@ -135,7 +192,7 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     _dialogBox.BackGroundTexture.MeshList[0].RenderInfo.ShaderProgramID = hudShaderID.ID;
 
 
-    GameSystem.Resource.Load(font, L"Font/harrington.fnt");
+    GameSystem.Resource.Add(font, L"Font/harrington.fnt");
     _dialogBox.Content.SetFont(font);
     _dialogBox.Content.SetText("Text...");
     _dialogBox.Content.MatrixModel.Scale(1);
@@ -145,7 +202,7 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     _dialogBox.Content.UpdateText();
     GameSystem.Resource.Add(_dialogBox.Content);
     GameSystem.Resource.PushToGPU(_dialogBox.Content);
-    _dialogBox.Content.MeshList[0].RenderInfo.ShaderProgramID = hudShaderID.ID;
+    _dialogBox.Content.MeshList[0].RenderInfo.ShaderProgramID = hudShaderID.ID;*/
 
     //-------------------------------------------------------------------------
 
@@ -155,7 +212,7 @@ void Cleaved::CleavedGameSystem::OnStartUp()
 
 
 
-    GameSystem.Resource.PrintContent(false);
+    GameSystem.PrintContent(false);
     //text = new BF::UIText("SampleText", *GameSystem.Resource.DefaultFont, -1, -0.8);
     //text->RenderInformation.ShaderProgramID = hudShaderID.ID;
     //text->SetFont(*Resource.DefaultFont);
@@ -166,10 +223,10 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     _camera->CurrentRotation.Set(-90, 0, 0);
     _camera->Move(Vector3<float>(0, 0, -60));
     _camera->Rotate(0, 0);
-    //_camera->MatrixModel.Rotate(90, 0, 0);
+    _camera->MatrixModel.Rotate(90, 0, 0);
 
 
-    _camera->Target = &_playerCharacterLuna.MatrixModel;
+   // _camera->Target = &_playerCharacterLuna.MatrixModel;
     _camera->Offset.Set(0, 20, 60);
     _camera->FollowSpeed = 1;
 }
@@ -191,7 +248,7 @@ void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
 #if 1
     KeyBoard& keyboard = input.KeyBoardInput;
     Mouse& mouse = input.MouseInput;
-    Camera& camera = GameSystem.Resource.MainCamera;
+    Camera& camera = GameSystem.MainCamera;
     Vector3<float> movement;
 
     if (keyboard.ShitftLeft.IsPressed()) { movement.Add(0, -1, 0); }
@@ -216,9 +273,9 @@ void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
         }
     }
 
-    _playerCharacterLuna.MatrixModel.Move(movement);
+    //_playerCharacterLuna.MatrixModel.Move(movement);
 
-    //camera.Move(movement);
+    camera.Move(movement);
 
     camera.Rotate(mouse.InputAxis[0], mouse.InputAxis[1]);
 
@@ -270,12 +327,7 @@ void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
     //_camera->MatrixModel.Move(movementCharacter);
     _playerCharacterLuna.MatrixModel.Move(movementCharacter);
     //_camera->MatrixModel.Move(movementCamera);
-#endif // 1
-
-
-    
-
- 
+#endif // 1 
 }
 
 void Cleaved::CleavedGameSystem::OnUpdateUI()
