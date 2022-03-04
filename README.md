@@ -1,31 +1,34 @@
 # BitFireEngine
 ## Systems
 
-| OS | x86 | x64 | 
-|:--:|:--:|:--:|
-| Windows | :heavy_check_mark:  | :heavy_check_mark: |
-| Linux | :heavy_check_mark: | :heavy_check_mark: |
-| OSX |:x: | :x: |
+| OS | Windows | Linux (Mint) | OSX |
+|:--:|:--:|:--:|:--:|
+| x86 (32-Bit) | :heavy_check_mark:  | ⚠️ | :x: |
+| x64 (64-Bit) | :heavy_check_mark: | ⚠️ |:x: |
 
 ## Dependencies (.LIB / .DLL / .so)
 ### Cross Platform
-| Library | Used | Purpose |
-|:--:|:--:|:--:|
-| OpenGL<br> (Open Graphics Library) | API to be able to render | :heavy_check_mark: In-use |
-| GLFW <br> (OpenGL for Window)| Window creation and OpenGL Context creation, then binding to created window.<br>Has only one header file. |:warning: soon removed <br><br> Alot of code for something thatmost operating systems already provides. It saves only a smal chunk of code. |
-| GLUT<br>OpenGL Utility Toolkit | Manage Window creation, input handling and a hand full of events like a window main loop. |:x: never used<br><br> Undesirable for many programmers, too restricting if you want to have controll. |
-|stb_image<br>| Image Loader | :x: never used<br><br> |
-| SOIL<br>Simple OpenGL Image Library | Load & Save images | :x: never used <br><br> Many formats can be loaded but not saved. <br>It's half assly copyed from "stb_image" Library|
-| GLM <br> (OpenGL Math) | Math calculations needed for object transformation & positioning <br> Library is header only (Just .hpp files)| ↪️ rewritten <br><br> The whole library is very heavy, the compile time is very long. You most likely just need a Matrix4x4, a Vector3 and a Vector4. |
-| SDL <br> (Simple DirectMedia Layer)| Access to Audio, Keyboard & Controller and Rendering with OpenGL | :x: never used |
-| OpenAL<br> (Open Audio Library) | Async audio Interface <br> Syntax useable like OpenGL| :x: removed <br><br> Library written in C++, classes aren't even used <br>Code is nested in itself. |
-| libpng | Load&Save a PNG file | ↪️ rewritten <br><br> Code is scattered heavily.<br>Function call depth reaches very high amounts without doing anything.  |
+| Library | Purpose | State | Reason "to use or not to use.." |
+|:--:|:--:|:--:|:--:|
+| OpenGL<br> (Open Graphics Library) | Graphics API to be able to render models & stuff | :heavy_check_mark:<br>In-use | Mainly used in graphics cards since forever. Is nearly in every OS. |
+| GLFW <br> (OpenGL for Window)| Window creation and OpenGL context creation for multible operating systems, then binding to created window.<br>Has only one header file. | ❗<br>rewritten | Code is nearly a redirect, so it does not really add functionallity. It doesn't really reduce code and you loose alot of control of what each OS can really do.  |
+| GLUT<br>OpenGL Utility Toolkit | Manage Window creation, input handling and a hand full of events like a window main loop. |:x:<br>never used | Considered undesirable, because it is too restricting if you want to have controll. |
+|stb<br>| Load & Save Images | :x:<br>never used |  Many formats can be loaded but not saved.<br>It will not be feature-updated anymore because of "security" reasons, in the sence of it makes the library more vulnerable, more to test and harder to keep secure. |
+| SOIL<br>(Simple OpenGL Image Library) | Load & Save images and combine OpenGL image registration into one | :x:<br>never used | It uses underlying library "stb_image". It doesn't really add any functionality. |
+| GLM <br> (OpenGL Math) | Math calculations needed for object transformation & positioning <br> Library is header only (Just .hpp files)| ❗<br>rewritten | The whole library is very heavy, the compile time is very long. You most likely just need a Matrix4x4, a Vector3. Thus nearly the whole library will be unused. |
+| SDL <br> (Simple DirectMedia Layer)| Access to Audio, Keyboard & Controller and Rendering with OpenGL | :x:<br>never used |
+| OpenAL<br> (Open Audio Library) | Async audio Interface <br> Syntax useable like OpenGL| :x: removed | Library written in C++ but classes aren't even used.<br>It's C code with C++ std:: elements<br>Code is nested heavily in itself. |
+| libpng | Load & Save a PNG file | ❗<br>rewritten | Code is scattered heavily.<br>Function call depth reaches very high amounts without doing anything.  |
 
 ### Windows Only
-insert libs
+| Library | Purpose | 
+|:-:|:-:|
+| WINMM.DLL<br>(Windows Multi Media) | Sound (WAVE only) <br>Controller I/O<br>MIDI devices| 
 
 ### Linux Only
-insert libs
+| Library | Purpose | 
+|:-:|:-:|
+|||
 
 ### Current Minimal Systemrequirements 
 
