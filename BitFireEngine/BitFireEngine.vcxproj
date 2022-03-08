@@ -27,6 +27,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Resource\RenderableChunk.cpp" />
+    <ClCompile Include="Source\Resource\RenderableSegment.cpp" />
+    <ClCompile Include="Source\Level\Level.cpp" />
     <ClCompile Include="Source\Sound\AudioClip.cpp" />
     <ClCompile Include="Source\Animation\AnimatorSprite.cpp" />
     <ClCompile Include="Source\Dialog\DialogBox.cpp" />
@@ -70,6 +73,9 @@
     <ClCompile Include="Source\Resource\TextureCube.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Resource\RenderableChunk.h" />
+    <ClInclude Include="Source\Resource\RenderableSegment.h" />
+    <ClInclude Include="Source\Level\Level.h" />
     <ClInclude Include="Source\Sound\AudioClip.h" />
     <ClInclude Include="Source\Animation\AnimatorSprite.h" />
     <ClInclude Include="Source\Dialog\DialogBox.h" />

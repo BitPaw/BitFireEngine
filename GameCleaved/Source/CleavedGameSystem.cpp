@@ -101,8 +101,10 @@ void Cleaved::CleavedGameSystem::OnStartUp()
         };
 
         GameSystem.Load(_cubeRenderable, vtx, 12, itx, 4);
+        _cubeRenderable.Mode = RenderMode::Square;
         _cubeRenderable.ShaderUse(_simplex);
-        _cubeRenderable.TextureID = testTextue.ID;
+        _cubeRenderable.ChunkList[0].SegmentList[0].TextureID = testTextue.ID;
+        _cubeRenderable.ChunkList[0].SegmentList[0].TextureType = ImageType::Texture2D;
     }
 
     _backGround.Scale(12);

@@ -3,26 +3,32 @@
 #include <Math/Geometry/Matrix4x4.hpp>
 #include "../Shader/ShaderProgram.h"
 #include "../System/RenderMode.h"
+#include "RenderableChunk.h"
+
+#include <Container/List.hpp>
 
 namespace BF
 {
 	struct Renderable : public Matrix4x4<float>
 	{
 		public:  
-		unsigned int VAO;
-		unsigned int VBO;
-		unsigned int IBO;
 
-		unsigned int ShaderID;
-		unsigned int TextureID;
+		bool DoRendering;
+
+		unsigned int ID; // VAO
+		unsigned int ChunkListSize;
+		RenderableChunk* ChunkList;
+
+		Renderable* Parent;
+		List<Renderable*> Children;
 
 		RenderMode Mode;
-
-		bool ShouldItBeRendered;
 
 		Renderable();
 
 		void MeshShare(const Renderable& rendable);
 		void ShaderUse(const ShaderProgram& shaderProgram);
+
+		constexpr bool IsRegistered() const { return ID != -1; } ;
 	};
 }

@@ -24,11 +24,9 @@ namespace BF
 		List<Dialog*> DialogList;
 		List<Camera*> CameraList;
 
-		Level();
-
 		static bool IsLevelFile(const wchar_t* filePath);
 
-		FileActionResult Load();
+		FileActionResult Load(const wchar_t* filePath);
 
 		size_t FullSizeInMemory();
 	};

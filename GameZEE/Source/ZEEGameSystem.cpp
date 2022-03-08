@@ -22,6 +22,9 @@ using namespace BF;
 
 BF::UIText* text;
 //BF::Model* sphere;
+BF::Texture _blockTexture;
+
+BF::Level _level;
 
 BF::SkyBox skybox;
 BF::Renderable _cubeModel;
@@ -62,11 +65,10 @@ void ZEE::ZEEGameSystem::OnStartUp()
         L"Texture/SkyBox/Front.png"
     );
 
-  
 
-    //GameSystem.Resource.Load(textureBix, "Model/Dialog/DialogBox.obj");
+    //GameSystem.Load(textureBix, "Model/Dialog/DialogBox.obj");
 
-    //GameSystem.Resource.Load("Texture/Block.bmp");   
+    GameSystem.Load(_blockTexture, L"Texture/Block.bmp",false);
     //GameSystem.Resource.Load("Model/Triangle.obj");
     
    // _worldGravity.IgnoreAxis.Set(true, true, true);
@@ -74,14 +76,15 @@ void ZEE::ZEEGameSystem::OnStartUp()
    // _worldGravity.PullDirection.Set(0, -1, 0);
    // GameSystem.Resource.Add(&_worldGravity);
 
-   // GameSystem.Resource.Add(L"Level/MainMenu.lev"); <--------------------------
+    //GameSystem.Load(_level, L"Level/MainMenu.lev");
 
     //GameSystem.Resource.Load(L"B:/Daten/Textures/PR/Countrry/Neo/FI/Country.obj");
 
     GameSystem.Load(_cubeModel, L"Model/Cube.obj", false);
-    _cubeModel.Move(0,50,0);
-    _cubeModel.Scale(10.0f);
-    _cubeModel.ShaderID = _worldShader.ID;
+   // _cubeModel.Move(0,50,0);
+   // _cubeModel.Scale(100.0f);
+    _cubeModel.ChunkList[0].SegmentList[0].ShaderID = _worldShader.ID;
+    _cubeModel.ChunkList[0].SegmentList[0].TextureID = _blockTexture.ID;
         
         
         //cube.EnablePhysics = true;

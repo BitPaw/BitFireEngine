@@ -13,8 +13,6 @@
 
 #include <GL/glew.h>
 
-#define GLID unsigned int
-
 namespace BF
 {
 	class OpenGL

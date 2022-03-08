@@ -33,6 +33,9 @@
 #include "../Shader/ShaderProgram.h"
 
 #include <Window/Window.h>
+#include "../Level/Level.h"
+
+#define OpenGLID unsigned int
 
 namespace BF
 {
@@ -85,7 +88,7 @@ namespace BF
         static void OnMouseMove(const short x, const short y);
         static void OnKeyBoardKey(const KeyBoardKeyInfo keyBoardKeyInfo);
         static void OnWindowCreated(Window& window);
-        static void OnWindowSizeChanged(const unsigned int width, const unsigned int height);
+        static void OnWindowSizeChanged(const size_t width, const size_t height);
         static void OnWindowsMouseCaptureChanged();
 
 
@@ -133,6 +136,7 @@ namespace BF
         void Register(SkyBox& skyBox);
         bool Register(ShaderProgram& shaderProgram, const wchar_t* vertexShaderFilePath, const wchar_t* fragmentShaderFilePath);
         void Register(AudioSource& audioSource);
+        void Register(Font& font);
         void Register(AudioClip& audioClip, const Sound& sound);
 
         void Use(Texture& texture);
@@ -150,17 +154,28 @@ namespace BF
 
         static ThreadFunctionReturnType LoadResourceAsync(void* resourceAdress);
 
+        FileActionResult Load(Resource* resource, const wchar_t* filePath, const bool loadAsynchronously = true);
+        FileActionResult Load(Level& level, const wchar_t* filePath, const bool loadAsynchronously = true);
+       
+
+        FileActionResult Load(Font& font, const wchar_t* filePath, bool loadAsynchronously = true);     
+        FileActionResult Load(ShaderProgram& shaderProgram, const wchar_t* vertexShaderFilePath, const wchar_t* fragmentShaderFilePath);
+       
+        // Model
+        FileActionResult Load(Model& model, const wchar_t* filePath, const bool loadAsynchronously = true);
         FileActionResult Load(Renderable& renderable, const wchar_t* filePath, bool loadAsynchronously = true);
         FileActionResult Load(Renderable& renderable, const float* vertexData, const size_t vertexDataSize, const unsigned int* indexList, const size_t indexListSize);
+
+        // Texture
+        FileActionResult Load(Image& image, const wchar_t* filePath, bool loadAsynchronously = true);
         FileActionResult Load(Texture& texture, const wchar_t* filePath, bool loadAsynchronously = true);
-        FileActionResult Load(Font& font, const wchar_t* filePath, bool loadAsynchronously = true);
+        FileActionResult Load(Sprite& sprite, const wchar_t* filePath);
+
+        // Audio
+        FileActionResult Load(Sound& sound, const wchar_t* filePath, const bool loadAsynchronously = true);
         FileActionResult Load(AudioClip& audioClip, const wchar_t* filePath, bool loadAsynchronously = true);
-        FileActionResult Load(ShaderProgram& shaderProgram, const wchar_t* vertexShaderFilePath, const wchar_t* fragmentShaderFilePath);
-        FileActionResult Load
-        (
-            Sprite& sprite,
-            const wchar_t* filePath
-        );
+        
+   
         FileActionResult Load(Collider* collider);
         FileActionResult Load
         (
@@ -180,7 +195,7 @@ namespace BF
 
         void ModelsPhysicsApply(float deltaTime);
 
-        void ModelsRender(float deltaTime);
+        void ModelsRender(const float deltaTime);
         void BoundingBoxRender(Matrix4x4<float> modelMatrix, Vector3<float> boundingBox, Vector3<float> color);
 
         void PrintContent(bool detailed);
@@ -190,14 +205,14 @@ namespace BF
         // Convert
         static const unsigned short ToRenderMode(const RenderMode renderMode);
         
-        static ShaderType ToShaderType(unsigned int token);
-        static unsigned int ToShaderType(ShaderType shaderType);
+        static const ShaderType ToShaderType(const OpenGLID token);
+        static const OpenGLID ToShaderType(const ShaderType shaderType);
 
-        static ImageDataFormat ToImageFormat(unsigned int token);
-        static unsigned int ToImageFormat(ImageDataFormat imageFormat);
+        static const ImageDataFormat ToImageFormat(const OpenGLID token);
+        static const OpenGLID ToImageFormat(const ImageDataFormat imageFormat);
 
-        static ImageType ToImageType(unsigned int token);
-        static unsigned int ToImageType(ImageType imageType);
+        static const ImageType ToImageType(const OpenGLID token);
+        static const OpenGLID ToImageType(const ImageType imageType);
 
         static int ImageWrapToOpenGLFormat(ImageWrap imageWrap);
         static int ImageLayoutToOpenGLFormat(ImageLayout layout);

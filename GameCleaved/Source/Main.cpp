@@ -120,10 +120,12 @@ ThreadFunctionReturnType RenderLoop(void* windowAdress)
 
 void TakeScreenShot(BF::Window& window, BF::Image& image)
 {
+    unsigned int x = 0;
+    unsigned int y = 0;
     unsigned int width = 0;
     unsigned int height = 0;
 
-    window.Size(width, height);
+    window.Size(x,y,width, height);
 
     unsigned int size = width * height * 3;
 

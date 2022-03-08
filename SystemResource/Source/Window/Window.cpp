@@ -615,7 +615,7 @@ ThreadFunctionReturnType BF::Window::WindowThead(void* windowCreationInfoAdress)
     wndclass.lpszClassName = lpClassName;
 
 
-    WORD classID = RegisterClassW(&wndclass);
+    const WORD classID = RegisterClassW(&wndclass);
 
     lpClassName = (wchar_t*)classID;
 
@@ -668,8 +668,6 @@ ThreadFunctionReturnType BF::Window::WindowThead(void* windowCreationInfoAdress)
             MSG message{ 0 };
             const bool peekResult = PeekMessageW(&message, nullptr, 0, 0, PM_NOREMOVE);
                       
-           // printf("Tick");
-
             if (peekResult)
             {
                 const bool messageResult = GetMessageW(&message, nullptr, 0, 0);
@@ -727,7 +725,7 @@ void BF::Window::Create(const unsigned int width, const unsigned int height, con
 
 void BF::Window::Destroy()
 {
-
+    CloseWindow(ID);
 }
 
 void BF::Window::IconCorner()
@@ -740,19 +738,63 @@ void BF::Window::IconTaskBar()
 
 }
 
-void BF::Window::Size(unsigned int& width, unsigned int& height)
+void BF::Window::Size
+(
+    unsigned int& x,
+    unsigned int& y,
+    unsigned int& width,
+    unsigned int& height
+)
 {
+#if defined(OSUnix)
+#elif defined(OSWindows)
+    RECT rect{ 0 };
 
+    const bool result = GetWindowRect(ID, &rect);
+    const bool success = result != 0;
+
+    // Get Last Error
+
+    x = rect.left;
+    y = rect.top;
+    width = rect.right - x;
+    height = rect.bottom - y; 
+#endif
 }
 
-void BF::Window::SizeChange(const unsigned int width, const unsigned int height)
+void BF::Window::SizeChange
+(
+    const unsigned int x,
+    const unsigned int y,
+    const unsigned int width,
+    const unsigned int height
+)
 {
+#if defined(OSUnix)
+#elif defined(OSWindows)
+    RECT rect
+    {
+        x,
+        y,
+        width + x, 
+        height + y
+    };
 
+    DWORD style = 0;
+    DWORD exStyle = 0;
+
+    //AdjustWindowRectEx();
+
+    const bool result = AdjustWindowRectEx(&rect, style, FALSE, exStyle);
+    const bool success = result != 0;
+
+    // Get Last Error
+#endif
 }
 
 void BF::Window::Position(unsigned int& x, unsigned int& y)
 {
-
+    
 }
 
 void BF::Window::PositionChange(const unsigned int x, const unsigned int y)

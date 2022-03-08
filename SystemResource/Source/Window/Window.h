@@ -61,7 +61,7 @@ namespace BF
 	// Window
 	//typedef void (*WindowCreatingEvent)();
 	typedef void (*WindowCreatedEvent)(Window& window);
-	typedef void (*WindowSizeChangedEvent)(const unsigned int width, const unsigned int height);
+	typedef void (*WindowSizeChangedEvent)(const size_t width, const size_t height);
 	typedef void (*WindowClosingEvent)(bool& allowClosing);
 	typedef void (*WindowClosedEvent)();
 
@@ -122,8 +122,20 @@ namespace BF
 		void IconCorner();
 		void IconTaskBar();
 
-		void Size(unsigned int& width, unsigned int& height);
-		void SizeChange(const unsigned int width, const unsigned int height);
+		void Size
+		(
+			unsigned int& x,
+			unsigned int& y,
+			unsigned int& width,
+			unsigned int& height
+		);
+		void SizeChange
+		(
+			const unsigned int x,
+			const unsigned int y,
+			const unsigned int width,
+			const unsigned int height
+		);
 		void Position(unsigned int& x, unsigned int& y);
 		void PositionChange(const unsigned int x, const unsigned int y);
 		void PositonCenterScreen();
