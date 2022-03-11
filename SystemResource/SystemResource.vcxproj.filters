@@ -156,9 +156,6 @@
     <ClCompile Include="Source\Math\Geometry\Shape\Pentagon.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Math\Geometry\Shape\Rectangle.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Math\Geometry\Shape\Shape.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -824,7 +821,7 @@
     <ClInclude Include="Source\Math\Geometry\Shape\Pentagon.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Math\Geometry\Shape\Rectangle.h">
+    <ClInclude Include="Source\Math\Geometry\Rectangle.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Math\Geometry\Shape\Shape.h">
@@ -1100,13 +1097,10 @@
     <ClInclude Include="Source\Container\QuadTree\QuadTree.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Container\QuadTree\QuadTreeNode.hpp">
+    <ClInclude Include="Source\Container\QuadTree\QuadTreeChunk.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Container\QuadTree\QuadTreeDirection.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Container\QuadTree\QuadTreePosition.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\File\Bash.h">

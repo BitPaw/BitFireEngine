@@ -185,6 +185,7 @@
     <ClCompile Include="TestIO.cpp" />
     <ClCompile Include="TestLibrary.cpp" />
     <ClCompile Include="TestNetwork.cpp" />
+    <ClCompile Include="TestQuadTree.cpp" />
     <ClCompile Include="TestSystemResource.cpp" />
     <ClCompile Include="TestWindow.cpp" />
   </ItemGroup>

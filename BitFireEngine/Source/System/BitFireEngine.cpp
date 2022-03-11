@@ -2138,8 +2138,8 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
     {
         Collider* collider = colliderCurrent->Element;
         Vector3<float> color(1.0f, 1.0f, 1.0f);
-        Vector2<float> position = collider->BoundingBox.Position;
-        Vector2<float> size = collider->BoundingBox.Size;
+        Vector2<float> position(collider->BoundingBox.X, collider->BoundingBox.Y);
+        Vector2<float> size(collider->BoundingBox.Width, collider->BoundingBox.Height);
         Vector3<float> boundingBox(size.X, size.Y, 0);
         Matrix4x4<float> model;
 
@@ -2574,6 +2574,39 @@ const char* BF::BitFireEngine::ShaderTypeToString(int type)
             return "Unkown";
     }
 }
+
+
+
+
+
+
+
+
+
+/*void BF::Rectangle::GenerateVertexData(float* vertexData, size_t vertexDataSize, unsigned int* indexData, size_t indexDataSize)
+{
+	float vertexDataInput[] =
+	{
+		Size.X, Size.Y, 0,  // top right
+		Size.X, Position.Y, 0,  // bottom right
+		Position.X, Position.Y, 0,  // bottom left
+		Position.X, Size.Y, 0   // top left 
+	};
+
+	const unsigned int indexListInput[] =
+	{
+		0, 1, 2, 3
+	};
+
+	const size_t vertexDataInputSize = sizeof(vertexDataInput);
+	const size_t indexDataInputSize = sizeof(indexListInput);
+
+	memcpy(vertexData, vertexDataInput, vertexDataInputSize);
+	memcpy(indexData, indexListInput, indexDataInputSize);
+}*/
+
+
+
 
 /*
 *

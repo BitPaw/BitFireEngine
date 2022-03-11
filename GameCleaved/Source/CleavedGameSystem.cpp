@@ -6,7 +6,7 @@
 #include <File/FileTemporary.h>
 #include <Model/Model.h>
 #include <Math/Math.h>
-#include <Math/Geometry/Shape/Rectangle.h>
+#include <Math/Geometry/Rectangle.hpp>
 #include <Math/Geometry/Form/Cube.h>
 #include <Time/StopWatch.h>
 

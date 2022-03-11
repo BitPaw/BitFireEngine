@@ -11,8 +11,6 @@
 
 #include "../File/File.h"
 #include "../File/Text.h"
-#include "../../../SystemResource/Source/Math/Geometry/Shape/Triangle.h"
-#include "../../../SystemResource/Source/Math/Geometry/Shape/Rectangle.h"
 
 BF::Model::Model()
 {

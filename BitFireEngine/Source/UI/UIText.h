@@ -1,7 +1,7 @@
 #pragma once
 
 #include "UIElement.h"
-#include "../../../SystemResource/Source/Math/Geometry/Shape/Rectangle.h"
+#include "../../../SystemResource/Source/Math/Geometry/Rectangle.hpp"
 #include "../../../SystemResource/Source/Font/Font.h"
 
 #define TextSizeMax 1024
@@ -11,7 +11,7 @@ namespace BF
 	class UIText : public UIElement
 	{
 		private:
-		List<Rectangle> _textBlockList;
+		List<Rectangle<float>> _textBlockList;
 
 		Font* _font;
 

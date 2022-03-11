@@ -5,14 +5,14 @@
 
 #include <Math/Geometry/Vector2.hpp>
 #include <Math/Geometry/Vector3.hpp>
-#include <Math/Geometry/Shape/Rectangle.h>
+#include <Math/Geometry/Rectangle.hpp>
 
 namespace BF
 {
 	class Collider
 	{
 		public:
-		Rectangle BoundingBox;
+		Rectangle<float> BoundingBox;
 		ColliderType Type;
 
 		// CallBacks

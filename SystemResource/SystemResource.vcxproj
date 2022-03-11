@@ -417,7 +417,6 @@
     <ClCompile Include="Source\Math\Geometry\Shape\Circle.cpp" />
     <ClCompile Include="Source\Math\Geometry\Shape\Hexagon.cpp" />
     <ClCompile Include="Source\Math\Geometry\Shape\Pentagon.cpp" />
-    <ClCompile Include="Source\Math\Geometry\Shape\Rectangle.cpp" />
     <ClCompile Include="Source\Math\Geometry\Shape\Shape.cpp" />
     <ClCompile Include="Source\Math\Geometry\Shape\Square.cpp" />
     <ClCompile Include="Source\Math\Geometry\Shape\Star.cpp" />
@@ -546,8 +545,7 @@
     <ClInclude Include="Source\File\Program.h" />
     <ClInclude Include="Source\File\Bash.h" />
     <ClInclude Include="Source\Container\QuadTree\QuadTreeDirection.hpp" />
-    <ClInclude Include="Source\Container\QuadTree\QuadTreeNode.hpp" />
-    <ClInclude Include="Source\Container\QuadTree\QuadTreePosition.hpp" />
+    <ClInclude Include="Source\Container\QuadTree\QuadTreeChunk.hpp" />
     <ClInclude Include="Source\File\FileOpenMode.hpp" />
     <ClInclude Include="Source\File\FilePersistence.hpp" />
     <ClInclude Include="Source\File\IFIle.h" />
@@ -670,7 +668,7 @@
     <ClInclude Include="Source\Math\Geometry\Shape\Circle.h" />
     <ClInclude Include="Source\Math\Geometry\Shape\Hexagon.h" />
     <ClInclude Include="Source\Math\Geometry\Shape\Pentagon.h" />
-    <ClInclude Include="Source\Math\Geometry\Shape\Rectangle.h" />
+    <ClInclude Include="Source\Math\Geometry\Rectangle.hpp" />
     <ClInclude Include="Source\Math\Geometry\Shape\Shape.h" />
     <ClInclude Include="Source\Math\Geometry\Shape\Square.h" />
     <ClInclude Include="Source\Math\Geometry\Shape\Star.h" />
