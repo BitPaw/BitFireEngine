@@ -44,17 +44,29 @@ namespace BF
 			return !(x < X || y < Y || x >= (X + Width) || y >= (Y + Height));
 		}
 
-		constexpr bool Contain(const NumberType x, const NumberType y, const NumberType width, const NumberType height) const
+		constexpr bool Contain(const Rectangle<NumberType>& rectangle) const
 		{
-			const bool isInX = (x >= X) && (x + width < X + Width);
-			const bool isInY = (y >= Y) && (y + height < Y + Height);
+			const bool isInX = (rectangle.X >= X) && (rectangle.X + rectangle.Width <= X + Width);
+			const bool isInY = (rectangle.Y >= Y) && (rectangle.Y + rectangle.Height <= Y + Height);
 
 			return isInX && isInY;
 		}
 
+		constexpr bool Contain(const NumberType x, const NumberType y, const NumberType width, const NumberType height) const
+		{
+			const Rectangle<NumberType> rectangle(x, y, width, height);
+
+			return Contain(rectangle);
+		}
+
 		constexpr bool Overlap(const NumberType x, const NumberType y, const NumberType width, const NumberType height) const
 		{
-			return (X < x + width && X + Width >= x && Y < y + height && Y + Height >= height);
+			return 
+				
+				X < x + width && 
+				X + Width >= x && 
+				Y < y + height && 
+				Y + Height >= height;
 		}
 
 		/// <summary>

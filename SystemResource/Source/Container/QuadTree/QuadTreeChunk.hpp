@@ -26,26 +26,26 @@ namespace BF
 		public:
 		Rectangle<NumberType> Border;
 
-		QuadTreeChunk<NumberType, T>* Children[QuadTreeNodeChildSize];
+		QuadTreeChunk<NumberType, PayloadType>* Children[QuadTreeNodeChildSize];
 
 		size_t PayloadListSize;
 		PayloadType* PayloadList[QuadTreeNodeEntityChunkLimit];
 		
 		QuadTreeChunk()
 		{
-			X = 0;
-			Y = 0;
-			Width = 0;
-			Height = 0;
-
 			PayloadListSize = 0;			
 
 			for (size_t i = 0; i < QuadTreeNodeEntityChunkLimit; i++) Children[i] = nullptr;;
 
 			for (size_t i = 0; i < QuadTreeNodeChildSize; i++) PayloadList[i] = nullptr;	
+		}		
+
+		void Add(PayloadType&)
+		{
+
 		}
 
-		void SizeSet(size_t x, size_t y, size_t width, size_t height)
+		void SizeSet(const size_t x, const size_t y, const size_t width, const size_t height)
 		{
 			X = 0;
 			Y = 0;
@@ -55,8 +55,7 @@ namespace BF
 
 		void Clear()
 		{
-			delete Children;
-			delete PayloadList;	
+			//delete PayloadList;	
 		}		
 	};
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "QuadTreeChunk.hpp"
+#include "../../Math/Geometry/Rectangle.hpp"
 
 #include <cassert>
 #include <cstdlib>
@@ -12,6 +13,7 @@ namespace BF
 		Invalid,
 
 		InvalidParameter,
+		OutOfMemory,
 
 		Success,
 		ElementOutOfField,
@@ -25,6 +27,8 @@ namespace BF
 		QuadrantLowerLeft,
 		QuadrantLowerRight
 	};
+
+#define QuadChunk QuadTreeChunk<NumberType, PayloadType>
 
 	// 2D-BinaryTree structure
 	// NumberType: int, float, double
@@ -77,48 +81,183 @@ namespace BF
 		QuadTreeResult Search(const NumberType x, const NumberType y, const NumberType width, const NumberType height, PayloadType& data)
 		{
 			const Rectangle<NumberType> targetRectangle(x, y, width, height);
-			QuadTreeChunk<NumberType, PayloadType>* chunkCurrent = nullptr;
+			QuadTreeChunk<NumberType, PayloadType>* chunkCurrent = &RootChunk;
 			QuadTreeChunk<NumberType, PayloadType>* chunkResult = nullptr;
 			QuadTreeResult result = QuadTreeResult::Invalid;
 
 			do
 			{
 				result = Seek(targetRectangle, data, chunkCurrent, chunkResult);
+
+				chunkCurrent = chunkResult;
 			}
 			while (result == QuadTreeResult::Success);		
 			
 			return result;
 		}
 
-		void Insert()
-		{
 
+		// Create childs of not exists.
+		// If they exist, function does nothing
+		QuadTreeResult CreateChilds(QuadTreeChunk<NumberType, PayloadType>** quadChunk)
+		{
+			QuadTreeChunk<NumberType, PayloadType>* chunk = new QuadTreeChunk<NumberType, PayloadType>();
+
+			if (!chunk)
+			{
+				return QuadTreeResult::OutOfMemory;
+			}
+
+			*quadChunk = new QuadTreeChunk<NumberType, PayloadType>();
+		}
+
+		QuadTreeResult Insert(const NumberType x, const NumberType y, const NumberType width, const NumberType height, PayloadType payload)
+		{			
+			return Insert(Rectangle<NumberType>(x, y, width, height), payload);
+		}
+
+		QuadTreeResult Insert(const Rectangle<NumberType>& rectangle, const PayloadType payload)
+		{
+			QuadChunk* currentChunk = &RootChunk;
+			QuadTreeResult qudrantResult;
+
+			while(true)
+			{
+				Rectangle<NumberType> resultRectangle;
+
+				qudrantResult = QuadrantCheck(currentChunk->Border, rectangle, resultRectangle);
+
+				switch (qudrantResult)
+				{
+					case BF::QuadTreeResult::QuadrantUpperLeft:
+					case BF::QuadTreeResult::QuadrantUpperRight:
+					case BF::QuadTreeResult::QuadrantLowerLeft:
+					case BF::QuadTreeResult::QuadrantLowerRight:
+					{
+						// garantie that memory exists for the childs
+						QuadChunk** quadChunk = nullptr;					
+
+						switch (qudrantResult)
+						{
+							case BF::QuadTreeResult::QuadrantUpperLeft:
+								quadChunk = &currentChunk->Children[0];
+								break;
+
+							case BF::QuadTreeResult::QuadrantUpperRight:
+								quadChunk = &currentChunk->Children[1];
+								break;
+
+							case BF::QuadTreeResult::QuadrantLowerLeft:
+								quadChunk = &currentChunk->Children[2];
+								break;
+
+							case BF::QuadTreeResult::QuadrantLowerRight:
+								quadChunk = &currentChunk->Children[3];
+								break;								
+						}
+
+						if (!(*quadChunk))
+						{
+							CreateChilds(quadChunk);
+
+							(*quadChunk)->Border = resultRectangle;
+						}			
+
+						currentChunk = *quadChunk;
+
+						break;
+					}
+
+					case BF::QuadTreeResult::ElementOutOfField:						
+						return BF::QuadTreeResult::ElementOutOfField;
+
+					case BF::QuadTreeResult::Overlapping:
+					{
+						// Insert
+
+
+						return BF::QuadTreeResult::Success; // Add to this current Node
+					}
+					default: // Inavlid state
+						assert(false);
+				}
+			}
+
+			return QuadTreeResult::Success;
+		}
+
+		QuadTreeResult QuadrantCheck(const Rectangle<NumberType>& border, const Rectangle<NumberType>& target, Rectangle<NumberType>& result)
+		{
+			const bool isInBorder = border.Contain(target);
+
+			if (!isInBorder)
+			{
+				return QuadTreeResult::ElementOutOfField;
+			}
+
+			const NumberType hMax = (border.X + border.Width);
+			const NumberType vMax = (border.X + border.Width);
+			const NumberType hMid = hMax / (NumberType)2;
+			const NumberType vMid = vMax / (NumberType)2;
+
+			const Rectangle<NumberType> rectangleNW(border.X,    vMid, hMid, vMid);
+			const Rectangle<NumberType> rectangleNE(hMid, vMid, hMid, vMid);
+			const Rectangle<NumberType> rectangleSW(border.X, border.Y,    hMid, vMid);
+			const Rectangle<NumberType> rectangleSE(hMid, border.Y,    hMid, vMid);
+
+			const bool checkNW = rectangleNW.Contain(target);
+			const bool checkNE = rectangleNE.Contain(target);
+			const bool checkSW = rectangleSW.Contain(target);
+			const bool checkSE = rectangleSE.Contain(target);
+
+			const char amount = checkNW + checkNE + checkSW + checkSE;
+			
+
+			//assert(amount > 0); // 0 invalidates the first "isInBorder" check
+
+			switch (amount)
+			{
+				case 0:
+					return QuadTreeResult::Overlapping;
+
+				case 1:	// Exact found
+				{
+					const char quadKey = checkNW * 'A' + checkNE * 'B' + checkSW * 'C' + checkSE * 'D';
+
+					switch (quadKey)
+					{
+						case 'A': result = rectangleNW;	return QuadTreeResult::QuadrantUpperLeft;
+						case 'B': result = rectangleNE; return QuadTreeResult::QuadrantUpperRight;
+						case 'C': result = rectangleSW; return QuadTreeResult::QuadrantLowerLeft;
+						case 'D': result = rectangleSE; return QuadTreeResult::QuadrantLowerRight;
+					}
+
+					break;
+				}				
+				default:
+					assert(false);
+			}
 		}
 
 		QuadTreeResult Seek
 		(
-			const Rectangle& rectangle, // boundingbox of data
+			const Rectangle<NumberType>& rectangle, // boundingbox of data
 			PayloadType& data, 
 			const QuadTreeChunk<NumberType, PayloadType>* targetAdress, // where to start
 			QuadTreeChunk<NumberType, PayloadType>* nextHopAdress // where to add
 		)
 		{
-			if (!target) // nullponter check
+			if (!targetAdress) // nullponter check
 			{
 				return QuadTreeResult::InvalidParameter;
-			}
-
-			const auto& currentChunk = *targetAdress;
-			const bool isInTarget = currentChunk.Contain(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
-
-			if (!isInTarget)
-			{
-				return QuadTreeResult::ElementOutOfField;
-			}		
+			}					
 		
+			const auto& currentChunk = *targetAdress;
+
 			while (true)
 			{
-				QuadTreeResult qudrantResult; 	// Check for quadrant
+				Rectangle<NumberType> resultRectangle;
+				QuadTreeResult qudrantResult = QuadrantCheck(currentChunk.Border, rectangle, resultRectangle); 	// Check for quadrant
 
 				switch (qudrantResult)
 				{
@@ -138,8 +277,11 @@ namespace BF
 						nextHopAdress = currentChunk.Children[3];
 						break;
 
+					case BF::QuadTreeResult::ElementOutOfField:
+						return BF::QuadTreeResult::ElementOutOfField;
+
 					case BF::QuadTreeResult::Overlapping:
-						nextHopAdress = targetAdress;
+						nextHopAdress = (QuadTreeChunk<NumberType, PayloadType>*)targetAdress; // removing const
 						return BF::QuadTreeResult::Success; // Add to this current Node
 
 					default: // Inavlid state
@@ -148,99 +290,6 @@ namespace BF
 			}			
 
 			return QuadTreeResult::Success;
-		}
-
-
-		char Add(const NumberType x, const NumberType y, const NumberType width, const NumberType height, const PayloadType data)
-		{
-			return Add(x, y, width, height, data, *NodeList, nodeDataIndex);
-		}
-
-		char Add(NumberType x, NumberType y, NumberType width, NumberType height, T* data, QuadTreeChunk<NumberType, T>& node, size_t& nodeDataIndex)
-		{
-			NumberType farPointX = (x + width);
-			NumberType farPointY = (y + height);
-			bool isSmallerInX = node.X <= x && x <= node.Width;
-			bool isSmallerInY = node.Y <= y && y <= node.Height;
-			bool isBiggerInX = node.X <= farPointX && farPointX <= node.Width;
-			bool isBiggerInY = node.Y <= farPointY && farPointY <= node.Height;
-			bool isSmallerInNode = isSmallerInX && isSmallerInY;
-			bool isBiggerInNode = isBiggerInX && isBiggerInY;
-			bool isHalfInNode = (isSmallerInNode && !isBiggerInNode) || (!isSmallerInNode && isBiggerInNode);
-			bool isInNode = isSmallerInNode && isBiggerInNode;
-
-			if (!isInNode)
-			{
-				return QuadTreeNodeChildNotInField;
-			}
-
-			bool needToSplitt = node.FreeEntitys() == 0;
-			NumberType widthHalf = node.Width / (NumberType)2;
-			NumberType heightHalf = node.Height / (NumberType)2;
-			bool isInLowerX = x <= widthHalf && width <= widthHalf;
-			bool isInLowerY = y <= heightHalf && height <= heightHalf;
-			bool isHigherX = widthHalf < x && widthHalf < width;
-			bool isHigherY = widthHalf < y && widthHalf < height;
-			bool isBiggerThanOneChildNode = (isInLowerX && isHigherX) || (isHigherX && isHigherY);
-			bool storeInCurrentNode = isBiggerThanOneChildNode || isHalfInNode || !needToSplitt;
-
-			bool northWest = !isInLowerX && !isInLowerY;
-			bool northEast = isInLowerX && !isInLowerY;
-			bool southWest = isInLowerX && isInLowerY;
-			bool southEast = !isInLowerX && isInLowerY;
-
-			if (needToSplitt)
-			{
-				if (NodeListSize < nodeDataIndex)
-				{
-					NodeListSize += QuadTreeNodeChildSize;
-					MemoryReserve(NodeListSize);
-				}		
-			}
-
-			if (storeInCurrentNode)
-			{
-				node.Data[node.DataSize++] = data;
-
-				return QuadTreeNodeChildInsertedInField;
-			}
-
-
-			QuadTreeChunk<NumberType, T>* nextNode = &NodeList[nodeDataIndex++];
-				char ret = 0;
-
-
-			if (northEast)
-			{
-				nextNode->SizeSet(node.X + widthHalf, node.Y, node.Width, heightHalf);
-				node.Node[0] = nextNode;
-				ret = QuadTreeNodeChildNorthEast;
-			}
-
-			if (northWest)
-			{
-				nextNode->SizeSet(node.X, node.Y, widthHalf, widthHalf);
-				node.Node[1] = nextNode;
-				ret = QuadTreeNodeChildNorthWest;
-			}
-
-			if (southEast)
-			{
-				nextNode->SizeSet(node.X + widthHalf, node.Y + widthHalf, node.Width, node.Height);
-				node.Node[2] = nextNode;
-				ret = QuadTreeNodeChildSouthEast;
-			}
-
-			if (southWest)
-			{
-				nextNode->SizeSet(node.X, node.Y, widthHalf, heightHalf);
-				node.Node[3] = nextNode;
-				ret = QuadTreeNodeChildSouthWest;
-			}
-
-			Add(x, y, width, height, data, *nextNode, nodeDataIndex);
-
-			return ret;
 		}
 	};
 }

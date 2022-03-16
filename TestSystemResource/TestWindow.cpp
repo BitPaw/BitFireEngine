@@ -13,9 +13,13 @@ namespace TestSystemResource
         public:
         TEST_METHOD(TestWindowCreate)
         {
-            WindowID windowID = Window::Create();
+            BF::Window window;
 
-            Assert::IsTrue(windowID != 0);
+            window.Create();
+
+            Assert::IsTrue(window.ID != 0);
+
+            window.Destroy();
         }
     };
 }

@@ -21,28 +21,28 @@
     <ClCompile Include="pch.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="TestLibrary.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="TestImage.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="TestNetwork.cpp">
+    <ClCompile Include="TestExecute.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="TestFont.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="TestExecute.cpp">
+    <ClCompile Include="TestImage.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="TestIO.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="TestWindow.cpp">
+    <ClCompile Include="TestLibrary.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="TestNetwork.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="TestQuadTree.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="TestWindow.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
