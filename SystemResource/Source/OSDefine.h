@@ -34,6 +34,10 @@
 		#if Version_Windows >= Version_Windows_2000
 			#define WindowsAtleast2000
 		#endif
+
+		#if Version_Windows >= Version_Windows_XP
+		#define WindowsAtleastXP
+		#endif
 	
 		#if Version_Windows >= Version_Windows_10
 			#define WindowsAtleast10

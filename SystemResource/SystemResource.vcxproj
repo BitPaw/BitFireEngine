@@ -294,6 +294,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\ClipBoard\ClipBoardFormat.cpp" />
+    <ClCompile Include="Source\ClipBoard\ClipBoard.cpp" />
+    <ClCompile Include="Source\Memory\MemoryUsage.cpp" />
+    <ClCompile Include="Source\Memory\Memory.cpp" />
     <ClCompile Include="Source\Controller\KeyBoardKey.cpp" />
     <ClCompile Include="Source\Controller\ControllerData.cpp" />
     <ClCompile Include="Source\Controller\ControllerSystem.cpp" />
@@ -493,6 +497,10 @@
     <ClCompile Include="Source\Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\ClipBoard\ClipBoardFormat.h" />
+    <ClInclude Include="Source\ClipBoard\ClipBoard.h" />
+    <ClInclude Include="Source\Memory\MemoryUsage.h" />
+    <ClInclude Include="Source\Memory\Memory.h" />
     <ClInclude Include="Source\Controller\KeyBoardKey.h" />
     <ClInclude Include="Source\Controller\ControllerData.h" />
     <ClInclude Include="Source\Controller\ControllerSystem.h" />
