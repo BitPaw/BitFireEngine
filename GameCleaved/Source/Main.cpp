@@ -146,12 +146,15 @@ void TakeScreenShot(BF::Window& window, BF::Image& image)
 }
 
 
+#include <DataBase/DataBase.h>
+
 #if !defined(_DEBUG) && defined(OSWindowsE)
 #include <windows.h>
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int nShowCmd)
 #else
 int main(int amountOFParameters, char** parameter)
 #endif  
+
 {
     //---<Error Callback>-----
     auto functionPointer = signal(SIGABRT, CallBackErrorOnError);
