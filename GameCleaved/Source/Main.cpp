@@ -145,9 +145,6 @@ void TakeScreenShot(BF::Window& window, BF::Image& image)
     glReadPixels(0, 0, width, height, GL_BGR, GL_UNSIGNED_BYTE, image.PixelData);
 }
 
-
-#include <DataBase/DataBase.h>
-
 #if !defined(_DEBUG) && defined(OSWindowsE)
 #include <windows.h>
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int nShowCmd)

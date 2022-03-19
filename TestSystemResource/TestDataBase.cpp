@@ -13,8 +13,20 @@ namespace TestSystemResource
         public:
         TEST_METHOD(TestDataBaseConnect)
         {
-            DataBase dataBase;
-            dataBase.ConnectToServer(L"BFDB");
+            BF::DataBase dataBase;
+
+            dataBase.Connect
+            (
+                L"127.0.0.1",
+                L"waffledb",
+                L"root",
+                L""
+            );
+
+            dataBase.Execute(L"select* from waffle;");
+
+            dataBase.Disconnect();
+
 
             Assert::IsTrue(true);
         }
