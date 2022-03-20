@@ -618,6 +618,12 @@
     <ClCompile Include="Source\ClipBoard\ClipBoardFormat.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\DataBase\SQLType.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DataBase\SQLResult.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp">
@@ -1416,6 +1422,12 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\ClipBoard\ClipBoardFormat.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DataBase\SQLType.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DataBase\SQLResult.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

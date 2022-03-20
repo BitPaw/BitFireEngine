@@ -23,10 +23,9 @@ namespace TestSystemResource
                 L""
             );
 
-            dataBase.Execute(L"select* from waffle;");
+            dataBase.Execute(L"select* from product;");
 
             dataBase.Disconnect();
-
 
             Assert::IsTrue(true);
         }

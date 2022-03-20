@@ -1,10 +1,15 @@
 #include "DataBase.h"
 
-
 #include <stdio.h>
 
 BF::DataBase::DataBase()
 {
+    OnConnectedEvent = 0;
+    OnDriverDetectedEvent = 0;
+    OnResultEvent = 0;
+    OnColumInfoEvent = 0;
+    OnRowDataEvent = 0;
+
 #if defined(OSUnix)
 #elif defined(OSWindows)
     _handleEnvironment = 0;
@@ -19,7 +24,7 @@ BF::DataBase::~DataBase()
     Cleanup();
 }
 
-void BF::DataBase::Connect
+BF::SQLResult BF::DataBase::Connect
 (
     const wchar_t* source,
     const wchar_t* database,
@@ -34,7 +39,7 @@ void BF::DataBase::Connect
 
         if (!successful)
         {
-            return;
+            return SQLResult::MemoryAllocFailed;
         }
     }
 
@@ -45,7 +50,7 @@ void BF::DataBase::Connect
 
         if (!successful)
         {
-            return;
+            return SQLResult::SettingEnvironmentAttributeFailed;
         }
     }
 
@@ -56,64 +61,123 @@ void BF::DataBase::Connect
 
         if (!successful)
         {
-            return;
+            return SQLResult::MemoryAllocFailed;
         }
     }
            
     // Set login timeout to 5 seconds  
-    SQLSetConnectAttr(_handleConnection, SQL_LOGIN_TIMEOUT, (SQLPOINTER)5, 0);
+    {
+        const SQLRETURN resultConnect = SQLSetConnectAttrW(_handleConnection, SQL_LOGIN_TIMEOUT, (SQLPOINTER)5, 0);
+        const bool successful = resultConnect == SQL_SUCCESS || resultConnect == SQL_SUCCESS_WITH_INFO;
 
-    /*                {
-        //const wchar_t* connectionString = L"DRIVER={SQL Server};";
-        const wchar_t* connectionString = L"DSN=BFDB;";
-        SQLSMALLINT connectionStringLength = SQL_NTSL;
+        if (!successful)
+        {
+            return SQLResult::Invalid;
+        }
+    }   
+                                                                      
+    printf("+---[ODBC Drivers]-------------------------------------------+--------------+\n");
 
-        SQLWCHAR outConnection[1024]{0};
-        const SQLSMALLINT outConnectionLength = sizeof(outConnection) / sizeof(SQLWCHAR);
-        SQLSMALLINT outConnectionLengthWritten = 0;
+    ScanForDrivers();
 
-       // SQL_NEED_DATA
+    printf("+------------------------------------------------------------+--------------+\n");
 
-        /*
-        SQL_SUCCESS
-             SQL_SUCCESS_WITH_INFO,
-            SQL_NEED_DATA,
-            SQL_ERROR,
-            SQL_INVALID_HANDLE,
-            SQL_STILL_EXECUTING.* /
+    const wchar_t* driver = L"MySQL ODBC 8.0 Unicode Driver";
 
-        SQLRETURN resulkt = SQLBrowseConnectW
+    // Connect
+    {
+        SQLWCHAR connectionString[2048]{ 0 };
+        SQLWCHAR connectionStringResult[2048]{ 0 };
+        const SQLSMALLINT connectionStringResultSize = sizeof(connectionStringResult) / sizeof(SQLWCHAR);
+        SQLSMALLINT connectionStringResultWrittenSize = 0;
+        const size_t connectionStringSize = wsprintf
         (
-            connectionHandle,
-            (wchar_t*)connectionString,
-            connectionStringLength,
-            outConnection,
-            outConnectionLength,
-            &outConnectionLengthWritten
+            connectionString,
+            L"Driver={%ls};Server=%ls;Database=%ls;UID=%ls;PWD=%ls;",
+            driver,
+            source,
+            database,
+            user,
+            password
         );
 
-        printf("sdf\n");
+        const SQLRETURN resultDriverConnect = SQLDriverConnectW
+        (
+            _handleConnection,
+            NULL,
+            connectionString,
+            connectionStringSize,
+            connectionStringResult,
+            connectionStringResultSize,
+            &connectionStringResultWrittenSize,
+            SQL_DRIVER_NOPROMPT
+        );
+
+        const bool successfulConnected = resultDriverConnect == SQL_SUCCESS || resultDriverConnect == SQL_SUCCESS_WITH_INFO;
+
+        if (!successfulConnected)
+        {
+            return SQLResult::ConnectionFailed;
+        }
+    }
+
+    if (OnConnectedEvent)
+    {
+        OnConnectedEvent(driver, source, database, user);
+    }
+
+    return SQLResult::Successful;
+
+    /*
+    SQLWCHAR* serverNameS = (wchar_t*)serverName;
+    const SQLSMALLINT serverNameLength = SQL_NTSL;
+    SQLWCHAR* userName = NULL;
+    const SQLSMALLINT userNameLength = 0;
+    SQLWCHAR* password = NULL;
+    const SQLSMALLINT passwordLength = 0;
+
+    retcode = SQLConnectW
+    (
+        connectionHandle,
+        serverNameS,
+        serverNameLength,
+        userName,
+        userNameLength,
+        password,
+        passwordLength
+    );* /
+
+    if (successfulConnected)
+    {       
+        SQLUSMALLINT infoType = SQL_PROCEDURES;
+        wchar_t bufferLength[1024];
+        SQLSMALLINT   cbInfoValueMax = sizeof(bufferLength);
+        SQLSMALLINT pcbInfoValue = 0;
+
+        SQLRETURN infoResult = SQLGetInfoW
+        (
+            _handleConnection,
+            infoType,
+            bufferLength,
+            cbInfoValueMax,
+            &pcbInfoValue
+        );       
     }*/
+}
 
-
-
-
-
-
+void BF::DataBase::ScanForDrivers()
+{
     SQLUSMALLINT direction = SQL_FETCH_FIRST;
     bool finished = false;
 
-                                                               
-    printf("+---[ODBC Drivers]-------------------------------------------+--------------+\n");
-
-    while (!finished)
+    while(!finished)
     {
-        SQLWCHAR driverDescription[1024]{ 0 };
-        const SQLSMALLINT driverDescriptionSize = sizeof(driverDescription) / sizeof(SQLWCHAR);
+        wchar_t driverDescription[1024]{ 0 };
+        const SQLSMALLINT driverDescriptionSize = sizeof(driverDescription) / sizeof(wchar_t);
         SQLSMALLINT driverDescriptionSizeWritten = 0;
 
-        SQLWCHAR driverAttributes[1024]{ 0 };
-        const SQLSMALLINT driverAttributesSize = sizeof(driverAttributes) / sizeof(SQLWCHAR);
+        wchar_t driverAttributes[1024]{ 0 };
+        const SQLSMALLINT driverAttributesSize = sizeof(driverAttributes) / sizeof(wchar_t);
         SQLSMALLINT driverAttributesSizeWritten = 0;
 
         const SQLRETURN resultDriver = SQLDriversW
@@ -133,6 +197,12 @@ void BF::DataBase::Connect
             case SQL_SUCCESS_WITH_INFO:
             case SQL_SUCCESS: // Do nothing and go next   
                 direction = SQL_FETCH_NEXT; // [!] Important [!] - Mark to go next. 
+
+                if (OnDriverDetectedEvent)
+                {
+                    OnDriverDetectedEvent(driverDescription, driverAttributes);
+                }
+
                 printf("| %-57ls | %-13ls |\n", driverDescription, driverAttributes);
                 break;
 
@@ -144,93 +214,6 @@ void BF::DataBase::Connect
                 break;
         }
     }
-
-    printf("+------------------------------------------------------------+--------------+\n");
-
-
-
-    SQLWCHAR connectionString[2048]{ 0 };
-    SQLWCHAR connectionStringResult[2048]{ 0 };
-
-    //wprintf(connectionString, "Driver={SQL Server Native Client 11.0};Server=SqlHostName;Database=SomeSqlDatabase;UID=YourUserName;PWD=YourPassword");
-
-    const SQLSMALLINT connectionStringResultSize = sizeof(connectionStringResult) / sizeof(SQLWCHAR);
-    SQLSMALLINT connectionStringResultWrittenSize = 0;
-    const size_t connectionStringSize = wsprintf
-    (
-        connectionString,
-        L"Driver={MySQL ODBC 8.0 Unicode Driver};Server=%ls;Database=%ls;UID=%ls;PWD=%ls;",
-        source,
-        database,
-        user,
-        password
-    );
-
-    const SQLRETURN resultDriverConnect = SQLDriverConnectW
-    (
-        _handleConnection,
-        NULL,
-        connectionString,
-        connectionStringSize,
-        connectionStringResult,
-        connectionStringResultSize,
-        &connectionStringResultWrittenSize,
-        SQL_DRIVER_NOPROMPT
-    );
-
-    bool successfulConnected = resultDriverConnect == SQL_SUCCESS || resultDriverConnect == SQL_SUCCESS_WITH_INFO;
-
-
-
-
-    /*
-
-    wprintf();
-
-
-    // Connect to data source
-
-    SQLWCHAR* serverNameS = (wchar_t*)serverName;
-    const SQLSMALLINT serverNameLength = SQL_NTSL;
-    SQLWCHAR* userName = NULL;
-    const SQLSMALLINT userNameLength = 0;
-    SQLWCHAR* password = NULL;
-    const SQLSMALLINT passwordLength = 0;
-
-    retcode = SQLConnectW
-    (
-        connectionHandle,
-        serverNameS,
-        serverNameLength,
-        userName,
-        userNameLength,
-        password,
-        passwordLength
-    );0* /
-
-    // Allocate statement handle  
-    if (successfulConnected)
-    {
-        
-
-        // Process data  
-
-
-
-        SQLUSMALLINT infoType = SQL_PROCEDURES;
-        wchar_t bufferLength[1024];
-        SQLSMALLINT   cbInfoValueMax = sizeof(bufferLength);
-        SQLSMALLINT pcbInfoValue = 0;
-
-        SQLRETURN infoResult = SQLGetInfoW
-        (
-            _handleConnection,
-            infoType,
-            bufferLength,
-            cbInfoValueMax,
-            &pcbInfoValue
-        );       
-    }    */
 }
 
 void BF::DataBase::Disconnect()
@@ -254,60 +237,153 @@ void BF::DataBase::Cleanup()
     }   
 }
 
-void BF::DataBase::Execute(const wchar_t* sqlStatement)
+BF::SQLResult BF::DataBase::Execute(const wchar_t* sqlStatement)
 {
-    SQLHSTMT hstmt = 0;
-        
-    if (_handleConnection == 0)
+    SQLHSTMT handleStatement = 0;    
+    size_t colums = 0;
+    size_t rows = 0;
+     
+    // Check connection
     {
-        return; // No Connection
-    }
+        const bool connected = _handleConnection != 0;
+
+        if (!connected)
+        {
+            return SQLResult::DatabaseNotConnected;
+        }
+    }   
 
     // Alloc statement
     {
-        const SQLRETURN retcode = SQLAllocHandle(SQL_HANDLE_STMT, _handleConnection, &hstmt);
+        const SQLRETURN retcode = SQLAllocHandle(SQL_HANDLE_STMT, _handleConnection, &handleStatement);
         const bool sucessfulAlloc = retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO;
 
         if (!sucessfulAlloc)
         {
-            return; // Out of memory
+            return SQLResult::MemoryAllocFailed;
         }
     }
        
- 
-
-    SQLRETURN sqlRet = SQLExecDirectW(hstmt, (SQLWCHAR*)sqlStatement, SQL_NTSL);
-
-    SQLSMALLINT nCols = 0;
-    SQLLEN nRows = 0;
-
-    SQLNumResultCols(hstmt, &nCols);
-    SQLRowCount(hstmt, &nRows);
-
-    size_t rowIndex = 0;
-
-    printf("[Result] Rows:%i Colums:%i\n", nRows, nCols);
-
-    while (SQL_SUCCEEDED(sqlRet = SQLFetch(hstmt)))
+    // Execute command
     {
-        for (size_t i = 1; i <= nCols; ++i)
+        const SQLRETURN resultExecute = SQLExecDirectW(handleStatement, (SQLWCHAR*)sqlStatement, SQL_NTSL);
+        const bool successful = resultExecute == SQL_SUCCESS || resultExecute == SQL_SUCCESS_WITH_INFO;
+
+        if (!successful)
         {
-            wchar_t fieldBuffer[2048] = { 0 };
+            return SQLResult::ExecuteFailed;
+        }
+    }
+
+    // Get table size
+    {
+        SQLSMALLINT nCols = 0;
+        SQLLEN nRows = 0;
+
+        SQLNumResultCols(handleStatement, &nCols);
+        SQLRowCount(handleStatement, &nRows);
+
+        colums = nCols;
+        rows = nRows;
+    }
+  
+    if (OnResultEvent)
+    {
+        OnResultEvent(colums, rows);
+    }
+
+    printf("[Result] Rows:%zi Colums:%zi\n", rows, colums);
+  
+    printf("+----------------------+----------------------+----------------------+----------------------+\n");
+
+    printf("|");
+
+    for (size_t columIndex = 1; columIndex <= colums; ++columIndex)
+    {
+        wchar_t columnName[1024]{ 0 };
+        const SQLSMALLINT columnNameSize = sizeof(columnName) / sizeof(wchar_t);
+        SQLSMALLINT columnNameSizeWritten;
+
+        SQLSMALLINT DataType;
+        SQLULEN ColumnSize;
+        SQLSMALLINT decimalDigits = 0;
+        SQLSMALLINT isNullableID = 0;
+        bool isNullable = false;
+        bool isBaseType = false;
+
+        const SQLRETURN resultDescriped = SQLDescribeColW
+        (
+            handleStatement,
+            columIndex,
+            columnName,
+            columnNameSize,
+            &columnNameSizeWritten,
+            &DataType,
+            &ColumnSize,
+            &decimalDigits,
+            &isNullableID
+        );
+
+        const SQLType type = ToSQLType(DataType);
+
+        //SQLColAttribute();
+
+        //isBaseType = DataType == SQL_COLUMN_DISTINCT_TYPE;
+        isNullable = isNullableID == SQL_NULLABLE; // SQL_NO_NULLS
+
+        const char* typeName = SQLTypeToString(type);
+
+        if (OnColumInfoEvent)
+        {
+            OnColumInfoEvent(columIndex, type, isNullable, columnName, columnNameSizeWritten);
+        }
+        
+        printf(" %-20ls |", columnName);
+    }
+
+    printf("\n");
+    printf("+----------------------+----------------------+----------------------+----------------------+\n");
+
+    SQLRETURN resultFetch = 0;
+    for (size_t rowIndex = 0 ; SQL_SUCCEEDED(resultFetch = SQLFetch(handleStatement)); ++rowIndex)
+    {
+        printf("|");
+
+        for (size_t columIndex = 1; columIndex <= colums; ++columIndex)
+        {
+            wchar_t fieldBuffer[1048] { 0 };
             const size_t fieldBufferSize = sizeof(fieldBuffer) / sizeof(wchar_t);
             SQLLEN readLength = 0;
 
-            const SQLRETURN resultData = SQLGetData(hstmt, i, SQL_UNICODE_CHAR, fieldBuffer, fieldBufferSize, &readLength);
-            const bool success = SQL_SUCCEEDED(sqlRet);
+            const SQLRETURN resultData = SQLGetData(handleStatement, columIndex, SQL_UNICODE_CHAR, fieldBuffer, fieldBufferSize, &readLength);
+            const bool success = SQL_SUCCEEDED(resultData);
 
             if (success)
             {
-                printf("%ls, ", fieldBuffer);
+                if (OnRowDataEvent)
+                {
+                    OnRowDataEvent(rowIndex, columIndex, fieldBuffer);
+                }
+
+                printf(" %-20ls |", fieldBuffer);
             }
         }
 
         printf("\n");
     }
 
+    printf("+----------------------+----------------------+----------------------+----------------------+\n");
    
-    SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+    // Free memory
+    {
+        const SQLRETURN resultFree = SQLFreeHandle(SQL_HANDLE_STMT, handleStatement);
+        const bool successful = resultFree == SQL_SUCCESS || resultFree == SQL_SUCCESS_WITH_INFO;
+
+        if (successful)
+        {
+            return SQLResult::MemoryFreeFailed;
+        }
+    }
+
+    return SQLResult::Successful;
 }

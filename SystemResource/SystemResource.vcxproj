@@ -495,6 +495,8 @@
     <ClCompile Include="Source\Service\HTTP\HTTPServer.cpp" />
     <ClCompile Include="Source\Window\CursorIcon.cpp" />
     <ClCompile Include="Source\Window\Window.cpp" />
+    <ClCompile Include="Source\DataBase\SQLType.cpp" />
+    <ClCompile Include="Source\DataBase\SQLResult.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ClipBoard\ClipBoardFormat.h" />
@@ -763,6 +765,8 @@
     <ClInclude Include="Source\Window\CursorIcon.h" />
     <ClInclude Include="Source\Window\CursorMode.h" />
     <ClInclude Include="Source\Window\Window.h" />
+    <ClInclude Include="Source\DataBase\SQLType.h" />
+    <ClInclude Include="Source\DataBase\SQLResult.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
