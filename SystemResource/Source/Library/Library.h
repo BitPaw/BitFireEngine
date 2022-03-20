@@ -1,25 +1,22 @@
 #pragma once
 
 #include "../OSDefine.h"
+#include "../ErrorCode.h"
 
 #ifdef defined(OSUnix)
 #include <sys/types.h>
 #include <dlfcn.h>
-/*
-dlopen() - gain access to an executable object file
-dclose() - close a dlopen object
-dlsym() - obtain the address of a symbol from a dlopen object
-dlvsym() - Programming interface to dynamic linking loader.
-dlerror() - get diagnostic information
-*/
+
 #define LibraryHandle void*
 #define LibraryFunction func_t*
+#define LibraryDirectoryID void*
 
 #elif defined(OSWindows)	
 #include <windows.h>
 
 #define LibraryHandle HMODULE // HINSTANCE (semms is also okey)
 #define LibraryFunction FARPROC
+#define LibraryDirectoryID DLL_DIRECTORY_COOKIE
 #endif
 
 namespace BF
@@ -34,5 +31,8 @@ namespace BF
         bool Close(); // close a dlopen object
         LibraryFunction GetSymbol(const char* symbolName); // obtain the address of a symbol from a dlopen object
        // void SymbolVector(); // Programming interface to dynamic linking loader.
+
+        static ErrorCode SearchDirectoryAdd(const wchar_t* directoryPath, LibraryDirectoryID& libraryDirectoryID);
+        static ErrorCode SearchDirectoryRemove(LibraryDirectoryID& libraryDirectoryID);
     };
 }
