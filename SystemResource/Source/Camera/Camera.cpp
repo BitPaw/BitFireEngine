@@ -12,35 +12,56 @@ void BF::Camera::AspectRatioSet(float width, float height)
 	Width = width;
 	Height = height;
 
-	PerspectiveChange(Perspective);
+	ViewChange(Perspective);
 }
 
-void BF::Camera::PerspectiveChange(CameraPerspective cmeraPerspective)
+void BF::Camera::ViewChange(const CameraPerspective cameraPerspective)
 {
-	Perspective = cmeraPerspective;
+	Perspective = cameraPerspective;
 
 	switch (Perspective)
 	{
 		case CameraPerspective::Orthographic:
 		{
-			float scaling = 0.10;
-			float left = -(Width / 2.0f) * scaling;
-			float right = (Width / 2.0f) * scaling;
-			float bottom = -(Height / 2.0f) * scaling;
-			float top = (Height / 2.0f) * scaling;
-
-			MatrixProjection.Orthographic(left, right, bottom, top, Near, Far);
+			ViewChangeOrthographic(Width, Height, Near, Far);
 			break;
-		}	
+		}
 
 		case CameraPerspective::Perspective:
 		{
-			float aspectRatio = AspectRatioGet();
+			const float aspectRatio = AspectRatioGet();
 
-			MatrixProjection.Perspective(FieldOfView, aspectRatio, Near, Far);
+			ViewChangePerspective(FieldOfView, aspectRatio, Near, Far);
+
 			break;
-		}			
+		}
 	}
+}
+
+void BF::Camera::ViewChangeOrthographic(const float width, const float height, const float near, const float far)
+{
+	const float scaling = 0.10;
+	const float left = -(Width / 2.0f) * scaling;
+	const float right = (Width / 2.0f) * scaling;
+	const float bottom = -(Height / 2.0f) * scaling;
+	const float top = (Height / 2.0f) * scaling;
+
+	MatrixProjection.Orthographic(left, right, bottom, top, near, far);
+
+	Width = width;
+	Height = height;
+	Near = near;
+	Far = far;	
+}
+
+void BF::Camera::ViewChangePerspective(const float fieldOfView, const float aspectRatio, const float near, const float far)
+{
+	FieldOfView = fieldOfView;
+	//aspectRatio = TODO
+	Near = near;
+	Far = far;
+
+	MatrixProjection.Perspective(fieldOfView, aspectRatio, near, far);
 }
 
 void BF::Camera::Follow(float deltaTime)
@@ -72,7 +93,7 @@ BF::Camera::Camera()
 
 	CurrentRotation.Set(0, 0, 0);
 
-	PerspectiveChange(CameraPerspective::Perspective);
+	ViewChange(CameraPerspective::Perspective);
 
 	LookAtPosition.Set(1, 0, 0);
 	LookAtPosition.Normalize();
@@ -155,5 +176,5 @@ void BF::Camera::Update(float deltaTime)
 	//Width = Window::Width;
 	//Height = Window::Height;
 
-	PerspectiveChange(Perspective);
+	ViewChange(Perspective);
 }

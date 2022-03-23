@@ -294,6 +294,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\ClipBoard\ClipBoardFormat.cpp" />
     <ClCompile Include="Source\ClipBoard\ClipBoard.cpp" />
     <ClCompile Include="Source\Memory\MemoryUsage.cpp" />
@@ -499,6 +500,8 @@
     <ClCompile Include="Source\DataBase\SQLResult.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Camera\Camera.h" />
+    <ClInclude Include="Source\Camera\CameraPerspective.hpp" />
     <ClInclude Include="Source\ClipBoard\ClipBoardFormat.h" />
     <ClInclude Include="Source\ClipBoard\ClipBoard.h" />
     <ClInclude Include="Source\Memory\MemoryUsage.h" />
@@ -721,6 +724,7 @@
     <ClInclude Include="Source\File\Endian.h" />
     <ClInclude Include="Source\Types\UUID.h" />
     <ClInclude Include="Source\Video\IVideoFormat.hpp" />
+    <ClInclude Include="Source\Video\RefreshRateMode.h" />
     <ClInclude Include="Source\Video\Video.h" />
     <ClInclude Include="Source\Sound\WMA\WMA.h" />
     <ClInclude Include="Source\Compression\ZLIB\ZLIBHeader.h" />

@@ -43,15 +43,42 @@ namespace BF
 	struct Matrix4x4
 	{
 		public:
-		/*
-		XA YA ZA Or
-		 0  1  2  3
-		 4  5  6  7
-		 8  9 10 11
-		12 13 14 15
-		*/
-		NumberType MatrixData[16];
+		union
+		{
+			struct
+			{
+				NumberType XX;
+				NumberType XY;
+				NumberType XZ;
+				NumberType XW;
+				NumberType YX;
+				NumberType YY;
+				NumberType YZ;
+				NumberType YW;
+				NumberType ZX;
+				NumberType ZY;
+				NumberType ZZ;
+				NumberType ZW;
+				NumberType WX;
+				NumberType WY;
+				NumberType WZ;
+				NumberType WW;
+			};
 
+			/*
+			+----+----+----+----+
+			| XA | YA | ZA | Or |
+			+----+----+----+----+
+			|  0 |  1 |  2 |  3 |
+			|  4 |  5 |  6 |  7 |
+			|  8 |  9 | 10 | 11 |
+			| 12 | 13 | 14 | 15 |
+			+----+----+----+----+
+			*/
+			NumberType Data[16];
+
+			NumberType DataXY[4][4];
+		};
 
 		Matrix4x4()
 		{
@@ -60,79 +87,79 @@ namespace BF
 
 		void Reset()
 		{
-			MatrixData[XAxisX] = 1;
-			MatrixData[YAxisX] = 0;
-			MatrixData[ZAxisX] = 0;
-			MatrixData[WAxisX] = 0;
+			Data[XAxisX] = 1;
+			Data[YAxisX] = 0;
+			Data[ZAxisX] = 0;
+			Data[WAxisX] = 0;
 
-			MatrixData[XAxisY] = 0;
-			MatrixData[YAxisY] = 1;
-			MatrixData[ZAxisY] = 0;
-			MatrixData[WAxisY] = 0;
+			Data[XAxisY] = 0;
+			Data[YAxisY] = 1;
+			Data[ZAxisY] = 0;
+			Data[WAxisY] = 0;
 
-			MatrixData[XAxisZ] = 0;
-			MatrixData[YAxisZ] = 0;
-			MatrixData[ZAxisZ] = 1;
-			MatrixData[WAxisZ] = 0;
+			Data[XAxisZ] = 0;
+			Data[YAxisZ] = 0;
+			Data[ZAxisZ] = 1;
+			Data[WAxisZ] = 0;
 
-			MatrixData[XAxisW] = 0;
-			MatrixData[YAxisW] = 0;
-			MatrixData[ZAxisW] = 0;
-			MatrixData[WAxisW] = 1;
+			Data[XAxisW] = 0;
+			Data[YAxisW] = 0;
+			Data[ZAxisW] = 0;
+			Data[WAxisW] = 1;
 		}
 
 		void Multiply(const Matrix4x4<NumberType>& matrixB)
 		{
-			NumberType a = this->MatrixData[0];
-			NumberType b = this->MatrixData[1];
-			NumberType c = this->MatrixData[2];
-			NumberType d = this->MatrixData[3];
-			NumberType e = this->MatrixData[4];
-			NumberType f = this->MatrixData[5];
-			NumberType g = this->MatrixData[6];
-			NumberType h = this->MatrixData[7];
-			NumberType i = this->MatrixData[8];
-			NumberType j = this->MatrixData[9];
-			NumberType k = this->MatrixData[10];
-			NumberType l = this->MatrixData[11];
-			NumberType m = this->MatrixData[12];
-			NumberType n = this->MatrixData[13];
-			NumberType o = this->MatrixData[14];
-			NumberType p = this->MatrixData[15];
+			NumberType a = this->Data[0];
+			NumberType b = this->Data[1];
+			NumberType c = this->Data[2];
+			NumberType d = this->Data[3];
+			NumberType e = this->Data[4];
+			NumberType f = this->Data[5];
+			NumberType g = this->Data[6];
+			NumberType h = this->Data[7];
+			NumberType i = this->Data[8];
+			NumberType j = this->Data[9];
+			NumberType k = this->Data[10];
+			NumberType l = this->Data[11];
+			NumberType m = this->Data[12];
+			NumberType n = this->Data[13];
+			NumberType o = this->Data[14];
+			NumberType p = this->Data[15];
 
-			NumberType A = matrixB.MatrixData[0];
-			NumberType B = matrixB.MatrixData[1];
-			NumberType C = matrixB.MatrixData[2];
-			NumberType D = matrixB.MatrixData[3];
-			NumberType E = matrixB.MatrixData[4];
-			NumberType F = matrixB.MatrixData[5];
-			NumberType G = matrixB.MatrixData[6];
-			NumberType H = matrixB.MatrixData[7];
-			NumberType I = matrixB.MatrixData[8];
-			NumberType J = matrixB.MatrixData[9];
-			NumberType K = matrixB.MatrixData[10];
-			NumberType L = matrixB.MatrixData[11];
-			NumberType M = matrixB.MatrixData[12];
-			NumberType N = matrixB.MatrixData[13];
-			NumberType O = matrixB.MatrixData[14];
-			NumberType P = matrixB.MatrixData[15];
+			NumberType A = matrixB.Data[0];
+			NumberType B = matrixB.Data[1];
+			NumberType C = matrixB.Data[2];
+			NumberType D = matrixB.Data[3];
+			NumberType E = matrixB.Data[4];
+			NumberType F = matrixB.Data[5];
+			NumberType G = matrixB.Data[6];
+			NumberType H = matrixB.Data[7];
+			NumberType I = matrixB.Data[8];
+			NumberType J = matrixB.Data[9];
+			NumberType K = matrixB.Data[10];
+			NumberType L = matrixB.Data[11];
+			NumberType M = matrixB.Data[12];
+			NumberType N = matrixB.Data[13];
+			NumberType O = matrixB.Data[14];
+			NumberType P = matrixB.Data[15];
 
-			NumberType& resultA = MatrixData[0];
-			NumberType& resultB = MatrixData[1];
-			NumberType& resultC = MatrixData[2];
-			NumberType& resultD = MatrixData[3];
-			NumberType& resultE = MatrixData[4];
-			NumberType& resultF = MatrixData[5];
-			NumberType& resultG = MatrixData[6];
-			NumberType& resultH = MatrixData[7];
-			NumberType& resultI = MatrixData[8];
-			NumberType& resultJ = MatrixData[9];
-			NumberType& resultK = MatrixData[10];
-			NumberType& resultL = MatrixData[11];
-			NumberType& resultM = MatrixData[12];
-			NumberType& resultN = MatrixData[13];
-			NumberType& resultO = MatrixData[14];
-			NumberType& resultP = MatrixData[15];
+			NumberType& resultA = Data[0];
+			NumberType& resultB = Data[1];
+			NumberType& resultC = Data[2];
+			NumberType& resultD = Data[3];
+			NumberType& resultE = Data[4];
+			NumberType& resultF = Data[5];
+			NumberType& resultG = Data[6];
+			NumberType& resultH = Data[7];
+			NumberType& resultI = Data[8];
+			NumberType& resultJ = Data[9];
+			NumberType& resultK = Data[10];
+			NumberType& resultL = Data[11];
+			NumberType& resultM = Data[12];
+			NumberType& resultN = Data[13];
+			NumberType& resultO = Data[14];
+			NumberType& resultP = Data[15];
 
 			resultA = a * A + b * E + c * I + d * M;
 			resultB = e * A + f * E + g * I + h * M;
@@ -162,67 +189,67 @@ namespace BF
 			// ---0
 			// 0001
 
-			this->MatrixData[3] = 0;
-			this->MatrixData[7] = 0;
-			this->MatrixData[11] = 0;
-			this->MatrixData[12] = 0;
-			this->MatrixData[13] = 0;
-			this->MatrixData[14] = 0;
-			this->MatrixData[15] = 1;
+			this->Data[3] = 0;
+			this->Data[7] = 0;
+			this->Data[11] = 0;
+			this->Data[12] = 0;
+			this->Data[13] = 0;
+			this->Data[14] = 0;
+			this->Data[15] = 1;
 		}
 
 		void Add(const Matrix4x4<NumberType>& matrixB)
 		{
-			NumberType a = this->MatrixData[0];
-			NumberType b = this->MatrixData[1];
-			NumberType c = this->MatrixData[2];
-			NumberType d = this->MatrixData[3];
-			NumberType e = this->MatrixData[4];
-			NumberType f = this->MatrixData[5];
-			NumberType g = this->MatrixData[6];
-			NumberType h = this->MatrixData[7];
-			NumberType i = this->MatrixData[8];
-			NumberType j = this->MatrixData[9];
-			NumberType k = this->MatrixData[10];
-			NumberType l = this->MatrixData[11];
-			NumberType m = this->MatrixData[12];
-			NumberType n = this->MatrixData[13];
-			NumberType o = this->MatrixData[14];
-			NumberType p = this->MatrixData[15];
+			NumberType a = this->Data[0];
+			NumberType b = this->Data[1];
+			NumberType c = this->Data[2];
+			NumberType d = this->Data[3];
+			NumberType e = this->Data[4];
+			NumberType f = this->Data[5];
+			NumberType g = this->Data[6];
+			NumberType h = this->Data[7];
+			NumberType i = this->Data[8];
+			NumberType j = this->Data[9];
+			NumberType k = this->Data[10];
+			NumberType l = this->Data[11];
+			NumberType m = this->Data[12];
+			NumberType n = this->Data[13];
+			NumberType o = this->Data[14];
+			NumberType p = this->Data[15];
 
-			NumberType A = matrixB.MatrixData[0];
-			NumberType B = matrixB.MatrixData[1];
-			NumberType C = matrixB.MatrixData[2];
-			NumberType D = matrixB.MatrixData[3];
-			NumberType E = matrixB.MatrixData[4];
-			NumberType F = matrixB.MatrixData[5];
-			NumberType G = matrixB.MatrixData[6];
-			NumberType H = matrixB.MatrixData[7];
-			NumberType I = matrixB.MatrixData[8];
-			NumberType J = matrixB.MatrixData[9];
-			NumberType K = matrixB.MatrixData[10];
-			NumberType L = matrixB.MatrixData[11];
-			NumberType M = matrixB.MatrixData[12];
-			NumberType N = matrixB.MatrixData[13];
-			NumberType O = matrixB.MatrixData[14];
-			NumberType P = matrixB.MatrixData[15];
+			NumberType A = matrixB.Data[0];
+			NumberType B = matrixB.Data[1];
+			NumberType C = matrixB.Data[2];
+			NumberType D = matrixB.Data[3];
+			NumberType E = matrixB.Data[4];
+			NumberType F = matrixB.Data[5];
+			NumberType G = matrixB.Data[6];
+			NumberType H = matrixB.Data[7];
+			NumberType I = matrixB.Data[8];
+			NumberType J = matrixB.Data[9];
+			NumberType K = matrixB.Data[10];
+			NumberType L = matrixB.Data[11];
+			NumberType M = matrixB.Data[12];
+			NumberType N = matrixB.Data[13];
+			NumberType O = matrixB.Data[14];
+			NumberType P = matrixB.Data[15];
 
-			NumberType& resultA = MatrixData[0];
-			NumberType& resultB = MatrixData[1];
-			NumberType& resultC = MatrixData[2];
-			NumberType& resultD = MatrixData[3];
-			NumberType& resultE = MatrixData[4];
-			NumberType& resultF = MatrixData[5];
-			NumberType& resultG = MatrixData[6];
-			NumberType& resultH = MatrixData[7];
-			NumberType& resultI = MatrixData[8];
-			NumberType& resultJ = MatrixData[9];
-			NumberType& resultK = MatrixData[10];
-			NumberType& resultL = MatrixData[11];
-			NumberType& resultM = MatrixData[12];
-			NumberType& resultN = MatrixData[13];
-			NumberType& resultO = MatrixData[14];
-			NumberType& resultP = MatrixData[15];
+			NumberType& resultA = Data[0];
+			NumberType& resultB = Data[1];
+			NumberType& resultC = Data[2];
+			NumberType& resultD = Data[3];
+			NumberType& resultE = Data[4];
+			NumberType& resultF = Data[5];
+			NumberType& resultG = Data[6];
+			NumberType& resultH = Data[7];
+			NumberType& resultI = Data[8];
+			NumberType& resultJ = Data[9];
+			NumberType& resultK = Data[10];
+			NumberType& resultL = Data[11];
+			NumberType& resultM = Data[12];
+			NumberType& resultN = Data[13];
+			NumberType& resultO = Data[14];
+			NumberType& resultP = Data[15];
 
 			resultA = a + A;
 			resultB = b + B;
@@ -254,9 +281,12 @@ namespace BF
 			return matrix;
 		}	
 
-		void operator=(Matrix4x4<NumberType> matrix4x4)
+		void operator=(const Matrix4x4<NumberType>& matrix)
 		{
-			memcmp(this->MatrixData, matrix4x4.MatrixData, 16 * sizeof(NumberType));
+			for (size_t i = 0; i < 16; ++i)
+			{
+				this->Data[i] = matrix.Data[i];
+			}
 		}
 
 		Matrix4x4<NumberType> operator*=(Matrix4x4<NumberType> matrixB)
@@ -266,27 +296,27 @@ namespace BF
 
 		void Move(const NumberType x, const NumberType y, const NumberType z)
 		{
-			MatrixData[TransformX] += x;
-			MatrixData[TransformY] += y;
-			MatrixData[TransformZ] += z;
+			Data[TransformX] += x;
+			Data[TransformY] += y;
+			Data[TransformZ] += z;
 		}
 		void Move(const Vector3<NumberType> vector3)
 		{
-			MatrixData[TransformX] += vector3.X;
-			MatrixData[TransformY] += vector3.Y;
-			MatrixData[TransformZ] += vector3.Z;
+			Data[TransformX] += vector3.X;
+			Data[TransformY] += vector3.Y;
+			Data[TransformZ] += vector3.Z;
 		}
 		void MoveTo(const Vector3<NumberType> vector)
 		{
-			MatrixData[TransformX] = vector.X;
-			MatrixData[TransformY] = vector.Y;
-			MatrixData[TransformZ] = vector.Z;
+			Data[TransformX] = vector.X;
+			Data[TransformY] = vector.Y;
+			Data[TransformZ] = vector.Z;
 		}
 		void MoveTo(const NumberType x, const NumberType y, const NumberType z)
 		{
-			MatrixData[TransformX] = x;
-			MatrixData[TransformY] = y;
-			MatrixData[TransformZ] = z;
+			Data[TransformX] = x;
+			Data[TransformY] = y;
+			Data[TransformZ] = z;
 		}
 
 		void Rotate(const Vector3<NumberType> vector)
@@ -311,10 +341,10 @@ namespace BF
 				float cosResult = Math::Cosinus(x);
 				float sinResult = Math::Sinus(x);
 
-				xRotation.MatrixData[5] = cosResult;
-				xRotation.MatrixData[6] = sinResult;
-				xRotation.MatrixData[9] = -sinResult;
-				xRotation.MatrixData[10] = cosResult;
+				xRotation.Data[5] = cosResult;
+				xRotation.Data[6] = sinResult;
+				xRotation.Data[9] = -sinResult;
+				xRotation.Data[10] = cosResult;
 			
 			}
 
@@ -324,10 +354,10 @@ namespace BF
 				float cosResult = Math::Cosinus(y);
 				float sinResult = Math::Sinus(y);
 
-				yRotation.MatrixData[0] = cosResult;
-				yRotation.MatrixData[2] = -sinResult;
-				yRotation.MatrixData[8] = sinResult;
-				yRotation.MatrixData[10] = cosResult;	
+				yRotation.Data[0] = cosResult;
+				yRotation.Data[2] = -sinResult;
+				yRotation.Data[8] = sinResult;
+				yRotation.Data[10] = cosResult;	
 			}
 
 			//-----<X ROT>-----
@@ -336,10 +366,10 @@ namespace BF
 				float cosResult = Math::Cosinus(z);
 				float sinResult = Math::Sinus(z);
 
-				zRotation.MatrixData[0] = cosResult;
-				zRotation.MatrixData[1] = -sinResult;
-				zRotation.MatrixData[4] = sinResult;
-				zRotation.MatrixData[5] = cosResult;	
+				zRotation.Data[0] = cosResult;
+				zRotation.Data[1] = -sinResult;
+				zRotation.Data[4] = sinResult;
+				zRotation.Data[5] = cosResult;	
 			}
 
 			result = xRotation * yRotation * zRotation;
@@ -356,33 +386,33 @@ namespace BF
 		}
 		void Scale(const NumberType scalar)
 		{
-			MatrixData[ScaleX] *= scalar;
-			MatrixData[ScaleY] *= scalar;
-			MatrixData[ScaleZ] *= scalar;
+			Data[ScaleX] *= scalar;
+			Data[ScaleY] *= scalar;
+			Data[ScaleZ] *= scalar;
 		}
 		void Scale(const NumberType x, const NumberType y, const NumberType z)
 		{
-			MatrixData[ScaleX] *= x;
-			MatrixData[ScaleY] *= y;
-			MatrixData[ScaleZ] *= z;
+			Data[ScaleX] *= x;
+			Data[ScaleY] *= y;
+			Data[ScaleZ] *= z;
 		}
 		void ScaleSet(const NumberType x, const NumberType y, const NumberType z)
 		{
-			MatrixData[ScaleX] = x;
-			MatrixData[ScaleY] = y;
-			MatrixData[ScaleZ] = z;
+			Data[ScaleX] = x;
+			Data[ScaleY] = y;
+			Data[ScaleZ] = z;
 		}
 		void ScaleSet(const Vector3<NumberType> vector)
 		{
-			MatrixData[ScaleX] = vector.X;
-			MatrixData[ScaleY] = vector.Y;
-			MatrixData[ScaleZ] = vector.Z;
+			Data[ScaleX] = vector.X;
+			Data[ScaleY] = vector.Y;
+			Data[ScaleZ] = vector.Z;
 		}
 		void Scale(const Vector3<NumberType> vector)
 		{
-			MatrixData[ScaleX] *= vector.X;
-			MatrixData[ScaleY] *= vector.Y;
-			MatrixData[ScaleZ] *= vector.Z;
+			Data[ScaleX] *= vector.X;
+			Data[ScaleY] *= vector.Y;
+			Data[ScaleZ] *= vector.Z;
 		}
 
 		void LookAt(NumberType x, NumberType y, NumberType z)
@@ -403,65 +433,65 @@ namespace BF
 
 			Vector3<NumberType>::CrossProduct(s, f, u);
 
-			MatrixData[XAxisX] = s.X;
-			MatrixData[XAxisY] = s.Y;
-			MatrixData[XAxisZ] = s.Z;
+			Data[XAxisX] = s.X;
+			Data[XAxisY] = s.Y;
+			Data[XAxisZ] = s.Z;
 
-			MatrixData[YAxisX] = u.X;
-			MatrixData[YAxisY] = u.Y;
-			MatrixData[YAxisZ] = u.Z;
+			Data[YAxisX] = u.X;
+			Data[YAxisY] = u.Y;
+			Data[YAxisZ] = u.Z;
 
-			MatrixData[ZAxisX] = -f.X;
-			MatrixData[ZAxisY] = -f.Y;
-			MatrixData[ZAxisZ] = -f.Z;
+			Data[ZAxisX] = -f.X;
+			Data[ZAxisY] = -f.Y;
+			Data[ZAxisZ] = -f.Z;
 
-			MatrixData[TransformX] = -Vector3<NumberType>::DotProduct(s, eye);
-			MatrixData[TransformY] = -Vector3<NumberType>::DotProduct(u, eye);
-			MatrixData[TransformZ] = Vector3<NumberType>::DotProduct(f, eye);
+			Data[TransformX] = -Vector3<NumberType>::DotProduct(s, eye);
+			Data[TransformY] = -Vector3<NumberType>::DotProduct(u, eye);
+			Data[TransformZ] = Vector3<NumberType>::DotProduct(f, eye);
 		}
 
 		// Flip matrix diagonally
 		void Transpose()
 		{
-			//NumberType a = this->MatrixData[0];
-			NumberType b = this->MatrixData[1];
-			NumberType c = this->MatrixData[2];
-			NumberType d = this->MatrixData[3];
+			//NumberType a = this->Data[0];
+			NumberType b = this->Data[1];
+			NumberType c = this->Data[2];
+			NumberType d = this->Data[3];
 
-			NumberType e = this->MatrixData[4];
-			//NumberType f = this->MatrixData[5];
-			NumberType g = this->MatrixData[6];
-			NumberType h = this->MatrixData[7];
+			NumberType e = this->Data[4];
+			//NumberType f = this->Data[5];
+			NumberType g = this->Data[6];
+			NumberType h = this->Data[7];
 
-			NumberType i = this->MatrixData[8];
-			NumberType j = this->MatrixData[9];
-			//NumberType k = this->MatrixData[10];
-			NumberType l = this->MatrixData[11];
+			NumberType i = this->Data[8];
+			NumberType j = this->Data[9];
+			//NumberType k = this->Data[10];
+			NumberType l = this->Data[11];
 
-			NumberType m = this->MatrixData[12];
-			NumberType n = this->MatrixData[13];
-			NumberType o = this->MatrixData[14];
-			//NumberType p = this->MatrixData[15];
+			NumberType m = this->Data[12];
+			NumberType n = this->Data[13];
+			NumberType o = this->Data[14];
+			//NumberType p = this->Data[15];
 
-			//this->MatrixData[0] = a;
-			this->MatrixData[1] = e;
-			this->MatrixData[2] = i;
-			this->MatrixData[3] = m;
+			//this->Data[0] = a;
+			this->Data[1] = e;
+			this->Data[2] = i;
+			this->Data[3] = m;
 
-			this->MatrixData[4] = b;
-			//this->MatrixData[5] = f;
-			this->MatrixData[6] = j;
-			this->MatrixData[7] = n;
+			this->Data[4] = b;
+			//this->Data[5] = f;
+			this->Data[6] = j;
+			this->Data[7] = n;
 
-			this->MatrixData[8] = c;
-			this->MatrixData[9] = g;
-			//this->MatrixData[10] = k;
-			this->MatrixData[11] = o;
+			this->Data[8] = c;
+			this->Data[9] = g;
+			//this->Data[10] = k;
+			this->Data[11] = o;
 
-			this->MatrixData[12] = d;
-			this->MatrixData[13] = h;
-			this->MatrixData[14] = l;
-			//this->MatrixData[15] = p;
+			this->Data[12] = d;
+			this->Data[13] = h;
+			this->Data[14] = l;
+			//this->Data[15] = p;
 		}
 
 		// returns sucessful
@@ -470,24 +500,24 @@ namespace BF
 			Matrix4x4<NumberType> result;
 			double det = 0;
 
-			result[0] = MatrixData[5] * MatrixData[10] * MatrixData[15] - MatrixData[5] * MatrixData[11] * MatrixData[14] - MatrixData[9] * MatrixData[6] * MatrixData[15] + MatrixData[9] * MatrixData[7] * MatrixData[14] + MatrixData[13] * MatrixData[6] * MatrixData[11] - MatrixData[13] * MatrixData[7] * MatrixData[10];
-			result[4] = -MatrixData[4] * MatrixData[10] * MatrixData[15] + MatrixData[4] * MatrixData[11] * MatrixData[14] + MatrixData[8] * MatrixData[6] * MatrixData[15] - MatrixData[8] * MatrixData[7] * MatrixData[14] - MatrixData[12] * MatrixData[6] * MatrixData[11] + MatrixData[12] * MatrixData[7] * MatrixData[10];
-			result[8] = MatrixData[4] * MatrixData[9] * MatrixData[15] - MatrixData[4] * MatrixData[11] * MatrixData[13] - MatrixData[8] * MatrixData[5] * MatrixData[15] + MatrixData[8] * MatrixData[7] * MatrixData[13] + MatrixData[12] * MatrixData[5] * MatrixData[11] - MatrixData[12] * MatrixData[7] * MatrixData[9];
-			result[12] = -MatrixData[4] * MatrixData[9] * MatrixData[14] + MatrixData[4] * MatrixData[10] * MatrixData[13] + MatrixData[8] * MatrixData[5] * MatrixData[14] - MatrixData[8] * MatrixData[6] * MatrixData[13] - MatrixData[12] * MatrixData[5] * MatrixData[10] + MatrixData[12] * MatrixData[6] * MatrixData[9];
-			result[1] = -MatrixData[1] * MatrixData[10] * MatrixData[15] + MatrixData[1] * MatrixData[11] * MatrixData[14] + MatrixData[9] * MatrixData[2] * MatrixData[15] - MatrixData[9] * MatrixData[3] * MatrixData[14] - MatrixData[13] * MatrixData[2] * MatrixData[11] + MatrixData[13] * MatrixData[3] * MatrixData[10];
-			result[5] = MatrixData[0] * MatrixData[10] * MatrixData[15] - MatrixData[0] * MatrixData[11] * MatrixData[14] - MatrixData[8] * MatrixData[2] * MatrixData[15] + MatrixData[8] * MatrixData[3] * MatrixData[14] + MatrixData[12] * MatrixData[2] * MatrixData[11] - MatrixData[12] * MatrixData[3] * MatrixData[10];
-			result[9] = -MatrixData[0] * MatrixData[9] * MatrixData[15] + MatrixData[0] * MatrixData[11] * MatrixData[13] + MatrixData[8] * MatrixData[1] * MatrixData[15] - MatrixData[8] * MatrixData[3] * MatrixData[13] - MatrixData[12] * MatrixData[1] * MatrixData[11] + MatrixData[12] * MatrixData[3] * MatrixData[9];
-			result[13] = MatrixData[0] * MatrixData[9] * MatrixData[14] - MatrixData[0] * MatrixData[10] * MatrixData[13] - MatrixData[8] * MatrixData[1] * MatrixData[14] + MatrixData[8] * MatrixData[2] * MatrixData[13] + MatrixData[12] * MatrixData[1] * MatrixData[10] - MatrixData[12] * MatrixData[2] * MatrixData[9];
-			result[2] = MatrixData[1] * MatrixData[6] * MatrixData[15] - MatrixData[1] * MatrixData[7] * MatrixData[14] - MatrixData[5] * MatrixData[2] * MatrixData[15] + MatrixData[5] * MatrixData[3] * MatrixData[14] + MatrixData[13] * MatrixData[2] * MatrixData[7] - MatrixData[13] * MatrixData[3] * MatrixData[6];
-			result[6] = -MatrixData[0] * MatrixData[6] * MatrixData[15] + MatrixData[0] * MatrixData[7] * MatrixData[14] + MatrixData[4] * MatrixData[2] * MatrixData[15] - MatrixData[4] * MatrixData[3] * MatrixData[14] - MatrixData[12] * MatrixData[2] * MatrixData[7] + MatrixData[12] * MatrixData[3] * MatrixData[6];
-			result[10] = MatrixData[0] * MatrixData[5] * MatrixData[15] - MatrixData[0] * MatrixData[7] * MatrixData[13] - MatrixData[4] * MatrixData[1] * MatrixData[15] + MatrixData[4] * MatrixData[3] * MatrixData[13] + MatrixData[12] * MatrixData[1] * MatrixData[7] - MatrixData[12] * MatrixData[3] * MatrixData[5];
-			result[14] = -MatrixData[0] * MatrixData[5] * MatrixData[14] + MatrixData[0] * MatrixData[6] * MatrixData[13] + MatrixData[4] * MatrixData[1] * MatrixData[14] - MatrixData[4] * MatrixData[2] * MatrixData[13] - MatrixData[12] * MatrixData[1] * MatrixData[6] + MatrixData[12] * MatrixData[2] * MatrixData[5];
-			result[3] = -MatrixData[1] * MatrixData[6] * MatrixData[11] + MatrixData[1] * MatrixData[7] * MatrixData[10] + MatrixData[5] * MatrixData[2] * MatrixData[11] - MatrixData[5] * MatrixData[3] * MatrixData[10] - MatrixData[9] * MatrixData[2] * MatrixData[7] + MatrixData[9] * MatrixData[3] * MatrixData[6];
-			result[7] = MatrixData[0] * MatrixData[6] * MatrixData[11] - MatrixData[0] * MatrixData[7] * MatrixData[10] - MatrixData[4] * MatrixData[2] * MatrixData[11] + MatrixData[4] * MatrixData[3] * MatrixData[10] + MatrixData[8] * MatrixData[2] * MatrixData[7] - MatrixData[8] * MatrixData[3] * MatrixData[6];
-			result[11] = -MatrixData[0] * MatrixData[5] * MatrixData[11] + MatrixData[0] * MatrixData[7] * MatrixData[9] + MatrixData[4] * MatrixData[1] * MatrixData[11] - MatrixData[4] * MatrixData[3] * MatrixData[9] - MatrixData[8] * MatrixData[1] * MatrixData[7] + MatrixData[8] * MatrixData[3] * MatrixData[5];
-			result[15] = MatrixData[0] * MatrixData[5] * MatrixData[10] - MatrixData[0] * MatrixData[6] * MatrixData[9] - MatrixData[4] * MatrixData[1] * MatrixData[10] + MatrixData[4] * MatrixData[2] * MatrixData[9] + MatrixData[8] * MatrixData[1] * MatrixData[6] - MatrixData[8] * MatrixData[2] * MatrixData[5];
+			result[0] = Data[5] * Data[10] * Data[15] - Data[5] * Data[11] * Data[14] - Data[9] * Data[6] * Data[15] + Data[9] * Data[7] * Data[14] + Data[13] * Data[6] * Data[11] - Data[13] * Data[7] * Data[10];
+			result[4] = -Data[4] * Data[10] * Data[15] + Data[4] * Data[11] * Data[14] + Data[8] * Data[6] * Data[15] - Data[8] * Data[7] * Data[14] - Data[12] * Data[6] * Data[11] + Data[12] * Data[7] * Data[10];
+			result[8] = Data[4] * Data[9] * Data[15] - Data[4] * Data[11] * Data[13] - Data[8] * Data[5] * Data[15] + Data[8] * Data[7] * Data[13] + Data[12] * Data[5] * Data[11] - Data[12] * Data[7] * Data[9];
+			result[12] = -Data[4] * Data[9] * Data[14] + Data[4] * Data[10] * Data[13] + Data[8] * Data[5] * Data[14] - Data[8] * Data[6] * Data[13] - Data[12] * Data[5] * Data[10] + Data[12] * Data[6] * Data[9];
+			result[1] = -Data[1] * Data[10] * Data[15] + Data[1] * Data[11] * Data[14] + Data[9] * Data[2] * Data[15] - Data[9] * Data[3] * Data[14] - Data[13] * Data[2] * Data[11] + Data[13] * Data[3] * Data[10];
+			result[5] = Data[0] * Data[10] * Data[15] - Data[0] * Data[11] * Data[14] - Data[8] * Data[2] * Data[15] + Data[8] * Data[3] * Data[14] + Data[12] * Data[2] * Data[11] - Data[12] * Data[3] * Data[10];
+			result[9] = -Data[0] * Data[9] * Data[15] + Data[0] * Data[11] * Data[13] + Data[8] * Data[1] * Data[15] - Data[8] * Data[3] * Data[13] - Data[12] * Data[1] * Data[11] + Data[12] * Data[3] * Data[9];
+			result[13] = Data[0] * Data[9] * Data[14] - Data[0] * Data[10] * Data[13] - Data[8] * Data[1] * Data[14] + Data[8] * Data[2] * Data[13] + Data[12] * Data[1] * Data[10] - Data[12] * Data[2] * Data[9];
+			result[2] = Data[1] * Data[6] * Data[15] - Data[1] * Data[7] * Data[14] - Data[5] * Data[2] * Data[15] + Data[5] * Data[3] * Data[14] + Data[13] * Data[2] * Data[7] - Data[13] * Data[3] * Data[6];
+			result[6] = -Data[0] * Data[6] * Data[15] + Data[0] * Data[7] * Data[14] + Data[4] * Data[2] * Data[15] - Data[4] * Data[3] * Data[14] - Data[12] * Data[2] * Data[7] + Data[12] * Data[3] * Data[6];
+			result[10] = Data[0] * Data[5] * Data[15] - Data[0] * Data[7] * Data[13] - Data[4] * Data[1] * Data[15] + Data[4] * Data[3] * Data[13] + Data[12] * Data[1] * Data[7] - Data[12] * Data[3] * Data[5];
+			result[14] = -Data[0] * Data[5] * Data[14] + Data[0] * Data[6] * Data[13] + Data[4] * Data[1] * Data[14] - Data[4] * Data[2] * Data[13] - Data[12] * Data[1] * Data[6] + Data[12] * Data[2] * Data[5];
+			result[3] = -Data[1] * Data[6] * Data[11] + Data[1] * Data[7] * Data[10] + Data[5] * Data[2] * Data[11] - Data[5] * Data[3] * Data[10] - Data[9] * Data[2] * Data[7] + Data[9] * Data[3] * Data[6];
+			result[7] = Data[0] * Data[6] * Data[11] - Data[0] * Data[7] * Data[10] - Data[4] * Data[2] * Data[11] + Data[4] * Data[3] * Data[10] + Data[8] * Data[2] * Data[7] - Data[8] * Data[3] * Data[6];
+			result[11] = -Data[0] * Data[5] * Data[11] + Data[0] * Data[7] * Data[9] + Data[4] * Data[1] * Data[11] - Data[4] * Data[3] * Data[9] - Data[8] * Data[1] * Data[7] + Data[8] * Data[3] * Data[5];
+			result[15] = Data[0] * Data[5] * Data[10] - Data[0] * Data[6] * Data[9] - Data[4] * Data[1] * Data[10] + Data[4] * Data[2] * Data[9] + Data[8] * Data[1] * Data[6] - Data[8] * Data[2] * Data[5];
 
-			det = MatrixData[0] * result[0] + MatrixData[1] * result[4] + MatrixData[2] * result[8] + MatrixData[3] * result[12];
+			det = Data[0] * result[0] + Data[1] * result[4] + Data[2] * result[8] + Data[3] * result[12];
 
 			if (det == 0)
 				return false;
@@ -496,7 +526,7 @@ namespace BF
 
 			for (int i = 0; i < 16; i++)
 			{
-				MatrixData[i] = result[i] * det;
+				Data[i] = result[i] * det;
 			}				
 
 			return true;
@@ -504,19 +534,19 @@ namespace BF
 
 		void Set(NumberType value)
 		{
-			memset(this->MatrixData, value, 16 * sizeof(NumberType));
+			memset(this->Data, value, 16 * sizeof(NumberType));
 		} 		
 
 		void Orthographic(NumberType left, NumberType right, NumberType bottom, NumberType top, NumberType zNear, NumberType zFar)
 		{		
 			Reset();
 
-			MatrixData[ScaleX] = (2) / (NumberType)(right - left);
-			MatrixData[ScaleY] = (2) / (NumberType)(top - bottom);
-			MatrixData[ScaleZ] = -(2) / (NumberType)(zFar - zNear);
-			MatrixData[TransformX] = -(right + left) / (NumberType)(right - left);
-			MatrixData[TransformY] = -(top + bottom) / (NumberType)(top - bottom);
-			MatrixData[TransformZ] = -(zFar + zNear) / (NumberType)(zFar - zNear);
+			Data[ScaleX] = (2) / (NumberType)(right - left);
+			Data[ScaleY] = (2) / (NumberType)(top - bottom);
+			Data[ScaleZ] = -(2) / (NumberType)(zFar - zNear);
+			Data[TransformX] = -(right + left) / (NumberType)(right - left);
+			Data[TransformY] = -(top + bottom) / (NumberType)(top - bottom);
+			Data[TransformZ] = -(zFar + zNear) / (NumberType)(zFar - zNear);
 		}
 
 		void Perspective(const NumberType fielfOfView, const NumberType aspectRatio, const NumberType near, const NumberType far)
@@ -524,30 +554,30 @@ namespace BF
 			NumberType fielfOfViewRadians = Math::DegreeToRadians(fielfOfView);
 			float tanHalfFovy = Math::Tangens(fielfOfViewRadians / 2.0f);
 
-			memset(MatrixData, 0, 16 * sizeof(float));
+			memset(Data, 0, 16 * sizeof(float));
 
-			MatrixData[ScaleX] = (1) / (aspectRatio * tanHalfFovy);
-			MatrixData[ScaleY] = (1) / (tanHalfFovy);
-			MatrixData[ScaleZ] = -(far + near) / (far - near);
-			MatrixData[11] = -(1);
-			MatrixData[TransformZ] = -((2) * far * near) / (far - near);
+			Data[ScaleX] = (1) / (aspectRatio * tanHalfFovy);
+			Data[ScaleY] = (1) / (tanHalfFovy);
+			Data[ScaleZ] = -(far + near) / (far - near);
+			Data[11] = -(1);
+			Data[TransformZ] = -((2) * far * near) / (far - near);
 			
 		}
 		Vector3<NumberType> ScaleXYZ()
 		{
-			return Vector3<NumberType>(MatrixData[ScaleX], MatrixData[ScaleY], MatrixData[ScaleZ]);
+			return Vector3<NumberType>(Data[ScaleX], Data[ScaleY], Data[ScaleZ]);
 		}
 		Vector4<NumberType> ScaleXYZW()
 		{
-			return Vector4<NumberType>(MatrixData[ScaleX], MatrixData[ScaleY], MatrixData[ScaleZ], MatrixData[ScaleW]);
+			return Vector4<NumberType>(Data[ScaleX], Data[ScaleY], Data[ScaleZ], Data[ScaleW]);
 		}
 		Vector3<NumberType> PositionXYZ()
 		{
-			return Vector3<NumberType>(MatrixData[TransformX], MatrixData[TransformY], MatrixData[TransformZ]);
+			return Vector3<NumberType>(Data[TransformX], Data[TransformY], Data[TransformZ]);
 		}
 		Vector4<NumberType> PositionXYZW()
 		{
-			return Vector4<NumberType>(MatrixData[TransformX], MatrixData[TransformY], MatrixData[TransformZ], MatrixData[TransformW]);
+			return Vector4<NumberType>(Data[TransformX], Data[TransformY], Data[TransformZ], Data[TransformW]);
 		}
 		Vector4<NumberType> CurrentRotation()
 		{
@@ -559,7 +589,7 @@ namespace BF
 		}
 		Vector4<NumberType> CurrentScaling()
 		{
-			return Vector4<NumberType>(MatrixData[0], MatrixData[5], MatrixData[10], MatrixData[15]);
+			return Vector4<NumberType>(Data[0], Data[5], Data[10], Data[15]);
 		}
 
 		void Print()
@@ -571,40 +601,36 @@ namespace BF
 				"| %7.2f | %7.2f | %7.2f | %7.2f |\n"
 				"| %7.2f | %7.2f | %7.2f | %7.2f |\n"
 				"| %7.2f | %7.2f | %7.2f | %7.2f |\n",
-				MatrixData[0],
-				MatrixData[1],
-				MatrixData[2],
-				MatrixData[3],
-				MatrixData[4],
-				MatrixData[5],
-				MatrixData[6],
-				MatrixData[7],
-				MatrixData[8],
-				MatrixData[9],
-				MatrixData[10],
-				MatrixData[11],
-				MatrixData[12],
-				MatrixData[13],
-				MatrixData[14],
-				MatrixData[15]
-			);
-
-
-			
+				Data[0],
+				Data[1],
+				Data[2],
+				Data[3],
+				Data[4],
+				Data[5],
+				Data[6],
+				Data[7],
+				Data[8],
+				Data[9],
+				Data[10],
+				Data[11],
+				Data[12],
+				Data[13],
+				Data[14],
+				Data[15]
+			);			
 		}
-
 
 		Vector4<NumberType> CurrentAxisX()
 		{
-			return Vector4<NumberType>(MatrixData[XAxisX], MatrixData[XAxisY], MatrixData[XAxisZ], MatrixData[XAxisW]);
+			return Vector4<NumberType>(Data[XAxisX], Data[XAxisY], Data[XAxisZ], Data[XAxisW]);
 		}
 		Vector4<NumberType> CurrentAxisY()
 		{
-			return Vector4<NumberType>(MatrixData[YAxisX], MatrixData[YAxisY], MatrixData[YAxisZ], MatrixData[YAxisW]);
+			return Vector4<NumberType>(Data[YAxisX], Data[YAxisY], Data[YAxisZ], Data[YAxisW]);
 		}
 		Vector4<NumberType> CurrentAxisZ()
 		{
-			return Vector4<NumberType>(MatrixData[ZAxisX], MatrixData[ZAxisY], MatrixData[ZAxisZ], MatrixData[ZAxisW]);
+			return Vector4<NumberType>(Data[ZAxisX], Data[ZAxisY], Data[ZAxisZ], Data[ZAxisW]);
 		}
 	};
 }

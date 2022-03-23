@@ -18,6 +18,7 @@
 #include <Font/Font.h>
 #include <Sound/Sound.h>
 #include <Model/Model.h>
+#include <Camera/Camera.h>
 
 //#include "Window/Window.h"
 
@@ -26,7 +27,7 @@
 #include "../Sound/AudioClip.h"
 #include "../Sound/AudioSource.h"
 #include "../Resource/Sprite.h"
-#include "../Camera/Camera.h"
+
 #include "../Physic/Collider.h"
 #include "../Shader/Shader.h"
 #include "../Shader/ShaderType.h"

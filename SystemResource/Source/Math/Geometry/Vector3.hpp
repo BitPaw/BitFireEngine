@@ -10,9 +10,17 @@ namespace BF
 	struct Vector3
 	{
 		public:
-		NumberType X;
-		NumberType Y;
-		NumberType Z;
+		union
+		{
+			struct
+			{
+				NumberType X;
+				NumberType Y;
+				NumberType Z;
+			};
+
+			NumberType Data[3];			
+		};	
 
 		Vector3()
 		{
@@ -21,14 +29,14 @@ namespace BF
 			Z = 0;
 		}
 
-		Vector3(NumberType x, NumberType y, NumberType z)
+		Vector3(const NumberType x, const NumberType y, const NumberType z)
 		{
 			X = x;
 			Y = y;
 			Z = z;
 		}
 
-		void operator+=(NumberType scalar)
+		void operator+=(const NumberType scalar)
 		{
 			X += scalar;
 			Y += scalar;

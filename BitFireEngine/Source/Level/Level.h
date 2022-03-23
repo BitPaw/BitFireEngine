@@ -5,10 +5,11 @@
 #include <Font/Font.h>
 #include <Sound/Sound.h>
 #include <File/FileActionResult.hpp>
+#include <Camera/Camera.h>
 
 #include "../Shader/Shader.h"
 #include "../Dialog/Dialog.h"
-#include "../Camera/Camera.h"
+
 
 namespace BF
 {

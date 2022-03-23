@@ -264,7 +264,6 @@ void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
 
         movement.Add(0, 1, 0);
     }
-
     if (keyboard.F.IsShortPressed())
     {
         keyboard.F.Value = 0xFF;

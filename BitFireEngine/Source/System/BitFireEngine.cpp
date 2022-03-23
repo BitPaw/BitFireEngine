@@ -46,8 +46,8 @@ void CameraDataUpdate(BF::Camera& camera)
 
     //viewModel.Print();
 
-    BF::OpenGL::ShaderSetUniformMatrix4x4(_matrixViewID, camera.MatrixView.MatrixData);
-    BF::OpenGL::ShaderSetUniformMatrix4x4(_matrixProjectionID, camera.MatrixProjection.MatrixData);
+    BF::OpenGL::ShaderSetUniformMatrix4x4(_matrixViewID, camera.MatrixView.Data);
+    BF::OpenGL::ShaderSetUniformMatrix4x4(_matrixProjectionID, camera.MatrixProjection.Data);
 }
 
 
@@ -625,11 +625,11 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
         switch (camera.Perspective)
         {
             case CameraPerspective::Orthographic:
-                camera.PerspectiveChange(CameraPerspective::Perspective);
+                camera.ViewChange(CameraPerspective::Perspective);
                 break;
 
             case CameraPerspective::Perspective:
-                camera.PerspectiveChange(CameraPerspective::Orthographic);
+                camera.ViewChange(CameraPerspective::Orthographic);
                 break;
         }
     }
@@ -647,7 +647,7 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
         movement.Add(0, 1, 0);
     }
 
-    
+ 
 
     double mouseX = 0;
     double mouseY = 0;
@@ -1936,7 +1936,7 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
             CameraDataGet(shaderID);
             CameraDataUpdate(MainCamera);
 
-            OpenGL::ShaderSetUniformMatrix4x4(_matrixViewID, viewTri.MatrixData);
+            OpenGL::ShaderSetUniformMatrix4x4(_matrixViewID, viewTri.Data);
             //OpenGL::Use(*DefaultSkyBox);  
 
             const OpenGLID vao = renderable.ID;
@@ -2019,7 +2019,7 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
                 OpenGL::UseShaderProgram(shaderID);
                 CameraDataGet(shaderID);
                 CameraDataUpdate(MainCamera);
-                OpenGL::ShaderSetUniformMatrix4x4(_matrixModelID, renderable.MatrixData);    
+                OpenGL::ShaderSetUniformMatrix4x4(_matrixModelID, renderable.Data);    
 
                 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID); // IBO
 

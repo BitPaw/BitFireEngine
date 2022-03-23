@@ -2,11 +2,10 @@
 
 #include "CameraPerspective.hpp"
 
-#include <Math/Geometry/Vector3.hpp>
-#include <Math/Geometry/Matrix4x4.hpp>
-#include <Math/Physic/PhysicsDynamic.hpp>
-
-#include "../System/RefreshRateMode.h"
+#include "../Math/Geometry/Vector3.hpp"
+#include "../Math/Geometry/Matrix4x4.hpp"
+#include "../Math/Physic/PhysicsDynamic.hpp"
+#include "../Video/RefreshRateMode.h"
 
 namespace BF
 {
@@ -44,7 +43,10 @@ namespace BF
 		void Update(float deltaTime);
 		float AspectRatioGet();
 		void AspectRatioSet(float width, float height);
-		void PerspectiveChange(CameraPerspective cmeraPerspective);
+
+		void ViewChange(const CameraPerspective cameraPerspective);
+		void ViewChangeOrthographic(const float width, const float height, const float nearPlane, const float farPlane);
+		void ViewChangePerspective(const float fieldOfView, const float aspectRatio, const float near, const float far);
 
 		void Follow(float deltaTime);
 	};

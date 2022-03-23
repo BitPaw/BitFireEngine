@@ -1,18 +1,16 @@
 //-----------------------------------------------------------------------------
-//#include "../../ResourceSystem/Source/Network/Client.h"
+#include <stdio.h>
+#include <signal.h>
 
-#include "../../BitFireEngine/Source/System/BitFireEngine.h"
-#include "../../SystemResource/Source/OSDefine.h"
+#include <OSDefine.h>
+#include <Async/Thread.h>
+#include <Window/Window.h>
+
+#include <System/BitFireEngine.h>
 
 #include "CleavedGameSystem.h"
 
-#include <stdio.h>
-#include <signal.h>
-#include <Async/Thread.h>
-#include <Window/Window.h>
 //-----------------------------------------------------------------------------
-
-
 
 void OnMouseButtonEvent(const BF::MouseButton mouseButton, const BF::ButtonState buttonState)
 {

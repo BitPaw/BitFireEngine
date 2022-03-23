@@ -105,9 +105,6 @@
     <ClCompile Include="Source\Dialog\Dialog.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Camera\Camera.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Shader\Shader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -230,9 +227,6 @@
     <ClInclude Include="Source\System\OpenGL.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\System\RefreshRateMode.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\System\RenderMode.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -261,12 +255,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Dialog\Dialog.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Camera\Camera.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Camera\CameraPerspective.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Shader\Shader.h">

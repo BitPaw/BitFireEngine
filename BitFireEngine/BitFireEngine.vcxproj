@@ -36,7 +36,6 @@
     <ClCompile Include="Source\Resource\ResourceAsyncLoadInfo.cpp" />
     <ClCompile Include="Source\Resource\ImageType.cpp" />
     <ClCompile Include="Source\Resource\Renderable.cpp" />
-    <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\Dialog\Dialog.cpp" />
     <ClCompile Include="Source\Entity\Sign.cpp" />
     <ClCompile Include="Source\Entity\Entity.cpp" />
@@ -85,8 +84,6 @@
     <ClInclude Include="Source\Resource\ImageType.h" />
     <ClInclude Include="Source\Resource\ImageWrap.h" />
     <ClInclude Include="Source\Resource\Renderable.h" />
-    <ClInclude Include="Source\Camera\Camera.h" />
-    <ClInclude Include="Source\Camera\CameraPerspective.hpp" />
     <ClInclude Include="Source\Dialog\Dialog.h" />
     <ClInclude Include="Source\Entity\Sign.h" />
     <ClInclude Include="Source\Entity\Entity.h" />
@@ -116,7 +113,6 @@
     <ClInclude Include="Source\System\IBitFireEngineListener.hpp" />
     <ClInclude Include="Source\System\IBitFireEngineSoundListener.hpp" />
     <ClInclude Include="Source\System\OpenGL.h" />
-    <ClInclude Include="Source\System\RefreshRateMode.h" />
     <ClInclude Include="Source\System\RenderMode.h" />
     <ClInclude Include="Source\Sound\AudioConfig.h" />
     <ClInclude Include="Source\Sound\AudioSource.h" />
