@@ -294,6 +294,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Processor\Processor.cpp" />
     <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\ClipBoard\ClipBoardFormat.cpp" />
     <ClCompile Include="Source\ClipBoard\ClipBoard.cpp" />
@@ -500,6 +501,7 @@
     <ClCompile Include="Source\DataBase\SQLResult.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Processor\Processor.h" />
     <ClInclude Include="Source\Camera\Camera.h" />
     <ClInclude Include="Source\Camera\CameraPerspective.hpp" />
     <ClInclude Include="Source\ClipBoard\ClipBoardFormat.h" />

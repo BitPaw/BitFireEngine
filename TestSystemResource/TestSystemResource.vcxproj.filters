@@ -15,42 +15,42 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="TestSystemResource.cpp">
+    <ClCompile Include="Source\TestSystemResource.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
+    <ClCompile Include="Source\pch.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="TestExecute.cpp">
+    <ClCompile Include="Source\TestExecute.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="TestFont.cpp">
+    <ClCompile Include="Source\TestFont.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="TestImage.cpp">
+    <ClCompile Include="Source\TestImage.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="TestIO.cpp">
+    <ClCompile Include="Source\TestIO.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="TestLibrary.cpp">
+    <ClCompile Include="Source\TestLibrary.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="TestNetwork.cpp">
+    <ClCompile Include="Source\TestNetwork.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="TestQuadTree.cpp">
+    <ClCompile Include="Source\TestQuadTree.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="TestWindow.cpp">
+    <ClCompile Include="Source\TestWindow.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="TestDataBase.cpp">
+    <ClCompile Include="Source\TestDataBase.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h">
+    <ClInclude Include="Source\pch.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

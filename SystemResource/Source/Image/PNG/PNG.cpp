@@ -74,7 +74,7 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
             chunk.ChunkData = fileStream.Data + fileStream.DataCursorPosition;
 
             fileStream.Read(chunk.Lengh, Endian::Big);
-            fileStream.Read(chunk.ChunkTypeRaw, 4u);
+            fileStream.Read(chunk.ChunkTypeRaw.Data, 4u);
 
             chunk.Check();
 

@@ -1,64 +1,42 @@
 #include "PNGChunkType.h"
 
-BF::PNGChunkType BF::ConvertChunkType(unsigned char chunk[4])
+#define MakeInt(a, b, c, d) ((unsigned int)a << 24) | ((unsigned int)b << 16) | ((unsigned int)c << 8) | ((unsigned int)d)
+
+constexpr const unsigned int BF::PNGChunkTypeIDMake(const char a, const char b, const char c, const char d)
 {
-    unsigned char byteA = chunk[0];
-    unsigned char byteB = chunk[1];
-    unsigned char byteC = chunk[2];
-    unsigned char byteD = chunk[3];
+    PNGChunkTypeID chunkTypeID{ a, b, c, d };
 
-    switch (byteA)
-    {
-        case 'I':
-        {
-            if (byteB == 'H' && byteC == 'D' && byteD == 'R') return PNGChunkType::ImageHeader;
-            if (byteB == 'D' && byteC == 'A' && byteD == 'T') return PNGChunkType::ImageData;
-            if (byteB == 'E' && byteC == 'N' && byteD == 'D') return PNGChunkType::ImageEnd;
-            break;
-        }
-
-        case 'i':
-        {
-            if (byteB == 'C' && byteC == 'C' && byteD == 'P') return PNGChunkType::EmbeddedICCProfile; // iCCP
-            if (byteB == 'T' && byteC == 'X' && byteD == 't') return PNGChunkType::Transparency; // iTXt
-            break;
-        }
-
-        case 's':
-        {
-            if (byteB == 'B' && byteC == 'I' && byteD == 'T') return PNGChunkType::SignificantBits; // sBIT
-            if (byteB == 'R' && byteC == 'G' && byteD == 'B') return PNGChunkType::StandardRGBColorSpace; // sRGB
-            break;
-        }
-
-        case 't':
-        {
-            if (byteB == 'R' && byteC == 'N' && byteD == 'S') return PNGChunkType::Transparency; // tRNS
-            if (byteB == 'E' && byteC == 'X' && byteD == 't') return PNGChunkType::Transparency; // tEXt
-            if (byteB == 'I' && byteC == 'M' && byteD == 'E') return PNGChunkType::LastModificationTime; // tIME
-            break;
-        }
-
-        default:
-        {
-            if (byteA == 'P' && byteB == 'L' && byteC == 'T' && byteD == 'E') return PNGChunkType::Palette;
-
-            if (byteA == 'c' && byteB == 'H' && byteC == 'R' && byteD == 'M') return PNGChunkType::PrimaryChromaticities; // cHRM
-            if (byteA == 'g' && byteB == 'A' && byteC == 'M' && byteD == 'A') return PNGChunkType::ImageGamma; // gAMA
-            if (byteA == 'b' && byteB == 'K' && byteC == 'G' && byteD == 'D') return PNGChunkType::BackgroundColor; // bKGD
-            if (byteA == 'h' && byteB == 'I' && byteC == 'S' && byteD == 'T') return PNGChunkType::PaletteHistogram; // hIST   
-            if (byteA == 'p' && byteB == 'H' && byteC == 'Y' && byteD == 's') return PNGChunkType::PhysicalPixelDimensions; //pHYs
-            if (byteA == 's' && byteB == 'P' && byteC == 'L' && byteD == 'T') return PNGChunkType::Transparency; // sPLT    
-            if (byteA == 'z' && byteB == 'T' && byteC == 'X' && byteD == 't') return PNGChunkType::Transparency; // zTXt
-
-            break;
-        }
-    }
-
-    return PNGChunkType::Invalid;
+    return chunkTypeID.Value;
 }
 
-void BF::ConvertChunkType(unsigned char chunk[4], PNGChunkType pngchunkType)
+BF::PNGChunkType BF::ConvertChunkType(const PNGChunkTypeID chunkTypeID)
+{
+    switch (chunkTypeID.Value)
+    {
+        case MakeInt('I', 'H', 'D', 'R'): return PNGChunkType::ImageHeader; // IHDR
+        case MakeInt('I', 'D', 'A', 'T'): return PNGChunkType::ImageData; // PLTE
+        case MakeInt('I', 'E', 'N', 'D'): return PNGChunkType::ImageEnd; // IEND
+        case MakeInt('i', 'C', 'C', 'P'): return PNGChunkType::EmbeddedICCProfile; // iCCP
+        case MakeInt('i', 'T', 'X', 't'): return PNGChunkType::Transparency; // tRNS
+        case MakeInt('s', 'B', 'I', 'T'): return PNGChunkType::SignificantBits; // sBIT
+        case MakeInt('s', 'R', 'G', 'B'): return PNGChunkType::StandardRGBColorSpace; // sRGB
+        case MakeInt('t', 'R', 'N', 'S'): return PNGChunkType::Transparency; // tRNS
+        case MakeInt('t', 'E', 'X', 't'): return PNGChunkType::TextualData; // tEXt
+        case MakeInt('t', 'I', 'M', 'E'): return PNGChunkType::LastModificationTime; // tIME
+        case MakeInt('P', 'L', 'T', 'E'): return PNGChunkType::Palette; // PLTE
+        case MakeInt('c', 'H', 'R', 'M'): return PNGChunkType::PrimaryChromaticities; // cHRM
+        case MakeInt('g', 'A', 'M', 'A'): return PNGChunkType::ImageGamma;// gAMA
+        case MakeInt('b', 'K', 'G', 'D'): return PNGChunkType::BackgroundColor;// bKGD
+        case MakeInt('h', 'I', 'S', 'T'): return PNGChunkType::PaletteHistogram;// hIST   
+        case MakeInt('p', 'H', 'Y', 's'): return PNGChunkType::PhysicalPixelDimensions; //pHYs
+        case MakeInt('s', 'P', 'L', 'T'): return PNGChunkType::SuggestedPalette;// sPLT   
+        case MakeInt('z', 'T', 'X', 't'): return PNGChunkType::CompressedTextualData;// zTXt
+
+        default: return PNGChunkType::Invalid;
+    }
+}
+
+void BF::ConvertChunkType(PNGChunkTypeID& chunkTypeID, const PNGChunkType pngchunkType)
 {
     // TODO: implement
 }

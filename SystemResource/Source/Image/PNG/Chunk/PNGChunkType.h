@@ -2,6 +2,23 @@
 
 namespace BF
 {
+    union PNGChunkTypeID
+    {
+        public:
+        struct
+        {
+            public:
+            char A;
+            char B;
+            char C;
+            char D;
+        };
+
+        char Data[4];
+        
+        unsigned int Value;
+    };
+
     // Chunk Specifications
     enum class PNGChunkType
     {
@@ -91,8 +108,10 @@ namespace BF
         Custom
     };
 
-    PNGChunkType ConvertChunkType(unsigned char chunk[4]);
-    void ConvertChunkType(unsigned char chunk[4], PNGChunkType pngchunkType);
+    constexpr const unsigned int PNGChunkTypeIDMake(const char a, const char b, const char c, const char d);
+    
+    PNGChunkType ConvertChunkType(const PNGChunkTypeID chunkTypeID);
+    void ConvertChunkType(PNGChunkTypeID& chunkTypeID, const PNGChunkType pngchunkType);
 
     const char* ChunkTypeToString(PNGChunkType pngchunkType);
 }

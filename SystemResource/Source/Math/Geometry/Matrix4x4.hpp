@@ -551,16 +551,17 @@ namespace BF
 
 		void Perspective(const NumberType fielfOfView, const NumberType aspectRatio, const NumberType near, const NumberType far)
 		{
-			NumberType fielfOfViewRadians = Math::DegreeToRadians(fielfOfView);
-			float tanHalfFovy = Math::Tangens(fielfOfViewRadians / 2.0f);
+			const NumberType difference = far - near;
+			const NumberType fielfOfViewRadians = Math::DegreeToRadians(fielfOfView);
+			const float tanHalfFovy = Math::Tangens(fielfOfViewRadians / 2.0f);
 
-			memset(Data, 0, 16 * sizeof(float));
+			Reset();		
 
 			Data[ScaleX] = (1) / (aspectRatio * tanHalfFovy);
 			Data[ScaleY] = (1) / (tanHalfFovy);
-			Data[ScaleZ] = -(far + near) / (far - near);
+			Data[ScaleZ] = -(far + near) / difference;
 			Data[11] = -(1);
-			Data[TransformZ] = -((2) * far * near) / (far - near);
+			Data[TransformZ] = -((2) * far * near) / difference;
 			
 		}
 		Vector3<NumberType> ScaleXYZ()
