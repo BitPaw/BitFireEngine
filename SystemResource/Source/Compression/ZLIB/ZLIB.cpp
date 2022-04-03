@@ -2,7 +2,7 @@
 
 #include "ZLIBHeader.h"
 
-#include "../../Algorithm/Adler32.h"
+#include <Algorithm/ADLER/Adler32.h>
 
 #include <stdlib.h>
 

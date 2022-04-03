@@ -1,6 +1,7 @@
 #include "Program.h"
-#include "../OSDefine.h"
-#include "../ErrorCode.h"
+
+#include <OS/OSDefine.h>
+#include <ErrorCode.h>
 
 #include <stdio.h>
 #include <thread>

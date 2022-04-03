@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../OSDefine.h"
-#include "../ErrorCode.h"
+#include <OS/OSDefine.h>
+#include <ErrorCode.h>
 
 #ifdef defined(OSUnix)
 #include <sys/types.h>

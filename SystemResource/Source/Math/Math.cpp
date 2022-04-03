@@ -7,7 +7,7 @@
 
 #include "Interpolate.h"
 
-#include "../OSDefine.h"
+#include <OS/OSDefine.h>
 
 
 bool BF::Math::_timerSet = false;

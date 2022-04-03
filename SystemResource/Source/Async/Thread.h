@@ -1,7 +1,7 @@
 #ifndef ThreadInclude
 #define ThreadInclude
 
-#include "../OSDefine.h"
+#include <OS/OSDefine.h>
 
 #ifdef OSUnix
 #include <pthread.h>

@@ -7,9 +7,10 @@
 
 #include "IFile.h"
 #include "FileCachingMode.h"
-#include "../OSDefine.h"
-#include "../File/FileActionResult.hpp"
-#include "../ErrorCode.h"
+
+#include <ErrorCode.h>
+#include <OS/OSDefine.h>
+#include <File/FileActionResult.hpp>
 
 #define FileLineBufferSize 2048
 

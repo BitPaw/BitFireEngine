@@ -1,7 +1,7 @@
 #include "Processor.h"
 
-#include "../OSDefine.h"
-#include "../File/Text.h"
+#include <OS/OSDefine.h>
+#include <File/Text.h>
 
 #if defined(OSUnix)
 #include <cpuid.h>

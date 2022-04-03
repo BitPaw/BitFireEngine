@@ -1,6 +1,6 @@
 #include "Memory.h"
 
-#include "../OSDefine.h"
+#include <OS/OSDefine.h>
 
 #if defined(OSUnix)
 #elif defined(WindowsAtleastXP)

@@ -1,6 +1,6 @@
 #include "OpenFileDialog.h"
 
-#include "../OSDefine.h"
+#include <OS/OSDefine.h>
 
 #include <stdio.h>
 

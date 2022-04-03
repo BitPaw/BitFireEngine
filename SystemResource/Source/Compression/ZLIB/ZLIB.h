@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ZLIBHeader.h"
-#include "../../Algorithm/Adler32.h"
-#include "../../Image/PNG/Chunk/PNGInterlaceMethod.h"
+#include <Algorithm/ADLER/Adler32.h>
+#include <Image/PNG/Chunk/PNGInterlaceMethod.h>
 
 namespace BF
 {

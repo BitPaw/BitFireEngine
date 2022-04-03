@@ -3,13 +3,13 @@
 #include "PNGColorCompressor.h"
 #include "Chunk/PNGChunk.h"
 
-#include "../../File/FileStream.h"
-#include "../../Compression/ZLIB/ZLIBHeader.h"
-#include "../../Compression/ADAM7/ADAM7.h"
-#include "../../Compression/ZLIB/ZLIB.h"
-#include "../../Compression/DEFLATE/DeflateBlock.h"
-#include "../../Container/BitStreamHusk.h"
-#include "../../Algorithm/CRC32.h"
+#include <File/FileStream.h>
+#include <Compression/ZLIB/ZLIBHeader.h>
+#include <Compression/ADAM7/ADAM7.h>
+#include <Compression/ZLIB/ZLIB.h>
+#include <Compression/DEFLATE/DeflateBlock.h>
+#include <Container/BitStreamHusk.h>
+#include <Algorithm/CRC32/CRC32.h>
 
 #define PNGHeaderSequenz { 0x89, 'P', 'N', 'G', '\r', '\n', 0x1A, '\n' }
 #define PNGDebugInfo false

@@ -11,7 +11,7 @@
 		#define OSWindows
 		#include <SdkDdkVer.h>
 
-		typedef struct IUnknown IUnknown;
+		
 
 		#define Version_Windows WINVER
 
@@ -45,6 +45,7 @@
 	
 		#if Version_Windows == Version_Windows_XP
 			#define OSWindowsXP
+			typedef struct IUnknown IUnknown;
 		#elif Version_Windows == Version_Windows_7
 			#define OSWindows7
 		#elif Version_Windows == Version_Windows_10
@@ -56,5 +57,12 @@
 #ifndef OSUnix
 	#if defined(linux) || defined(__APPLE__)
 		#define OSUnix
+
+		#define BYTE unsigned char
+		#define CHAR char
+		#define INT int
+		#define UINT unsigned int
+		#define FLOAT float
+		#define DOUBLE double
 	#endif
 #endif
