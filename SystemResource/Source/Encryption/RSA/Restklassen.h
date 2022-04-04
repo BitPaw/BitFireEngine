@@ -5,7 +5,7 @@ class Restklasse
 	private:
 	int** restklasse;
 	public:
-	const char* Operation;
+	int(*operation)(int, int);
 	bool zyklisch;
 	bool hat_generator;
 	bool hat_neutralElement;
@@ -20,7 +20,7 @@ class Restklasse
 	int neutralElement();
 	int inverse(int number);
 	void print();
-	Restklasse(int mod, char op);
+	Restklasse(int mod, int(*function)(int, int));
 	Restklasse();
 	static unsigned int chineseRemainder(unsigned int* remainderset, unsigned int* moduloset);
 };

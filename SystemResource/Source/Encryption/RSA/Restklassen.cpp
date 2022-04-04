@@ -4,133 +4,7 @@
 #include <math.h>
 #include <map>
 
-void Restklasse::Restring_plus(int mod)
-{
-    int** rest = new int* [mod + 1];
-    for (int i = 0; i < mod + 1; i++)
-    {
-        rest[i] = new int[mod + 1];
-    }
-    for (int x = 0; x <= mod; x++)
-    {
-        for (int y = 0; y <= mod; y++)
-        {
-            if (x == 0 && y == 0)
-            {
-                rest[x][y] = mod;
-            }
-            else if (x == 0)
-            {
-                rest[x][y] = y - 1;
-            }
-            else if (y == 0)
-            {
-                rest[x][y] = x - 1;
-            }
-            else
-            {
-                rest[x][y] = ((x - 1) + (y - 1)) % mod;
-            }
-        }
-    }
-    restklasse = rest;
-}
 
-void Restklasse::Restring_minus(int mod)
-{
-    int** rest = new int* [mod + 1];
-    for (int i = 0; i < mod + 1; i++)
-    {
-        rest[i] = new int[mod + 1];
-    }
-    for (int x = 0; x <= mod; x++)
-    {
-        for (int y = 0; y <= mod; y++)
-        {
-            if (x == 0 && y == 0)
-            {
-                rest[x][y] = mod;
-            }
-            else if (x == 0)
-            {
-                rest[x][y] = y - 1;
-            }
-            else if (y == 0)
-            {
-                rest[x][y] = x - 1;
-            }
-            else
-            {
-                rest[x][y] = -1 * ((-1 * ((x - 1) - (y - 1))) % mod);
-            }
-        }
-    }
-    restklasse = rest;
-}
-
-void Restklasse::Restring_mal(int mod)
-{
-    int** rest = new int* [mod + 1];
-    for (int i = 0; i < mod + 1; i++)
-    {
-        rest[i] = new int[mod + 1];
-    }
-    for (int x = 0; x <= mod; x++)
-    {
-        for (int y = 0; y <= mod; y++)
-        {
-            if (x == 0 && y == 0)
-            {
-                rest[x][y] = mod;
-            }
-            else if (x == 0)
-            {
-                rest[x][y] = y - 1;
-            }
-            else if (y == 0)
-            {
-                rest[x][y] = x - 1;
-            }
-            else
-            {
-                rest[x][y] = ((x - 1) * (y - 1)) % mod;
-            }
-        }
-    }
-    restklasse = rest;
-}
-
-void Restklasse::Restring_durch(int mod)
-{
-    int** rest = new int* [mod + 1];
-    for (int i = 0; i < mod + 1; i++)
-    {
-        rest[i] = new int[mod + 1];
-    }
-    for (int x = 0; x <= mod; x++)
-    {
-        for (int y = 0; y <= mod; y++)
-        {
-            if (x == 0 && y == 0)
-            {
-                rest[x][y] = mod;
-            }
-            else if (x == 0)
-            {
-                rest[x][y] = y;
-            }
-            else if (y == 0)
-            {
-                rest[x][y] = x;
-            }
-            else
-            {
-                rest[x][y] = ((x) / (y)) % mod;
-            }
-        }
-    }
-    restklasse = rest;
-}
 
 int Restklasse::set_Generator(int mod)
 {
@@ -245,53 +119,57 @@ int Restklasse::inverse(int number)
 }
 void Restklasse::print()
 {
+    if (restklasse == nullptr)
+    {
+        printf("nicht Initialisierte Restklasse");
+        return;
+    }
     for (int x = 0; x <= restklasse[0][0]; x++)
     {
         for (int y = 0; y <= restklasse[0][0]; y++)
         {
-            if (x == 0 && y == 0)
+            /*if (x == 0 && y == 0)
             {
-                printf(" | %s | ", Operation);
+                printf(" | %s | ", operation);
             }
             else
-            {
-                printf(" | %d | ", restklasse[x][y]);
-            }
-
+            {*/
+            printf(" | %d | ", restklasse[x][y]);
+            //}
         }
         printf("\n");
     }
     printf("der Zahlenraum ist %d\n", restklasse[0][0]);
 }
-Restklasse::Restklasse(int mod, char op)
+Restklasse::Restklasse(int mod, int(*function)(int, int))
 {
-    switch (op)
-    {
-        case '+':
-            Restring_plus(mod);
-            Operation = "Plus";
-            break;
-        case '-':
-            Restring_minus(mod);
-            Operation = "Minus";
-            break;
-        case '*':
-            Restring_mal(mod);
-            Operation = "Mal";
-            break;
-        case '/':
-            Restring_durch(mod);
-            Operation = "Durch";
-            break;
-        default:
-            printf(" Nutze Opperator +,-.* oder / \n");
-            break;
+    int** rest = new int* [mod + 1];
+    for (int i = 0; i < mod + 1; i++) {
+        rest[i] = new int[mod + 1];
     }
+    for (int x = 0; x <= mod; x++) {
+        for (int y = 0; y <= mod; y++) {
+            if (x == 0 && y == 0) {
+                rest[x][y] = mod;
+            }
+            else if (x == 0) {
+                rest[x][y] = y - 1;
+            }
+            else if (y == 0) {
+                rest[x][y] = x - 1;
+            }
+            else {
+                rest[x][y] = function((x - 1), (y - 1)) % mod;
+            }
+        }
+    }
+    restklasse = rest;
     generator = set_Generator(mod);
     hat_generator = generator >= 0 ? true : false;
     neutralelement = neutralElement();
     hat_neutralElement = neutralelement >= 0 ? true : false;
     zyklisch = Zyklisch();
+    operation = function;
 }
 
 Restklasse::Restklasse()
