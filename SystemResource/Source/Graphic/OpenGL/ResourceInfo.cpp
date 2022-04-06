@@ -1,6 +1,6 @@
 #include "ResourceInfo.h"
 
-#include "File/Text.h"
+#include <Text/Text.h>
 
 BF::ResourceInfo::ResourceInfo()
 {

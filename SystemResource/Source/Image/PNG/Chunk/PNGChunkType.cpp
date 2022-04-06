@@ -1,15 +1,7 @@
 #include "PNGChunkType.h"
 
-#define MakeInt(a, b, c, d) ((unsigned int)a << 24) | ((unsigned int)b << 16) | ((unsigned int)c << 8) | ((unsigned int)d)
 
-constexpr const unsigned int BF::PNGChunkTypeIDMake(const char a, const char b, const char c, const char d)
-{
-    PNGChunkTypeID chunkTypeID{ a, b, c, d };
-
-    return chunkTypeID.Value;
-}
-
-BF::PNGChunkType BF::ConvertChunkType(const PNGChunkTypeID chunkTypeID)
+BF::PNGChunkType BF::ConvertChunkType(const Cluster4Byte chunkTypeID)
 {
     switch (chunkTypeID.Value)
     {
@@ -36,7 +28,7 @@ BF::PNGChunkType BF::ConvertChunkType(const PNGChunkTypeID chunkTypeID)
     }
 }
 
-void BF::ConvertChunkType(PNGChunkTypeID& chunkTypeID, const PNGChunkType pngchunkType)
+void BF::ConvertChunkType(Cluster4Byte& chunkTypeID, const PNGChunkType pngchunkType)
 {
     // TODO: implement
 }

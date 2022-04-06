@@ -9,8 +9,8 @@
 #include "STL/STL.h"
 #include "VRML/VRML.h"
 
-#include "../File/File.h"
-#include "../File/Text.h"
+#include <File/File.h>
+#include <Text/Text.h>
 
 BF::Model::Model()
 {

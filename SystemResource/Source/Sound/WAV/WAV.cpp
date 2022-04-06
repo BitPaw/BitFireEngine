@@ -2,6 +2,8 @@
 #include "../../File/FileStream.h"
 #include <cstring>
 
+#include <File/Cluster4Byte.h>
+
 BF::WAV::WAV()
 {
 	SoundDataSize = 0;
@@ -16,33 +18,33 @@ BF::WAV::~WAV()
 BF::FileActionResult BF::WAV::Load(const wchar_t* filePath)
 {
 	FileStream file;
-	FileActionResult FileActionResult = file.ReadFromDisk(filePath);
 	Endian endian;
 
-	if (FileActionResult != FileActionResult::Successful)
+	// Load file
 	{
-		return FileActionResult;
+		const FileActionResult FileActionResult = file.ReadFromDisk(filePath);
+		const bool successful = FileActionResult == FileActionResult::Successful;
+
+		if (!successful)
+		{
+			return FileActionResult;
+		}
 	}
 
-	file.Read(RIFFChunk.ChunkID, 4u);
+	file.Read(RIFFChunk.ChunkID.Data, 4u);
 
-	bool useBigEndian = memcmp("RIFX", RIFFChunk.ChunkID, 4u) == 0;
-	bool useLittleEndian = memcmp("RIFF", RIFFChunk.ChunkID, 4u) == 0;
-	bool isValidEndian = useLittleEndian != useBigEndian;
-
-	if (!isValidEndian)
+	switch (RIFFChunk.ChunkID.Value) // Detect Endiantype
 	{
-		return FileActionResult::FormatNotSupported;
-	}
+		case MakeInt('R', 'I', 'F', 'X'):
+			endian = Endian::Big;
+			break;
 
-	if (useLittleEndian)
-	{
-		endian = Endian::Little;
-	}
+		case MakeInt('R', 'I', 'F', 'F'):
+			endian = Endian::Little;
+			break;
 
-	if (useBigEndian)
-	{
-		endian = Endian::Big;
+		default:
+			return FileActionResult::FormatNotSupported;
 	}
 
 	file.Read(RIFFChunk.ChunkSize, endian);
@@ -61,27 +63,26 @@ BF::FileActionResult BF::WAV::Load(const wchar_t* filePath)
 
 
 	//---------------------------------------	
-	char dataText[4];
-
-	file.Read(dataText, 4u);
-
-	bool isRIFFListChunk = memcmp("LIST", dataText, 4) == 0;
-
-	if (isRIFFListChunk)
 	{
-		file.DataCursorPosition += 30u;
-	}	
-	//---------------------------------------
-	char dataTagText[4];
+		const unsigned int value = MakeInt('L', 'I', 'S', 'T');
+		const bool isRIFFListChunk = file.ReadAndCompare(value);
 
-	file.Read(dataTagText, 4u);
-
-	bool validDataChunk = memcmp("data", dataTagText, 4u) == 0;
-
-	if (!validDataChunk)
-	{
-		return FileActionResult::FormatNotAsExpected;
+		if (isRIFFListChunk)
+		{
+			file.DataCursorPosition += 30u;
+		}
 	}
+	//---------------------------------------
+	{
+		const unsigned int value = MakeInt('d', 'a', 't', 'a');
+		const bool validDataChunk = file.ReadAndCompare(value);	
+
+		if (!validDataChunk)
+		{
+			return FileActionResult::FormatNotAsExpected;
+		}
+	}
+	
 
 	file.Read(SoundDataSize, endian);
 

@@ -2,8 +2,8 @@
 
 namespace BF
 {
-	class Vulcan
+	class QOI
 	{
-
+		
 	};
 }

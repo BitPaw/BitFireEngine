@@ -2,7 +2,7 @@
 
 #include <cwchar>
 
-#include "ParsingToken.h"
+#include <File/ParsingToken.h>
 
 namespace BF
 {

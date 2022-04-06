@@ -19,7 +19,7 @@ bool BF::OpenFileDialog::Open(char* filePathOutput)
 
     if (succesful)
     {
-        sprintf(filePathOutput, "%ws", pathW);
+        sprintf(filePathOutput, "%ls", pathW);
     }
 
     return succesful;

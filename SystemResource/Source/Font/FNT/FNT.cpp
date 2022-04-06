@@ -4,7 +4,7 @@
 
 #include "../../File/FileStream.h"
 #include "../../File/File.h"
-#include "../../File/Text.h"
+#include <Text/Text.h>
 #include "../../File/ParsingToken.h"
 
 

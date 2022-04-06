@@ -1,3 +1,15 @@
+
+#include <stdint.h>
+
+
+#if UINTPTR_MAX == 0xffffffff
+#define OS32Bit
+#elif (UINTPTR_MAX == 0xffffffffffffffff)
+#define OS64Bit
+#else
+#error Invalid format
+#endif
+
 #ifndef OSWindows	
 	#if defined(_WIN32)
 		#define System32Bit

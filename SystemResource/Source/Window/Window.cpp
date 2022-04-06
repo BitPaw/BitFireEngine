@@ -12,7 +12,7 @@
 #include <Dbt.h>
 #endif
 
-#include "../File/Text.h"
+#include <Text/Text.h>
 #include "../Controller/ControllerData.h"
 #include "../Controller/ControllerSystem.h"
 

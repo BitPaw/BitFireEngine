@@ -2,7 +2,7 @@
 
 namespace BF
 {
-	class Vulcan
+	class SVG
 	{
 
 	};

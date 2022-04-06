@@ -8,35 +8,38 @@
 
 // OpenGL - Graphics
 #include <GL/glew.h>
+#include <Graphic/OpenGL/OpenGL.h>
+
 
 // Resource System
-#include <Math/Geometry/Matrix4x4.hpp>
 #include <Time/StopWatch.h>
 #include <Async/Thread.h>
 #include <Async/AsyncLock.h>
+#include <Camera/Camera.h>
 #include <Container/LinkedList.hpp>
 #include <Font/Font.h>
+#include <Math/Geometry/Matrix4x4.hpp>
 #include <Sound/Sound.h>
+#include <Shader/GLSL/ShaderType.h>
 #include <Model/Model.h>
-#include <Camera/Camera.h>
+#include <Sound/AudioClip.h>
+#include <Sound/AudioSource.h>
 
 //#include "Window/Window.h"
 
 #include "../Resource/SkyBox.h"
 #include "../Player/Player.h"
-#include "../Sound/AudioClip.h"
-#include "../Sound/AudioSource.h"
+
 #include "../Resource/Sprite.h"
 
-#include "../Physic/Collider.h"
-#include "../Shader/Shader.h"
-#include "../Shader/ShaderType.h"
-#include "../Shader/ShaderProgram.h"
 
 #include <Window/Window.h>
-#include "../Level/Level.h"
 
-#define OpenGLID unsigned int
+#include "../Level/Level.h"
+#include "../Physic/Collider.h"
+
+
+
 
 namespace BF
 {

@@ -1,24 +1,9 @@
 #pragma once
 
+#include <File/Cluster4Byte.h>
+
 namespace BF
 {
-    union PNGChunkTypeID
-    {
-        public:
-        struct
-        {
-            public:
-            char A;
-            char B;
-            char C;
-            char D;
-        };
-
-        char Data[4];
-        
-        unsigned int Value;
-    };
-
     // Chunk Specifications
     enum class PNGChunkType
     {
@@ -107,11 +92,9 @@ namespace BF
         // Unkown type, placegolder for future types or a midified PNG standard
         Custom
     };
-
-    constexpr const unsigned int PNGChunkTypeIDMake(const char a, const char b, const char c, const char d);
     
-    PNGChunkType ConvertChunkType(const PNGChunkTypeID chunkTypeID);
-    void ConvertChunkType(PNGChunkTypeID& chunkTypeID, const PNGChunkType pngchunkType);
+    PNGChunkType ConvertChunkType(const Cluster4Byte cluster4Byte);
+    void ConvertChunkType(Cluster4Byte& cluster4Byte, const PNGChunkType pngchunkType);
 
     const char* ChunkTypeToString(PNGChunkType pngchunkType);
 }

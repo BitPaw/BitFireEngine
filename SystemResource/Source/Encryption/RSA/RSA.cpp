@@ -2,7 +2,7 @@
 #include <math.h>
 #include <iostream>
 #include "Euklid.h"
-#include "../../File/Text.h"
+#include <Text/Text.h>
 
 RSA::RSA(int p, int q, int e)
 {

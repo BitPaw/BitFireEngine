@@ -294,6 +294,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\File\Cluster4Byte.cpp" />
+    <ClCompile Include="Source\Graphic\OpenGL\Renderable.cpp" />
+    <ClCompile Include="Source\Graphic\OpenGL\RenderableChunk.cpp" />
+    <ClCompile Include="Source\Graphic\OpenGL\RenderableSegment.cpp" />
+    <ClCompile Include="Source\Graphic\OpenGL\Resource.cpp" />
+    <ClCompile Include="Source\Graphic\OpenGL\ResourceAsyncLoadInfo.cpp" />
+    <ClCompile Include="Source\Graphic\OpenGL\ResourceInfo.cpp" />
+    <ClCompile Include="Source\Graphic\OpenGL\SkyBox.cpp" />
+    <ClCompile Include="Source\Graphic\OpenGL\Sprite.cpp" />
+    <ClCompile Include="Source\Image\QOI\QOI.cpp" />
+    <ClCompile Include="Source\Text\Text.cpp" />
+    <ClCompile Include="Source\Graphic\OpenGL\ImageType.cpp" />
+    <ClCompile Include="Source\Graphic\OpenGL\Texture.cpp" />
+    <ClCompile Include="Source\Graphic\OpenGL\TextureCube.cpp" />
+    <ClCompile Include="Source\Shader\Shader.cpp" />
+    <ClCompile Include="Source\Shader\ShaderProgram.cpp" />
+    <ClCompile Include="Source\Shader\GLSL\ShaderType.cpp" />
     <ClCompile Include="Source\Hardware\MainBoard\MainBoard.cpp" />
     <ClCompile Include="Source\OS\Windows\Registry.cpp" />
     <ClCompile Include="Source\Graphic\DirectX\DirectX.cpp" />
@@ -362,6 +379,9 @@
     <ClCompile Include="Source\Image\PNG\Chunk\PNGColorType.cpp" />
     <ClCompile Include="Source\Model\Model.cpp" />
     <ClCompile Include="Source\Network\SocketActionResult.cpp" />
+    <ClCompile Include="Source\Sound\AudioClip.cpp" />
+    <ClCompile Include="Source\Sound\AudioConfig.cpp" />
+    <ClCompile Include="Source\Sound\AudioSource.cpp" />
     <ClCompile Include="Source\Video\MP4\MP4.cpp" />
     <ClCompile Include="Source\Image\JPEG\JPEGScanSelector.cpp" />
     <ClCompile Include="Source\Image\JPEG\JPEGScanStart.cpp" />
@@ -506,8 +526,32 @@
     <ClCompile Include="Source\DataBase\SQLType.cpp" />
     <ClCompile Include="Source\DataBase\SQLResult.cpp" />
     <ClCompile Include="Source\Graphic\Vulcan\Vulcan.cpp" />
+    <ClCompile Include="Source\Image\SVG\SVG.cpp" />
+    <ClCompile Include="Source\Image\WEBP\WEBP.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\File\Cluster4Byte.h" />
+    <ClInclude Include="Source\Graphic\OpenGL\Renderable.h" />
+    <ClInclude Include="Source\Graphic\OpenGL\RenderableChunk.h" />
+    <ClInclude Include="Source\Graphic\OpenGL\RenderableSegment.h" />
+    <ClInclude Include="Source\Graphic\OpenGL\Resource.h" />
+    <ClInclude Include="Source\Graphic\OpenGL\ResourceAsyncLoadInfo.h" />
+    <ClInclude Include="Source\Graphic\OpenGL\ResourceInfo.h" />
+    <ClInclude Include="Source\Graphic\OpenGL\ResourceLoadMode.h" />
+    <ClInclude Include="Source\Graphic\OpenGL\ResourceType.hpp" />
+    <ClInclude Include="Source\Graphic\OpenGL\SkyBox.h" />
+    <ClInclude Include="Source\Graphic\OpenGL\Sprite.h" />
+    <ClInclude Include="Source\Image\QOI\QOI.h" />
+    <ClInclude Include="Source\Graphic\OpenGL\ImageFilter.h" />
+    <ClInclude Include="Source\Graphic\OpenGL\ImageLayout.h" />
+    <ClInclude Include="Source\Graphic\OpenGL\ImageType.h" />
+    <ClInclude Include="Source\Graphic\OpenGL\ImageWrap.h" />
+    <ClInclude Include="Source\Graphic\OpenGL\RenderMode.h" />
+    <ClInclude Include="Source\Graphic\OpenGL\Texture.h" />
+    <ClInclude Include="Source\Graphic\OpenGL\TextureCube.h" />
+    <ClInclude Include="Source\Shader\Shader.h" />
+    <ClInclude Include="Source\Shader\ShaderProgram.h" />
+    <ClInclude Include="Source\Shader\GLSL\ShaderType.h" />
     <ClInclude Include="Source\Hardware\MainBoard\MainBoard.h" />
     <ClInclude Include="Source\OS\Windows\Registry.h" />
     <ClInclude Include="Source\Graphic\DirectX\DirectX.h" />
@@ -540,7 +584,7 @@
     <ClInclude Include="Source\Encryption\RSA\Restklassen.h" />
     <ClInclude Include="Source\Encryption\RSA\RSA.h" />
     <ClInclude Include="Source\Encryption\RSA\RSAKeys.h" />
-    <ClInclude Include="Source\File\Text.h" />
+    <ClInclude Include="Source\Text\Text.h" />
     <ClInclude Include="Source\Image\PNG\Chunk\PNGTransparency.h" />
     <ClInclude Include="Source\Image\PNG\Chunk\PNGPhysicalPixelDimension.h" />
     <ClInclude Include="Source\Image\PNG\Chunk\PNGSuggestedPalette.h" />
@@ -593,7 +637,11 @@
     <ClInclude Include="Source\Network\IServerListener.h" />
     <ClInclude Include="Source\Network\ISocketListener.h" />
     <ClInclude Include="Source\Network\SocketActionResult.h" />
+    <ClInclude Include="Source\Sound\AudioClip.h" />
+    <ClInclude Include="Source\Sound\AudioConfig.h" />
+    <ClInclude Include="Source\Sound\AudioSource.h" />
     <ClInclude Include="Source\Sound\ISoundFormat.hpp" />
+    <ClInclude Include="Source\Sound\SoundPlayStyle.hpp" />
     <ClInclude Include="Source\Video\MP4\MP4.h" />
     <ClInclude Include="Source\IFileFormat.hpp" />
     <ClInclude Include="Source\Image\JPEG\JPEGScanSelector.h" />
@@ -788,6 +836,8 @@
     <ClInclude Include="Source\DataBase\SQLType.h" />
     <ClInclude Include="Source\DataBase\SQLResult.h" />
     <ClInclude Include="Source\Graphic\Vulcan\Vulcan.h" />
+    <ClInclude Include="Source\Image\SVG\SVG.h" />
+    <ClInclude Include="Source\Image\WEBP\WEBP.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

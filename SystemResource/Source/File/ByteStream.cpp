@@ -2,7 +2,7 @@
 #include <cassert>
 #include <cstring>
 
-#include "Text.h"
+#include <Text/Text.h>
 
 BF::ByteStream::ByteStream()
 {
@@ -222,6 +222,18 @@ bool BF::ByteStream::ReadAndCompare(void* value, size_t length)
 	DataCursorPosition += length;
 
 	return result;
+}
+
+bool BF::ByteStream::ReadAndCompare(const unsigned int value)
+{
+	const unsigned char* sourceAdress = Data + DataCursorPosition;
+	const unsigned int sourceValue = *((unsigned int*)sourceAdress);
+
+	const bool isEqual = sourceValue == value;
+
+	DataCursorPosition += 4;
+
+	return isEqual;
 }
 
 void BF::ByteStream::Write(bool value)

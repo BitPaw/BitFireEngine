@@ -2,7 +2,7 @@
 
 #include "../Container/AsciiString.h"
 
-#include "Text.h"
+#include <Text/Text.h>
 
 BF::FileActionResult BF::File::CheckFile()
 {

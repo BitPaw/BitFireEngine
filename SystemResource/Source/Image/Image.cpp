@@ -15,7 +15,7 @@
 #include <cstdio>
 #include <cwchar>
 
-#include "../File/Text.h"
+#include <Text/Text.h>
 
 BF::Vector4<unsigned char> BF::Image::GetPixel(unsigned int x, unsigned int y)
 {

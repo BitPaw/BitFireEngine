@@ -4,7 +4,7 @@
 #include "../../File/FileStream.h"
 #include "../../Container/AsciiString.h"
 
-#include "../../File/Text.h"
+#include <Text/Text.h>
 
 #include <cassert>
 #include <cstring>

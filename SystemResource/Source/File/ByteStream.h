@@ -3,6 +3,7 @@
 #include <cstddef>
 
 #include "Endian.h"
+#include "Cluster4Byte.h"
 
 #define Byte unsigned char
 
@@ -40,6 +41,7 @@ namespace BF
 		bool ReadAndCompare(const Byte* value, size_t length);
 		bool ReadAndCompare(const char* value, size_t length);
 		bool ReadAndCompare(void* value, size_t length);
+		bool ReadAndCompare(const unsigned int value);
 
 		void Write(bool value);
 		void Write(char value);

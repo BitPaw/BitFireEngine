@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ShaderType.h"
 
 #include <Resource.h>
 #include <File/FileActionResult.hpp>
 #include <cstdlib>
+#include <Shader/GLSL/ShaderType.h>
 
 namespace BF
 {

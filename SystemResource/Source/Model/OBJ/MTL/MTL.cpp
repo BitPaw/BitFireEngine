@@ -1,7 +1,7 @@
 #include "MTL.h"
 
 #include "../../../File/FileStream.h"
-#include "../../../File/Text.h"
+#include <Text/Text.h>
 #include "../../../Container/AsciiString.h"
 
 BF::MTL::MTL()

@@ -2,15 +2,18 @@
 
 #include <stdlib.h>
 
+
+
 #include <File/File.h>
 #include <Image/BMP/BMP.h>
 #include <Model/Model.h>
 #include <Time/StopWatch.h>
-#include <File/Text.h>
+#include <Text/Text.h>
 #include <Controller/ControllerSystem.h>
 #include <File/FileStream.h>
 
-#include "OpenGL.h"
+#include <Graphic/OpenGL/OpenGL.h>
+
 #include "Device/InputContainer.h"
 
 #include "../UI/UIText.h"
