@@ -48,7 +48,7 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
         //---<Check PNG Header>------------------------------------------------
         {
             const Byte pngFileHeader[8] = PNGHeaderSequenz;
-            bool isValidHeader = fileStream.ReadAndCompare(pngFileHeader, 8u);
+            const bool isValidHeader = fileStream.ReadAndCompare(pngFileHeader, 8u);
 
             if (!isValidHeader)
             {

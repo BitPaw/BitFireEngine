@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Resource/Sprite.h"
+#include <Graphic/OpenGL/Sprite.h>
 
 namespace BF
 {

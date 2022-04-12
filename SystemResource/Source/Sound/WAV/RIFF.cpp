@@ -2,10 +2,10 @@
 
 BF::RIFF::RIFF()
 {
-	ChunkID[0] = '?';
-	ChunkID[1] = '?';
-	ChunkID[2] = '?';
-	ChunkID[3] = '?';
+	ChunkID.A = '?';
+	ChunkID.B = '?';
+	ChunkID.C = '?';
+	ChunkID.D = '?';
 	ChunkSize = 0;
 	Format[0] = '?';
 	Format[1] = '?';

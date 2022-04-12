@@ -7,7 +7,7 @@
 #include <File/FileActionResult.hpp>
 #include <Camera/Camera.h>
 
-#include "../Shader/Shader.h"
+#include <Shader/Shader.h>
 #include "../Dialog/Dialog.h"
 
 

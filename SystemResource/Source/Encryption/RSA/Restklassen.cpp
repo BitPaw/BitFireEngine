@@ -195,7 +195,7 @@ Restklasse::Restklasse()
         }
     }
     restklasse[0][0] = 2;
-    Operation = "Initialisiert";
+   // Operation = "Initialisiert"; //TODO: ERROR: NOT FOUND
     generator = set_Generator(0);
     hat_generator = generator >= 0 ? true : false;
     neutralelement = neutralElement();

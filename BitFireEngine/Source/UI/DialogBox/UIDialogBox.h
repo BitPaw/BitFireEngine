@@ -5,7 +5,8 @@
 #include "../UIText.h"
 
 #include "../../Dialog/Dialog.h"
-#include "../../Resource/Sprite.h"
+
+#include <Graphic/OpenGL/Sprite.h>
 
 namespace BF
 {

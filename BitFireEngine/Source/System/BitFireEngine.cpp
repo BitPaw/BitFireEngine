@@ -17,7 +17,8 @@
 #include "Device/InputContainer.h"
 
 #include "../UI/UIText.h"
-#include "../Resource/ResourceType.hpp"
+#include <Graphic/OpenGL/ResourceType.hpp>
+//#include "../Resource/ResourceType.hpp"
 
 
 int _matrixModelID;

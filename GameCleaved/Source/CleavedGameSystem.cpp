@@ -10,12 +10,11 @@
 #include <Math/Geometry/Form/Cube.h>
 #include <Time/StopWatch.h>
 
-#include <Resource/SkyBox.h>
+#include <Graphic/OpenGL/SkyBox.h>
+#include <Graphic/OpenGL/Sprite.h>
 #include <UI/DialogBox/UIDialogBox.h>
 #include <UI/UIText.h>
 #include <Entity/Sign.h>
-#include <Resource/SkyBox.h>
-#include <Resource/Sprite.h>
 #include <Physic/GravityCube.h>
 #include <Shader/ShaderProgram.h>
 #include <Font/FNT/FNT.h>

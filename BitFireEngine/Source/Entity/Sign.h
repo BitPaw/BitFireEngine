@@ -1,8 +1,9 @@
 #pragma once
 
-#include "../Resource/Sprite.h"
 #include "../Physic/CollisionListener.h"
 #include "../Physic/Collider.h"
+
+#include <Graphic/OpenGL/Sprite.h>
 
 namespace BF
 {

@@ -27,16 +27,19 @@
 
 //#include "Window/Window.h"
 
-#include "../Resource/SkyBox.h"
+//#include "../Resource/SkyBox.h"
 #include "../Player/Player.h"
 
-#include "../Resource/Sprite.h"
+//#include "../Resource/Sprite.h"
 
 
 #include <Window/Window.h>
 
 #include "../Level/Level.h"
 #include "../Physic/Collider.h"
+#include <Graphic/OpenGL/Renderable.h>
+#include <Graphic/OpenGL/SkyBox.h>
+#include <Graphic/OpenGL/Sprite.h>
 
 
 
