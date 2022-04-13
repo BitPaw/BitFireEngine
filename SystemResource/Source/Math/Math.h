@@ -50,14 +50,30 @@ namespace BF
 		static double NewtonGravitation(double massA, double massB, double distance);
 
 		// Rounds x upward, returning the smallest integral value that is not less than x.
-		static int Ceiling(double value);
+		template<typename NumberType>
+		static inline constexpr int Ceiling(const NumberType value)
+		{
+			int integerValue = static_cast<int>(value);
+			const NumberType checkValue = static_cast<NumberType>(integerValue);
+			const bool isDifferentValue = checkValue != value;
+
+			integerValue += (1 * isDifferentValue);
+
+			return integerValue;
+		}
 
 		// Rounds x downward, returning the largest integral value that is not greater than x.
-		static int Floor(double value);
+		template<typename NumberType>
+		static inline constexpr int Floor(const NumberType value)
+		{
+			return (int)value;
+		}
 
-		static int Absolute(int value);
-		static float Absolute(float value);
-		static double Absolute(double value);
+		template<typename NumberType>
+		static inline constexpr NumberType Absolute(const NumberType value)
+		{
+			return value < 0 ? -value : value;
+		}
 
 		static unsigned int RandomeNumber();
 

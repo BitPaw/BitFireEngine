@@ -2,6 +2,7 @@
 
 namespace BF
 {
+	// Format header
 	struct FMT
 	{
 		public:

@@ -1,24 +1,14 @@
 #pragma once
 
+#include <File/Cluster4Byte.h>
+
 namespace BF
 {
 	// Resource Interchange File Format. 
 	struct RIFF
 	{
 		public:
-			union
-			{
-				struct
-				{
-					char A;
-					char B;
-					char C;
-					char D;
-				};
-				char Data[4];
-				unsigned int Value;
-			}ChunkID;
-
+		Cluster4Byte ChunkID;
 		unsigned int ChunkSize;
 		char Format[4];
 

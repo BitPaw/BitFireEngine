@@ -24,37 +24,6 @@ const float BF::Math::GravityOnMoon = 1.62;
 const float BF::Math::GravityOnMars = 3.711;
 
 
-int BF::Math::Ceiling(double value)
-{
-	int integerValue = static_cast<int>(value);
-	double checkValue = static_cast<double>(integerValue);
-	bool isDifferentValue = checkValue != value;
-
-	integerValue += (1 * isDifferentValue);
-
-	return integerValue;
-}
-
-int BF::Math::Floor(double value)
-{
-	return static_cast<int>(value);
-}
-
-int BF::Math::Absolute(int value)
-{
-	return value < 0 ? -value : value;
-}
-
-float BF::Math::Absolute(float value)
-{
-	return value < 0 ? -value : value;
-}
-
-double BF::Math::Absolute(double value)
-{
-	return value < 0 ? -value : value;
-}
-
 unsigned long x = 123456789, y = 362436069, z = 521288629;
 
 unsigned int BF::Math::RandomeNumber()
@@ -195,9 +164,7 @@ double BF::Math::Logarithmus(int base, double exponent)
 	return 0; // TODO: not implemented?
 	#elif defined(OSWindows)
 	return _dlog(exponent, base);
-	#endif
-
-	
+	#endif	
 }
 
 double BF::Math::LogarithmusBase2(double exponent)

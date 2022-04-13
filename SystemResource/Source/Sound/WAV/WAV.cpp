@@ -12,7 +12,7 @@ BF::WAV::WAV()
 
 BF::WAV::~WAV()
 {
-	free(SoundData);
+	delete[] SoundData;
 }
 
 BF::FileActionResult BF::WAV::Load(const wchar_t* filePath)
@@ -86,7 +86,7 @@ BF::FileActionResult BF::WAV::Load(const wchar_t* filePath)
 
 	file.Read(SoundDataSize, endian);
 
-	SoundData = (unsigned char*)malloc(SoundDataSize * sizeof(char));
+	SoundData = new unsigned char[SoundDataSize];
 
 	file.Read(SoundData, SoundDataSize);	
 
@@ -106,7 +106,7 @@ BF::FileActionResult BF::WAV::ConvertTo(Sound& sound)
 	sound.SampleRate = FMTChunk.SampleRate;
 	sound.BitsPerSample = FMTChunk.BitsPerSample;
 	sound.DataSize = SoundDataSize;
-	sound.Data = (unsigned char*)malloc(SoundDataSize);
+	sound.Data = new unsigned char[SoundDataSize];
 
 	memcpy(sound.Data, SoundData, SoundDataSize);
 

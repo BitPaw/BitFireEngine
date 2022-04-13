@@ -14,7 +14,7 @@
 
 #include <UI/UIText.h>
 #include <Shader/ShaderProgram.h>
-#include <Resource/SkyBox.h>
+#include <Graphic/OpenGL/SkyBox.h>
 #include <Physic/GravityCube.h>
 #include <Model/Model.h>
 
