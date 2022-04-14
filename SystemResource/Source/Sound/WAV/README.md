@@ -4,7 +4,7 @@
 ### RIFF Header (12 Bytes)
 |Offset|Size|Type|Name|Expected content|
 |:-:|:-:|:-:|:-:|:-:|
-|0|4|char[4]| Hedaer Signature | 'RIFF'|
+|0|4|char[4]| Header Signature | 'RIFF'|
 |4|4|unsigned int| Following data size |FileSize - 8|
 |8|4|char[4]|WAVE Signature|'WAVE'|
 ***
@@ -24,11 +24,11 @@
 ### WAVE Data
 |Offset|Size|Type|Name|Expected content|
 |:-:|:-:|:-:|:-:|:-:|
-|36|4|char[4]|Header signature|'data'|
-|40|4|unsigned int|Size|Maximal = FileSize - 44|
-|44|From FMT<br>Block allign|Byte[]|DataBlock 1|Musicdata Bytes |
-|??|From FMT<br>Block allign|Byte[]|DataBlock 2|Musicdata Bytes |
-|??|...|...|...|...|
+| 36 | 4                        | char[4]      | Header signature| 'data'                 |
+| 40 | 4                        | unsigned int | Size            | Maximal = FileSize - 44|
+| 44 | From FMT<br>Block allign | Byte[]       | DataBlock 1     | Musicdata Bytes      |
+| ?? | From FMT<br>Block allign | Byte[]       | DataBlock 2     | Musicdata Bytes       |
+| ?? |...|...|...|...|
 
 > Repeat until finished.
 ***
