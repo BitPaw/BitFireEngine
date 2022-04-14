@@ -2,31 +2,33 @@
 
 ## Structure
 ### RIFF Header (12 Bytes)
-|Offset|Name|Type|Size in Bytes |Expected content|
+|Offset|Size|Type|Name|Expected content|
 |:-:|:-:|:-:|:-:|:-:|
-|0|Hedaer Signature|char[4]| 4 | "RIFF"|
-|4|Size|unsigned int |4 |Size-8|
-|8|WAVE Signature|char[4]|4|"WAVE"|
-
+|0|4|char[4]| Hedaer Signature | 'RIFF'|
+|4|4|unsigned int| Following data size |FileSize - 8|
+|8|4|char[4]|WAVE Signature|'WAVE'|
+***
 ### FMT Header (24 Bytes)
-|Offset|Name|Type|Size in Bytes |Expected content|
+|Offset|Size|Type|Name|Expected content|
 |:-:|:-:|:-:|:-:|:-:|
-|12|Header signature|char[4]|4|"fmt "|
-|16|Size of header|unsigned int|4| 16 (Bytes)|
-|20|Format|unsigned short<br>enum|2|* |
-|22|Channels|unsigned short|2|1=Mono<br>2=Stereo<br>...|
-|24|Samplerate|unsigned int|4|
-|28|Bytes/second|unsigned int|4|
-|32|Block allign|unsigned short|2|||
-|34|bits/sample|unsigned short|2|||
+|12|4|char[4]       | Header signature|'fmt '|
+|16|4|unsigned int  | Size of header| 16 (Bytes)|
+|20|2|unsigned short<br>enum| Format| ... |
+|22|2|unsigned short| Channels      |1=Mono<br>2=Stereo<br>...|
+|24|4|unsigned int | Samplerate    |-|
+|28|4|unsigned int  | Bytes/second|-|
+|32|2|unsigned short| Block allign|-|
+|34|2|unsigned short| bits/sample|-|
+***
 
 ### WAVE Data
-|Offset|Name|Type|Size in Bytes |Expected content|
+|Offset|Size|Type|Name|Expected content|
 |:-:|:-:|:-:|:-:|:-:|
-|36|Header signature|char[4]|4|"data"|
-|40|Size|unsigned int|4|Maximal = FileSize - <br>(RIFF Header + FMT Header)<br>(12+24)<br>(44)|
-|44|DataBlock 1|Byte[]|Known from before| Musicdata Bytes |
-|??|DataBlock 2|Byte[]|Known from before|Musicdata Bytes|
+|36|4|char[4]|Header signature|'data'|
+|40|4|unsigned int|Size|Maximal = FileSize - 44|
+|44|From FMT<br>Block allign|Byte[]|DataBlock 1|Musicdata Bytes |
+|??|From FMT<br>Block allign|Byte[]|DataBlock 2|Musicdata Bytes |
 |??|...|...|...|...|
 
-Repeat until finished.
+> Repeat until finished.
+***
