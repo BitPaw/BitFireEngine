@@ -2,7 +2,7 @@
 
 #include "ZLIBHeader.h"
 #include <Algorithm/ADLER/Adler32.h>
-#include <Image/PNG/Chunk/PNGInterlaceMethod.h>
+#include <Media/Image/PNG/Chunk/PNGInterlaceMethod.h>
 
 namespace BF
 {

@@ -5,7 +5,7 @@
 
 
 #include <File/File.h>
-#include <Image/BMP/BMP.h>
+#include <Media/Image/BMP/BMP.h>
 #include <Model/Model.h>
 #include <Time/StopWatch.h>
 #include <Text/Text.h>

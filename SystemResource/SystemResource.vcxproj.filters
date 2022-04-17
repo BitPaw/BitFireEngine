@@ -27,43 +27,43 @@
     <ClCompile Include="Source\File\File.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\FNT\FNT.cpp">
+    <ClCompile Include="Source\Media\Font\FNT\FNT.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\FNT\FNTCharacter.cpp">
+    <ClCompile Include="Source\Media\Font\FNT\FNTCharacter.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\FNT\FNTPage.cpp">
+    <ClCompile Include="Source\Media\Font\FNT\FNTPage.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\OTF\OTF.cpp">
+    <ClCompile Include="Source\Media\Font\OTF\OTF.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\TTF.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\TTF.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\Font.cpp">
+    <ClCompile Include="Source\Media\Font\Font.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\BMP\BMP.cpp">
+    <ClCompile Include="Source\Media\Image\BMP\BMP.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\GIF\GIF.cpp">
+    <ClCompile Include="Source\Media\Image\GIF\GIF.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\JPEG\JPEG.cpp">
+    <ClCompile Include="Source\Media\Image\JPEG\JPEG.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\PNG\PNG.cpp">
+    <ClCompile Include="Source\Media\Image\PNG\PNG.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\TGA\TGA.cpp">
+    <ClCompile Include="Source\Media\Image\TGA\TGA.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\TIFF\TIFF.cpp">
+    <ClCompile Include="Source\Media\Image\TIFF\TIFF.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\Image.cpp">
+    <ClCompile Include="Source\Media\Image\Image.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Model\3DS\A3DS.cpp">
@@ -105,19 +105,19 @@
     <ClCompile Include="Source\Model\Vertex.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\MID\MID.cpp">
+    <ClCompile Include="Source\Media\Sound\MID\MID.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\MP3\MP3.cpp">
+    <ClCompile Include="Source\Media\Sound\MP3\MP3.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\OGG\OGG.cpp">
+    <ClCompile Include="Source\Media\Sound\OGG\OGG.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\WAV\WAV.cpp">
+    <ClCompile Include="Source\Media\Sound\WAV\WAV.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\Sound.cpp">
+    <ClCompile Include="Source\Media\Sound\Sound.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Types\UUID.cpp">
@@ -195,52 +195,52 @@
     <ClCompile Include="Source\Network\Server.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\WAV\FMT.cpp">
+    <ClCompile Include="Source\Media\Sound\WAV\FMT.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\WAV\RIFF.cpp">
+    <ClCompile Include="Source\Media\RIFF\RIFF.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Video\AVI\AVI.cpp">
+    <ClCompile Include="Source\Media\Video\AVI\AVI.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Video\Video.cpp">
+    <ClCompile Include="Source\Media\Video\Video.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\WMA\WMA.cpp">
+    <ClCompile Include="Source\Media\Sound\WMA\WMA.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\AAC\AAC.cpp">
+    <ClCompile Include="Source\Media\Sound\AAC\AAC.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\FLAC\FLAC.cpp">
+    <ClCompile Include="Source\Media\Sound\FLAC\FLAC.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\M4A\M4A.cpp">
+    <ClCompile Include="Source\Media\Sound\M4A\M4A.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\MP3\MP3Header.cpp">
+    <ClCompile Include="Source\Media\Sound\MP3\MP3Header.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\MP3\MPEGAudioTag.cpp">
+    <ClCompile Include="Source\Media\Sound\MP3\MPEGAudioTag.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\MP3\MPEGGenre.cpp">
+    <ClCompile Include="Source\Media\Sound\MP3\MPEGGenre.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\MID\MIDITrackHeader.cpp">
+    <ClCompile Include="Source\Media\Sound\MID\MIDITrackHeader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\MID\MIDINote.cpp">
+    <ClCompile Include="Source\Media\Sound\MID\MIDINote.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\MID\MIDICommand.cpp">
+    <ClCompile Include="Source\Media\Sound\MID\MIDICommand.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\MID\MIDICommandExtended.cpp">
+    <ClCompile Include="Source\Media\Sound\MID\MIDICommandExtended.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\MID\MIDITrack.cpp">
+    <ClCompile Include="Source\Media\Sound\MID\MIDITrack.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Compression\ZLIB\ZLIBCompressionLevel.cpp">
@@ -261,16 +261,16 @@
     <ClCompile Include="Source\Compression\DEFLATE\DeflateEncodingMethod.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\BMP\BMPInfoHeader.cpp">
+    <ClCompile Include="Source\Media\Image\BMP\BMPInfoHeader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\BMP\BMPType.cpp">
+    <ClCompile Include="Source\Media\Image\BMP\BMPType.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\BMP\BMPInfoHeaderType.cpp">
+    <ClCompile Include="Source\Media\Image\BMP\BMPInfoHeaderType.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Video\AVI\AVIHeader.cpp">
+    <ClCompile Include="Source\Media\Video\AVI\AVIHeader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Algorithm\ADLER\Adler32.cpp">
@@ -288,43 +288,43 @@
     <ClCompile Include="Source\Algorithm\ISBN\ISBN.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\ImageDataFormat.cpp">
+    <ClCompile Include="Source\Media\Image\ImageDataFormat.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\TGA\TGAImageDataType.cpp">
+    <ClCompile Include="Source\Media\Image\TGA\TGAImageDataType.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\TGA\TGABitsPerPixel.cpp">
+    <ClCompile Include="Source\Media\Image\TGA\TGABitsPerPixel.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\JPEG\JPEGMarker.cpp">
+    <ClCompile Include="Source\Media\Image\JPEG\JPEGMarker.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\JPEG\JPEGFileInfo.cpp">
+    <ClCompile Include="Source\Media\Image\JPEG\JPEGFileInfo.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\JPEG\JPEGFrame.cpp">
+    <ClCompile Include="Source\Media\Image\JPEG\JPEGFrame.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\JPEG\JPEGFrameComponent.cpp">
+    <ClCompile Include="Source\Media\Image\JPEG\JPEGFrameComponent.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\JPEG\JPEGHuffmanTable.cpp">
+    <ClCompile Include="Source\Media\Image\JPEG\JPEGHuffmanTable.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\JPEG\JPEGScanStart.cpp">
+    <ClCompile Include="Source\Media\Image\JPEG\JPEGScanStart.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\JPEG\JPEGScanSelector.cpp">
+    <ClCompile Include="Source\Media\Image\JPEG\JPEGScanSelector.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Video\MP4\MP4.cpp">
+    <ClCompile Include="Source\Media\Video\MP4\MP4.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\FNT\FNTCommonData.cpp">
+    <ClCompile Include="Source\Media\Font\FNT\FNTCommonData.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\FNT\FNTInfo.cpp">
+    <ClCompile Include="Source\Media\Font\FNT\FNTInfo.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Network\SocketActionResult.cpp">
@@ -363,10 +363,10 @@
     <ClCompile Include="Source\Compression\ADAM7\ADAM7.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\PNG\PNGColorCompressor.cpp">
+    <ClCompile Include="Source\Media\Image\PNG\PNGColorCompressor.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\PNG\PNGColorTree.cpp">
+    <ClCompile Include="Source\Media\Image\PNG\PNGColorTree.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Compression\HUFFMAN\HuffmanCodeType.cpp">
@@ -378,112 +378,112 @@
     <ClCompile Include="Source\Compression\ZLIB\ZLIB.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\TTFMaximumProfile.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFMaximumProfile.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\TTFHeader.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFHeader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\TTFHorizontalHeader.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFHorizontalHeader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\TTFOffsetTable.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFOffsetTable.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\TTFVersion.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFVersion.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\TTFLinearThreshold.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFLinearThreshold.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\TTFVerticalDeviceMetrics.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFVerticalDeviceMetrics.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\CMAP\EncodingID.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\CMAP\EncodingID.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\CMAP\PlatformID.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\CMAP\PlatformID.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\CMAP\EncodingRecord.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\CMAP\EncodingRecord.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\DSIG\TTFDigitalSignature.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\DSIG\TTFDigitalSignature.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\DSIG\TTFDigitalSignatureBlock.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\DSIG\TTFDigitalSignatureBlock.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\DSIG\TTFDigitalSignatureRecord.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\DSIG\TTFDigitalSignatureRecord.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\OS2\TTFCompatibility.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\TTFCompatibility.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFArmStyle.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFArmStyle.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFContrast.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFContrast.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFFamilyType.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFFamilyType.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFHeightX.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFHeightX.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFLetterform.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFLetterform.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFMidline.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFMidline.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFPanose.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFPanose.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFProportion.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFProportion.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFSerifStyle.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFSerifStyle.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFStrokeVariatoon.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFStrokeVariatoon.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\OS2\Panose\TTFWeight.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFWeight.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\TTFPostScript.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFPostScript.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\TTFVersionType.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFVersionType.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\File\OpenFileDialog.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFKerning.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\KERN\TTFKerning.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFKerningSubtable.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\KERN\TTFKerningSubtable.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat0.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\KERN\TTFSubtableFormat0.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat2.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\KERN\TTFSubtableFormat2.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\KERN\TTFKerningPair.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\KERN\TTFKerningPair.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\Chunks\CMAP\TTFCharacterMapping.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\Chunks\CMAP\TTFCharacterMapping.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\TTFTableEntryType.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\TTFTableEntryType.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\TTF\TTFTableEntry.cpp">
+    <ClCompile Include="Source\Media\Font\TTF\TTFTableEntry.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Network\IOSocketMessage.cpp">
@@ -507,25 +507,25 @@
     <ClCompile Include="Source\File\ProgramExecuteInfo.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\PNG\Chunk\PNGImageHeader.cpp">
+    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGImageHeader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\PNG\Chunk\PNGChunkType.cpp">
+    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGChunkType.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\PNG\Chunk\PNGInterlaceMethod.cpp">
+    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGInterlaceMethod.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\PNG\Chunk\PNGColorType.cpp">
+    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGColorType.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\PNG\Chunk\PNGPalette.cpp">
+    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGPalette.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\PNG\Chunk\PNGPrimaryChromatics.cpp">
+    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGPrimaryChromatics.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\PNG\Chunk\PNGChunk.cpp">
+    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGChunk.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Service\HTTP\HTTPError.cpp">
@@ -537,28 +537,28 @@
     <ClCompile Include="Source\Service\HTTP\HTTPServer.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\PNG\Chunk\PNGLastModificationTime.cpp">
+    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGLastModificationTime.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\PNG\Chunk\PNGBackgroundColor.cpp">
+    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGBackgroundColor.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\PNG\Chunk\PNGPaletteHistogram.cpp">
+    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGPaletteHistogram.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\PNG\Chunk\PNGSuggestedPalette.cpp">
+    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGSuggestedPalette.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\PNG\Chunk\PNGPhysicalPixelDimension.cpp">
+    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGPhysicalPixelDimension.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\PNG\Chunk\PNGTransparency.cpp">
+    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGTransparency.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\GIF\GIFImageDescriptor.cpp">
+    <ClCompile Include="Source\Media\Image\GIF\GIFImageDescriptor.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Font\FNT\FNTLineType.cpp">
+    <ClCompile Include="Source\Media\Font\FNT\FNTLineType.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\File\ParsingToken.cpp">
@@ -669,25 +669,25 @@
     <ClCompile Include="Source\Graphic\OpenGL\ImageType.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\AudioClip.cpp">
+    <ClCompile Include="Source\Media\Sound\AudioClip.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\AudioConfig.cpp">
+    <ClCompile Include="Source\Media\Sound\AudioConfig.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound\AudioSource.cpp">
+    <ClCompile Include="Source\Media\Sound\AudioSource.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Text\Text.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\QOI\QOI.cpp">
+    <ClCompile Include="Source\Media\Image\QOI\QOI.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\WEBP\WEBP.cpp">
+    <ClCompile Include="Source\Media\Image\WEBP\WEBP.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Image\SVG\SVG.cpp">
+    <ClCompile Include="Source\Media\Image\SVG\SVG.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphic\OpenGL\Renderable.cpp">
@@ -714,7 +714,10 @@
     <ClCompile Include="Source\Graphic\OpenGL\Sprite.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\File\Cluster4Byte.cpp">
+    <ClCompile Include="Source\File\ByteCluster.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Media\RIFF\RIFFFormat.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -764,61 +767,61 @@
     <ClInclude Include="Source\File\File.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\FNT\FNT.h">
+    <ClInclude Include="Source\Media\Font\FNT\FNT.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\FNT\FNTChanalMode.h">
+    <ClInclude Include="Source\Media\Font\FNT\FNTChanalMode.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\FNT\FNTCharacter.h">
+    <ClInclude Include="Source\Media\Font\FNT\FNTCharacter.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\FNT\FNTCommand.h">
+    <ClInclude Include="Source\Media\Font\FNT\FNTCommand.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\FNT\FNTPage.h">
+    <ClInclude Include="Source\Media\Font\FNT\FNTPage.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\OTF\OTF.h">
+    <ClInclude Include="Source\Media\Font\OTF\OTF.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\TTF.h">
+    <ClInclude Include="Source\Media\Font\TTF\TTF.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\Font.h">
+    <ClInclude Include="Source\Media\Font\Font.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\FontFormat.h">
+    <ClInclude Include="Source\Media\Font\FontFormat.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\BMP\BMP.h">
+    <ClInclude Include="Source\Media\Image\BMP\BMP.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\BMP\BMPType.h">
+    <ClInclude Include="Source\Media\Image\BMP\BMPType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\GIF\GIF.h">
+    <ClInclude Include="Source\Media\Image\GIF\GIF.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\JPEG\JPEG.h">
+    <ClInclude Include="Source\Media\Image\JPEG\JPEG.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\PNG\PNG.h">
+    <ClInclude Include="Source\Media\Image\PNG\PNG.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\TGA\TGA.h">
+    <ClInclude Include="Source\Media\Image\TGA\TGA.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\TGA\TGABitsPerPixel.h">
+    <ClInclude Include="Source\Media\Image\TGA\TGABitsPerPixel.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\TGA\TGAColorType.h">
+    <ClInclude Include="Source\Media\Image\TGA\TGAColorType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\TGA\TGAImageDataType.h">
+    <ClInclude Include="Source\Media\Image\TGA\TGAImageDataType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\TIFF\TIFF.h">
+    <ClInclude Include="Source\Media\Image\TIFF\TIFF.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Model\3DS\A3DS.h">
@@ -875,22 +878,22 @@
     <ClInclude Include="Source\Model\Vertex.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\MID\MID.h">
+    <ClInclude Include="Source\Media\Sound\MID\MID.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\MP3\MP3.h">
+    <ClInclude Include="Source\Media\Sound\MP3\MP3.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\OGG\OGG.h">
+    <ClInclude Include="Source\Media\Sound\OGG\OGG.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\WAV\WAV.h">
+    <ClInclude Include="Source\Media\Sound\WAV\WAV.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\Sound.h">
+    <ClInclude Include="Source\Media\Sound\Sound.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\SoundFormat.h">
+    <ClInclude Include="Source\Media\Sound\SoundFormat.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Types\UUID.h">
@@ -1010,64 +1013,64 @@
     <ClInclude Include="Source\Math\Geometry\AngleDegree.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\WAV\RIFF.h">
+    <ClInclude Include="Source\Media\RIFF\RIFF.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\WAV\FMT.h">
+    <ClInclude Include="Source\Media\Sound\WAV\FMT.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Video\AVI\AVI.h">
+    <ClInclude Include="Source\Media\Video\AVI\AVI.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Video\Video.h">
+    <ClInclude Include="Source\Media\Video\Video.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\WMA\WMA.h">
+    <ClInclude Include="Source\Media\Sound\WMA\WMA.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\AAC\AAC.h">
+    <ClInclude Include="Source\Media\Sound\AAC\AAC.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\FLAC\FLAC.h">
+    <ClInclude Include="Source\Media\Sound\FLAC\FLAC.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\M4A\M4A.h">
+    <ClInclude Include="Source\Media\Sound\M4A\M4A.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\MP3\MP3Header.h">
+    <ClInclude Include="Source\Media\Sound\MP3\MP3Header.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\MP3\MP3Layer.hpp">
+    <ClInclude Include="Source\Media\Sound\MP3\MP3Layer.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\MP3\MP3MPEGVersion.hpp">
+    <ClInclude Include="Source\Media\Sound\MP3\MP3MPEGVersion.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\MP3\MP3ChannelMode.hpp">
+    <ClInclude Include="Source\Media\Sound\MP3\MP3ChannelMode.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\MP3\MP3Emphasis.hpp">
+    <ClInclude Include="Source\Media\Sound\MP3\MP3Emphasis.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\MP3\MPEGAudioTag.h">
+    <ClInclude Include="Source\Media\Sound\MP3\MPEGAudioTag.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\MP3\MPEGGenre.hpp">
+    <ClInclude Include="Source\Media\Sound\MP3\MPEGGenre.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\MID\MIDITrackHeader.h">
+    <ClInclude Include="Source\Media\Sound\MID\MIDITrackHeader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\MID\MIDINote.h">
+    <ClInclude Include="Source\Media\Sound\MID\MIDINote.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\MID\MIDICommand.h">
+    <ClInclude Include="Source\Media\Sound\MID\MIDICommand.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\MID\MIDICommandExtended.h">
+    <ClInclude Include="Source\Media\Sound\MID\MIDICommandExtended.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\MID\MIDITrack.h">
+    <ClInclude Include="Source\Media\Sound\MID\MIDITrack.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Math\Geometry\Matrix.hpp">
@@ -1091,13 +1094,13 @@
     <ClInclude Include="Source\Compression\DEFLATE\DeflateEncodingMethod.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\BMP\BMPInfoHeaderType.h">
+    <ClInclude Include="Source\Media\Image\BMP\BMPInfoHeaderType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\BMP\BMPInfoHeader.h">
+    <ClInclude Include="Source\Media\Image\BMP\BMPInfoHeader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Video\AVI\AVIHeader.h">
+    <ClInclude Include="Source\Media\Video\AVI\AVIHeader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Algorithm\CRC32\CRC32.h">
@@ -1115,34 +1118,34 @@
     <ClInclude Include="Source\Algorithm\ISBN\ISBN.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\ImageDataFormat.h">
+    <ClInclude Include="Source\Media\Image\ImageDataFormat.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\ImageFileFormat.h">
+    <ClInclude Include="Source\Media\Image\ImageFileFormat.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\IImageFormat.h">
+    <ClInclude Include="Source\Media\Image\IImageFormat.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\JPEG\JPEGMarker.h">
+    <ClInclude Include="Source\Media\Image\JPEG\JPEGMarker.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\JPEG\JPEGFileInfo.h">
+    <ClInclude Include="Source\Media\Image\JPEG\JPEGFileInfo.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\JPEG\JPEGFrame.h">
+    <ClInclude Include="Source\Media\Image\JPEG\JPEGFrame.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\JPEG\JPEGFrameComponent.h">
+    <ClInclude Include="Source\Media\Image\JPEG\JPEGFrameComponent.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\JPEG\JPEGHuffmanTable.h">
+    <ClInclude Include="Source\Media\Image\JPEG\JPEGHuffmanTable.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\JPEG\JPEGScanStart.h">
+    <ClInclude Include="Source\Media\Image\JPEG\JPEGScanStart.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\JPEG\JPEGScanSelector.h">
+    <ClInclude Include="Source\Media\Image\JPEG\JPEGScanSelector.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\File\FileActionResult.hpp">
@@ -1151,13 +1154,13 @@
     <ClInclude Include="Source\IFileFormat.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Video\IVideoFormat.hpp">
+    <ClInclude Include="Source\Media\Video\IVideoFormat.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Video\MP4\MP4.h">
+    <ClInclude Include="Source\Media\Video\MP4\MP4.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\ISoundFormat.hpp">
+    <ClInclude Include="Source\Media\Sound\ISoundFormat.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Model\IModelFormat.hpp">
@@ -1166,13 +1169,13 @@
     <ClInclude Include="Source\File\Endian.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\FNT\FNTCommonData.h">
+    <ClInclude Include="Source\Media\Font\FNT\FNTCommonData.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\FNT\FNTInfo.h">
+    <ClInclude Include="Source\Media\Font\FNT\FNTInfo.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\IFontFormat.hpp">
+    <ClInclude Include="Source\Media\Font\IFontFormat.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Network\SocketActionResult.h">
@@ -1226,7 +1229,7 @@
     <ClInclude Include="Source\File\ProgramExecuteResultListener.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\Image.h">
+    <ClInclude Include="Source\Media\Image\Image.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Compression\HUFFMAN\HuffmanTree.h">
@@ -1238,10 +1241,10 @@
     <ClInclude Include="Source\Compression\ADAM7\ADAM7.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\PNG\PNGColorCompressor.h">
+    <ClInclude Include="Source\Media\Image\PNG\PNGColorCompressor.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\PNG\PNGColorTree.h">
+    <ClInclude Include="Source\Media\Image\PNG\PNGColorTree.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Compression\HUFFMAN\HuffmanNumberCode.h">
@@ -1250,79 +1253,79 @@
     <ClInclude Include="Source\Compression\ZLIB\ZLIB.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\TTFMaximumProfile.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFMaximumProfile.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\TTFHeader.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFHeader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\TTFHorizontalHeader.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFHorizontalHeader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\TTFOffsetTable.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFOffsetTable.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\TTFVersion.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFVersion.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\TTFLinearThreshold.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFLinearThreshold.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\TTFVerticalDeviceMetrics.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFVerticalDeviceMetrics.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\CMAP\EncodingID.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\CMAP\EncodingID.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\CMAP\PlatformID.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\CMAP\PlatformID.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\CMAP\EncodingRecord.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\CMAP\EncodingRecord.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\DSIG\TTFDigitalSignature.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\DSIG\TTFDigitalSignature.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\DSIG\TTFDigitalSignatureBlock.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\DSIG\TTFDigitalSignatureBlock.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\DSIG\TTFDigitalSignatureRecord.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\DSIG\TTFDigitalSignatureRecord.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\OS2\TTFCompatibility.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\TTFCompatibility.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFArmStyle.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFArmStyle.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFContrast.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFContrast.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFFamilyType.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFFamilyType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFHeightX.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFHeightX.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFLetterform.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFLetterform.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFMidline.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFMidline.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFPanose.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFPanose.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFProportion.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFProportion.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFSerifStyle.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFSerifStyle.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFStrokeVariatoon.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFStrokeVariatoon.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\OS2\Panose\TTFWeight.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFWeight.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Container\DictionaryStatic.hpp">
@@ -1331,37 +1334,37 @@
     <ClInclude Include="Source\Container\Dictionary.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\TTFPostScript.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFPostScript.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\TTFVersionType.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFVersionType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\File\OpenFileDialog.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFKerning.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\KERN\TTFKerning.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFKerningSubtable.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\KERN\TTFKerningSubtable.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat2.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\KERN\TTFSubtableFormat2.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFSubtableFormat0.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\KERN\TTFSubtableFormat0.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\KERN\TTFKerningPair.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\KERN\TTFKerningPair.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\Chunks\CMAP\TTFCharacterMapping.h">
+    <ClInclude Include="Source\Media\Font\TTF\Chunks\CMAP\TTFCharacterMapping.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\TTFTableEntryType.h">
+    <ClInclude Include="Source\Media\Font\TTF\TTFTableEntryType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\TTF\TTFTableEntry.h">
+    <ClInclude Include="Source\Media\Font\TTF\TTFTableEntry.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Network\IOSocketMessage.h">
@@ -1391,25 +1394,25 @@
     <ClInclude Include="Source\File\ProgramExecuteInfo.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\PNG\Chunk\PNGImageHeader.h">
+    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGImageHeader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\PNG\Chunk\PNGChunkType.h">
+    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGChunkType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\PNG\Chunk\PNGInterlaceMethod.h">
+    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGInterlaceMethod.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\PNG\Chunk\PNGColorType.h">
+    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGColorType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\PNG\Chunk\PNGPalette.h">
+    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGPalette.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\PNG\Chunk\PNGPrimaryChromatics.h">
+    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGPrimaryChromatics.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\PNG\Chunk\PNGChunk.h">
+    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGChunk.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Service\HTTP\HTTPServer.h">
@@ -1421,31 +1424,31 @@
     <ClInclude Include="Source\Service\HTTP\HTTPRequestMethod.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\PNG\Chunk\PNGLastModificationTime.h">
+    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGLastModificationTime.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\PNG\Chunk\PNGBackgroundColor.h">
+    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGBackgroundColor.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\PNG\Chunk\PNGPaletteHistogram.h">
+    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGPaletteHistogram.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\PNG\Chunk\PNGSuggestedPalette.h">
+    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGSuggestedPalette.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\PNG\Chunk\PNGPhysicalPixelDimension.h">
+    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGPhysicalPixelDimension.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\PNG\Chunk\PNGTransparency.h">
+    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGTransparency.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Text\Text.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\GIF\GIFImageDescriptor.h">
+    <ClInclude Include="Source\Media\Image\GIF\GIFImageDescriptor.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Font\FNT\FNTLineType.h">
+    <ClInclude Include="Source\Media\Font\FNT\FNTLineType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\File\ParsingToken.h">
@@ -1523,7 +1526,7 @@
     <ClInclude Include="Source\DataBase\SQLResult.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Video\RefreshRateMode.h">
+    <ClInclude Include="Source\Media\Video\RefreshRateMode.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Camera\Camera.h">
@@ -1589,25 +1592,25 @@
     <ClInclude Include="Source\Graphic\OpenGL\ImageType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\SoundPlayStyle.hpp">
+    <ClInclude Include="Source\Media\Sound\SoundPlayStyle.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\AudioClip.h">
+    <ClInclude Include="Source\Media\Sound\AudioClip.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\AudioConfig.h">
+    <ClInclude Include="Source\Media\Sound\AudioConfig.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound\AudioSource.h">
+    <ClInclude Include="Source\Media\Sound\AudioSource.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\QOI\QOI.h">
+    <ClInclude Include="Source\Media\Image\QOI\QOI.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\WEBP\WEBP.h">
+    <ClInclude Include="Source\Media\Image\WEBP\WEBP.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Image\SVG\SVG.h">
+    <ClInclude Include="Source\Media\Image\SVG\SVG.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphic\OpenGL\Sprite.h">
@@ -1640,7 +1643,10 @@
     <ClInclude Include="Source\Graphic\OpenGL\SkyBox.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\File\Cluster4Byte.h">
+    <ClInclude Include="Source\File\ByteCluster.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Media\RIFF\RIFFFormat.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

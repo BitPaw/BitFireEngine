@@ -1,8 +1,9 @@
 #pragma once
 
 #include "UIElement.h"
-#include "../../../SystemResource/Source/Math/Geometry/Rectangle.hpp"
-#include "../../../SystemResource/Source/Font/Font.h"
+
+#include <Math/Geometry/Rectangle.hpp>
+#include <Media/Font/Font.h>
 
 #define TextSizeMax 1024
 

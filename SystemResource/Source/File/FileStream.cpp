@@ -4,20 +4,21 @@
 #include <string>
 #include "File.h"
 
+#include <Hardware/Memory/Memory.h>
+
 BF::FileStream::FileStream()
 {
 }
 
-BF::FileStream::FileStream(size_t dataSize)
+BF::FileStream::FileStream(const size_t dataSize)
 {
 	DataSize = dataSize;
-	Data = (Byte*)malloc(DataSize * sizeof(Byte));
+	Data = Memory::Allocate<Byte>(dataSize);
 }
 
 BF::FileStream::~FileStream()
 {
-	free(Data);
-	Data = nullptr;
+	Memory::Release(Data, DataSize);
 }
 
 BF::FileActionResult BF::FileStream::ReadFromDisk(const char* filePath, bool addNullTerminator, FilePersistence filePersistence)
@@ -93,7 +94,7 @@ BF::FileActionResult BF::FileStream::ReadFromDisk(FILE* file, Byte** targetBuffe
 		++bufferSize;
 	}
 
-	Byte* dataBuffer = (Byte*)malloc(bufferSize * sizeof(Byte));	
+	Byte* dataBuffer = Memory::Allocate<Byte>(bufferSize);
 
 	if (!dataBuffer) // If malloc failed
 	{
@@ -154,5 +155,17 @@ BF::FileActionResult BF::FileStream::WriteToDisk(const char* filePath, FilePersi
 
 BF::FileActionResult BF::FileStream::WriteToDisk(const wchar_t* filePath, FilePersistence filePersistence)
 {
-	return FileActionResult();
+	File file(filePath);
+	FileActionResult fileActionResult = file.Open(filePath, FileOpenMode::Write);
+
+	if(fileActionResult != FileActionResult::Successful)
+	{
+		return fileActionResult;
+	}
+
+	size_t writtenBytes = fwrite(Data, sizeof(char), DataSize, file.FileMarker);
+
+	fileActionResult = file.Close();
+
+	return BF::FileActionResult::Successful;
 }

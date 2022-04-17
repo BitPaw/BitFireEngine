@@ -26,6 +26,16 @@ void BF::ByteStream::CursorToBeginning()
 	DataCursorPosition = 0;
 }
 
+Byte* BF::ByteStream::CursorCurrentAdress()
+{
+	return Data + DataCursorPosition;
+}
+
+void BF::ByteStream::CursorAdvance(const size_t steps)
+{
+	DataCursorPosition += steps;
+}
+
 unsigned int BF::ByteStream::ReadNextLineInto(char* exportBuffer)
 {
 	SkipEndOfLineCharacters();

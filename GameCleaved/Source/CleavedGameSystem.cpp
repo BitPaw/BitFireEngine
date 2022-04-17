@@ -17,7 +17,7 @@
 #include <Entity/Sign.h>
 #include <Physic/GravityCube.h>
 #include <Shader/ShaderProgram.h>
-#include <Font/FNT/FNT.h>
+#include <Media/Font/FNT/FNT.h>
 
 using namespace BF;
 

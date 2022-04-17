@@ -12,7 +12,7 @@ namespace BF
 	{	
 		public:
 		FileStream();
-		FileStream(size_t dataSize);
+		FileStream(const size_t dataSize);
 		~FileStream();
 
 		FileActionResult ReadFromDisk(const char* filePath, bool addNullTerminator = false, FilePersistence filePersistence = FilePersistence::Permanent);

@@ -1,7 +1,7 @@
 #include "UIText.h"
 
-#include "../../../SystemResource/Source/Font/FNT/FNT.h"
-#include "../../../SystemResource/Source/Math/Interpolate.h"
+#include <Media/Font/FNT/FNT.h>
+#include <Math/Interpolate.h>
 #include <Text/Text.h>
 
 void BF::UIText::Setup(const wchar_t* text, Font* font, float x, float y)

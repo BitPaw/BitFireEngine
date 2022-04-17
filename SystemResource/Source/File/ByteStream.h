@@ -3,7 +3,7 @@
 #include <cstddef>
 
 #include "Endian.h"
-#include "Cluster4Byte.h"
+#include "ByteCluster.h"
 
 #define Byte unsigned char
 
@@ -21,8 +21,10 @@ namespace BF
 
 
 		void DataSet(Byte* data, size_t dataSize, size_t cursorPosition = 0);
-
+		
 		void CursorToBeginning();
+		Byte* CursorCurrentAdress();
+		void CursorAdvance(const size_t steps);
 
 
 		unsigned int ReadNextLineInto(char* exportBuffer);

@@ -3,6 +3,7 @@
 #include "../Container/AsciiString.h"
 
 #include <Text/Text.h>
+#include <Hardware/Memory/Memory.h>
 
 BF::FileActionResult BF::File::CheckFile()
 {
@@ -499,7 +500,7 @@ BF::FileActionResult BF::File::ReadFromDisk(unsigned char** outPutBuffer, size_t
 		++allocationSize;
 	}
 
-	unsigned char* buffer = (unsigned char*)malloc(sizeof(char) * allocationSize);
+	unsigned char* buffer = Memory::Allocate<unsigned char>(allocationSize);
 
 	if (!buffer)
 	{
@@ -590,7 +591,7 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 	WIN32_FIND_DATA dataCursour;
 	HANDLE hFind = 0;
 
-	memset(&dataCursour, 0, sizeof(WIN32_FIND_DATA));
+	Memory::Set(&dataCursour, 0, sizeof(WIN32_FIND_DATA));
 
 	hFind = FindFirstFile(folderPathW, &dataCursour); 	// "/*.*";
 
@@ -605,18 +606,18 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 
 	for (; FindNextFile(hFind, &dataCursour); listSize++);
 
-	memset(&dataCursour, 0, sizeof(WIN32_FIND_DATA));
+	Memory::Set(&dataCursour, 0, sizeof(WIN32_FIND_DATA));
 
-	(*list) = (wchar_t**)malloc(listSize * sizeof(wchar_t*));
+	(*list) = Memory::Allocate<wchar_t*>(listSize);
 
 	hFind = FindFirstFile(folderPathW, &dataCursour); // Expected "." Folder
 	size_t fileIndex = 0;
 
 	do
 	{
-		size_t length = Text::Length(dataCursour.cFileName);
-		wchar_t* filePathSource = dataCursour.cFileName;		
-		wchar_t* newString = (wchar_t*)malloc((length + 1) * sizeof(wchar_t));
+		const size_t length = Text::Length(dataCursour.cFileName);
+		const wchar_t* filePathSource = dataCursour.cFileName;
+		wchar_t* newString = Memory::Allocate<wchar_t>((length + 1) * sizeof(wchar_t));
 	
 		if (!newString)
 		{

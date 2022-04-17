@@ -17,13 +17,13 @@
 #include <Async/AsyncLock.h>
 #include <Camera/Camera.h>
 #include <Container/LinkedList.hpp>
-#include <Font/Font.h>
+#include <Media/Font/Font.h>
 #include <Math/Geometry/Matrix4x4.hpp>
-#include <Sound/Sound.h>
 #include <Shader/GLSL/ShaderType.h>
 #include <Model/Model.h>
-#include <Sound/AudioClip.h>
-#include <Sound/AudioSource.h>
+#include <Media/Sound/AudioClip.h>
+#include <Media/Sound/AudioSource.h>
+#include <Media/Sound/Sound.h>
 
 //#include "Window/Window.h"
 

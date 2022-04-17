@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Image/Image.h>
+#include <Media/Image/Image.h>
 
 namespace BF
 {

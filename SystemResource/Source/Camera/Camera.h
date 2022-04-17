@@ -2,10 +2,10 @@
 
 #include "CameraPerspective.hpp"
 
-#include "../Math/Geometry/Vector3.hpp"
-#include "../Math/Geometry/Matrix4x4.hpp"
-#include "../Math/Physic/PhysicsDynamic.hpp"
-#include "../Video/RefreshRateMode.h"
+#include <Math/Geometry/Vector3.hpp>
+#include <Math/Geometry/Matrix4x4.hpp>
+#include <Math/Physic/PhysicsDynamic.hpp>
+#include <Media/Video/RefreshRateMode.h>
 
 namespace BF
 {

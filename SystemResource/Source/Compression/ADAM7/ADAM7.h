@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-#include "../../Image/PNG/Chunk/PNGInterlaceMethod.h"
+#include <Media/Image/PNG/Chunk/PNGInterlaceMethod.h>
 
 namespace BF
 {

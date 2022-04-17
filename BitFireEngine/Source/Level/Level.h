@@ -1,9 +1,9 @@
 #pragma once
 
 #include <Model/Model.h>
-#include <Image/Image.h>
-#include <Font/Font.h>
-#include <Sound/Sound.h>
+#include <Media/Image/Image.h>
+#include <Media/Font/Font.h>
+#include <Media/Sound/Sound.h>
 #include <File/FileActionResult.hpp>
 #include <Camera/Camera.h>
 
