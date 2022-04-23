@@ -31,7 +31,7 @@ BF::Sound::~Sound()
 
 BF::SoundFormat BF::Sound::FileFormatPeek(const wchar_t* filePath)
 {
-    File file(filePath);
+    FilePath file(filePath);
 
     if (file.ExtensionEquals("aac")) return SoundFormat::AAC;
     if (file.ExtensionEquals("flac")) return SoundFormat::FLAC;

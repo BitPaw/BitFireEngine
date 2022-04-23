@@ -6,9 +6,10 @@ namespace BF
 	{
 		public:
 		unsigned int ID;
-		char* EventData;
+		unsigned char* EventData;
 		unsigned int EventDataSize;
 
 		MIDITrack();
+		~MIDITrack();
 	};
 }

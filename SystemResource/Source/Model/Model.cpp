@@ -45,7 +45,7 @@ void BF::Model::PrintModelData()
 
 BF::ModelType BF::Model::FileFormatPeek(const wchar_t* fileExtension)
 {
-    File file(fileExtension);
+    FilePath file(fileExtension);
 
     if (file.ExtensionEquals("3ds")) return ModelType::A3DS;
     if (file.ExtensionEquals("obj")) return ModelType::OBJ;

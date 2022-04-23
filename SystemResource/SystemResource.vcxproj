@@ -294,6 +294,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\File\FilePath.cpp" />
+    <ClCompile Include="Source\File\FileLocation.cpp" />
     <ClCompile Include="Source\Media\RIFF\RIFFFormat.cpp" />
     <ClCompile Include="Source\File\ByteCluster.cpp" />
     <ClCompile Include="Source\Graphic\OpenGL\Renderable.cpp" />
@@ -531,6 +533,8 @@
     <ClCompile Include="Source\Media\Image\WEBP\WEBP.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\File\FilePath.h" />
+    <ClInclude Include="Source\File\FileLocation.h" />
     <ClInclude Include="Source\Media\RIFF\RIFFFormat.h" />
     <ClInclude Include="Source\File\ByteCluster.h" />
     <ClInclude Include="Source\Graphic\OpenGL\Renderable.h" />

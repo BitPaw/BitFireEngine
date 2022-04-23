@@ -1,8 +1,10 @@
 #include "ByteStream.h"
+
 #include <cassert>
 #include <cstring>
 
 #include <Text/Text.h>
+#include <Hardware/Memory/Memory.h>
 
 BF::ByteStream::ByteStream()
 {
@@ -210,7 +212,7 @@ void BF::ByteStream::Read(unsigned long long& value, Endian endian)
 
 void BF::ByteStream::Read(void* value, size_t length)
 {
-	memcpy(value, Data + DataCursorPosition, length);
+	Memory::Copy(value, Data + DataCursorPosition, length);
 
 	DataCursorPosition += length;
 }
@@ -227,7 +229,7 @@ bool BF::ByteStream::ReadAndCompare(const char* value, size_t length)
 
 bool BF::ByteStream::ReadAndCompare(void* value, size_t length)
 {
-	bool result = memcmp(value, Data + DataCursorPosition, length) == 0;
+	bool result = Memory::Compare(value, Data + DataCursorPosition, length) == 0;
 
 	DataCursorPosition += length;
 
@@ -334,7 +336,7 @@ void BF::ByteStream::Write(unsigned long long& value, Endian endian)
 
 void BF::ByteStream::Write(void* value, size_t length)
 {
-	memcpy(Data + DataCursorPosition, value, length);
+	Memory::Copy(Data + DataCursorPosition, value, length);
 
 	DataCursorPosition += length;
 }

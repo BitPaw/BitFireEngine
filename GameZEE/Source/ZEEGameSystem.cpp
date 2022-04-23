@@ -5,11 +5,11 @@
 
 #include <Math/Math.h>
 #include <Math/Geometry/Matrix.hpp>
-#include <Sound/WAV/WAV.h>
-#include <Sound/MID/MID.h>
-#include <Image/PNG/PNG.h>
-#include <Image/JPEG/JPEG.h>
-#include <Font/TTF/TTF.h>
+#include <Media/Sound/WAV/WAV.h>
+#include <Media/Sound/MID/MID.h>
+#include <Media/Image/PNG/PNG.h>
+#include <Media/Image/JPEG/JPEG.h>
+#include <Media/Font/TTF/TTF.h>
 #include <Time/StopWatch.h>
 
 #include <UI/UIText.h>
@@ -130,7 +130,7 @@ void ZEE::ZEEGameSystem::OnStartUp()
 
 #endif // Sound Enable
     GameSystem.MainCamera.Update(0);
-    GameSystem.MainCamera.Move(BF::Vector3<float>(0, 0, -100));
+    GameSystem.MainCamera.Move(0, 0, -100);
 
     GameSystem.PrintContent(true);
 }

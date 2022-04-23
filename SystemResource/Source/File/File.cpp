@@ -5,29 +5,9 @@
 #include <Text/Text.h>
 #include <Hardware/Memory/Memory.h>
 
-BF::FileActionResult BF::File::CheckFile()
-{
-	if (!DoesFileExist(Path))
-	{
-		return BF::FileActionResult::FileNotFound;
-	}
-
-	return BF::FileActionResult::Successful;
-}
-
 BF::File::File()
 {
-	SetFilePath((wchar_t*)nullptr);
-}
-
-BF::File::File(const char* filePath)
-{
-	SetFilePath(filePath);
-}
-
-BF::File::File(const wchar_t* filePath)
-{
-	SetFilePath(filePath);
+	FileHandle = 0;
 }
 
 BF::FileActionResult BF::File::Open(const char* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode)
@@ -188,11 +168,6 @@ BF::FileActionResult BF::File::Close(FileHandleType& fileHandle)
 #endif
 }
 
-BF::ErrorCode BF::File::Remove()
-{
-	return BF::File::Remove(Path);
-}
-
 BF::ErrorCode BF::File::Remove(const char* filePath)
 {
 	int removeResult = FileRemoveA(filePath);
@@ -209,26 +184,12 @@ BF::ErrorCode BF::File::Remove(const wchar_t* filePath)
 	return errorCode;
 }
 
-BF::ErrorCode BF::File::Rename(const char* name)
-{
-	wchar_t nameW[FileNameMaxSize];
-
-	mbstowcs(nameW, name, FileNameMaxSize - 1);
-
-	return File::Rename(Path, nameW);
-}
-
 BF::ErrorCode BF::File::Rename(const char* oldName, const char* newName)
 {
 	int renameResult = FileRenameA(oldName, newName);
 	ErrorCode errorCode = ConvertErrorCode(renameResult);
 
 	return errorCode;
-}
-
-BF::ErrorCode BF::File::Rename(const wchar_t* name)
-{
-	return File::Rename(Path, name);
 }
 
 BF::ErrorCode BF::File::Rename(const wchar_t* oldName, const wchar_t* newName)
@@ -412,40 +373,6 @@ BF::ErrorCode BF::File::DirectoryDelete(const wchar_t* directoryName)
 	}
 
 	return ErrorCode::Successful;
-}
-
-void BF::File::SetFilePath(const char* filePath)
-{
-	if (!filePath)
-	{
-		SetFilePath((wchar_t*)nullptr);
-		return;
-	}
-
-	wchar_t filePathW[PathMaxSize];
-
-	Text::AsciiToUnicode(filePath, PathMaxSize, filePathW,PathMaxSize);
-
-	SetFilePath(filePathW);
-}
-
-void BF::File::SetFilePath(const wchar_t* filePath)
-{
-	FileMarker = nullptr;
-
-	if (filePath == nullptr)
-	{
-		Path[0] = '\0';
-		Drive[0] = '\0';
-		Directory[0] = '\0';
-		FileName[0] = '\0';
-		Extension[0] = '\0';
-		return;
-	}
-
-	Text::Copy(Path, filePath, PathMaxSize);
-
-	PathSplitt(filePath, Drive, Directory, FileName, Extension);
 }
 
 BF::FileActionResult BF::File::ReadFromDisk(unsigned char** outPutBuffer, size_t& outPutBufferSize, const bool addTerminatorByte)
@@ -638,160 +565,12 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 
 void BF::File::FilesInFolder(const wchar_t* folderPath, wchar_t*** list, size_t& listSize)
 {
-
-}
-
-void BF::File::PathSplitt(const char* fullPath, char* drive, char* directory, char* fileName, char* extension)
-{
-	PathSplitt
-	(
-		fullPath, PathMaxSize,
-		drive, DriveMaxSize,
-		directory, DirectoryMaxSize,
-		fileName, FileNameMaxSize,
-		extension, ExtensionMaxSize
-	);
-}
-
-void BF::File::PathSplitt
-(
-	const char* fullPath, size_t fullPathMaxSize,
-	char* drive, size_t driveMaxSize,
-	char* directory, size_t directoryMaxSize,
-	char* fileName, size_t fileNameMaxSize,
-	char* extension, size_t extensionMaxSize
-)
-{
-#if defined(OSUnix)
-	char directoryNameCache[PathMaxSize];
-	char baseNameCache[FileNameMaxSize];
-
-	Text::Copy(directoryNameCache, fullPath, FileNameMaxSize);
-	Text::Copy(baseNameCache, fullPath, FileNameMaxSize);
-
-	char* dirNameResult = dirname(directoryNameCache);
-	char* baseNameResult = basename(baseNameCache);
-
-	size_t directoryLength = Text::Copy(directory, dirNameResult, DirectoryMaxSize);
-	size_t fileNameLength = Text::Copy(fileName, baseNameResult, FileNameMaxSize);
-
-	for (size_t i = fileNameLength - 1; i > 0; --i)
-	{
-		bool isDot = fileName[i] == '.';
-
-		if (isDot)
-		{
-			Text::Copy(extension, fileName + i + 1, ExtensionMaxSize - i);
-			break;
-		}
-	}
-#elif defined(OSWindows)
-	char fileNameCache[FileNameMaxSize];
-
-	_splitpath_s
-	(
-		fullPath,
-		drive, driveMaxSize,
-		directory, directoryMaxSize,
-		fileName, fileNameMaxSize,
-		extension, extensionMaxSize
-	);
-
-	for (size_t i = 0; fileName[i] != '\0'; i++)
-	{
-		bool isDot = fileName[i] == '.';
-
-		if (isDot)
-		{			
-			Text::Copy(fileNameCache, extension + i, FileNameMaxSize);
-			Text::Copy(extension, fileNameCache, FileNameMaxSize);
-			break;
-		}
-	}
-#endif 
-}
-
-void BF::File::PathSplitt(const wchar_t* fullPath, wchar_t* drive, wchar_t* directory, wchar_t* fileName, wchar_t* extension)
-{
-	PathSplitt
-	(
-		fullPath, PathMaxSize,
-		drive, DriveMaxSize,
-		directory, DirectoryMaxSize,
-		fileName, FileNameMaxSize,
-		extension, ExtensionMaxSize
-	);
-}
-
-void BF::File::PathSplitt(const wchar_t* fullPath, size_t fullPathMaxSize, wchar_t* drive, size_t driveMaxSize, wchar_t* directory, size_t directoryMaxSize, wchar_t* fileName, size_t fileNameMaxSize, wchar_t* extension, size_t extensionMaxSize)
-{
-#if defined(OSUnix)
-	char fullPathA[PathMaxSize];
-	char driveA[DriveMaxSize];
-	char directoryA[DirectoryMaxSize];
-	char fileNameA[FileNameMaxSize];
-	char extensionA[ExtensionMaxSize];
-
-	Text::Copy(fullPathA, fullPath, PathMaxSize);
-
-	PathSplitt
-	(
-		fullPathA,
-		driveA,
-		directoryA,
-		fileNameA,
-		extensionA
-	);
-
-	Text::Copy(drive, driveA, DriveMaxSize);
-	Text::Copy(directory, directoryA, DirectoryMaxSize);
-	Text::Copy(fileName, fileNameA, FileNameMaxSize);
-	Text::Copy(extension, extensionA, ExtensionMaxSize);
-#elif defined(OSWindows)
-	wchar_t extensionCache[FileNameMaxSize];
-
-	_wsplitpath_s
-	(
-		fullPath,
-		drive, driveMaxSize,
-		directory, directoryMaxSize,
-		fileName, fileNameMaxSize,
-		extension, extensionMaxSize
-	);
-
-	for (size_t i = 0; extension[i] != '\0'; i++)
-	{
-		bool isDot = extension[i] == '.';
-
-		if (isDot)
-		{
-			Text::Copy(extensionCache, extension + i + 1, FileNameMaxSize);
-			Text::Copy(extension, extensionCache, FileNameMaxSize);
-			break;
-		}
-	}
-#endif 
-}
-
-bool BF::File::DoesFileExist()
-{
-	FileActionResult fileActionResult = Open(Path, FileOpenMode::Read);
-
-	if (fileActionResult == FileActionResult::Successful)
-	{
-		Close();
-
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	
 }
 
 bool BF::File::DoesFileExist(const char* filePath)
 {
-	FILE* file = fopen(filePath, "rb"); 
+	FILE* file = FileOpenA(filePath, "rb"); 
 
 	if (file)
 	{
@@ -805,24 +584,14 @@ bool BF::File::DoesFileExist(const char* filePath)
 
 bool BF::File::DoesFileExist(const wchar_t* filePath)
 {
-	File file(filePath);
-	
-	return file.DoesFileExist();
-}
+	FILE* file = FileOpenW(filePath, L"rb");
 
-void BF::File::GetFileExtension(const char* filePath, char* fileExtension)
-{
-	char dummyBuffer[PathMaxSize];
+	if(file)
+	{
+		fclose(file);
 
-	PathSplitt(filePath, dummyBuffer, dummyBuffer, dummyBuffer, fileExtension);
-}
+		return true;
+	}
 
-bool BF::File::ExtensionEquals(const char* extension)
-{
-	return Text::CompareIgnoreCase(Extension, extension, ExtensionMaxSize);
-}
-
-bool BF::File::ExtensionEquals(const wchar_t* extension)
-{
-	return Text::CompareIgnoreCase(Extension, extension, ExtensionMaxSize);
+	return false;
 }

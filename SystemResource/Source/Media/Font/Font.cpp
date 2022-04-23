@@ -8,10 +8,9 @@
 
 BF::FileActionResult BF::Font::Load(const wchar_t* filePath)
 {
-    File file(filePath);
     FontFormat fontFormat = FileFormatPeek(filePath);
 
-    if (!file.DoesFileExist())
+    if (!File::DoesFileExist(filePath))
     {
         return FileActionResult::FileNotFound;
     }
@@ -87,7 +86,7 @@ BF::FileActionResult BF::Font::Save(const wchar_t* filePath, FontFormat fontForm
 
 BF::FontFormat BF::Font::FileFormatPeek(const wchar_t* filePath)
 {
-    File file(filePath);
+    FilePath file(filePath);
 
     if (file.ExtensionEquals("FNT")) return FontFormat::FormatFNT;
     if (file.ExtensionEquals("OTF")) return FontFormat::FormatOFT;

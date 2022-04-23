@@ -3,6 +3,10 @@
 #include "MIDICommand.h"
 
 #include <File/FileStream.h>
+#include <Hardware/Memory/Memory.h>
+
+#define MIDITrackHeaderID MakeInt('M','T','h','d')
+#define MIDITrackChunkID  MakeInt('M','T','r','k')
 
 BF::MID::MID()
 {
@@ -23,17 +27,34 @@ BF::FileActionResult BF::MID::Load(const wchar_t* filePath)
 	const char midiTrackEndIndicator[5] = "\x00\xFF\x2F\x00";
 
 	FileStream file;
-	FileActionResult loadingResult = file.ReadFromDisk(filePath);
 
-	if (loadingResult != FileActionResult::Successful)
 	{
-		return loadingResult;
+		const FileActionResult loadingResult = file.MapToVirtualMemory(filePath);
+		const bool successful = loadingResult == FileActionResult::Successful;
+
+		if(!successful)
+		{
+			return loadingResult;
+		}
 	}
 
 	// Pasre Chunk header
-	{
+	{		
 		unsigned int chunkLength = 0;
-		bool validHeaderTag = file.ReadAndCompare("MThd", 4u);	
+		
+		{
+			ByteCluster headerSignature;
+
+			file.Read(headerSignature.Data, 4u);
+
+			const bool isValid = headerSignature.Value = MIDITrackHeaderID;
+
+			if(!isValid)
+			{
+				return FileActionResult::InvalidHeaderSignature;
+			}
+		}
+	
 		
 		file.Read(chunkLength, Endian::Big);
 		file.Read(Format, Endian::Big);
@@ -41,18 +62,36 @@ BF::FileActionResult BF::MID::Load(const wchar_t* filePath)
 		file.Read(MusicSpeed, Endian::Big);	
 	}	
 
+	if(TrackListSize == 0)
+	{
+		return FileActionResult::Successful;
+	}
+
 	TrackList = new MIDITrack[TrackListSize];
 
 	// Parse Track Header
-	for (unsigned int i = 0; i < TrackListSize; i++)
+	for (size_t i = 0; i < TrackListSize; i++)
 	{
-		bool validTrackHeaderTag = file.ReadAndCompare("MTrk", 4u);
-		unsigned int chunkLength = 0;
 		MIDITrack& track = TrackList[i];
+		unsigned int chunkLength = 0;
+
+		{
+			ByteCluster headerSignature;
+
+			file.Read(headerSignature.Data, 4u);
+
+			const bool isValid = headerSignature.Value = MIDITrackChunkID;
+
+			if(!isValid)
+			{
+				return FileActionResult::InvalidHeaderSignature;
+			}
+		}		
 
 		file.Read(chunkLength, Endian::Big);
 
-		track.EventData = (char*)malloc(chunkLength);
+		track.ID = i;
+		track.EventData = Memory::Allocate<Byte>(chunkLength);
 		track.EventDataSize = chunkLength;
 
 		file.Read(track.EventData, chunkLength);

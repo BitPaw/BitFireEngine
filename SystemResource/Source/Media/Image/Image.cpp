@@ -296,7 +296,7 @@ void BF::Image::FormatChange(ImageDataFormat imageFormat)
 
 BF::ImageFileFormat BF::Image::FileFormatPeek(const wchar_t* filePath)
 {
-    File file(filePath);
+    FilePath file(filePath);
 
     if (file.ExtensionEquals("BMP"))  return ImageFileFormat::BitMap;
     if (file.ExtensionEquals("GIF"))  return ImageFileFormat::GIF;

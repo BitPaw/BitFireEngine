@@ -9,6 +9,8 @@
 #include <cassert>
 #include <cstring>
 
+#include <Hardware/Memory/Memory.h>
+
 BF::OBJ::OBJ()
 {
     Text::Copy(Name, "[N/A]", OBJNameSize);
@@ -215,12 +217,17 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
     char currentLineBuffer[currentLineBufferSize];
     bool isFirstVertex = true;
     FileStream file; 
-    FileActionResult FileActionResult = file.ReadFromDisk(filePath, true);
 
-    if (FileActionResult != FileActionResult::Successful)
     {
-        return FileActionResult;
-    }   
+        const FileActionResult fileActionResult = file.MapToVirtualMemory(filePath); // TODO: true
+        const bool successful = fileActionResult == FileActionResult::Successful;
+
+        if(!successful)
+        {
+            return fileActionResult;
+        }
+    }
+   
 
     Text::Copy(Name, filePath, OBJNameSize);
 
@@ -307,7 +314,7 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
 
             if (fetchNextMesh)
             {
-                OBJElement* newelementList = (OBJElement*)realloc(ElementList, ++ElementListSize * sizeof(OBJElement));
+                OBJElement* newelementList = Memory::Rellocate<OBJElement>(ElementList, ++ElementListSize);
 
                 if (!newelementList)
                 {

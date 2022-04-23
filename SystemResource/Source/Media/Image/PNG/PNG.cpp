@@ -10,11 +10,21 @@
 #include <Compression/DEFLATE/DeflateBlock.h>
 #include <Container/BitStreamHusk.h>
 #include <Algorithm/CRC32/CRC32.h>
+#include <Hardware/Memory/Memory.h>
 
 #include <string>
 
 #define PNGHeaderSequenz { 0x89, 'P', 'N', 'G', '\r', '\n', 0x1A, '\n' }
 #define PNGDebugInfo false
+
+BF::PNG::PNG()
+{
+}
+
+BF::PNG::~PNG()
+{
+    Memory::Release(PixelData, PixelDataSize);
+}
 
 unsigned int BF::PNG::BitsPerPixel()
 {
@@ -30,22 +40,27 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
     size_t imageDataChunkCacheSizeMAX = 0u;
     Byte* imageDataChunkCache = nullptr;
 
-    memset(this, 0, sizeof(PNG));
+    Memory::Set(this, 0, sizeof(PNG));
 
     //---<Parse PNG File>------------------------------------------------------
     {
         FileStream fileStream;
-        FileActionResult fileActionResult = fileStream.ReadFromDisk(filePath);
+      
         bool parseFinished = false;
 
-        if (fileActionResult != FileActionResult::Successful)
         {
-            return fileActionResult;
-        }
+            const FileActionResult fileActionResult = fileStream.MapToVirtualMemory(filePath);
+            const bool sucessful = fileActionResult == FileActionResult::Successful;
+
+            if(!sucessful)
+            {
+                return fileActionResult;
+            }
+        }     
 
         // Allocate Memory for later ImageData Chunks
         imageDataChunkCacheSizeMAX = fileStream.DataSize - 0u;
-        imageDataChunkCache = (Byte*)malloc(imageDataChunkCacheSizeMAX * sizeof(Byte));
+        imageDataChunkCache = Memory::Allocate<Byte>(imageDataChunkCacheSizeMAX);
 
         //---<Check PNG Header>------------------------------------------------
         {
@@ -331,7 +346,7 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
                 {
                     size_t listSize = chunk.Lengh / 2;
                     PaletteHistogram.ColorFrequencyListSize = listSize;
-                    PaletteHistogram.ColorFrequencyList = (unsigned short*)malloc(listSize * sizeof(unsigned short));
+                    PaletteHistogram.ColorFrequencyList = Memory::Allocate<unsigned short>(listSize);
 
                     for (size_t i = 0; i < listSize; i++)
                     {
@@ -370,7 +385,7 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
 
     //---<Allocate>------------------------------------------------------------
     PixelDataSize = ImageHeader.Width * ImageHeader.Height * NumberOfColorChannels(ImageHeader.ColorType);
-    PixelData = (Byte*)malloc(PixelDataSize * sizeof(Byte));   
+    PixelData = Memory::Allocate<Byte>(PixelDataSize);   
     //-------------------------------------------------------------------------
     
 
@@ -386,10 +401,10 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
             DeflateBlock deflateBlock;
 
             size_t zlibDataCache = 0;
-            size_t bitsPerPixel = BitsPerPixel();
-            size_t expectedzlibCacheSize = ZLIB::CalculateExpectedSize(ImageHeader.Width, ImageHeader.Height, bitsPerPixel, ImageHeader.InterlaceMethod);
-            size_t expectedadam7CacheSize = ADAM7::CaluclateExpectedSize(ImageHeader.Width, ImageHeader.Height, bitsPerPixel);
-            Byte* zlibCache = (Byte*)malloc(expectedzlibCacheSize * sizeof(Byte));
+            const size_t bitsPerPixel = BitsPerPixel();
+            const size_t expectedzlibCacheSize = ZLIB::CalculateExpectedSize(ImageHeader.Width, ImageHeader.Height, bitsPerPixel, ImageHeader.InterlaceMethod);
+            const size_t expectedadam7CacheSize = ADAM7::CaluclateExpectedSize(ImageHeader.Width, ImageHeader.Height, bitsPerPixel);
+            Byte* zlibCache = Memory::Allocate<Byte>(expectedzlibCacheSize);
             Byte* adam7Cache = nullptr;
 
             do
@@ -399,15 +414,15 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
             }
             while (!deflateBlock.IsLastBlock);
 
-            adam7Cache = (Byte*)malloc(expectedadam7CacheSize * sizeof(Byte));
+            adam7Cache = Memory::Allocate<Byte>(expectedadam7CacheSize);
 
             ADAM7::ScanlinesDecode(adam7Cache, zlibCache, ImageHeader.Width, ImageHeader.Height, bitsPerPixel, ImageHeader.InterlaceMethod);
 
-            free(zlibCache);
+            Memory::Release(zlibCache, zlibDataCache);
 
             PNGColorCompressor::Decompress(adam7Cache, PixelData, ImageHeader.Width, ImageHeader.Height, ImageHeader.BitDepth, ImageHeader.ColorType);
        
-            free(adam7Cache);
+            Memory::Release(adam7Cache, expectedadam7CacheSize);
 
             break;
         }

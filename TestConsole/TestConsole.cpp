@@ -1,6 +1,7 @@
 #include <iostream>
 #include <Hardware/Processor/Processor.h>
 #include <Encryption/MD5/MD5.h>
+#include <File/File.h>
 
 int main()
 {
@@ -9,6 +10,15 @@ int main()
 
   //  BF::Processor::FetchInfo(processorInfo);
 
+
+    BF::File file;
+
+    HANDLE handle = 0;
+
+    const auto x = file.MapToVirtualRAM(handle, L"C:/Users/BitPaw/Videos/Compile Info.txt");
+
+
+    /*
 
   
     const char input[] = "";// "The quick brown fox jumps over the lazy dog.";
@@ -19,7 +29,7 @@ int main()
 
     size_t writtenBytes = BF::MD5::Encrypt(input, inputSize, output, outputSize);
 
-
+    */
 
 
 

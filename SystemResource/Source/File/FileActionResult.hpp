@@ -4,6 +4,8 @@ namespace BF
 {
 	enum class FileActionResult
 	{
+		Invalid,
+
 		Successful,
 
 		EmptyPath,
@@ -18,6 +20,8 @@ namespace BF
 		FileCloseFailure,
 		FileReadFailure,
 		FileCopyFailure,
+
+		FileMemoryMappingFailed,
 
 		// Parsing
 		InvalidHeaderSignature,

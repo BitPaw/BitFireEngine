@@ -22,7 +22,7 @@ BF::FileActionResult BF::WAV::Load(const wchar_t* filePath)
 
 	// Load file
 	{
-		const FileActionResult FileActionResult = file.ReadFromDisk(filePath);
+		const FileActionResult FileActionResult = file.MapToVirtualMemory(filePath);
 		const bool successful = FileActionResult == FileActionResult::Successful;
 
 		if (!successful)

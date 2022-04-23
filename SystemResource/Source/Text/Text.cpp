@@ -4,6 +4,8 @@
 #include <cassert>
 #include <cstdarg>
 
+#include <Hardware/Memory/Memory.h>
+
 #define MakeLetterCaseLower(character) (character | 0b00100000)
 #define MakeLetterCaseUpper(character) (character & 0b11011111)
 #define CompareLetterCaseIgnore(a, b) (MakeLetterCaseLower(a) == b) || (MakeLetterCaseUpper(a) == b)
@@ -51,12 +53,12 @@ size_t BF::Text::UnicodeToAscii(const wchar_t* input, const size_t inputSize, ch
 
 void BF::Text::Clear(char* string, const size_t stringSize)
 {
-	memset(string, 0, sizeof(char) * stringSize);
+	Memory::Set(string, 0, sizeof(char) * stringSize);
 }
 
 void BF::Text::Clear(wchar_t* string, const size_t stringSize)
 {
-	memset(string, 0, sizeof(wchar_t) * stringSize);
+	Memory::Set(string, 0, sizeof(wchar_t) * stringSize);
 }
 
 size_t BF::Text::Length(const char* string)
@@ -498,7 +500,7 @@ void BF::Text::Parse(char* buffer, size_t bufferSize, const char* syntax, ...)
 				char* source = &buffer[startIndex];
 				unsigned int length = stopIndex - startIndex - 1;
 
-				memcpy(destination, source, length);
+				Memory::Copy(destination, source, length);
 				destination[length] = '\0';
 				break;
 			}

@@ -58,6 +58,9 @@ namespace BF
 
 		//---------------------------------------------------------------------------
 
+		PNG();
+		~PNG();
+
 		unsigned int BitsPerPixel();
 
 		FileActionResult Load(const wchar_t* filePath);
