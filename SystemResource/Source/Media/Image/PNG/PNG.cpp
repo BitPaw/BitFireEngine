@@ -344,7 +344,8 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
                 }
                 case PNGChunkType::PaletteHistogram:
                 {
-                    size_t listSize = chunk.Lengh / 2;
+                    const size_t listSize = chunk.Lengh / 2;
+
                     PaletteHistogram.ColorFrequencyListSize = listSize;
                     PaletteHistogram.ColorFrequencyList = Memory::Allocate<unsigned short>(listSize);
 

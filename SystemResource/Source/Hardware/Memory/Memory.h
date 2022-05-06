@@ -8,11 +8,15 @@
 #include "MemoryUsage.h"
 
 #include <OS/OSDefine.h>
+#include <ErrorCode.h>
 
 #if defined(OSUnix)
+#include <sys/mman.h>
 #elif defined(OSWindows)
 #include <Windows.h>
 #endif
+#include <File/FileCachingMode.h>
+#include <File/FileActionResult.hpp>
 
 #define MemoryDebug 0
 
@@ -25,10 +29,11 @@ namespace BF
 
         static int Compare(const void* a, const void* b, const size_t length);
 
+        static bool VirtualMemoryPrefetch(const void* adress, const size_t size);
         static bool VirtualMemoryAllocate();
         static bool VirtualMemoryRelease();
-        static bool VirtualMemoryFileMap(const char* filePath, HANDLE& fileHandle, HANDLE& mappingHandle, void** fileData, size_t& fileSize);
-        static bool VirtualMemoryFileMap(const wchar_t* filePath, HANDLE& fileHandle, HANDLE& mappingHandle, void** fileData, size_t& fileSize);
+        static FileActionResult VirtualMemoryFileMap(const char* filePath, HANDLE& fileHandle, HANDLE& mappingHandle, void** fileData, size_t& fileSize);
+        static FileActionResult VirtualMemoryFileMap(const wchar_t* filePath, HANDLE& fileHandle, HANDLE& mappingHandle, void** fileData, size_t& fileSize);
         static bool VirtualMemoryFileUnmap(HANDLE& fileHandle, HANDLE& mappingHandle, void** fileData, size_t& fileSize);
 
         template<typename T>
@@ -44,9 +49,20 @@ namespace BF
             return reallocatedAdress;
         }
 
-        static bool Advise(void* adress, const size_t length)
+        static bool Advise(const void* adress, const size_t length, const FileCachingMode fileCachingMode)
         {
+            const int cachingModeID = ConvertFileCachingMode(fileCachingMode);
+
+#if defined(OSUnix)    
+            const int result = madvise(adress, length, cachingModeID);
+            const ErrorCode errorCode = ConvertErrorCode(result);
+            const bool successful = errorCode == ErrorCode::Successful;
+
+            return successful;
+
+#elif defined(OSWindows)
             return true;
+#endif                 
         }
 
         // Allocates memory on the HEAP.

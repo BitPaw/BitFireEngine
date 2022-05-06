@@ -108,11 +108,15 @@ BF::FileActionResult BF::FileStream::MapToVirtualMemory(const char* filePath)
 BF::FileActionResult BF::FileStream::MapToVirtualMemory(const wchar_t* filePath)
 {
 	void** adress = (void**)&Data;
-	const bool x = Memory::VirtualMemoryFileMap(filePath, _fileHandle, _fileMappingHandle, adress, DataSize);
+	const FileActionResult result = Memory::VirtualMemoryFileMap(filePath, _fileHandle, _fileMappingHandle, adress, DataSize);
+	const bool successful = result == FileActionResult::Successful;
 
-	_fileLocation = FileLocation::MappedFromDisk;
+	if(successful)
+	{
+		_fileLocation = FileLocation::MappedFromDisk;
+	}
 
-	return FileActionResult::Successful;
+	return result;
 }
 
 BF::FileActionResult BF::FileStream::UnmapFromVirtualMemory()

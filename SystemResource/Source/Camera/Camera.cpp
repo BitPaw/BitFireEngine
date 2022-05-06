@@ -82,8 +82,8 @@ void BF::Camera::Follow(float deltaTime)
 
 BF::Camera::Camera()
 {
-	_walkSpeed = 0.3;
-	_viewSpeed = 2.5;
+	_walkSpeed = 0.2;
+	_viewSpeed = 0.5;
 
 	FieldOfView = 75;
 	Height = 1000;

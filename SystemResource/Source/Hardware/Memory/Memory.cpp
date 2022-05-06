@@ -11,6 +11,44 @@
 #include <ClipBoard/ClipBoard.cpp>
 #include <File/File.h>
 
+
+void* operator new(const size_t size)
+{
+	void* adress = malloc(size);
+
+#if MemoryDebug
+	printf("[#][Memory] 0x%p (%10zi B) Allocate (new)\n", adress, size);
+#endif  
+
+	return adress;
+}
+
+/*
+void* operator new[](const size_t size)
+{
+#if MemoryDebug
+	printf("[#][Memory] 0x%p (%10zi B) Compare to 0x%p\n", a, length, b);
+#endif  
+}*/
+
+void operator delete(void* adress)
+{
+#if MemoryDebug
+	printf("[#][Memory] 0x%p free (delete)\n", adress);
+#endif  
+
+	free(adress);
+}
+
+/*
+void operator delete[](void* adress)
+{
+#if MemoryDebug
+	printf("[#][Memory] 0x%p (%10zi B) Compare to 0x%p\n", a, length, b);
+#endif  
+}*/
+
+
 bool BF::Memory::Scan(MemoryUsage& memoryUsage)
 {
 #if defined(OSUnix)
@@ -47,6 +85,36 @@ int BF::Memory::Compare(const void* a, const void* b, const size_t length)
 	return memcmp(a, b, length);
 }
 
+bool BF::Memory::VirtualMemoryPrefetch(const void* adress, const size_t size)
+{
+
+#if defined(OSUnix)
+#elif defined(OSWindows)
+#if defined(WindowsAtleast8)
+
+	const HANDLE process = GetCurrentProcess();
+	const size_t numberOfEntries = 2;
+	WIN32_MEMORY_RANGE_ENTRY memoryRangeEntry;
+	const size_t flags = 0; // reserved and needs to be 0
+
+	memoryRangeEntry.VirtualAddress = (void*)adress;
+	memoryRangeEntry.NumberOfBytes = size;
+
+	//const bool prefetchResult = PrefetchVirtualMemory(process, numberOfEntries, &memoryRangeEntry, flags);
+
+	printf("[#][Memory] 0x%p (%10zi B) Pre-Fetched\n", adress, size);
+
+#endif // defined(WindowsAtleast8)
+#else
+#pragama message EEEE
+#if MemoryDebug
+printf("[#][Memory] 0x%p (%10zi B) Pre-Fetched [NOT SUPPORTED] Skipped...\n", adress, size);
+#endif  
+#endif
+
+	return false;
+}
+
 bool BF::Memory::VirtualMemoryAllocate()
 {
 	return false;
@@ -57,12 +125,12 @@ bool BF::Memory::VirtualMemoryRelease()
 	return false;
 }
 
-bool BF::Memory::VirtualMemoryFileMap(const char* filePath, HANDLE& fileHandle, HANDLE& mappingHandle, void** fileData, size_t& fileSize)
+BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const char* filePath, HANDLE& fileHandle, HANDLE& mappingHandle, void** fileData, size_t& fileSize)
 {
-	return false;
+	return FileActionResult::Invalid;
 }
 
-bool BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, HANDLE& fileHandle, HANDLE& mappingHandle, void** fileData, size_t& fileSize)
+BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, HANDLE& fileHandle, HANDLE& mappingHandle, void** fileData, size_t& fileSize)
 {
 	fileHandle = 0;
 	mappingHandle = 0;
@@ -75,7 +143,7 @@ bool BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, HANDLE& fileHandl
 
 		if(!openSuccess)
 		{
-			return false; //openResult;
+			return openResult; //openResult;
 		}
 	}
 
@@ -115,7 +183,7 @@ bool BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, HANDLE& fileHandl
 
 		if(!successful)
 		{
-			return false;// FileActionResult::FileMemoryMappingFailed;
+			return FileActionResult::FileMemoryMappingFailed;
 		}
 
 		mappingHandle = fileMappingHandleResult;
@@ -140,28 +208,17 @@ bool BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, HANDLE& fileHandl
 			numaNodePreferred
 		);
 
-		{
-			const HANDLE process = GetCurrentProcess();
-			const size_t numberOfEntries = 2;
-			WIN32_MEMORY_RANGE_ENTRY memoryRangeEntry;
-			const size_t flags = 0; // reserved and needs to be 0
-
-			memoryRangeEntry.VirtualAddress = fileMapped;
-			memoryRangeEntry.NumberOfBytes = fileSize;
-
-			const bool prefetchResult = PrefetchVirtualMemory(process, numberOfEntries, &memoryRangeEntry, flags);
-		}
-
-	
+		VirtualMemoryPrefetch(fileMapped, fileSize);	
 
 		(*fileData) = fileMapped;
 	}
 #endif
 
-
 #if MemoryDebug
 	printf("[#][Memory] 0x%p (%10zi B) MMAP %ls\n", (*fileData), fileSize, filePath);
 #endif    
+
+	return FileActionResult::Successful;
 }
 
 bool BF::Memory::VirtualMemoryFileUnmap(HANDLE& fileHandle, HANDLE& mappingHandle, void** fileData, size_t& fileSize)
