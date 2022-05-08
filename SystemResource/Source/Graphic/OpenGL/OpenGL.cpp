@@ -5,6 +5,7 @@
 #include <cassert>
 
 #include <GL/glew.h>
+#include <Hardware/Memory/Memory.h>
 
 void BF::OpenGL::Initialize()
 {
@@ -49,11 +50,16 @@ void BF::OpenGL::RenderBothSides(bool renderBothSides)
 
 char BF::OpenGL::UseShaderProgram(int shaderProgramID)
 {
-    assert(shaderProgramID != -1);
+    const bool valid = shaderProgramID != -1;
+
+    if(!valid)
+    {
+        return false;
+    }
 
     glUseProgram(shaderProgramID);
 
-    return 0;
+    return true;
 }
 
 void BF::OpenGL::VertexArrayBind(int vertexArrayID)
@@ -99,7 +105,7 @@ void BF::OpenGL::GLSLVersionsSupported(const char*** shaderList, int shaderListS
 {
     glGetIntegerv(GL_NUM_SHADING_LANGUAGE_VERSIONS, &shaderListSize);
 
-    (*shaderList) = (const char**)malloc(shaderListSize * sizeof(const char**));
+    (*shaderList) = Memory::Allocate<const char*>(shaderListSize);
 
     for (size_t i = 0; i < shaderListSize; i++)
     {
@@ -144,7 +150,7 @@ unsigned int BF::OpenGL::ShaderCompile(unsigned int type, char* shaderString)
             int lengh;
 
             glGetShaderiv(id, GL_INFO_LOG_LENGTH, &lengh);
-            char* message = (char*)malloc(lengh * sizeof(char));
+            char* message = Memory::Allocate<char>(lengh);
 
             glGetShaderInfoLog(id, lengh, &lengh, message);
 
@@ -160,7 +166,7 @@ unsigned int BF::OpenGL::ShaderCompile(unsigned int type, char* shaderString)
                 message
             );
 
-            free(message);
+            Memory::Release(message, lengh);
 
             glDeleteShader(id);
 
@@ -219,15 +225,30 @@ void BF::OpenGL::IndexDataDefine(unsigned int* indexID, int size, void* data)
 
 int BF::OpenGL::ShaderGetUniformLocationID(int shaderID, const char* UniformName)
 {
-    return glGetUniformLocation(shaderID, UniformName);
+    const bool valid = (shaderID != -1) && (UniformName != nullptr);
+
+    if(!valid)
+    {
+        return -1;
+    }
+
+    {
+        const int uniformLocationID = glGetUniformLocation(shaderID, UniformName);
+
+        return uniformLocationID;
+    }
 }
 
 void BF::OpenGL::ShaderSetUniformMatrix4x4(const int matrixUniformID, const float* matrix)
 {
-    if (matrixUniformID != -1)
+    const bool valid = matrixUniformID != -1;
+
+    if (!valid)
     {
-        glUniformMatrix4fv(matrixUniformID, 1, GL_FALSE, matrix);
+        return;     
     }
+
+    glUniformMatrix4fv(matrixUniformID, 1, GL_FALSE, matrix);
 }
 
 void BF::OpenGL::ShaderSetUniformVector3(int vector3UniformID, float x, float y, float z)

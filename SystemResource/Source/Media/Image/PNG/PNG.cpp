@@ -525,7 +525,7 @@ BF::FileActionResult BF::PNG::ConvertTo(Image& image)
         case BF::PNGColorType::InvalidColorType:
         case BF::PNGColorType::IndexedColor:
         case BF::PNGColorType::GrayscaleWithAlphaChannel:
-            image.Format = ImageDataFormat::Unkown;           
+            image.Format = ImageDataFormat::Invalid;           
             break;
 
         case BF::PNGColorType::TruecolorWithAlphaChannel:

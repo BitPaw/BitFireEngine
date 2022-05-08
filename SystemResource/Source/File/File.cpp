@@ -135,9 +135,26 @@ BF::FileActionResult BF::File::Open(FileHandleType& fileHandle, const wchar_t* f
 		hTemplateFile
 	);
 
-	bool successful = fileHandle != INVALID_HANDLE_VALUE;
+	{
+		const bool successful = fileHandle != INVALID_HANDLE_VALUE;
 
-	return successful ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
+		if(!successful)
+		{
+			const ErrorCode error = GetCurrentError();
+
+			switch(error)
+			{
+				case ErrorCode::NoSuchFileOrDirectory:
+					return FileActionResult::FileNotFound;
+
+				default:
+					return FileActionResult::FileOpenFailure;
+			}
+
+		}
+	}
+
+	return FileActionResult::Successful;
 #endif
 }
 
@@ -393,7 +410,7 @@ BF::FileActionResult BF::File::ReadFromDisk(unsigned char** outPutBuffer, size_t
 		++outPutBufferSize;
 	}
 
-	unsigned char* dataBuffer = (unsigned char*)malloc(outPutBufferSize * sizeof(unsigned char));
+	unsigned char* dataBuffer = Memory::Allocate<unsigned char>(outPutBufferSize);
 
 	if (!dataBuffer) // If malloc failed
 	{

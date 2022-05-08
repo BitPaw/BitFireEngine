@@ -4,7 +4,7 @@ namespace BF
 {
 	enum class ImageType
 	{
-		TextureUnkown,
+		Invalid,
 
 		Texture2D,
 		Texture3D,

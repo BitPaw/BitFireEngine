@@ -7,5 +7,5 @@ BF::RenderableSegment::RenderableSegment()
 	ShaderID = -1;
 	TextureID = -1;
 
-	TextureType = ImageType::TextureUnkown;
+	TextureType = ImageType::Invalid;
 }

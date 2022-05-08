@@ -2,13 +2,13 @@
 
 BF::Texture::Texture()
 {
-	ID = 0;
-	Type = ImageType::TextureUnkown;
-    Filter = ImageFilter::NoFilter;
-    LayoutNear = ImageLayout::Nearest;
-    LayoutFar = ImageLayout::Nearest;
-    WrapHeight = ImageWrap::NoModification;
-    WrapWidth = ImageWrap::NoModification;
+	ID = -1;
+	Type = ImageType::Invalid;
+    Filter = ImageFilter::Invalid;
+    LayoutNear = ImageLayout::Invalid;
+    LayoutFar = ImageLayout::Invalid;
+    WrapHeight = ImageWrap::Invalid;
+    WrapWidth = ImageWrap::Invalid;
 }
 
 void BF::Texture::TextureWrap(ImageWrap wrap)

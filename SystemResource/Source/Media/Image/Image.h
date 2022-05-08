@@ -25,12 +25,14 @@ namespace BF
 		Image();
 		~Image();
 
+		bool IsDataValid() const;
+
 		void RemoveColor(unsigned char red, unsigned char green, unsigned char blue);
 
 		void FlipHorizontal();
 		void FlipVertical();
 
-		void Resize(unsigned int width, unsigned height);
+		void Resize(const size_t width, const size_t height);
 
 		void FillRandome();
 

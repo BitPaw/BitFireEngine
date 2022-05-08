@@ -4,6 +4,8 @@ namespace BF
 {
 	enum class ImageWrap
 	{	
+		Invalid,
+
 		// Images will be used 'as is' and will not be streched whatsoever.
 		NoModification,
 

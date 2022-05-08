@@ -4,8 +4,8 @@ const char* BF::ImageTypeToString(ImageType imageType)
 {
 	switch (imageType)
 	{
-		case ImageType::TextureUnkown:
-			return "Unkown";
+		case ImageType::Invalid:
+			return "Invalid";
 
 		case 	ImageType::Texture2D:
 			return "2D";

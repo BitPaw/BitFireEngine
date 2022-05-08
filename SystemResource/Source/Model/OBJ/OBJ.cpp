@@ -618,10 +618,11 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
 
             Text::Copy(material.Name, mtlMaterial.Name, MTLNameSize);
           //  Text::Copy(material.FilePath, mtlMaterial.TextureFilePath, MTLFilePath);
-            memcpy(material.Ambient, mtlMaterial.Ambient, 3 * sizeof(float));
-            memcpy(material.Diffuse, mtlMaterial.Diffuse, 3 * sizeof(float));
-            memcpy(material.Specular, mtlMaterial.Specular, 3 * sizeof(float));
-            memcpy(material.Emission, mtlMaterial.Emission, 3 * sizeof(float));
+                       
+            Memory::Copy(material.Ambient, mtlMaterial.Ambient, 3 * sizeof(float));
+            Memory::Copy(material.Diffuse, mtlMaterial.Diffuse, 3 * sizeof(float));
+            Memory::Copy(material.Specular, mtlMaterial.Specular, 3 * sizeof(float));
+            Memory::Copy(material.Emission, mtlMaterial.Emission, 3 * sizeof(float));
         }
     }
 
@@ -653,14 +654,14 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
         const size_t verexDataSize = faceElementListSize * (3 + 3 + 4 + 2);
 
         mesh.VertexDataListSize = verexDataSize;
-        mesh.VertexDataList = (float*)malloc(verexDataSize * sizeof(float));
+        mesh.VertexDataList = Memory::Allocate<float>(verexDataSize);
        
 
         // mesh.Structure.RenderType = VertexStructureSize == 4 ? RenderMode::Square : RenderMode::Triangle;
         //mesh.VertexDataStructureListSize
 
         meshSegment.IndexDataListSize = faceElementListSize;
-        meshSegment.IndexDataList = (unsigned int*)malloc(faceElementListSize * sizeof(unsigned int));
+        meshSegment.IndexDataList = Memory::Allocate<unsigned int>(faceElementListSize);
 
         //meshSegment. = malloc .Allocate(faceElementListSize * (3 + 3 + 4 + 2), faceElementListSize);
         //mesh.RenderInfo.MaterialID = element.MaterialListIndex;
@@ -733,7 +734,7 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
 
             meshSegment.IndexDataList[i] = i;
 
-            memcpy(vertexDataArray + vertecDataIndex, data, sizeof(float) * dataSize);
+            Memory::Copy(vertexDataArray + vertecDataIndex, data, sizeof(float) * dataSize);
 
             vertecDataIndex += dataSize;        
         }

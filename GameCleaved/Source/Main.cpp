@@ -7,9 +7,9 @@
 #include <Window/Window.h>
 
 #include <System/BitFireEngine.h>
+#include <Hardware/Memory/Memory.h>
 
 #include "CleavedGameSystem.h"
-
 //-----------------------------------------------------------------------------
 
 void OnMouseButtonEvent(const BF::MouseButton mouseButton, const BF::ButtonState buttonState)
@@ -129,8 +129,8 @@ void TakeScreenShot(BF::Window& window, BF::Image& image)
 
     if (image.PixelDataSize != size)
     {
-        free(image.PixelData);
-        image.PixelData = (unsigned char*)malloc(size);
+        BF::Memory::Release(image.PixelData, size);
+        image.PixelData = BF::Memory::Allocate<unsigned char>(size);
         image.PixelDataSize = size;
     }
 

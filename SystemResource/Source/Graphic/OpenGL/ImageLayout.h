@@ -4,6 +4,8 @@ namespace BF
 {
 	enum class ImageLayout
 	{
+        Invalid,
+
         // Returns the value of the texture element that is nearest to the specified texture coordinates.
         Nearest,
 

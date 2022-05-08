@@ -29,7 +29,7 @@ BF::RefreshRateMode RefreshRate;
 
 BF::BitFireEngine* BF::BitFireEngine::_instance = nullptr;
 
-void CameraDataGet(float shaderID)
+void CameraDataGet(const unsigned int shaderID)
 {
     _matrixModelID = BF::OpenGL::ShaderGetUniformLocationID(shaderID, "MatrixModel");
     _matrixViewID = BF::OpenGL::ShaderGetUniformLocationID(shaderID, "MatrixView");
@@ -769,6 +769,16 @@ void BF::BitFireEngine::Register(Texture& texture)
 void BF::BitFireEngine::Register(TextureCube& textureCube)
 {
     OpenGLID textureID = -1;
+    
+    // Check
+    {
+        const bool isValid = textureCube.HasTextures();
+
+        if(!isValid)
+        {
+            return;
+        }
+    }
 
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
@@ -786,8 +796,8 @@ void BF::BitFireEngine::Register(TextureCube& textureCube)
     for(size_t i = 0; i < 6; i++)
     {
         Image& image = textureCube.ImageList[i];
-        const float textureTypeID = (unsigned int)GL_TEXTURE_CUBE_MAP_POSITIVE_X + i;
-        const float imageFormat = ToImageFormat(image.Format);
+        const unsigned int textureTypeID = (unsigned int)GL_TEXTURE_CUBE_MAP_POSITIVE_X + i;
+        const unsigned int imageFormat = ToImageFormat(image.Format);
         const ImageType imageType = ToImageType(textureTypeID);
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -910,6 +920,17 @@ void BF::BitFireEngine::Register(Renderable& renderable, const Model& model)
 
 void BF::BitFireEngine::Register(Renderable& renderable, const float* vertexData, const size_t vertexDataSize, const unsigned int* indexList, const size_t indexListSize)
 {
+    // Check
+    {
+        const bool hasData = vertexData && vertexDataSize && indexList && indexListSize;
+        
+
+        if(!hasData)
+        {
+            return;
+        }
+    }
+
     unsigned int id[3] = { -1,-1,-1 };
 
     glGenVertexArrays(1, &id[0]);
@@ -1272,9 +1293,7 @@ BF::FileActionResult BF::BitFireEngine::Load(Texture& texture, const wchar_t* fi
 
     _imageAdd.Lock();
     _textureList.Add(&texture);
-    _imageAdd.Release();
-
-    texture.Type = ImageType::Texture2D;
+    _imageAdd.Release(); 
 
     if(loadAsynchronously)
     {
@@ -1289,6 +1308,13 @@ BF::FileActionResult BF::BitFireEngine::Load(Texture& texture, const wchar_t* fi
 
         if(isSucessful)
         {
+            texture.Type = ImageType::Texture2D;
+            texture.Filter = ImageFilter::NoFilter;
+            texture.LayoutNear = ImageLayout::Nearest;
+            texture.LayoutFar = ImageLayout::Nearest;
+            texture.WrapHeight = ImageWrap::StrechEdges;
+            texture.WrapWidth = ImageWrap::StrechEdges;
+
             Register(texture);
         }
 
@@ -1926,7 +1952,7 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
         {
             const SkyBox& skyBox = *DefaultSkyBox;
             const Renderable& renderable = skyBox.RenderInfo;
-            const float shaderID = skyBox.Shader.ID;
+            const unsigned int shaderID = skyBox.Shader.ID;
             Matrix4x4<float> viewTri(MainCamera.MatrixView);
 
             viewTri.ResetForthAxis();
@@ -2014,7 +2040,7 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
                 const OpenGLID textureID = segment.TextureID != -1 ? segment.TextureID : _defaultTextureID;
                 const OpenGLID size = segment.Size;
 
-                assert(textureID != -1);
+               // assert(textureID != -1);
                 assert(indexBufferID != -1);
                 assert(size > 0 && size != -1);
 
@@ -2455,7 +2481,7 @@ const BF::ImageType BF::BitFireEngine::ToImageType(const OpenGLID token)
             return ImageType::TextureCubeFront;
 
         default:
-            return ImageType::TextureUnkown;
+            return ImageType::Invalid;
     }
 }
 

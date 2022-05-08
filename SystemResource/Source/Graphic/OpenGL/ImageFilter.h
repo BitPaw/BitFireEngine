@@ -4,6 +4,8 @@ namespace BF
 {
 	enum class ImageFilter
 	{
+		Invalid,
+
 		// No filter Option, use this for Pixelated Textures.
 		NoFilter,
 

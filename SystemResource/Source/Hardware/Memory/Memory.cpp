@@ -102,7 +102,9 @@ bool BF::Memory::VirtualMemoryPrefetch(const void* adress, const size_t size)
 
 	//const bool prefetchResult = PrefetchVirtualMemory(process, numberOfEntries, &memoryRangeEntry, flags);
 
+#if MemoryDebug
 	printf("[#][Memory] 0x%p (%10zi B) Pre-Fetched\n", adress, size);
+#endif
 
 #endif // defined(WindowsAtleast8)
 #else
@@ -158,9 +160,6 @@ BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, H
 
 		fileSize = largeInt.QuadPart;
 	}
-
-
-
 
 	// Create mapping
 	{

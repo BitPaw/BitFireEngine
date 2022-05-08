@@ -2,14 +2,18 @@
 
 #include <Media/Image/Image.h>
 
+#define TextureCubeImageListSize 6
+
 namespace BF
 {
 	struct TextureCube
 	{
 		public:
 		unsigned int ID;
-		Image ImageList[6];
+		Image ImageList[TextureCubeImageListSize];
 
 		TextureCube();
+
+		bool HasTextures();
 	};
 }

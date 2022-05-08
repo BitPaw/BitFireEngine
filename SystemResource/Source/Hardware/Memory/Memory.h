@@ -74,10 +74,32 @@ namespace BF
             T* adress = (T*)malloc(requestedBytes);
 
 #if MemoryDebug
-            printf("[#][Memory] 0x%p (%10zi B) Alloc\n", adress, requestedBytes);
+            printf("[#][Memory] 0x%p (%10zi B) Allocate\n", adress, requestedBytes);
 #endif      
 
             return adress;
+        }
+
+        template<typename T>
+        static T* Reallocate(T* adress, const size_t size)
+        {
+            const size_t requestedBytes = size * sizeof(T);
+            T* adressReallocated = (T*)realloc(adress, requestedBytes);
+
+#if MemoryDebug
+            const bool hasChanged = adress != adressReallocated;
+
+            if(hasChanged)
+            {
+                printf("[#][Memory] 0x%p (%10zi B) Reallocate to 0x%p\n", adress, requestedBytes, adressReallocated);
+            }
+            else
+            {
+                printf("[#][Memory] 0x%p (%10zi B) Reallocate (No Change)\n", adress, requestedBytes);
+            }           
+#endif    
+
+            return adressReallocated;
         }
 
         static void Release(void* adress, const size_t size)
@@ -104,6 +126,5 @@ namespace BF
 #endif 
             memcpy(target, source, size);
         }
-        //static void* Realloc();
     };
 }

@@ -4,7 +4,7 @@ namespace BF
 {
 	enum class ImageDataFormat
 	{
-		Unkown,
+		Invalid,
 
 		AlphaMaskBinary,
 		AlphaMask,

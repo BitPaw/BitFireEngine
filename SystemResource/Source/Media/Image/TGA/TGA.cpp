@@ -229,7 +229,7 @@ BF::FileActionResult BF::TGA::Save(const wchar_t* filePath)
 
 BF::FileActionResult BF::TGA::ConvertTo(Image& image)
 {	
-	ImageDataFormat imageFormat = ImageDataFormat::Unkown;
+	ImageDataFormat imageFormat = ImageDataFormat::Invalid;
 	size_t pixelDataLengh = 0;
 	size_t bytesPerPixel = 0;
 	unsigned char* newImageData = nullptr;
