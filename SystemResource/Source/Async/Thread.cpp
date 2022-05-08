@@ -8,7 +8,8 @@ BF::Thread::Thread()
 ThreadID BF::Thread::Run(const ThreadFunction threadFunction, const void* parameter)
 {
 #ifdef OSUnix
-	const ThreadID threadID = pthread_create(&threadID, 0, threadFunction, parameter);
+    ThreadID threadID = 0;
+	const int result = pthread_create(&threadID, 0, threadFunction, (void*)parameter);
 #elif defined(OSWindows)
 	const LPSECURITY_ATTRIBUTES lpThreadAttributes = NULL;
 	const SIZE_T dwStackSize = NULL;
@@ -26,7 +27,7 @@ void BF::Thread::WaitForFinish(const ThreadID threadID)
 {
 #ifdef OSUnix
     //pthread_join(thread->ID, NULL);
-#elif defined(OSWindows)	
+#elif defined(OSWindows)
 	DWORD exitCode = 0;
 
 	do
@@ -34,5 +35,5 @@ void BF::Thread::WaitForFinish(const ThreadID threadID)
 		GetExitCodeThread(threadID, &exitCode);
 	}
 	while (exitCode == STILL_ACTIVE);
-#endif 
+#endif
 }

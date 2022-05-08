@@ -1,4 +1,4 @@
-#include "Level.h"
+/*#include "Level.h"
 
 #include <File/File.h>
 
@@ -22,4 +22,4 @@ BF::FileActionResult BF::Level::Load()
 size_t BF::Level::FullSizeInMemory()
 {
 	return sizeof(*this);
-}
+}*/

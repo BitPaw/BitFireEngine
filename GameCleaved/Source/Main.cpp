@@ -90,10 +90,16 @@ ThreadFunctionReturnType RenderLoop(void* windowAdress)
 
     while (true)
     {
-        if (!window->HandleDeviceContext)
+         #if defined(OSUnix)
+
+        #elif defined(OSWindows)
+   if (!window->HandleDeviceContext)
         {
             continue;
         }
+        #endif
+
+
         // Set every pixel in the frame buffer to the current clear color.
        //glClear(GL_COLOR_BUFFER_BIT);
 
@@ -109,7 +115,11 @@ ThreadFunctionReturnType RenderLoop(void* windowAdress)
         // Flush drawing command buffer to make drawing happen as soon as possible.
         glFlush();
 
-        SwapBuffers(window->HandleDeviceContext);
+        #if defined(OSUnix)
+
+        #elif defined(OSWindows)
+           SwapBuffers(window->HandleDeviceContext);
+        #endif
 
         //  BFFF::Window::Update();
          // UpdateWindow(winow);
@@ -148,7 +158,7 @@ void TakeScreenShot(BF::Window& window, BF::Image& image)
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int nShowCmd)
 #else
 int main(int amountOFParameters, char** parameter)
-#endif  
+#endif
 {
     //---<Error Callback>-----
     auto functionPointer = signal(SIGABRT, CallBackErrorOnError);

@@ -2,7 +2,7 @@
 
 BF::AsyncLock::AsyncLock()
 {
-	HandleID = 0;
+	//HandleID = 0;
 }
 
 BF::AsyncLock::~AsyncLock()
@@ -14,9 +14,11 @@ int BF::AsyncLock::Create()
 {
 	int createResult = -1;
 
-#ifdef OSUnix
+#if defined(OSUnix)
 	int sharedPointer = 0;
 	unsigned int value = 1;
+
+	//HandleID = 0;
 
 	createResult = sem_init(&HandleID, sharedPointer, value);
 #elif defined(OSWindows)
@@ -27,7 +29,7 @@ int BF::AsyncLock::Create()
 
 	createResult = 0;
 	HandleID = CreateSemaphore(lpSemaphoreAttributes, lInitialCount, lMaximumCount, lpName);
-#endif 
+#endif
 
 	return createResult;
 }
@@ -36,13 +38,13 @@ int BF::AsyncLock::Delete()
 {
 	int closingResult = -1;
 
-#ifdef OSUnix
+#if defined(OSUnix)
 	closingResult = sem_destroy(&HandleID);
 #elif defined(OSWindows)
 	closingResult = CloseHandle(HandleID);
-#endif 
+#endif
 
-	HandleID = 0;
+	//HandleID = 0;
 
 	return closingResult;
 }
@@ -51,24 +53,24 @@ int BF::AsyncLock::Lock()
 {
 	int lockResult = -1;
 
-#ifdef OSUnix
+#if defined(OSUnix)
 	lockResult = sem_wait(&HandleID);
 #elif defined(OSWindows)
 	lockResult = WaitForSingleObject(HandleID, INFINITE);
-#endif 
+#endif
 
-	return lockResult;	
+	return lockResult;
 }
 
 int BF::AsyncLock::Release()
 {
 	int releaseResult = -1;
 
-#ifdef OSUnix
+#if defined(OSUnix)
 	releaseResult = sem_post(&HandleID);
 #elif defined(OSWindows)
 	releaseResult = ReleaseSemaphore(HandleID, 1, 0);
-#endif 
+#endif
 
 	return releaseResult;
 }

@@ -87,10 +87,14 @@ namespace BF
 		CursorMode _cursorMode;
 
 		public:
-		WindowID ID;	
+		WindowID ID;
+
+		#if defined(OSUnix)
+		#elif defined(OSWindows)
 		HCURSOR CursorID;
 		HDC HandleDeviceContext;
 		HGLRC OpenGLRenderingContext;
+		#endif
 
 		// Interneal
 		ThreadID MessageThreadID;
@@ -114,7 +118,7 @@ namespace BF
 #endif
 
 		static ThreadFunctionReturnType WindowThead(void* windowCreationInfoAdress);
-	
+
 		void Create();
 		void Create(const unsigned int width, const unsigned int height, const char* title);
 		void Destroy();
@@ -139,7 +143,7 @@ namespace BF
 		void Position(unsigned int& x, unsigned int& y);
 		void PositionChange(const unsigned int x, const unsigned int y);
 		void PositonCenterScreen();
-		
+
 		void Cursor();
 		void Cursor(const CursorIcon cursorIcon);
 		void CursorTexture();

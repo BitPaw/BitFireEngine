@@ -18,7 +18,7 @@ void* operator new(const size_t size)
 
 #if MemoryDebug
 	printf("[#][Memory] 0x%p (%10zi B) Allocate (new)\n", adress, size);
-#endif  
+#endif
 
 	return adress;
 }
@@ -28,14 +28,14 @@ void* operator new[](const size_t size)
 {
 #if MemoryDebug
 	printf("[#][Memory] 0x%p (%10zi B) Compare to 0x%p\n", a, length, b);
-#endif  
+#endif
 }*/
 
 void operator delete(void* adress)
 {
 #if MemoryDebug
 	printf("[#][Memory] 0x%p free (delete)\n", adress);
-#endif  
+#endif
 
 	free(adress);
 }
@@ -45,7 +45,7 @@ void operator delete[](void* adress)
 {
 #if MemoryDebug
 	printf("[#][Memory] 0x%p (%10zi B) Compare to 0x%p\n", a, length, b);
-#endif  
+#endif
 }*/
 
 
@@ -73,14 +73,14 @@ bool BF::Memory::Scan(MemoryUsage& memoryUsage)
 	}
 
 	return result;
-#endif	
+#endif
 }
 
 int BF::Memory::Compare(const void* a, const void* b, const size_t length)
 {
 #if MemoryDebug
 	printf("[#][Memory] 0x%p (%10zi B) Compare to 0x%p\n", a, length, b);
-#endif  
+#endif
 
 	return memcmp(a, b, length);
 }
@@ -111,7 +111,7 @@ bool BF::Memory::VirtualMemoryPrefetch(const void* adress, const size_t size)
 #pragama message EEEE
 #if MemoryDebug
 printf("[#][Memory] 0x%p (%10zi B) Pre-Fetched [NOT SUPPORTED] Skipped...\n", adress, size);
-#endif  
+#endif
 #endif
 
 	return false;
@@ -127,12 +127,12 @@ bool BF::Memory::VirtualMemoryRelease()
 	return false;
 }
 
-BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const char* filePath, HANDLE& fileHandle, HANDLE& mappingHandle, void** fileData, size_t& fileSize)
+BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const char* filePath, FileHandleType& fileHandle, FileHandleType& mappingHandle, void** fileData, size_t& fileSize)
 {
 	return FileActionResult::Invalid;
 }
 
-BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, HANDLE& fileHandle, HANDLE& mappingHandle, void** fileData, size_t& fileSize)
+BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, FileHandleType& fileHandle, FileHandleType& mappingHandle, void** fileData, size_t& fileSize)
 {
 	fileHandle = 0;
 	mappingHandle = 0;
@@ -207,7 +207,7 @@ BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, H
 			numaNodePreferred
 		);
 
-		VirtualMemoryPrefetch(fileMapped, fileSize);	
+		VirtualMemoryPrefetch(fileMapped, fileSize);
 
 		(*fileData) = fileMapped;
 	}
@@ -215,19 +215,34 @@ BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, H
 
 #if MemoryDebug
 	printf("[#][Memory] 0x%p (%10zi B) MMAP %ls\n", (*fileData), fileSize, filePath);
-#endif    
+#endif
 
 	return FileActionResult::Successful;
 }
 
-bool BF::Memory::VirtualMemoryFileUnmap(HANDLE& fileHandle, HANDLE& mappingHandle, void** fileData, size_t& fileSize)
+bool BF::Memory::VirtualMemoryFileUnmap(FileHandleType& fileHandle, FileHandleType& mappingHandle, void** fileData, size_t& fileSize)
 {
-
 #if MemoryDebug
 	printf("[#][Memory] 0x%p (%10zi B) MMAP-Release\n", (*fileData), fileSize);
-#endif    
+#endif
 
-	{
+    const int result = munmap(fileData, fileSize);
+    const bool sucessful = result != -1;
+
+    if (!sucessful)
+    {
+        const ErrorCode errorCode = GetCurrentError();
+
+        return false;
+    }
+
+    return true;
+
+#if defined(OSUnix)
+
+
+#elif defined(OSWindows)
+{
 		void* data = (*fileData);
 		const bool unmappingSucessful = UnmapViewOfFile(data);
 
@@ -256,4 +271,5 @@ bool BF::Memory::VirtualMemoryFileUnmap(HANDLE& fileHandle, HANDLE& mappingHandl
 	const FileActionResult closeFile = File::Close(fileHandle);
 
 	return true;
+#endif
 }

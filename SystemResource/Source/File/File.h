@@ -28,9 +28,12 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <libgen.h>
-#define FileRemoveA remove 
+
+#define FileOpenA fopen
+#define FileOpenW(string, mode) FileOpenA((const char*)string, (const char*)mode)
+#define FileRemoveA remove
 #define FileRemoveW(string) remove((const char*)string)
-#define FileRenameA rename 
+#define FileRenameA rename
 #define FileRenameW(oldName, newName) rename((const char*)oldName, (const char*)newName)
 #define FileDirectoryCreateA(string) mkdir(string, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)
 #define FileDirectoryCreateW(string) FileDirectoryCreateA((const char*)string)
@@ -40,6 +43,7 @@
 #define WorkingDirectoryChangeW(string) WorkingDirectoryChangeA((const char*)string)
 
 #elif defined(OSWindows)
+
 #define FileHandleType HANDLE
 
 #include <direct.h>
@@ -47,9 +51,9 @@
 
 #define FileOpenA fopen
 #define FileOpenW _wfopen
-#define FileRemoveA remove 
-#define FileRemoveW _wremove 
-#define FileRenameA rename 
+#define FileRemoveA remove
+#define FileRemoveW _wremove
+#define FileRenameA rename
 #define FileRenameW _wrename
 #define FileDirectoryCreateA _mkdir
 #define FileDirectoryCreateW _wmkdir
@@ -63,7 +67,7 @@ namespace BF
 {
 	struct File : public IFile
 	{
-		public:	
+		public:
 		FileHandleType FileHandle;
 
 		File();
@@ -87,7 +91,7 @@ namespace BF
 		FileActionResult Close();
 		static FileActionResult Close(FileHandleType& fileHandle);
 
-		
+
 
 
 		// Directory
@@ -95,16 +99,16 @@ namespace BF
 
 
 		//---<Utility>--
-	
+
 
 
 
 		static ErrorCode Remove(const char* filePath);
 		static ErrorCode Remove(const wchar_t* filePath);
 
-		static ErrorCode Rename(const char* oldName, const char* newName);	
+		static ErrorCode Rename(const char* oldName, const char* newName);
 		static ErrorCode Rename(const wchar_t* oldName, const wchar_t* newName);
-		
+
 
 		static FileActionResult Copy(const char* sourceFilePath, const char* destinationFilePath);
 		static FileActionResult Copy(const wchar_t* sourceFilePath, const wchar_t* destinationFilePath);

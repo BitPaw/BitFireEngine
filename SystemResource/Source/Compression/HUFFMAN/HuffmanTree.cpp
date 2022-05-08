@@ -29,8 +29,8 @@ int BF::HuffmanTree::GenerateFromLengths(const unsigned int* bitlen, size_t numc
 	unsigned error = 0;
 
 	codes = (unsigned int*)malloc(numcodes * sizeof(unsigned int));
-	
-	
+
+
 	if (!codes || !blcount || !nextcode) error = 83; /*alloc fail*/
 
 	if (!error)
@@ -111,7 +111,7 @@ int BF::HuffmanTree::GenerateFromLengths(const unsigned int* bitlen, size_t numc
 
 		table_len[i] = l;
 		table_value[i] = pointer;
-		
+
 		pointer += (1u << (l - FIRSTBITS));
 	}
 
@@ -132,7 +132,7 @@ int BF::HuffmanTree::GenerateFromLengths(const unsigned int* bitlen, size_t numc
 		{
 			/*short symbol, fully in first table, replicated num times if l < FIRSTBITS*/
 			unsigned num = 1u << (FIRSTBITS - l);
-		
+
 			for (size_t j = 0; j < num; ++j)
 			{
 				/*bit reader will read the l bits of symbol first, the remaining FIRSTBITS - l bits go to the MSB's*/
@@ -152,7 +152,7 @@ int BF::HuffmanTree::GenerateFromLengths(const unsigned int* bitlen, size_t numc
 			unsigned tablelen = maxlen - FIRSTBITS;
 			unsigned start = table_value[index]; /*starting index in secondary table*/
 			unsigned num = 1u << (tablelen - (l - FIRSTBITS)); /*amount of entries of this symbol in secondary table*/
-	
+
 			if (maxlen < l) return 55; /*invalid tree: long symbol shares prefix with short symbol*/
 			for (size_t j = 0; j < num; ++j)
 			{
@@ -219,7 +219,7 @@ tree of the dynamic huffman tree lengths is generated*/
 	unsigned* bitlen_cl = 0;
 	HuffmanTree tree_cl; /*the code tree for code length codes (the huffman tree for compressed huffman trees)*/
 
-	//if (!ensureBits17(reader, 14)) return 49; /*error: the bit pointer is or will go past the memory*/
+	//if (!ensureBits17(reader, 14)) return 49; //error: the bit pointer is or will go past the memory BBBB
 
 	HuffmanNumberCode huffmanNumberCode;
 	huffmanNumberCode.NumberOfLiteralCodes = bitStreamHusk.ExtractBitsAndMove(5) + 257u;
@@ -247,7 +247,7 @@ tree of the dynamic huffman tree lengths is generated*/
 		/*read the code length codes out of 3 * (amount of code length codes) bits*/
 		/*if (lodepng_gtofl(reader->bp, HCLEN * 3, reader->bitsize))
 		{
-			throw(50); /*error: the bit pointer is or will go past the memory* /
+			// throw(50); // error: the bit pointer is or will go past the memory* AAAA/
 		}*/
 		for (size_t index = 0; index != HCLEN; ++index)
 		{
@@ -270,7 +270,7 @@ tree of the dynamic huffman tree lengths is generated*/
 		memset(bitlen_d, 0, NUM_DISTANCE_SYMBOLS * sizeof(*bitlen_d));
 
 		/*i is the current symbol we're reading in the part that contains the code lengths of lit/len and dist codes*/
-		
+
 		for (size_t i = 0; i < HLIT + HDIST; )
 		{
 			unsigned code;
@@ -343,14 +343,14 @@ tree of the dynamic huffman tree lengths is generated*/
 				(10=no endcode, 11=wrong jump outside of tree)*/
 				/* TODO: revise error codes 10,11,50: the above comment is no longer valid * /
 				throw(50); /*error, bit pointer jumps past memory* /
-			}*/ 
+			}*/
 		}
 		if (error) break;
 
 		if (bitlen_ll[256] == 0) throw(64); /*the length of the end code 256 must be larger than 0*/
 
 		/*now we've finally got HLIT and HDIST, so generate the code trees, and the function is done*/
-	
+
 		error = treeLength.GenerateFromLengths(bitlen_ll, NUM_DEFLATE_CODE_SYMBOLS, 15);
 		if (error) break;
 		error = treeDistance.GenerateFromLengths(bitlen_d, NUM_DISTANCE_SYMBOLS, 15);
@@ -361,7 +361,7 @@ tree of the dynamic huffman tree lengths is generated*/
 	free(bitlen_cl);
 	free(bitlen_ll);
 	free(bitlen_d);
-	
+
 	return error;
 }
 
@@ -399,7 +399,7 @@ unsigned int BF::HuffmanTree::huffmanDecodeSymbol(BitStreamHusk& reader, Huffman
 
 		unsigned int extraBitsToRead = huffmanSymbol.Length - FIRSTBITS;
 		unsigned int extraBits = reader.ExtractBits(extraBitsToRead);
-		unsigned int index2 = huffmanSymbol.Value + extraBits;		
+		unsigned int index2 = huffmanSymbol.Value + extraBits;
 		unsigned int moveBits = codetree.table_len[index2] - FIRSTBITS;
 		unsigned int result = codetree.table_value[index2];
 
@@ -429,12 +429,12 @@ unsigned BF::HuffmanTree::reverseBits(unsigned bits, unsigned num)
 
 void BF::HuffmanTree::GenerateFixedLiteralLengthTree()
 {
-	//------------------------------------------- generateFixedLitLenTree()			
+	//------------------------------------------- generateFixedLitLenTree()
 	const unsigned int maxbitlen = 15;
 	const size_t numcodes = NUM_DEFLATE_CODE_SYMBOLS;
 	unsigned int bitlen[numcodes];
 	unsigned int i = 0;
-	
+
 
 	/*288 possible codes: 0-255=literals, 256=endcode, 257-285=lengthcodes, 286-287=unused*/
 	for (i = 0; i <= 143; ++i) bitlen[i] = 8;

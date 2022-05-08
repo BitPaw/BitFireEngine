@@ -130,7 +130,7 @@ void BF::Model::ConvertFrom(float* vertexList, size_t vertexListSize, unsigned i
     MeshList = new Mesh[MeshListSize];
 
     Mesh& mesh = MeshList[0]; // Get current target Mesh
-    
+
    // mesh.Structure.RenderType = renderMode;
 
     mesh.SegmentList = new MeshSegment();
@@ -192,10 +192,10 @@ void BF::Model::ConvertFrom(float* vertexList, size_t vertexListSize, unsigned i
             vertexFullData[vertexFullDataIndex++] = 1;
             vertexFullData[vertexFullDataIndex++] = 1;
 
-            vertexFullData[vertexFullDataIndex++] = tx; 
-            vertexFullData[vertexFullDataIndex++] = ty; 
+            vertexFullData[vertexFullDataIndex++] = tx;
+            vertexFullData[vertexFullDataIndex++] = ty;
         }
-    }   
+    }
 
    // BoundingBoxUpdate();
 
@@ -214,9 +214,9 @@ void BF::Model::BoundingBoxUpdate()
     Vector3<float> scaling = MatrixModel.ScaleXYZ();
 
     BoundingBox.Set(position.X, position.Y, size.X * scaling.X, size.Y * scaling.Y);
-}*/
+}* /
 
-/*
+/ *
 
 void BF::Model::ConvertFrom(Shape& shape)
 {

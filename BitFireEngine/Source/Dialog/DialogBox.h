@@ -2,6 +2,8 @@
 
 #include "Dialog.h"
 
+#include <cstddef>
+
 namespace BF
 {
 	struct DialogBox

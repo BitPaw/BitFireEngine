@@ -14,7 +14,7 @@ BF::DataBase::DataBase()
 #elif defined(OSWindows)
     _handleEnvironment = 0;
     _handleConnection = 0;
-#endif	
+#endif
 }
 
 BF::DataBase::~DataBase()
@@ -32,7 +32,12 @@ BF::SQLResult BF::DataBase::Connect
     const wchar_t* password
 )
 {
-    // Allocate environment handle  
+
+#if defined(OSUnix)
+    return SQLResult::Invalid;
+
+#elif defined(OSWindows)
+   // Allocate environment handle
     {
         const SQLRETURN result = SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &_handleEnvironment);
         const bool successful = result == SQL_SUCCESS || result == SQL_SUCCESS_WITH_INFO;
@@ -43,7 +48,7 @@ BF::SQLResult BF::DataBase::Connect
         }
     }
 
-    // Set the ODBC version environment attribute  
+    // Set the ODBC version environment attribute
     {
         const SQLRETURN result = SQLSetEnvAttr(_handleEnvironment, SQL_ATTR_ODBC_VERSION, (void*)SQL_OV_ODBC3, 0);
         const bool successful = result == SQL_SUCCESS || result == SQL_SUCCESS_WITH_INFO;
@@ -54,7 +59,7 @@ BF::SQLResult BF::DataBase::Connect
         }
     }
 
-    // Allocate connection handle  
+    // Allocate connection handle
     {
         const SQLRETURN result = SQLAllocHandle(SQL_HANDLE_DBC, _handleEnvironment, &_handleConnection);
         const bool successful = result == SQL_SUCCESS || result == SQL_SUCCESS_WITH_INFO;
@@ -64,8 +69,8 @@ BF::SQLResult BF::DataBase::Connect
             return SQLResult::MemoryAllocFailed;
         }
     }
-           
-    // Set login timeout to 5 seconds  
+
+    // Set login timeout to 5 seconds
     {
         const SQLRETURN resultConnect = SQLSetConnectAttrW(_handleConnection, SQL_LOGIN_TIMEOUT, (SQLPOINTER)5, 0);
         const bool successful = resultConnect == SQL_SUCCESS || resultConnect == SQL_SUCCESS_WITH_INFO;
@@ -74,8 +79,8 @@ BF::SQLResult BF::DataBase::Connect
         {
             return SQLResult::Invalid;
         }
-    }   
-                                                                      
+    }
+
     printf("+---[ODBC Drivers]-------------------------------------------+--------------+\n");
 
     ScanForDrivers();
@@ -148,7 +153,7 @@ BF::SQLResult BF::DataBase::Connect
     );* /
 
     if (successfulConnected)
-    {       
+    {
         SQLUSMALLINT infoType = SQL_PROCEDURES;
         wchar_t bufferLength[1024];
         SQLSMALLINT   cbInfoValueMax = sizeof(bufferLength);
@@ -161,12 +166,15 @@ BF::SQLResult BF::DataBase::Connect
             bufferLength,
             cbInfoValueMax,
             &pcbInfoValue
-        );       
+        );
     }*/
+#endif
 }
 
 void BF::DataBase::ScanForDrivers()
 {
+#if defined(OSUnix)
+#elif defined(OSWindows)
     SQLUSMALLINT direction = SQL_FETCH_FIRST;
     bool finished = false;
 
@@ -195,8 +203,8 @@ void BF::DataBase::ScanForDrivers()
         switch (resultDriver)
         {
             case SQL_SUCCESS_WITH_INFO:
-            case SQL_SUCCESS: // Do nothing and go next   
-                direction = SQL_FETCH_NEXT; // [!] Important [!] - Mark to go next. 
+            case SQL_SUCCESS: // Do nothing and go next
+                direction = SQL_FETCH_NEXT; // [!] Important [!] - Mark to go next.
 
                 if (OnDriverDetectedEvent)
                 {
@@ -214,10 +222,14 @@ void BF::DataBase::ScanForDrivers()
                 break;
         }
     }
+#endif
 }
 
 void BF::DataBase::Disconnect()
 {
+
+#if defined(OSUnix)
+#elif defined(OSWindows)
     if (_handleConnection != 0)
     {
         const SQLRETURN resultDisconnect = SQLDisconnect(_handleConnection);
@@ -225,24 +237,32 @@ void BF::DataBase::Disconnect()
 
         _handleConnection = 0;
     }
+#endif
+
 }
 
 void BF::DataBase::Cleanup()
 {
-    Disconnect();
+  Disconnect();
 
+#if defined(OSUnix)
+#elif defined(OSWindows)
     if (_handleEnvironment != 0)
     {
         const SQLRETURN result = SQLFreeHandle(SQL_HANDLE_ENV, _handleEnvironment);
-    }   
+    }
+#endif
 }
 
 BF::SQLResult BF::DataBase::Execute(const wchar_t* sqlStatement)
 {
-    SQLHSTMT handleStatement = 0;    
+
+#if defined(OSUnix)
+#elif defined(OSWindows)
+    SQLHSTMT handleStatement = 0;
     size_t colums = 0;
     size_t rows = 0;
-     
+
     // Check connection
     {
         const bool connected = _handleConnection != 0;
@@ -251,7 +271,7 @@ BF::SQLResult BF::DataBase::Execute(const wchar_t* sqlStatement)
         {
             return SQLResult::DatabaseNotConnected;
         }
-    }   
+    }
 
     // Alloc statement
     {
@@ -263,7 +283,7 @@ BF::SQLResult BF::DataBase::Execute(const wchar_t* sqlStatement)
             return SQLResult::MemoryAllocFailed;
         }
     }
-       
+
     // Execute command
     {
         const SQLRETURN resultExecute = SQLExecDirectW(handleStatement, (SQLWCHAR*)sqlStatement, SQL_NTSL);
@@ -286,14 +306,14 @@ BF::SQLResult BF::DataBase::Execute(const wchar_t* sqlStatement)
         colums = nCols;
         rows = nRows;
     }
-  
+
     if (OnResultEvent)
     {
         OnResultEvent(colums, rows);
     }
 
     printf("[Result] Rows:%zi Colums:%zi\n", rows, colums);
-  
+
     printf("+----------------------+----------------------+----------------------+----------------------+\n");
 
     printf("|");
@@ -337,7 +357,7 @@ BF::SQLResult BF::DataBase::Execute(const wchar_t* sqlStatement)
         {
             OnColumInfoEvent(columIndex, type, isNullable, columnName, columnNameSizeWritten);
         }
-        
+
         printf(" %-20ls |", columnName);
     }
 
@@ -373,7 +393,7 @@ BF::SQLResult BF::DataBase::Execute(const wchar_t* sqlStatement)
     }
 
     printf("+----------------------+----------------------+----------------------+----------------------+\n");
-   
+
     // Free memory
     {
         const SQLRETURN resultFree = SQLFreeHandle(SQL_HANDLE_STMT, handleStatement);
@@ -386,4 +406,5 @@ BF::SQLResult BF::DataBase::Execute(const wchar_t* sqlStatement)
     }
 
     return SQLResult::Successful;
+#endif
 }

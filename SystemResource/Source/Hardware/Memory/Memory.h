@@ -1,22 +1,23 @@
 #pragma once
 
-#include <cstddef>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-
 #include "MemoryUsage.h"
 
 #include <OS/OSDefine.h>
 #include <ErrorCode.h>
+#include <File/File.h>
+#include <File/FileCachingMode.h>
+#include <File/FileActionResult.hpp>
+
+#include <cstddef>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 
 #if defined(OSUnix)
 #include <sys/mman.h>
 #elif defined(OSWindows)
 #include <Windows.h>
 #endif
-#include <File/FileCachingMode.h>
-#include <File/FileActionResult.hpp>
 
 #define MemoryDebug 0
 
@@ -32,9 +33,9 @@ namespace BF
         static bool VirtualMemoryPrefetch(const void* adress, const size_t size);
         static bool VirtualMemoryAllocate();
         static bool VirtualMemoryRelease();
-        static FileActionResult VirtualMemoryFileMap(const char* filePath, HANDLE& fileHandle, HANDLE& mappingHandle, void** fileData, size_t& fileSize);
-        static FileActionResult VirtualMemoryFileMap(const wchar_t* filePath, HANDLE& fileHandle, HANDLE& mappingHandle, void** fileData, size_t& fileSize);
-        static bool VirtualMemoryFileUnmap(HANDLE& fileHandle, HANDLE& mappingHandle, void** fileData, size_t& fileSize);
+        static FileActionResult VirtualMemoryFileMap(const char* filePath, FileHandleType& fileHandle, FileHandleType& mappingHandle, void** fileData, size_t& fileSize);
+        static FileActionResult VirtualMemoryFileMap(const wchar_t* filePath, FileHandleType& fileHandle, FileHandleType& mappingHandle, void** fileData, size_t& fileSize);
+        static bool VirtualMemoryFileUnmap(FileHandleType& fileHandle, FileHandleType& mappingHandle, void** fileData, size_t& fileSize);
 
         template<typename T>
         static T* Rellocate(T* adress, const size_t size)
@@ -44,7 +45,7 @@ namespace BF
 
 #if MemoryDebug
             printf("[#][Memory] 0x%p (%10zi B) Reallocate to 0x%p\n", adress, size, reallocatedAdress);
-#endif     
+#endif
 
             return reallocatedAdress;
         }
@@ -53,8 +54,8 @@ namespace BF
         {
             const int cachingModeID = ConvertFileCachingMode(fileCachingMode);
 
-#if defined(OSUnix)    
-            const int result = madvise(adress, length, cachingModeID);
+#if defined(OSUnix)
+            const int result = madvise((void*)adress, length, cachingModeID);
             const ErrorCode errorCode = ConvertErrorCode(result);
             const bool successful = errorCode == ErrorCode::Successful;
 
@@ -62,7 +63,7 @@ namespace BF
 
 #elif defined(OSWindows)
             return true;
-#endif                 
+#endif
         }
 
         // Allocates memory on the HEAP.
@@ -75,7 +76,7 @@ namespace BF
 
 #if MemoryDebug
             printf("[#][Memory] 0x%p (%10zi B) Allocate\n", adress, requestedBytes);
-#endif      
+#endif
 
             return adress;
         }
@@ -96,8 +97,8 @@ namespace BF
             else
             {
                 printf("[#][Memory] 0x%p (%10zi B) Reallocate (No Change)\n", adress, requestedBytes);
-            }           
-#endif    
+            }
+#endif
 
             return adressReallocated;
         }
@@ -106,7 +107,7 @@ namespace BF
         {
 #if MemoryDebug
             printf("[#][Memory] 0x%p (%10zi B) Free\n", adress, size);
-#endif       
+#endif
 
             return free(adress);
         }
@@ -115,7 +116,7 @@ namespace BF
         {
 #if MemoryDebug
             printf("[#][Memory] 0x%p (%10zi B) Set with %x\n", target, size, value);
-#endif   
+#endif
             memset(target, value, size);
         }
 
@@ -123,7 +124,7 @@ namespace BF
         {
 #if MemoryDebug
             printf("[#][Memory] 0x%p (%10zi B) Copy from 0x%p\n", target, size, source);
-#endif 
+#endif
             memcpy(target, source, size);
         }
     };

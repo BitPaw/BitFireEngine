@@ -1,8 +1,12 @@
 #include "RSA.h"
+
+#include "Euklid.h"
+
+#include <Text/Text.h>
+
 #include <math.h>
 #include <iostream>
-#include "Euklid.h"
-#include <Text/Text.h>
+#include <cstring>
 
 RSA::RSA(int p, int q, int e)
 {

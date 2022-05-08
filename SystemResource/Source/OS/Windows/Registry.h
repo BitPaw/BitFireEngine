@@ -41,5 +41,5 @@ namespace BF
 	};
 }
 #else
-#error Windows Regestry does not exist under non-Windows Systems
+//#error Windows Regestry does not exist under non-Windows Systems
 #endif // defined(OSWindows)

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 namespace BF
 {
 	enum class ProcessorVendor

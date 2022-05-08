@@ -2,6 +2,8 @@
 
 #include "File/FileActionResult.hpp"
 
+#include <cstddef>
+
 namespace BF
 {
 	struct Resource

@@ -32,19 +32,28 @@ bool BF::Processor::FetchInfo(ProcessorInfo& processorInfo)
 
 	int cpuInfo[4]{0};
 
-
-  
-    
-    for (size_t a = 0; a < 4; a++)
+#if defined(OSUnix)
+   // ????
+#elif defined(OSWindows)
+   for (size_t a = 0; a < 4; a++)
 	{
 		__cpuid(cpuInfo, a);
 	}
+#endif
+
+
+
 
     nIds_ = cpuInfo[0];
 
     for (size_t i = 0; i <= nIds_; ++i)
     {
-        __cpuidex(cpuInfo, i, 0);
+    #if defined(OSUnix)
+   // ????
+#elif defined(OSWindows)
+  __cpuidex(cpuInfo, i, 0);
+#endif
+
 
         for (size_t j = 0; j < 4; j++)
         {
@@ -78,7 +87,7 @@ bool BF::Processor::FetchInfo(ProcessorInfo& processorInfo)
             isAMD = true;
         }
     }
-    
+
 
     // load bitset with flags for function 0x00000001
     if (nIds_ >= 1)
@@ -96,7 +105,16 @@ bool BF::Processor::FetchInfo(ProcessorInfo& processorInfo)
 
     // Calling __cpuid with 0x80000000 as the function_id argument
     // gets the number of the highest valid extended ID.
+
+
+#if defined(OSUnix)
+   // ????
+#elif defined(OSWindows)
     __cpuid(cpuInfo, 0x80000000);
+#endif
+
+
+
     nExIds_ = cpuInfo[0];
 
     // Brand Name
@@ -107,25 +125,28 @@ bool BF::Processor::FetchInfo(ProcessorInfo& processorInfo)
 
         for (size_t i = 0x80000000; i <= nExIds_; ++i)
         {
+        #if defined(OSUnix)
+        #elif defined(OSWindows)
             __cpuidex(cpuInfo, i, 0);
+            #endif // defined
 
             extdata_[exDataindex++] = cpuInfo[0];
             extdata_[exDataindex++] = cpuInfo[1];
             extdata_[exDataindex++] = cpuInfo[2];
             extdata_[exDataindex++] = cpuInfo[3];
-        }        
+        }
 
         if (exDataindex > 0)
         {
             const char* brandName = (const char*)extdata_ + 32;
 
             Text::Copy(processorInfo.BrandName, brandName, sizeof(processorInfo.BrandName));
-        }    
+        }
     }
 
     processorInfo.SSE3 = BitIndex(f_1_ECX_, 0);
-    processorInfo.PCLMULQDQ = BitIndex(f_1_ECX_,1); 
-    processorInfo.MONITOR = BitIndex(f_1_ECX_ ,3); 
+    processorInfo.PCLMULQDQ = BitIndex(f_1_ECX_,1);
+    processorInfo.MONITOR = BitIndex(f_1_ECX_ ,3);
     processorInfo.SSSE3 = BitIndex(f_1_ECX_,9);
     processorInfo.FMA = BitIndex(f_1_ECX_,12);
     processorInfo.CMPXCHG16B = BitIndex(f_1_ECX_,13);
@@ -186,5 +207,9 @@ bool BF::Processor::FetchInfo(ProcessorInfo& processorInfo)
 
 const size_t BF::Processor::ClockCyclesSinceLastReset() const
 {
+#if defined(OSUnix)
+    return -1;
+#elif defined(OSWindows)
 	return __rdtsc();
+#endif
 }

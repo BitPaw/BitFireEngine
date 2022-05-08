@@ -3,15 +3,15 @@
 #include <OS/OSDefine.h>
 #include <ErrorCode.h>
 
-#ifdef defined(OSUnix)
+#if defined(OSUnix)
 #include <sys/types.h>
 #include <dlfcn.h>
 
 #define LibraryHandle void*
-#define LibraryFunction func_t*
+#define LibraryFunction void*
 #define LibraryDirectoryID void*
 
-#elif defined(OSWindows)	
+#elif defined(OSWindows)
 #include <windows.h>
 
 #define LibraryHandle HMODULE // HINSTANCE (semms is also okey)
@@ -23,7 +23,7 @@ namespace BF
 {
     class Library
     {
-        public:  
+        public:
         LibraryHandle Handle;
 
         bool Open(const char* filePath); //  gain access to an executable object file. RTLD_LAZY

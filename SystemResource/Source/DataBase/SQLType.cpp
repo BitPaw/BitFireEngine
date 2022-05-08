@@ -1,10 +1,19 @@
 #include "SQLType.h"
 
+#include <OS/OSDefine.h>
+
+#if defined(OSUnix)
+#elif defined(OSWindows)
 #include <Windows.h>
 #include <sql.h>
+#endif
 
 const BF::SQLType BF::ToSQLType(const unsigned int sqlType)
 {
+#if defined(OSUnix)
+  return SQLType::Invalid;
+
+#elif defined(OSWindows)
     switch (sqlType)
     {
         // Mysql?
@@ -25,7 +34,7 @@ const BF::SQLType BF::ToSQLType(const unsigned int sqlType)
 #if (ODBCVER >= 0x0300)
         case  SQL_DATETIME:return SQLType::DATETIME;
 #endif
-     
+
 
         /* One-parameter shortcuts for date/time data types */
 #if (ODBCVER >= 0x0300)
@@ -37,6 +46,7 @@ const BF::SQLType BF::ToSQLType(const unsigned int sqlType)
         default:
             return SQLType::Invalid;
     }
+#endif
 }
 
 const char* BF::SQLTypeToString(const SQLType sqlType)

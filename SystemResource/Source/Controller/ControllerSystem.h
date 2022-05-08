@@ -2,10 +2,9 @@
 
 #include "ControllerData.h"
 
-#include <Windows.h>
+#include <Window/Window.h>
 
 #define ControllerID unsigned int
-#define WindowID HWND
 
 namespace BF
 {

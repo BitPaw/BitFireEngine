@@ -37,9 +37,9 @@ BF::FileActionResult BF::File::Open(FileHandleType& fileHandle, const char* file
 	// int posix_fadvise(int fd, off_t offset, off_t len, int advice);
 	// int posix_fadvise64(int fd, off_t offset, off_t len, int advice);
 
-	FileMarker = fopen(filePath, readMode);
+	fileHandle = fopen(filePath, readMode);
 
-	return FileMarker ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
+	return fileHandle ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
 
 #elif defined(OSWindows)
 	DWORD dwDesiredAccess = 0;
@@ -95,9 +95,10 @@ BF::FileActionResult BF::File::Open(FileHandleType& fileHandle, const wchar_t* f
 	char filePathA[PathMaxSize];
 
 	Text::Copy(filePathA, filePath, PathMaxSize);
-	File::Open(filePathA, fileOpenMode);
 
-	return FileMarker ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
+	File::Open(fileHandle, filePathA, fileOpenMode);
+
+	return fileHandle ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
 #elif defined(OSWindows)
 	DWORD dwDesiredAccess = 0;
 	DWORD dwShareMode = 0;
@@ -166,7 +167,7 @@ BF::FileActionResult BF::File::Close()
 BF::FileActionResult BF::File::Close(FileHandleType& fileHandle)
 {
 #if defined(OSUnix)
-	int closeResult = fclose(FileMarker);
+	int closeResult = fclose(fileHandle);
 
 	switch (closeResult)
 	{
@@ -285,7 +286,7 @@ BF::FileActionResult BF::File::Copy(const wchar_t* sourceFilePath, const wchar_t
 	}
 
 	return FileActionResult::Successful;
-#endif	
+#endif
 }
 
 BF::ErrorCode BF::File::DirectoryCreate(const char* directoryName)
@@ -393,7 +394,7 @@ BF::ErrorCode BF::File::DirectoryDelete(const wchar_t* directoryName)
 }
 
 BF::FileActionResult BF::File::ReadFromDisk(unsigned char** outPutBuffer, size_t& outPutBufferSize, const bool addTerminatorByte)
-{	
+{
 #if defined(OSUnix)
 	fseek(FileMarker, 0, SEEK_END); // Jump to end of file
 	outPutBufferSize = ftell(FileMarker); // Get current 'data-cursor' position
@@ -426,7 +427,7 @@ BF::FileActionResult BF::File::ReadFromDisk(unsigned char** outPutBuffer, size_t
 	}
 
 	size_t readBytes = fread(dataBuffer, 1u, outPutBufferSize, FileMarker);
-	size_t overAllocatedBytes = outPutBufferSize - readBytes; // if overAllocatedBytes > 0 there was a reading error.	
+	size_t overAllocatedBytes = outPutBufferSize - readBytes; // if overAllocatedBytes > 0 there was a reading error.
 
 	assert(outPutBufferSize == readBytes);
 
@@ -471,7 +472,7 @@ BF::FileActionResult BF::File::ReadFromDisk(unsigned char** outPutBuffer, size_t
 	outPutBufferSize = numberOfBytesRead;
 
 	return FileActionResult::Successful;
-#endif	
+#endif
 }
 
 void BF::File::PathSwapFile(const wchar_t* currnetPath, wchar_t* targetPath, const wchar_t* newFileName)
@@ -492,7 +493,7 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 	wchar_t folderPathW[PathMaxSize];
 	size_t writtenBytes = Text::Copy(folderPathW, folderPath, PathMaxSize);
 
-#if defined(OSUnix)		
+#if defined(OSUnix)
 	DIR* directory = opendir(folderPath);
 
 	if (directory)
@@ -517,7 +518,7 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 				const char* fileName = directoryInfo->d_name;
 				size_t length = Text::Length(fileName);
 				wchar_t* newString = (wchar_t*)malloc((length + 1) * sizeof(wchar_t));
-				wchar_t** target = &(*list)[index];				
+				wchar_t** target = &(*list)[index];
 
 				if (!newString)
 				{
@@ -562,12 +563,12 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 		const size_t length = Text::Length(dataCursour.cFileName);
 		const wchar_t* filePathSource = dataCursour.cFileName;
 		wchar_t* newString = Memory::Allocate<wchar_t>((length + 1) * sizeof(wchar_t));
-	
+
 		if (!newString)
 		{
 			return; // Error: OutOfMemory
-		}	
-	
+		}
+
 		Text::Copy(newString, filePathSource, length);
 
 		(*list)[fileIndex] = newString;
@@ -576,18 +577,18 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 	}
 	while (FindNextFile(hFind, &dataCursour));
 
-	FindClose(hFind);	
+	FindClose(hFind);
 #endif
 }
 
 void BF::File::FilesInFolder(const wchar_t* folderPath, wchar_t*** list, size_t& listSize)
 {
-	
+
 }
 
 bool BF::File::DoesFileExist(const char* filePath)
 {
-	FILE* file = FileOpenA(filePath, "rb"); 
+	FILE* file = FileOpenA(filePath, "rb");
 
 	if (file)
 	{

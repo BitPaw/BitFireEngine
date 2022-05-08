@@ -3,14 +3,14 @@
 
 #include <OS/OSDefine.h>
 
-#ifdef OSUnix
+#if defined(OSUnix)
 #include <semaphore.h>
 #define AsyncLockID sem_t
 #elif defined(OSWindows)
 #include <windows.h>
 //#include <process.h>
 #define AsyncLockID HANDLE
-#endif 
+#endif
 
 namespace BF
 {

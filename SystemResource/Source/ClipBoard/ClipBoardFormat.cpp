@@ -7,55 +7,59 @@
 #include <Windows.h>
 
 #define ClipBoardFormatTEXT CF_TEXT
-#define ClipBoardFormatBITMAP CF_BITMAP           
-#define ClipBoardFormatMETAFILEPICT CF_METAFILEPICT     
-#define ClipBoardFormatSYLK CF_SYLK             
-#define ClipBoardFormatDIF CF_DIF              
-#define ClipBoardFormatTIFF   CF_TIFF             
-#define ClipBoardFormatOEMTEXT CF_OEMTEXT          
-#define ClipBoardFormatDIB CF_DIB              
-#define ClipBoardFormatPALETTE  CF_PALETTE          
-#define ClipBoardFormatPENDATA CF_PENDATA          
-#define ClipBoardFormatRIFF CF_RIFF             
-#define ClipBoardFormatWAVE CF_WAVE             
-#define ClipBoardFormatUNICODETEXT CF_UNICODETEXT      
-#define ClipBoardFormatENHMETAFILE CF_ENHMETAFILE    
-#define ClipBoardFormatOWNERDISPLAY CF_OWNERDISPLAY    
-#define ClipBoardFormatDSPTEXT   CF_DSPTEXT         
-#define ClipBoardFormatDSPBITMAP CF_DSPBITMAP       
-#define ClipBoardFormatDSPMETAFILEPICT CF_DSPMETAFILEPICT 
-#define ClipBoardFormatDSPENHMETAFILE  CF_DSPENHMETAFILE  
-#define ClipBoardFormatPRIVATEFIRST CF_PRIVATEFIRST    
-#define ClipBoardFormatPRIVATELAST CF_PRIVATELAST     
-#define ClipBoardFormatGDIOBJFIRST CF_GDIOBJFIRST     
-#define ClipBoardFormatGDIOBJLAST CF_GDIOBJLAST   
+#define ClipBoardFormatBITMAP CF_BITMAP
+#define ClipBoardFormatMETAFILEPICT CF_METAFILEPICT
+#define ClipBoardFormatSYLK CF_SYLK
+#define ClipBoardFormatDIF CF_DIF
+#define ClipBoardFormatTIFF   CF_TIFF
+#define ClipBoardFormatOEMTEXT CF_OEMTEXT
+#define ClipBoardFormatDIB CF_DIB
+#define ClipBoardFormatPALETTE  CF_PALETTE
+#define ClipBoardFormatPENDATA CF_PENDATA
+#define ClipBoardFormatRIFF CF_RIFF
+#define ClipBoardFormatWAVE CF_WAVE
+#define ClipBoardFormatUNICODETEXT CF_UNICODETEXT
+#define ClipBoardFormatENHMETAFILE CF_ENHMETAFILE
+#define ClipBoardFormatOWNERDISPLAY CF_OWNERDISPLAY
+#define ClipBoardFormatDSPTEXT   CF_DSPTEXT
+#define ClipBoardFormatDSPBITMAP CF_DSPBITMAP
+#define ClipBoardFormatDSPMETAFILEPICT CF_DSPMETAFILEPICT
+#define ClipBoardFormatDSPENHMETAFILE  CF_DSPENHMETAFILE
+#define ClipBoardFormatPRIVATEFIRST CF_PRIVATEFIRST
+#define ClipBoardFormatPRIVATELAST CF_PRIVATELAST
+#define ClipBoardFormatGDIOBJFIRST CF_GDIOBJFIRST
+#define ClipBoardFormatGDIOBJLAST CF_GDIOBJLAST
 
 #if defined(WindowsAtleastNT)
-#define ClipBoardFormatHDROP CF_HDROP            
-#define ClipBoardFormatLOCALE CF_LOCALE   
+#define ClipBoardFormatHDROP CF_HDROP
+#define ClipBoardFormatLOCALE CF_LOCALE
 #else
-#define ClipBoardFormatHDROP 15            
-#define ClipBoardFormatLOCALE 16   
-#endif 
+#define ClipBoardFormatHDROP 15
+#define ClipBoardFormatLOCALE 16
+#endif
 
 #if defined(WindowsAtleast2000)
 #define ClipBoardFormatDIBV5 CF_DIBV5
 #else
 #define ClipBoardFormatDIBV5 17
-#endif 
+#endif
 
 #if defined(WindowsAtleast2000)
-#define ClipBoardFormatMAX CF_MAX              
+#define ClipBoardFormatMAX CF_MAX
 #elif defined(WindowsAtleastNT)
 #define ClipBoardFormatMAX 17
 #else
 #define ClipBoardFormatMAX 15
-#endif   
+#endif
 
 #endif
 
 unsigned int BF::ToClipBoardFormat(const ClipBoardFormat clipBoardFormat)
 {
+#if defined(OSUnix)
+    return -1;
+
+#elif defined(OSWindows)
 	switch (clipBoardFormat)
 	{
 		default:
@@ -143,10 +147,13 @@ unsigned int BF::ToClipBoardFormat(const ClipBoardFormat clipBoardFormat)
 		case BF::ClipBoardFormat::GDIOBJLAST:
 			return ClipBoardFormatGDIOBJLAST;
 	}
+#endif
 }
 
 BF::ClipBoardFormat BF::ToClipBoardFormat(const unsigned int clipBoardFormat)
 {
+#if defined(OSUnix)
+#elif defined(OSWindows)
 	switch (clipBoardFormat)
 	{
 		case ClipBoardFormatTEXT:
@@ -233,4 +240,5 @@ BF::ClipBoardFormat BF::ToClipBoardFormat(const unsigned int clipBoardFormat)
 		default:
 			return BF::ClipBoardFormat::Invalid;
 	}
+	#endif // defined
 }

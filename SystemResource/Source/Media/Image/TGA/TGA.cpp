@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include <File/FileStream.h>
+#include <Hardware/Memory/Memory.h>
 
 #include <string>
 
@@ -40,9 +41,9 @@ BF::FileActionResult BF::TGA::Load(const wchar_t* filePath)
 	unsigned short colorPaletteChunkSize = 0;
 	unsigned char colorPaletteEntrySizeInBits = 0;
 
-	size_t footerEntryIndex = 0;	
-	size_t extensionOffset = 0;
-	size_t developerAreaOffset = 0;
+	size_t footerEntryIndex = 0;
+	unsigned int extensionOffset = 0;
+	unsigned int developerAreaOffset = 0;
 	size_t firstFieldAfterHeader = 0;
 	FileStream file;
 	FileActionResult loadingResult = file.ReadFromDisk(filePath);
@@ -53,7 +54,7 @@ BF::FileActionResult BF::TGA::Load(const wchar_t* filePath)
 	}
 
 	//---[ Parse Header ]-------------------------------
-	{			
+	{
 		unsigned char imageIDLengh = 0;
 		unsigned char pixelDepth = 0;
 		unsigned char imageTypeValue = 0;
@@ -80,7 +81,7 @@ BF::FileActionResult BF::TGA::Load(const wchar_t* filePath)
 
 		ImageDataSize = Width * Height * (pixelDepth / 8u);
 		ImageData = (Byte*)malloc(ImageDataSize * sizeof(Byte));
-	}	
+	}
 	//----------------------------------------------------
 
 	//---[Parse Image ID]--------------
@@ -97,10 +98,10 @@ BF::FileActionResult BF::TGA::Load(const wchar_t* filePath)
 	}
 	//--------------------------------
 
-	//---[ ImageData ]------------------	
-	file.Read(ImageData, ImageDataSize);	
+	//---[ ImageData ]------------------
+	file.Read(ImageData, ImageDataSize);
 	//-----------------------------------------------------------------
-	
+
 
 	// Check end of file if the file is a Version 2.0 file.
 	{
@@ -109,7 +110,7 @@ BF::FileActionResult BF::TGA::Load(const wchar_t* filePath)
 		unsigned char lastCharacter = file.Data[file.DataSize-1];
 		Byte* string = file.Data + (file.DataSize - stringLengh);
 		bool isTGAVersionTwo = false;
-		
+
 		if (lastCharacter == '.')
 		{
 			compareLength--;
@@ -117,15 +118,15 @@ BF::FileActionResult BF::TGA::Load(const wchar_t* filePath)
 		}
 
 		footerEntryIndex = file.DataSize - (26u -1u);
-		
-		isTGAVersionTwo = memcmp(TGAFileIdentifier, string, compareLength-1) == 0; // Is this string at this address?;
+
+		isTGAVersionTwo = Memory::Compare(TGAFileIdentifier, string, compareLength-1) == 0; // Is this string at this address?;
 
 		if (!isTGAVersionTwo) // Is this a TGA v.1.0 file?
 		{
 			return FileActionResult::Successful; // Parsing finished. There should be no more data to parse. End of file.
 		}
 	}
-	
+
 	firstFieldAfterHeader = file.DataCursorPosition;
 
 	//---[ Parse Footer ]--------------------------------------------------------
@@ -171,9 +172,9 @@ BF::FileActionResult BF::TGA::Load(const wchar_t* filePath)
 		file.Read(JobID, 41u);
 
 		// 6 Bytes
-		file.Read(JobTimeHours, Endian::Little); 
+		file.Read(JobTimeHours, Endian::Little);
 		file.Read(JobTimeMinutes, Endian::Little);
-		file.Read(JobTimeSeconds, Endian::Little);		
+		file.Read(JobTimeSeconds, Endian::Little);
 
 		file.DataCursorPosition += 12u;
 
@@ -208,7 +209,7 @@ BF::FileActionResult BF::TGA::Load(const wchar_t* filePath)
 		byteSteam.CurrentPosition += ScanlineOffset;
 	}*/
 	}
-	//-----------------------------------------------------------		
+	//-----------------------------------------------------------
 
 	return FileActionResult::Successful;
 }
@@ -228,7 +229,7 @@ BF::FileActionResult BF::TGA::Save(const wchar_t* filePath)
 }
 
 BF::FileActionResult BF::TGA::ConvertTo(Image& image)
-{	
+{
 	ImageDataFormat imageFormat = ImageDataFormat::Invalid;
 	size_t pixelDataLengh = 0;
 	size_t bytesPerPixel = 0;
@@ -238,7 +239,7 @@ BF::FileActionResult BF::TGA::ConvertTo(Image& image)
 	{
 		case TGABitsPerPixel::X1:
 		{
-			imageFormat = ImageDataFormat::AlphaMaskBinary;			
+			imageFormat = ImageDataFormat::AlphaMaskBinary;
 			break;
 		}
 		case TGABitsPerPixel::X8:
@@ -279,7 +280,7 @@ BF::FileActionResult BF::TGA::ConvertTo(Image& image)
 	if (newImageData == nullptr)
 	{
 		return FileActionResult::OutOfMemory;
-	}	
+	}
 
 	image.Format = imageFormat;
 	image.Height = Height;

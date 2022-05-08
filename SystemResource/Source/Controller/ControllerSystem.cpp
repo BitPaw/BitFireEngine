@@ -1,13 +1,21 @@
 #include "ControllerSystem.h"
 
+#include <OS/OSDefine.h>
+
+#if defined(OSUnix)
+
+#elif defined(OSWindows)
 #include <Windows.h>
 #include <joystickapi.h>
 
 #pragma comment( lib, "winmm.lib" )
+#endif
 
 void BF::ControllerSystem::ControllerScanDevices(NewControllerDetectedCallback callback)
 {
-	const size_t amountOfJoySticksSupported = joyGetNumDevs();
+#if defined(OSUnix)
+#elif defined(OSWindows)
+const size_t amountOfJoySticksSupported = joyGetNumDevs();
 
 	for (size_t i = 0; i < amountOfJoySticksSupported; i++)
 	{
@@ -69,10 +77,15 @@ void BF::ControllerSystem::ControllerScanDevices(NewControllerDetectedCallback c
 				break;
 		}*/
 	}
+#endif
 }
 
 bool BF::ControllerSystem::ControllerDataGet(const ControllerID controllerID, ControllerData& controller)
 {
+#if defined(OSUnix)
+    return false;
+
+#elif defined(OSWindows)
 #if (WINVER >= 0x0400) // newer than Windows NT 4.0
 	JOYINFOEX joystickInfo{ 0 }; // must set the 'dwSize' and 'dwFlags' or joyGetPosEx will fail.
 
@@ -114,10 +127,15 @@ bool BF::ControllerSystem::ControllerDataGet(const ControllerID controllerID, Co
 
 	return successful;
 #endif
+#endif
 }
 
 bool BF::ControllerSystem::ControllerAttachToWindow(const ControllerID controllerID, const WindowID windowID)
 {
+#if defined(OSUnix)
+    return false;
+
+#elif defined(OSWindows)
 	UINT uPeriod = 1;
 	BOOL fChanged = true;
 
@@ -125,12 +143,18 @@ bool BF::ControllerSystem::ControllerAttachToWindow(const ControllerID controlle
 	const bool successful = captureResult == JOYERR_NOERROR;
 
 	return successful;
+#endif
 }
 
 bool BF::ControllerSystem::ControllerDetachToWindow(const ControllerID controllerID)
 {
-	const MMRESULT releaseResult = joyReleaseCapture(controllerID);
+#if defined(OSUnix)
+    return false;
+
+#elif defined(OSWindows)
+const MMRESULT releaseResult = joyReleaseCapture(controllerID);
 	const bool successful = releaseResult == JOYERR_NOERROR;
 
 	return successful;
+#endif
 }

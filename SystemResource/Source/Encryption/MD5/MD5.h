@@ -2,6 +2,8 @@
 
 #define MD5Length 16
 
+#include <cstddef>
+
 namespace BF
 {
 	// Message-Digest Algorithm 5

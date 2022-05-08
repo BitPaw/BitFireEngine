@@ -2,7 +2,7 @@
 
 #include "Restklassen.h"
 
-class Körper
+class Koerper
 {
 	private:
 	Restklasse rk1;
@@ -13,9 +13,9 @@ class Körper
 	bool Kommutativ;
 	bool mit_Eins;
 	bool Null_frei;
-	Körper();
-	Körper(Restklasse rk);
-	Körper(Restklasse rk1, Restklasse rk2);
+	Koerper();
+	Koerper(Restklasse rk);
+	Koerper(Restklasse rk1, Restklasse rk2);
 	void addRestklasse(Restklasse rk);
 	void endlich();
 	void kommutativ();

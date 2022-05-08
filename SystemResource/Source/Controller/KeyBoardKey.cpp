@@ -3,6 +3,29 @@
 #include <OS/OSDefine.h>
 
 #if defined(OSUnix)
+#define ButtonBackSpace  0x08
+#define ButtonTab  0x09
+#define ButtonReturn  0x0D
+
+#define ButtonKeyPad0  0x60 //Numeric keypad 0 key
+#define ButtonKeyPad1  0x61 //Numeric keypad 1 key
+#define ButtonKeyPad2 0x62// Numeric keypad 2 key
+#define ButtonKeyPad3  0x63 //Numeric keypad 3 key
+#define ButtonKeyPad4  0x64 //Numeric keypad 4 key
+#define ButtonKeyPad5  0x65 //Numeric keypad 5 key
+#define ButtonKeyPad6  0x66 //Numeric keypad 6 key
+#define ButtonKeyPad7  0x67 //Numeric keypad 7 key
+#define ButtonKeyPad8  0x68 //Numeric keypad 8 key
+#define ButtonKeyPad9  0x69 //Numeric keypad 9 key
+
+#define ButtonShiftLeft  0xA0
+#define ButtonShiftRight  0xA1
+#define ButtonControlLeft 0xA2
+#define ButtonControlRight    0xA3
+#define ButtonMenuLeft  0xA4
+#define ButtonMenuRight  0xA5
+
+
 #elif defined(OSWindows)
 #include <Windows.h>
 #include <WinUser.h>
@@ -237,8 +260,8 @@ BF::KeyBoardKey BF::ConvertKeyBoardKey(wchar_t character)
 		case ButtonControlLeft: return KeyBoardKey::KeyCONTROLLEFT;
 		case ButtonControlRight: return KeyBoardKey::KeyCONTROLRIGHT;
 		// case ButtonMenuLeft: return KeyBoardKey::;
-		// case ButtonMenuRight: return KeyBoardKey::KeyShiftLeft;		
-			
+		// case ButtonMenuRight: return KeyBoardKey::KeyShiftLeft;
+
 		case ButtonBackSpace: return KeyBoardKey::KeyBACKSPACE;
 		case ButtonTab: return KeyBoardKey::KeyTAB;
 		case ButtonReturn: return KeyBoardKey::KeyENTER;

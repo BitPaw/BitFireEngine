@@ -1,5 +1,7 @@
 #include "Euklid.h"
+
 #include <iostream>
+#include <math.h>
 
 Euklid::Euklid(int a, int b)
 {
@@ -17,7 +19,7 @@ Euklid::Euklid(int a, int b)
         element.remainder = a % b;
         element.x = 0;
         element.y = 0;
-        liste[i] = element; 
+        liste[i] = element;
         a = b;
         b = element.remainder;
         ggt = a;

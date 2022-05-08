@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="BitFireEngine" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="../__Export__/X64B-Debug - Linux/BitFireEngine_DEBUG.lib" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output="../__Temp__/X64B-Debug - Linux/BitFireEngine/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="../SystemResource/Source" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="../__Export__/X64B-Release - Linux/BitFireEngine_Release.lib" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output="../__Temp__/X64B-Release - Linux/BitFireEngine/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="../SystemResource/Source" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="Source/Animation/AnimatorSprite.cpp" />
+		<Unit filename="Source/Animation/AnimatorSprite.h" />
+		<Unit filename="Source/Collision/SystemPhysics.cpp" />
+		<Unit filename="Source/Collision/SystemPhysics.h" />
+		<Unit filename="Source/Dialog/Dialog.cpp" />
+		<Unit filename="Source/Dialog/Dialog.h" />
+		<Unit filename="Source/Dialog/DialogBox.cpp" />
+		<Unit filename="Source/Dialog/DialogBox.h" />
+		<Unit filename="Source/Entity/Entity.cpp" />
+		<Unit filename="Source/Entity/Entity.h" />
+		<Unit filename="Source/Entity/Sign.cpp" />
+		<Unit filename="Source/Entity/Sign.h" />
+		<Unit filename="Source/Level/Level.cpp" />
+		<Unit filename="Source/Level/Level.h" />
+		<Unit filename="Source/Physic/Collider.cpp" />
+		<Unit filename="Source/Physic/Collider.h" />
+		<Unit filename="Source/Physic/ColliderType.h" />
+		<Unit filename="Source/Physic/CollisionListener.cpp" />
+		<Unit filename="Source/Physic/CollisionListener.h" />
+		<Unit filename="Source/Physic/GravityCube.cpp" />
+		<Unit filename="Source/Physic/GravityCube.h" />
+		<Unit filename="Source/Physic/GravityField.cpp" />
+		<Unit filename="Source/Physic/GravityField.h" />
+		<Unit filename="Source/Physic/GravitySphere.cpp" />
+		<Unit filename="Source/Physic/GravitySphere.h" />
+		<Unit filename="Source/Player/Player.cpp" />
+		<Unit filename="Source/Player/Player.h" />
+		<Unit filename="Source/System/BitFireEngine.cpp" />
+		<Unit filename="Source/System/BitFireEngine.h" />
+		<Unit filename="Source/System/Device/InputButton.cpp" />
+		<Unit filename="Source/System/Device/InputButton.h" />
+		<Unit filename="Source/System/Device/InputContainer.cpp" />
+		<Unit filename="Source/System/Device/InputContainer.h" />
+		<Unit filename="Source/System/Device/KeyBoard/KeyBoard.cpp" />
+		<Unit filename="Source/System/Device/KeyBoard/KeyBoard.h" />
+		<Unit filename="Source/System/Device/Mouse/Mouse.cpp" />
+		<Unit filename="Source/System/Device/Mouse/Mouse.h" />
+		<Unit filename="Source/System/IBitFireEngineListener.hpp" />
+		<Unit filename="Source/System/IBitFireEngineRenderListener.hpp" />
+		<Unit filename="Source/System/IBitFireEngineSoundListener.hpp" />
+		<Unit filename="Source/System/VideoConfig.cpp" />
+		<Unit filename="Source/System/VideoConfig.h" />
+		<Unit filename="Source/UI/DialogBox/UIDialogBox.cpp" />
+		<Unit filename="Source/UI/DialogBox/UIDialogBox.h" />
+		<Unit filename="Source/UI/UIButton.cpp" />
+		<Unit filename="Source/UI/UIButton.h" />
+		<Unit filename="Source/UI/UIElement.cpp" />
+		<Unit filename="Source/UI/UIElement.h" />
+		<Unit filename="Source/UI/UIImage.cpp" />
+		<Unit filename="Source/UI/UIImage.h" />
+		<Unit filename="Source/UI/UIText.cpp" />
+		<Unit filename="Source/UI/UIText.h" />
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>

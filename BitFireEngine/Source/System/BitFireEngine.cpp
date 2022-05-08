@@ -226,7 +226,7 @@ void BF::BitFireEngine::Start()
 
 
 
-    // Sound 
+    // Sound
     /*
     {
         //---<Select Device>
@@ -273,7 +273,11 @@ void BF::BitFireEngine::Start()
 
     while(!_mainWindow.IsRunning);
 
-    wglMakeCurrent(_mainWindow.HandleDeviceContext, _mainWindow.OpenGLRenderingContext);
+    #if defined(OSUnix)
+    // ???
+    #elif defined(OSWIndows)
+        wglMakeCurrent(_mainWindow.HandleDeviceContext, _mainWindow.OpenGLRenderingContext);
+    #endif
 
     _callbackListener->OnStartUp();
 
@@ -307,7 +311,7 @@ void BF::BitFireEngine::Update()
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-#if 0 // Triangle Test       
+#if 0 // Triangle Test
     // glClearColor(0.5f, 0.5f, 0.5f, 1);
 
     glBegin(GL_POLYGON);
@@ -324,12 +328,15 @@ void BF::BitFireEngine::Update()
 
     //---[Render World]----------------------------------------------------
     ModelsRender(deltaTime);
-    //---------------------------------------------------------------------          
+    //---------------------------------------------------------------------
 #endif
 
     glFlush();  // Flush drawing command buffer to make drawing happen as soon as possible.
 
+    #if defined(OSUnix)
+    #elif defined(OSWindows)
     SwapBuffers(_mainWindow.HandleDeviceContext);
+    #endif
 
     //wglMakeCurrent(0, 0);
 
@@ -386,7 +393,7 @@ void BF::BitFireEngine::OnMouseMove(const short x, const short y)
     // Update position
     mouse.Position[0] = x;
     mouse.Position[1] = y;
-#endif   
+#endif
 
     //printf("[#][OnMouseMove] X:%5i Y:%5i\n", mouse.InputAxis[0], mouse.InputAxis[1]);
 }
@@ -455,6 +462,8 @@ void BF::BitFireEngine::OnKeyBoardKey(const KeyBoardKeyInfo keyBoardKeyInfo)
 
 void BF::BitFireEngine::OnWindowCreated(Window& window)
 {
+#if defined(OSUnix)
+#elif defined(OSWindows)
     const PIXELFORMATDESCRIPTOR pfd =
     {
         sizeof(PIXELFORMATDESCRIPTOR),
@@ -567,6 +576,8 @@ void BF::BitFireEngine::OnWindowCreated(Window& window)
     }
 
     wglMakeCurrent(0, 0);
+
+#endif
 }
 
 void BF::BitFireEngine::OnWindowSizeChanged(const size_t width, const size_t height)
@@ -638,7 +649,7 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
         }
     }
 
-#if 1 DEBUG
+#if 1 // DEBUG
     if(keyboard.ShitftLeft.IsPressed()) { movement.Add(0, -1, 0); }
     if(keyboard.W.IsPressed()) { movement.Add(0, 0, 1); }
     if(keyboard.A.IsPressed()) { movement.Add(-1, 0, 0); }
@@ -755,7 +766,7 @@ void BF::BitFireEngine::Register(Texture& texture)
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexImage2D(textureType, 0, GL_RGBA, image.Width, image.Height, 0, format, GL_UNSIGNED_BYTE, image.PixelData);
 
-    //glGenerateMipmap(textureType); 
+    //glGenerateMipmap(textureType);
 
     glBindTexture(textureType, 0);
 
@@ -769,7 +780,7 @@ void BF::BitFireEngine::Register(Texture& texture)
 void BF::BitFireEngine::Register(TextureCube& textureCube)
 {
     OpenGLID textureID = -1;
-    
+
     // Check
     {
         const bool isValid = textureCube.HasTextures();
@@ -814,7 +825,7 @@ void BF::BitFireEngine::Register(Renderable& renderable, const Model& model)
     //float vaoIDList[128u];
     //memset(vaoIDList, -1, 128u * sizeof(unsigned int));
 
-    //glGenVertexArrays(numberOfMeshes, vaoIDList); // Generate VAOs  
+    //glGenVertexArrays(numberOfMeshes, vaoIDList); // Generate VAOs
 
     glGenVertexArrays(1, &renderable.ID); // Create VAO
 
@@ -826,7 +837,7 @@ void BF::BitFireEngine::Register(Renderable& renderable, const Model& model)
         OpenGLID meshIDList[128u];
         memset(meshIDList, -1, 128u * sizeof(OpenGLID));
 
-        glGenBuffers(numberOfMeshes, meshIDList); // Create VBO Buffers      
+        glGenBuffers(numberOfMeshes, meshIDList); // Create VBO Buffers
 
         renderable.ChunkListSize = numberOfMeshes;
         renderable.ChunkList = new RenderableChunk[numberOfMeshes];
@@ -923,7 +934,7 @@ void BF::BitFireEngine::Register(Renderable& renderable, const float* vertexData
     // Check
     {
         const bool hasData = vertexData && vertexDataSize && indexList && indexListSize;
-        
+
 
         if(!hasData)
         {
@@ -931,7 +942,7 @@ void BF::BitFireEngine::Register(Renderable& renderable, const float* vertexData
         }
     }
 
-    unsigned int id[3] = { -1,-1,-1 };
+    unsigned int id[3] = { (unsigned int)-1,(unsigned int)-1,(unsigned int)-1 };
 
     glGenVertexArrays(1, &id[0]);
 
@@ -1017,7 +1028,7 @@ bool BF::BitFireEngine::Register(ShaderProgram& shaderProgram, const wchar_t* ve
         }
     }
 
-    //-----   
+    //-----
     {
         const FileActionResult vertexLoadResult = vertexShader.Load(vertexShaderFilePath);
 
@@ -1293,7 +1304,7 @@ BF::FileActionResult BF::BitFireEngine::Load(Texture& texture, const wchar_t* fi
 
     _imageAdd.Lock();
     _textureList.Add(&texture);
-    _imageAdd.Release(); 
+    _imageAdd.Release();
 
     if(loadAsynchronously)
     {
@@ -1614,9 +1625,9 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
                     scaleText
                 );
 
-                // Get raw Data-------------------------                         
+                // Get raw Data-------------------------
 
-                // Replace 0|0|0 -> 0 0 0 
+                // Replace 0|0|0 -> 0 0 0
                 for(size_t i = 0; positionText[i] != '\0'; i++)
                 {
                     if(positionText[i] == '|')
@@ -1967,7 +1978,7 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
             CameraDataUpdate(MainCamera);
 
             OpenGL::ShaderSetUniformMatrix4x4(_matrixViewID, viewTri.Data);
-            //OpenGL::Use(*DefaultSkyBox);  
+            //OpenGL::Use(*DefaultSkyBox);
 
             const OpenGLID vao = renderable.ID;
             const OpenGLID vbo = renderable.ChunkList[0].ID;
@@ -2061,7 +2072,7 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
 #else
                 glDrawArrays(GL_POINTS, 0, size);
                 glDrawArrays(renderModeID, 0, size);
-#endif // 0                  
+#endif // 0
 
                 Use(textureType, 0);
 

@@ -4,6 +4,11 @@
 
 #include <cstdlib>
 
+#if defined(OSUnix)
+#include <libgen.h> // dirname()
+#elif defined(OSWindows)
+#endif
+
 BF::FilePath::FilePath()
 {
 	Path[0] = '\0';
@@ -111,7 +116,7 @@ void BF::FilePath::Splitt(const char* fullPath, size_t fullPathMaxSize, char* dr
 			break;
 		}
 	}
-#endif 
+#endif
 }
 
 void BF::FilePath::Splitt(const wchar_t* fullPath, wchar_t* drive, wchar_t* directory, wchar_t* fileName, wchar_t* extension)
@@ -173,7 +178,7 @@ void BF::FilePath::Splitt(const wchar_t* fullPath, size_t fullPathMaxSize, wchar
 			break;
 		}
 	}
-#endif 
+#endif
 }
 
 void BF::FilePath::GetFileExtension(const char* filePath, char* fileExtension)
