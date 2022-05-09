@@ -29,7 +29,247 @@
 BF::Dictionary<WindowID, BF::Window*> BF::Window::_windowLookup;
 BF::Window* BF::Window::_currentWindow = nullptr;
 
-#if defined(OSWindows)
+#if defined(OSUnix)
+void BF::Window::OnWindowEvent(const XEvent& event)
+{
+    BF::Window& window = *_currentWindow;
+
+ switch(event.type)
+        {
+        case KeyPress		:
+        {
+    printf("[Event] KeyPress \n");
+
+    break;
+}
+case KeyRelease		:
+{
+    printf("[Event] KeyRelease \n");
+
+    break;
+}
+case ButtonPress	:
+{
+    const XButtonEvent& buttonEvent = event.xbutton;
+    unsigned int buttonID = buttonEvent.button;
+
+    printf("[Event] Button Pressed %i\n",buttonID);
+            break;
+}
+case ButtonRelease	:
+{
+    printf("[Event] ButtonRelease \n");
+
+    break;
+}
+case MotionNotify	:
+{
+    printf("[Event] MotionNotify \n");
+
+    break;
+}
+case EnterNotify	:
+{
+    printf("[Event] EnterNotify \n");
+
+    break;
+}
+case LeaveNotify	:
+{
+    printf("[Event] LeaveNotify \n");
+
+    break;
+}
+case FocusIn		:
+{
+    printf("[Event] FocusIn \n");
+
+    break;
+}
+case FocusOut		:
+{
+    printf("[Event] FocusOut \n");
+
+    break;
+}
+case KeymapNotify	:
+{
+    printf("[Event] KeymapNotify \n");
+
+    break;
+}
+case Expose			:
+{
+printf("[Event] Expose \n");
+
+/*
+  XWindowAttributes gwa;
+
+            XGetWindowAttributes(window.Dis, windowID, &gwa);
+            glViewport(0, 0, gwa.width, gwa.height);
+
+
+            glClearColor(1.0, 1.0, 1.0, 1.0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            glBegin(GL_POLYGON);
+            glColor3f(1, 0, 0); glVertex3f(-0.6, -0.75, 0.5);
+            glColor3f(0, 1, 0); glVertex3f(0.6, -0.75, 0);
+            glColor3f(0, 0, 1); glVertex3f(0, 0.75, 0);
+            glEnd();
+
+            // Flush drawing command buffer to make drawing happen as soon as possible.
+            //glFlush();
+
+            window.FrameBufferSwap();*/
+
+    break;
+}
+case GraphicsExpose	:
+{
+    printf("[Event] GraphicsExpose \n");
+
+    break;
+}
+case NoExpose		:
+{
+    printf("[Event] NoExpose \n");
+
+    break;
+}
+case VisibilityNotify:
+{
+    printf("[Event] VisibilityNotify \n");
+
+    break;
+}
+case CreateNotify		:
+{
+    printf("[Event] CreateNotify \n");
+
+    break;
+}
+case DestroyNotify		:
+{
+    printf("[Event] DestroyNotify \n");
+
+    break;
+}
+case UnmapNotify		:
+{
+    printf("[Event] UnmapNotify \n");
+
+    break;
+}
+case MapNotify		:
+{
+    printf("[Event] MapNotify \n");
+
+    break;
+}
+case MapRequest		:
+{
+    printf("[Event] MapRequest \n");
+
+    break;
+}
+case ReparentNotify	:
+{
+    printf("[Event] ReparentNotify \n");
+
+    break;
+}
+case ConfigureNotify:
+{
+    printf("[Event] ConfigureNotify \n");
+
+    break;
+}
+case ConfigureRequest:
+{
+    printf("[Event] Destroyed \n");
+
+    break;
+}
+case GravityNotify		:
+{
+    printf("[Event] GravityNotify \n");
+
+    break;
+}
+case ResizeRequest		:
+{
+    const XResizeRequestEvent resizeRequestEvent = event.xresizerequest;
+    const int width = resizeRequestEvent.width;
+    const int height = resizeRequestEvent.height;
+
+    printf("[Event] Resize %i x %i. Type %i\n", width, height);
+
+     //InvokeEvent(window.WindowSizeChangedCallBack, width, height);
+
+     break;
+}
+case CirculateNotify	:
+{
+    printf("[Event] CirculateNotify \n");
+
+    break;
+}
+case CirculateRequest	:
+{
+    printf("[Event] CirculateRequest \n");
+
+    break;
+}
+case PropertyNotify		:
+{
+    printf("[Event] PropertyNotify \n");
+
+    break;
+}
+case SelectionClear		:
+{
+    printf("[Event] SelectionClear \n");
+
+    break;
+}
+case SelectionRequest	:
+{
+    printf("[Event] SelectionRequest \n");
+
+    break;
+}
+case SelectionNotify	:
+{
+    printf("[Event] SelectionNotify \n");
+
+    break;
+}
+case ColormapNotify		:
+{
+    printf("[Event] ColormapNotify \n");
+
+    break;
+}
+case ClientMessage		:
+{
+    printf("[Event] ClientMessage \n");
+
+    break;
+}
+case MappingNotify		:
+{
+    printf("[Event] MappingNotify \n");
+
+    break;
+}
+case GenericEvent		:
+{
+    break;
+}
+        }
+}
+#elif defined(OSWindows)
 LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM lParam)
 {
     bool letWindowsHandleEvent = true;
@@ -82,7 +322,22 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
 
             if (_currentWindow)
             {
+                window = const HDC windowHandleToDeviceContext = GetDC(windowsID);
+
+            if (_currentWindow)
+            {
                 window = _currentWindow;
+                window->ID = windowsID;
+                window->HandleDeviceContext = windowHandleToDeviceContext;
+
+                _currentWindow = nullptr;
+
+                _windowLookup.Add(windowsID, window);
+
+                InvokeEvent(window->WindowCreatedCallBack, *window);
+
+                window->IsRunning = true;
+            } _currentWindow;
                 window->ID = windowsID;
                 window->HandleDeviceContext = windowHandleToDeviceContext;
 
@@ -282,13 +537,13 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
             KeyBoardKeyInfo buttonInfo;
             buttonInfo.Key = ConvertKeyBoardKey(character);
             buttonInfo.Mode = mode;
-            buttonInfo.Repeat          = (characterInfo & 0b00000000000000001111111111111111); // Die Wiederholungsanzahl für die aktuelle Meldung.Der Wert gibt an, wie oft die Tastatureingabe automatisch angezeigt wird, wenn der Benutzer den Schlüssel hält.Die Wiederholungsanzahl ist immer 1 für eine WM _ KEYUP - Nachricht.
-            buttonInfo.ScanCode        = (characterInfo & 0b00000000111111110000000000000000) >> 16; // Der Scancode.Der Wert hängt vom OEM ab.
-            buttonInfo.SpecialKey      = (characterInfo & 0b00000001000000000000000000000000) >> 24; // Gibt an, ob es sich bei der Taste um eine erweiterte Taste handelt, z.B.die rechte ALT - und STRG - Taste, die auf einer erweiterten Tastatur mit 101 oder 102 Tasten angezeigt werden.Der Wert ist 1, wenn es sich um einen erweiterten Schlüssel handelt.andernfalls ist es 0.
+            buttonInfo.Repeat          = (characterInfo & 0b00000000000000001111111111111111); // Die Wiederholungsanzahl fÃ¼r die aktuelle Meldung.Der Wert gibt an, wie oft die Tastatureingabe automatisch angezeigt wird, wenn der Benutzer den SchlÃ¼ssel hÃ¤lt.Die Wiederholungsanzahl ist immer 1 fÃ¼r eine WM _ KEYUP - Nachricht.
+            buttonInfo.ScanCode        = (characterInfo & 0b00000000111111110000000000000000) >> 16; // Der Scancode.Der Wert hÃ¤ngt vom OEM ab.
+            buttonInfo.SpecialKey      = (characterInfo & 0b00000001000000000000000000000000) >> 24; // Gibt an, ob es sich bei der Taste um eine erweiterte Taste handelt, z.B.die rechte ALT - und STRG - Taste, die auf einer erweiterten Tastatur mit 101 oder 102 Tasten angezeigt werden.Der Wert ist 1, wenn es sich um einen erweiterten SchlÃ¼ssel handelt.andernfalls ist es 0.
             //buttonInfo.ReservedDontUse = (characterInfo & 0b00011110000000000000000000000000) >> 25; //	Reserviert; nicht verwenden.
-            buttonInfo.KontextCode     = (characterInfo & 0b00100000000000000000000000000000) >> 29; // Der Kontextcode.Der Wert ist für eine WM _ KEYUP - Nachricht immer 0.
-            buttonInfo.PreState        = (characterInfo & 0b01000000000000000000000000000000) >> 30; // Der vorherige Schlüsselzustand.Der Wert ist immer 1 für eine WM _ KEYUP - Nachricht.
-            buttonInfo.GapState        = (characterInfo & 0b10000000000000000000000000000000) >> 31; // Der Übergangszustand.Der Wert ist immer 1 für eine WM _ KEYUP - Nachricht.
+            buttonInfo.KontextCode     = (characterInfo & 0b00100000000000000000000000000000) >> 29; // Der Kontextcode.Der Wert ist fÃ¼r eine WM _ KEYUP - Nachricht immer 0.
+            buttonInfo.PreState        = (characterInfo & 0b01000000000000000000000000000000) >> 30; // Der vorherige SchlÃ¼sselzustand.Der Wert ist immer 1 fÃ¼r eine WM _ KEYUP - Nachricht.
+            buttonInfo.GapState        = (characterInfo & 0b10000000000000000000000000000000) >> 31; // Der Ãœbergangszustand.Der Wert ist immer 1 fÃ¼r eine WM _ KEYUP - Nachricht.
 
             InvokeEvent(window->KeyBoardKeyCallBack, buttonInfo);
 
@@ -571,7 +826,7 @@ BF::Window::Window()
     #if defined(OSUnix)
     DisplayCurrent = nullptr;
     WindowRoot = 0;
-    #elif defined(OSWindows)   
+    #elif defined(OSWindows)
     HandleDeviceContext = 0;
     CursorID = 0;
     #endif
@@ -639,19 +894,50 @@ ThreadFunctionReturnType BF::Window::WindowThead(void* windowCreationInfoAdress)
     Colormap colormap = XCreateColormap(display, windowRoot, visualInfo->visual, AllocNone);
 
     XSetWindowAttributes setWindowAttributes;
+    //setWindowAttributes.cursor = ;
     setWindowAttributes.colormap = colormap;
-    setWindowAttributes.event_mask = ExposureMask | KeyPressMask;
+    setWindowAttributes.event_mask =
+ KeyReleaseMask			|
+ ButtonPressMask		|
+ ButtonReleaseMask		|
+ EnterWindowMask		|
+ LeaveWindowMask		|
+ PointerMotionMask		|
+ PointerMotionHintMask	|
+ Button1MotionMask		|
+ Button2MotionMask		|
+ Button3MotionMask	|
+ Button4MotionMask	|
+ Button5MotionMask	|
+ ButtonMotionMask		|
+ KeymapStateMask		|
+ ExposureMask			|
+ VisibilityChangeMask	|
+ StructureNotifyMask	|
+ ResizeRedirectMask		|
+ SubstructureNotifyMask		|
+ SubstructureRedirectMask	|
+ FocusChangeMask	|
+ PropertyChangeMask	|
+ ColormapChangeMask	|
+ OwnerGrabButtonMask;
 
+
+    int x = creationInfo.X;
+    int y = creationInfo.Y;
+    int width = creationInfo.Width;
+    int height = creationInfo.Height;
+    int borderWidth = 0;
 
     XID windowID = XCreateWindow
     (
         display,
         windowRoot,
-        0,
-        0,
-        600,
-        600,
-        0,
+        x,
+        y,
+        width,
+        height,
+        borderWidth,
         visualInfo->depth,
         InputOutput,
         visualInfo->visual,
@@ -659,9 +945,12 @@ ThreadFunctionReturnType BF::Window::WindowThead(void* windowCreationInfoAdress)
         &setWindowAttributes
     );
 
+    char windowTitle[256];
+
+    Text::Copy(windowTitle, creationInfo.Title, 256);
 
     XMapWindow(display, windowID);
-    XStoreName(display, windowID, "VERY SIMPLE APPLICATION");
+    XStoreName(display, windowID, windowTitle);
 
     GLXContext glContext = glXCreateContext(display, visualInfo, NULL, GL_TRUE);
     glXMakeCurrent(display, windowID, glContext);
@@ -673,6 +962,18 @@ ThreadFunctionReturnType BF::Window::WindowThead(void* windowCreationInfoAdress)
 
     //  Windows created
 
+
+     _currentWindow = &window;
+    _windowLookup.Add(windowID, &window);
+
+     window.IsRunning = true;
+
+    InvokeEvent(window.WindowCreatedCallBack, window);
+
+
+
+
+
     glEnable(GL_DEPTH_TEST);
 
     while(creationInfo.Async)
@@ -681,37 +982,8 @@ ThreadFunctionReturnType BF::Window::WindowThead(void* windowCreationInfoAdress)
 
         XNextEvent(display, &event);
 
-        if(event.type == Expose)
-        {
-            XWindowAttributes gwa;
-
-            XGetWindowAttributes(display, windowID, &gwa);
-            glViewport(0, 0, gwa.width, gwa.height);
-
-
-            glClearColor(1.0, 1.0, 1.0, 1.0);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            glBegin(GL_POLYGON);
-            glColor3f(1, 0, 0); glVertex3f(-0.6, -0.75, 0.5);
-            glColor3f(0, 1, 0); glVertex3f(0.6, -0.75, 0);
-            glColor3f(0, 0, 1); glVertex3f(0, 0.75, 0);
-            glEnd();
-
-            // Flush drawing command buffer to make drawing happen as soon as possible.
-            //glFlush();
-
-            window.FrameBufferSwap();
-        }
-        else if(event.type == KeyPress)
-        {
-            glXMakeCurrent(display, None, NULL);
-            glXDestroyContext(display, glContext);
-            XDestroyWindow(display, windowID);
-            XCloseDisplay(display);
-        }
-    } /* this closes while(1) { */
-
+        OnWindowEvent(event);
+    }
 
     #elif defined(OSWindows)
     DWORD windowStyle = WS_EX_APPWINDOW;
@@ -853,21 +1125,12 @@ void BF::Window::Create(const unsigned int width, const unsigned int height, con
 void BF::Window::Destroy()
 {
 #if defined(OSUnix)
-
+    glXMakeCurrent(DisplayCurrent, None, NULL);
+//    glXDestroyContext(DisplayCurrent, OpenGLConextID);
+    XDestroyWindow(DisplayCurrent, ID);
+    XCloseDisplay(DisplayCurrent);
 #elif defined(OSWindows)
     CloseWindow(ID);
-#endif
-}
-
-void BF::Window::FrameBufferSwap()
-{
- glFlush();  // Flush drawing command buffer to make drawing happen as soon as possible.
-
-#if defined(OSUnix)
-    glXSwapBuffers(DisplayCurrent, ID);
-#elif defined(OSWindows)
-  SwapBuffers(HandleDeviceContext);
-    //wglMakeCurrent(0, 0);
 #endif
 }
 
@@ -1049,11 +1312,32 @@ void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
 #endif
 }
 
-void BF::Window::FrameBufferSwapContext()
+void BF::Window::FrameBufferSwap()
+{
+    glFlush();  // Flush drawing command buffer to make drawing happen as soon as possible.
+
+#if defined(OSUnix)
+    glXSwapBuffers(DisplayCurrent, ID);
+#elif defined(OSWindows)
+    SwapBuffers(HandleDeviceContext);
+    //wglMakeCurrent(0, 0);
+#endif
+}
+
+void BF::Window::FrameBufferContextRegister()
 {
     #if defined(OSUnix)
      glXMakeCurrent(DisplayCurrent, ID, OpenGLConext);
     #elif defined(OSWindows)
         wglMakeCurrent(HandleDeviceContext, OpenGLRenderingContext);
+    #endif
+}
+
+void BF::Window::FrameBufferContextRelease()
+{
+ #if defined(OSUnix)
+     glXMakeCurrent(0, 0, OpenGLConext);
+    #elif defined(OSWindows)
+        wglMakeCurrent(0, 0);
     #endif
 }

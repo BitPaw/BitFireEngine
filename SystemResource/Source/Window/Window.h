@@ -50,11 +50,11 @@ namespace BF
 	{
 		KeyBoardKey Key;
 		ButtonState Mode;
-		unsigned short Repeat; // Die Wiederholungsanzahl für die aktuelle Meldung.Der Wert gibt an, wie oft die Tastatureingabe automatisch angezeigt wird, wenn der Benutzer den Schlüssel hält.Die Wiederholungsanzahl ist immer 1 für eine WM _ KEYUP - Nachricht.
-		unsigned short ScanCode;// Der Scancode.Der Wert hängt vom OEM ab.
-		unsigned short SpecialKey;// Gibt an, ob es sich bei der Taste um eine erweiterte Taste handelt, z.B.die rechte ALT - und STRG - Taste, die auf einer erweiterten Tastatur mit 101 oder 102 Tasten angezeigt werden.Der Wert ist 1, wenn es sich um einen erweiterten Schlüssel handelt.andernfalls ist es 0.
-		unsigned short KontextCode; // Der Kontextcode.Der Wert ist für eine WM _ KEYUP - Nachricht immer 0.
-		unsigned short PreState; // Der vorherige Schlüsselzustand.Der Wert ist immer 1 für eine WM _ KEYUP - Nachricht.
+		unsigned short Repeat; // Die Wiederholungsanzahl fÃ¼r die aktuelle Meldung.Der Wert gibt an, wie oft die Tastatureingabe automatisch angezeigt wird, wenn der Benutzer den SchlÃ¼ssel hÃ¤lt.Die Wiederholungsanzahl ist immer 1 fÃ¼r eine WM _ KEYUP - Nachricht.
+		unsigned short ScanCode;// Der Scancode.Der Wert hÃ¤ngt vom OEM ab.
+		unsigned short SpecialKey;// Gibt an, ob es sich bei der Taste um eine erweiterte Taste handelt, z.B.die rechte ALT - und STRG - Taste, die auf einer erweiterten Tastatur mit 101 oder 102 Tasten angezeigt werden.Der Wert ist 1, wenn es sich um einen erweiterten SchlÃ¼ssel handelt.andernfalls ist es 0.
+		unsigned short KontextCode; // Der Kontextcode.Der Wert ist fÃ¼r eine WM _ KEYUP - Nachricht immer 0.
+		unsigned short PreState; // Der vorherige SchlÃ¼sselzustand.Der Wert ist immer 1 fÃ¼r eine WM _ KEYUP - Nachricht.
 		unsigned short GapState;
 	};
 
@@ -126,7 +126,9 @@ namespace BF
 		Window();
 		~Window();
 
-#if defined(OSWindows)
+#if defined(OSUnix)
+        static void OnWindowEvent(const XEvent& event);
+#elif defined(OSWindows)
 		static LRESULT CALLBACK OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM lParam);
 #endif
 
@@ -164,6 +166,7 @@ namespace BF
 		void CursorCaptureMode(const CursorMode cursorMode);
 
 		void FrameBufferSwap();
-		void FrameBufferSwapContext();
+		void FrameBufferContextRegister();
+        void FrameBufferContextRelease();
 	};
 }

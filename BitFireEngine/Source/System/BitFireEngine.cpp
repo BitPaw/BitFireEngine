@@ -268,10 +268,10 @@ void BF::BitFireEngine::Start()
     while(!_mainWindow.IsRunning);
 
 
-    _mainWindow.FrameBufferSwapContext();
+    _mainWindow.FrameBufferContextRegister();
 
 
-    _callbackListener->OnStartUp();
+    //_callbackListener->OnStartUp();
 
     double time = stopwatch.Stop();
 
@@ -298,10 +298,10 @@ void BF::BitFireEngine::Update()
         //_callbackListener->OnUpdateUI();
     }
     //---------------------------------------------------------------------
- _mainWindow.FrameBufferSwapContext();
+
     //---[User-Input]------------------------------------------------------
 
-     glClearColor(1.0, 1.0, 1.0, 1.0);
+     glClearColor(0.2, 0.2, 0.2, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 #if 1 // Triangle Test
@@ -447,6 +447,8 @@ void BF::BitFireEngine::OnKeyBoardKey(const KeyBoardKeyInfo keyBoardKeyInfo)
 
 void BF::BitFireEngine::OnWindowCreated(Window& window)
 {
+printf("[EVENT] Window created!\n");
+
 #if defined(OSUnix)
 #elif defined(OSWindows)
     const PIXELFORMATDESCRIPTOR pfd =
@@ -474,6 +476,8 @@ void BF::BitFireEngine::OnWindowCreated(Window& window)
 
     window.OpenGLRenderingContext = wglCreateContext(window.HandleDeviceContext);
     wglMakeCurrent(window.HandleDeviceContext, window.OpenGLRenderingContext);
+
+    #endif
 
     //GLEW
     {
@@ -560,9 +564,7 @@ void BF::BitFireEngine::OnWindowCreated(Window& window)
          //glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
     }
 
-    wglMakeCurrent(0, 0);
-
-#endif
+    window.FrameBufferContextRelease();
 }
 
 void BF::BitFireEngine::OnWindowSizeChanged(const size_t width, const size_t height)

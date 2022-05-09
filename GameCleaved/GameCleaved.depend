@@ -238,7 +238,7 @@
 
 1652022894 /home/bitpaw/Desktop/Engine/BitFireEngine/BitFireEngine/Source/Player/Player.h
 
-1652104014 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Window/Window.h
+1652139845 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Window/Window.h
 	<OS/OSDefine.h>
 	"../Controller/KeyBoardKey.h"
 	"../Container/Dictionary.hpp"
