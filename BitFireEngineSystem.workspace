@@ -4,5 +4,7 @@
 		<Project filename="SystemResource/SystemResource.cbp" />
 		<Project filename="BitFireEngine/BitFireEngine.cbp" />
 		<Project filename="GameCleaved/GameCleaved.cbp" />
+		<Project filename="../../LinuxWindow/LinuxWindow.cbp" />
+		<Project filename="TestConsole/TestConsole.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

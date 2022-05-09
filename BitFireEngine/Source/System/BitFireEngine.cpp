@@ -267,11 +267,9 @@ void BF::BitFireEngine::Start()
 
     while(!_mainWindow.IsRunning);
 
-    #if defined(OSUnix)
-    // ???
-    #elif defined(OSWindows)
-        wglMakeCurrent(_mainWindow.HandleDeviceContext, _mainWindow.OpenGLRenderingContext);
-    #endif
+
+    _mainWindow.FrameBufferSwapContext();
+
 
     _callbackListener->OnStartUp();
 
@@ -300,12 +298,13 @@ void BF::BitFireEngine::Update()
         //_callbackListener->OnUpdateUI();
     }
     //---------------------------------------------------------------------
-
+ _mainWindow.FrameBufferSwapContext();
     //---[User-Input]------------------------------------------------------
 
+     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-#if 0 // Triangle Test
+#if 1 // Triangle Test
     // glClearColor(0.5f, 0.5f, 0.5f, 1);
 
     glBegin(GL_POLYGON);
@@ -325,16 +324,7 @@ void BF::BitFireEngine::Update()
     //---------------------------------------------------------------------
 #endif
 
-    glFlush();  // Flush drawing command buffer to make drawing happen as soon as possible.
-
-    #if defined(OSUnix)
-    #elif defined(OSWindows)
-    SwapBuffers(_mainWindow.HandleDeviceContext);
-    //wglMakeCurrent(0, 0);
-    #endif
-
-  
-
+    _mainWindow.FrameBufferSwap();
 
     UpdateInput(_inputContainer);
     _callbackListener->OnUpdateInput(_inputContainer);
@@ -1047,7 +1037,7 @@ bool BF::BitFireEngine::Register(ShaderProgram& shaderProgram, const wchar_t* ve
     const size_t shaderListSize = 2;
     const Shader* shaderList[shaderListSize]{ &vertexShader, &fragmentShader };
     const OpenGLID shaderProgrammID = OpenGL::ShaderProgramCreate();
-    OpenGLID shaderIDList[shaderListSize] = { -1,-1 };
+    OpenGLID shaderIDList[shaderListSize] = { (unsigned int)-1,(unsigned int)-1 };
     unsigned int  sucessfulCounter = 0;
     bool isValidShader = false;
 

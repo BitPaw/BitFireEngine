@@ -20,9 +20,10 @@
 				<Linker>
 					<Add library="../__Export__/X64B-Debug - Linux/BitFireEngine_DEBUG.lib" />
 					<Add library="../__Export__/X64B-Debug - Linux/SystemResource_DEBUG.lib" />
-					<Add library="pthread" />
+					<Add library="X11" />
 					<Add library="GL" />
 					<Add library="GLEW" />
+					<Add library="pthread" />
 				</Linker>
 			</Target>
 			<Target title="Release">

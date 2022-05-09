@@ -375,9 +375,10 @@
 
 1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/File/ParsingToken.h
 
-1652047734 source:/home/bitpaw/Desktop/Engine/BitFireEngine/BitFireEngine/Source/System/BitFireEngine.cpp
+1652091788 source:/home/bitpaw/Desktop/Engine/BitFireEngine/BitFireEngine/Source/System/BitFireEngine.cpp
 	"BitFireEngine.h"
-	<stdlib.h>
+	"Device/InputContainer.h"
+	"../UI/UIText.h"
 	<File/File.h>
 	<Media/Image/BMP/BMP.h>
 	<Model/Model.h>
@@ -386,9 +387,8 @@
 	<Controller/ControllerSystem.h>
 	<File/FileStream.h>
 	<Graphic/OpenGL/OpenGL.h>
-	"Device/InputContainer.h"
-	"../UI/UIText.h"
 	<Graphic/OpenGL/ResourceType.hpp>
+	<stdlib.h>
 
 1652022894 /home/bitpaw/Desktop/Engine/BitFireEngine/BitFireEngine/Source/System/BitFireEngine.h
 	"IBitFireEngineListener.hpp"
@@ -417,7 +417,7 @@
 1652022894 /home/bitpaw/Desktop/Engine/BitFireEngine/BitFireEngine/Source/System/IBitFireEngineListener.hpp
 	"Device/InputContainer.h"
 
-1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Graphic/OpenGL/OpenGL.h
+1652091400 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Graphic/OpenGL/OpenGL.h
 	"RenderMode.h"
 	<Media/Image/Image.h>
 	<Model/Model.h>
@@ -435,12 +435,12 @@
 	<stdint.h>
 	<SdkDdkVer.h>
 
-1652032240 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Async/Thread.h
+1652100352 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Async/Thread.h
 	<OS/OSDefine.h>
 	<pthread.h>
 	<windows.h>
 
-1652030897 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Async/AsyncLock.h
+1652050116 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Async/AsyncLock.h
 	<OS/OSDefine.h>
 	<semaphore.h>
 	<windows.h>
@@ -452,13 +452,16 @@
 
 1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Media/Sound/AudioSource.h
 
-1652032329 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Window/Window.h
+1652100969 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Window/Window.h
 	<OS/OSDefine.h>
 	"../Controller/KeyBoardKey.h"
 	"../Container/Dictionary.hpp"
 	"../Async/Thread.h"
 	"../Controller/KeyBoardKey.h"
 	"CursorMode.h"
+	<X11/X.h>
+	<X11/Xlib.h>
+	<GL/glx.h>
 	<wtypes.h>
 	<windef.h>
 	"CursorIcon.h"

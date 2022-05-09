@@ -9,11 +9,22 @@
 #include "CursorMode.h"
 
 #if defined(OSUnix)
-#define WindowID unsigned int
+
+#include <X11/X.h>
+#include <X11/Xlib.h>
+#include <GL/glew.h>
+#include <GL/gl.h>
+#include <GL/glx.h>
+#define WindowID XID // XID is Window
+#define OpenGLConextID GLXContext
+
 #elif defined(OSWindows)
+
 #include <wtypes.h>
 #include <windef.h>
 #define WindowID HWND
+#define OpenGLConextID HGLRC
+
 #endif
 #include "CursorIcon.h"
 
@@ -88,12 +99,14 @@ namespace BF
 
 		public:
 		WindowID ID;
+		OpenGLConextID OpenGLConext;
 
 		#if defined(OSUnix)
+		Display* DisplayCurrent;
+		WindowID WindowRoot;
 		#elif defined(OSWindows)
 		HCURSOR CursorID;
 		HDC HandleDeviceContext;
-		HGLRC OpenGLRenderingContext;
 		#endif
 
 		// Interneal
@@ -149,5 +162,8 @@ namespace BF
 		void CursorTexture();
 		CursorMode CursorCaptureMode();
 		void CursorCaptureMode(const CursorMode cursorMode);
+
+		void FrameBufferSwap();
+		void FrameBufferSwapContext();
 	};
 }

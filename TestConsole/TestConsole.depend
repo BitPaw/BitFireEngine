@@ -1,0 +1,38 @@
+# depslib dependency file v1.0
+1652101968 source:/home/bitpaw/Desktop/Engine/BitFireEngine/TestConsole/TestConsole.cpp
+	<Window/Window.h>
+
+1652102573 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Window/Window.h
+	<OS/OSDefine.h>
+	"../Controller/KeyBoardKey.h"
+	"../Container/Dictionary.hpp"
+	"../Async/Thread.h"
+	"../Controller/KeyBoardKey.h"
+	"CursorMode.h"
+	<X11/X.h>
+	<X11/Xlib.h>
+	<GL/glew.h>
+	<GL/gl.h>
+	<GL/glx.h>
+	<wtypes.h>
+	<windef.h>
+	"CursorIcon.h"
+
+1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/OS/OSDefine.h
+	<stdint.h>
+	<SdkDdkVer.h>
+
+1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Controller/KeyBoardKey.h
+
+1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Container/Dictionary.hpp
+	<stdlib.h>
+
+1652100352 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Async/Thread.h
+	<OS/OSDefine.h>
+	<pthread.h>
+	<windows.h>
+
+1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Window/CursorMode.h
+
+1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Window/CursorIcon.h
+

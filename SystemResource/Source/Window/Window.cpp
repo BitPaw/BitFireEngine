@@ -26,7 +26,6 @@
 
 #define InvokeEvent(FunctionPoniter, ...) if(FunctionPoniter) FunctionPoniter(__VA_ARGS__)
 
-
 BF::Dictionary<WindowID, BF::Window*> BF::Window::_windowLookup;
 BF::Window* BF::Window::_currentWindow = nullptr;
 
@@ -596,17 +595,143 @@ ThreadFunctionReturnType BF::Window::WindowThead(void* windowCreationInfoAdress)
 {
     if(!windowCreationInfoAdress)
     {
-#if defined(OSUnix)
-        return nullptr;
-#elif defined(OSWindows)
-        return 0;
-#endif
-}
- 
+
+        return ThreadFunctionReturnValue;
+    }
 
     WindowCreationInfo& creationInfo = *(WindowCreationInfo*)windowCreationInfoAdress;
+    BF::Window& window = *(creationInfo.CreatedWindow);
 
     #if defined(OSUnix)
+    Display* display = XOpenDisplay(nullptr);   // Create Window
+
+    {
+        const bool successful = display != nullptr;
+
+        if(!successful)
+        {
+            return ThreadFunctionReturnValue; // printf("\n\tcannot connect to X server\n\n");
+        }
+    }
+
+    // Make windows root
+    XID windowRoot = DefaultRootWindow(display);
+
+    int attributeList[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
+
+    XVisualInfo* visualInfo = glXChooseVisual(display, 0, attributeList);
+
+    {
+        const bool successful = visualInfo != nullptr;
+
+        if(!successful)
+        {
+            return ThreadFunctionReturnValue; // no appropriate visual found
+        }
+    }
+
+    printf("\n\tvisual %p selected\n", (void *)visualInfo->visualid); /* %p creates hexadecimal output like in glxinfo */
+
+
+    // Create colormapping
+    Colormap colormap = XCreateColormap(display, windowRoot, visualInfo->visual, AllocNone);
+
+    XSetWindowAttributes setWindowAttributes;
+    setWindowAttributes.colormap = colormap;
+    setWindowAttributes.event_mask = ExposureMask | KeyPressMask;
+
+
+    XID windowID = XCreateWindow
+    (
+        display,
+        windowRoot,
+        0,
+        0,
+        600,
+        600,
+        0,
+        visualInfo->depth,
+        InputOutput,
+        visualInfo->visual,
+        CWColormap | CWEventMask,
+        &setWindowAttributes
+    );
+
+
+    XMapWindow(display, windowID);
+    XStoreName(display, windowID, "VERY SIMPLE APPLICATION");
+
+    GLXContext glContext = glXCreateContext(display, visualInfo, NULL, GL_TRUE);
+    glXMakeCurrent(display, windowID, glContext);
+
+    // Set Data
+    window.DisplayCurrent = display;
+    window.ID = windowID;
+    window.OpenGLConext = glContext;
+
+
+    //  Windows created
+
+
+
+     glEnable(GL_DEPTH_TEST);
+
+    while(creationInfo.Async)
+    {
+        XEvent event;
+
+        XNextEvent(display, &event);
+
+
+
+        if(event.type == Expose)
+        {
+            XWindowAttributes gwa;
+
+        	XGetWindowAttributes(display, windowID, &gwa);
+            glViewport(0, 0, gwa.width, gwa.height);
+
+
+                       glClearColor(1.0, 1.0, 1.0, 1.0);
+ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        	glBegin(GL_POLYGON);
+        glColor3f(1, 0, 0); glVertex3f(-0.6, -0.75, 0.5);
+        glColor3f(0, 1, 0); glVertex3f(0.6, -0.75, 0);
+        glColor3f(0, 0, 1); glVertex3f(0, 0.75, 0);
+        glEnd();
+
+        // Flush drawing command buffer to make drawing happen as soon as possible.
+        //glFlush();
+
+        window.FrameBufferSwap();
+
+         ;
+        }
+        else if(event.type == KeyPress)
+        {
+        	glXMakeCurrent(display, None, NULL);
+            glXDestroyContext(display, glContext);
+            XDestroyWindow(display, windowID);
+            XCloseDisplay(display);
+        }
+    } /* this closes while(1) { */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -708,11 +833,7 @@ ThreadFunctionReturnType BF::Window::WindowThead(void* windowCreationInfoAdress)
     }
     #endif
 
-#if defined(OSUnix)
-    return nullptr;
-#elif defined(OSWindows)
-    return 0;
-#endif
+    return ThreadFunctionReturnValue;
 }
 
 void BF::Window::Create()
@@ -757,6 +878,18 @@ void BF::Window::Destroy()
 
 #elif defined(OSWindows)
     CloseWindow(ID);
+#endif
+}
+
+void BF::Window::FrameBufferSwap()
+{
+ glFlush();  // Flush drawing command buffer to make drawing happen as soon as possible.
+
+#if defined(OSUnix)
+    glXSwapBuffers(DisplayCurrent, ID);
+#elif defined(OSWindows)
+  SwapBuffers(HandleDeviceContext);
+    //wglMakeCurrent(0, 0);
 #endif
 }
 
@@ -936,4 +1069,13 @@ void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
 
     _cursorMode = cursorMode;
 #endif
+}
+
+void BF::Window::FrameBufferSwapContext()
+{
+    #if defined(OSUnix)
+     glXMakeCurrent(DisplayCurrent, ID, OpenGLConext);
+    #elif defined(OSWindows)
+        wglMakeCurrent(HandleDeviceContext, OpenGLRenderingContext);
+    #endif
 }
