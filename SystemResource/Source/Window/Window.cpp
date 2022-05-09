@@ -594,10 +594,15 @@ BF::Window::~Window()
 
 ThreadFunctionReturnType BF::Window::WindowThead(void* windowCreationInfoAdress)
 {
-    if (!windowCreationInfoAdress)
+    if(!windowCreationInfoAdress)
     {
+#if defined(OSUnix)
         return nullptr;
-    }
+#elif defined(OSWindows)
+        return 0;
+#endif
+}
+ 
 
     WindowCreationInfo& creationInfo = *(WindowCreationInfo*)windowCreationInfoAdress;
 
@@ -703,7 +708,11 @@ ThreadFunctionReturnType BF::Window::WindowThead(void* windowCreationInfoAdress)
     }
     #endif
 
+#if defined(OSUnix)
     return nullptr;
+#elif defined(OSWindows)
+    return 0;
+#endif
 }
 
 void BF::Window::Create()

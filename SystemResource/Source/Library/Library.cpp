@@ -79,7 +79,11 @@ LibraryFunction BF::Library::GetSymbol(const char* symbol)
 	const bool successful = functionPointer;
 #endif
 
+#if defined(OSUnix)
 	return (void*)functionPointer;
+#elif defined(OSWindows)
+	return functionPointer;
+#endif	
 }
 
 BF::ErrorCode BF::Library::SearchDirectoryAdd(const wchar_t* directoryPath, LibraryDirectoryID& libraryDirectoryID)

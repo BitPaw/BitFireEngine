@@ -224,22 +224,20 @@ bool BF::Memory::VirtualMemoryFileUnmap(FileHandleType& fileHandle, FileHandleTy
 {
 #if MemoryDebug
 	printf("[#][Memory] 0x%p (%10zi B) MMAP-Release\n", (*fileData), fileSize);
-#endif
-
-    const int result = munmap(fileData, fileSize);
-    const bool sucessful = result != -1;
-
-    if (!sucessful)
-    {
-        const ErrorCode errorCode = GetCurrentError();
-
-        return false;
-    }
-
-    return true;
+#endif    
 
 #if defined(OSUnix)
+	const int result = munmap(fileData, fileSize);
+	const bool sucessful = result != -1;
 
+	if(!sucessful)
+	{
+		const ErrorCode errorCode = GetCurrentError();
+
+		return false;
+	}
+
+	return true;
 
 #elif defined(OSWindows)
 {

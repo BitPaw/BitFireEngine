@@ -294,6 +294,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Encryption\RSA\Koerper.cpp" />
     <ClCompile Include="Source\File\FilePath.cpp" />
     <ClCompile Include="Source\File\FileLocation.cpp" />
     <ClCompile Include="Source\Media\RIFF\RIFFFormat.cpp" />
@@ -338,7 +339,6 @@
     <ClCompile Include="Source\Media\Font\FNT\FNTLineType.cpp" />
     <ClCompile Include="Source\Media\Image\GIF\GIFImageDescriptor.cpp" />
     <ClCompile Include="Source\Encryption\RSA\Euklid.cpp" />
-    <ClCompile Include="Source\Encryption\RSA\Körper.cpp" />
     <ClCompile Include="Source\Encryption\RSA\Restklassen.cpp" />
     <ClCompile Include="Source\Encryption\RSA\RSA.cpp" />
     <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGTransparency.cpp" />
@@ -533,6 +533,7 @@
     <ClCompile Include="Source\Media\Image\WEBP\WEBP.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Encryption\RSA\Koerper.h" />
     <ClInclude Include="Source\File\FilePath.h" />
     <ClInclude Include="Source\File\FileLocation.h" />
     <ClInclude Include="Source\Media\RIFF\RIFFFormat.h" />
@@ -586,7 +587,6 @@
     <ClInclude Include="Source\Media\Image\GIF\GIFImageDescriptor.h" />
     <ClInclude Include="Source\Encryption\RSA\Euklid.h" />
     <ClInclude Include="Source\Encryption\RSA\Euklid_element.h" />
-    <ClInclude Include="Source\Encryption\RSA\Körper.h" />
     <ClInclude Include="Source\Encryption\RSA\Restklassen.h" />
     <ClInclude Include="Source\Encryption\RSA\RSA.h" />
     <ClInclude Include="Source\Encryption\RSA\RSAKeys.h" />
