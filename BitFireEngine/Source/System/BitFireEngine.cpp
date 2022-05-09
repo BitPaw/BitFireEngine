@@ -1,8 +1,7 @@
 #include "BitFireEngine.h"
 
-#include <stdlib.h>
-
-
+#include "Device/InputContainer.h"
+#include "../UI/UIText.h"
 
 #include <File/File.h>
 #include <Media/Image/BMP/BMP.h>
@@ -11,20 +10,15 @@
 #include <Text/Text.h>
 #include <Controller/ControllerSystem.h>
 #include <File/FileStream.h>
-
 #include <Graphic/OpenGL/OpenGL.h>
-
-#include "Device/InputContainer.h"
-
-#include "../UI/UIText.h"
 #include <Graphic/OpenGL/ResourceType.hpp>
-//#include "../Resource/ResourceType.hpp"
 
+#include <stdlib.h>
 
-int _matrixModelID;
-int _matrixViewID;
-int _matrixProjectionID;
-int _materialTextureID;
+OpenGLID _matrixModelID;
+OpenGLID _matrixViewID;
+OpenGLID _matrixProjectionID;
+OpenGLID _materialTextureID;
 BF::RefreshRateMode RefreshRate;
 
 BF::BitFireEngine* BF::BitFireEngine::_instance = nullptr;
@@ -275,7 +269,7 @@ void BF::BitFireEngine::Start()
 
     #if defined(OSUnix)
     // ???
-    #elif defined(OSWIndows)
+    #elif defined(OSWindows)
         wglMakeCurrent(_mainWindow.HandleDeviceContext, _mainWindow.OpenGLRenderingContext);
     #endif
 
@@ -336,9 +330,10 @@ void BF::BitFireEngine::Update()
     #if defined(OSUnix)
     #elif defined(OSWindows)
     SwapBuffers(_mainWindow.HandleDeviceContext);
+    //wglMakeCurrent(0, 0);
     #endif
 
-    //wglMakeCurrent(0, 0);
+  
 
 
     UpdateInput(_inputContainer);
@@ -935,14 +930,13 @@ void BF::BitFireEngine::Register(Renderable& renderable, const float* vertexData
     {
         const bool hasData = vertexData && vertexDataSize && indexList && indexListSize;
 
-
         if(!hasData)
         {
             return;
         }
     }
 
-    unsigned int id[3] = { (unsigned int)-1,(unsigned int)-1,(unsigned int)-1 };
+    OpenGLID id[3] = { (unsigned int)-1,(unsigned int)-1,(unsigned int)-1 };
 
     glGenVertexArrays(1, &id[0]);
 
@@ -1031,8 +1025,9 @@ bool BF::BitFireEngine::Register(ShaderProgram& shaderProgram, const wchar_t* ve
     //-----
     {
         const FileActionResult vertexLoadResult = vertexShader.Load(vertexShaderFilePath);
+        const bool successful = vertexLoadResult == FileActionResult::Successful;
 
-        if(vertexLoadResult != FileActionResult::Successful)
+        if(!successful)
         {
             return false;
         }
@@ -1040,26 +1035,27 @@ bool BF::BitFireEngine::Register(ShaderProgram& shaderProgram, const wchar_t* ve
 
     {
         const FileActionResult fragmentLoadResult = fragmentShader.Load(fragmentShaderFilePath);
+        const bool sucessful = fragmentLoadResult == FileActionResult::Successful;
 
-        if(fragmentLoadResult != FileActionResult::Successful)
+        if(!sucessful)
         {
             return false;
         }
     }
     //-----
 
-    const float shaderProgrammID = glCreateProgram();
     const size_t shaderListSize = 2;
     const Shader* shaderList[shaderListSize]{ &vertexShader, &fragmentShader };
-    float shaderIDList[shaderListSize] = { -1,-1 };
-    float sucessfulCounter = 0;
+    const OpenGLID shaderProgrammID = OpenGL::ShaderProgramCreate();
+    OpenGLID shaderIDList[shaderListSize] = { -1,-1 };
+    unsigned int  sucessfulCounter = 0;
     bool isValidShader = false;
 
     for(size_t i = 0; i < shaderListSize; ++i)
     {
         const Shader& shader = *shaderList[i];
-        const float type = ToShaderType(shader.Type);
-        const float shaderID = OpenGL::ShaderCompile(type, shader.Content);
+        const OpenGLID type = ToShaderType(shader.Type);
+        const OpenGLID shaderID = OpenGL::ShaderCompile(type, shader.Content);
         const bool compileFailed = shaderID == -1;
 
         if(compileFailed)
@@ -1086,7 +1082,7 @@ bool BF::BitFireEngine::Register(ShaderProgram& shaderProgram, const wchar_t* ve
     // We used the Shaders above to compile, these elements are not used anymore.
     for(size_t i = 0; i < shaderListSize; i++)
     {
-        const float shaderID = shaderIDList[i];
+        const OpenGLID shaderID = shaderIDList[i];
         const bool isLoaded = shaderID != -1;
 
         if(isLoaded)
@@ -1156,7 +1152,7 @@ void BF::BitFireEngine::Use(const ImageType imageType, const int textureID)
 
     glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
 
-    const float imageTypeID = ToImageType(imageType);
+    const OpenGLID imageTypeID = ToImageType(imageType);
 
     glBindTexture(imageTypeID, textureID);
 }
@@ -1170,7 +1166,7 @@ void BF::BitFireEngine::Use(SkyBox& skyBox)
 {
     // TODO:TEST REMOVAL !!!    OpenGL::VertexArrayBind(skyBox.RenderInfo.VAO);
 
-    int skyBoxTextureLocation = OpenGL::ShaderGetUniformLocationID(skyBox.Shader.ID, "SkyBoxTexture");
+    OpenGLID skyBoxTextureLocation = OpenGL::ShaderGetUniformLocationID(skyBox.Shader.ID, "SkyBoxTexture");
 
 
     glEnable(GL_TEXTURE_2D);
@@ -1522,12 +1518,12 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
     const char _dialogToken = 'D';
     const char _emptyToken = ' ';
     const char _commentToken = '#';
-    float modelCounter = 0;
-    float imageCounter = 0;
-    float soundCounter = 0;
-    float fontCounter = 0;
-    float shaderCounter = 0;
-    float dialogCounter = 0;
+    unsigned int modelCounter = 0;
+    unsigned int imageCounter = 0;
+    unsigned int soundCounter = 0;
+    unsigned int fontCounter = 0;
+    unsigned int shaderCounter = 0;
+    unsigned int dialogCounter = 0;
 
     printf("[+][Resource] Level <%ls> loading...\n", filePath);
 
@@ -1963,7 +1959,7 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
         {
             const SkyBox& skyBox = *DefaultSkyBox;
             const Renderable& renderable = skyBox.RenderInfo;
-            const unsigned int shaderID = skyBox.Shader.ID;
+            const OpenGLID shaderID = skyBox.Shader.ID;
             Matrix4x4<float> viewTri(MainCamera.MatrixView);
 
             viewTri.ResetForthAxis();

@@ -26,6 +26,9 @@ namespace BF
 		static void Initialize();
 
 
+		static OpenGLID ShaderProgramCreate();
+
+
 
 
 

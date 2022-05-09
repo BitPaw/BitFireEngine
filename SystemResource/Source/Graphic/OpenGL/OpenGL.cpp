@@ -12,6 +12,11 @@ void BF::OpenGL::Initialize()
 
 }
 
+OpenGLID BF::OpenGL::ShaderProgramCreate()
+{
+    return glCreateProgram();
+}
+
 void BF::OpenGL::DepthMaskEnable(bool enable)
 {
     if (enable)
