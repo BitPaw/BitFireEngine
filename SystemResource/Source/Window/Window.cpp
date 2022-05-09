@@ -566,10 +566,12 @@ BF::Window::Window()
     ID = 0;
     MessageThreadID = 0;
     IsRunning = 0;
+    OpenGLConext = 0;
 
     #if defined(OSUnix)
-    #elif defined(OSWindows)
-    OpenGLRenderingContext = 0;
+    DisplayCurrent = nullptr;
+    WindowRoot = 0;
+    #elif defined(OSWindows)   
     HandleDeviceContext = 0;
     CursorID = 0;
     #endif
@@ -669,12 +671,9 @@ ThreadFunctionReturnType BF::Window::WindowThead(void* windowCreationInfoAdress)
     window.ID = windowID;
     window.OpenGLConext = glContext;
 
-
     //  Windows created
 
-
-
-     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
 
     while(creationInfo.Async)
     {
@@ -682,35 +681,31 @@ ThreadFunctionReturnType BF::Window::WindowThead(void* windowCreationInfoAdress)
 
         XNextEvent(display, &event);
 
-
-
         if(event.type == Expose)
         {
             XWindowAttributes gwa;
 
-        	XGetWindowAttributes(display, windowID, &gwa);
+            XGetWindowAttributes(display, windowID, &gwa);
             glViewport(0, 0, gwa.width, gwa.height);
 
 
-                       glClearColor(1.0, 1.0, 1.0, 1.0);
- glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glClearColor(1.0, 1.0, 1.0, 1.0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        	glBegin(GL_POLYGON);
-        glColor3f(1, 0, 0); glVertex3f(-0.6, -0.75, 0.5);
-        glColor3f(0, 1, 0); glVertex3f(0.6, -0.75, 0);
-        glColor3f(0, 0, 1); glVertex3f(0, 0.75, 0);
-        glEnd();
+            glBegin(GL_POLYGON);
+            glColor3f(1, 0, 0); glVertex3f(-0.6, -0.75, 0.5);
+            glColor3f(0, 1, 0); glVertex3f(0.6, -0.75, 0);
+            glColor3f(0, 0, 1); glVertex3f(0, 0.75, 0);
+            glEnd();
 
-        // Flush drawing command buffer to make drawing happen as soon as possible.
-        //glFlush();
+            // Flush drawing command buffer to make drawing happen as soon as possible.
+            //glFlush();
 
-        window.FrameBufferSwap();
-
-         ;
+            window.FrameBufferSwap();
         }
         else if(event.type == KeyPress)
         {
-        	glXMakeCurrent(display, None, NULL);
+            glXMakeCurrent(display, None, NULL);
             glXDestroyContext(display, glContext);
             XDestroyWindow(display, windowID);
             XCloseDisplay(display);
@@ -718,25 +713,8 @@ ThreadFunctionReturnType BF::Window::WindowThead(void* windowCreationInfoAdress)
     } /* this closes while(1) { */
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     #elif defined(OSWindows)
-     DWORD windowStyle = WS_EX_APPWINDOW;
+    DWORD windowStyle = WS_EX_APPWINDOW;
     DWORD dwStyle = WS_VISIBLE | WS_OVERLAPPEDWINDOW;
     HWND hWndParent = nullptr;
     HMENU hMenu = nullptr;
