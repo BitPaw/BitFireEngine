@@ -37,13 +37,16 @@ BF::Window* BF::Window::_currentWindow = nullptr;
 #if defined(OSUnix)
 void BF::Window::OnWindowEvent(const XEvent& event)
 {
-    BF::Window& window = *_currentWindow;
+    //BF::Window& window = *_currentWindow;
 
     switch(event.type)
     {
         case KeyPress:
         {
-            printf("[Event] KeyPress \n");
+            const XKeyEvent& keyEvent = event.xkey;
+            const unsigned int keyCode = keyEvent.keycode;
+
+            printf("[Event] KeyPress %2x\n", keyCode);
 
             break;
         }
@@ -57,6 +60,8 @@ void BF::Window::OnWindowEvent(const XEvent& event)
         {
             const XButtonEvent& buttonEvent = event.xbutton;
             unsigned int buttonID = buttonEvent.button;
+
+
 
             printf("[Event] Button Pressed %i\n", buttonID);
             break;
@@ -567,31 +572,31 @@ WindowEventType ToWindowEventType(const unsigned int windowEventID)
         case WM_SYSCOLORCHANGE: return WindowEventType::SystemColorChange;
         case WM_SHOWWINDOW: return WindowEventType::ShowWindow;
         case WM_WININICHANGE: return WindowEventType::IconChange;
-        //case WM_SETTINGCHANGE                WM_WININICHANGE 
+        //case WM_SETTINGCHANGE                WM_WININICHANGE
         case WM_DEVMODECHANGE: return WindowEventType::DeviceModeChange;
-        case WM_ACTIVATEAPP: return WindowEventType::ActivateApp; 
+        case WM_ACTIVATEAPP: return WindowEventType::ActivateApp;
         case WM_FONTCHANGE: return WindowEventType::FontChange;
         case WM_TIMECHANGE: return WindowEventType::TimeChange;
-        case WM_CANCELMODE: return WindowEventType::CancelMode; 
+        case WM_CANCELMODE: return WindowEventType::CancelMode;
         case WM_SETCURSOR: return WindowEventType::CursorSet;
-        case WM_MOUSEACTIVATE: return WindowEventType::MouseActivate; 
+        case WM_MOUSEACTIVATE: return WindowEventType::MouseActivate;
         case WM_CHILDACTIVATE: return WindowEventType::ChildActivate;
-        case WM_QUEUESYNC: return WindowEventType::QueueSync; 
-        case WM_GETMINMAXINFO: return WindowEventType::SizeChange; 
+        case WM_QUEUESYNC: return WindowEventType::QueueSync;
+        case WM_GETMINMAXINFO: return WindowEventType::SizeChange;
         case WM_PAINTICON: return WindowEventType::IconPaint;
 
-            
+
 
         case WM_ICONERASEBKGND: return WindowEventType::IconBackgroundErase;
-        case WM_NEXTDLGCTL: return WindowEventType::DialogControlNext; 
-        case WM_SPOOLERSTATUS: return WindowEventType::SPOOLERSTATUS; 
-        case WM_DRAWITEM: return WindowEventType::ItemDraw; 
-        case WM_MEASUREITEM: return WindowEventType::ItemMeasure; 
-        case WM_DELETEITEM: return WindowEventType::ItemDelete; 
+        case WM_NEXTDLGCTL: return WindowEventType::DialogControlNext;
+        case WM_SPOOLERSTATUS: return WindowEventType::SPOOLERSTATUS;
+        case WM_DRAWITEM: return WindowEventType::ItemDraw;
+        case WM_MEASUREITEM: return WindowEventType::ItemMeasure;
+        case WM_DELETEITEM: return WindowEventType::ItemDelete;
         case WM_VKEYTOITEM: return WindowEventType::VKEYTOITEM;
         case WM_CHARTOITEM: return WindowEventType::CHARTOITEM;
-        case WM_SETFONT: return WindowEventType::FontSet; 
-        case WM_GETFONT: return WindowEventType::FontGet; 
+        case WM_SETFONT: return WindowEventType::FontSet;
+        case WM_GETFONT: return WindowEventType::FontGet;
         case WM_SETHOTKEY: return WindowEventType::SETHOTKEY;
         case WM_GETHOTKEY: return WindowEventType::GETHOTKEY;
         case WM_QUERYDRAGICON: return WindowEventType::QUERYDRAGICON;
@@ -657,67 +662,67 @@ WindowEventType ToWindowEventType(const unsigned int windowEventID)
                 /*
             case WM_IME_ENDCOMPOSITION: return WindowEventType::XXXXXXXXXXXXXXX;
             case WM_IME_COMPOSITION: return WindowEventType::XXXXXXXXXXXXXXX;
-            case WM_IME_KEYLAST: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_INITDIALOG: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_COMMAND: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_SYSCOMMAND: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_TIMER: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_HSCROLL: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_VSCROLL: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_INITMENU: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_INITMENUPOPUP: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_GESTURE: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_GESTURENOTIFY: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_MENUSELECT: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_MENUCHAR: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_ENTERIDLE: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_MENURBUTTONUP: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_MENUDRAG: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_MENUGETOBJECT: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_UNINITMENUPOPUP: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_MENUCOMMAND: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_CHANGEUISTATE: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_UPDATEUISTATE: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_QUERYUISTATE: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_CTLCOLORMSGBOX: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_CTLCOLOREDIT: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_CTLCOLORLISTBOX: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_CTLCOLORBTN: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_CTLCOLORDLG: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_CTLCOLORSCROLLBAR: return WindowEventType::XXXXXXXXXXXXXXX; 
+            case WM_IME_KEYLAST: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_INITDIALOG: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_COMMAND: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_SYSCOMMAND: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_TIMER: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_HSCROLL: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_VSCROLL: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_INITMENU: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_INITMENUPOPUP: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_GESTURE: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_GESTURENOTIFY: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_MENUSELECT: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_MENUCHAR: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_ENTERIDLE: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_MENURBUTTONUP: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_MENUDRAG: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_MENUGETOBJECT: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_UNINITMENUPOPUP: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_MENUCOMMAND: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_CHANGEUISTATE: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_UPDATEUISTATE: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_QUERYUISTATE: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_CTLCOLORMSGBOX: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_CTLCOLOREDIT: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_CTLCOLORLISTBOX: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_CTLCOLORBTN: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_CTLCOLORDLG: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_CTLCOLORSCROLLBAR: return WindowEventType::XXXXXXXXXXXXXXX;
             case WM_CTLCOLORSTATIC: return WindowEventType::CTLCOLORSTATIC;
             case MN_GETHMENU: return WindowEventType::GETHMENU;
             //case WM_MOUSEFIRST: return WindowEventType::MOUSEFIRST;
             case WM_MOUSEMOVE: return WindowEventType::MOUSEMOVE;
-            case WM_LBUTTONDOWN: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_LBUTTONUP: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_LBUTTONDBLCLK: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_RBUTTONDOWN: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_RBUTTONUP: return WindowEventType::XXXXXXXXXXXXXXX; 
+            case WM_LBUTTONDOWN: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_LBUTTONUP: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_LBUTTONDBLCLK: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_RBUTTONDOWN: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_RBUTTONUP: return WindowEventType::XXXXXXXXXXXXXXX;
             case WM_RBUTTONDBLCLK: return WindowEventType::RBUTTONDBLCLK;
             case WM_MBUTTONDOWN: return WindowEventType::MBUTTONDOWN;
             case WM_MBUTTONUP: return WindowEventType::MBUTTONUP;
             case WM_MBUTTONDBLCLK: return WindowEventType::MBUTTONDBLCLK;
             case WM_MOUSEWHEEL: return WindowEventType::MOUSEWHEEL;
-            case WM_XBUTTONDOWN: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_XBUTTONUP: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_XBUTTONDBLCLK: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_MOUSEHWHEEL: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_MOUSELAST: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_PARENTNOTIFY: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_ENTERMENULOOP: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_EXITMENULOOP: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_NEXTMENU: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_SIZING: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_CAPTURECHANGED: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_MOVING: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_POWERBROADCAST: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_DEVICECHANGE: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_MDICREATE: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_MDIDESTROY: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_MDIACTIVATE: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_MDIRESTORE: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_MDINEXT: return WindowEventType::XXXXXXXXXXXXXXX; 
+            case WM_XBUTTONDOWN: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_XBUTTONUP: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_XBUTTONDBLCLK: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_MOUSEHWHEEL: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_MOUSELAST: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_PARENTNOTIFY: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_ENTERMENULOOP: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_EXITMENULOOP: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_NEXTMENU: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_SIZING: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_CAPTURECHANGED: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_MOVING: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_POWERBROADCAST: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_DEVICECHANGE: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_MDICREATE: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_MDIDESTROY: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_MDIACTIVATE: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_MDIRESTORE: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_MDINEXT: return WindowEventType::XXXXXXXXXXXXXXX;
             case WM_MDIMAXIMIZE: return WindowEventType::MDIMAXIMIZE;
             case WM_MDITILE: return WindowEventType::MDITILE;
             case WM_MDICASCADE: return WindowEventType::MDICASCADE;
@@ -749,33 +754,33 @@ WindowEventType ToWindowEventType(const unsigned int windowEventID)
             case WM_POINTERROUTEDTO: return WindowEventType::XXXXXXXXXXXXXXX; 251
             case WM_POINTERROUTEDAWAY: return WindowEventType::XXXXXXXXXXXXXXX; 252
             case WM_POINTERROUTEDRELEASED: return WindowEventType::XXXXXXXXXXXXXXX; 253
-            case WM_IME_SETCONTEXT: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_IME_NOTIFY: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_IME_CONTROL: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_IME_COMPOSITIONFULL: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_IME_SELECT: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_IME_CHAR: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_IME_REQUEST: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_IME_KEYDOWN: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_IME_KEYUP: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_MOUSEHOVER: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_MOUSELEAVE: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_NCMOUSEHOVER: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_NCMOUSELEAVE: return WindowEventType::XXXXXXXXXXXXXXX; 
+            case WM_IME_SETCONTEXT: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_IME_NOTIFY: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_IME_CONTROL: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_IME_COMPOSITIONFULL: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_IME_SELECT: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_IME_CHAR: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_IME_REQUEST: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_IME_KEYDOWN: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_IME_KEYUP: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_MOUSEHOVER: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_MOUSELEAVE: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_NCMOUSEHOVER: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_NCMOUSELEAVE: return WindowEventType::XXXXXXXXXXXXXXX;
             case WM_WTSSESSION_CHANGE: return WindowEventType::XXXXXXXXXXXXXXX;
-            case WM_TABLET_FIRST: return WindowEventType::XXXXXXXXXXXXXXX; 
+            case WM_TABLET_FIRST: return WindowEventType::XXXXXXXXXXXXXXX;
             case WM_TABLET_LAST: return WindowEventType::XXXXXXXXXXXXXXX;
             case WM_DPICHANGED: return WindowEventType::XXXXXXXXXXXXXXX;
-            case WM_DPICHANGED_BEFOREPARENT: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_DPICHANGED_AFTERPARENT: return WindowEventType::XXXXXXXXXXXXXXX; 
+            case WM_DPICHANGED_BEFOREPARENT: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_DPICHANGED_AFTERPARENT: return WindowEventType::XXXXXXXXXXXXXXX;
             case WM_GETDPISCALEDSIZE: return WindowEventType::XXXXXXXXXXXXXXX;
-            case WM_CUT: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_COPY: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_PASTE: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_CLEAR: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_UNDO: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_RENDERFORMAT: return WindowEventType::XXXXXXXXXXXXXXX; 
-            case WM_RENDERALLFORMATS: return WindowEventType::XXXXXXXXXXXXXXX; 
+            case WM_CUT: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_COPY: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_PASTE: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_CLEAR: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_UNDO: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_RENDERFORMAT: return WindowEventType::XXXXXXXXXXXXXXX;
+            case WM_RENDERALLFORMATS: return WindowEventType::XXXXXXXXXXXXXXX;
             case WM_DESTROYCLIPBOARD: return WindowEventType::XXXXXXXXXXXXXXX; */
 
 
@@ -806,7 +811,7 @@ WindowEventType ToWindowEventType(const unsigned int windowEventID)
             case WM_HANDHELDLAST: return WindowEventType::HANDHELDLAST;
             case WM_AFXFIRST: return WindowEventType::AFXFIRST;
             case WM_AFXLAST: return WindowEventType::AFXLAST;
-            case WM_PENWINFIRST: return WindowEventType::PENWINFIRST; 
+            case WM_PENWINFIRST: return WindowEventType::PENWINFIRST;
             case WM_PENWINLAST: return WindowEventType::PENWINLAST;
             case WM_APP: return WindowEventType::APP;
 
@@ -1353,7 +1358,7 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
     // Safe functions
     switch(eventID)
     {
-      
+
         case WM_GETMINMAXINFO: // Gets called right after 'WM_CREATE'
         {
             //wParam is unused
@@ -1378,7 +1383,7 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
 
     bool letWindowsHandleEvent = true;
 
-  
+
 
     BF::Window** windowAdressReference = BF::Window::_windowLookup.GetValue(windowsID);
     const bool isRegistered = windowAdressReference;
@@ -1402,7 +1407,7 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
         }
 #endif
 
- 
+
         case WM_CLOSE:
         {
             InvokeEvent(window.WindowClosingCallBack, letWindowsHandleEvent);
@@ -1860,7 +1865,7 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
 
     if(letWindowsHandleEvent)
     {
-     
+
     }
 
     return NULL;
@@ -2014,7 +2019,6 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
     XStoreName(display, windowID, windowTitle);
 
     GLXContext glContext = glXCreateContext(display, visualInfo, NULL, GL_TRUE);
-    glXMakeCurrent(display, windowID, glContext);
 
     window.OpenGLConext = glContext;
 
@@ -2076,10 +2080,10 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
 
         window.ID = windowID;
     }
-  
+
     // Create OpenGL Context
     {
-        const HDC windowHandleToDeviceContext = GetDC(windowID);  
+        const HDC windowHandleToDeviceContext = GetDC(windowID);
 
         window.HandleDeviceContext = windowHandleToDeviceContext;
 
@@ -2105,7 +2109,7 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
 
         int letWindowsChooseThisPixelFormat = ChoosePixelFormat(windowHandleToDeviceContext, &pfd);
         bool sucessul = SetPixelFormat(windowHandleToDeviceContext, letWindowsChooseThisPixelFormat, &pfd);
-          
+
     }
 
     {
@@ -2138,21 +2142,24 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
                 break;
 
             case GLEW_ERROR_NO_GL_VERSION:
-                return 1;
+                return (void*)1;
 
             case GLEW_ERROR_GL_VERSION_10_ONLY:
-                return 2;
+                return (void*)2;
 
             case GLEW_ERROR_GLX_VERSION_11_ONLY:
-                return 3;
+                return (void*)3;
 
             case GLEW_ERROR_NO_GLX_DISPLAY:
-                return 4;
+                return (void*)4;
 
             default:
-                return 5;
+                return (void*)5;
         }
     }
+
+    glClearColor(0.1, 0.5, 0.1, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if(true)
     {
@@ -2175,7 +2182,7 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
          //glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
     }
 
-    _windowLookup.Add(windowID, &window); 
+    _windowLookup.Add(windowID, &window);
 
     InvokeEvent(window.WindowCreatedCallBack, window);
 
@@ -2185,7 +2192,7 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
 
     while(window.IsRunning)
     {
-#if defined(OSUnix)  
+#if defined(OSUnix)
         XEvent windowEvent;
 
         XNextEvent(display, &windowEvent);
@@ -2442,92 +2449,6 @@ void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
 
     _cursorMode = cursorMode;
 #endif
-}
-
-// 0 = OK
-// 1 = missing GL version
-// 2 = Need at least OpenGL 1.1
-// 3 = Need at least GLX 1.2 
-// 4 = Need GLX display for GLX support
-// 5 = unkown cause?
-int BF::Window::FrameBufferInitialize()
-{
-#if defined(OSUnix)
-
-#elif defined(OSWindows)
-    HGLRC glConext = wglCreateContext(HandleDeviceContext);
-#endif   
-
-    OpenGLConext = glConext;
-
-    FrameBufferContextRegister(); 
-
-    {
-        const unsigned int result = glewInit(); // Initialise OpenGL enviroment
-
-        switch(result)
-        {
-            case GLEW_OK: // No Error, do nothing
-                break;
-     
-            case GLEW_ERROR_NO_GL_VERSION:
-                return 1;
-
-            case GLEW_ERROR_GL_VERSION_10_ONLY:
-                return 2;
-
-            case GLEW_ERROR_GLX_VERSION_11_ONLY:
-                return 3;
-
-            case GLEW_ERROR_NO_GLX_DISPLAY:
-                return 4;
-
-            default:
-                return 5;
-        }
-    }
-
-    //glDebugMessageCallback(BF::BitFireEngine::ErrorMessageCallback, 0);
-    //glEnable(GL_DEBUG_OUTPUT);    
-
-    printf
-    (
-        "+------------------------------------------------------+\n"
-        "| Graphics Card - Information                          |\n"
-        "+------------------------------------------------------+\n"
-        "| Vendor           : %-33s |\n"
-        "| Model            : %-33s |\n"
-        "| OpenGL Version   : %-33s |\n"
-        "| Texture Slots    : %-33u |\n"
-        "| Maximal Textures : %-33u |\n"
-        "+------------------------------------------------------+\n",
-        OpenGL::GPUVendorName(),
-        OpenGL::GPUModel(),
-        OpenGL::GLSLVersionPrimary(),
-        OpenGL::TextureMaxSlots(),
-        OpenGL::TextureMaxLoaded()
-    );
-
-    if(true)
-    {
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-    }
-
-    if(true) // X-RAY
-    {
-        glEnable(GL_DEPTH_TEST);
-    }
-
-    if(true)
-    {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        // glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_COLOR, GL_DST_COLOR);
-
-         //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-         //glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
-    }
 }
 
 void BF::Window::FrameBufferSwap()

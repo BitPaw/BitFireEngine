@@ -83,7 +83,7 @@ namespace BF
 		static Dictionary<WindowID, Window*> _windowLookup;
 		static Window* _currentWindow;
 
-		CursorMode _cursorMode;		
+		CursorMode _cursorMode;
 
 		public:
 		bool IsRunning;
@@ -107,7 +107,7 @@ namespace BF
 
 		// Interneal
 		ThreadID MessageThreadID;
-		
+
 
 		MouseClickEvent MouseClickCallBack;
 		MouseClickDoubleEvent MouseClickDoubleCallBack;
@@ -162,7 +162,6 @@ namespace BF
 		CursorMode CursorCaptureMode();
 		void CursorCaptureMode(const CursorMode cursorMode);
 
-		int FrameBufferInitialize();
 		void FrameBufferSwap();
 		bool FrameBufferContextRegister();
         void FrameBufferContextRelease();
