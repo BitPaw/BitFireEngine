@@ -277,7 +277,7 @@ void BF::BitFireEngine::Start()
 
     printf("[i][Info] Loading took %.2fs\n", time);
 
-    PrintContent(true);
+    //PrintContent(true);
 
     IsRunning = true;
 }
@@ -447,84 +447,6 @@ void BF::BitFireEngine::OnKeyBoardKey(const KeyBoardKeyInfo keyBoardKeyInfo)
 
 void BF::BitFireEngine::OnWindowCreated(Window& window)
 {
-printf("[EVENT] Window created!\n");
-
-#if defined(OSUnix)
-#elif defined(OSWindows)
-    const PIXELFORMATDESCRIPTOR pfd =
-    {
-        sizeof(PIXELFORMATDESCRIPTOR),
-        1,
-        PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,    //Flags
-        PFD_TYPE_RGBA,        // The kind of framebuffer. RGBA or palette.
-        32,                   // Colordepth of the framebuffer.
-        0, 0, 0, 0, 0, 0,
-        0,
-        0,
-        0,
-        0, 0, 0, 0,
-        24,                   // Number of bits for the depthbuffer
-        8,                    // Number of bits for the stencilbuffer
-        0,                    // Number of Aux buffers in the framebuffer.
-        PFD_MAIN_PLANE,
-        0,
-        0, 0, 0
-    };
-
-    int letWindowsChooseThisPixelFormat = ChoosePixelFormat(window.HandleDeviceContext, &pfd);
-    SetPixelFormat(window.HandleDeviceContext, letWindowsChooseThisPixelFormat, &pfd);
-
-    window.OpenGLRenderingContext = wglCreateContext(window.HandleDeviceContext);
-    wglMakeCurrent(window.HandleDeviceContext, window.OpenGLRenderingContext);
-
-    #endif
-
-    //GLEW
-    {
-        printf("[i][GLEW] Initialize... ");
-
-        const GLenum result = glewInit();
-        const bool success = result == GLEW_OK;
-
-        printf("[%s]\n", (success ? "OK" : "Failed"));
-
-        if(!success)
-        {
-            switch(result)
-            {
-                case GLEW_OK: // No Error
-                {
-                    break;
-                }
-                case GLEW_ERROR_NO_GL_VERSION:   /* missing GL version */
-                {
-                    printf("[x][OpenGL] No Version detected. Is the contect created?\n");
-                    break;
-                }
-                case GLEW_ERROR_GL_VERSION_10_ONLY: /* Need at least OpenGL 1.1 */
-                {
-                    printf("[x][OpenGL] Version is outdated. You need al least Version 1.1\n");
-                    break;
-                }
-                case GLEW_ERROR_GLX_VERSION_11_ONLY:  /* Need at least GLX 1.2 */
-                {
-                    printf("[x][OpenGL] Version is outdated. You need al least Version 1.2\n");
-                    break;
-                }
-                case GLEW_ERROR_NO_GLX_DISPLAY:  /* Need GLX display for GLX support */
-                {
-                    printf("[x][OpenGL] No display detected that can support OpenGL\n\n");
-                    break;
-                }
-                default:
-                    break;
-            }
-        }
-
-        glDebugMessageCallback(BF::BitFireEngine::ErrorMessageCallback, 0);
-        glEnable(GL_DEBUG_OUTPUT);
-    }
-
     printf
     (
         "+------------------------------------------------------+\n"
@@ -543,28 +465,8 @@ printf("[EVENT] Window created!\n");
         OpenGL::TextureMaxLoaded()
     );
 
-    if(true)
-    {
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-    }
-
-    if(true) // X-RAY
-    {
-        glEnable(GL_DEPTH_TEST);
-    }
-
-    if(true)
-    {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        // glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_COLOR, GL_DST_COLOR);
-
-         //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-         //glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
-    }
-
-    window.FrameBufferContextRelease();
+    glDebugMessageCallback(BF::BitFireEngine::ErrorMessageCallback, 0);
+    glEnable(GL_DEBUG_OUTPUT);  
 }
 
 void BF::BitFireEngine::OnWindowSizeChanged(const size_t width, const size_t height)

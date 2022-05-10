@@ -29,6 +29,7 @@
 #include "CursorIcon.h"
 
 #define UseRawMouseData 1
+#define WindowTitleSizeMax 256
 
 namespace BF
 {
@@ -76,30 +77,25 @@ namespace BF
 	typedef void (*WindowClosingEvent)(bool& allowClosing);
 	typedef void (*WindowClosedEvent)();
 
-	struct WindowCreationInfo
-	{
-		public:
-		bool Async;
-
-		Window* CreatedWindow;
-		wchar_t Title[256];
-		int X;
-		int Y;
-		int Width;
-		int Height;
-	};
-
 	class Window
 	{
 		private:
 		static Dictionary<WindowID, Window*> _windowLookup;
 		static Window* _currentWindow;
 
-		CursorMode _cursorMode;
+		CursorMode _cursorMode;		
 
 		public:
+		bool IsRunning;
 		WindowID ID;
 		OpenGLConextID OpenGLConext;
+
+		unsigned int X;
+		unsigned int Y;
+		unsigned int Width;
+		unsigned int Height;
+
+		wchar_t Title[WindowTitleSizeMax];
 
 		#if defined(OSUnix)
 		Display* DisplayCurrent;
@@ -111,7 +107,7 @@ namespace BF
 
 		// Interneal
 		ThreadID MessageThreadID;
-		bool IsRunning;
+		
 
 		MouseClickEvent MouseClickCallBack;
 		MouseClickDoubleEvent MouseClickDoubleCallBack;
@@ -132,10 +128,11 @@ namespace BF
 		static LRESULT CALLBACK OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM lParam);
 #endif
 
-		static ThreadFunctionReturnType WindowThead(void* windowCreationInfoAdress);
+		static ThreadFunctionReturnType WindowCreateThread(void* windowAdress);
+		static ThreadFunctionReturnType WindowEventListenThread(void* windowAdress);
 
-		void Create();
-		void Create(const unsigned int width, const unsigned int height, const char* title);
+		void Create(bool async = true);
+		void Create(const unsigned int width, const unsigned int height, const char* title, bool async = true);
 		void Destroy();
 
 		void IconCorner();
@@ -165,8 +162,9 @@ namespace BF
 		CursorMode CursorCaptureMode();
 		void CursorCaptureMode(const CursorMode cursorMode);
 
+		int FrameBufferInitialize();
 		void FrameBufferSwap();
-		void FrameBufferContextRegister();
+		bool FrameBufferContextRegister();
         void FrameBufferContextRelease();
 	};
 }
