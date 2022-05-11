@@ -20,6 +20,7 @@
 					<Add library="X11" />
 					<Add library="GL" />
 					<Add library="pthread" />
+					<Add library="GLEW" />
 				</Linker>
 			</Target>
 			<Target title="Release">

@@ -36,11 +36,6 @@ BF::Dictionary<WindowID, BF::Window*> BF::Window::_windowLookup;
 #if defined(OSUnix)
 void BF::Window::OnWindowEvent(BF::Window& window, const XEvent& event)
 {
-<<<<<<< Updated upstream
-    //BF::Window& window = *_currentWindow;
-
-=======
->>>>>>> Stashed changes
     switch(event.type)
     {
         case KeyPress:
@@ -591,9 +586,9 @@ WindowEventType ToWindowEventType(const unsigned int windowEventID)
 
 
 =======
-        case WM_QUEUESYNC: return WindowEventType::QueueSync; 
-        case WM_GETMINMAXINFO: return WindowEventType::SizeChange; 
-        case WM_PAINTICON: return WindowEventType::IconPaint;  
+        case WM_QUEUESYNC: return WindowEventType::QueueSync;
+        case WM_GETMINMAXINFO: return WindowEventType::SizeChange;
+        case WM_PAINTICON: return WindowEventType::IconPaint;
 >>>>>>> Stashed changes
         case WM_ICONERASEBKGND: return WindowEventType::IconBackgroundErase;
         case WM_NEXTDLGCTL: return WindowEventType::DialogControlNext;
@@ -652,7 +647,7 @@ WindowEventType ToWindowEventType(const unsigned int windowEventID)
         case WM_NCXBUTTONUP: return WindowEventType::NCXBUTTONUP;
         case WM_NCXBUTTONDBLCLK: return WindowEventType::NCXBUTTONDBLCLK;
         case WM_INPUT_DEVICE_CHANGE: return WindowEventType::INPUT_DEVICE_CHANGE;
-        case WM_INPUT: return WindowEventType::INPUT;  
+        case WM_INPUT: return WindowEventType::INPUT;
         //case WM_KEYFIRST: return WindowEventType::KEYFIRST;
         case WM_KEYDOWN: return WindowEventType::KEYDOWN;
         case WM_KEYUP: return WindowEventType::KEYUP;
@@ -700,7 +695,7 @@ WindowEventType ToWindowEventType(const unsigned int windowEventID)
             case WM_CTLCOLORDLG: return WindowEventType::XXXXXXXXXXXXXXX;
             case WM_CTLCOLORSCROLLBAR: return WindowEventType::XXXXXXXXXXXXXXX;
 =======
-            case WM_IME_STARTCOMPOSITION: return WindowEventType::IME_STARTCOMPOSITION;                
+            case WM_IME_STARTCOMPOSITION: return WindowEventType::IME_STARTCOMPOSITION;
             case WM_IME_ENDCOMPOSITION: return WindowEventType::IME_ENDCOMPOSITION;
             case WM_IME_COMPOSITION: return WindowEventType::IME_COMPOSITION;
             //case WM_IME_KEYLAST: return WindowEventType::IME_KEYLAST;
@@ -942,7 +937,7 @@ WindowEventType ToWindowEventType(const unsigned int windowEventID)
 LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM lParam)
 {
     const WindowEventType windowEventType = ToWindowEventType(eventID);
-    BF::Window** windowAdressReference = _windowLookup.GetValue(windowsID);  
+    BF::Window** windowAdressReference = _windowLookup.GetValue(windowsID);
 
     if(!windowAdressReference)
     {
@@ -1046,7 +1041,7 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
             SetCursor(NULL);
 
             return true; // prevent further processing
-        }       
+        }
         case WindowEventType::MouseActivate:
             break;
         case WindowEventType::ChildActivate:
@@ -1176,7 +1171,7 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
             break;
         case WindowEventType::INPUT_DEVICE_CHANGE:
             break;
-        case WindowEventType::INPUT:        
+        case WindowEventType::INPUT:
         {
             const size_t inputCode = GET_RAWINPUT_CODE_WPARAM(wParam);
             const HRAWINPUT handle = (HRAWINPUT)lParam;
@@ -1225,7 +1220,7 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
 
             break;
         }
-        
+
         case WindowEventType::KEYFIRST:
             break;
 
@@ -2134,7 +2129,7 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
 
     return NULL;
 =======
-    return DefWindowProc(windowsID, eventID, wParam, lParam);     
+    return DefWindowProc(windowsID, eventID, wParam, lParam);
 >>>>>>> Stashed changes
 }
 #endif
@@ -2439,13 +2434,9 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
          //glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
     }
 
-<<<<<<< Updated upstream
-    _windowLookup.Add(windowID, &window);
-=======
     glClearColor(0.2, 0.0, 0.0, 1.0);
 
-    _windowLookup.Add(windowID, &window); 
->>>>>>> Stashed changes
+    _windowLookup.Add(windowID, &window);
 
     InvokeEvent(window.WindowCreatedCallBack, window);
 
@@ -2457,6 +2448,8 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
     {
 #if defined(OSUnix)
         XEvent windowEvent;
+
+        printf("[EVENT] PULL\n");
 
         XNextEvent(display, &windowEvent);
 
@@ -2705,102 +2698,13 @@ void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
 #endif
 }
 
-<<<<<<< Updated upstream
-void BF::Window::FrameBufferSwap()
-=======
-// 0 = OK
-// 1 = missing GL version
-// 2 = Need at least OpenGL 1.1
-// 3 = Need at least GLX 1.2 
-// 4 = Need GLX display for GLX support
-// 5 = unkown cause?
-int BF::Window::FrameBufferInitialize()
-{
-#if defined(OSUnix)
-
-#elif defined(OSWindows)
-    HGLRC glConext = wglCreateContext(HandleDeviceContext);
-#endif   
-
-    OpenGLConext = glConext;
-
-    FrameBufferContextRegister(); 
-
-    {
-        const unsigned int result = glewInit(); // Initialise OpenGL enviroment
-
-        switch(result)
-        {
-            case GLEW_OK: // No Error, do nothing
-                break;
-     
-            case GLEW_ERROR_NO_GL_VERSION:
-                return 1;
-
-            case GLEW_ERROR_GL_VERSION_10_ONLY:
-                return 2;
-
-            case GLEW_ERROR_GLX_VERSION_11_ONLY:
-                return 3;
-
-            case GLEW_ERROR_NO_GLX_DISPLAY:
-                return 4;
-
-            default:
-                return 5;
-        }
-    }
-
-    //glDebugMessageCallback(BF::BitFireEngine::ErrorMessageCallback, 0);
-    //glEnable(GL_DEBUG_OUTPUT);    
-
-    printf
-    (
-        "+------------------------------------------------------+\n"
-        "| Graphics Card - Information                          |\n"
-        "+------------------------------------------------------+\n"
-        "| Vendor           : %-33s |\n"
-        "| Model            : %-33s |\n"
-        "| OpenGL Version   : %-33s |\n"
-        "| Texture Slots    : %-33u |\n"
-        "| Maximal Textures : %-33u |\n"
-        "+------------------------------------------------------+\n",
-        OpenGL::GPUVendorName(),
-        OpenGL::GPUModel(),
-        OpenGL::GLSLVersionPrimary(),
-        OpenGL::TextureMaxSlots(),
-        OpenGL::TextureMaxLoaded()
-    );
-
-    if(true)
-    {
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-    }
-
-    if(true) // X-RAY
-    {
-        glEnable(GL_DEPTH_TEST);
-    }
-
-    if(true)
-    {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        // glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_COLOR, GL_DST_COLOR);
-
-         //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-         //glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
-    }
-}
-
 bool BF::Window::FrameBufferSwap()
->>>>>>> Stashed changes
 {
     glFlush();  // Flush drawing command buffer to make drawing happen as soon as possible.
 
 #if defined(OSUnix)
-    bool successful = glXSwapBuffers(DisplayCurrent, ID);
+    bool successful = true; // No feedback?
+    glXSwapBuffers(DisplayCurrent, ID);
 #elif defined(OSWindows)
     bool successful = SwapBuffers(HandleDeviceContext);
 #endif

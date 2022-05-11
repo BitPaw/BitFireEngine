@@ -375,7 +375,7 @@
 
 1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/File/ParsingToken.h
 
-1652222925 source:/home/bitpaw/Desktop/Engine/BitFireEngine/BitFireEngine/Source/System/BitFireEngine.cpp
+1652292385 source:/home/bitpaw/Desktop/Engine/BitFireEngine/BitFireEngine/Source/System/BitFireEngine.cpp
 	"BitFireEngine.h"
 	"Device/InputContainer.h"
 	"../UI/UIText.h"
@@ -452,7 +452,7 @@
 
 1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Media/Sound/AudioSource.h
 
-1652223067 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Window/Window.h
+1652292438 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Window/Window.h
 	<OS/OSDefine.h>
 	"../Controller/KeyBoardKey.h"
 	"../Container/Dictionary.hpp"
@@ -483,7 +483,7 @@
 	"Renderable.h"
 	<Shader/ShaderProgram.h>
 
-1652044280 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/File/File.h
+1652300866 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/File/File.h
 	<cstdlib>
 	<cstdio>
 	<cwchar>

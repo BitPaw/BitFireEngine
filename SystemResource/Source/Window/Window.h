@@ -160,12 +160,8 @@ namespace BF
 		CursorMode CursorCaptureMode();
 		void CursorCaptureMode(const CursorMode cursorMode);
 
-<<<<<<< Updated upstream
-		void FrameBufferSwap();
-=======
 		int FrameBufferInitialize();
 		bool FrameBufferSwap();
->>>>>>> Stashed changes
 		bool FrameBufferContextRegister();
 		bool FrameBufferContextRelease();
 	};

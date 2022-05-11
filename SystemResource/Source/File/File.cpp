@@ -396,15 +396,15 @@ BF::ErrorCode BF::File::DirectoryDelete(const wchar_t* directoryName)
 BF::FileActionResult BF::File::ReadFromDisk(unsigned char** outPutBuffer, size_t& outPutBufferSize, const bool addTerminatorByte)
 {
 #if defined(OSUnix)
-	fseek(FileMarker, 0, SEEK_END); // Jump to end of file
-	outPutBufferSize = ftell(FileMarker); // Get current 'data-cursor' position
+	fseek(FileHandle, 0, SEEK_END); // Jump to end of file
+	outPutBufferSize = ftell(FileHandle); // Get current 'data-cursor' position
 
 	if (!outPutBufferSize) // If no bytes in file, exit.
 	{
 		return FileActionResult::FileEmpty;
 	}
 
-	rewind(FileMarker); // Jump to the begining of the file
+	rewind(FileHandle); // Jump to the begining of the file
 
 	if (addTerminatorByte)
 	{
@@ -426,7 +426,7 @@ BF::FileActionResult BF::File::ReadFromDisk(unsigned char** outPutBuffer, size_t
 		--outPutBufferSize;
 	}
 
-	size_t readBytes = fread(dataBuffer, 1u, outPutBufferSize, FileMarker);
+	size_t readBytes = fread(dataBuffer, 1u, outPutBufferSize, FileHandle);
 	size_t overAllocatedBytes = outPutBufferSize - readBytes; // if overAllocatedBytes > 0 there was a reading error.
 
 	assert(outPutBufferSize == readBytes);

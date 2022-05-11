@@ -294,7 +294,7 @@
 	"ControllerData.h"
 	<Window/Window.h>
 
-1652223067 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Window/Window.h
+1652292438 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Window/Window.h
 	<OS/OSDefine.h>
 	"../Controller/KeyBoardKey.h"
 	"../Container/Dictionary.hpp"
@@ -354,7 +354,7 @@
 	<cstdlib>
 	<Windows.h>
 
-1652044280 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/File/File.h
+1652300866 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/File/File.h
 	<cstdlib>
 	<cstdio>
 	<cwchar>
@@ -522,7 +522,7 @@
 1652033241 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Hardware/Memory/MemoryUsage.h
 	<cstddef>
 
-1652022896 source:/home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/File/FileStream.cpp
+1652300962 source:/home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/File/FileStream.cpp
 	"FileStream.h"
 	<cassert>
 	<string>
@@ -796,7 +796,7 @@
 	"Interpolate.h"
 	<OS/OSDefine.h>
 
-1652022896 source:/home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNT.cpp
+1652300917 source:/home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNT.cpp
 	"FNT.h"
 	"FNTCommand.h"
 	"FNTLineType.h"
@@ -1926,8 +1926,9 @@
 	<OS/OSDefine.h>
 	<winuser.rh>
 
-1652140024 source:/home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Window/Window.cpp
+1652301000 source:/home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Window/Window.cpp
 	"Window.h"
+	<GL/glew.h>
 	<GL/gl.h>
 	<stdio.h>
 	<windowsx.h>
@@ -1936,6 +1937,7 @@
 	<hidusage.h>
 	<Dbt.h>
 	<Text/Text.h>
+	<Graphic/OpenGL/OpenGL.h>
 	"../Controller/ControllerData.h"
 	"../Controller/ControllerSystem.h"
 
@@ -1962,7 +1964,7 @@
 	<Hardware/Memory/Memory.h>
 	<string>
 
-1652044205 source:/home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/File/File.cpp
+1652300949 source:/home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/File/File.cpp
 	"File.h"
 	"../Container/AsciiString.h"
 	<Text/Text.h>

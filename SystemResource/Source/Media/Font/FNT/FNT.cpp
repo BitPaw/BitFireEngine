@@ -75,11 +75,11 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 	while (file.ReadNextLineInto(currentCursor))
 	{
 		const FNTLineType lineType = ConvertFNTLineType(currentCursor);
-				
+
 		switch (lineType)
 		{
 			case BF::FNTLineType::Info:
-			{	
+			{
 				const char parsingData[] = "face=\0size=\0bold=\0italic\0charset=\0unicode=\0stretchH=\0smooth=\0aa=\0padding=\0spacing=\0";
 				const char* indexPosition[11];
 				const ParsingToken parsingTokenList[] =
@@ -119,7 +119,7 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 				Text::TerminateBeginFromFirst(Info.CharSet, CharSetNameSize, '\"');
 
 				break;
-			}	
+			}
 			case BF::FNTLineType::Common:
 			{
 				const char parsingData[] = "lineHeight=\0base=\0scaleW=\0scaleH=\0pages=\0packed=\0";
@@ -167,7 +167,7 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 				Text::ToInt(indexPosition[0], 5, currentPage->PageID);
 				Text::Copy(currentPage->PageFileName, indexPosition[1] + 1, FNTPageFileNameSize);
 
-				Text::TerminateBeginFromFirst(currentPage->PageFileName, FNTPageFileNameSize, '\"');				
+				Text::TerminateBeginFromFirst(currentPage->PageFileName, FNTPageFileNameSize, '\"');
 
 				break;
 			}
@@ -187,9 +187,9 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 				break;
 			}
 			case BF::FNTLineType::CharacterDefinition:
-			{				
+			{
 				FNTCharacter& character = currentPage->CharacteList[characterIndex++];
-		
+
 				const char parsingData[] = "id=\0x=\0y=\0width=\0height=\0xoffset=\0yoffset=\0xadvance=\0page=\0chnl=";
 				const char* indexPosition[10];
 				const ParsingToken parsingTokenList[] =
@@ -204,7 +204,7 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 					{parsingData + 43, &indexPosition[7]},
 					{parsingData + 53, &indexPosition[8]},
 					{parsingData + 59, &indexPosition[9]}
-				};	
+				};
 				const size_t values = sizeof(parsingTokenList) / sizeof(ParsingToken);
 
 				Text::FindAll(currentCursor + 5, bufferSize, parsingTokenList, values);
@@ -219,7 +219,7 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 				Text::ToInt(indexPosition[7], 5, character.XAdvance);
 				Text::ToInt(indexPosition[8], 5, character.Page);
 				Text::ToInt(indexPosition[9], 5, character.Chanal);
-							
+
 				break;
 			}
 			case BF::FNTLineType::Unkown:
@@ -227,7 +227,7 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 			{
 				// Ignore
 				break;
-			}			
+			}
 		}
 	}
 
@@ -237,13 +237,13 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 BF::FileActionResult BF::FNT::Save(const wchar_t* filePath)
 {
 	int characterWritten = 0;
-	
+
 	File file;
 	file.Open(filePath, FileOpenMode::Write);
 
 	characterWritten = fprintf
 	(
-		file.FileMarker,
+		file.FileHandle,
 		"info face=\"%s\" size=%i bold=%i italic=%i charset=%s unicode=%i stretchH=%i smooth=%i aa=%i padding=%i,%i,%i,%i spacing=%i,%i\n",
 		Info.Name,
 		Info.Size,
@@ -264,7 +264,7 @@ BF::FileActionResult BF::FNT::Save(const wchar_t* filePath)
 
 	characterWritten = fprintf
 	(
-		file.FileMarker,
+		file.FileHandle,
 		"common lineHeight=%i base=%i scaleW=%i scaleH=%i pages=%i packed=%i\n",
 		CommonData.LineHeight,
 		CommonData.Base,
@@ -280,7 +280,7 @@ BF::FileActionResult BF::FNT::Save(const wchar_t* filePath)
 
 		characterWritten = fprintf
 		(
-			file.FileMarker,
+			file.FileHandle,
 			"page id=%i file=\"%s\"\n"
 			"chars count=%zi",
 			page.PageID,
@@ -294,7 +294,7 @@ BF::FileActionResult BF::FNT::Save(const wchar_t* filePath)
 
 			characterWritten = fprintf
 			(
-				file.FileMarker,
+				file.FileHandle,
 				"char id=%i x=%f y=%f width=%f height=%f xoffset=%f yoffset=%f xadvance=%i page=%i chnl=%i\n",
 				character.ID,
 				character.Position[0],

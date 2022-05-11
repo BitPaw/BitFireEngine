@@ -65,7 +65,7 @@
 
 namespace BF
 {
-	struct File : public IFile
+	struct File
 	{
 		public:
 		FileHandleType FileHandle;

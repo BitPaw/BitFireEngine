@@ -157,10 +157,10 @@ BF::FileActionResult BF::FileStream::ReadFromDisk(FILE* file, Byte** targetBuffe
 	{
 		dataBuffer[bufferSize - 1] = '\0';
 		--bufferSize;
-	}	
+	}
 
 	size_t readBytes = fread(dataBuffer, 1u, bufferSize, file);
-	size_t overAllocatedBytes = bufferSize - readBytes; // if overAllocatedBytes > 0 there was a reading error.	
+	size_t overAllocatedBytes = bufferSize - readBytes; // if overAllocatedBytes > 0 there was a reading error.
 
 	assert(bufferSize == readBytes);
 
@@ -175,7 +175,7 @@ BF::FileActionResult BF::FileStream::ReadFromDisk(const wchar_t* filePath, Byte*
 	if (result != FileActionResult::Successful)
 	{
 		return result;
-	}	
+	}
 
 	//result = ReadFromDisk(file.FileMarker, targetBuffer, bufferSize, addNullTerminator);
 
@@ -196,7 +196,7 @@ BF::FileActionResult BF::FileStream::WriteToDisk(const char* filePath, FilePersi
 		return fileActionResult;
 	}
 
-	size_t writtenBytes = fwrite(Data, sizeof(char), DataSize, file.FileMarker);
+	size_t writtenBytes = fwrite(Data, sizeof(char), DataSize, file.FileHandle);
 
 	fileActionResult = file.Close();
 
@@ -213,7 +213,7 @@ BF::FileActionResult BF::FileStream::WriteToDisk(const wchar_t* filePath, FilePe
 		return fileActionResult;
 	}
 
-	size_t writtenBytes = fwrite(Data, sizeof(char), DataSize, file.FileMarker);
+	size_t writtenBytes = fwrite(Data, sizeof(char), DataSize, file.FileHandle);
 
 	fileActionResult = file.Close();
 

@@ -268,9 +268,9 @@ void BF::BitFireEngine::Start()
     while(!_mainWindow.IsRunning);
 
 
-    _mainWindow.FrameBufferContextRegister();
+    //_mainWindow.FrameBufferContextRegister();
 
-    _callbackListener->OnStartUp();
+    //_callbackListener->OnStartUp();
 
     double time = stopwatch.Stop();
 
@@ -303,7 +303,7 @@ void BF::BitFireEngine::Update()
      glClearColor(0.2, 0.2, 0.2, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-#if 0 // Triangle Test
+#if 1 // Triangle Test
     // glClearColor(0.5f, 0.5f, 0.5f, 1);
 
     glBegin(GL_POLYGON);
@@ -465,7 +465,7 @@ void BF::BitFireEngine::OnWindowCreated(Window& window)
     );
 
     glDebugMessageCallback(BF::BitFireEngine::ErrorMessageCallback, 0);
-    glEnable(GL_DEBUG_OUTPUT);  
+    glEnable(GL_DEBUG_OUTPUT);
 }
 
 void BF::BitFireEngine::OnWindowSizeChanged(const size_t width, const size_t height)
