@@ -1,4 +1,9 @@
 # Dependencies (.LIB / .DLL / .so)
+
+## Install (for Linux)
+### OpenGL and OpenGL Extension Library
+sudo apt-get install -y libglu1-mesa-dev freeglut3-dev mesa-common-dev  libglew-dev
+
 ## Cross Platform
 | Library | Purpose | State | Reason "to use or not to use.." |
 |:--:|:--:|:--:|:--:|
