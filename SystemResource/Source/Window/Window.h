@@ -81,7 +81,6 @@ namespace BF
 	{
 		private:
 		static Dictionary<WindowID, Window*> _windowLookup;
-		static Window* _currentWindow;
 
 		CursorMode _cursorMode;
 
@@ -123,13 +122,12 @@ namespace BF
 		~Window();
 
 #if defined(OSUnix)
-        static void OnWindowEvent(const XEvent& event);
+        static void OnWindowEvent(BF::Window& window, const XEvent& event);
 #elif defined(OSWindows)
 		static LRESULT CALLBACK OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM lParam);
 #endif
 
 		static ThreadFunctionReturnType WindowCreateThread(void* windowAdress);
-		static ThreadFunctionReturnType WindowEventListenThread(void* windowAdress);
 
 		void Create(bool async = true);
 		void Create(const unsigned int width, const unsigned int height, const char* title, bool async = true);
@@ -162,8 +160,13 @@ namespace BF
 		CursorMode CursorCaptureMode();
 		void CursorCaptureMode(const CursorMode cursorMode);
 
+<<<<<<< Updated upstream
 		void FrameBufferSwap();
+=======
+		int FrameBufferInitialize();
+		bool FrameBufferSwap();
+>>>>>>> Stashed changes
 		bool FrameBufferContextRegister();
-        void FrameBufferContextRelease();
+		bool FrameBufferContextRelease();
 	};
 }
