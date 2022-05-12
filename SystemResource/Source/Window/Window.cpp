@@ -2449,8 +2449,6 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
 #if defined(OSUnix)
         XEvent windowEvent;
 
-        printf("[EVENT] PULL\n");
-
         XNextEvent(display, &windowEvent);
 
         OnWindowEvent(window, windowEvent);
@@ -2712,12 +2710,19 @@ bool BF::Window::FrameBufferSwap()
     return successful;
 }
 
+#include <unistd.h>
 bool BF::Window::FrameBufferContextRegister()
 {
 #if defined(OSUnix)
+    __pid_t   tid = getpid();
+
     const bool successful = glXMakeCurrent(DisplayCurrent, ID, OpenGLConext);
+
+    printf("[%x][OpenGL] Make context %p %i %p\n", tid, DisplayCurrent, ID, OpenGLConext);
 #elif defined(OSWindows)
     const bool successful = wglMakeCurrent(HandleDeviceContext, OpenGLConext);
+
+    printf("[OpenGL] Make context %p %p\n", HandleDeviceContext, OpenGLConext);
 #endif
 
     return successful;
@@ -2725,6 +2730,10 @@ bool BF::Window::FrameBufferContextRegister()
 
 bool BF::Window::FrameBufferContextRelease()
 {
+     __pid_t   tid = getpid();
+
+     printf("[%x][OpenGL] Remove context \n", tid);
+
 #if defined(OSUnix)
     const bool successful = glXMakeCurrent(0, 0, OpenGLConext);
 #elif defined(OSWindows)
