@@ -237,13 +237,14 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 BF::FileActionResult BF::FNT::Save(const wchar_t* filePath)
 {
 	int characterWritten = 0;
+	char buffer[2028]{0}; // TODO: FIX
 
 	File file;
 	file.Open(filePath, FileOpenMode::Write);
 
-	characterWritten = fprintf
+	characterWritten = sprintf
 	(
-		file.FileHandle,
+		buffer,
 		"info face=\"%s\" size=%i bold=%i italic=%i charset=%s unicode=%i stretchH=%i smooth=%i aa=%i padding=%i,%i,%i,%i spacing=%i,%i\n",
 		Info.Name,
 		Info.Size,
@@ -262,9 +263,9 @@ BF::FileActionResult BF::FNT::Save(const wchar_t* filePath)
 		Info.SpacerOffset[1]
 	);
 
-	characterWritten = fprintf
+	characterWritten = sprintf
 	(
-		file.FileHandle,
+		buffer,
 		"common lineHeight=%i base=%i scaleW=%i scaleH=%i pages=%i packed=%i\n",
 		CommonData.LineHeight,
 		CommonData.Base,
@@ -278,9 +279,9 @@ BF::FileActionResult BF::FNT::Save(const wchar_t* filePath)
 	{
 		FNTPage& page = FontPageList[i];
 
-		characterWritten = fprintf
+		characterWritten = sprintf
 		(
-			file.FileHandle,
+			buffer,
 			"page id=%i file=\"%s\"\n"
 			"chars count=%zi",
 			page.PageID,
@@ -292,9 +293,9 @@ BF::FileActionResult BF::FNT::Save(const wchar_t* filePath)
 		{
 			FNTCharacter& character = page.CharacteList[i];
 
-			characterWritten = fprintf
+			characterWritten = sprintf
 			(
-				file.FileHandle,
+				buffer,
 				"char id=%i x=%f y=%f width=%f height=%f xoffset=%f yoffset=%f xadvance=%i page=%i chnl=%i\n",
 				character.ID,
 				character.Position[0],

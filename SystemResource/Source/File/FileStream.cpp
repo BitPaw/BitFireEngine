@@ -196,7 +196,12 @@ BF::FileActionResult BF::FileStream::WriteToDisk(const char* filePath, FilePersi
 		return fileActionResult;
 	}
 
+#if defined(OSUnix)
 	size_t writtenBytes = fwrite(Data, sizeof(char), DataSize, file.FileHandle);
+#elif defined(OSWindows)
+	DWORD writtenBytes = 0;
+	const bool successful = WriteFile(file.FileHandle, Data, DataSize, &writtenBytes, nullptr);
+#endif
 
 	fileActionResult = file.Close();
 
@@ -213,7 +218,12 @@ BF::FileActionResult BF::FileStream::WriteToDisk(const wchar_t* filePath, FilePe
 		return fileActionResult;
 	}
 
+#if defined(OSUnix)
 	size_t writtenBytes = fwrite(Data, sizeof(char), DataSize, file.FileHandle);
+#elif defined(OSWindows)
+	DWORD writtenBytes = 0;
+	const bool successful = WriteFile(file.FileHandle, Data, DataSize, &writtenBytes, nullptr);
+#endif
 
 	fileActionResult = file.Close();
 

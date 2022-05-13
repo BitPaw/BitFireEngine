@@ -5,6 +5,7 @@
 
 #ifdef OSUnix
 #include <pthread.h>
+#include <unistd.h>
 #define ThreadFunctionReturnType void*
 #define ThreadFunctionReturnValue nullptr
 #define ThreadID pthread_t
@@ -33,6 +34,8 @@ namespace BF
 		Thread();
 
 		static ThreadID Run(const ThreadFunction threadFunction, const void* parameter);
+
+		static size_t ThreadCurrentID();
 
 		static void WaitForFinish(const ThreadID threadID);
 	};

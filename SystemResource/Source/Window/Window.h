@@ -1,15 +1,14 @@
 #pragma once
 
+#include <Async/Thread.h>
+#include <Controller/KeyBoardKey.h>
+#include <Controller/KeyBoardKey.h>
+#include <Container/Dictionary.hpp>
 #include <OS/OSDefine.h>
-#include "../Controller/KeyBoardKey.h"
-#include "../Container/Dictionary.hpp"
-#include "../Async/Thread.h"
-#include "../Controller/KeyBoardKey.h"
 
 #include "CursorMode.h"
 
 #if defined(OSUnix)
-#include <Async/AsyncLock.h>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -27,6 +26,7 @@
 #define OpenGLConextID HGLRC
 
 #endif
+
 #include "CursorIcon.h"
 
 #define UseRawMouseData 1
@@ -119,8 +119,7 @@ namespace BF
 
 		wchar_t Title[WindowTitleSizeMax];
 
-		#if defined(OSUnix)
-        AsyncLock RenderLock;
+		#if defined(OSUnix) 
 		Display* DisplayCurrent;
 		WindowID WindowRoot;
 		#elif defined(OSWindows)

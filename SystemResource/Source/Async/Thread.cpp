@@ -23,6 +23,17 @@ ThreadID BF::Thread::Run(const ThreadFunction threadFunction, const void* parame
 	return threadID;
 }
 
+size_t BF::Thread::ThreadCurrentID()
+{
+#if defined(OSUnix)
+	const __pid_t threadID = getpid();
+#elif defined(OSWindows)
+	const DWORD threadID = GetCurrentThreadId();
+#endif
+
+	return threadID;
+}
+
 void BF::Thread::WaitForFinish(const ThreadID threadID)
 {
 #ifdef OSUnix
