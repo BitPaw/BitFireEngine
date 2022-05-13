@@ -2200,13 +2200,14 @@
 	"ControllerData.h"
 	<Window/Window.h>
 
-1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/Window.h
+1652477172 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/Window.h
 	<OS/OSDefine.h>
 	"../Controller/KeyBoardKey.h"
 	"../Container/Dictionary.hpp"
 	"../Async/Thread.h"
 	"../Controller/KeyBoardKey.h"
 	"CursorMode.h"
+	<Async/AsyncLock.h>
 	<X11/X.h>
 	<X11/Xlib.h>
 	<GL/glew.h>
@@ -3940,7 +3941,7 @@
 	<OS/OSDefine.h>
 	<winuser.rh>
 
-1652303052 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/Window.cpp
+1652480722 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/Window.cpp
 	"Window.h"
 	<GL/glew.h>
 	<GL/gl.h>
@@ -3954,4 +3955,5 @@
 	<Graphic/OpenGL/OpenGL.h>
 	"../Controller/ControllerData.h"
 	"../Controller/ControllerSystem.h"
+	<unistd.h>
 

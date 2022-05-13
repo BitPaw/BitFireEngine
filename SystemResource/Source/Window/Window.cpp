@@ -11,6 +11,12 @@
 #define DefautPositionX 00000000000000
 #define DefautPositionY 00000000000000
 
+#define MouseButtonLeft 1
+#define MouseButtonMiddle 2
+#define MouseButtonRight 3
+#define MouseScrollUp 4
+#define MouseScrollDown 5
+
 #elif defined(OSWindows)
 #include <windowsx.h>
 #include <WinUser.h>
@@ -34,6 +40,7 @@
 BF::Dictionary<WindowID, BF::Window*> BF::Window::_windowLookup;
 
 #if defined(OSUnix)
+
 void BF::Window::OnWindowEvent(BF::Window& window, const XEvent& event)
 {
     switch(event.type)
@@ -53,21 +60,37 @@ void BF::Window::OnWindowEvent(BF::Window& window, const XEvent& event)
 
             break;
         }
+        case ButtonRelease:
         case ButtonPress:
         {
             const XButtonEvent& buttonEvent = event.xbutton;
-            unsigned int buttonID = buttonEvent.button;
+            const unsigned int buttonID = buttonEvent.button;
+            const ButtonState buttonState = event.type == ButtonPress ? ButtonState::Down :  ButtonState::Release;
+            MouseButton mouseButton = MouseButton::Invalid;
 
+            switch(buttonID)
+            {
+                case MouseButtonLeft:
+                    InvokeEvent(window.MouseClickCallBack, MouseButton::Left, buttonState);
+                    break;
 
+                case MouseButtonMiddle:
+                    InvokeEvent(window.MouseClickCallBack, MouseButton::Middle, buttonState);
+                    break;
 
-            printf("[Event] Button Pressed %i\n", buttonID);
-            break;
-        }
-        case ButtonRelease:
-        {
-            printf("[Event] ButtonRelease \n");
+                case MouseButtonRight:
+                    InvokeEvent(window.MouseClickCallBack, MouseButton::Right, buttonState);
+                    break;
 
-            break;
+                case MouseScrollUp:
+                    InvokeEvent(window.MouseScrollCallBack, MouseScrollDirection::Up);
+                    break;
+
+                case MouseScrollDown:
+                    InvokeEvent(window.MouseScrollCallBack, MouseScrollDirection::Down);
+                    break;
+
+            }
         }
         case MotionNotify:
         {
@@ -77,26 +100,22 @@ void BF::Window::OnWindowEvent(BF::Window& window, const XEvent& event)
         }
         case EnterNotify:
         {
-            printf("[Event] EnterNotify \n");
-
+            InvokeEvent(window.WindowMouseEnterCallBack);
             break;
         }
         case LeaveNotify:
         {
-            printf("[Event] LeaveNotify \n");
-
+            InvokeEvent(window.WindowMouseLeaveCallBack);
             break;
         }
         case FocusIn:
         {
-            printf("[Event] FocusIn \n");
-
+            InvokeEvent(window.WindowFocusEnterCallBack);
             break;
         }
         case FocusOut:
         {
-            printf("[Event] FocusOut \n");
-
+            InvokeEvent(window.WindowFocusLeaveCallBack);
             break;
         }
         case KeymapNotify:
@@ -210,9 +229,9 @@ void BF::Window::OnWindowEvent(BF::Window& window, const XEvent& event)
             const int width = resizeRequestEvent.width;
             const int height = resizeRequestEvent.height;
 
-            printf("[Event] Resize %i x %i. Type %i\n", width, height);
+           // glViewport(0,0, width, height);
 
-            //InvokeEvent(window.WindowSizeChangedCallBack, width, height);
+            InvokeEvent(window.WindowSizeChangedCallBack, width, height);
 
             break;
         }
@@ -272,6 +291,14 @@ void BF::Window::OnWindowEvent(BF::Window& window, const XEvent& event)
         }
         case GenericEvent:
         {
+            printf("[Event] GenericEvent \n");
+
+            break;
+        }
+        default:
+        {
+            printf("[Event] default: unkown event \n");
+
             break;
         }
     }
@@ -2183,6 +2210,8 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
     BF::Window& window = *((Window*)windowAdress);
 
 #if defined(OSUnix)
+    XInitThreads();
+
     Display* display = XOpenDisplay(nullptr);   // Create Window
 
     {
@@ -2211,6 +2240,10 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
             return ThreadFunctionReturnValue; // no appropriate visual found
         }
     }
+
+
+
+
 
     // Create colormapping
     Colormap colormap = XCreateColormap(display, windowRoot, visualInfo->visual, AllocNone);
@@ -2410,9 +2443,6 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
         }
     }
 
-    glClearColor(0.1, 0.5, 0.1, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     if(true)
     {
         glEnable(GL_CULL_FACE);
@@ -2435,12 +2465,18 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
     }
 
     glClearColor(0.2, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 
     _windowLookup.Add(windowID, &window);
 
     InvokeEvent(window.WindowCreatedCallBack, window);
 
     window.FrameBufferContextRelease();
+
+
+    window.RenderLock.Create();
+
 
     window.IsRunning = true;
 
@@ -2449,9 +2485,30 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
 #if defined(OSUnix)
         XEvent windowEvent;
 
+        XLockDisplay(window.DisplayCurrent);
+
+
         XNextEvent(display, &windowEvent);
 
+              XUnlockDisplay(window.DisplayCurrent);
+
         OnWindowEvent(window, windowEvent);
+
+#if 0
+  glClearColor(1.0, 1.0, 1.0, 1.0);
+ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+ glBegin(GL_QUADS);
+  glColor3f(1., 0., 0.); glVertex3f(-.75, -.75, 0.);
+  glColor3f(0., 1., 0.); glVertex3f( .75, -.75, 0.);
+  glColor3f(0., 0., 1.); glVertex3f( .75,  .75, 0.);
+  glColor3f(1., 1., 0.); glVertex3f(-.75,  .75, 0.);
+ glEnd();
+
+ window.FrameBufferSwap();
+#endif
+
+
 #elif defined(OSWindows)
         MSG message{ 0 };
         const bool peekResult = PeekMessageW(&message, nullptr, 0, 0, PM_NOREMOVE);
@@ -2473,6 +2530,8 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
         }
 #endif
     }
+
+    window.RenderLock.Delete();
 
     return ThreadFunctionReturnValue;
 }
@@ -2735,7 +2794,7 @@ bool BF::Window::FrameBufferContextRelease()
      printf("[%x][OpenGL] Remove context \n", tid);
 
 #if defined(OSUnix)
-    const bool successful = glXMakeCurrent(0, 0, OpenGLConext);
+    const bool successful = glXMakeCurrent(0, ID, OpenGLConext);
 #elif defined(OSWindows)
     const bool successful = wglMakeCurrent(0, 0);
 #endif

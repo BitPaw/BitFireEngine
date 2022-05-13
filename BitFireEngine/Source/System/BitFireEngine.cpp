@@ -267,10 +267,9 @@ void BF::BitFireEngine::Start()
 
     while(!_mainWindow.IsRunning);
 
+    _mainWindow.FrameBufferContextRegister();
 
-    //_mainWindow.FrameBufferContextRegister();
-
-    //_callbackListener->OnStartUp();
+    _callbackListener->OnStartUp();
 
     double time = stopwatch.Stop();
 
@@ -299,13 +298,15 @@ void BF::BitFireEngine::Update()
     //---------------------------------------------------------------------
 
     //---[User-Input]------------------------------------------------------
+    const float red = 0.5f;
+    const float green = 0.5f;
+    const float blue = 0.5f;
+    const float alpha = 1.0f;
 
-     glClearColor(0.2, 0.2, 0.2, 1.0);
+    glClearColor(red, green, blue, alpha);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 #if 1 // Triangle Test
-    // glClearColor(0.5f, 0.5f, 0.5f, 1);
-
     glBegin(GL_POLYGON);
     glColor3f(1, 0, 0); glVertex3f(-0.6, -0.75, 0.5);
     glColor3f(0, 1, 0); glVertex3f(0.6, -0.75, 0);

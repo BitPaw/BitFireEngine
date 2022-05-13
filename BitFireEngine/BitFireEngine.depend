@@ -861,7 +861,7 @@
 1652303050 /home/bitpaw/Desktop/BitFireEngine/BitFireEngine/Source/System/VideoConfig.h
 	<Media/Video/RefreshRateMode.h>
 
-1652303050 source:/home/bitpaw/Desktop/BitFireEngine/BitFireEngine/Source/System/BitFireEngine.cpp
+1652460644 source:/home/bitpaw/Desktop/BitFireEngine/BitFireEngine/Source/System/BitFireEngine.cpp
 	"BitFireEngine.h"
 	"Device/InputContainer.h"
 	"../UI/UIText.h"
@@ -943,13 +943,14 @@
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Sound/AudioSource.h
 
-1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/Window.h
+1652477172 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/Window.h
 	<OS/OSDefine.h>
 	"../Controller/KeyBoardKey.h"
 	"../Container/Dictionary.hpp"
 	"../Async/Thread.h"
 	"../Controller/KeyBoardKey.h"
 	"CursorMode.h"
+	<Async/AsyncLock.h>
 	<X11/X.h>
 	<X11/Xlib.h>
 	<GL/glew.h>

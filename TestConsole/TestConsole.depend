@@ -37,17 +37,17 @@
 
 1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Window/CursorIcon.h
 
-1652357392 source:/home/bitpaw/Desktop/BitFireEngine/TestConsole/TestConsole.cpp
-	<Window/Window.h>
-	<unistd.h>
+1652482596 source:/home/bitpaw/Desktop/BitFireEngine/TestConsole/TestConsole.cpp
+	<stdio.h>
 
-1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/Window.h
+1652477172 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/Window.h
 	<OS/OSDefine.h>
 	"../Controller/KeyBoardKey.h"
 	"../Container/Dictionary.hpp"
 	"../Async/Thread.h"
 	"../Controller/KeyBoardKey.h"
 	"CursorMode.h"
+	<Async/AsyncLock.h>
 	<X11/X.h>
 	<X11/Xlib.h>
 	<GL/glew.h>
@@ -74,4 +74,9 @@
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/CursorMode.h
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/CursorIcon.h
+
+1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Async/AsyncLock.h
+	<OS/OSDefine.h>
+	<semaphore.h>
+	<windows.h>
 

@@ -9,6 +9,7 @@
 #include "CursorMode.h"
 
 #if defined(OSUnix)
+#include <Async/AsyncLock.h>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -35,6 +36,8 @@ namespace BF
 {
 	enum class ButtonState
 	{
+        Invalid,
+
 		Down,
 		Hold,
 		Release
@@ -42,10 +45,23 @@ namespace BF
 
 	enum class MouseButton
 	{
+        Invalid,
+
 		Left,
 		Middle,
 		Right
 	};
+
+	enum class MouseScrollDirection
+	{
+        Invalid,
+
+		Up,
+		Down,
+		Left,
+		Right
+	};
+
 
 	struct KeyBoardKeyInfo
 	{
@@ -62,7 +78,7 @@ namespace BF
 	class Window;
 
 	// Mouse
-	typedef void (*MouseScrollEvent)();
+	typedef void (*MouseScrollEvent)(const MouseScrollDirection mouseScrollDirection);
 	typedef void (*MouseClickEvent)(const MouseButton mouseButton, const ButtonState buttonState);
 	typedef void (*MouseClickDoubleEvent)(const MouseButton mouseButton);
 	typedef void (*MouseMoveEvent)(const short x, const short y);
@@ -72,6 +88,13 @@ namespace BF
 
 	// Window
 	//typedef void (*WindowCreatingEvent)();
+
+	typedef void (*WindowMouseEnterEvent)();
+    typedef void (*WindowMouseLeaveEvent)();
+
+	typedef void (*WindowFocusEnterEvent)();
+	typedef void (*WindowFocusLeaveEvent)();
+
 	typedef void (*WindowCreatedEvent)(Window& window);
 	typedef void (*WindowSizeChangedEvent)(const size_t width, const size_t height);
 	typedef void (*WindowClosingEvent)(bool& allowClosing);
@@ -97,6 +120,7 @@ namespace BF
 		wchar_t Title[WindowTitleSizeMax];
 
 		#if defined(OSUnix)
+        AsyncLock RenderLock;
 		Display* DisplayCurrent;
 		WindowID WindowRoot;
 		#elif defined(OSWindows)
@@ -107,12 +131,20 @@ namespace BF
 		// Interneal
 		ThreadID MessageThreadID;
 
-
+        MouseScrollEvent MouseScrollCallBack;
 		MouseClickEvent MouseClickCallBack;
 		MouseClickDoubleEvent MouseClickDoubleCallBack;
 
 		MouseMoveEvent MouseMoveCallBack;
 		KeyBoardKeyEvent KeyBoardKeyCallBack;
+
+        WindowMouseEnterEvent WindowMouseEnterCallBack;
+		WindowMouseLeaveEvent WindowMouseLeaveCallBack;
+
+		WindowFocusEnterEvent WindowFocusEnterCallBack;
+		WindowFocusLeaveEvent WindowFocusLeaveCallBack;
+
+
 		WindowCreatedEvent WindowCreatedCallBack;
 		WindowSizeChangedEvent WindowSizeChangedCallBack;
 		WindowClosingEvent WindowClosingCallBack;
