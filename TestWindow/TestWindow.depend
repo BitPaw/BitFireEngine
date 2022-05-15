@@ -3,14 +3,13 @@
 	<Window/Window.h>
 	<stdio.h>
 
-1652477172 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/Window.h
+1652536129 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/Window.h
+	<Async/Thread.h>
+	<Controller/KeyBoardKey.h>
+	<Controller/KeyBoardKey.h>
+	<Container/Dictionary.hpp>
 	<OS/OSDefine.h>
-	"../Controller/KeyBoardKey.h"
-	"../Container/Dictionary.hpp"
-	"../Async/Thread.h"
-	"../Controller/KeyBoardKey.h"
 	"CursorMode.h"
-	<Async/AsyncLock.h>
 	<X11/X.h>
 	<X11/Xlib.h>
 	<GL/glew.h>
@@ -24,14 +23,15 @@
 	<stdint.h>
 	<SdkDdkVer.h>
 
-1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Controller/KeyBoardKey.h
+1652635307 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Controller/KeyBoardKey.h
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/Dictionary.hpp
 	<stdlib.h>
 
-1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Async/Thread.h
+1652536129 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Async/Thread.h
 	<OS/OSDefine.h>
 	<pthread.h>
+	<unistd.h>
 	<windows.h>
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/CursorMode.h

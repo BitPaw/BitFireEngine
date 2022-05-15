@@ -230,17 +230,45 @@ BF::KeyBoardKey BF::ConvertKeyBoardKey(wchar_t character)
 		case 0x59: return KeyBoardKey::KeyY;
 		case 0x5A: return KeyBoardKey::KeyZ;
 
-		case 0x70: return KeyBoardKey::KeyF1;
-		case 0x71: return KeyBoardKey::KeyF2;
-		case 0x72: return KeyBoardKey::KeyF3;
-		case 0x73: return KeyBoardKey::KeyF4;
+		case 0x61: return KeyBoardKey::KeyASmal;
+        case 0x62: return KeyBoardKey::KeyBSmal;
+		case 0x63: return KeyBoardKey::KeyCSmal;
+		case 0x64: return KeyBoardKey::KeyDSmal;
+		case 0x65: return KeyBoardKey::KeyESmal;
+		case 0x66: return KeyBoardKey::KeyFSmal;
+		case 0x67: return KeyBoardKey::KeyGSmal;
+		case 0x68: return KeyBoardKey::KeyHSmal;
+		case 0x69: return KeyBoardKey::KeyISmal;
+		case 0x6A: return KeyBoardKey::KeyJSmal;
+		case 0x6B: return KeyBoardKey::KeyKSmal;
+		case 0x6C: return KeyBoardKey::KeyLSmal;
+		case 0x6D: return KeyBoardKey::KeyMSmal;
+		case 0x6E: return KeyBoardKey::KeyNSmal;
+		case 0x6F: return KeyBoardKey::KeyOSmal;
+		case 0x70: return KeyBoardKey::KeyPSmal;
+		case 0x71: return KeyBoardKey::KeyQSmal;
+		case 0x72: return KeyBoardKey::KeyRSmal;
+		case 0x73: return KeyBoardKey::KeySSmal;
+		case 0x74: return KeyBoardKey::KeyTSmal;
+		case 0x75: return KeyBoardKey::KeyUSmal;
+		case 0x76: return KeyBoardKey::KeyVSmal;
+		case 0x77: return KeyBoardKey::KeyWSmal;
+		case 0x78: return KeyBoardKey::KeyXSmal;
+		case 0x79: return KeyBoardKey::KeyYSmal;
+		case 0x7A: return KeyBoardKey::KeyZSmal;
+
+/*
+		/case 0x70: return KeyBoardKey::KeyF1;
+		//case 0x71: return KeyBoardKey::KeyF2;
+		//case 0x72: return KeyBoardKey::KeyF3;
+		//case 0x73: return KeyBoardKey::KeyF4;
 		case 0x74: return KeyBoardKey::KeyF5;
 		case 0x75: return KeyBoardKey::KeyF6;
 		case 0x76: return KeyBoardKey::KeyF7;
 		case 0x77: return KeyBoardKey::KeyF8;
 		case 0x78: return KeyBoardKey::KeyF9;
 		case 0x79: return KeyBoardKey::KeyF10;
-		case 0x7A: return KeyBoardKey::KeyF11;
+		case 0x7A: return KeyBoardKey::KeyF11;*/
 		case 0x7B: return KeyBoardKey::KeyF12;
 		case 0x7C: return KeyBoardKey::KeyF13;
 		case 0x7D: return KeyBoardKey::KeyF14;
@@ -266,6 +294,7 @@ BF::KeyBoardKey BF::ConvertKeyBoardKey(wchar_t character)
 		case ButtonTab: return KeyBoardKey::KeyTAB;
 		case ButtonReturn: return KeyBoardKey::KeyENTER;
 
+		/*
 		case ButtonKeyPad0: return KeyBoardKey::KeyPad0;
 		case ButtonKeyPad1: return KeyBoardKey::KeyPad1;
 		case ButtonKeyPad2: return KeyBoardKey::KeyPad2;
@@ -275,7 +304,7 @@ BF::KeyBoardKey BF::ConvertKeyBoardKey(wchar_t character)
 		case ButtonKeyPad6: return KeyBoardKey::KeyPad6;
 		case ButtonKeyPad7: return KeyBoardKey::KeyPad7;
 		case ButtonKeyPad8: return KeyBoardKey::KeyPad8;
-		case ButtonKeyPad9: return KeyBoardKey::KeyPad9;
+		case ButtonKeyPad9: return KeyBoardKey::KeyPad9;*/
 
 		default:
 			return KeyBoardKey::KeyUnknown;

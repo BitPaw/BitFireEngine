@@ -8,6 +8,8 @@
 
 #if defined(OSUnix)
 
+#include <X11/cursorfont.h>
+
 #define DefautPositionX 00000000000000
 #define DefautPositionY 00000000000000
 
@@ -46,17 +48,37 @@ void BF::Window::OnWindowEvent(BF::Window& window, const XEvent& event)
     switch(event.type)
     {
         case KeyPress:
+        case KeyRelease:
         {
             const XKeyEvent& keyEvent = event.xkey;
             const unsigned int keyCode = keyEvent.keycode;
+            const bool release = event.type == KeyRelease;
+            const KeySym keySym = XKeycodeToKeysym(window.DisplayCurrent, keyCode, 0);
+            const char* keyName = XKeysymToString(keySym);
 
-            printf("[Event] KeyPress %2x\n", keyCode);
+            KeyBoardKey keyBoardKey = BF::ConvertKeyBoardKey(keySym);
 
-            break;
-        }
-        case KeyRelease:
-        {
-            printf("[Event] KeyRelease \n");
+            KeyBoardKeyInfo keyBoardKeyInfo;
+
+            keyBoardKeyInfo.Key = keyBoardKey;
+            keyBoardKeyInfo.Mode = release ? ButtonState::Release : ButtonState::Down;
+            keyBoardKeyInfo.Repeat = 0;
+            keyBoardKeyInfo.ScanCode = keySym;
+            keyBoardKeyInfo.SpecialKey = 0;
+            keyBoardKeyInfo.KontextCode = 0;
+            keyBoardKeyInfo.PreState = 0;
+            keyBoardKeyInfo.GapState = 0;
+
+            InvokeEvent(window.KeyBoardKeyCallBack, keyBoardKeyInfo);
+
+            if(release)
+            {
+                printf("[Event] Key-Release %2i %2i %s\n",keyCode,keySym, keyName);
+            }
+            else
+            {
+                printf("[Event] Key-Press %2i %2i %s\n", keyCode, keySym, keyName);
+            }
 
             break;
         }
@@ -1802,6 +1824,7 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
     //setWindowAttributes.cursor = ;
     setWindowAttributes.colormap = colormap;
     setWindowAttributes.event_mask =
+        KeyPressMask |
         KeyReleaseMask |
         ButtonPressMask |
         ButtonReleaseMask |
@@ -1825,7 +1848,9 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
         FocusChangeMask |
         PropertyChangeMask |
         ColormapChangeMask |
-        OwnerGrabButtonMask;
+        OwnerGrabButtonMask |
+       // XI_RawMotion |
+        0;
 
     int borderWidth = 0;
 
@@ -1856,6 +1881,26 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
     GLXContext glContext = glXCreateContext(display, visualInfo, NULL, GL_TRUE);
 
     window.OpenGLConext = glContext;
+
+#if 0
+    bool   ret    = false;
+    XID cursor = XCreateFontCursor(display, XC_crosshair);
+    int    root   = DefaultRootWindow(display);
+
+    const int grabResult = XGrabPointer
+    (
+        display,
+        root,
+        0,
+        ButtonMotionMask | ButtonPressMask | ButtonReleaseMask,
+        GrabModeAsync,
+        GrabModeAsync,
+        root,
+        cursor,
+        CurrentTime
+    );
+#endif
+
 
 #elif defined(OSWindows)
     DWORD windowStyle = WS_EX_APPWINDOW;
@@ -2031,6 +2076,30 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
     {
 #if defined(OSUnix)
         XEvent windowEvent;
+
+    /*
+        Window root_return, child_return;
+        int root_x_return, root_y_return;
+        int win_x_return, win_y_return;
+        unsigned int mask_return;
+        /*
+         * We need:
+         *     child_return - the active window under the cursor
+         *     win_{x,y}_return - pointer coordinate with respect to root window
+         * /
+        int retval = XQueryPointer
+        (
+            display,
+            root_window,
+            &root_return,
+            &child_return,
+            &root_x_return,
+            &root_y_return,
+            &win_x_return,
+            &win_y_return,
+            &mask_return
+        );*/
+
 
         XLockDisplay(window.DisplayCurrent);
 

@@ -397,32 +397,59 @@ void BF::BitFireEngine::OnKeyBoardKey(const KeyBoardKeyInfo keyBoardKeyInfo)
         case KeyBoardKey::KeySpace: inputButton = &keyBoard.SpaceBar; break;
         case KeyBoardKey::KeyShiftLeft: inputButton = &keyBoard.ShitftLeft; break;
 
-        case KeyBoardKey::KeyA: inputButton = &keyBoard.A; break;
-        case KeyBoardKey::KeyB: inputButton = &keyBoard.B; break;
-        case KeyBoardKey::KeyC: inputButton = &keyBoard.C; break;
-        case KeyBoardKey::KeyD: inputButton = &keyBoard.D; break;
-        case KeyBoardKey::KeyE: inputButton = &keyBoard.E; break;
-        case KeyBoardKey::KeyF: inputButton = &keyBoard.F; break;
-        case KeyBoardKey::KeyG: inputButton = &keyBoard.G; break;
-        case KeyBoardKey::KeyH: inputButton = &keyBoard.H; break;
-        case KeyBoardKey::KeyI: inputButton = &keyBoard.I; break;
-        case KeyBoardKey::KeyJ: inputButton = &keyBoard.J; break;
-        case KeyBoardKey::KeyK: inputButton = &keyBoard.K; break;
-        case KeyBoardKey::KeyL: inputButton = &keyBoard.L; break;
-        case KeyBoardKey::KeyM: inputButton = &keyBoard.M; break;
-        case KeyBoardKey::KeyN: inputButton = &keyBoard.N; break;
-        case KeyBoardKey::KeyO: inputButton = &keyBoard.O; break;
-        case KeyBoardKey::KeyP: inputButton = &keyBoard.P; break;
-        case KeyBoardKey::KeyQ: inputButton = &keyBoard.Q; break;
-        case KeyBoardKey::KeyR: inputButton = &keyBoard.R; break;
-        case KeyBoardKey::KeyS: inputButton = &keyBoard.S; break;
-        case KeyBoardKey::KeyT: inputButton = &keyBoard.T; break;
-        case KeyBoardKey::KeyU: inputButton = &keyBoard.U; break;
-        case KeyBoardKey::KeyV: inputButton = &keyBoard.V; break;
-        case KeyBoardKey::KeyW: inputButton = &keyBoard.W; break;
-        case KeyBoardKey::KeyX: inputButton = &keyBoard.X; break;
-        case KeyBoardKey::KeyY: inputButton = &keyBoard.Y; break;
-        case KeyBoardKey::KeyZ: inputButton = &keyBoard.Z; break;
+        case KeyBoardKey::KeyA:
+        case KeyBoardKey::KeyASmal: inputButton = &keyBoard.A; break;
+         case KeyBoardKey::KeyB:
+        case KeyBoardKey::KeyBSmal: inputButton = &keyBoard.B; break;
+         case KeyBoardKey::KeyC:
+        case KeyBoardKey::KeyCSmal: inputButton = &keyBoard.C; break;
+         case KeyBoardKey::KeyD:
+        case KeyBoardKey::KeyDSmal: inputButton = &keyBoard.D; break;
+         case KeyBoardKey::KeyE:
+        case KeyBoardKey::KeyESmal: inputButton = &keyBoard.E; break;
+         case KeyBoardKey::KeyF:
+        case KeyBoardKey::KeyFSmal: inputButton = &keyBoard.F; break;
+         case KeyBoardKey::KeyG:
+        case KeyBoardKey::KeyGSmal: inputButton = &keyBoard.G; break;
+         case KeyBoardKey::KeyH:
+        case KeyBoardKey::KeyHSmal: inputButton = &keyBoard.H; break;
+         case KeyBoardKey::KeyI:
+        case KeyBoardKey::KeyISmal: inputButton = &keyBoard.I; break;
+         case KeyBoardKey::KeyJ:
+        case KeyBoardKey::KeyJSmal: inputButton = &keyBoard.J; break;
+         case KeyBoardKey::KeyK:
+        case KeyBoardKey::KeyKSmal: inputButton = &keyBoard.K; break;
+
+         case KeyBoardKey::KeyL:
+        case KeyBoardKey::KeyLSmal: inputButton = &keyBoard.L; break;
+        case KeyBoardKey::KeyM:
+        case KeyBoardKey::KeyMSmal: inputButton = &keyBoard.M; break;
+        case KeyBoardKey::KeyN:
+        case KeyBoardKey::KeyNSmal: inputButton = &keyBoard.N; break;
+        case KeyBoardKey::KeyO:
+        case KeyBoardKey::KeyOSmal: inputButton = &keyBoard.O; break;
+        case KeyBoardKey::KeyP:
+        case KeyBoardKey::KeyPSmal: inputButton = &keyBoard.P; break;
+         case KeyBoardKey::KeyQ:
+        case KeyBoardKey::KeyQSmal: inputButton = &keyBoard.Q; break;
+        case KeyBoardKey::KeyR:
+        case KeyBoardKey::KeyRSmal: inputButton = &keyBoard.R; break;
+       case KeyBoardKey::KeyS:
+        case KeyBoardKey::KeySSmal: inputButton = &keyBoard.S; break;
+        case KeyBoardKey::KeyT:
+        case KeyBoardKey::KeyTSmal: inputButton = &keyBoard.T; break;
+        case KeyBoardKey::KeyU:
+        case KeyBoardKey::KeyUSmal: inputButton = &keyBoard.U; break;
+        case KeyBoardKey::KeyV:
+        case KeyBoardKey::KeyVSmal: inputButton = &keyBoard.V; break;
+        case KeyBoardKey::KeyW:
+         case KeyBoardKey::KeyWSmal:inputButton = &keyBoard.W; break;
+        case KeyBoardKey::KeyX:
+        case KeyBoardKey::KeyXSmal: inputButton = &keyBoard.X; break;
+          case KeyBoardKey::KeyY:
+        case KeyBoardKey::KeyYSmal: inputButton = &keyBoard.Y; break;
+         case KeyBoardKey::KeyZ:
+        case KeyBoardKey::KeyZSmal: inputButton = &keyBoard.Z; break;
     }
 
     if(!inputButton)

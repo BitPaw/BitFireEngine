@@ -50,6 +50,33 @@ namespace BF
 		KeyX,
 		KeyY,
 		KeyZ,
+
+		KeyASmal,
+		KeyBSmal,
+		KeyCSmal,
+		KeyDSmal,
+		KeyESmal,
+		KeyFSmal,
+		KeyGSmal,
+		KeyHSmal,
+		KeyISmal,
+		KeyJSmal,
+		KeyKSmal,
+		KeyLSmal,
+		KeyMSmal,
+		KeyNSmal,
+		KeyOSmal,
+		KeyPSmal,
+		KeyQSmal,
+		KeyRSmal,
+		KeySSmal,
+		KeyTSmal,
+		KeyUSmal,
+		KeyVSmal,
+		KeyWSmal,
+		KeyXSmal,
+		KeyYSmal,
+		KeyZSmal,
 		KeyLEFT_BRACKET,  /* [ */
 		KeyBACKSLASH,  /* \ */
 		KeyRIGHT_BRACKET,  /* ] */
@@ -125,7 +152,7 @@ namespace BF
 		KeyCONTROLLEFT,
 		KeyALTLEFT,
 		KeySUPERLEFT,
-	
+
 		KeyCONTROLRIGHT,
 		KeyALTRIGHT,
 		KeySUPERRIGHT,
