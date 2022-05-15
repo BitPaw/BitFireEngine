@@ -602,6 +602,14 @@ bool BF::File::DoesFileExist(const char* filePath)
 
 bool BF::File::DoesFileExist(const wchar_t* filePath)
 {
+#if defined(OSUnix)
+    char filePathA[PathMaxSize];
+
+    Text::Copy(filePathA, filePath, PathMaxSize);
+
+    return DoesFileExist(filePathA);
+
+#elif defined(OSWindows)
 	FILE* file = FileOpenW(filePath, L"rb");
 
 	if(file)
@@ -610,6 +618,7 @@ bool BF::File::DoesFileExist(const wchar_t* filePath)
 
 		return true;
 	}
+#endif // defined
 
 	return false;
 }

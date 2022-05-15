@@ -9,14 +9,12 @@
 BF::FileStream::FileStream()
 {
 	_fileHandle = 0;
-	_fileMappingHandle = 0;
 	_fileLocation = FileLocation::Invalid;
 }
 
 BF::FileStream::FileStream(const size_t dataSize)
 {
 	_fileHandle = 0;
-	_fileMappingHandle = 0;
 	_fileLocation = FileLocation::Invalid;
 
 	DataSize = dataSize;
@@ -108,12 +106,14 @@ BF::FileActionResult BF::FileStream::MapToVirtualMemory(const char* filePath)
 BF::FileActionResult BF::FileStream::MapToVirtualMemory(const wchar_t* filePath)
 {
 	void** adress = (void**)&Data;
-	const FileActionResult result = Memory::VirtualMemoryFileMap(filePath, _fileHandle, _fileMappingHandle, adress, DataSize);
+	const FileActionResult result = Memory::VirtualMemoryFileMap(filePath, _fileMappingInfo);
 	const bool successful = result == FileActionResult::Successful;
 
 	if(successful)
 	{
 		_fileLocation = FileLocation::MappedFromDisk;
+		Data = (Byte*)_fileMappingInfo.Data;
+		DataSize = _fileMappingInfo.Size;
 	}
 
 	return result;
@@ -122,7 +122,7 @@ BF::FileActionResult BF::FileStream::MapToVirtualMemory(const wchar_t* filePath)
 BF::FileActionResult BF::FileStream::UnmapFromVirtualMemory()
 {
 	void** adress = (void**)&Data;
-	const bool x = Memory::VirtualMemoryFileUnmap(_fileHandle, _fileMappingHandle, adress, DataSize);
+	const bool x = Memory::VirtualMemoryFileUnmap(_fileMappingInfo);
 
 	return FileActionResult::Successful;
 }

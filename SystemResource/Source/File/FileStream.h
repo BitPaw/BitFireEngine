@@ -6,6 +6,7 @@
 #include "FilePersistence.hpp"
 #include "FileLocation.h"
 #include "ByteStream.h"
+#include <Hardware/Memory/Memory.h>
 
 #include <cstdlib>
 
@@ -20,8 +21,8 @@ namespace BF
 	{
 		private:
 		FileLocation _fileLocation;
-		FileHandleType _fileHandle;
-		FileHandleType _fileMappingHandle;
+		FileHandleType _fileHandle; // Only used if file is used directly
+		FileMappingInfo _fileMappingInfo; // only used if mapping is used
 
 		public:
 		FileStream();

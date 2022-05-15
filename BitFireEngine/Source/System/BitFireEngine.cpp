@@ -306,7 +306,7 @@ void BF::BitFireEngine::Update()
     glClearColor(red, green, blue, alpha);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-#if 1 // Triangle Test
+#if 0 // Triangle Test
     glBegin(GL_POLYGON);
     glColor3f(1, 0, 0); glVertex3f(-0.6, -0.75, 0.5);
     glColor3f(0, 1, 0); glVertex3f(0.6, -0.75, 0);
@@ -314,9 +314,9 @@ void BF::BitFireEngine::Update()
     glEnd();
 #else
     //---[Game-Logic]------------------------------------------------------
-    ModelsPhysicsApply(deltaTime);
+    //ModelsPhysicsApply(deltaTime);
 
-    _callbackListener->OnUpdateGameLogic(deltaTime);
+    //_callbackListener->OnUpdateGameLogic(deltaTime);
     //---------------------------------------------------------------------
 
     //---[Render World]----------------------------------------------------
@@ -955,6 +955,9 @@ bool BF::BitFireEngine::Register(ShaderProgram& shaderProgram, const wchar_t* ve
         if(compileFailed)
         {
             isValidShader = false;
+
+            const wchar_t* text = i == 0 ? vertexShaderFilePath : fragmentShaderFilePath;
+            printf("[x][OpenGL][Shader] Failed to compile <%ls>!\n", text);
             break;
         }
 
@@ -2167,7 +2170,7 @@ void BF::BitFireEngine::PrintContent(bool detailed)
         {
             const Texture& texture = *currentTexture->Element;
 
-            printf("| %3i | \n", texture.ID);
+            printf("| %3i | %4zix%4zi | \n", texture.ID, texture.DataImage.Width, texture.DataImage.Height );
         }
 
         printf(endLine);

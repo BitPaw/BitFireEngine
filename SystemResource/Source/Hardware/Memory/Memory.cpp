@@ -1,8 +1,11 @@
 #include "Memory.h"
 
 #include <OS/OSDefine.h>
+#include <Text/Text.h>
 
 #if defined(OSUnix)
+#include <sys/stat.h>
+#include <fcntl.h>
 #elif defined(WindowsAtleastXP)
 #include <Windows.h>
 #endif
@@ -10,6 +13,9 @@
 #include <ErrorCode.h>
 #include <ClipBoard/ClipBoard.cpp>
 #include <File/File.h>
+
+
+
 
 
 void* operator new(const size_t size)
@@ -127,14 +133,52 @@ bool BF::Memory::VirtualMemoryRelease()
 	return false;
 }
 
-BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const char* filePath, FileHandleType& fileHandle, FileHandleType& mappingHandle, void** fileData, size_t& fileSize)
+BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const char* filePath, FileMappingInfo& fileMappingInfo)
 {
-	return FileActionResult::Invalid;
+#if defined(OSUnix)
+    void* preferedAdress = nullptr;
+    size_t length = 0;
+    int memoryProtectionMode = PROT_READ;
+    int flags = MAP_SHARED;
+    int fileDiscriptor = open(filePath, O_RDONLY);
+    __off64_t offset = 0;
+
+    struct stat sb;
+    fstat(fileDiscriptor, &sb); // FIleSize
+    length = sb.st_size;
+
+    void* mappedAdress = mmap64
+    (
+        preferedAdress,
+        length,
+        memoryProtectionMode,
+        flags,
+        fileDiscriptor,
+        offset
+    );
+
+    fileMappingInfo.ID = fileDiscriptor;
+    fileMappingInfo.Size = length;
+    fileMappingInfo.Data = mappedAdress;
+
+#elif defined(OSWindows)
+#endif
+
+	return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, FileHandleType& fileHandle, FileHandleType& mappingHandle, void** fileData, size_t& fileSize)
+BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, FileMappingInfo& fileMappingInfo)
 {
-	fileHandle = 0;
+#if defined(OSUnix)
+    char filePathA[PathMaxSize];
+
+    Text::Copy(filePathA, filePath, PathMaxSize);
+
+    return VirtualMemoryFileMap(filePathA, fileMappingInfo);
+
+#elif defined(OSWindows)
+
+    fileHandle = 0;
 	mappingHandle = 0;
 	(*fileData) = 0;
 
@@ -149,9 +193,6 @@ BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, F
 		}
 	}
 
-#if defined(OSUnix)
-
-#elif defined(OSWindows)
 
 	{
 		LARGE_INTEGER largeInt{0};
@@ -220,14 +261,14 @@ BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, F
 	return FileActionResult::Successful;
 }
 
-bool BF::Memory::VirtualMemoryFileUnmap(FileHandleType& fileHandle, FileHandleType& mappingHandle, void** fileData, size_t& fileSize)
+bool BF::Memory::VirtualMemoryFileUnmap(FileMappingInfo& fileMappingInfo)
 {
 #if MemoryDebug
 	printf("[#][Memory] 0x%p (%10zi B) MMAP-Release\n", (*fileData), fileSize);
-#endif    
+#endif
 
 #if defined(OSUnix)
-	const int result = munmap(fileData, fileSize);
+	const int result = munmap(fileMappingInfo.Data, fileMappingInfo.Size);
 	const bool sucessful = result != -1;
 
 	if(!sucessful)
@@ -236,6 +277,10 @@ bool BF::Memory::VirtualMemoryFileUnmap(FileHandleType& fileHandle, FileHandleTy
 
 		return false;
 	}
+
+	fileMappingInfo.ID = 0;
+	fileMappingInfo.Size = 0;
+	fileMappingInfo.Data = 0;
 
 	return true;
 

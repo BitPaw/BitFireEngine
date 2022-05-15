@@ -75,7 +75,7 @@ void Cleaved::CleavedGameSystem::OnStartUp()
         L"Texture/SkyBox_Bottom.png",
         L"Texture/SkyBox_Side.png",
         L"Texture/SkyBox_Side.png"
-    ); 
+    );
 
     GameSystem.Load(testTextue, L"Texture/SkyBox.bmp", false);
 
@@ -91,7 +91,7 @@ void Cleaved::CleavedGameSystem::OnStartUp()
             0,0,0,
             0,1,0,
             1,1,0,
-            1,0,0     
+            1,0,0
         };
 
         const unsigned int itx[4] =
@@ -122,11 +122,11 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     _sign.MeshShare(_cubeRenderable);
     GameSystem.Load(_sign, L"Texture/Sign.png");
     //_sign.Type = ColliderType::EffectBox;
-    
+
     _floor.MoveTo(10, -7, 0);
     _floor.Scale(200, 20, 1);
     _floor.ShaderUse(_simplex);
-    _floor.MeshShare(_cubeRenderable);   
+    _floor.MeshShare(_cubeRenderable);
     GameSystem.Load(_floor, L"Texture/MissingTexture.bmp");
     _floor.UsedTexture->TextureWrap(ImageWrap::Repeat);
 
@@ -160,16 +160,16 @@ void Cleaved::CleavedGameSystem::OnStartUp()
    // _fireplace.Set(20, 0, 0.2, "Sprite_FirePlace", "Texture/Fireplace.png");
    // GameSystem.Resource.Add(_fireplace);
 
-   
+
 
     _floor.Set(10, -2, 0.0, "Floor", "Texture/Brick.bmp");
     _floor.MaterialList[0].Texture->ImageWrapSet(ImageWrap::Repeat);
-    _floor.MatrixModel.Scale(200, 20, 1);   
+    _floor.MatrixModel.Scale(200, 20, 1);
    // _floor.MatrixModel.Move(100, -83, 0);
-    GameSystem.Resource.Add(_floor);        
-#endif 
+    GameSystem.Resource.Add(_floor);
+#endif
 
- 
+
 
 
 #if 1
@@ -181,7 +181,7 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     GameSystem.Resource.PushToGPU(GameSystem.Resource.CubeHitBoxViewModel);
 #endif // 1
 
- 
+
 
 
 
@@ -208,12 +208,12 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     //-------------------------------------------------------------------------
 
 
-    
 
 
 
 
-    GameSystem.PrintContent(false);
+
+    GameSystem.PrintContent(true);
     //text = new BF::UIText("SampleText", *GameSystem.Resource.DefaultFont, -1, -0.8);
     //text->RenderInformation.ShaderProgramID = hudShaderID.ID;
     //text->SetFont(*Resource.DefaultFont);
@@ -327,7 +327,7 @@ void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
     //_camera->MatrixModel.Move(movementCharacter);
     _playerCharacterLuna.MatrixModel.Move(movementCharacter);
     //_camera->MatrixModel.Move(movementCamera);
-#endif // 1 
+#endif // 1
 }
 
 void Cleaved::CleavedGameSystem::OnUpdateUI()

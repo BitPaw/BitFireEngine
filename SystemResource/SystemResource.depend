@@ -2006,12 +2006,13 @@
 	<stdint.h>
 	<SdkDdkVer.h>
 
-1652303052 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Async/Thread.cpp
+1652536129 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Async/Thread.cpp
 	"Thread.h"
 
-1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Async/Thread.h
+1652536129 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Async/Thread.h
 	<OS/OSDefine.h>
 	<pthread.h>
+	<unistd.h>
 	<windows.h>
 
 1652303052 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Camera/Camera.cpp
@@ -2200,14 +2201,13 @@
 	"ControllerData.h"
 	<Window/Window.h>
 
-1652477172 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/Window.h
+1652536129 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/Window.h
+	<Async/Thread.h>
+	<Controller/KeyBoardKey.h>
+	<Controller/KeyBoardKey.h>
+	<Container/Dictionary.hpp>
 	<OS/OSDefine.h>
-	"../Controller/KeyBoardKey.h"
-	"../Container/Dictionary.hpp"
-	"../Async/Thread.h"
-	"../Controller/KeyBoardKey.h"
 	"CursorMode.h"
-	<Async/AsyncLock.h>
 	<X11/X.h>
 	<X11/Xlib.h>
 	<GL/glew.h>
@@ -2369,13 +2369,14 @@
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/FileCachingMode.h
 
-1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/FileStream.h
+1652573229 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/FileStream.h
 	"IFile.h"
 	"File.h"
 	"FileActionResult.hpp"
 	"FilePersistence.hpp"
 	"FileLocation.h"
 	"ByteStream.h"
+	<Hardware/Memory/Memory.h>
 	<cstdlib>
 	<Windows.h>
 
@@ -2423,7 +2424,7 @@
 	<Text/Text.h>
 	<Hardware/Memory/Memory.h>
 
-1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/Memory.h
+1652572943 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/Memory.h
 	"MemoryUsage.h"
 	<OS/OSDefine.h>
 	<ErrorCode.h>
@@ -2440,7 +2441,7 @@
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/MemoryUsage.h
 	<cstddef>
 
-1652303052 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/File.cpp
+1652570019 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/File.cpp
 	"File.h"
 	"../Container/AsciiString.h"
 	<Text/Text.h>
@@ -2459,7 +2460,7 @@
 	<cstdlib>
 	<libgen.h>
 
-1652303052 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/FileStream.cpp
+1652573462 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/FileStream.cpp
 	"FileStream.h"
 	<cassert>
 	<string>
@@ -2533,7 +2534,7 @@
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Graphic/OpenGL/ImageType.h
 
-1652303052 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Graphic/OpenGL/OpenGL.cpp
+1652548714 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Graphic/OpenGL/OpenGL.cpp
 	"OpenGL.h"
 	<cassert>
 	<GL/glew.h>
@@ -2708,9 +2709,12 @@
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/MainBoard/MainBoard.h
 
-1652303052 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/Memory.cpp
+1652573087 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/Memory.cpp
 	"Memory.h"
 	<OS/OSDefine.h>
+	<Text/Text.h>
+	<sys/stat.h>
+	<fcntl.h>
 	<Windows.h>
 	<ErrorCode.h>
 	<ClipBoard/ClipBoard.cpp>
@@ -2843,7 +2847,7 @@
 	"Interpolate.h"
 	<OS/OSDefine.h>
 
-1652303052 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNT.cpp
+1652536129 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNT.cpp
 	"FNT.h"
 	"FNTCommand.h"
 	"FNTLineType.h"
@@ -3941,7 +3945,7 @@
 	<OS/OSDefine.h>
 	<winuser.rh>
 
-1652480722 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/Window.cpp
+1652540734 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/Window.cpp
 	"Window.h"
 	<GL/glew.h>
 	<GL/gl.h>
@@ -3955,5 +3959,4 @@
 	<Graphic/OpenGL/OpenGL.h>
 	"../Controller/ControllerData.h"
 	"../Controller/ControllerSystem.h"
-	<unistd.h>
 

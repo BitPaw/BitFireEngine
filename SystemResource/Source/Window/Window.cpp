@@ -1702,7 +1702,7 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
             InvokeEvent(window.KeyBoardKeyCallBack, buttonInfo);
 
             break;
-        } 
+        }
     }*/
 
 
@@ -1730,10 +1730,15 @@ BF::Window::Window()
 
     _cursorMode = CursorMode::Show;
 
+    MouseScrollCallBack = 0;
     MouseClickCallBack = 0;
     MouseClickDoubleCallBack = 0;
     MouseMoveCallBack = 0;
     KeyBoardKeyCallBack = 0;
+    WindowMouseEnterCallBack = 0;
+    WindowMouseLeaveCallBack = 0;
+    WindowFocusEnterCallBack = 0;
+    WindowFocusLeaveCallBack = 0;
     WindowCreatedCallBack = 0;
     WindowSizeChangedCallBack = 0;
     WindowClosingCallBack = 0;

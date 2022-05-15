@@ -15,14 +15,25 @@
 
 #if defined(OSUnix)
 #include <sys/mman.h>
+#define FileMappingID int
 #elif defined(OSWindows)
 #include <Windows.h>
+#define FileMappingID HANDLE
 #endif
 
 #define MemoryDebug 0
 
 namespace BF
 {
+
+    struct FileMappingInfo
+    {
+        public:
+        FileMappingID ID;
+        size_t Size;
+        void* Data;
+    };
+
     class Memory
     {
         public:
@@ -33,9 +44,9 @@ namespace BF
         static bool VirtualMemoryPrefetch(const void* adress, const size_t size);
         static bool VirtualMemoryAllocate();
         static bool VirtualMemoryRelease();
-        static FileActionResult VirtualMemoryFileMap(const char* filePath, FileHandleType& fileHandle, FileHandleType& mappingHandle, void** fileData, size_t& fileSize);
-        static FileActionResult VirtualMemoryFileMap(const wchar_t* filePath, FileHandleType& fileHandle, FileHandleType& mappingHandle, void** fileData, size_t& fileSize);
-        static bool VirtualMemoryFileUnmap(FileHandleType& fileHandle, FileHandleType& mappingHandle, void** fileData, size_t& fileSize);
+        static FileActionResult VirtualMemoryFileMap(const char* filePath, FileMappingInfo& fileMappingInfo);
+        static FileActionResult VirtualMemoryFileMap(const wchar_t* filePath, FileMappingInfo& fileMappingInfo);
+        static bool VirtualMemoryFileUnmap(FileMappingInfo& fileMappingInfo);
 
         template<typename T>
         static T* Rellocate(T* adress, const size_t size)

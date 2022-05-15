@@ -1,4 +1,7 @@
-#version 330
+#version 300 es
+
+precision highp float;
+precision mediump int;
 
 layout(location = 0) in vec3 position;
 

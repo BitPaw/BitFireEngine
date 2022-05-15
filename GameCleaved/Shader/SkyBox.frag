@@ -1,4 +1,7 @@
-#version 330
+#version 300 es
+
+precision highp float;
+precision mediump int;
 
 out vec4 fragcolor;
 

@@ -861,7 +861,7 @@
 1652303050 /home/bitpaw/Desktop/BitFireEngine/BitFireEngine/Source/System/VideoConfig.h
 	<Media/Video/RefreshRateMode.h>
 
-1652460644 source:/home/bitpaw/Desktop/BitFireEngine/BitFireEngine/Source/System/BitFireEngine.cpp
+1652569659 source:/home/bitpaw/Desktop/BitFireEngine/BitFireEngine/Source/System/BitFireEngine.cpp
 	"BitFireEngine.h"
 	"Device/InputContainer.h"
 	"../UI/UIText.h"
@@ -921,9 +921,10 @@
 	<stdint.h>
 	<SdkDdkVer.h>
 
-1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Async/Thread.h
+1652536129 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Async/Thread.h
 	<OS/OSDefine.h>
 	<pthread.h>
+	<unistd.h>
 	<windows.h>
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Async/AsyncLock.h
@@ -943,14 +944,13 @@
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Sound/AudioSource.h
 
-1652477172 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/Window.h
+1652536129 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/Window.h
+	<Async/Thread.h>
+	<Controller/KeyBoardKey.h>
+	<Controller/KeyBoardKey.h>
+	<Container/Dictionary.hpp>
 	<OS/OSDefine.h>
-	"../Controller/KeyBoardKey.h"
-	"../Container/Dictionary.hpp"
-	"../Async/Thread.h"
-	"../Controller/KeyBoardKey.h"
 	"CursorMode.h"
-	<Async/AsyncLock.h>
 	<X11/X.h>
 	<X11/Xlib.h>
 	<GL/glew.h>
@@ -1054,13 +1054,14 @@
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Controller/ControllerData.h
 
-1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/FileStream.h
+1652573229 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/FileStream.h
 	"IFile.h"
 	"File.h"
 	"FileActionResult.hpp"
 	"FilePersistence.hpp"
 	"FileLocation.h"
 	"ByteStream.h"
+	<Hardware/Memory/Memory.h>
 	<cstdlib>
 	<Windows.h>
 
@@ -1133,4 +1134,21 @@
 	<IFileFormat.hpp>
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Math/Interpolate.h
+
+1652572943 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/Memory.h
+	"MemoryUsage.h"
+	<OS/OSDefine.h>
+	<ErrorCode.h>
+	<File/File.h>
+	<File/FileCachingMode.h>
+	<File/FileActionResult.hpp>
+	<cstddef>
+	<cstdlib>
+	<cstdio>
+	<cstring>
+	<sys/mman.h>
+	<Windows.h>
+
+1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/MemoryUsage.h
+	<cstddef>
 

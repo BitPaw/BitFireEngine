@@ -454,7 +454,7 @@
 	<OS/OSDefine.h>
 	<cstddef>
 
-1652303050 source:/home/bitpaw/Desktop/BitFireEngine/GameCleaved/Source/CleavedGameSystem.cpp
+1652541952 source:/home/bitpaw/Desktop/BitFireEngine/GameCleaved/Source/CleavedGameSystem.cpp
 	"CleavedGameSystem.h"
 	<stdio.h>
 	<stdlib.h>
@@ -633,9 +633,10 @@
 	<stdint.h>
 	<SdkDdkVer.h>
 
-1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Async/Thread.h
+1652536129 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Async/Thread.h
 	<OS/OSDefine.h>
 	<pthread.h>
+	<unistd.h>
 	<windows.h>
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Async/AsyncLock.h
@@ -693,14 +694,13 @@
 
 1652303050 /home/bitpaw/Desktop/BitFireEngine/BitFireEngine/Source/Player/Player.h
 
-1652477172 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/Window.h
+1652536129 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/Window.h
+	<Async/Thread.h>
+	<Controller/KeyBoardKey.h>
+	<Controller/KeyBoardKey.h>
+	<Container/Dictionary.hpp>
 	<OS/OSDefine.h>
-	"../Controller/KeyBoardKey.h"
-	"../Container/Dictionary.hpp"
-	"../Async/Thread.h"
-	"../Controller/KeyBoardKey.h"
 	"CursorMode.h"
-	<Async/AsyncLock.h>
 	<X11/X.h>
 	<X11/Xlib.h>
 	<GL/glew.h>
@@ -866,7 +866,7 @@
 	"CleavedGameSystem.h"
 	<windows.h>
 
-1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/Memory.h
+1652572943 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/Memory.h
 	"MemoryUsage.h"
 	<OS/OSDefine.h>
 	<ErrorCode.h>

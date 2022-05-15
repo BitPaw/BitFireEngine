@@ -152,7 +152,7 @@ unsigned int BF::OpenGL::ShaderCompile(unsigned int type, char* shaderString)
 
         if (result == GL_FALSE)
         {
-            int lengh;
+            int lengh = 0;
 
             glGetShaderiv(id, GL_INFO_LOG_LENGTH, &lengh);
             char* message = Memory::Allocate<char>(lengh);
@@ -161,13 +161,13 @@ unsigned int BF::OpenGL::ShaderCompile(unsigned int type, char* shaderString)
 
             printf
             (
-                "[x][OpenGL][Shader] Failed to compile <%s>!\n"
-                "+-------------------------------------------------------+\n"
-                "| GSGL - Shader compile error log                       |\n"
-                "+-------------------------------------------------------+\n"
+                "================================================================================\n"
+                "+------------------------------------------------------------------------------+\n"
+                "| GLSL - OpenGL Shader - compile error log                                     |\n"
+                "+------------------------------------------------------------------------------+\n"
                 "%s"
-                "+-------------------------------------------------------+\n",
-                "N/A",//ShaderTypeToString(type),
+                "+------------------------------------------------------------------------------+\n"
+                "================================================================================\n",
                 message
             );
 
@@ -250,7 +250,7 @@ void BF::OpenGL::ShaderSetUniformMatrix4x4(const int matrixUniformID, const floa
 
     if (!valid)
     {
-        return;     
+        return;
     }
 
     glUniformMatrix4fv(matrixUniformID, 1, GL_FALSE, matrix);
