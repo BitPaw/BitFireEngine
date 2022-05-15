@@ -4,17 +4,16 @@
 
 #include <File/ParsingToken.h>
 
+#define MakeLetterCaseLower(character) (character | 0b00100000)
+#define MakeLetterCaseUpper(character) (character & 0b11011111)
+#define CompareLetterCaseIgnore(a, b) (MakeLetterCaseLower(a) == b) || (MakeLetterCaseUpper(a) == b)
+#define UnicodeToASCII(wc) (wc <= 0xFF ? (char)wc : '?') 
+
 namespace BF
 {
 	struct Text
 	{
 		public:
-		static wchar_t AsciiToUnicode(char character);
-		static char UnicodeToAscii(wchar_t character);
-
-		static size_t AsciiToUnicode(const char* input, const size_t inputSize, wchar_t* output, const size_t outputSize);
-		static size_t UnicodeToAscii(const wchar_t* input, const size_t inputSize, char* output, const size_t outputSize);
-
 		static void Clear(char* string, const size_t stringSize);
 		static void Clear(wchar_t* string, const size_t stringSize);
 
@@ -22,10 +21,10 @@ namespace BF
 		static size_t LengthUntil(const char* string, const size_t stringSize, const char character);
 		static size_t Length(const wchar_t* string);
 
-		static size_t Copy(char* destination, const char* source, const size_t stringSize);
-		static size_t Copy(char* destination, const wchar_t* source, const size_t stringSize);
-		static size_t Copy(wchar_t* destination, const char* source, const size_t stringSize);
-		static size_t Copy(wchar_t* destination, const wchar_t* source, const size_t stringSize);
+		static size_t Copy(const char* source, const size_t sourceLength, char* destination, const size_t destinationLength);
+		static size_t Copy(const char* source, const size_t sourceLength, wchar_t* destination, const size_t destinationLength);
+		static size_t Copy(const wchar_t* source, const size_t sourceLength, char* destination, const size_t destinationLength);
+		static size_t Copy(const wchar_t* source, const size_t sourceLength, wchar_t* destination, const size_t destinationLength);
 
 		static int Compare(const char* a, const size_t aSize, const char* b, const size_t bSize);
 

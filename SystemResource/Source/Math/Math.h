@@ -49,6 +49,18 @@ namespace BF
 
 		static double NewtonGravitation(double massA, double massB, double distance);
 
+		template<typename NumberType>
+		static inline constexpr NumberType Minimum(const NumberType a, const NumberType b)
+		{
+			return a < b ? a : b;
+		}
+
+		template<typename NumberType>
+		static inline constexpr NumberType Maximum(const NumberType a, const NumberType b)
+		{
+			return a > b ? a : b;
+		}
+
 		// Rounds x upward, returning the smallest integral value that is not less than x.
 		template<typename NumberType>
 		static inline constexpr int Ceiling(const NumberType value)

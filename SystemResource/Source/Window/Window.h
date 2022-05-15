@@ -81,19 +81,15 @@ namespace BF
 	typedef void (*MouseScrollEvent)(const MouseScrollDirection mouseScrollDirection);
 	typedef void (*MouseClickEvent)(const MouseButton mouseButton, const ButtonState buttonState);
 	typedef void (*MouseClickDoubleEvent)(const MouseButton mouseButton);
-	typedef void (*MouseMoveEvent)(const short x, const short y);
-
+	typedef void (*MouseMoveEvent)(const short x, const short y);	
+	typedef void (*MouseEnterEvent)();
+	typedef void (*MouseLeaveEvent)();
+	
 	// Keyboard
 	typedef void (*KeyBoardKeyEvent)(const KeyBoardKeyInfo keyBoardKeyInfo);
 
-	// Window
-	//typedef void (*WindowCreatingEvent)();
-
-	typedef void (*WindowMouseEnterEvent)();
-    typedef void (*WindowMouseLeaveEvent)();
-
-	typedef void (*WindowFocusEnterEvent)();
-	typedef void (*WindowFocusLeaveEvent)();
+	typedef void (*FocusEnterEvent)();
+	typedef void (*FocusLeaveEvent)();
 
 	typedef void (*WindowCreatedEvent)(Window& window);
 	typedef void (*WindowSizeChangedEvent)(const size_t width, const size_t height);
@@ -106,6 +102,7 @@ namespace BF
 		static Dictionary<WindowID, Window*> _windowLookup;
 
 		CursorMode _cursorMode;
+
 
 		public:
 		bool IsRunning;
@@ -133,17 +130,14 @@ namespace BF
         MouseScrollEvent MouseScrollCallBack;
 		MouseClickEvent MouseClickCallBack;
 		MouseClickDoubleEvent MouseClickDoubleCallBack;
-
+		MouseEnterEvent MouseEnterCallBack;
+		MouseLeaveEvent MouseLeaveCallBack;
 		MouseMoveEvent MouseMoveCallBack;
+
 		KeyBoardKeyEvent KeyBoardKeyCallBack;
 
-        WindowMouseEnterEvent WindowMouseEnterCallBack;
-		WindowMouseLeaveEvent WindowMouseLeaveCallBack;
-
-		WindowFocusEnterEvent WindowFocusEnterCallBack;
-		WindowFocusLeaveEvent WindowFocusLeaveCallBack;
-
-
+		FocusEnterEvent FocusEnterCallBack;
+		FocusLeaveEvent FocusLeaveCallBack;
 		WindowCreatedEvent WindowCreatedCallBack;
 		WindowSizeChangedEvent WindowSizeChangedCallBack;
 		WindowClosingEvent WindowClosingCallBack;

@@ -119,7 +119,9 @@ bool BF::Processor::FetchInfo(ProcessorInfo& processorInfo)
 
     // Brand Name
     {
-        for (size_t i = 0; i < sizeof(processorInfo.BrandName); ++i) processorInfo.BrandName[i] = '\0';
+        const size_t brandNameSize = sizeof(processorInfo.BrandName);
+
+        for (size_t i = 0; i < brandNameSize; ++i) processorInfo.BrandName[i] = '\0';
 
         size_t exDataindex = 0;
 
@@ -140,7 +142,7 @@ bool BF::Processor::FetchInfo(ProcessorInfo& processorInfo)
         {
             const char* brandName = (const char*)extdata_ + 32;
 
-            Text::Copy(processorInfo.BrandName, brandName, sizeof(processorInfo.BrandName));
+            Text::Copy(brandName, brandNameSize, processorInfo.BrandName, brandNameSize);
         }
     }
 

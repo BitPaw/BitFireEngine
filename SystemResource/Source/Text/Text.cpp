@@ -6,50 +6,8 @@
 
 #include <Hardware/Memory/Memory.h>
 
-#define MakeLetterCaseLower(character) (character | 0b00100000)
-#define MakeLetterCaseUpper(character) (character & 0b11011111)
-#define CompareLetterCaseIgnore(a, b) (MakeLetterCaseLower(a) == b) || (MakeLetterCaseUpper(a) == b)
+#include <Math/Math.h>
 
-inline wchar_t BF::Text::AsciiToUnicode(char character)
-{
-	return (wchar_t)character;
-}
-
-inline char BF::Text::UnicodeToAscii(wchar_t character)
-{
-	const bool isToBig = character > 255u;
-	const char result = (!isToBig * character) + (isToBig * '?');
-
-	return result;
-}
-
-size_t BF::Text::AsciiToUnicode(const char* input, const size_t inputSize, wchar_t* output, const  size_t outputSize)
-{
-	size_t i = 0;
-
-	for (; (i < inputSize) && (input[i] != '\0') && (i < outputSize); ++i)
-	{
-		output[i] = input[i];
-	}
-
-	output[i] = L'\0';
-
-	return i;
-}
-
-size_t BF::Text::UnicodeToAscii(const wchar_t* input, const size_t inputSize, char* output, const size_t outputSize)
-{
-	size_t i = 0;
-
-	for (; (i < inputSize) && (output[i] != L'\0') && (i < outputSize); ++i)
-	{
-		output[i] = AsciiToUnicode(input[i]);
-	}
-
-	output[i] = '\0';
-
-	return i;
-}
 
 void BF::Text::Clear(char* string, const size_t stringSize)
 {
@@ -88,14 +46,15 @@ size_t BF::Text::Length(const wchar_t* string)
 	return index;
 }
 
-size_t BF::Text::Copy(char* destination, const char* source, const size_t stringSize)
+size_t BF::Text::Copy(const char* source, const size_t sourceLength, char* destination, const size_t destinationLength)
 {
+	const size_t minLength = Math::Minimum(sourceLength, destinationLength);
 	size_t i = 0;
 
 	assert(destination);
 	assert(source);
 
-	for (; (i < stringSize) && (source[i] != '\0'); ++i)
+	for(; (i < minLength) && (source[i] != '\0'); ++i)
 	{
 		destination[i] = source[i];
 	}
@@ -105,14 +64,15 @@ size_t BF::Text::Copy(char* destination, const char* source, const size_t string
 	return i;
 }
 
-size_t BF::Text::Copy(char* destination, const wchar_t* source, const size_t stringSize)
+size_t BF::Text::Copy(const char* source, const size_t sourceLength, wchar_t* destination, const size_t destinationLength)
 {
+	const size_t minLength = Math::Minimum(sourceLength, destinationLength);
 	size_t i = 0;
 
 	assert(destination);
 	assert(source);
 
-	for (; (i < stringSize) && (source[i] != '\0'); ++i)
+	for(; (i < minLength) && (source[i] != '\0'); ++i)
 	{
 		destination[i] = source[i];
 	}
@@ -122,13 +82,17 @@ size_t BF::Text::Copy(char* destination, const wchar_t* source, const size_t str
 	return i;
 }
 
-size_t BF::Text::Copy(wchar_t* destination, const char* source, const size_t stringSize)
+size_t BF::Text::Copy(const wchar_t* source, const size_t sourceLength, char* destination, const size_t destinationLength)
 {
+	const size_t minLength = Math::Minimum(sourceLength, destinationLength);
 	size_t i = 0;
 
-	for (; (i < stringSize) && (source[i] != '\0'); ++i)
+	assert(destination);
+	assert(source);
+
+	for(; (i < minLength) && (source[i] != '\0'); ++i)
 	{
-		destination[i] = AsciiToUnicode(source[i]);
+		destination[i] = UnicodeToASCII(source[i]);
 	}
 
 	destination[i] = '\0';
@@ -136,13 +100,15 @@ size_t BF::Text::Copy(wchar_t* destination, const char* source, const size_t str
 	return i;
 }
 
-size_t BF::Text::Copy(wchar_t* destination, const wchar_t* source, const size_t stringSize)
+size_t BF::Text::Copy(const wchar_t* source, const size_t sourceLength, wchar_t* destination, const size_t destinationLength)
 {
-	// lstrcpyW(Path, filePath);
-
+	const size_t minLength = Math::Minimum(sourceLength, destinationLength);
 	size_t i = 0;
 
-	for (; (i < stringSize) && (source[i] != '\0'); ++i)
+	assert(destination);
+	assert(source);
+
+	for(; (i < minLength) && (source[i] != '\0'); ++i)
 	{
 		destination[i] = source[i];
 	}
@@ -199,7 +165,7 @@ int BF::Text::Compare(const char* a, const wchar_t* b, const size_t stringSize)
 int BF::Text::Compare(const wchar_t* a, const char* b, const size_t stringSize)
 {
 	size_t index = 0;
-	int samecounter = 0;
+	size_t samecounter = 0;
 
 	for (; (index < stringSize) && (a[index] != '\0') && (b[index] != '\0'); ++index)
 		samecounter += a[index] == (wchar_t)b[index];
@@ -225,7 +191,7 @@ int BF::Text::CompareIgnoreCase(const char* a, const char* b, const size_t strin
 int BF::Text::CompareIgnoreCase(const wchar_t* a, const wchar_t* b, const size_t stringSize)
 {
 	size_t index = 0;
-	int samecounter = 0;
+	size_t samecounter = 0;
 	bool wasLastLetterSame = true;
 
 	for (; (index < stringSize) && (a[index] != '\0') && (b[index] != '\0') && wasLastLetterSame; ++index)
@@ -240,7 +206,7 @@ int BF::Text::CompareIgnoreCase(const wchar_t* a, const wchar_t* b, const size_t
 int BF::Text::CompareIgnoreCase(const char* a, const wchar_t* b, const size_t stringSize)
 {
 	size_t index = 0;
-	int samecounter = 0;
+	size_t samecounter = 0;
 	bool wasLastLetterSame = true;
 
 	for (; (index < stringSize) && (a[index] != '\0') && (b[index] != '\0') && wasLastLetterSame; ++index)
@@ -255,7 +221,7 @@ int BF::Text::CompareIgnoreCase(const char* a, const wchar_t* b, const size_t st
 int BF::Text::CompareIgnoreCase(const wchar_t* a, const char* b, const size_t stringSize)
 {
 	size_t index = 0;
-	int samecounter = 0;
+	size_t samecounter = 0;
 	bool wasLastLetterSame = true;
 
 	for (; (index < stringSize) && (a[index] != '\0') && (b[index] != '\0') && wasLastLetterSame; ++index)
@@ -349,7 +315,7 @@ size_t BF::Text::ToFloat(const char* string, const size_t dataSize, float& numbe
 
 	size_t readBytes = Text::ToDouble(string, dataSize, x);
 
-	number = x;
+	number = (float)x;
 
 	return readBytes;
 }

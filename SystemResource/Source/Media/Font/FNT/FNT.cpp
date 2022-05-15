@@ -100,11 +100,11 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 
 				Text::FindAll(currentCursor + 5, bufferSize, parsingTokenList, values);
 
-				Text::Copy(Info.Name, indexPosition[0] + 1, FontNameSize);
+				Text::Copy(indexPosition[0] + 1, FontNameSize, Info.Name, FontNameSize);
 				Text::ToInt(indexPosition[1], 5, Info.Size);
 				Text::ToBool(indexPosition[2], 5, Info.Bold);
 				Text::ToBool(indexPosition[3], 5, Info.Italic);
-				Text::Copy(Info.CharSet, indexPosition[4] + 1, CharSetNameSize);
+				Text::Copy(indexPosition[4] + 1, CharSetNameSize, Info.CharSet, CharSetNameSize);
 				Text::ToBool(indexPosition[5], 5, Info.Unicode);
 				Text::ToInt(indexPosition[6], 5, Info.StretchH);
 				Text::ToBool(indexPosition[7], 5, Info.Smooth);
@@ -165,7 +165,7 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 				Text::FindAll(currentCursor + 5, bufferSize, parsingTokenList, values);
 
 				Text::ToInt(indexPosition[0], 5, currentPage->PageID);
-				Text::Copy(currentPage->PageFileName, indexPosition[1] + 1, FNTPageFileNameSize);
+				Text::Copy(indexPosition[1] + 1, FNTPageFileNameSize, currentPage->PageFileName, FNTPageFileNameSize);
 
 				Text::TerminateBeginFromFirst(currentPage->PageFileName, FNTPageFileNameSize, '\"');
 
@@ -326,17 +326,17 @@ BF::FileActionResult BF::FNT::ConvertTo(Font& font)
 	font.AdditionalResourceListSize = amountOfResources;
 	font.CharacterSize = Info.Size;
 	font.SizeBetweenLines = CommonData.LineHeight;
-	font.AdditionalResourceList = (char**)malloc(amountOfResources * sizeof(char*));
+	font.AdditionalResourceList = Memory::Allocate<char*>(amountOfResources);
 
 	for (size_t i = 0; i < amountOfResources; i++)
 	{
 		FNTPage& page = FontPageList[i];
 		char* pageFileName = page.PageFileName;
-		char* string = (char*)malloc(FNTPageFileNameSize * sizeof(char));
+		char* string = Memory::Allocate<char>(FNTPageFileNameSize);
 
 		font.AdditionalResourceList[i] = string;
 
-		Text::Copy(string, pageFileName, FNTPageFileNameSize);
+		Text::Copy(pageFileName, FNTPageFileNameSize, string, FNTPageFileNameSize);
 	}
 
 	return BF::FileActionResult::Successful;

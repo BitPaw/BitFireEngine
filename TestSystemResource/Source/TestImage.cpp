@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "CppUnitTest.h"
 
-#include <Image/Image.h>
+#include <Media/Image/Image.h>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace BF;

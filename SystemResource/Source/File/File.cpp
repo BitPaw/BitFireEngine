@@ -482,17 +482,15 @@ void BF::File::PathSwapFile(const wchar_t* currnetPath, wchar_t* targetPath, con
 
 	if (found)
 	{
-		size_t copyedBytes = Text::Copy(targetPath, currnetPath, index + 1);
+		const size_t copyedBytes = Text::Copy(currnetPath, index + 1, targetPath, index + 1);
+		const size_t toCopy = PathMaxSize - copyedBytes;
 
-		Text::Copy(targetPath + copyedBytes, newFileName, 260 - copyedBytes);
+		Text::Copy(newFileName, toCopy, targetPath + copyedBytes, toCopy);
 	}
 }
 
 void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& listSize)
 {
-	wchar_t folderPathW[PathMaxSize];
-	size_t writtenBytes = Text::Copy(folderPathW, folderPath, PathMaxSize);
-
 #if defined(OSUnix)
 	DIR* directory = opendir(folderPath);
 
@@ -533,6 +531,9 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 		closedir(directory);
 	}
 #elif defined(OSWindows)
+	wchar_t folderPathW[PathMaxSize];
+	size_t writtenBytes = Text::Copy(folderPath, PathMaxSize, folderPathW, PathMaxSize);
+
 	WIN32_FIND_DATA dataCursour;
 	HANDLE hFind = 0;
 
@@ -562,14 +563,14 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 	{
 		const size_t length = Text::Length(dataCursour.cFileName);
 		const wchar_t* filePathSource = dataCursour.cFileName;
-		wchar_t* newString = Memory::Allocate<wchar_t>((length + 1) * sizeof(wchar_t));
+		wchar_t* newString = Memory::Allocate<wchar_t>(length + 1);
 
 		if (!newString)
 		{
 			return; // Error: OutOfMemory
 		}
 
-		Text::Copy(newString, filePathSource, length);
+		Text::Copy(filePathSource, length, newString, length);
 
 		(*list)[fileIndex] = newString;
 
@@ -605,7 +606,7 @@ bool BF::File::DoesFileExist(const wchar_t* filePath)
 #if defined(OSUnix)
     char filePathA[PathMaxSize];
 
-    Text::Copy(filePathA, filePath, PathMaxSize);
+    Text::Copy(filePath, PathMaxSize, filePathA, PathMaxSize);
 
     return DoesFileExist(filePathA);
 

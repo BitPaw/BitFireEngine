@@ -30,6 +30,9 @@ namespace BF
     {
         public:
         FileMappingID ID;
+#if defined(OSWindows)
+        FileMappingID IDMapping;
+#endif
         size_t Size;
         void* Data;
     };

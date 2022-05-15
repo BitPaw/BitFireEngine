@@ -13,7 +13,10 @@
 
 BF::OBJ::OBJ()
 {
-    Text::Copy(Name, "[N/A]", OBJNameSize);
+    const char na[] = "[N/A]";
+    const size_t naSize = sizeof(na);
+
+    Text::Copy(na, naSize, Name, OBJNameSize);
 
     VertexStructureSize = 0;
 
@@ -229,7 +232,7 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
     }
    
 
-    Text::Copy(Name, filePath, OBJNameSize);
+    Text::Copy(filePath, OBJNameSize, Name, OBJNameSize);
 
     //---<Cound needed Space and allocate>----------------------------------
     {
@@ -421,7 +424,7 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
                             materialFilePathTempA
                         );
 
-                        Text::AsciiToUnicode(materialFilePathTempA, PathMaxSize, materialFilePathTempW, PathMaxSize);
+                        Text::Copy(materialFilePathTempA, PathMaxSize, materialFilePathTempW, PathMaxSize);
 
                         File::PathSwapFile(filePath, materialFilePath, materialFilePathTempW);
                     }              
@@ -475,7 +478,9 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
 
                 case OBJLineCommand::ObjectName:
                 {
-                    Text::Copy(elemtent->Name, currentLineBuffer + 2, OBJElementNameLength);
+                    const size_t offset = 2;
+
+                    Text::Copy(currentLineBuffer + offset, currentLineBufferSize - offset, elemtent->Name, OBJElementNameLength);
                     break;
                 }
 
@@ -616,7 +621,7 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
             MTLMaterial& mtlMaterial = mtl.MaterialList[materialIndex];
             Material& material = model.MaterialList[materialIndex];
 
-            Text::Copy(material.Name, mtlMaterial.Name, MTLNameSize);
+            Text::Copy(mtlMaterial.Name, MTLNameSize, material.Name, MaterialNameLength);
           //  Text::Copy(material.FilePath, mtlMaterial.TextureFilePath, MTLFilePath);
                        
             Memory::Copy(material.Ambient, mtlMaterial.Ambient, 3 * sizeof(float));
@@ -647,11 +652,9 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
         OBJElement& element = ElementList[i];
         MeshSegment& meshSegment = mesh.SegmentList[i];
         const size_t faceElementListSize = element.FaceElementList.Size();
-
-        Text::Copy(meshSegment.Name, element.Name, OBJElementNameLength);
-
-        
         const size_t verexDataSize = faceElementListSize * (3 + 3 + 4 + 2);
+
+        Text::Copy(element.Name, OBJElementNameLength, meshSegment.Name, MeshSegmentNameLength);          
 
         mesh.VertexDataListSize = verexDataSize;
         mesh.VertexDataList = Memory::Allocate<float>(verexDataSize);

@@ -54,7 +54,7 @@ void BF::UIText::SetText(const char* text)
 		return;
 	}
 
-	TextSizeCurrent = Text::Copy(TextContent, text, TextSizeMax);
+	TextSizeCurrent = Text::Copy(text, TextSizeMax, TextContent, TextSizeMax);
 }
 
 void BF::UIText::SetText(const wchar_t* text)
@@ -64,7 +64,7 @@ void BF::UIText::SetText(const wchar_t* text)
 		return;
 	}
 
-	TextSizeCurrent = Text::Copy(TextContent, text, TextSizeMax);
+	TextSizeCurrent = Text::Copy(text, TextSizeMax, TextContent, TextSizeMax);
 }
 
 void BF::UIText::UpdateText()

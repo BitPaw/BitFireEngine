@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "CppUnitTest.h"
 
-#include <Font/TTF/TTF.h>
+#include <Media/Font/TTF/TTF.h>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace BF;

@@ -218,8 +218,6 @@ void BF::BitFireEngine::Start()
 
     _mainWindow.Create(600 * 2, 400 * 2, "[BFE] <BitFireEngine>");
 
-
-
     // Sound
     /*
     {
@@ -1521,7 +1519,7 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
     {
         char character = currentLineBuffer[0];
         char dummyBuffer[30];
-        char path[PathMaxSize];
+        char filePathA[PathMaxSize];
 
         switch(character)
         {
@@ -1539,7 +1537,7 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
                     currentLineBuffer,
                     "%s %s %s %s %s",
                     dummyBuffer,
-                    path,
+                    filePath,
                     positionText,
                     rotationText,
                     scaleText
@@ -1581,11 +1579,11 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
                 Model* loadedModel = new Model();
 
 
-                wchar_t pathW[PathMaxSize];
-                Text::Copy(pathW, path, PathMaxSize);
+                wchar_t filePathW[PathMaxSize];
+                Text::Copy(filePathA, PathMaxSize, filePathW, PathMaxSize);
 
 
-                const FileActionResult result = Load(*loadedModel, pathW, false);
+                const FileActionResult result = Load(*loadedModel, filePathW, false);
                 const bool successful = result == FileActionResult::Successful;
 
                 if(successful)
@@ -1625,12 +1623,12 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
             {
                 Image* image = new Image();
 
-                char filePathA[260];
-                wchar_t filePathW[260];
-
+                char filePathA[PathMaxSize];
+                wchar_t filePathW[PathMaxSize];
+ 
                 sscanf(currentLineBuffer, "%s %s", dummyBuffer, filePathA);
-
-                Text::Copy(filePathW, filePathA, 260);
+        
+                Text::Copy(filePathA, PathMaxSize, filePathW, PathMaxSize);
 
                 Load(*image, filePathW, true);
 
@@ -1639,28 +1637,28 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
             }
             case _musicToken:
             {
-                sscanf(currentLineBuffer, "%s %s", dummyBuffer, path);
+                sscanf(currentLineBuffer, "%s %s", dummyBuffer, filePathA);
 
-                wchar_t pathW[260];
-                Text::Copy(pathW, path, 260);
+                wchar_t filePathW[PathMaxSize];
+                Text::Copy(filePathA, PathMaxSize, filePathW, PathMaxSize);
 
                 Sound* sound = new Sound();
 
-                Load(*sound, pathW);
+                Load(*sound, filePathW);
 
                 level.SoundList[soundCounter++] = sound;
                 break;
             }
             case _fontToken:
             {
-                sscanf(currentLineBuffer, "%s %s", dummyBuffer, path);
+                sscanf(currentLineBuffer, "%s %s", dummyBuffer, filePathA);
 
-                wchar_t pathW[260];
-                Text::Copy(pathW, path, 260);
+                wchar_t filePathW[PathMaxSize];
+                Text::Copy(filePathA, PathMaxSize, filePathW, PathMaxSize);
 
                 Font* font = new Font();
 
-                Load(*font, pathW);
+                Load(*font, filePathW);
 
                 level.FontList[fontCounter++] = font;
 

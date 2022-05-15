@@ -78,7 +78,10 @@ BF::FileActionResult BF::MTL::Load(const wchar_t* filePath)
 			{
 				material = &MaterialList[materialIndex++];
 
-				Text::Copy(material->TextureFilePath, "<internal>", MTLFilePath);
+				const char internalText[] = "<internal>";
+				const size_t internalTextSize = sizeof(internalText);
+
+				Text::Copy(internalText, internalTextSize, material->TextureFilePath, MTLFilePath);
 
 				Text::Parse(currentLineBuffer, currentLineBufferSize, "§s", material->Name);
 

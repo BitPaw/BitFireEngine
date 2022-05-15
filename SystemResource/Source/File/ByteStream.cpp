@@ -64,7 +64,7 @@ unsigned int BF::ByteStream::ReadNextLineInto(char* exportBuffer)
 		return 0;
 	}
 
-	Text::Copy(exportBuffer, input, length);
+	Text::Copy(input, length, exportBuffer, length);
 
 	SkipEndOfLineCharacters();
 

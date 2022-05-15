@@ -32,7 +32,7 @@ void BF::FilePath::Splitt(const char* filePath)
 {
 	wchar_t filePathW[PathMaxSize];
 
-	Text::Copy(filePathW, filePath, PathMaxSize);
+	Text::Copy(filePath, PathMaxSize, filePathW, PathMaxSize);
 
 	FilePath::Splitt
 	(
@@ -74,14 +74,14 @@ void BF::FilePath::Splitt(const char* fullPath, size_t fullPathMaxSize, char* dr
 	char directoryNameCache[PathMaxSize];
 	char baseNameCache[FileNameMaxSize];
 
-	Text::Copy(directoryNameCache, fullPath, FileNameMaxSize);
-	Text::Copy(baseNameCache, fullPath, FileNameMaxSize);
+	Text::Copy(fullPath, FileNameMaxSize, directoryNameCache, FileNameMaxSize);
+	Text::Copy(fullPath, FileNameMaxSize, baseNameCache, FileNameMaxSize);
 
 	char* dirNameResult = dirname(directoryNameCache);
 	char* baseNameResult = basename(baseNameCache);
 
-	size_t directoryLength = Text::Copy(directory, dirNameResult, DirectoryMaxSize);
-	size_t fileNameLength = Text::Copy(fileName, baseNameResult, FileNameMaxSize);
+	size_t directoryLength = Text::Copy(dirNameResult, DirectoryMaxSize, directory, DirectoryMaxSize);
+	size_t fileNameLength = Text::Copy(baseNameResult, FileNameMaxSize, fileName, FileNameMaxSize);
 
 	for(size_t i = fileNameLength - 1; i > 0; --i)
 	{
@@ -89,7 +89,7 @@ void BF::FilePath::Splitt(const char* fullPath, size_t fullPathMaxSize, char* dr
 
 		if(isDot)
 		{
-			Text::Copy(extension, fileName + i + 1, ExtensionMaxSize - i);
+			Text::Copy(fileName + i + 1, ExtensionMaxSize - i, extension, extensionMaxSize);
 			break;
 		}
 	}
@@ -111,8 +111,8 @@ void BF::FilePath::Splitt(const char* fullPath, size_t fullPathMaxSize, char* dr
 
 		if(isDot)
 		{
-			Text::Copy(fileNameCache, extension + i, FileNameMaxSize);
-			Text::Copy(extension, fileNameCache, FileNameMaxSize);
+			Text::Copy(extension + i, extensionMaxSize, fileNameCache, FileNameMaxSize);
+			Text::Copy(fileNameCache, FileNameMaxSize, extension, extensionMaxSize);
 			break;
 		}
 	}
@@ -173,8 +173,8 @@ void BF::FilePath::Splitt(const wchar_t* fullPath, size_t fullPathMaxSize, wchar
 
 		if(isDot)
 		{
-			Text::Copy(extensionCache, extension + i + 1, FileNameMaxSize);
-			Text::Copy(extension, extensionCache, FileNameMaxSize);
+			Text::Copy(extension + i + 1, extensionMaxSize, extensionCache, FileNameMaxSize);
+			Text::Copy(extensionCache, FileNameMaxSize, extension, extensionMaxSize);
 			break;
 		}
 	}

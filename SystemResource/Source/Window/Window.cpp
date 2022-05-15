@@ -32,6 +32,7 @@
 #endif
 
 #include <Text/Text.h>
+#include <File/File.h>
 #include <Graphic/OpenGL/OpenGL.h>
 
 #include "../Controller/ControllerData.h"
@@ -1757,10 +1758,10 @@ BF::Window::Window()
     MouseClickDoubleCallBack = 0;
     MouseMoveCallBack = 0;
     KeyBoardKeyCallBack = 0;
-    WindowMouseEnterCallBack = 0;
-    WindowMouseLeaveCallBack = 0;
-    WindowFocusEnterCallBack = 0;
-    WindowFocusLeaveCallBack = 0;
+    MouseEnterCallBack = 0;
+    MouseLeaveCallBack = 0;
+    FocusEnterCallBack = 0;
+    FocusLeaveCallBack = 0;
     WindowCreatedCallBack = 0;
     WindowSizeChangedCallBack = 0;
     WindowClosingCallBack = 0;
@@ -2160,7 +2161,7 @@ void BF::Window::Create(const unsigned int width, const unsigned int height, con
     Width = width;
     Height = height;
 
-    Text::Copy(Title, title, 256);
+    Text::Copy(title, PathMaxSize, Title, PathMaxSize);
 
     if(async)
     {

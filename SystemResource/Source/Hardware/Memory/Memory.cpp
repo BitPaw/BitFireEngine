@@ -178,13 +178,9 @@ BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, F
 
 #elif defined(OSWindows)
 
-    fileHandle = 0;
-	mappingHandle = 0;
-	(*fileData) = 0;
-
 	// Open file
 	{
-		const FileActionResult openResult = File::Open(fileHandle, filePath, FileOpenMode::Read, FileCachingMode::Sequential);
+		const FileActionResult openResult = File::Open(fileMappingInfo.ID, filePath, FileOpenMode::Read, FileCachingMode::Sequential);
 		const bool openSuccess = openResult == FileActionResult::Successful;
 
 		if(!openSuccess)
@@ -193,26 +189,25 @@ BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, F
 		}
 	}
 
-
 	{
 		LARGE_INTEGER largeInt{0};
 
-		const bool sizeResult = GetFileSizeEx(fileHandle, &largeInt);
+		const bool sizeResult = GetFileSizeEx(fileMappingInfo.ID, &largeInt);
 
-		fileSize = largeInt.QuadPart;
+		fileMappingInfo.Size = largeInt.QuadPart;
 	}
 
 	// Create mapping
 	{
-		SECURITY_ATTRIBUTES fileMappingAttributes{ 0 };
-		DWORD                 flProtect = PAGE_READONLY;
-		DWORD                 dwMaximumSizeHigh = 0;
-		DWORD                 dwMaximumSizeLow = 0; // Problem if file is 0 Length
+		SECURITY_ATTRIBUTES	fileMappingAttributes{ 0 };
+		DWORD				flProtect = PAGE_READONLY;
+		DWORD				dwMaximumSizeHigh = 0;
+		DWORD				dwMaximumSizeLow = 0; // Problem if file is 0 Length
 		wchar_t* name = nullptr;
 
 		const HANDLE fileMappingHandleResult = CreateFileMappingW
 		(
-			fileHandle,
+			fileMappingInfo.ID,
 			nullptr,
 			flProtect,
 			dwMaximumSizeHigh,
@@ -226,7 +221,7 @@ BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, F
 			return FileActionResult::FileMemoryMappingFailed;
 		}
 
-		mappingHandle = fileMappingHandleResult;
+		fileMappingInfo.IDMapping = fileMappingHandleResult;
 	}
 
 	{
@@ -239,7 +234,7 @@ BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, F
 
 		void* fileMapped = MapViewOfFileExNuma
 		(
-			mappingHandle,
+			fileMappingInfo.IDMapping,
 			desiredAccess,
 			fileOffsetHigh,
 			fileOffsetLow,
@@ -248,9 +243,9 @@ BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, F
 			numaNodePreferred
 		);
 
-		VirtualMemoryPrefetch(fileMapped, fileSize);
+		fileMappingInfo.Data = fileMapped;
 
-		(*fileData) = fileMapped;
+		VirtualMemoryPrefetch(fileMapped, fileMappingInfo.Size);
 	}
 #endif
 
@@ -286,7 +281,7 @@ bool BF::Memory::VirtualMemoryFileUnmap(FileMappingInfo& fileMappingInfo)
 
 #elif defined(OSWindows)
 {
-		void* data = (*fileData);
+		void* data = fileMappingInfo.Data;
 		const bool unmappingSucessful = UnmapViewOfFile(data);
 
 		if(!unmappingSucessful)
@@ -296,22 +291,22 @@ bool BF::Memory::VirtualMemoryFileUnmap(FileMappingInfo& fileMappingInfo)
 			return false;// FileActionResult::Invalid; // TODO: fix this
 		}
 
-		(*fileData) = nullptr;
+		fileMappingInfo.Data = nullptr;
 	}
 
 
 	{
-		const bool closeMappingSucessful = CloseHandle(mappingHandle);
+		const bool closeMappingSucessful = CloseHandle(fileMappingInfo.IDMapping);
 
 		if(!closeMappingSucessful)
 		{
 			return false;// FileActionResult::Invalid; // TODO: fix this
 		}
 
-		mappingHandle = 0;
+		fileMappingInfo.IDMapping = 0;
 	}
 
-	const FileActionResult closeFile = File::Close(fileHandle);
+	const FileActionResult closeFile = File::Close(fileMappingInfo.ID);
 
 	return true;
 #endif
