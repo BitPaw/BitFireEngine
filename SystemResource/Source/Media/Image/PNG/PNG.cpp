@@ -65,7 +65,8 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
         //---<Check PNG Header>------------------------------------------------
         {
             const Byte pngFileHeader[8] = PNGHeaderSequenz;
-            const bool isValidHeader = fileStream.ReadAndCompare(pngFileHeader, 8u);
+            const size_t pngFileHeaderSize = sizeof(pngFileHeader);
+            const bool isValidHeader = fileStream.ReadAndCompare(pngFileHeader, pngFileHeaderSize);
 
             if (!isValidHeader)
             {
@@ -387,8 +388,7 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
     //---<Allocate>------------------------------------------------------------
     PixelDataSize = ImageHeader.Width * ImageHeader.Height * NumberOfColorChannels(ImageHeader.ColorType);
     PixelData = Memory::Allocate<Byte>(PixelDataSize);   
-    //-------------------------------------------------------------------------
-    
+    //-------------------------------------------------------------------------    
 
     BitStreamHusk bitstream(imageDataChunkCache, imageDataChunkCacheSizeUSED);
     ZLIB zlib(imageDataChunkCache, imageDataChunkCacheSizeUSED);       
@@ -441,15 +441,12 @@ BF::FileActionResult BF::PNG::Save(const wchar_t* filePath)
     size_t fileLength = 500;
     FileStream fileStream(fileLength);
 
-
-
-
-
     //---<Signature>---
     {
-        const Byte pngFileHeader[8] = PNGHeaderSequenz;
+        const char pngFileHeader[8] = PNGHeaderSequenz;
+        const size_t pngFileHeaderSize = sizeof(pngFileHeader);
 
-        fileStream.Write((char*)pngFileHeader, 8u);
+        fileStream.Write(pngFileHeader, pngFileHeaderSize);
     }
 
     //---<IHDR> (Image Header)---
@@ -495,9 +492,6 @@ BF::FileActionResult BF::PNG::Save(const wchar_t* filePath)
     // zTXt
     // tEXt
 
-
-
-
     //---<>---
     {   
         fileStream.Write(0u, Endian::Big);
@@ -536,7 +530,7 @@ BF::FileActionResult BF::PNG::ConvertTo(Image& image)
 
 	image.Resize(ImageHeader.Width, ImageHeader.Height);
 
-    memcpy(image.PixelData, PixelData, PixelDataSize);
+    Memory::Copy(image.PixelData, PixelData, PixelDataSize);
 
     return FileActionResult::Successful;
 }

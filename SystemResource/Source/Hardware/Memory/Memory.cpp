@@ -15,9 +15,6 @@
 #include <File/File.h>
 
 
-
-
-
 void* operator new(const size_t size)
 {
 	void* adress = malloc(size);
@@ -250,7 +247,7 @@ BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, F
 #endif
 
 #if MemoryDebug
-	printf("[#][Memory] 0x%p (%10zi B) MMAP %ls\n", (*fileData), fileSize, filePath);
+	printf("[#][Memory] 0x%p (%10zi B) MMAP %ls\n", fileMappingInfo.Data, fileMappingInfo.Size, filePath);
 #endif
 
 	return FileActionResult::Successful;
@@ -259,7 +256,7 @@ BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const wchar_t* filePath, F
 bool BF::Memory::VirtualMemoryFileUnmap(FileMappingInfo& fileMappingInfo)
 {
 #if MemoryDebug
-	printf("[#][Memory] 0x%p (%10zi B) MMAP-Release\n", (*fileData), fileSize);
+	printf("[#][Memory] 0x%p (%10zi B) MMAP-Release\n", fileMappingInfo.Data, fileMappingInfo.Size);
 #endif
 
 #if defined(OSUnix)
@@ -293,7 +290,6 @@ bool BF::Memory::VirtualMemoryFileUnmap(FileMappingInfo& fileMappingInfo)
 
 		fileMappingInfo.Data = nullptr;
 	}
-
 
 	{
 		const bool closeMappingSucessful = CloseHandle(fileMappingInfo.IDMapping);

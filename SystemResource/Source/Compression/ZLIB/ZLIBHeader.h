@@ -13,7 +13,7 @@ namespace BF
 		ZLIBCompressionMethod CompressionMethod; // 4 Bits
 
 
-		  /*
+		/*
 		   4 Bits
 		   
 		For CM = 8, CINFO is the base-2 logarithm of the LZ77 window size, minus eight
@@ -26,9 +26,7 @@ namespace BF
 		size_t WindowSize;
 		unsigned char  CheckFlag; // 5 Bits
 		bool DictionaryPresent; // 1 Bit
-		ZLIBCompressionLevel CompressionLevel; // 2 Bits	
-
-		
+		ZLIBCompressionLevel CompressionLevel; // 2 Bits
 
 		ZLIBHeader();
 		ZLIBHeader(unsigned char compressionFormatByte, unsigned char flagByte);

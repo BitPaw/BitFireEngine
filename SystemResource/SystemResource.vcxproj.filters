@@ -726,6 +726,9 @@
     <ClCompile Include="Source\Encryption\RSA\Koerper.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Hardware\Monitor\Monitor.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp">
@@ -1659,6 +1662,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Encryption\RSA\Koerper.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Hardware\Monitor\Monitor.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <cassert>
 
+#include <Hardware/Memory/Memory.h>
+
 BF::DeflateBlock::DeflateBlock()
 {
 	IsLastBlock = false;
@@ -40,12 +42,12 @@ void BF::DeflateBlock::Inflate(BitStreamHusk& bitStream, unsigned char* dataOut,
             unsigned short length = bitStream.ExtractBitsAndMove(16);
             unsigned short lengthInverse = bitStream.ExtractBitsAndMove(16);
             unsigned char* sourceAdress = bitStream.StartAdress + bitStream.CurrentPosition;
-            bool validLength = (length + lengthInverse) == 65535;
-            size_t bitsToJump = (size_t)length * 8;
+            const bool validLength = (length + lengthInverse) == 65535;
+            const size_t bitsToJump = (size_t)length * 8;
 
             assert(validLength);          
                         
-            memcpy(dataOut + dataOutSize, sourceAdress, length);
+            Memory::Copy(dataOut + dataOutSize, sourceAdress, length);
 
             dataOutSize += length;
             bitStream.Move(bitsToJump);
@@ -63,7 +65,7 @@ void BF::DeflateBlock::Inflate(BitStreamHusk& bitStream, unsigned char* dataOut,
             {
                 case DeflateEncodingMethod::HuffmanDynamic:
                 {
-                    unsigned int result = HuffmanTree::GenerateDynamicTree(bitStream, literalAndLengthCodes, distanceCodes);
+                    const unsigned int result = HuffmanTree::GenerateDynamicTree(bitStream, literalAndLengthCodes, distanceCodes);
 
                     if (result != 0)
                     {
@@ -101,9 +103,7 @@ void BF::DeflateBlock::Inflate(BitStreamHusk& bitStream, unsigned char* dataOut,
                     case BF::HuffmanCodeType::Length:
                     {
                         // printf("[Symbol] <%2x>(%3i) Length.\n", resultLengthCode, resultLengthCode);
-
-#define FIRST_LENGTH_CODE_INDEX 257
-#define LAST_LENGTH_CODE_INDEX 285
+                                            
 
                         unsigned int distance = 0;
                         unsigned int numextrabits_l = 0;
@@ -123,11 +123,18 @@ void BF::DeflateBlock::Inflate(BitStreamHusk& bitStream, unsigned char* dataOut,
                         static const unsigned DISTANCEEXTRA[30] = { 0, 0, 0, 0, 1, 1, 2,  2,  3,  3,  4,  4,  5,  5,   6,   6,   7,   7,   8, 8,    9,    9,   10,   10,   11,   11,   12,    12,    13,    13 };
 
 
-                        /*part 1: get length base*/
-                        length = LENGTHBASE[resultLengthCode - FIRST_LENGTH_CODE_INDEX];
+                        {
+                            const unsigned int FIRST_LENGTH_CODE_INDEX = 257u;
+                            const unsigned int LAST_LENGTH_CODE_INDEX = 285u;
 
-                        /*part 2: get extra bits and add the value of that to length*/
-                        numextrabits_l = LENGTHEXTRA[resultLengthCode - FIRST_LENGTH_CODE_INDEX];
+                            /*part 1: get length base*/
+                            length = LENGTHBASE[resultLengthCode - FIRST_LENGTH_CODE_INDEX];
+
+                            /*part 2: get extra bits and add the value of that to length*/
+                            numextrabits_l = LENGTHEXTRA[resultLengthCode - FIRST_LENGTH_CODE_INDEX];
+                        }    
+
+
                         if (numextrabits_l != 0)
                         {
                             /* bits already ensured above */
@@ -174,7 +181,7 @@ void BF::DeflateBlock::Inflate(BitStreamHusk& bitStream, unsigned char* dataOut,
 
                         if (distance < length)
                         {
-                            memcpy(dataOut + start, dataOut + backward, distance);
+                            Memory::Copy(dataOut + start, dataOut + backward, distance);
 
                             start += distance;
 
@@ -185,7 +192,7 @@ void BF::DeflateBlock::Inflate(BitStreamHusk& bitStream, unsigned char* dataOut,
                         }
                         else
                         {
-                            memcpy(dataOut + start, dataOut + backward, length);
+                            Memory::Copy(dataOut + start, dataOut + backward, length);
                         }
                         break;
                     }

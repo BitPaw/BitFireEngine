@@ -1,9 +1,8 @@
 #include "ZLIBHeader.h"
 
 #include <cassert>
-#include <string>
 
-#include "../../Math/Math.h"
+#include <Math/Math.h>
 
 BF::ZLIBHeader::ZLIBHeader()
 {
@@ -54,8 +53,6 @@ void BF::ZLIBHeader::Set(ZLIBCompressionMethod compressionMethod)
         default:
             break;
     }
-
-
 }
 
 void BF::ZLIBHeader::Parse(unsigned char compressionFormatByte, unsigned char flagByte)

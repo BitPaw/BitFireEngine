@@ -1,8 +1,17 @@
 #include <stdio.h>
 
+#include <Hardware/Monitor/Monitor.h>
+
 int main()
 {
-   printf("Hello");
+    BF::Monitor::List();
+
+    while(true)
+    {
+
+    }
+
+    printf("Hello");
 
     return 0;
 }
