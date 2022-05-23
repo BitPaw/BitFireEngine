@@ -210,7 +210,9 @@ bool BF::Processor::FetchInfo(ProcessorInfo& processorInfo)
 const size_t BF::Processor::ClockCyclesSinceLastReset() const
 {
 #if defined(OSUnix)
-    return -1;
+    unsigned int lo, hi;
+    __asm__ __volatile__("rdtsc" : "=a" (lo), "=d" (hi));
+    return ((uint64_t)hi << 32) | lo;
 #elif defined(OSWindows)
 	return __rdtsc();
 #endif
