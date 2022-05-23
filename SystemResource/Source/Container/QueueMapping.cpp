@@ -10,7 +10,7 @@ BF::QueueMapping::QueueMapping()
 
 void BF::QueueMapping::Allocate(const size_t sizeInBytes)
 {
-	//MapToVirtualMemory();
+	MapToVirtualMemory(sizeInBytes);
 }
 
 bool BF::QueueMapping::Enqueue(const void* source, const size_t sizeInBytes)

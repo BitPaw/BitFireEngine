@@ -19,6 +19,10 @@ BF::File::~File()
 			UnmapFromVirtualMemory();
 			break;
 
+		case FileLocation::MappedVirtual:
+			Memory::VirtualMemoryRelease(Data, DataSize);
+			break;
+
 		case  FileLocation::CachedFromDisk:
 			Memory::Release(Data, DataSize);
 			break;
@@ -431,19 +435,19 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const wchar_t* filePath)
 
 BF::FileActionResult BF::File::MapToVirtualMemory(const size_t size)
 {
-	/*
-	void** adress = (void**)&Data;
-	const FileActionResult result = Memory::VirtualMemoryFileMap(filePath, FileMappingInfo);
-	const bool successful = result == FileActionResult::Successful;
+	const void* data = Memory::VirtualMemoryAllocate(size);
+	const bool successful = data;
 
-	if(successful)
+	if(!successful)
 	{
-		_fileLocation = FileLocation::MappedFromDisk;
-		Data = (Byte*)FileMappingInfo.Data;
-		DataSize = FileMappingInfo.Size;
-	}*/
+		return FileActionResult::Invalid;
+	}
 
-	return FileActionResult::Invalid;
+	_fileLocation = FileLocation::MappedVirtual;
+	Data = (Byte*)data;
+	DataSize = size;
+
+	return FileActionResult::Successful;
 }
 
 BF::FileActionResult BF::File::UnmapFromVirtualMemory()

@@ -29,5 +29,7 @@ namespace BF
 		void* Data;
 
 		SilverBulletProtocolData();
+		
+		void Set(unsigned int command, unsigned int source, unsigned int target, unsigned int id, unsigned int dataSize);
 	};
 }

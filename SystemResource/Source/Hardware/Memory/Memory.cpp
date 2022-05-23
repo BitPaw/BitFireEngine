@@ -111,7 +111,7 @@ bool BF::Memory::VirtualMemoryPrefetch(const void* adress, const size_t size)
 
 #endif // defined(WindowsAtleast8)
 #else
-#pragama message EEEE
+
 #if MemoryDebug
 printf("[#][Memory] 0x%p (%10zi B) Pre-Fetched [NOT SUPPORTED] Skipped...\n", adress, size);
 #endif
@@ -120,14 +120,40 @@ printf("[#][Memory] 0x%p (%10zi B) Pre-Fetched [NOT SUPPORTED] Skipped...\n", ad
 	return false;
 }
 
-bool BF::Memory::VirtualMemoryAllocate()
+void* BF::Memory::VirtualMemoryAllocate(const size_t size)
 {
-	return false;
+	void* address = nullptr;
+
+#if defined(OSUnix)
+#elif defined(OSWindows)       
+	DWORD allocationType = MEM_COMMIT | MEM_RESERVE;
+	DWORD protect = PAGE_READWRITE;
+
+	address = VirtualAlloc(address, size, allocationType, protect);
+#endif
+
+#if MemoryDebug
+	printf("[#][Memory] 0x%p (%10zi B) Virtual allocation\n", adress, size);
+#endif
+
+	return address;
 }
 
-bool BF::Memory::VirtualMemoryRelease()
+bool BF::Memory::VirtualMemoryRelease(const void* adress, const size_t size)
 {
-	return false;
+#if defined(OSUnix)
+	const bool result = true;
+
+#elif defined(OSWindows)       
+	DWORD freeType = MEM_RELEASE;
+	const bool result = VirtualFree((void*)adress, 0, freeType);
+#endif
+
+#if MemoryDebug
+	printf("[#][Memory] 0x%p (%10zi B) Virtual free\n", adress, size);
+#endif
+
+	return result;
 }
 
 BF::FileActionResult BF::Memory::VirtualMemoryFileMap(const char* filePath, FileMappingInfo& fileMappingInfo)

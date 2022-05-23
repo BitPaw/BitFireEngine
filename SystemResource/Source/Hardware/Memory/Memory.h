@@ -25,25 +25,18 @@ namespace BF
         static int Compare(const void* a, const void* b, const size_t length);
 
         static bool VirtualMemoryPrefetch(const void* adress, const size_t size);
-        static bool VirtualMemoryAllocate();
-        static bool VirtualMemoryRelease();
+
+        // Allocate memory in virtual memory space. 
+        // The minimal size will be a pagefile (4KB).
+        // The size will be rounded up to the next page boundary.
+        // Use only for bigger datablocks.
+        static void* VirtualMemoryAllocate(const size_t size);
+        static bool VirtualMemoryRelease(const void* adress, const size_t size);
         static FileActionResult VirtualMemoryFileMap(const char* filePath, FileMappingInfo& fileMappingInfo);
         static FileActionResult VirtualMemoryFileMap(const wchar_t* filePath, FileMappingInfo& fileMappingInfo);
         static bool VirtualMemoryFileUnmap(FileMappingInfo& fileMappingInfo);
 
-        template<typename T>
-        static T* Rellocate(T* adress, const size_t size)
-        {
-            const size_t sizeInBytes = size * sizeof(T);
-            T* reallocatedAdress = (T*)realloc(adress, sizeInBytes);
-
-#if MemoryDebug
-            printf("[#][Memory] 0x%p (%10zi B) Reallocate to 0x%p\n", adress, size, reallocatedAdress);
-#endif
-
-            return reallocatedAdress;
-        }
-
+ 
         static bool Advise(const void* adress, const size_t length, const FileCachingMode fileCachingMode)
         {
             const int cachingModeID = ConvertFileCachingMode(fileCachingMode);
@@ -75,6 +68,9 @@ namespace BF
             return adress;
         }
 
+        // Changes the size of a given byteblock.
+        // The change maybe performed without moving the data and thus not changing the poniter.
+        // The function will return NULL if the system is "out of memory".
         template<typename T>
         static T* Reallocate(T* adress, const size_t size)
         {
@@ -97,13 +93,14 @@ namespace BF
             return adressReallocated;
         }
 
+        // Give back memory that you allocated before.
         static void Release(void* adress, const size_t size)
         {
 #if MemoryDebug
             printf("[#][Memory] 0x%p (%10zi B) Free\n", adress, size);
 #endif
 
-            return free(adress);
+            free(adress);
         }
 
         static void Set(void* target, const unsigned char value, const size_t size)

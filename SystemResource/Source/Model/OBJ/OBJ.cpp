@@ -313,7 +313,7 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
 
             if (fetchNextMesh)
             {
-                OBJElement* newelementList = Memory::Rellocate<OBJElement>(ElementList, ++ElementListSize);
+                OBJElement* newelementList = Memory::Reallocate<OBJElement>(ElementList, ++ElementListSize);
 
                 if (!newelementList)
                 {
