@@ -2,7 +2,7 @@
 
 #include "GIFImageDescriptor.h"
 
-#include <File/FileStream.h>
+#include <File/File.h>
 #include <Math/Math.h>
 
 #define GIFHeader {'G','I','F'}
@@ -17,13 +17,16 @@ BF::GIF::GIF()
 
 BF::FileActionResult BF::GIF::Load(const wchar_t* filePath)
 {
-    FileStream fileStream;
-    FileActionResult loadingResult = fileStream.ReadFromDisk(filePath);
+    File fileStream;
 
-    if (loadingResult != FileActionResult::Successful)
     {
-        return loadingResult;
-    }
+        const FileActionResult loadingResult = fileStream.MapToVirtualMemory(filePath);
+
+        if(loadingResult != FileActionResult::Successful)
+        {
+            return loadingResult;
+        }
+    }   
 
     // Check Header
     {

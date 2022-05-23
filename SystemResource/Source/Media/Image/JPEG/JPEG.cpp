@@ -6,7 +6,7 @@
 #include <cassert>
 #include <stdlib.h>
 
-#include <File/FileStream.h>
+#include <File/File.h>
 
 BF::JPEG::JPEG()
 {
@@ -18,12 +18,16 @@ BF::JPEG::JPEG()
 
 BF::FileActionResult BF::JPEG::Load(const wchar_t* filePath)
 {
-    FileStream file;
-    FileActionResult FileActionResult = file.ReadFromDisk(filePath);
+    File file;
 
-    if (FileActionResult != FileActionResult::Successful)
     {
-        return FileActionResult;
+        const FileActionResult loadingResult = file.ReadFromDisk(filePath);
+        const bool sucessful = loadingResult != FileActionResult::Successful;
+
+        if(sucessful)
+        {
+            return loadingResult;
+        }
     }
 
     // Check Start of Image

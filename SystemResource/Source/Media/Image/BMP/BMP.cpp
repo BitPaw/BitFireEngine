@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-#include <File/FileStream.h>
+#include <File/File.h>
 #include <Math/Math.h>
 
 #include <string>
@@ -24,10 +24,10 @@ BF::BMP::~BMP()
 
 BF::FileActionResult BF::BMP::Load(const wchar_t* filePath)
 {
-    FileStream file; 
+    File file; 
 
     {
-        const FileActionResult loadingResult = file.ReadFromDisk(filePath);
+        const FileActionResult loadingResult = file.MapToVirtualMemory(filePath);
         const bool success = loadingResult != FileActionResult::Successful;
 
         if(success)
@@ -145,7 +145,7 @@ BF::FileActionResult BF::BMP::Load(const wchar_t* filePath)
 BF::FileActionResult BF::BMP::Save(const wchar_t* filePath)
 {
     unsigned int fileSize = InfoHeader.Width * InfoHeader.Height * 3 + 54u;
-    FileStream file(fileSize);
+    File file;// (fileSize);
  
     file.Write("BM", 2u);
     file.Write(fileSize, Endian::Little);

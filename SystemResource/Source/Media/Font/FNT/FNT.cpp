@@ -2,11 +2,10 @@
 #include "FNTCommand.h"
 #include "FNTLineType.h"
 
-#include <File/FileStream.h>
 #include <File/File.h>
 #include <Text/Text.h>
 #include <File/ParsingToken.h>
-
+#include <Hardware/Memory/Memory.h>
 
 #define InfoLineFace "face"
 #define InfoLineSizzeText "size"
@@ -59,12 +58,15 @@ BF::FNT::~FNT()
 
 BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 {
-	FileStream file;
-	FileActionResult fileActionResult = file.ReadFromDisk(filePath);
+	File file;
 
-	if (fileActionResult != FileActionResult::Successful)
 	{
-		return fileActionResult;
+		const FileActionResult fileActionResult = file.ReadFromDisk(filePath);
+
+		if(fileActionResult != FileActionResult::Successful)
+		{
+			return fileActionResult;
+		}
 	}
 
 	size_t bufferSize = 512;

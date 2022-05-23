@@ -50,3 +50,33 @@ void BF::Renderable::ShaderUse(const ShaderProgram& shaderProgram)
 
 	//ShaderID = shaderProgram.ID;
 }
+
+void BF::Renderable::ShaderUse(const unsigned int shaderProgramID)
+{
+	for(size_t i = 0; i < ChunkListSize; i++)
+	{
+		RenderableChunk& renderableChunk = ChunkList[i];
+
+		for(size_t j = 0; j < renderableChunk.SegmentListSize; j++)
+		{
+			RenderableSegment& renderableSegment = renderableChunk.SegmentList[j];
+
+			renderableSegment.ShaderID = shaderProgramID;
+		}
+	}
+}
+
+void BF::Renderable::TextureUse(const unsigned int texturteID)
+{
+	for(size_t i = 0; i < ChunkListSize; i++)
+	{
+		RenderableChunk& renderableChunk = ChunkList[i];
+
+		for(size_t j = 0; j < renderableChunk.SegmentListSize; j++)
+		{
+			RenderableSegment& renderableSegment = renderableChunk.SegmentList[j];
+
+			renderableSegment.TextureID = texturteID;
+		}
+	}
+}

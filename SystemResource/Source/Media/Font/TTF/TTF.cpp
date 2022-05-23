@@ -2,19 +2,23 @@
 
 #include "TTFTableEntry.h"
 #include "Chunks/TTFOffsetTable.h"
-#include <File/FileStream.h>
+#include "Chunks/OS2/Panose/TTFPanose.h"
+
+#include <File/File.h>
 
 #include <cassert>
-#include "Chunks/OS2/Panose/TTFPanose.h"
 
 BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
 {
-	FileStream file;
-	FileActionResult fileActionResult = file.ReadFromDisk(filePath);
+	File file;
 
-	if (fileActionResult != FileActionResult::Successful)
 	{
-		return fileActionResult;
+		const FileActionResult fileActionResult = file.MapToVirtualMemory(filePath);
+
+		if(fileActionResult != FileActionResult::Successful)
+		{
+			return fileActionResult;
+		}
 	}
 
 	TTFOffsetTable offsetTable;

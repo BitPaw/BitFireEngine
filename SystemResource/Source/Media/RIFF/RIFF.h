@@ -6,8 +6,6 @@
 
 #include <cstddef>
 #include <File/Endian.h>
-#include <File/FileStream.h>
-
 
 namespace BF
 {
@@ -22,6 +20,6 @@ namespace BF
 
 		RIFF();
 	
-		void Parse(FileStream& fileStream);
+		//void Parse(FileStream& fileStream);
 	};
 }

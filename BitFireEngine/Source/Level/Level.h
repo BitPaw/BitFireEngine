@@ -7,6 +7,8 @@
 #include <File/FileActionResult.hpp>
 #include <Camera/Camera.h>
 
+#include <Graphic/OpenGL/Texture.h>
+
 #include <Shader/Shader.h>
 #include "../Dialog/Dialog.h"
 
@@ -18,7 +20,7 @@ namespace BF
 		public:
 		// Physics Container
 		List<Model*> ModelList;
-		List<Image*> ImageList;
+		List<Texture*> TextureList;
 		List<Sound*> SoundList;
 		List<Font*> FontList;
 		List<Shader*> ShaderList;

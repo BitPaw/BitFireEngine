@@ -1,6 +1,6 @@
 #include "OGG.h"
 
-#include <File/FileStream.h>
+#include <File/File.h>
 
 BF::FileActionResult BF::OGG::Load(const wchar_t* filePath)
 {

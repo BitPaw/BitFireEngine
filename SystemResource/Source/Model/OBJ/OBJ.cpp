@@ -1,15 +1,11 @@
 #include "OBJ.h"
 
-#include "../../File/File.h"
-#include "../../File/FileStream.h"
-#include "../../Container/AsciiString.h"
-
+#include <File/File.h>
 #include <Text/Text.h>
+#include <Hardware/Memory/Memory.h>
 
 #include <cassert>
 #include <cstring>
-
-#include <Hardware/Memory/Memory.h>
 
 BF::OBJ::OBJ()
 {
@@ -219,7 +215,7 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
     const size_t currentLineBufferSize = 1024;
     char currentLineBuffer[currentLineBufferSize];
     bool isFirstVertex = true;
-    FileStream file; 
+    File file; 
 
     {
         const FileActionResult fileActionResult = file.MapToVirtualMemory(filePath); // TODO: true
@@ -607,7 +603,7 @@ BF::FileActionResult BF::OBJ::Save(const wchar_t* filePath)
 BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
 {
     bool usedNormals = false;     
-  
+ 
     for (size_t materialFileIndex = 0; materialFileIndex < MaterialFileListSize; materialFileIndex++)
     {
         MTL& mtl = MaterialFileList[materialFileIndex];
@@ -668,7 +664,6 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
 
         //meshSegment. = malloc .Allocate(faceElementListSize * (3 + 3 + 4 + 2), faceElementListSize);
         //mesh.RenderInfo.MaterialID = element.MaterialListIndex;
-
 
         size_t vertecDataIndex = 0;
         float* vertexDataArray = mesh.VertexDataList;

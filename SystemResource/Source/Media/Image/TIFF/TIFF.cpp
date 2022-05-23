@@ -1,6 +1,6 @@
 #include "TIFF.h"
 
-#include <File/FileStream.h>
+#include <File/File.h>
 
 #define GIFFormatA {'I','I'}
 #define GIFFormatB {'M','M'}
@@ -12,13 +12,17 @@ BF::TIFF::TIFF()
 
 BF::FileActionResult BF::TIFF::Load(const wchar_t* filePath)
 {
-    FileStream fileStream;
-    FileActionResult loadingResult = fileStream.ReadFromDisk(filePath);
+    File file;
 
-    if (loadingResult != FileActionResult::Successful)
     {
-        return loadingResult;
-    }
+        const FileActionResult loadingResult = file.MapToVirtualMemory(filePath);
+        const bool successful = loadingResult != FileActionResult::Successful;
+
+        if(successful)
+        {
+            return loadingResult;
+        }
+    } 
 
     // Check Header
     {
@@ -26,7 +30,7 @@ BF::FileActionResult BF::TIFF::Load(const wchar_t* filePath)
         const char versionB[2] = GIFFormatB;
         char headerTag[2] = { '#', '#' };
 
-       fileStream.Read(headerTag, sizeof(headerTag));
+        file.Read(headerTag, sizeof(headerTag));
 
         bool useBigEndian = headerTag[0] == versionB[0] && headerTag[1] == versionB[1];
         bool useLittleEndian = headerTag[0] == versionA[0] && headerTag[1] == versionA[1];

@@ -1,14 +1,18 @@
 #include "WMA.h"
-#include <File/FileStream.h>
+
+#include <File/File.h>
 
 BF::FileActionResult BF::WMA::Load(const wchar_t* filePath)
 {
-	FileStream file;
-	FileActionResult loadingResult = file.ReadFromDisk(filePath);
+	File file;
 
-	if (loadingResult != FileActionResult::Successful)
 	{
-		return loadingResult;
+		const FileActionResult loadingResult = file.ReadFromDisk(filePath);
+
+		if(loadingResult != FileActionResult::Successful)
+		{
+			return loadingResult;
+		}
 	}
 
 	return FileActionResult::Successful;

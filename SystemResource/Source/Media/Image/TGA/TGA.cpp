@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-#include <File/FileStream.h>
+#include <File/File.h>
 #include <Hardware/Memory/Memory.h>
 
 #include <string>
@@ -45,12 +45,15 @@ BF::FileActionResult BF::TGA::Load(const wchar_t* filePath)
 	unsigned int extensionOffset = 0;
 	unsigned int developerAreaOffset = 0;
 	size_t firstFieldAfterHeader = 0;
-	FileStream file;
-	FileActionResult loadingResult = file.ReadFromDisk(filePath);
+	File file;
 
-	if (loadingResult != FileActionResult::Successful)
 	{
-		return loadingResult;
+		const FileActionResult loadingResult = file.ReadFromDisk(filePath);
+
+		if(loadingResult != FileActionResult::Successful)
+		{
+			return loadingResult;
+		}
 	}
 
 	//---[ Parse Header ]-------------------------------
@@ -80,7 +83,7 @@ BF::FileActionResult BF::TGA::Load(const wchar_t* filePath)
 		PixelDepth = ConvertPixelDepth(pixelDepth);
 
 		ImageDataSize = Width * Height * (pixelDepth / 8u);
-		ImageData = (Byte*)malloc(ImageDataSize * sizeof(Byte));
+		ImageData = Memory::Allocate<Byte>(ImageDataSize);
 	}
 	//----------------------------------------------------
 
@@ -218,12 +221,12 @@ BF::FileActionResult BF::TGA::Save(const wchar_t* filePath)
 {
 	const char footer[18] = TGAFileIdentifier;
 	unsigned int fileLength = 500;
-	FileStream fileStream(fileLength);
+	File file;// (fileLength);
 
 
 	// Data Stuff
 
-	fileStream.WriteToDisk(filePath);
+	file.WriteToDisk(filePath);
 
 	return FileActionResult::Successful;
 }

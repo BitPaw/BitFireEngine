@@ -294,6 +294,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Container\QueueMapping.cpp" />
+    <ClCompile Include="Source\Network\Protocol\SilverBulletProtocolData.cpp" />
     <ClCompile Include="Source\Hardware\Monitor\Monitor.cpp" />
     <ClCompile Include="Source\Encryption\RSA\Koerper.cpp" />
     <ClCompile Include="Source\File\FilePath.cpp" />
@@ -374,7 +376,6 @@
     <ClCompile Include="Source\File\Program.cpp" />
     <ClCompile Include="Source\File\Bash.cpp" />
     <ClCompile Include="Source\File\IFIle.cpp" />
-    <ClCompile Include="Source\File\FileStream.cpp" />
     <ClCompile Include="Source\File\ByteStream.cpp" />
     <ClCompile Include="Source\File\FileTemporary.cpp" />
     <ClCompile Include="Source\Model\MeshSegment.cpp" />
@@ -534,6 +535,8 @@
     <ClCompile Include="Source\Media\Image\WEBP\WEBP.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Container\QueueMapping.h" />
+    <ClInclude Include="Source\Network\Protocol\SilverBulletProtocolData.h" />
     <ClInclude Include="Source\Hardware\Monitor\Monitor.h" />
     <ClInclude Include="Source\Encryption\RSA\Koerper.h" />
     <ClInclude Include="Source\File\FilePath.h" />
@@ -630,7 +633,6 @@
     <ClInclude Include="Source\File\FileOpenMode.hpp" />
     <ClInclude Include="Source\File\FilePersistence.hpp" />
     <ClInclude Include="Source\File\IFIle.h" />
-    <ClInclude Include="Source\File\FileStream.h" />
     <ClInclude Include="Source\File\ByteStream.h" />
     <ClInclude Include="Source\File\FileTemporary.h" />
     <ClInclude Include="Source\Container\QuadTree\QuadTree.hpp" />

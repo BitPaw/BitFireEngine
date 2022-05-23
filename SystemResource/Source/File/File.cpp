@@ -7,7 +7,22 @@
 
 BF::File::File()
 {
+	_fileLocation = FileLocation::Invalid;
 	FileHandle = 0;
+}
+
+BF::File::~File()
+{
+	switch(_fileLocation)
+	{
+		case FileLocation::MappedFromDisk:
+			UnmapFromVirtualMemory();
+			break;
+
+		case  FileLocation::CachedFromDisk:
+			Memory::Release(Data, DataSize);
+			break;
+	}
 }
 
 BF::FileActionResult BF::File::Open(const char* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode)
@@ -391,6 +406,215 @@ BF::ErrorCode BF::File::DirectoryDelete(const wchar_t* directoryName)
 	}
 
 	return ErrorCode::Successful;
+}
+
+BF::FileActionResult BF::File::MapToVirtualMemory(const char* filePath)
+{
+	return FileActionResult();
+}
+
+BF::FileActionResult BF::File::MapToVirtualMemory(const wchar_t* filePath)
+{
+	void** adress = (void**)&Data;
+	const FileActionResult result = Memory::VirtualMemoryFileMap(filePath, FileMappingInfo);
+	const bool successful = result == FileActionResult::Successful;
+
+	if(successful)
+	{
+		_fileLocation = FileLocation::MappedFromDisk;
+		Data = (Byte*)FileMappingInfo.Data;
+		DataSize = FileMappingInfo.Size;
+	}
+
+	return result;
+}
+
+BF::FileActionResult BF::File::MapToVirtualMemory(const size_t size)
+{
+	/*
+	void** adress = (void**)&Data;
+	const FileActionResult result = Memory::VirtualMemoryFileMap(filePath, FileMappingInfo);
+	const bool successful = result == FileActionResult::Successful;
+
+	if(successful)
+	{
+		_fileLocation = FileLocation::MappedFromDisk;
+		Data = (Byte*)FileMappingInfo.Data;
+		DataSize = FileMappingInfo.Size;
+	}*/
+
+	return FileActionResult::Invalid;
+}
+
+BF::FileActionResult BF::File::UnmapFromVirtualMemory()
+{
+	void** adress = (void**)&Data;
+	const bool x = Memory::VirtualMemoryFileUnmap(FileMappingInfo);
+
+	return FileActionResult::Successful;
+}
+
+BF::FileActionResult BF::File::ReadFromDisk(const char* filePath, bool addNullTerminator, FilePersistence filePersistence)
+{
+	File file;
+	FileActionResult result = file.Open(filePath, FileOpenMode::Read, FileCachingMode::Sequential);
+
+	if(result != FileActionResult::Successful)
+	{
+		return result;
+	}
+
+	result = file.ReadFromDisk(&Data, DataSize, addNullTerminator);
+
+	if(result != FileActionResult::Successful)
+	{
+		file.Close();
+		return result;
+	}
+
+	result = file.Close();
+
+	if(result != FileActionResult::Successful)
+	{
+		return result;
+	}
+
+	_fileLocation = FileLocation::CachedFromDisk;
+
+	return BF::FileActionResult::Successful;
+}
+
+BF::FileActionResult BF::File::ReadFromDisk(const wchar_t* filePath, bool addNullTerminator, FilePersistence filePersistence)
+{
+	File file;
+	FileActionResult result = file.Open(filePath, FileOpenMode::Read, FileCachingMode::Sequential);
+
+	if(result != FileActionResult::Successful)
+	{
+		return result;
+	}
+
+	result = file.ReadFromDisk(&Data, DataSize, addNullTerminator);
+
+	if(result != FileActionResult::Successful)
+	{
+		file.Close();
+		return result;
+	}
+
+	result = file.Close();
+
+	if(result != FileActionResult::Successful)
+	{
+		return result;
+	}
+
+	_fileLocation = FileLocation::CachedFromDisk;
+
+	return BF::FileActionResult::Successful;
+}
+
+BF::FileActionResult BF::File::ReadFromDisk(FILE* file, Byte** targetBuffer, size_t& bufferSize, bool addNullTerminator)
+{
+	fseek(file, 0, SEEK_END); // Jump to end of file
+	bufferSize = ftell(file); // Get current 'data-cursor' position
+
+	if(!bufferSize) // If no bytes in file, exit.
+	{
+		return FileActionResult::FileEmpty;
+	}
+
+	rewind(file); // Jump to the begining of the file
+
+	if(addNullTerminator)
+	{
+		++bufferSize;
+	}
+
+	Byte* dataBuffer = Memory::Allocate<Byte>(bufferSize);
+
+	if(!dataBuffer) // If malloc failed
+	{
+		return BF::FileActionResult::OutOfMemory;
+	}
+
+	*targetBuffer = dataBuffer;
+
+	if(addNullTerminator)
+	{
+		dataBuffer[bufferSize - 1] = '\0';
+		--bufferSize;
+	}
+
+	size_t readBytes = fread(dataBuffer, 1u, bufferSize, file);
+	size_t overAllocatedBytes = bufferSize - readBytes; // if overAllocatedBytes > 0 there was a reading error.
+
+	assert(bufferSize == readBytes);
+
+	return FileActionResult::Successful;
+}
+
+BF::FileActionResult BF::File::ReadFromDisk(const wchar_t* filePath, Byte** targetBuffer, size_t& bufferSize, bool addNullTerminator, FilePersistence filePersistence)
+{
+	File file;
+	FileActionResult result = file.Open(filePath, FileOpenMode::Read);
+
+	if(result != FileActionResult::Successful)
+	{
+		return result;
+	}
+
+	//result = ReadFromDisk(file.FileMarker, targetBuffer, bufferSize, addNullTerminator);
+
+	file.ReadFromDisk(targetBuffer, bufferSize, addNullTerminator);
+
+	result = file.Close();
+
+	return BF::FileActionResult::Successful;
+}
+
+BF::FileActionResult BF::File::WriteToDisk(const char* filePath, FilePersistence filePersistence)
+{
+	File file;
+	FileActionResult fileActionResult = file.Open(filePath, FileOpenMode::Write);
+
+	if(fileActionResult != FileActionResult::Successful)
+	{
+		return fileActionResult;
+	}
+
+#if defined(OSUnix)
+	size_t writtenBytes = fwrite(Data, sizeof(char), DataSize, file.FileHandle);
+#elif defined(OSWindows)
+	DWORD writtenBytes = 0;
+	const bool successful = WriteFile(file.FileHandle, Data, DataSize, &writtenBytes, nullptr);
+#endif
+
+	fileActionResult = file.Close();
+
+	return BF::FileActionResult::Successful;
+}
+
+BF::FileActionResult BF::File::WriteToDisk(const wchar_t* filePath, FilePersistence filePersistence)
+{
+	File file;
+	FileActionResult fileActionResult = file.Open(filePath, FileOpenMode::Write);
+
+	if(fileActionResult != FileActionResult::Successful)
+	{
+		return fileActionResult;
+	}
+
+#if defined(OSUnix)
+	size_t writtenBytes = fwrite(Data, sizeof(char), DataSize, file.FileHandle);
+#elif defined(OSWindows)
+	DWORD writtenBytes = 0;
+	const bool successful = WriteFile(file.FileHandle, Data, DataSize, &writtenBytes, nullptr);
+#endif
+
+	fileActionResult = file.Close();
+
+	return BF::FileActionResult::Successful;
 }
 
 BF::FileActionResult BF::File::ReadFromDisk(unsigned char** outPutBuffer, size_t& outPutBufferSize, const bool addTerminatorByte)

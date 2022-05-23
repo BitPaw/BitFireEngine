@@ -339,9 +339,6 @@
     <ClCompile Include="Source\File\ByteStream.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\File\FileStream.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\File\FileTemporary.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -727,6 +724,12 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Hardware\Monitor\Monitor.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Network\Protocol\SilverBulletProtocolData.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Container\QueueMapping.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1202,9 +1205,6 @@
     <ClInclude Include="Source\File\ByteStream.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\File\FileStream.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\File\FileTemporary.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -1665,6 +1665,12 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Hardware\Monitor\Monitor.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Network\Protocol\SilverBulletProtocolData.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Container\QueueMapping.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

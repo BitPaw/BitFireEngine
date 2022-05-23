@@ -53,7 +53,8 @@ namespace BF
 		void Write(int value, Endian endian);
 		void Write(unsigned int value, Endian endian);
 		void Write(const char* string, size_t length);
+		void Write(const unsigned char* string, size_t length);
 		void Write(unsigned long long& value, Endian endian);
-		void Write(void* value, size_t length);
+		void Write(const void* value, size_t length);
 	};
 }

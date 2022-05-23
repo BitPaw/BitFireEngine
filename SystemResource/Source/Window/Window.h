@@ -28,6 +28,7 @@
 #endif
 
 #include "CursorIcon.h"
+#include <Media/Image/Image.h>
 
 #define UseRawMouseData 1
 #define WindowTitleSizeMax 256
@@ -184,6 +185,8 @@ namespace BF
 		void CursorTexture();
 		CursorMode CursorCaptureMode();
 		void CursorCaptureMode(const CursorMode cursorMode);
+
+		void ScreenShotTake(Image image);
 
 		int FrameBufferInitialize();
 		bool FrameBufferSwap();

@@ -1,6 +1,6 @@
 #include "Shader.h"
 
-#include <File/FileStream.h>
+#include <File/File.h>
 
 #include <cstdlib>
 
@@ -59,5 +59,5 @@ BF::FileActionResult BF::Shader::Load(const wchar_t* filePath)
     return ShaderType::Unkown;
 	*/
 
-     return FileStream::ReadFromDisk(filePath, (Byte**)&Content, ContentSize, true);
+     return File::ReadFromDisk(filePath, (Byte**)&Content, ContentSize, true);
 }

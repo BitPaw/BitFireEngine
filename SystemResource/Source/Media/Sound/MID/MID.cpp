@@ -2,7 +2,7 @@
 
 #include "MIDICommand.h"
 
-#include <File/FileStream.h>
+#include <File/File.h>
 #include <Hardware/Memory/Memory.h>
 
 #define MIDITrackHeaderID MakeInt('M','T','h','d')
@@ -22,11 +22,10 @@ BF::MID::~MID()
 }
 
 BF::FileActionResult BF::MID::Load(const wchar_t* filePath)
-{
-	
+{	
 	const char midiTrackEndIndicator[5] = "\x00\xFF\x2F\x00";
 
-	FileStream file;
+	File file;
 
 	{
 		const FileActionResult loadingResult = file.MapToVirtualMemory(filePath);
@@ -102,7 +101,7 @@ BF::FileActionResult BF::MID::Load(const wchar_t* filePath)
 
 BF::FileActionResult BF::MID::Save(const wchar_t* filePath)
 {	
-	unsigned int fileSize = 14u;
+	size_t fileSize = 14u;
 
 	for (unsigned int i = 0; i < TrackListSize; i++)
 	{
@@ -111,19 +110,22 @@ BF::FileActionResult BF::MID::Save(const wchar_t* filePath)
 		fileSize += 8u + track.EventDataSize;
 	}
 
-	FileStream file(fileSize);
+	File file;// (fileSize);
+	const ByteCluster midiTagData(MIDITrackHeaderID);
 
-	file.Write("MThd", 4u);
-	file.Write((unsigned int)6u, Endian::Big);
+	file.Write(midiTagData.Data, 4u); // "MThd"
+	file.Write(6u, Endian::Big);
 	file.Write(Format, Endian::Big);
 	file.Write(TrackListSize, Endian::Big);
 	file.Write(MusicSpeed, Endian::Big);
 
-	for (unsigned int  i = 0; i < TrackListSize; i++)
+	for (size_t i = 0; i < TrackListSize; i++)
 	{
+		const ByteCluster midiTrackTag(MIDITrackChunkID);
+
 		MIDITrack& track = TrackList[i];
 
-		file.Write("MTrk", 4u);
+		file.Write(midiTrackTag.Data, 4u);
 		file.Write(track.EventDataSize, Endian::Big);
 		file.Write(track.EventData, track.EventDataSize);
 	}	

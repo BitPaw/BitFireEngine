@@ -21,7 +21,7 @@ BF::RIFF::RIFF()
 	ChunkSize = 0;
 	Format = RIFFFormat::Invalid;
 }
-
+/*
 void BF::RIFF::Parse(FileStream& fileStream)
 {
 	ByteCluster chunkID;
@@ -78,4 +78,4 @@ void BF::RIFF::Parse(FileStream& fileStream)
 	}
 
 	Valid = (EndianFormat != Endian::Invalid) && (Format != RIFFFormat::Invalid);
-}
+}*/

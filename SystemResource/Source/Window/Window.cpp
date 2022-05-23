@@ -37,6 +37,7 @@
 
 #include "../Controller/ControllerData.h"
 #include "../Controller/ControllerSystem.h"
+#include <Hardware/Memory/Memory.h>
 
 #define InvokeEvent(FunctionPoniter, ...) if(FunctionPoniter) FunctionPoniter(__VA_ARGS__)
 
@@ -2368,6 +2369,33 @@ void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
 
     _cursorMode = cursorMode;
 #endif
+}
+
+void BF::Window::ScreenShotTake(Image image)
+{
+    unsigned int x = 0;
+    unsigned int y = 0;
+    unsigned int width = 0;
+    unsigned int height = 0;
+
+    Size(x, y, width, height);
+
+    unsigned int size = width * height * 3;
+
+    if(image.PixelDataSize != size)
+    {
+        Memory::Release(image.PixelData, size);
+        image.PixelData = Memory::Reallocate<unsigned char>(image.PixelData, size);
+        image.PixelDataSize = size;
+    }
+
+    image.Width = width;
+    image.Height = height;
+    image.Format = BF::ImageDataFormat::BGR;
+
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    glReadBuffer(GL_FRONT);
+    glReadPixels(0, 0, width, height, GL_BGR, GL_UNSIGNED_BYTE, image.PixelData);
 }
 
 bool BF::Window::FrameBufferSwap()

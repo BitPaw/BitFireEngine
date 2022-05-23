@@ -1,8 +1,7 @@
 #include "MTL.h"
 
-#include "../../../File/FileStream.h"
+#include <File/File.h>
 #include <Text/Text.h>
-#include "../../../Container/AsciiString.h"
 
 BF::MTL::MTL()
 {
@@ -29,14 +28,17 @@ BF::FileActionResult BF::MTL::Load(const wchar_t* filePath)
 	//static const char _newMaterialCharacter = 'i';
 
 
-	FileStream file;
-	FileActionResult fileActionResult = file.ReadFromDisk(filePath);
+	File file;
 
-	if (fileActionResult != FileActionResult::Successful)
-	{
-		return fileActionResult;
+	{		
+		const FileActionResult fileActionResult = file.ReadFromDisk(filePath);
+
+		if(fileActionResult != FileActionResult::Successful)
+		{
+			return fileActionResult;
+		}
 	}
-	
+
 	const size_t currentLineBufferSize = 512;
 	char currentLineBuffer[currentLineBufferSize];
 

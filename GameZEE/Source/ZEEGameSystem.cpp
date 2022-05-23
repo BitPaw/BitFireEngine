@@ -76,7 +76,7 @@ void ZEE::ZEEGameSystem::OnStartUp()
    // _worldGravity.PullDirection.Set(0, -1, 0);
    // GameSystem.Resource.Add(&_worldGravity);
 
-    //GameSystem.Load(_level, L"Level/MainMenu.lev");
+   // GameSystem.Load(_level, L"Level/MainMenu.lev");
 
     //GameSystem.Resource.Load(L"B:/Daten/Textures/PR/Countrry/Neo/FI/Country.obj");
 
@@ -204,10 +204,16 @@ void ZEE::ZEEGameSystem::OnUpdateInput(BF::InputContainer& input)
     camera.Update(_deltaTime);
     keyboard.IncrementButtonTick();
     mouse.ResetAxis();
+
+    auto x = GameSystem.MainCamera.MatrixModel.PositionXYZ();
+    printf("Camera Pos : %5.2f %5.2f %5.2f\n", x.X, x.Y, x.Z);
 }
 
 void ZEE::ZEEGameSystem::OnUpdateUI()
 {
+
+  
+
     //sprintf_s(text->TextContent, "FPS: %4i", (BF::Math::Ceiling(1 / _deltaTime)));
     //text->SetText(text->TextContent);
 

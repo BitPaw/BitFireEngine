@@ -126,33 +126,6 @@ ThreadFunctionReturnType RenderLoop(void* windowAdress)
     }
 }
 
-void TakeScreenShot(BF::Window& window, BF::Image& image)
-{
-    unsigned int x = 0;
-    unsigned int y = 0;
-    unsigned int width = 0;
-    unsigned int height = 0;
-
-    window.Size(x,y,width, height);
-
-    unsigned int size = width * height * 3;
-
-    if (image.PixelDataSize != size)
-    {
-        BF::Memory::Release(image.PixelData, size);
-        image.PixelData = BF::Memory::Allocate<unsigned char>(size);
-        image.PixelDataSize = size;
-    }
-
-    image.Width = width;
-    image.Height = height;
-    image.Format = BF::ImageDataFormat::BGR;
-
-    glPixelStorei(GL_PACK_ALIGNMENT, 1);
-    glReadBuffer(GL_FRONT);
-    glReadPixels(0, 0, width, height, GL_BGR, GL_UNSIGNED_BYTE, image.PixelData);
-}
-
 #if !defined(_DEBUG) && defined(OSWindowsE)
 #include <windows.h>
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int nShowCmd)

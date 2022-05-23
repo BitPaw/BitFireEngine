@@ -3,19 +3,23 @@
 #include "MP3Header.h"
 #include "MPEGAudioTag.h"
 
-#include <File/FileStream.h>
+#include <File/File.h>
+
 #include <cstddef>
 #include <cstring>
 
 BF::FileActionResult BF::MP3::Load(const wchar_t* filePath)
 {
-	FileStream file;
-	FileActionResult loadingResult = file.ReadFromDisk(filePath);
+	File file;
 
-	if (loadingResult != FileActionResult::Successful)
 	{
-		return loadingResult;
-	}
+		const FileActionResult loadingResult = file.ReadFromDisk(filePath);
+
+		if(loadingResult != FileActionResult::Successful)
+		{
+			return loadingResult;
+		}
+	}	
 
 	MP3Header mp3Header;
 	MPEGAudioTag mpegAudioTag;

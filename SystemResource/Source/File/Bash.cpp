@@ -1,6 +1,6 @@
 #include "Bash.h"
 #include "FileTemporary.h"
-#include "FileStream.h"
+#include "File.h"
 
 BF::FileActionResult BF::Bash::Execute(const char* programPath, bool syncronous)
 {
@@ -14,7 +14,7 @@ BF::FileActionResult BF::Bash::Execute(const char* programPath, bool syncronous)
 		return result;
 	}
 
-	result = FileStream::ReadFromDisk(pipe.FileMarker, &data, dataLength, true);
+	result = File::ReadFromDisk(pipe.FileMarker, &data, dataLength, true);
 
 	result = pipe.Close();
 

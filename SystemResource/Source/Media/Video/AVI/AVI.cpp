@@ -1,23 +1,26 @@
 #include "AVI.h"
-#include <File/FileStream.h>
+
+#include <File/File.h>
 #include <Media/RIFF/RIFF.h>
 
 BF::FileActionResult BF::AVI::Load(const char* filePath)
 {
-    FileStream fileStream;
-    FileActionResult loadingResult = fileStream.ReadFromDisk(filePath);
-
-    if (loadingResult != FileActionResult::Successful)
+    File file;
+    
     {
-        return loadingResult;
-    }
+        const FileActionResult loadingResult = file.MapToVirtualMemory(filePath);
 
+        if(loadingResult != FileActionResult::Successful)
+        {
+            return loadingResult;
+        }
+    }
 
     // RIFF
     {
         RIFF riff;
 
-        riff.Parse(fileStream);
+       // riff.Parse(fileStream);
 
         if(!riff.Valid)
         {
@@ -27,7 +30,7 @@ BF::FileActionResult BF::AVI::Load(const char* filePath)
 
     unsigned int size = 0;
   
-    fileStream.Read(size, Endian::Big);
+    file.Read(size, Endian::Big);
 
     return FileActionResult::Successful;
 }

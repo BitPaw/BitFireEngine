@@ -1,6 +1,6 @@
 #include "WAV.h"
 
-#include <File/FileStream.h>
+#include <File/File.h>
 #include <Media/RIFF/RIFF.h>
 #include <Hardware/Memory/Memory.h>
 
@@ -17,7 +17,7 @@ BF::WAV::~WAV()
 
 BF::FileActionResult BF::WAV::Load(const wchar_t* filePath)
 {
-	FileStream file;
+	File file;
 	Endian endian = Endian::Invalid;
 
 	// Load file
@@ -35,7 +35,7 @@ BF::FileActionResult BF::WAV::Load(const wchar_t* filePath)
 	{
 		RIFF riff;
 
-		riff.Parse(file);
+		//riff.Parse(file);
 
 		if(!riff.Valid)
 		{
@@ -105,7 +105,7 @@ BF::FileActionResult BF::WAV::Load(const wchar_t* filePath)
 BF::FileActionResult BF::WAV::Save(const wchar_t* filePath)
 {
 	// Note: The sample data must end on an even byte boundary. Whatever that means. 
-	FileStream fileStream;
+	File fileStream;
 
 	const Endian endian = Endian::Little;
 	unsigned int riffSize = 0;

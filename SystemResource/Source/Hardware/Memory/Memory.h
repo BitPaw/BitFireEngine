@@ -13,30 +13,10 @@
 #include <cstdio>
 #include <cstring>
 
-#if defined(OSUnix)
-#include <sys/mman.h>
-#define FileMappingID int
-#elif defined(OSWindows)
-#include <Windows.h>
-#define FileMappingID HANDLE
-#endif
-
 #define MemoryDebug 0
 
 namespace BF
 {
-
-    struct FileMappingInfo
-    {
-        public:
-        FileMappingID ID;
-#if defined(OSWindows)
-        FileMappingID IDMapping;
-#endif
-        size_t Size;
-        void* Data;
-    };
-
     class Memory
     {
         public:

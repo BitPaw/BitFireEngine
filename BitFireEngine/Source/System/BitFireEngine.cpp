@@ -9,9 +9,9 @@
 #include <Time/StopWatch.h>
 #include <Text/Text.h>
 #include <Controller/ControllerSystem.h>
-#include <File/FileStream.h>
 #include <Graphic/OpenGL/OpenGL.h>
 #include <Graphic/OpenGL/ResourceType.hpp>
+#include <Hardware/Memory/Memory.h>
 
 #include <stdlib.h>
 
@@ -322,7 +322,7 @@ void BF::BitFireEngine::Update()
     //---------------------------------------------------------------------
 #endif
 
-    _mainWindow.FrameBufferSwap();
+   _mainWindow.FrameBufferSwap();
 
     UpdateInput(_inputContainer);
     _callbackListener->OnUpdateInput(_inputContainer);
@@ -749,7 +749,7 @@ void BF::BitFireEngine::Register(Renderable& renderable, const Model& model)
         size_t meshIndexCounter = 0;
 
         OpenGLID meshIDList[128u];
-        memset(meshIDList, -1, 128u * sizeof(OpenGLID));
+        Memory::Set(meshIDList, -1, 128u * sizeof(OpenGLID));
 
         glGenBuffers(numberOfMeshes, meshIDList); // Create VBO Buffers
 
@@ -776,7 +776,24 @@ void BF::BitFireEngine::Register(Renderable& renderable, const Model& model)
 
             OpenGL::VertexAttributeArrayDefine(sizeof(float), mesh.VertexDataStructureListSize, mesh.VertexDataStructureList);
 
-            printf("| x     | y     | z     | nx     | ny      | nz      | r      | g      | b      | a      | u      | v      |\n");
+            printf("+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+\n");
+
+            printf
+            (
+                "| %7s | %7s | %7s | %7s | %7s | %7s | %7s | %7s | %7s | %7s | %7s | %7s |\n",
+                "x",
+                "y",
+                "z",
+                "nx",
+                "ny",
+                "nz",
+                "r",
+                "g",
+                "b",
+                "a",
+                "u",
+                "v"
+            );
 
             for(size_t i = 0; i < mesh.VertexDataListSize; )
             {
@@ -796,8 +813,25 @@ void BF::BitFireEngine::Register(Renderable& renderable, const Model& model)
                 float u = mesh.VertexDataList[i++];
                 float v = mesh.VertexDataList[i++];
 
-                printf("| %5f | %5f | %5f | %5f | %5f | %5f | %5f | %5f | %5f | %5f | %5f | %5f |\n", x, y, z, nx, ny, nz, r, g, b, a, u, v);
+                printf
+                (
+                    "| %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f |\n", 
+                    x,
+                    y,
+                    z,
+                    nx,
+                    ny,
+                    nz,
+                    r,
+                    g,
+                    b,
+                    a,
+                    u,
+                    v
+                );
             }
+
+            printf("+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+\n");
 
             size_t segmentIndexCounter = 0;
 
@@ -818,7 +852,7 @@ void BF::BitFireEngine::Register(Renderable& renderable, const Model& model)
                 segment.ID = indexBufferID;
                 segment.Size = meshSegment.IndexDataListSize;
 
-#if 0
+#if 1
 
                 for(size_t i = 0; i < meshSegment.IndexDataListSize; )
                 {
@@ -1061,7 +1095,7 @@ void BF::BitFireEngine::Use(Texture& texture)
 
 void BF::BitFireEngine::Use(const ImageType imageType, const int textureID)
 {
-    const bool isValidTexture = textureID != -1;
+    const bool isValidTexture = textureID != -1 && imageType != ImageType::Invalid;
 
 #if 1 // Ignore
     if(!isValidTexture)
@@ -1186,6 +1220,8 @@ BF::FileActionResult BF::BitFireEngine::Load(Renderable& renderable, const wchar
 
         if(successful)
         {
+            renderable.Mode = RenderMode::Triangle;
+
             Register(renderable, model);
         }
     }
@@ -1449,7 +1485,7 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
 
     printf("[+][Resource] Level <%ls> loading...\n", filePath);
 
-    FileStream file;
+    File file;
     FileActionResult fileActionResult = file.ReadFromDisk(filePath, true);
     char currentLineBuffer[256];
 
@@ -1499,7 +1535,7 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
 
     // Step II - Reserve space
     level.ModelList.ReSize(modelCounter);
-    level.ImageList.ReSize(imageCounter);
+    level.TextureList.ReSize(imageCounter);
     level.SoundList.ReSize(soundCounter);
     level.FontList.ReSize(fontCounter);
     level.ShaderList.ReSize(shaderCounter);
@@ -1519,7 +1555,7 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
     {
         char character = currentLineBuffer[0];
         char dummyBuffer[30];
-        char filePathA[PathMaxSize];
+        char filePathA[PathMaxSize]{0};
 
         switch(character)
         {
@@ -1537,7 +1573,7 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
                     currentLineBuffer,
                     "%s %s %s %s %s",
                     dummyBuffer,
-                    filePath,
+                    filePathA,
                     positionText,
                     rotationText,
                     scaleText
@@ -1608,20 +1644,22 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
                     //loadedModel->Scale(scale);
                     //loadedModel->UpdateGlobalMesh();
 
-                    Renderable* renderable = new Renderable();
+                    Renderable* renderable = new Renderable();                
 
                     Register(*renderable, *loadedModel);
 
+                    renderable->ShaderUse(_defaultShaderID);
+                    renderable->TextureUse(_defaultTextureID);
+
                     _renderList.Add(renderable);
                 }
-
 
                 //-----------------------
                 break;
             }
             case _textureToken:
             {
-                Image* image = new Image();
+                Texture* texture = new Texture();
 
                 char filePathA[PathMaxSize];
                 wchar_t filePathW[PathMaxSize];
@@ -1630,9 +1668,11 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
         
                 Text::Copy(filePathA, PathMaxSize, filePathW, PathMaxSize);
 
-                Load(*image, filePathW, true);
+                Load(*texture, filePathW, true);
 
-                level.ImageList[imageCounter++] = image;
+                Register(*texture);
+
+                level.TextureList[imageCounter++] = texture;
                 break;
             }
             case _musicToken:
@@ -1983,8 +2023,8 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
                 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID); // IBO
 
                 Use(textureType, textureID);
-#if 1
-                //glDrawElements(GL_POINTS, size, GL_UNSIGNED_INT, 0);
+#if 0
+                glDrawElements(GL_POINTS, size, GL_UNSIGNED_INT, 0);
                 //glDrawElements(GL_LINES, size, GL_UNSIGNED_INT, 0);
                 glDrawElements(renderModeID, size, GL_UNSIGNED_INT, 0);
 #else

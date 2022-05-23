@@ -330,11 +330,16 @@ void BF::ByteStream::Write(const char* string, size_t length)
 	Write((void*)string, length);
 }
 
+void BF::ByteStream::Write(const unsigned char* string, size_t length)
+{
+	Write((void*)string, length);
+}
+
 void BF::ByteStream::Write(unsigned long long& value, Endian endian)
 {
 }
 
-void BF::ByteStream::Write(void* value, size_t length)
+void BF::ByteStream::Write(const void* value, size_t length)
 {
 	Memory::Copy(Data + DataCursorPosition, value, length);
 

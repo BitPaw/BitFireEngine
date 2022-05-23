@@ -3,7 +3,7 @@
 #include "PNGColorCompressor.h"
 #include "Chunk/PNGChunk.h"
 
-#include <File/FileStream.h>
+#include <File/File.h>
 #include <Compression/ZLIB/ZLIBHeader.h>
 #include <Compression/ADAM7/ADAM7.h>
 #include <Compression/ZLIB/ZLIB.h>
@@ -44,7 +44,7 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
 
     //---<Parse PNG File>------------------------------------------------------
     {
-        FileStream fileStream;
+        File fileStream;
       
         bool parseFinished = false;
 
@@ -439,14 +439,14 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
 BF::FileActionResult BF::PNG::Save(const wchar_t* filePath)
 {
     size_t fileLength = 500;
-    FileStream fileStream(fileLength);
+    File file;// (fileLength);
 
     //---<Signature>---
     {
         const char pngFileHeader[8] = PNGHeaderSequenz;
         const size_t pngFileHeaderSize = sizeof(pngFileHeader);
 
-        fileStream.Write(pngFileHeader, pngFileHeaderSize);
+        file.Write(pngFileHeader, pngFileHeaderSize);
     }
 
     //---<IHDR> (Image Header)---
@@ -454,23 +454,23 @@ BF::FileActionResult BF::PNG::Save(const wchar_t* filePath)
         unsigned char colorType = ConvertColorType(ImageHeader.ColorType);
         unsigned char interlaceMethod = ConvertPNGInterlaceMethod(ImageHeader.InterlaceMethod);
         unsigned int crc = 0;
-        unsigned char* chunkStart = fileStream.Data + fileStream.DataCursorPosition;
+        unsigned char* chunkStart = file.Data + file.DataCursorPosition;
 
-        fileStream.Write(13u, Endian::Big);
-        fileStream.Write("IHDR", 4u);
+        file.Write(13u, Endian::Big);
+        file.Write("IHDR", 4u);
 
-        fileStream.Write(ImageHeader.Width, Endian::Big);
-        fileStream.Write(ImageHeader.Height, Endian::Big);
+        file.Write(ImageHeader.Width, Endian::Big);
+        file.Write(ImageHeader.Height, Endian::Big);
 
-        fileStream.Write(ImageHeader.BitDepth);
-        fileStream.Write(colorType);
-        fileStream.Write(ImageHeader.CompressionMethod);
-        fileStream.Write(ImageHeader.FilterMethod);
-        fileStream.Write(interlaceMethod);
+        file.Write(ImageHeader.BitDepth);
+        file.Write(colorType);
+        file.Write(ImageHeader.CompressionMethod);
+        file.Write(ImageHeader.FilterMethod);
+        file.Write(interlaceMethod);
 
         crc = CRC32::Generate(chunkStart, 13+4);
 
-        fileStream.Write(crc, Endian::Big);
+        file.Write(crc, Endian::Big);
     }
 
     // iCCP
@@ -494,12 +494,12 @@ BF::FileActionResult BF::PNG::Save(const wchar_t* filePath)
 
     //---<>---
     {   
-        fileStream.Write(0u, Endian::Big);
-        fileStream.Write("IEND", 4u);
-        fileStream.Write(2923585666u, Endian::Big);
+        file.Write(0u, Endian::Big);
+        file.Write("IEND", 4u);
+        file.Write(2923585666u, Endian::Big);
     }
 
-    fileStream.WriteToDisk(filePath);
+    file.WriteToDisk(filePath);
 
     return FileActionResult::Successful;
 }
