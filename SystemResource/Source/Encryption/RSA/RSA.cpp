@@ -4,9 +4,9 @@
 
 #include <Text/Text.h>
 
-#include <math.h>
+#include <Math/Primes.h>
+
 #include <iostream>
-#include <cstring>
 
 RSA::RSA(int p, int q, int e)
 {
@@ -21,7 +21,7 @@ RSA::RSA(int p, int q, int e)
 		return;
 	}
 
-	if (Primes_Print(p) != 0 && Primes_Print(q) != 0)
+	if (BF::Primes::firstPrimeInX(p) != p && BF::Primes::firstPrimeInX(q) != q)
 	{
 		return;
 	}
@@ -64,9 +64,9 @@ RSA::RSA(int n, int e)
 		return;
 	}
 
-	unsigned int p = Primes_Print(n);
+	unsigned int p = BF::Primes::firstPrimeInX(n);
 
-	if (Primes_Print(n / p) != 0)
+	if (BF::Primes::firstPrimeInX(n / p) != 0)
 	{
 		return;
 	}
@@ -133,9 +133,10 @@ char* RSA::encode_message(const char* m)
 	{
 		return nullptr;
 	}
-	int length = strlen(m);
+	int length = BF::Text::Length(m);
+	// can memory be used here or is text allocation in the text workdomain?
 	char* encoded = (char*)malloc(length * sizeof(char) + 1);
-	strcpy(encoded, m);
+	BF::Text::Copy(m, length, encoded, length);
 
 	for (int i = 0; i < length; i++)
 	{
@@ -143,18 +144,18 @@ char* RSA::encode_message(const char* m)
 
 		current_char = current_char < (p* q) ? current_char : 1;
 
-		encoded[i] = pow_mod(current_char, publicKey.f, publicKey.n);
+		encoded[i] = BF::Math::PowerModulo(current_char, publicKey.f, publicKey.n);
 	}
 	return encoded;
 }
 
-int RSA::encode_message(int m)
+unsigned int RSA::encode_message(unsigned int m)
 {
 	if (!publicKey.valid || m <= 0 || m >= (p * q))
 	{
 		return -1;
 	}
-	return pow_mod(m, publicKey.f, publicKey.n);
+	return BF::Math::PowerModulo(m, publicKey.f, publicKey.n);
 }
 
 char* RSA::decode_message(const char* c)
@@ -164,9 +165,10 @@ char* RSA::decode_message(const char* c)
 		return nullptr;
 	}
 
-	int length = strlen(c);
+	int length = BF::Text::Length(c);
+	// can memory be used here or is text allocation in the text workdomain?
 	char* decoded = (char*)malloc(length * sizeof(char) + 1);
-	strcpy(decoded, c);
+	BF::Text::Copy(c, length, decoded, length);
 
 	for (int i = 0; i < length; i++)
 	{
@@ -174,91 +176,25 @@ char* RSA::decode_message(const char* c)
 
 		current_char = current_char < (p* q) ? current_char : 1;
 
-		decoded[i] = pow_mod(current_char, privateKey.f, privateKey.n);
+		decoded[i] = BF::Math::PowerModulo(current_char, privateKey.f, privateKey.n);
 	}
 	return decoded;
 }
 
-int RSA::decode_message(int c)
+unsigned int RSA::decode_message(unsigned int c)
 {
 	if (!privateKey.valid || c <= 0 || c >= (p * q))
 	{
 		return -1;
 	}
-	return pow_mod(c, privateKey.f, privateKey.n);
+	return BF::Math::PowerModulo(c, privateKey.f, privateKey.n);
 }
 
 unsigned int RSA::number_of_Publickeys()
 {
-	int rest = phi_n;
 	if (!publicKey.valid)
 	{
 		return 0;
 	}
-	while (rest != 1)
-	{
-		int i = 2;
-		while (rest % i != 0)
-		{
-			i++;
-		}
-		primes[i] = primes[i]++;
-		rest /= i;
-	}
-	int result = 1;
-	for (auto element : primes)
-	{
-		result *= pow(element.first, element.second - 1) * (element.first - 1);
-	}
-	return result;
-}
-
-unsigned int RSA::Primes(unsigned int input)
-{
-	int check_up_to = sqrt(input);
-	for (int i = 2; i < check_up_to; i++)
-	{
-		if (input % i == 0)
-		{
-			return i;
-		}
-	}
-	return 0;
-}
-
-unsigned int RSA::Primes_Print(unsigned int input)
-{
-	int check_up_to = sqrt(input);
-	for (int i = 2; i < check_up_to; i++)
-	{
-		if (input % i == 0)
-		{
-			printf("%d teilt %d\n", i, input);
-			return i;
-		}
-		for (int j = 2; j <= i; j++)
-		{
-			if (i % j == 0 && j != i)
-			{
-				break;
-			}
-			else if (i % j == 0 && j == i)
-			{
-				printf("%d teilt nicht %d\n", j, input);
-			}
-
-		}
-	}
-	return 0;
-}
-
-unsigned int pow_mod(unsigned int base, unsigned int exp, unsigned int mod)
-{
-	unsigned int result = 1;
-	for (int i = 0; i < exp; i++)
-	{
-		result *= base;
-		result %= mod;
-	}
-	return result;
+	return BF::Primes::Eula_phi(phi_n);
 }

@@ -1,12 +1,13 @@
 #include "Euklid.h"
 
 #include <iostream>
-#include <math.h>
+#include <Math/Math.h>
+#include <Hardware/Memory/Memory.h>
 
 Euklid::Euklid(int a, int b)
 {
-    int maxEntries = a < b ? log2(a) + 1 : log2(b) + 1;
-    liste = (Euklid_element*)malloc(maxEntries * sizeof(Euklid_element));
+    int maxEntries = a < b ? BF::Math::LogarithmusBase2(a) + 1 : BF::Math::LogarithmusBase2(b) + 1;
+    liste = BF::Memory::Allocate<Euklid_element>(maxEntries);
     Euklid_element element;
 
     // TODO: "liste" can be null, unhandled possible null pointer
@@ -49,17 +50,9 @@ void Euklid::Advanced()
 
 void Euklid::print()
 {
-    /*
-    std::cout << "Int a = " << liste.get(0).a << " und Int b = " << liste.get(0).b << " bildet sich wie folgt.\n";
-    std::cout << "| a | b | mal | rest | x | y |\n";
-    for (int j = 0; j < liste.size(); j++) {
-        std::cout << "| " << liste.get(j).a << " | " << liste.get(j).b << " | " << liste.get(j).times << " | " << liste.get(j).remainder << " | ";
-        std::cout << liste.get(j).x << " | " << liste.get(j).y << " |\n";
-    }
-    */
     std::cout << "Int a = " << liste[0].a << " und Int b = " << liste[0].b << " bildet sich wie folgt.\n";
     std::cout << "| a | b | mal | rest | x | y |\n";
-    int limit = ((int)(log2(liste[0].b) + 1));
+    int limit = ((int)(BF::Math::LogarithmusBase2(liste[0].b) + 1));
     for (int i = 0; i < limit && (liste[i - 1].remainder != 0 || i == 0); i++)
     {
         std::cout << "| " << liste[i].a << " | " << liste[i].b << " | " << liste[i].times << " | " << liste[i].remainder << " | " << liste[i].x << " | " << liste[i].y << " |\n";

@@ -33,6 +33,7 @@ namespace BF
 		
 		static double Power(double base, double exponent);
 		static double PowerOfTwo(double base);
+		static unsigned int PowerModulo(unsigned int base, unsigned int exponent, unsigned int modulo);
 
 		static double Root(unsigned int rootNr, double value);
 

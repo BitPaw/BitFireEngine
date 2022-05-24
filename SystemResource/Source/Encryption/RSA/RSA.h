@@ -20,10 +20,8 @@ class RSA
 	RSAKey public_key();
 	RSAKey private_key();
 	char* encode_message(const char* m);
-	int encode_message(int m);
+	unsigned int encode_message(unsigned int m);
 	char* decode_message(const char* c);
-	int decode_message(int c);
+	unsigned int decode_message(unsigned int c);
 	unsigned int number_of_Publickeys();
-	unsigned int Primes(unsigned int input);
-	unsigned int Primes_Print(unsigned int input);
 };

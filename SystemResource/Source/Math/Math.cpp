@@ -117,6 +117,17 @@ double BF::Math::PowerOfTwo(double base)
 	return Power(base, 2);
 }
 
+unsigned int BF::Math::PowerModulo(unsigned int base, unsigned int exponent, unsigned int modulo)
+{
+	unsigned int result = 1;
+	for (int i = 0; i < exponent; i++)
+	{
+		result *= base;
+		result %= modulo;
+	}
+	return result;
+}
+
 double BF::Math::Root(unsigned int rootNr, double value)
 {
 	switch (rootNr)
