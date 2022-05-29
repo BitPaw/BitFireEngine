@@ -3,7 +3,7 @@
 #include "Euklid.h"
 
 #include <Text/Text.h>
-
+#include <Hardware/Memory/Memory.h>
 #include <Math/Primes.h>
 
 #include <iostream>
@@ -134,8 +134,7 @@ char* RSA::encode_message(const char* m)
 		return nullptr;
 	}
 	int length = BF::Text::Length(m);
-	// can memory be used here or is text allocation in the text workdomain?
-	char* encoded = (char*)malloc(length * sizeof(char) + 1);
+	char* encoded = BF::Memory::Allocate<char>(length + 1);
 	BF::Text::Copy(m, length, encoded, length);
 
 	for (int i = 0; i < length; i++)
@@ -166,8 +165,7 @@ char* RSA::decode_message(const char* c)
 	}
 
 	int length = BF::Text::Length(c);
-	// can memory be used here or is text allocation in the text workdomain?
-	char* decoded = (char*)malloc(length * sizeof(char) + 1);
+	char* decoded = BF::Memory::Allocate<char>(length + 1);
 	BF::Text::Copy(c, length, decoded, length);
 
 	for (int i = 0; i < length; i++)
