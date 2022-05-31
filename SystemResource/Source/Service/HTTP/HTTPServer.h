@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../../Network/Server.h"
+#include <Network/Server.h>
 
 #define PortHTTP 80
 
 namespace BF
 {
-	class HTTPServer : public Server, public IServerListener,public ISocketListener
+	class HTTPServer : public Server, public IServerListener, public ISocketListener
 	{
 		public:
 		void MessageParse(const char* message);

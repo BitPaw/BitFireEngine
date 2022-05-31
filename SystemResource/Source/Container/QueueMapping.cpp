@@ -22,7 +22,7 @@ bool BF::QueueMapping::Enqueue(const void* source, const size_t sizeInBytes)
 	return true;
 }
 
-bool BF::QueueMapping::Dequeue(void** target, size_t& sizeInBytes)
+bool BF::QueueMapping::Dequeue(void* target, size_t sizeInBytes)
 {
 	{
 		const bool hasElements = _elementConter > 0;
@@ -34,9 +34,8 @@ bool BF::QueueMapping::Dequeue(void** target, size_t& sizeInBytes)
 	}
 
 	const Byte* adressStart = Data + _offsetBytesUsed;
-	void* targetAdress = *target;
 
-	Memory::Copy(targetAdress, adressStart, sizeInBytes);
+	Memory::Copy(target, adressStart, sizeInBytes);
 
 	_offsetBytesUsed += sizeInBytes;
 

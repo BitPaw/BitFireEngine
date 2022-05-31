@@ -726,10 +726,22 @@
     <ClCompile Include="Source\Hardware\Monitor\Monitor.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Network\Protocol\SilverBulletProtocolData.cpp">
+    <ClCompile Include="Source\Network\Protocol\SBP\SBPData.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Container\QueueMapping.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Network\Protocol\SBP\SBPQueue.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Network\Protocol\SBP\SBPClient.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Network\Protocol\SBP\SBPServer.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Network\Protocol\SBP\SBPText.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1667,10 +1679,22 @@
     <ClInclude Include="Source\Hardware\Monitor\Monitor.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Network\Protocol\SilverBulletProtocolData.h">
+    <ClInclude Include="Source\Network\Protocol\SBP\SBPData.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Container\QueueMapping.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Network\Protocol\SBP\SBPQueue.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Network\Protocol\SBP\SBPClient.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Network\Protocol\SBP\SBPServer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Network\Protocol\SBP\SBPText.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

@@ -19,6 +19,6 @@ namespace BF
 		void Allocate(const size_t sizeInBytes);
 
 		bool Enqueue(const void* source, const size_t sizeInBytes);
-		bool Dequeue(void** target, size_t& sizeInBytes);
+		bool Dequeue(void* target, size_t sizeInBytes);
 	};
 }

@@ -8,10 +8,10 @@ namespace BF
 	{
 		public:
 		int SocketID;
-		char* Message;
+		const unsigned char* Message;
 		size_t MessageSize;
 
 		IOSocketMessage();
-		IOSocketMessage(int socketID, char* message, size_t messageSize);		
+		IOSocketMessage(int socketID, const unsigned char* message, size_t messageSize);
 	};
 }

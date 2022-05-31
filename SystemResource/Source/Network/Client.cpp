@@ -34,13 +34,13 @@ BF::SocketActionResult BF::Client::ConnectToServer(const char* ip, unsigned shor
     for (size_t i = 0; i < adressInfoListSize; i++)
     {
         IPAdressInfo& adressInfo = adressInfoList[i];
-        SocketActionResult socketCreateResult = Create(adressInfo.Family, adressInfo.Type, adressInfo.Protocol, adressInfo.SocketID);
-        bool creationSuccesful = adressInfo.SocketID != -1;
+        const SocketActionResult socketCreateResult = Create(adressInfo.Family, adressInfo.Type, adressInfo.Protocol, adressInfo.SocketID);
+        const bool creationSuccesful = adressInfo.SocketID != -1;
 
         if (creationSuccesful)
         {
-            int serverSocketID = connect(adressInfo.SocketID, (struct sockaddr*)adressInfo.IPRawByte, adressInfo.IPRawByteSize);
-            bool connected = serverSocketID != -1;
+            const int serverSocketID = connect(adressInfo.SocketID, (struct sockaddr*)adressInfo.IPRawByte, adressInfo.IPRawByteSize);
+            const bool connected = serverSocketID != -1;
 
             if (connected)
             {
@@ -78,9 +78,13 @@ ThreadFunctionReturnType BF::Client::CommunicationFunctionAsync(void* data)
 
     while (client.IsCurrentlyUsed())
     {
-        SocketActionResult socketActionResult = client.Receive();
+        const size_t bufferSize = 2048;
+        Byte buffer[bufferSize]{0};
 
-        if (socketActionResult != SocketActionResult::Successful)
+        const SocketActionResult receiveingResult = client.Receive(buffer, bufferSize);
+        const bool sucessful = receiveingResult == SocketActionResult::Successful;
+
+        if (!sucessful)
         {
             client.Disconnect();
         }

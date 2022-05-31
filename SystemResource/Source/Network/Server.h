@@ -5,8 +5,9 @@
 #include "IServerListener.h"
 #include "SocketActionResult.h"
 
-#include "../Async/Thread.h"
-#include "../Async/AsyncLock.h"
+#include <Async/Thread.h>
+#include <Async/AsyncLock.h>
+#include <File/File.h>
 
 namespace BF
 {
@@ -26,22 +27,24 @@ namespace BF
         size_t NumberOfMaximalClients;
         //-----------------------------------
 
-        //---<Ouput>
+        //---<Ouput>-------------------------
         size_t SocketListSize;
-        IOSocket* SocketList;
+        IOSocket* SocketList; // Server connections
         //-----------------------------------
 
         Server();
         ~Server();
 
-        SocketActionResult Start(unsigned short port);
+        SocketActionResult Start(const unsigned short port);
         void Stop();
         void KickClient(int socketID);
         Client* GetClientViaID(int socketID);
 
         void RegisterClient(IOSocket* client);
 
-        SocketActionResult SendMessageToClient(int clientID, char* message, size_t messageLength);
+        SocketActionResult SendMessageToAll(const Byte* data, const size_t dataSize);
+        SocketActionResult SendMessageToClient(const ClientID clientID, const Byte* data, const size_t dataSize);
+
         SocketActionResult SendFileToClient(int clientID, const char* filePath);
         SocketActionResult SendFileToClient(int clientID, const wchar_t* filePath);
 

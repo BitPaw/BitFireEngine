@@ -4,8 +4,10 @@
 
 // Source
 #define SourceInvalid	-1
-#define SourceFillData	-2 // Request the reciever (Server mostly) to fill in data.
+#define SourceMe	-2 // Request the reciever (Server mostly) to fill in data.
 #define SourceServer	-3 // Server is the owner of this message
+
+#define SourceLimitMaximum SourceServer
 
 // Target
 #define TargetInvalid		-1 
@@ -16,9 +18,11 @@
 #define TargetYouAndOthers	-6 // *Something* -> pecific Clients + Client (You)
 #define TargetEveryBody		-7 // *Something* -> All Clients (You)
 
+#define TargetLimitMaximum TargetEveryBody
+
 namespace BF
 {
-	struct SilverBulletProtocolData
+	struct SBPData
 	{
 		public:
 		ByteCluster Command;
@@ -28,8 +32,29 @@ namespace BF
 		unsigned int DataSize;
 		void* Data;
 
-		SilverBulletProtocolData();
+		SBPData();
+		SBPData
+		(
+			const unsigned int command,
+			const unsigned int source,
+			const unsigned int target,
+			const unsigned int id,
+			const unsigned int dataSize,
+			const void* adress
+		);
 		
-		void Set(unsigned int command, unsigned int source, unsigned int target, unsigned int id, unsigned int dataSize);
+		void Set
+		(
+			const unsigned int command,
+			const unsigned int source,
+			const unsigned int target,
+			const unsigned int id,
+			const unsigned int dataSize,
+			const void* adress
+		);
+
+		unsigned int Size();
+
+		void Clear();
 	};
 }

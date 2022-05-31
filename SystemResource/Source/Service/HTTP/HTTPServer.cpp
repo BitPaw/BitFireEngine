@@ -48,7 +48,7 @@ void BF::HTTPServer::OnMessageReceive(IOSocketMessage socketMessage)
 
 	if (isGet)
 	{
-		this->SendMessageToClient(socketMessage.SocketID, (char*)response, 147);
+		this->SendMessageToClient(socketMessage.SocketID, (const unsigned char*)response, 147);
 		this->KickClient(socketMessage.SocketID);
 	}
 

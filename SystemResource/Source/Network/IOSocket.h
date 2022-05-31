@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../OS/OSDefine.h"
+#include <OS/OSDefine.h>
 
 #define SocketBufferSize 2048u
 
@@ -24,7 +24,6 @@
 #define AdressInfoDelete FreeAddrInfoA
 #endif
 
-#include "../Async/Thread.h"
 #include "SocketActionResult.h"
 #include "IPVersion.h"
 #include "IPAdressFamily.h"
@@ -32,6 +31,11 @@
 #include "SocketType.h"
 #include "IPAdressInfo.h"
 #include "ISocketListener.h"
+
+#include <Async/Thread.h>
+#include <File/File.h>
+
+#define ClientID unsigned int
 
 namespace BF
 {
@@ -43,7 +47,6 @@ namespace BF
 		//----------------------------
 
 		//---<Internal IO>------------
-		char BufferMessage[SocketBufferSize];
 		Thread CommunicationThread;
 		//----------------------------
 
@@ -57,7 +60,13 @@ namespace BF
 		bool IsCurrentlyUsed();
 		void Close();
 		
-		static SocketActionResult Create(IPAdressFamily adressFamily, SocketType socketType, ProtocolMode protocolMode, unsigned int& socketID);
+		static SocketActionResult Create
+		(
+			const IPAdressFamily adressFamily, 
+			const SocketType socketType,
+			const ProtocolMode protocolMode,
+			size_t& socketID
+		);
 
 		static SocketActionResult SetupAdress
 		(
@@ -70,9 +79,9 @@ namespace BF
 			IPAdressInfo** adressInfoList
 		);
 
-		SocketActionResult Receive();
-		SocketActionResult Send(const char* message, size_t messageLength);
-		SocketActionResult SendFile(const char* filePath, size_t sendBufferSize = 2048);		
+		SocketActionResult Receive(Byte* message, const size_t messageLength);
+		SocketActionResult Send(const Byte* message, const size_t messageLength);
+		SocketActionResult SendFile(const char* filePath, const size_t sendBufferSize = 2048);
 
 #if defined(OSWindows)
 		static SocketActionResult WindowsSocketAgentStartup();

@@ -63,26 +63,30 @@ BF::Client* BF::Server::GetNextClient()
     return GetNextClient();
 }
 
-BF::SocketActionResult BF::Server::Start(unsigned short port)
+BF::SocketActionResult BF::Server::Start(const unsigned short port)
 {
     size_t adressInfoListSize = 0;
     IPAdressInfo* adressInfoList = nullptr;
 
-    SocketActionResult adressResult = IOSocket::SetupAdress
-    (
-        nullptr, 
-        port, 
-        IPAdressFamily::Unspecified,
-        SocketType::Stream, 
-        ProtocolMode::TCP,
-        adressInfoListSize,
-        &adressInfoList
-    );
-
-    if (adressResult != SocketActionResult::Successful)
+    // Setup adress info
     {
-        return adressResult;
-    }
+        const SocketActionResult adressResult = IOSocket::SetupAdress
+        (
+            nullptr,
+            port,
+            IPAdressFamily::Unspecified,
+            SocketType::Stream,
+            ProtocolMode::TCP,
+            adressInfoListSize,
+            &adressInfoList
+        );
+        const bool adressSetupSucessful = adressResult == SocketActionResult::Successful;
+
+        if(!adressSetupSucessful)
+        {
+            return adressResult;
+        }
+    }   
 
     SocketListSize = adressInfoListSize;
     SocketList = new IOSocket[SocketListSize];
@@ -90,8 +94,8 @@ BF::SocketActionResult BF::Server::Start(unsigned short port)
     for (size_t i = 0; i < SocketListSize; i++)
     {
         IOSocket& ioSocket = SocketList[i];
-        ioSocket.AdressInfo = adressInfoList[i];        
 
+        ioSocket.AdressInfo = adressInfoList[i]; 
         ioSocket.EventCallBackSocket = EventCallBackSocket;
 
         // If some is there to ask, ask. He may want to say no.
@@ -109,12 +113,16 @@ BF::SocketActionResult BF::Server::Start(unsigned short port)
             }
         }
       
-        SocketActionResult socketCreateResult = IOSocket::Create(ioSocket.AdressInfo.Family, ioSocket.AdressInfo.Type, ioSocket.AdressInfo.Protocol, ioSocket.AdressInfo.SocketID);
-
-        if (socketCreateResult != SocketActionResult::Successful)
+        // Create socket
         {
-            return SocketActionResult::SocketCreationFailure;
-        }
+            const SocketActionResult socketCreateResult = IOSocket::Create(ioSocket.AdressInfo.Family, ioSocket.AdressInfo.Type, ioSocket.AdressInfo.Protocol, ioSocket.AdressInfo.SocketID);
+            const bool sucessful = socketCreateResult == SocketActionResult::Successful;
+
+            if(!sucessful)
+            {
+                return SocketActionResult::SocketCreationFailure;
+            }
+        }       
 
         // Set Socket Options
         {
@@ -233,16 +241,40 @@ void BF::Server::RegisterClient(IOSocket* clientSocket)
     */
 }
 
-BF::SocketActionResult BF::Server::SendMessageToClient(int clientID, char* message, size_t messageLength)
+BF::SocketActionResult BF::Server::SendMessageToAll(const Byte* data, const size_t dataSize)
+{
+    unsigned int failCounter = 0;
+
+    for(size_t i = 0; i < NumberOfConnectedClients; ++i)
+    {
+        Client& client = ClientList[i];
+        const SocketActionResult sendResult = client.Send(data, dataSize);
+        const bool sucessful = sendResult == SocketActionResult::Successful;
+
+        if(!sucessful)
+        {
+            ++failCounter;
+        }
+    }
+
+    if(failCounter)
+    {
+        return SocketActionResult::SocketSendFailure;
+    }
+
+    return SocketActionResult::Successful;
+}
+
+BF::SocketActionResult BF::Server::SendMessageToClient(const ClientID clientID, const Byte* data, const size_t dataSize)
 {
     Client* client = GetClientViaID(clientID);
 
-    if (!client)
+    if(!client)
     {
         return SocketActionResult::NoClientWithThisID;
     }
 
-    return client->Send(message, messageLength);
+    return client->Send(data, dataSize);
 }
 
 BF::SocketActionResult BF::Server::SendFileToClient(int clientID, const char* filePath)
@@ -276,7 +308,7 @@ BF::SocketActionResult BF::Server::BroadcastMessageToClients(char* message, size
 
         if (client->IsCurrentlyUsed())
         {
-            SocketActionResult currentCrrorCode = client->Send(message, messageLength);
+            SocketActionResult currentCrrorCode = client->Send((unsigned char*)message, messageLength);
 
             if (currentCrrorCode != SocketActionResult::Successful)
             {

@@ -17,9 +17,6 @@
 
 #define FileLineBufferSize 2048
 
-#ifndef Byte
-#define Byte unsigned char
-#endif
 
 #if defined(OSUnix)
 
@@ -67,6 +64,10 @@
 #define WorkingDirectoryCurrentW _wgetcwd
 #define WorkingDirectoryChangeA _chdir
 #define WorkingDirectoryChangeW _wchdir
+#endif
+
+#ifndef Byte
+#define Byte unsigned char
 #endif
 
 namespace BF

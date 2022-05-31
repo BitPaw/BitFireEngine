@@ -33,9 +33,7 @@ namespace BF
 	{
 		public:
 		// Runtime Stuff
-		unsigned int SocketID;
-
-
+		size_t SocketID;
 
 		char IP[IPv6LengthMax];
 		unsigned short Port;

@@ -4,16 +4,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define SocketPackageIDFileBegin 'F'
-#define SocketPackageIDFileEnd '/'
-
 #include "IOSocketMessage.h"
 
-#include "../ErrorCode.h"
+#define SocketPackageIDFileBegin 'F'
+#define SocketPackageIDFileEnd '/'
 
 #if defined(OSWindows)
 #define EAI_ADDRFAMILY WSAHOST_NOT_FOUND
 #endif
+
+#include <ErrorCode.h>
+#include <Hardware/Memory/Memory.h>
 
 bool BF::IOSocket::IsCurrentlyUsed()
 {
@@ -38,12 +39,15 @@ BF::SocketActionResult BF::IOSocket::SetupAdress
     // ADRRINFOW?
 
 #if defined(OSWindows)
-    SocketActionResult errorCode = WindowsSocketAgentStartup();
-
-    if (errorCode != SocketActionResult::Successful)
     {
-        return errorCode;
-    }
+        const SocketActionResult wsaResult = WindowsSocketAgentStartup();
+        const bool sucessful = wsaResult == SocketActionResult::Successful;
+
+        if(!sucessful)
+        {
+            return wsaResult;
+        }
+    }  
 #endif 
 
     if (port != -1)
@@ -142,8 +146,6 @@ BF::SocketActionResult BF::IOSocket::SetupAdress
 BF::IOSocket::IOSocket()
 {
     EventCallBackSocket = 0;
-
-    memset(BufferMessage, 0, SocketBufferSize); 
 }
 
 void BF::IOSocket::Close()
@@ -170,34 +172,47 @@ void BF::IOSocket::Close()
     AdressInfo.SocketID = SocketIDOffline;
 }
 
-BF::SocketActionResult BF::IOSocket::Create(IPAdressFamily adressFamily, SocketType socketType, ProtocolMode protocolMode, unsigned int& socketID)
+BF::SocketActionResult BF::IOSocket::Create
+(
+    const IPAdressFamily adressFamily,
+    const SocketType socketType,
+    const ProtocolMode protocolMode,
+    size_t& socketID
+)
 {
-    int ipAdressFamilyID = ConvertIPAdressFamily(adressFamily);
-    int socketTypeID = ConvertSocketType(socketType);
-    int protocolModeID = ConvertProtocolMode(protocolMode);
+    const int ipAdressFamilyID = ConvertIPAdressFamily(adressFamily);
+    const int socketTypeID = ConvertSocketType(socketType);
+    const int protocolModeID = ConvertProtocolMode(protocolMode);
 
 #if defined(OSWindows)
-    SocketActionResult errorCode = WindowsSocketAgentStartup();
-
-    if (errorCode != SocketActionResult::Successful)
     {
-        return errorCode;
-    }
+        const SocketActionResult permissionGranted = WindowsSocketAgentStartup();
+        const bool sucessful = permissionGranted == SocketActionResult::Successful;
+
+        if(!sucessful)
+        {
+            return permissionGranted;
+        }
+    }  
 #endif 
 
-    socketID = socket(ipAdressFamilyID, socketTypeID, protocolModeID);
+    const size_t socketIDResult = socket(ipAdressFamilyID, socketTypeID, protocolModeID);
 
-    bool wasSucessful = socketID != SocketIDOffline;
-
-    if (!wasSucessful)
     {
-        return SocketActionResult::SocketCreationFailure;
-    }
+        const bool wasSucessful = socketIDResult != SocketIDOffline;
+
+        if(!wasSucessful)
+        {
+            return SocketActionResult::SocketCreationFailure;
+        }
+    } 
+
+    socketID = socketIDResult;
 
     return SocketActionResult::Successful;
 }
 
-BF::SocketActionResult BF::IOSocket::Receive()
+BF::SocketActionResult BF::IOSocket::Receive(Byte* message, const size_t messageLength)
 {
     unsigned int byteRead = 0;
 
@@ -206,13 +221,16 @@ BF::SocketActionResult BF::IOSocket::Receive()
         return SocketActionResult::SocketIsNotConnected;
     }
 
-    memset(BufferMessage, 0, SocketBufferSize);
+    // Read
+    {
+        char* data = (char*)message;
 
 #if defined(OSUnix)
-    byteRead = read(AdressInfo.SocketID, BufferMessage, SocketBufferSize);
+        byteRead = read(AdressInfo.SocketID, data, messageLength);
 #elif defined(OSWindows)
-    byteRead = recv(AdressInfo.SocketID, BufferMessage, SocketBufferSize, 0);
+        byteRead = recv(AdressInfo.SocketID, data, messageLength, 0);
 #endif
+    }
 
     switch (byteRead)
     {
@@ -229,7 +247,7 @@ BF::SocketActionResult BF::IOSocket::Receive()
         {
             if (EventCallBackSocket)
             {
-                IOSocketMessage socketMessage(AdressInfo.SocketID, BufferMessage, byteRead);
+                IOSocketMessage socketMessage(AdressInfo.SocketID, message, byteRead);
 
                 EventCallBackSocket->OnMessageReceive(socketMessage);
             }
@@ -239,7 +257,7 @@ BF::SocketActionResult BF::IOSocket::Receive()
     }
 }
 
-BF::SocketActionResult BF::IOSocket::Send(const char* message, size_t messageLength)
+BF::SocketActionResult BF::IOSocket::Send(const Byte* message, const size_t messageLength)
 {
     unsigned int writtenBytes = 0;
 
@@ -253,21 +271,24 @@ BF::SocketActionResult BF::IOSocket::Send(const char* message, size_t messageLen
         return SocketActionResult::Successful; // Do not send anything if the message is empty
     }
 
-    memcpy(BufferMessage, message, messageLength);
-
     if (EventCallBackSocket)
     {
-        IOSocketMessage socketMessage(AdressInfo.SocketID, BufferMessage, messageLength);
+        IOSocketMessage socketMessage(AdressInfo.SocketID, message, messageLength);
 
         EventCallBackSocket->OnMessageSend(socketMessage);
     }
 
-#if defined(OSUnix)
-    writtenBytes = write(AdressInfo.SocketID, BufferMessage, messageLength);
-#elif defined(OSWindows)
-    writtenBytes = send(AdressInfo.SocketID, BufferMessage, messageLength, 0);
-#endif  
+    // Send into stream
+    {
+        const char* data = (const char*)message;
 
+#if defined(OSUnix)
+        writtenBytes = write(AdressInfo.SocketID, data, messageLength);
+#elif defined(OSWindows)
+        writtenBytes = send(AdressInfo.SocketID, data, messageLength, 0);
+#endif 
+    }
+    
     switch (writtenBytes)
     {
         case (unsigned int)-1:
@@ -278,10 +299,10 @@ BF::SocketActionResult BF::IOSocket::Send(const char* message, size_t messageLen
     }   
 }
 
-BF::SocketActionResult BF::IOSocket::SendFile(const char* filePath, size_t sendBufferSize)
+BF::SocketActionResult BF::IOSocket::SendFile(const char* filePath, const size_t sendBufferSize)
 {
     FILE* file = fopen(filePath, "rb");
-    char buffer[2048];
+    Byte buffer[2048];
 
     if (!file)
     {
@@ -306,12 +327,8 @@ BF::SocketActionResult BF::IOSocket::SendFile(const char* filePath, size_t sendB
 BF::SocketActionResult BF::IOSocket::WindowsSocketAgentStartup()
 {
     WORD wVersionRequested = MAKEWORD(2, 2);
-    WSADATA wsaData;
-    int result = -1;
-
-    memset(&wsaData, 0, sizeof(WSADATA));
-
-    result = WSAStartup(wVersionRequested, &wsaData);
+    WSADATA wsaData{ 0 };
+    const int result = WSAStartup(wVersionRequested, &wsaData);
 
     switch (result)
     {

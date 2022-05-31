@@ -113,6 +113,14 @@ namespace BF
 
         static void Copy(void* target, const void* source, const size_t size)
         {
+            if(!size)
+            {
+                return;
+            }
+
+            assert(target);
+            assert(source);
+
 #if MemoryDebug
             printf("[#][Memory] 0x%p (%10zi B) Copy from 0x%p\n", target, size, source);
 #endif
