@@ -13,5 +13,5 @@ namespace BF
 		CharacterDefinition
 	};
 
-	FNTLineType ConvertFNTLineType(const char* line);
+	FNTLineType ConvertFNTLineType(const unsigned char* line);
 }

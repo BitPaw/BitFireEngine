@@ -145,6 +145,8 @@ BF::SocketActionResult BF::IOSocket::SetupAdress
 
 BF::IOSocket::IOSocket()
 {
+    State = SocketState::NotInitialised;
+
     EventCallBackSocket = 0;
 }
 
@@ -170,6 +172,11 @@ void BF::IOSocket::Close()
     }
 
     AdressInfo.SocketID = SocketIDOffline;
+}
+
+void BF::IOSocket::StateChange(const SocketState socketState)
+{
+    State = socketState;
 }
 
 BF::SocketActionResult BF::IOSocket::Create
@@ -225,11 +232,15 @@ BF::SocketActionResult BF::IOSocket::Receive(Byte* message, const size_t message
     {
         char* data = (char*)message;
 
+        StateChange(SocketState::DataReceiving);
+
 #if defined(OSUnix)
         byteRead = read(AdressInfo.SocketID, data, messageLength);
 #elif defined(OSWindows)
         byteRead = recv(AdressInfo.SocketID, data, messageLength, 0);
 #endif
+
+        StateChange(SocketState::IDLE);
     }
 
     switch (byteRead)
@@ -301,26 +312,40 @@ BF::SocketActionResult BF::IOSocket::Send(const Byte* message, const size_t mess
 
 BF::SocketActionResult BF::IOSocket::SendFile(const char* filePath, const size_t sendBufferSize)
 {
-    FILE* file = fopen(filePath, "rb");
-    Byte buffer[2048];
+    File file;   
 
-    if (!file)
+    // Load file
     {
-        return SocketActionResult::FileNotFound;
+        const FileActionResult loadResult = file.MapToVirtualMemory(filePath);
+        const bool sucess = loadResult == FileActionResult::Successful;
+
+        if(!sucess)
+        {
+            return SocketActionResult::FileNotFound;
+        }
     }
 
-    size_t readSize = 0;
-
-    do
     {
-        readSize = fread(buffer, sizeof(char), sendBufferSize, file);
-        Send(buffer, readSize);
+        const size_t bufferSize = 2048;
+        const size_t fileSize = file.DataSize;
+        size_t readSize = 0;
+        Byte* currentPosition = file.CursorCurrentAdress();
+
+        while(readSize < fileSize)
+        {
+            const size_t possibleReadBytes = file.ReadPossibleSize();
+            const bool canFulfil = bufferSize <= possibleReadBytes;
+            const size_t bytesToRead = canFulfil ? bufferSize : possibleReadBytes;
+
+            Send(currentPosition, bytesToRead);
+
+            file.DataCursorPosition += bytesToRead;
+
+            readSize += bytesToRead;
+        }
     }
-    while (readSize > 0);
 
-    int closeResult = fclose(file);
-
-    return closeResult == 0 ? SocketActionResult::Successful : SocketActionResult::InvalidResult;
+    return SocketActionResult::Successful;
 }
 
 #ifdef OSWindows

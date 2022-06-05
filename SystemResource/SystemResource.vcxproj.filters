@@ -744,6 +744,12 @@
     <ClCompile Include="Source\Network\Protocol\SBP\SBPText.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="WebM.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Media\Image\ImageFileFormat.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp">
@@ -1695,6 +1701,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Network\Protocol\SBP\SBPText.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="WebM.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

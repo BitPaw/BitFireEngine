@@ -56,29 +56,60 @@ BF::FNT::~FNT()
 	delete[] FontPageList;
 }
 
+BF::FileActionResult BF::FNT::Load(const char* filePath)
+{
+	File file;
+
+	{
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+
+		if(!sucessful)
+		{
+			return fileLoadingResult;
+		}
+	}
+
+	{
+		const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+
+		return fileParsingResult;
+	}
+}
+
 BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 {
 	File file;
 
 	{
-		const FileActionResult fileActionResult = file.ReadFromDisk(filePath);
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
-		if(fileActionResult != FileActionResult::Successful)
+		if(!sucessful)
 		{
-			return fileActionResult;
+			return fileLoadingResult;
 		}
 	}
 
-	size_t bufferSize = 512;
-	char currentCursor[512];
+	{
+		const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+
+		return fileParsingResult;
+	}
+}
+
+BF::FileActionResult BF::FNT::Load(const unsigned char* fileData, const size_t fileDataSize)
+{
+	ByteStream dataStream(fileData, fileDataSize);
 	FNTPage* currentPage = nullptr;
 	size_t characterIndex = 0;
 
-	while (file.ReadNextLineInto(currentCursor))
+	while(!dataStream.IsAtEnd())
 	{
-		const FNTLineType lineType = ConvertFNTLineType(currentCursor);
+		const Byte* currentPosition = dataStream.CursorCurrentAdress();
+		FNTLineType lineType = ConvertFNTLineType(currentPosition);
 
-		switch (lineType)
+		switch(lineType)
 		{
 			case BF::FNTLineType::Info:
 			{
@@ -100,7 +131,15 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 				};
 				const size_t values = sizeof(parsingTokenList) / sizeof(ParsingToken);
 
-				Text::FindAll(currentCursor + 5, bufferSize, parsingTokenList, values);
+				dataStream.CursorAdvance(5u);
+
+				Text::FindAll
+				(
+					(char*)dataStream.CursorCurrentAdress(),
+					dataStream.ReadPossibleSize(),
+					parsingTokenList, 
+					values
+				);
 
 				Text::Copy(indexPosition[0] + 1, FontNameSize, Info.Name, FontNameSize);
 				Text::ToInt(indexPosition[1], 5, Info.Size);
@@ -137,14 +176,22 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 				};
 				const size_t values = sizeof(parsingTokenList) / sizeof(ParsingToken);
 
-				Text::FindAll(currentCursor + 6, bufferSize, parsingTokenList, values);
+				dataStream.CursorAdvance(6u);
 
-				Text::ToInt(indexPosition[0], bufferSize, CommonData.LineHeight);
-				Text::ToInt(indexPosition[1], bufferSize, CommonData.Base);
-				Text::ToInt(indexPosition[2], bufferSize, CommonData.ScaleWidth);
-				Text::ToInt(indexPosition[3], bufferSize, CommonData.ScaleHeight);
-				Text::ToInt(indexPosition[4], bufferSize, CommonData.AmountOfPages);
-				Text::ToBool(indexPosition[5], bufferSize, CommonData.Packed);
+				Text::FindAll
+				(
+					(char*)dataStream.CursorCurrentAdress(),
+					dataStream.ReadPossibleSize(),
+					parsingTokenList,
+					values
+				);
+
+				Text::ToInt(indexPosition[0], dataStream.ReadPossibleSize(), CommonData.LineHeight);
+				Text::ToInt(indexPosition[1], dataStream.ReadPossibleSize(), CommonData.Base);
+				Text::ToInt(indexPosition[2], dataStream.ReadPossibleSize(), CommonData.ScaleWidth);
+				Text::ToInt(indexPosition[3], dataStream.ReadPossibleSize(), CommonData.ScaleHeight);
+				Text::ToInt(indexPosition[4], dataStream.ReadPossibleSize(), CommonData.AmountOfPages);
+				Text::ToBool(indexPosition[5], dataStream.ReadPossibleSize(), CommonData.Packed);
 
 				FontPageListSize = CommonData.AmountOfPages;
 				FontPageList = new FNTPage[FontPageListSize];
@@ -164,10 +211,18 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 				};
 				const size_t values = sizeof(parsingTokenList) / sizeof(ParsingToken);
 
-				Text::FindAll(currentCursor + 5, bufferSize, parsingTokenList, values);
+				dataStream.CursorAdvance(5u);
+
+				Text::FindAll
+				(
+					(char*)dataStream.CursorCurrentAdress(),
+					dataStream.ReadPossibleSize(),
+					parsingTokenList,
+					values
+				);
 
 				Text::ToInt(indexPosition[0], 5, currentPage->PageID);
-				Text::Copy(indexPosition[1] + 1, FNTPageFileNameSize, currentPage->PageFileName, FNTPageFileNameSize);
+				Text::Copy(indexPosition[1] + 1, dataStream.ReadPossibleSize(), currentPage->PageFileName, FNTPageFileNameSize-1);
 
 				Text::TerminateBeginFromFirst(currentPage->PageFileName, FNTPageFileNameSize, '\"');
 
@@ -176,10 +231,13 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 			case BF::FNTLineType::CharacterCount:
 			{
 				const char countText[] = "count=";
-				char* count = Text::FindPosition(currentCursor + 6, bufferSize, countText, sizeof(countText)-1);
+
+				dataStream.CursorAdvance(6u);
+
+				char* count = Text::FindPosition((char*)dataStream.CursorCurrentAdress(), dataStream.ReadPossibleSize(), countText, sizeof(countText) - 1);
 				int size = 0;
 
-				Text::ToInt(count + sizeof(countText) -1, bufferSize - sizeof(countText), size);
+				Text::ToInt(count + sizeof(countText) - 1, dataStream.ReadPossibleSize() - sizeof(countText), size);
 
 				currentPage->CharacteListSize = size;
 				currentPage->CharacteList = new FNTCharacter[size];
@@ -189,7 +247,24 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 				break;
 			}
 			case BF::FNTLineType::CharacterDefinition:
-			{
+			{			
+				const bool acessCharacterOutofBounce = characterIndex >= currentPage->CharacteListSize;
+
+				if(acessCharacterOutofBounce)
+				{
+					++currentPage->CharacteListSize;
+
+					FNTCharacter* characteListR = Memory::Reallocate(currentPage->CharacteList, currentPage->CharacteListSize);
+					const bool adresschanged = characteListR != currentPage->CharacteList;
+
+					if(!characteListR)
+					{
+						// Error, out of memeory
+					}
+
+					currentPage->CharacteList = characteListR;
+				}
+
 				FNTCharacter& character = currentPage->CharacteList[characterIndex++];
 
 				const char parsingData[] = "id=\0x=\0y=\0width=\0height=\0xoffset=\0yoffset=\0xadvance=\0page=\0chnl=";
@@ -209,18 +284,33 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 				};
 				const size_t values = sizeof(parsingTokenList) / sizeof(ParsingToken);
 
-				Text::FindAll(currentCursor + 5, bufferSize, parsingTokenList, values);
+				dataStream.CursorAdvance(5u);			
+
+				Text::FindAll
+				(
+					(char*)dataStream.CursorCurrentAdress(),
+					dataStream.ReadPossibleSize(),
+					parsingTokenList,
+					values
+				);
+				
 
 				Text::ToInt(indexPosition[0], 5, character.ID);
+			
 				Text::ToFloat(indexPosition[1], 5, character.Position[0]);
+			
 				Text::ToFloat(indexPosition[2], 5, character.Position[1]);
+			
 				Text::ToFloat(indexPosition[3], 5, character.Size[0]);
+				
 				Text::ToFloat(indexPosition[4], 5, character.Size[1]);
+				/*
 				Text::ToFloat(indexPosition[5], 5, character.Offset[0]);
 				Text::ToFloat(indexPosition[6], 5, character.Offset[1]);
+			
 				Text::ToInt(indexPosition[7], 5, character.XAdvance);
 				Text::ToInt(indexPosition[8], 5, character.Page);
-				Text::ToInt(indexPosition[9], 5, character.Chanal);
+				Text::ToInt(indexPosition[9], 5, character.Chanal);*/
 
 				break;
 			}
@@ -231,6 +321,8 @@ BF::FileActionResult BF::FNT::Load(const wchar_t* filePath)
 				break;
 			}
 		}
+
+		dataStream.SkipLine();
 	}
 
 	return BF::FileActionResult::Successful;

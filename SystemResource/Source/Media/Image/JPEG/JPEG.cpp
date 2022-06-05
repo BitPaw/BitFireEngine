@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #include <File/File.h>
+#include <Hardware/Memory/Memory.h>
 
 BF::JPEG::JPEG()
 {
@@ -16,59 +17,88 @@ BF::JPEG::JPEG()
     CompressedImageData = 0;
 }
 
+BF::FileActionResult BF::JPEG::Load(const char* filePath)
+{
+    File file;
+
+    {
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+        const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+
+        if(!sucessful)
+        {
+            return fileLoadingResult;
+        }
+    }
+
+    {
+        const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+
+        return fileParsingResult;
+    }
+}
+
 BF::FileActionResult BF::JPEG::Load(const wchar_t* filePath)
 {
     File file;
 
     {
-        const FileActionResult loadingResult = file.ReadFromDisk(filePath);
-        const bool sucessful = loadingResult != FileActionResult::Successful;
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+        const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
-        if(sucessful)
+        if(!sucessful)
         {
-            return loadingResult;
+            return fileLoadingResult;
         }
     }
+
+    {
+        const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+
+        return fileParsingResult;
+    }
+}
+
+BF::FileActionResult BF::JPEG::Load(const unsigned char* fileData, const size_t fileDataSize)
+{
+    ByteStream dataStream(fileData, fileDataSize);
 
     // Check Start of Image
     {
         unsigned char startBlock[2];
-        JPEGMarker marker = JPEGMarker::MarkerInvalid;
-        bool validStart = false;
 
-        file.Read(startBlock, 2u);
+        dataStream.Read(startBlock, 2u);
 
-        marker = ConvertJPEGMarker(startBlock);
-        validStart = marker == JPEGMarker::StartOfImage;
+        const JPEGMarker marker = ConvertJPEGMarker(startBlock);
+        const bool validStart = marker == JPEGMarker::StartOfImage;
 
-        if (!validStart)
+        if(!validStart)
         {
-            return FileActionResult::FormatNotAsExpected;
+            return FileActionResult::InvalidHeaderSignature;
         }
     }
 
-    while (true)
+    while(true)
     {
-        unsigned char markerData[2];
-        JPEGMarker marker = JPEGMarker::MarkerInvalid;
+        unsigned char markerData[2];     
 
-        file.Read(markerData, 2u);
+        dataStream.Read(markerData, 2u);
 
-        marker = ConvertJPEGMarker(markerData);
+        const JPEGMarker marker = ConvertJPEGMarker(markerData);
 
-        switch (marker)
+        switch(marker)
         {
             default:
             case BF::JPEGMarker::MarkerInvalid:
-            {    
+            {
                 unsigned short length = 0;
 
-                file.Read(length, Endian::Big);
+                dataStream.Read(length, Endian::Big);
 
-                file.DataCursorPosition += length - 2;
+                dataStream.DataCursorPosition += length - 2;
 
                 break;
-            }             
+            }
 
             case BF::JPEGMarker::EndOfImage:
             {
@@ -79,27 +109,27 @@ BF::FileActionResult BF::JPEG::Load(const wchar_t* filePath)
             {
                 // We read the start tag already. Reading it again is not valid.
                 return FileActionResult::FormatNotAsExpected;
-            }    
+            }
 
             case BF::JPEGMarker::StartOfFrame:
             {
                 unsigned short length = 0;
                 JPEGFrame frame;
 
-                file.Read(length, Endian::Big);
-                file.Read(frame.Precusion, Endian::Little);
-                file.Read(frame.LineNb, Endian::Little);
-                file.Read(frame.LineSamples);
-                file.Read(frame.ComponentListSize);
-               
-                for (size_t i = 0; i < frame.ComponentListSize; i++)
+                dataStream.Read(length, Endian::Big);
+                dataStream.Read(frame.Precusion, Endian::Little);
+                dataStream.Read(frame.LineNb, Endian::Little);
+                dataStream.Read(frame.LineSamples);
+                dataStream.Read(frame.ComponentListSize);
+
+                for(size_t i = 0; i < frame.ComponentListSize; ++i)
                 {
                     JPEGFrameComponent& frameComponent = frame.ComponentList[i];
                     unsigned char size = 0;
 
-                    file.Read(frameComponent.ID);
-                    file.Read(size);
-                    file.Read(frameComponent.Key);
+                    dataStream.Read(frameComponent.ID);
+                    dataStream.Read(size);
+                    dataStream.Read(frameComponent.Key);
 
                     frameComponent.Width = (unsigned char)((size & 0b11110000) >> 4u);
                     frameComponent.Height = (unsigned char)(size & 0b00001111);
@@ -114,10 +144,10 @@ BF::FileActionResult BF::JPEG::Load(const wchar_t* filePath)
                 unsigned char chrominance = 0;
                 unsigned char buffer[64];
 
-                file.Read(length, Endian::Big);
-                file.Read(chrominance);
+                dataStream.Read(length, Endian::Big);
+                dataStream.Read(chrominance);
 
-                file.Read(buffer, 64);
+                dataStream.Read(buffer, 64);
 
                 break;
             }
@@ -127,70 +157,68 @@ BF::FileActionResult BF::JPEG::Load(const wchar_t* filePath)
                 unsigned short length = 0;
                 JPEGHuffmanTable jpegHuffmanTable;
 
-                file.Read(length, Endian::Big);
-                file.Read(jpegHuffmanTable.Class);
-                file.Read(jpegHuffmanTable.Destination);
+                dataStream.Read(length, Endian::Big);
+                dataStream.Read(jpegHuffmanTable.Class);
+                dataStream.Read(jpegHuffmanTable.Destination);
 
-                file.DataCursorPosition += (length - 2) - 2;
-                
+                dataStream.DataCursorPosition += (length - 2) - 2;
+
                 break;
             }
 
             case BF::JPEGMarker::StartOfScan:
             {
                 unsigned short length = 0;
-                file.Read(length, Endian::Big);
-                file.Read(ScanStart.ScanSelectorSize);
-                
-                for (size_t i = 0; i < ScanStart.ScanSelectorSize; i++)
+                dataStream.Read(length, Endian::Big);
+                dataStream.Read(ScanStart.ScanSelectorSize);
+
+                for(size_t i = 0; i < ScanStart.ScanSelectorSize; i++)
                 {
                     JPEGScanSelector& scanSelector = ScanStart.ScanSelector[i];
                     unsigned char dcacTable = 0;
 
-                    file.Read(scanSelector.Selector);
-                    file.Read(dcacTable);
+                    dataStream.Read(scanSelector.Selector);
+                    dataStream.Read(dcacTable);
 
                     scanSelector.DC = (unsigned char)((dcacTable & 0b11110000) >> 4u);
                     scanSelector.ACTable = (unsigned char)(dcacTable & 0b00001111);
                 }
 
-                file.Read(ScanStart.SpectralSelectFrom);
-                file.Read(ScanStart.SpectralSelectTo);
-                file.Read(ScanStart.SuccessiveAproximation);
+                dataStream.Read(ScanStart.SpectralSelectFrom);
+                dataStream.Read(ScanStart.SpectralSelectTo);
+                dataStream.Read(ScanStart.SuccessiveAproximation);
 
-                CompressedImageDataSize = file.DataSize - file.DataCursorPosition - 2;
-                CompressedImageData = (unsigned char*)malloc(CompressedImageDataSize * sizeof(char));
+                CompressedImageDataSize = dataStream.DataSize - dataStream.DataCursorPosition - 2;
+                CompressedImageData = Memory::Allocate<unsigned char>(CompressedImageDataSize);
 
-                file.Read(CompressedImageData, CompressedImageDataSize);
+                dataStream.Read(CompressedImageData, CompressedImageDataSize);
 
                 break;
             }
             case BF::JPEGMarker::HeaderFileInfo:
             {
-                file.Read(FileInfo.Length, Endian::Little);
-                file.Read(FileInfo.Identifier, 5u);
-                file.Read(FileInfo.VersionMajor);
-                file.Read(FileInfo.VersionMinor);
-                file.Read(FileInfo.DensityUnits);
-                file.Read(FileInfo.DensityX, Endian::Little);
-                file.Read(FileInfo.DensityY, Endian::Little);
-                file.Read(FileInfo.ThumbnailX);
-                file.Read(FileInfo.ThumbnailY);
-                
-                if (FileInfo.ThumbnailX > 0 && FileInfo.ThumbnailY > 0)
+                dataStream.Read(FileInfo.Length, Endian::Little);
+                dataStream.Read(FileInfo.Identifier, 5u);
+                dataStream.Read(FileInfo.VersionMajor);
+                dataStream.Read(FileInfo.VersionMinor);
+                dataStream.Read(FileInfo.DensityUnits);
+                dataStream.Read(FileInfo.DensityX, Endian::Little);
+                dataStream.Read(FileInfo.DensityY, Endian::Little);
+                dataStream.Read(FileInfo.ThumbnailX);
+                dataStream.Read(FileInfo.ThumbnailY);
+
+                if(FileInfo.ThumbnailX > 0 && FileInfo.ThumbnailY > 0)
                 {
                     FileInfo.ThumbnailDataSize = FileInfo.ThumbnailX * FileInfo.ThumbnailY * 3u;
-                    FileInfo.ThumbnailData = (unsigned char*)malloc(FileInfo.ThumbnailDataSize * sizeof(char));
+                    FileInfo.ThumbnailData = Memory::Allocate<unsigned char>(FileInfo.ThumbnailDataSize);
 
-                    file.Read(FileInfo.ThumbnailData, FileInfo.ThumbnailDataSize);
-                }             
+                    dataStream.Read(FileInfo.ThumbnailData, FileInfo.ThumbnailDataSize);
+                }
 
                 break;
-            }                
+            }
         }
     }
-
-    return FileActionResult::FormatNotAsExpected;
 }
 
 BF::FileActionResult BF::JPEG::Save(const wchar_t* filePath)
@@ -200,7 +228,7 @@ BF::FileActionResult BF::JPEG::Save(const wchar_t* filePath)
 
 BF::JPEG::~JPEG()
 {
-    free(CompressedImageData);
+    Memory::Release(CompressedImageData, CompressedImageDataSize);
 }
 
 BF::FileActionResult BF::JPEG::ConvertTo(Image& image)

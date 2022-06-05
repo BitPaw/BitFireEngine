@@ -39,9 +39,48 @@
 
 namespace BF
 {
+	enum class SocketState
+	{
+		NotInitialised,
+
+		// Client only
+
+		Connecting,
+		Connected,
+
+		DataReceiving,
+		DataSending,
+
+		FileReceiving,
+		FileSending,
+
+		// Server only
+		WaitingForConnection, // listenung
+
+		
+
+		IDLE
+	};
+
+	typedef void (*SocketCreatingEvent)(const IPAdressInfo& adressInfo, bool& use);
+	typedef void (*SocketCreatedEvent)(const IPAdressInfo& adressInfo, bool& use);
+
+	typedef void (*MessageSendEvent)(IOSocketMessage socketMessage);
+	typedef void (*MessageReceiveEvent)(IOSocketMessage socketMessage);
+
+	// Server Only
+	typedef void (*ConnectionListeningEvent)(const IPAdressInfo& adressInfo);
+	typedef void (*ConnectionLinkedEvent)(const IPAdressInfo& adressInfo);
+
+	// Client Only
+	typedef void (*ConnectionEstablishedEvent)(const IPAdressInfo& adressInfo);
+	typedef void (*ConnectionTerminatedEvent)(const IPAdressInfo& adressInfo);
+
 	class IOSocket
 	{	
 		public:
+		SocketState State;
+
 		//---<Data>-------------------
 		IPAdressInfo AdressInfo;
 		//----------------------------
@@ -59,6 +98,8 @@ namespace BF
 
 		bool IsCurrentlyUsed();
 		void Close();
+
+		void StateChange(const SocketState socketState);
 		
 		static SocketActionResult Create
 		(

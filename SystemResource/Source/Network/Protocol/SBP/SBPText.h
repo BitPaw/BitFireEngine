@@ -6,21 +6,14 @@
 
 namespace BF
 {
-	enum class SBPTextType : char
-	{
-		Invalid = SBPTextTypeInvalid,
-
-		Narrow = SBPTextTypeNarrow, // Interpred text as char*
-		Wide = SBPTextTypeWide // Interpret thext as wchar_t*
-	};
-
 	struct SBPText
 	{
 		public:
-		SBPTextType Type;
+		unsigned char Type;
 		
 		union 
 		{
+			const void* Text;
 			const char* TextA;
 			const wchar_t* TextW;
 		};

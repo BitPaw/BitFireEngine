@@ -3,19 +3,19 @@
 
 BF::SBPText::SBPText()
 {
-	Type = SBPTextType::Invalid;
+	Type = SBPTextTypeInvalid;
 	TextA = 0;
 }
 
 BF::SBPText::SBPText(const char* text)
 {
-	Type = SBPTextType::Narrow;
+	Type = SBPTextTypeNarrow;
 	TextA = text;
 }
 
 BF::SBPText::SBPText(const wchar_t* text)
 {
-	Type = SBPTextType::Wide;
+	Type = SBPTextTypeWide;
 	TextW = text;
 }
 
@@ -24,13 +24,13 @@ size_t BF::SBPText::SizeInBytes() const
 	switch(Type)
 	{
 		default:
-		case BF::SBPTextType::Invalid:
+		case SBPTextTypeInvalid:
 			return 0;
 
-		case BF::SBPTextType::Narrow:
+		case SBPTextTypeNarrow:
 			return Text::Length(TextA) + 1;
 
-		case BF::SBPTextType::Wide:
+		case SBPTextTypeWide:
 			return (Text::Length(TextW) +1 )* 2u;
 	}
 }

@@ -19,6 +19,12 @@ namespace BF
 		ByteStream();
 		ByteStream(Byte* data, size_t dataSize);
 
+		// WARNING! If this constructor is used, guarantee that it will only be "read".
+		// A write operation will be illegal to do, a crash may accur. 
+		ByteStream(const Byte* data, size_t dataSize);
+
+		size_t ReadPossibleSize() const;
+		bool IsAtEnd() const;
 
 		void DataSet(Byte* data, size_t dataSize, size_t cursorPosition = 0);
 		
@@ -30,6 +36,7 @@ namespace BF
 		unsigned int ReadNextLineInto(char* exportBuffer);
 
 		void SkipEndOfLineCharacters();
+		void SkipLine();
 
 		void Read(bool& value);
 		void Read(char& value);
@@ -40,6 +47,11 @@ namespace BF
 		void Read(unsigned int& value, Endian endian);
 		void Read(unsigned long long& value, Endian endian);
 		void Read(void* value, size_t length);
+
+		// Additional check how many bytes are read.
+		// Slower version of Read(), this function can't fail.
+		size_t ReadSafe(Byte* value, const size_t length);
+
 		bool ReadAndCompare(const Byte* value, size_t length);
 		bool ReadAndCompare(const char* value, size_t length);
 		bool ReadAndCompare(void* value, size_t length);

@@ -9,6 +9,11 @@ BF::Client::Client()
     EventCallBackClient = 0;
 }
 
+BF::Client::~Client()
+{
+    Disconnect();
+}
+
 BF::SocketActionResult BF::Client::ConnectToServer(const char* ip, unsigned short port)
 {
     IPAdressFamily ipAdressFamily = IPAdressFamily::Unspecified;

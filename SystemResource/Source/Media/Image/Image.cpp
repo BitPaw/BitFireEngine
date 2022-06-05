@@ -301,6 +301,20 @@ void BF::Image::FormatChange(ImageDataFormat imageFormat)
     }
 }
 
+BF::ImageFileFormat BF::Image::FileFormatPeek(const char* filePath)
+{
+    FilePath file(filePath);
+
+    if(file.ExtensionEquals("BMP"))  return ImageFileFormat::BitMap;
+    if(file.ExtensionEquals("GIF"))  return ImageFileFormat::GIF;
+    if(file.ExtensionEquals("JPEG"))  return ImageFileFormat::JPEG;
+    if(file.ExtensionEquals("PNG"))  return ImageFileFormat::PNG;
+    if(file.ExtensionEquals("TGA"))  return ImageFileFormat::TGA;
+    if(file.ExtensionEquals("TIFF"))  return ImageFileFormat::TIFF;
+
+    return ImageFileFormat::Unkown;
+}
+
 BF::ImageFileFormat BF::Image::FileFormatPeek(const wchar_t* filePath)
 {
     FilePath file(filePath);
@@ -315,67 +329,203 @@ BF::ImageFileFormat BF::Image::FileFormatPeek(const wchar_t* filePath)
     return ImageFileFormat::Unkown;
 }
 
-BF::FileActionResult BF::Image::Load(const wchar_t* filePath)
+BF::FileActionResult BF::Image::Load(const char* filePath)
 {
-    if (!File::DoesFileExist(filePath))
+    File file;
+
     {
-        return FileActionResult::FileNotFound;
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+        const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+
+        if(!sucessful)
+        {
+            return fileLoadingResult;
+        }
     }
 
-    ImageFileFormat imageFileFormat = FileFormatPeek(filePath);
+    {
+        const ImageFileFormat hint = FileFormatPeek(filePath);
+        const FileActionResult fileParsingResult = Load(file.Data, file.DataSize, hint);
+        const bool success = fileParsingResult == FileActionResult::Successful;
 
-    switch (imageFileFormat)
+        if(success)
+        {
+            return FileActionResult::Successful;
+        }
+
+        FileActionResult fileGuessResult = FileActionResult::Invalid;
+        unsigned int fileFormatID = 1;
+
+        do
+        {
+            const ImageFileFormat imageFileFormat = ConvertImageFileFormat(fileFormatID);
+
+            fileGuessResult = Load(file.Data, file.DataSize, imageFileFormat);
+
+            fileFormatID++;
+        }
+        while(fileGuessResult == FileActionResult::InvalidHeaderSignature);
+
+        return fileGuessResult;
+    }
+}
+
+BF::FileActionResult BF::Image::Load(const wchar_t* filePath)
+{
+    File file;
+
+    {
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+        const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+
+        if(!sucessful)
+        {
+            return fileLoadingResult;
+        }
+    }
+
+    {
+        const ImageFileFormat hint = FileFormatPeek(filePath);
+        const FileActionResult fileParsingResult = Load(file.Data, file.DataSize, hint);
+        const bool success = fileParsingResult == FileActionResult::Successful;
+
+        if(!success)
+        {
+            FileActionResult fileGuessResult = FileActionResult::Invalid;
+            unsigned int fileFormatID = 1;
+
+            do
+            {
+                const ImageFileFormat imageFileFormat = ConvertImageFileFormat(fileFormatID);
+
+                fileGuessResult = Load(file.Data, file.DataSize, imageFileFormat);
+
+                fileFormatID++;
+            }
+            while(fileGuessResult != FileActionResult::FormatNotSupported);
+
+            return FileActionResult::FormatNotSupported;
+        }
+
+        return fileParsingResult;
+    }  
+}
+
+BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t fileDataSize, const ImageFileFormat imageFileFormat)
+{
+    switch(imageFileFormat)
     {
         case ImageFileFormat::BitMap:
         {
             BMP bitmap;
-            bitmap.Load(filePath);
-            bitmap.ConvertTo(*this);         
+
+            {
+                const FileActionResult fileActionResult = bitmap.Load(fileData, fileDataSize);
+                const bool sucessful = fileActionResult == FileActionResult::Successful;
+
+                if(sucessful)
+                {
+                    bitmap.ConvertTo(*this);
+
+                    return FileActionResult::Successful;
+                }
+            }        
+        
             break;
         }
         case ImageFileFormat::GIF:
         {
             GIF gif;
-            gif.Load(filePath);
-            gif.ConvertTo(*this);
+
+            {
+                const FileActionResult fileActionResult = gif.Load(fileData, fileDataSize);
+                const bool sucessful = fileActionResult == FileActionResult::Successful;
+
+                if(sucessful)
+                {
+                    gif.ConvertTo(*this);
+
+                    return FileActionResult::Successful;
+                }
+            }
+
             break;
         }
         case ImageFileFormat::JPEG:
         {
             JPEG jpeg;
-            jpeg.Load(filePath);
-            jpeg.ConvertTo(*this);
+
+            {
+                const FileActionResult fileActionResult = jpeg.Load(fileData, fileDataSize);
+                const bool sucessful = fileActionResult == FileActionResult::Successful;
+
+                if(sucessful)
+                {
+                    jpeg.ConvertTo(*this);
+
+                    return FileActionResult::Successful;
+                }
+            }
+
             break;
         }
         case ImageFileFormat::PNG:
         {
             PNG png;
-            png.Load(filePath);
-            png.ConvertTo(*this);
+     
+            {
+                const FileActionResult fileActionResult = png.Load(fileData, fileDataSize);
+                const bool sucessful = fileActionResult == FileActionResult::Successful;
+
+                if(sucessful)
+                {
+                    png.ConvertTo(*this);
+
+                    return FileActionResult::Successful;
+                }
+            }
+
             break;
         }
         case ImageFileFormat::TGA:
         {
             TGA tga;
-            tga.Load(filePath);
-            tga.ConvertTo(*this);
+      
+            {
+                const FileActionResult fileActionResult = tga.Load(fileData, fileDataSize);
+                const bool sucessful = fileActionResult == FileActionResult::Successful;
+
+                if(sucessful)
+                {
+                    tga.ConvertTo(*this);
+
+                    return FileActionResult::Successful;
+                }
+            }
+
             break;
         }
         case ImageFileFormat::TIFF:
         {
             TIFF tiff;
-            tiff.Load(filePath);
-            tiff.ConvertTo(*this);
+          
+            {
+                const FileActionResult fileActionResult = tiff.Load(fileData, fileDataSize);
+                const bool sucessful = fileActionResult == FileActionResult::Successful;
+
+                if(sucessful)
+                {
+                    tiff.ConvertTo(*this);
+
+                    return FileActionResult::Successful;
+                }
+            }
+
             break;
-        }
-        case ImageFileFormat::Unkown:
-        default:
-        {
-            return FileActionResult::FormatNotSupported;
         }
     }
 
-    return FileActionResult::Successful;
+    return FileActionResult::FormatNotSupported;
 }
 
 BF::FileActionResult BF::Image::Save(const wchar_t* filePath, ImageFileFormat imageFileFormat)

@@ -160,6 +160,15 @@ BF::FileActionResult BF::File::Open(FileHandleType& fileHandle, const wchar_t* f
 
 		if(!successful)
 		{
+			switch(fileOpenMode)
+			{
+				case FileOpenMode::Read:
+					return FileActionResult::FileNotFound;
+
+				case FileOpenMode::Write:
+					return FileActionResult::FileCreateFailure;
+			}
+
 			const ErrorCode error = GetCurrentError();
 
 			switch(error)
@@ -170,7 +179,6 @@ BF::FileActionResult BF::File::Open(FileHandleType& fileHandle, const wchar_t* f
 				default:
 					return FileActionResult::FileOpenFailure;
 			}
-
 		}
 	}
 
@@ -414,7 +422,13 @@ BF::ErrorCode BF::File::DirectoryDelete(const wchar_t* directoryName)
 
 BF::FileActionResult BF::File::MapToVirtualMemory(const char* filePath)
 {
-	return FileActionResult();
+	wchar_t filePathW[PathMaxSize];
+
+	Text::Copy(filePath, PathMaxSize, filePathW, PathMaxSize);
+
+	const FileActionResult fileActionResult = MapToVirtualMemory(filePathW);
+
+	return fileActionResult;
 }
 
 BF::FileActionResult BF::File::MapToVirtualMemory(const wchar_t* filePath)

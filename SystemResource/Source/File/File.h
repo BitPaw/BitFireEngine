@@ -81,6 +81,17 @@ namespace BF
 #endif
 		size_t Size;
 		void* Data;
+
+		FileMappingInfo()
+		{
+			ID = 0;
+#if defined(OSWindows)
+			IDMapping = 0;
+#endif
+
+			Size = 0;
+			Data = 0;
+		}
 	};
 
 	struct File : public ByteStream

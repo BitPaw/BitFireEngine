@@ -2,8 +2,10 @@
 
 
 #include <Network/Protocol/SBP/SBPServer.h>
+#include <Network/Protocol/SBP/SBPClient.h>
 #include <Network/Protocol/SBP/SBPQueue.h>
 #include <Time/StopWatch.h>
+#include <Media/Font/Font.h>
 
 using namespace BF;
 
@@ -61,19 +63,19 @@ void SBPDataPrint(const SBPData& sbpData)
                 textINN = "Invalid";
                 break;
 
-            case TargetMeToServer:
+            case TargetServer:
                 textINN = "Me->Ser";
                 break;
 
-            case TargetMeToAll:
+            case TargetAll:
                 textINN = "Me->All";
                 break;
 
-            case TargetMeToOthers:
+            case TargetSpecific:
                 textINN = "Me->Oth";
                 break;
 
-            case TargetYouOnly:
+            case TargetYou:
                 textINN = "Ser->You";
                 break;
 
@@ -183,16 +185,42 @@ int main()
 
 #endif
 
+
+#if 0
     SBPServer server;    
 
     server.Start(25565);
 
     while(true)
     {
-       server.SendTextToAll(L"Ping Hello");
+       server.SendFile("C:/Users/BitPaw/Videos/Compile Info.txt");
 
-       Sleep(1000);
+       Sleep(5000);
     }   
+#endif
+
+    /*
+    SBPClient client;
+
+    client.ConnectToServer("localhost", 25666);
+
+    while(true)
+    {
+        Sleep(1000);
+    }
+    */
+
+    StopWatch sw;
+
+    Font font;
+
+    sw.Start();
+
+    font.Load(L"B:\\Daten\\Fonts\\_BitMapFont\\arial.fnt");
+
+    float dx = sw.Stop();
+
+    printf("Took : %3.2fus\n", dx*1000000);
 
     return 0;
 }

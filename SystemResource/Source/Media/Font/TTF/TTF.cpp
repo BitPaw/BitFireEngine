@@ -5,44 +5,78 @@
 #include "Chunks/OS2/Panose/TTFPanose.h"
 
 #include <File/File.h>
+#include <Hardware/Memory/Memory.h>
 
 #include <cassert>
 
-BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
+BF::FileActionResult BF::TTF::Load(const char* filePath)
 {
 	File file;
 
 	{
-		const FileActionResult fileActionResult = file.MapToVirtualMemory(filePath);
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
-		if(fileActionResult != FileActionResult::Successful)
+		if(!sucessful)
 		{
-			return fileActionResult;
+			return fileLoadingResult;
 		}
 	}
 
+	{
+		const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+
+		return fileParsingResult;
+	}
+}
+
+BF::FileActionResult BF::TTF::Load(const wchar_t* filePath)
+{
+	File file;
+
+	{
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+
+		if(!sucessful)
+		{
+			return fileLoadingResult;
+		}
+	}
+
+	{
+		const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+
+		return fileParsingResult;
+	}	
+}
+
+BF::FileActionResult BF::TTF::Load(const unsigned char* fileData, const size_t fileDataSize)
+{
+	ByteStream dataStream(fileData, fileDataSize);
+
 	TTFOffsetTable offsetTable;
 
-	file.Read(offsetTable.Version.Major, Endian::Big);
-	file.Read(offsetTable.Version.Minor, Endian::Big);
-	file.Read(offsetTable.NumberOfTables, Endian::Big);
-	file.Read(offsetTable.SearchRange, Endian::Big);
-	file.Read(offsetTable.EntrySelctor, Endian::Big);
-	file.Read(offsetTable.RangeShift, Endian::Big);
+	dataStream.Read(offsetTable.Version.Major, Endian::Big);
+	dataStream.Read(offsetTable.Version.Minor, Endian::Big);
+	dataStream.Read(offsetTable.NumberOfTables, Endian::Big);
+	dataStream.Read(offsetTable.SearchRange, Endian::Big);
+	dataStream.Read(offsetTable.EntrySelctor, Endian::Big);
+	dataStream.Read(offsetTable.RangeShift, Endian::Big);
 
-	for (size_t i = 0; i < offsetTable.NumberOfTables; i++)
+	for(size_t i = 0; i < offsetTable.NumberOfTables; i++)
 	{
 		TTFTableEntry tableEntry;
 		ByteStream chunkData;
 
-		file.Read(tableEntry.TypeRaw, 4u);
-		file.Read(tableEntry.CheckSum, Endian::Big);
-		file.Read(tableEntry.Offset, Endian::Big);
-		file.Read(tableEntry.Length, Endian::Big);
+		dataStream.Read(tableEntry.TypeRaw, 4u);
+		dataStream.Read(tableEntry.CheckSum, Endian::Big);
+		dataStream.Read(tableEntry.Offset, Endian::Big);
+		dataStream.Read(tableEntry.Length, Endian::Big);
 
 		tableEntry.Type = ConvertTableEntryType(tableEntry.TypeRaw);
 
-		chunkData.DataSet(file.Data + tableEntry.Offset, tableEntry.Length);
+		chunkData.DataSet(dataStream.Data + tableEntry.Offset, tableEntry.Length);
 
 		printf
 		(
@@ -56,7 +90,7 @@ BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
 			tableEntry.Length
 		);
 
-		switch (tableEntry.Type)
+		switch(tableEntry.Type)
 		{
 			//---<Essential>---------------------------------------------------		
 			case TTFTableEntryType::FontHeader:
@@ -83,7 +117,7 @@ BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
 				chunkData.Read(Header.GlyphDataFormat, Endian::Big);
 
 				break;
-			}				
+			}
 			case TTFTableEntryType::HorizontalHeader:
 			{
 				chunkData.Read(HorizontalHeader.Version.Major, Endian::Big);
@@ -116,7 +150,7 @@ BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
 
 				assert(validVersion);
 
-				if (trustedTypeFonts && !openTypeFonts)
+				if(trustedTypeFonts && !openTypeFonts)
 				{
 					chunkData.Read(MaximumProfile.PointsMaximal, Endian::Big);
 					chunkData.Read(MaximumProfile.ContoursMaximal, Endian::Big);
@@ -131,10 +165,10 @@ BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
 					chunkData.Read(MaximumProfile.SizeOfInstructionsMaximal, Endian::Big);
 					chunkData.Read(MaximumProfile.ComponentElementsMaximal, Endian::Big);
 					chunkData.Read(MaximumProfile.ComponentDepthMaximal, Endian::Big);
-				}				
+				}
 
 				break;
-			}			
+			}
 			case TTFTableEntryType::Compatibility:
 			{
 				chunkData.Read(Compatibility.Version, Endian::Big);
@@ -152,7 +186,7 @@ BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
 				chunkData.Read(Compatibility.ySuperscriptYOffset, Endian::Big);
 				chunkData.Read(Compatibility.yStrikeoutPosition, Endian::Big);
 				chunkData.Read(Compatibility.sFamilyClass, Endian::Big);
-	
+
 				// Parse PANROSE
 				{
 					TTFPanose& panrose = Compatibility.Panose;
@@ -177,7 +211,7 @@ BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
 					chunkData.Read(bLetterform);
 					chunkData.Read(bMidline);
 					chunkData.Read(bXHeight);
-					
+
 					panrose.FamilyType = ConvertTTFFamilyType(bFamilyType);
 					panrose.SerifStyle = ConvertTTFSerifStyle(bSerifStyle);
 					panrose.Weight = ConvertTTFWeight(bWeight);
@@ -204,7 +238,7 @@ BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
 				chunkData.Read(Compatibility.fsFirstCharIndex, Endian::Big);
 				chunkData.Read(Compatibility.fsLastCharIndex, Endian::Big);
 
-				if (Compatibility.Version > 0)
+				if(Compatibility.Version > 0)
 				{
 					chunkData.Read(Compatibility.sTypoAscender, Endian::Big);
 					chunkData.Read(Compatibility.sTypoDescender, Endian::Big);
@@ -219,11 +253,11 @@ BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
 					chunkData.Read(Compatibility.usBreakChar, Endian::Big);
 					chunkData.Read(Compatibility.usMaxContext, Endian::Big);
 					chunkData.Read(Compatibility.usLowerPointSize, Endian::Big);
-					chunkData.Read(Compatibility.usUpperPointSize, Endian::Big);			
+					chunkData.Read(Compatibility.usUpperPointSize, Endian::Big);
 				}
 
 				break;
-			}		
+			}
 
 			case TTFTableEntryType::ControlValue: // cvt
 			{
@@ -233,11 +267,11 @@ BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
 			case TTFTableEntryType::GlyphNameAndPostScriptCompatibility: // post
 			{
 				chunkData.Read(PostScript.Version.Major, Endian::Big);
-				chunkData.Read(PostScript.Version.Minor, Endian::Little);		
+				chunkData.Read(PostScript.Version.Minor, Endian::Little);
 
 				PostScript.Version.Check();
 
-				switch (PostScript.Version.Type)
+				switch(PostScript.Version.Type)
 				{
 					case TTFVersionType::Invalid:
 						break;
@@ -272,7 +306,7 @@ BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
 
 				Kerning.KerningSubtableList = new TTFKerningSubtable[Kerning.NumberOfSubtables];
 
-				for (size_t i = 0; i < Kerning.NumberOfSubtables; i++)
+				for(size_t i = 0; i < Kerning.NumberOfSubtables; i++)
 				{
 					TTFKerningSubtable& kerningTable = Kerning.KerningSubtableList[i];
 
@@ -284,7 +318,7 @@ BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
 
 					kerningTable.ParseCoverageValue(coverage);
 
-					switch (kerningTable.Version)
+					switch(kerningTable.Version)
 					{
 						case 0:
 						{
@@ -297,7 +331,7 @@ BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
 
 							subtableFormat.KerningPairList = new TTFKerningPair[subtableFormat.NumberOfPairs];
 
-							for (size_t i = 0; i < subtableFormat.NumberOfPairs; i++)
+							for(size_t i = 0; i < subtableFormat.NumberOfPairs; i++)
 							{
 								TTFKerningPair& kerningPair = subtableFormat.KerningPairList[i];
 
@@ -321,7 +355,7 @@ BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
 						}
 					}
 				}
-				
+
 				break;
 			}
 			case TTFTableEntryType::ControlValueProgram: // prep
@@ -348,7 +382,7 @@ BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
 
 				CharacterMapping.EncodingRecordList = new EncodingRecord[CharacterMapping.NumberOfTables];
 
-				for (size_t i = 0; i < CharacterMapping.NumberOfTables; i++)
+				for(size_t i = 0; i < CharacterMapping.NumberOfTables; i++)
 				{
 					EncodingRecord& encodingRecord = CharacterMapping.EncodingRecordList[i];
 
@@ -370,9 +404,9 @@ BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
 				chunkData.Read(LinearThreshold.Version, Endian::Big);
 				chunkData.Read(LinearThreshold.NumberOfGlyphs, Endian::Big);
 
-				LinearThreshold.PelsHeightList = (Byte*)malloc(LinearThreshold.NumberOfGlyphs * sizeof(Byte));
+				LinearThreshold.PelsHeightList = Memory::Allocate<Byte>(LinearThreshold.NumberOfGlyphs);
 
-				chunkData.Read(LinearThreshold.PelsHeightList, LinearThreshold.NumberOfGlyphs * sizeof(Byte));
+				chunkData.Read(LinearThreshold.PelsHeightList, LinearThreshold.NumberOfGlyphs);
 
 				break;
 			}
@@ -387,7 +421,7 @@ BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
 				DigitalSignature.SignatureRecordList = new TTFDigitalSignatureRecord[DigitalSignature.NumberOfSignatures];
 				DigitalSignature.SignatureBlockList = new TTFDigitalSignatureBlock[DigitalSignature.NumberOfSignatures];
 
-				for (size_t i = 0; i < DigitalSignature.NumberOfSignatures; i++)
+				for(size_t i = 0; i < DigitalSignature.NumberOfSignatures; i++)
 				{
 					TTFDigitalSignatureRecord& signatureRecord = DigitalSignature.SignatureRecordList[i];
 
@@ -407,9 +441,9 @@ BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
 
 						chunkData.Read(signatureBlock.Signature, signatureBlock.SignatureLength);
 
-						for (size_t w = 0; w < signatureBlock.SignatureLength - 2; w++)
+						for(size_t w = 0; w < signatureBlock.SignatureLength - 2; w++)
 						{
-							if (signatureBlock.Signature[w] == 0)
+							if(signatureBlock.Signature[w] == 0)
 							{
 								signatureBlock.Signature[w] = '#';
 							}
@@ -420,9 +454,9 @@ BF::FileActionResult BF::TTF::TTF::Load(const wchar_t* filePath)
 				break;
 			}
 		}
-	}	
+	}
 
-    return FileActionResult::Successful;
+	return FileActionResult::Successful;
 }
 
 BF::FileActionResult BF::TTF::TTF::Save(const wchar_t* filePath)

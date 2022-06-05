@@ -12,33 +12,67 @@
 
 BF::GIF::GIF()
 {
+   Width = 0;
+   Height = 0;
+}
 
+BF::FileActionResult BF::GIF::Load(const char* filePath)
+{
+    File file;
+
+    {
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+        const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+
+        if(!sucessful)
+        {
+            return fileLoadingResult;
+        }
+    }
+
+    {
+        const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+
+        return fileParsingResult;
+    }
 }
 
 BF::FileActionResult BF::GIF::Load(const wchar_t* filePath)
 {
-    File fileStream;
+    File file;
 
     {
-        const FileActionResult loadingResult = fileStream.MapToVirtualMemory(filePath);
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+        const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
-        if(loadingResult != FileActionResult::Successful)
+        if(!sucessful)
         {
-            return loadingResult;
+            return fileLoadingResult;
         }
-    }   
+    }
+
+    {
+        const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+
+        return fileParsingResult;
+    }
+}
+
+BF::FileActionResult BF::GIF::Load(const unsigned char* fileData, const size_t fileDataSize)
+{
+    ByteStream dataStream(fileData, fileDataSize);
 
     // Check Header
     {
         const char versionA[3] = GIFVersionA;
         const char versionB[3] = GIFVersionB;
-        char headerTag[3] = GIFHeader;
+        const char headerTag[3] = GIFHeader;
         char version[3] = { '#','#','#' };
 
-        bool validHeader = fileStream.ReadAndCompare(headerTag, sizeof(headerTag));
-        fileStream.Read(version, sizeof(version));
+        const bool validHeader = dataStream.ReadAndCompare(headerTag, sizeof(headerTag));
+        dataStream.Read(version, sizeof(version));
 
-        bool validVersion =
+        const bool validVersion =
             version[0] == versionA[0] &&
             version[1] == versionA[1] &&
             version[2] == versionA[2]
@@ -47,12 +81,12 @@ BF::FileActionResult BF::GIF::Load(const wchar_t* filePath)
             version[1] == versionB[1] &&
             version[2] == versionB[2];
 
-        if (!validHeader)
+        if(!validHeader)
         {
             return FileActionResult::InvalidHeaderSignature;
         }
 
-        if (!validVersion)
+        if(!validVersion)
         {
             return FileActionResult::InvalidVersion;
         }
@@ -60,21 +94,21 @@ BF::FileActionResult BF::GIF::Load(const wchar_t* filePath)
 
     // Logical Screen Descriptor.
     {
-        fileStream.Read(Width, Endian::Little);
-        fileStream.Read(Height, Endian::Little);
+        dataStream.Read(Width, Endian::Little);
+        dataStream.Read(Height, Endian::Little);
 
         unsigned char packedFields = 0;
 
-        fileStream.Read(packedFields);
-        fileStream.Read(BackgroundColorIndex);
-        fileStream.Read(PixelAspectRatio);
+        dataStream.Read(packedFields);
+        dataStream.Read(BackgroundColorIndex);
+        dataStream.Read(PixelAspectRatio);
 
         GlobalColorTableSize = packedFields & 0b00000111;
-        IsSorted = (packedFields & 0b00001000) >> 3; 
+        IsSorted = (packedFields & 0b00001000) >> 3;
         ColorResolution = (packedFields & 0b01110000) >> 4;
         IsGlobalColorTablePresent = (packedFields & 0b10000000) >> 7;
 
-        if (IsGlobalColorTablePresent)
+        if(IsGlobalColorTablePresent)
         {
             //---<Image Descriptor>--------------------------------------------
 
@@ -85,12 +119,12 @@ BF::FileActionResult BF::GIF::Load(const wchar_t* filePath)
 
             unsigned char packedFields = 0;
 
-            fileStream.Read(imageDescriptor.Separator);
-            fileStream.Read(imageDescriptor.LeftPosition, Endian::Little);
-            fileStream.Read(imageDescriptor.TopPosition, Endian::Little);
-            fileStream.Read(imageDescriptor.Width, Endian::Little);
-            fileStream.Read(imageDescriptor.Height, Endian::Little);
-            fileStream.Read(packedFields);
+            dataStream.Read(imageDescriptor.Separator);
+            dataStream.Read(imageDescriptor.LeftPosition, Endian::Little);
+            dataStream.Read(imageDescriptor.TopPosition, Endian::Little);
+            dataStream.Read(imageDescriptor.Width, Endian::Little);
+            dataStream.Read(imageDescriptor.Height, Endian::Little);
+            dataStream.Read(packedFields);
 
             imageDescriptor.LocalColorTableSize = (packedFields & 0b00000111);
             imageDescriptor.Reserved = (packedFields & 0b00011000) >> 3;
@@ -98,7 +132,7 @@ BF::FileActionResult BF::GIF::Load(const wchar_t* filePath)
             imageDescriptor.InterlaceFlag = (packedFields & 0b01000000) >> 6;
             imageDescriptor.LocalColorTableFlag = (packedFields & 0b10000000) >> 7;
 
-            if (imageDescriptor.LocalColorTableFlag)
+            if(imageDescriptor.LocalColorTableFlag)
             {
                 //---<Local Color Table>---------------------------------------
 
@@ -106,14 +140,13 @@ BF::FileActionResult BF::GIF::Load(const wchar_t* filePath)
             }
 
             //-----------------------------------------------------------------       
-        }       
+        }
     }
 
     //---<Table Based Image Data>--------------------------------------
-    
+
     //-----------------------------------------------------------------
 
-    
 
     return FileActionResult::Successful;
 }

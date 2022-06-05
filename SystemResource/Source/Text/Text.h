@@ -39,6 +39,7 @@ namespace BF
 
 		static char* FindPosition(const char* data, size_t dataSize, const char* target, size_t targetSize);
 		static size_t ToInt(const char* string, const size_t dataSize, int& number);
+		static size_t ToInt(const wchar_t* string, const size_t dataSize, int& number);
 		static size_t ToBool(const char* string, const size_t dataSize, bool& number);
 		static size_t ToFloat(const char* string, const size_t dataSize, float& number);
 		static size_t ToDouble(const char* string, const size_t dataSize, double& number);

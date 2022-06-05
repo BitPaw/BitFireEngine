@@ -20,6 +20,7 @@ namespace BF
 		FileCloseFailure,
 		FileReadFailure,
 		FileCopyFailure,
+		FileCreateFailure,
 
 		FileMemoryMappingFailed,
 

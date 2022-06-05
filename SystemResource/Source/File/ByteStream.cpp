@@ -6,6 +6,13 @@
 #include <Text/Text.h>
 #include <Hardware/Memory/Memory.h>
 
+#include <iso646.h>
+
+#define InRange DataCursorPosition < DataSize	
+#define NotEndOfString Data[DataCursorPosition] != '\0'
+#define EndOfString Data[DataCursorPosition] == '\0'
+#define EndOfLineCharacter (Data[DataCursorPosition] == '\r' || Data[DataCursorPosition] == '\n')
+
 BF::ByteStream::ByteStream()
 {
 	DataSet(nullptr, 0);
@@ -14,6 +21,21 @@ BF::ByteStream::ByteStream()
 BF::ByteStream::ByteStream(Byte* data, size_t dataSize)
 {
 	DataSet(data, dataSize);
+}
+
+BF::ByteStream::ByteStream(const Byte* data, size_t dataSize)
+{
+	DataSet((Byte*)data, dataSize);
+}
+
+size_t BF::ByteStream::ReadPossibleSize() const
+{
+	return DataSize - DataCursorPosition;
+}
+
+bool BF::ByteStream::IsAtEnd() const
+{
+	return ReadPossibleSize() == 0;
 }
 
 void BF::ByteStream::DataSet(Byte* data, size_t dataSize, size_t cursorPosition)
@@ -46,16 +68,7 @@ unsigned int BF::ByteStream::ReadNextLineInto(char* exportBuffer)
 	const char* input = (char*)Data + beginningPosition;
 	size_t length = 0;
 
-	for 
-	(
-		; 
-		DataCursorPosition < DataSize && // End of length
-		Data[DataCursorPosition] != '\r' && // Windows additional "Return cursor"
-		Data[DataCursorPosition] != '\n' && // Line-End
-		Data[DataCursorPosition] != '\0' // End Of String
-		;
-		++DataCursorPosition
-	);
+	while(InRange and !EndOfLineCharacter and NotEndOfString) ++DataCursorPosition;
 
 	length = DataCursorPosition - beginningPosition;
 
@@ -73,13 +86,34 @@ unsigned int BF::ByteStream::ReadNextLineInto(char* exportBuffer)
 
 void BF::ByteStream::SkipEndOfLineCharacters()
 {
-	for
-		(
-			;
-			DataCursorPosition < DataSize && (Data[DataCursorPosition] == '\r' || Data[DataCursorPosition] == '\n') && Data[DataCursorPosition] != '\0'
-			;
-			++DataCursorPosition
-			);
+	while(InRange)
+	{
+		const bool advance = EndOfLineCharacter and NotEndOfString;
+
+		if(!advance)
+		{
+			break;
+		}
+
+		++DataCursorPosition;
+	}
+}
+
+void BF::ByteStream::SkipLine()
+{
+	while(InRange)
+	{
+		const bool advance = !EndOfLineCharacter and NotEndOfString;
+
+		if(!advance)
+		{
+			break;
+		}
+
+		++DataCursorPosition;
+	}
+
+	SkipEndOfLineCharacters();
 }
 
 void BF::ByteStream::Read(bool& value)
@@ -215,6 +249,17 @@ void BF::ByteStream::Read(void* value, size_t length)
 	Memory::Copy(value, Data + DataCursorPosition, length);
 
 	DataCursorPosition += length;
+}
+
+size_t BF::ByteStream::ReadSafe(Byte* value, const size_t length)
+{
+	const size_t possibleReadSize = ReadPossibleSize();
+	const bool canFullfill = possibleReadSize >= length;
+	const size_t readBytes = canFullfill ? length : possibleReadSize;
+
+	Read(value, readBytes);
+
+	return readBytes;
 }
 
 bool BF::ByteStream::ReadAndCompare(const Byte* value, size_t length)

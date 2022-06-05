@@ -1,6 +1,6 @@
 #include "FNTLineType.h"
 
-BF::FNTLineType BF::ConvertFNTLineType(const char* line)
+BF::FNTLineType BF::ConvertFNTLineType(const unsigned  char* line)
 {
 	// input check
 

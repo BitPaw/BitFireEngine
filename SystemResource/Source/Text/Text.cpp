@@ -288,6 +288,47 @@ size_t BF::Text::ToInt(const char* string, size_t dataSize, int& number)
 	return index;
 }
 
+size_t BF::Text::ToInt(const wchar_t* string, const size_t dataSize, int& number)
+{
+	size_t index = 0;
+	bool isNegative = false;
+
+	number = 0;
+
+	if(!string)
+	{
+		return 0;
+	}
+
+	if(string[0] == '-')
+	{
+		index++;
+		isNegative = true;
+	}
+
+	for(; string[index] != '\0'; index++)
+	{
+		char character = string[index];
+		char isValidCharacter = (character >= '0' && character <= '9');
+		int numberElement = character - '0';
+
+		if(!isValidCharacter)
+		{
+			break;
+		}
+
+		number *= 10; // "Shft number to left" Example 12 -> 120
+		number += numberElement; // ASCII character to actual number.
+	}
+
+	if(isNegative)
+	{
+		number *= -1;
+	}
+
+	return index;
+}
+
 size_t BF::Text::ToBool(const char* string, size_t dataSize, bool& number)
 {
 	switch (string[0])

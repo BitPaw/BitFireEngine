@@ -14,4 +14,7 @@ namespace BF
 		TIFF, 
 		GIF
 	};
+
+	ImageFileFormat ConvertImageFileFormat(const unsigned int imageFileFormatID);
+	unsigned int ConvertImageFileFormat(const ImageFileFormat imageFileFormat);
 }

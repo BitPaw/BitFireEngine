@@ -5,7 +5,6 @@
 #include <File/File.h>
 #include <Math/Math.h>
 
-#include <string>
 #include <Hardware/Memory/Memory.h>
 
 BF::BMP::BMP()
@@ -22,19 +21,51 @@ BF::BMP::~BMP()
     Memory::Release(PixelData, PixelDataSize);
 }
 
-BF::FileActionResult BF::BMP::Load(const wchar_t* filePath)
+BF::FileActionResult BF::BMP::Load(const char* filePath)
 {
-    File file; 
+    File file;
 
     {
-        const FileActionResult loadingResult = file.MapToVirtualMemory(filePath);
-        const bool success = loadingResult != FileActionResult::Successful;
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+        const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
-        if(success)
+        if(!sucessful)
         {
-            return loadingResult;
+            return fileLoadingResult;
         }
     }
+
+    {
+        const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+
+        return fileParsingResult;
+    }
+}
+
+BF::FileActionResult BF::BMP::Load(const wchar_t* filePath)
+{
+    File file;
+
+    {
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+        const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+
+        if(!sucessful)
+        {
+            return fileLoadingResult;
+        }
+    }
+
+    {
+        const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+
+        return fileParsingResult;
+    }
+}
+
+BF::FileActionResult BF::BMP::Load(const unsigned char* fileData, const size_t fileDataSize)
+{
+    ByteStream dataStream(fileData, fileDataSize);
 
     //---[ Parsing Header ]----------------------------------------------------
     {
@@ -43,10 +74,10 @@ BF::FileActionResult BF::BMP::Load(const wchar_t* filePath)
         unsigned int reservedBlock = 0;
         unsigned int dataOffset = 0;
 
-        file.Read(byteCluster.Data, 2u);
-        file.Read(sizeOfFile, Endian::Little);
-        file.Read(reservedBlock, Endian::Little);
-        file.Read(dataOffset, Endian::Little);
+        dataStream.Read(byteCluster.Data, 2u);
+        dataStream.Read(sizeOfFile, Endian::Little);
+        dataStream.Read(reservedBlock, Endian::Little);
+        dataStream.Read(dataOffset, Endian::Little);
 
         Type = ConvertBMPType(byteCluster);
 
@@ -57,55 +88,55 @@ BF::FileActionResult BF::BMP::Load(const wchar_t* filePath)
             {
                 return FileActionResult::InvalidHeaderSignature;
             }
-        }   
+        }
     }
     //-------------------------------------------------------------------------
 
     //---[ DIP ]---------------------------------------------------------------    
     {
-        file.Read(InfoHeader.HeaderSize, Endian::Little);
+        dataStream.Read(InfoHeader.HeaderSize, Endian::Little);
 
         InfoHeaderType = ConvertBMPInfoHeaderType(InfoHeader.HeaderSize);
 
-        switch (InfoHeaderType)
+        switch(InfoHeaderType)
         {
             case BMPInfoHeaderType::BitMapInfoHeader:
             {
-                file.Read(InfoHeader.Width, Endian::Little);
-                file.Read(InfoHeader.Height, Endian::Little);
-                file.Read(InfoHeader.NumberOfColorPlanes, Endian::Little);
-                file.Read(InfoHeader.NumberOfBitsPerPixel, Endian::Little);
-                file.Read(InfoHeader.CompressionMethod, Endian::Little);
-                file.Read(InfoHeader.ImageSize, Endian::Little);
-                file.Read(InfoHeader.HorizontalResolution, Endian::Little);
-                file.Read(InfoHeader.VerticalResolution, Endian::Little);
-                file.Read(InfoHeader.NumberOfColorsInTheColorPalette, Endian::Little);
-                file.Read(InfoHeader.NumberOfImportantColorsUsed, Endian::Little);
+                dataStream.Read(InfoHeader.Width, Endian::Little);
+                dataStream.Read(InfoHeader.Height, Endian::Little);
+                dataStream.Read(InfoHeader.NumberOfColorPlanes, Endian::Little);
+                dataStream.Read(InfoHeader.NumberOfBitsPerPixel, Endian::Little);
+                dataStream.Read(InfoHeader.CompressionMethod, Endian::Little);
+                dataStream.Read(InfoHeader.ImageSize, Endian::Little);
+                dataStream.Read(InfoHeader.HorizontalResolution, Endian::Little);
+                dataStream.Read(InfoHeader.VerticalResolution, Endian::Little);
+                dataStream.Read(InfoHeader.NumberOfColorsInTheColorPalette, Endian::Little);
+                dataStream.Read(InfoHeader.NumberOfImportantColorsUsed, Endian::Little);
 
                 break;
             }
             case BMPInfoHeaderType::OS21XBitMapHeader:
             case BMPInfoHeaderType::OS22XBitMapHeader:
             {
-                file.Read((unsigned short&)InfoHeader.Width, Endian::Little);
-                file.Read((unsigned short&)InfoHeader.Height, Endian::Little);
-                file.Read(InfoHeader.NumberOfColorPlanes, Endian::Little);
-                file.Read(InfoHeader.NumberOfBitsPerPixel, Endian::Little);
+                dataStream.Read((unsigned short&)InfoHeader.Width, Endian::Little);
+                dataStream.Read((unsigned short&)InfoHeader.Height, Endian::Little);
+                dataStream.Read(InfoHeader.NumberOfColorPlanes, Endian::Little);
+                dataStream.Read(InfoHeader.NumberOfBitsPerPixel, Endian::Little);
 
-                if (InfoHeaderType == BMPInfoHeaderType::OS22XBitMapHeader)
-                {               
+                if(InfoHeaderType == BMPInfoHeaderType::OS22XBitMapHeader)
+                {
                     unsigned short paddingBytes = 0; // Padding.Ignored and should be zero                    
 
-                    file.Read(InfoHeader.HorizontalandVerticalResolutions, Endian::Little);
-                    file.Read(paddingBytes, Endian::Little);
-                    file.Read(InfoHeader.DirectionOfBits, Endian::Little);
-                    file.Read(InfoHeader.halftoningAlgorithm, Endian::Little);
+                    dataStream.Read(InfoHeader.HorizontalandVerticalResolutions, Endian::Little);
+                    dataStream.Read(paddingBytes, Endian::Little);
+                    dataStream.Read(InfoHeader.DirectionOfBits, Endian::Little);
+                    dataStream.Read(InfoHeader.halftoningAlgorithm, Endian::Little);
 
-                    file.Read(InfoHeader.HalftoningParameterA, Endian::Little);
-                    file.Read(InfoHeader.HalftoningParameterB, Endian::Little);
-                    file.Read(InfoHeader.ColorEncoding, Endian::Little);
-                    file.Read(InfoHeader.ApplicationDefinedByte, Endian::Little);
-                }    
+                    dataStream.Read(InfoHeader.HalftoningParameterA, Endian::Little);
+                    dataStream.Read(InfoHeader.HalftoningParameterB, Endian::Little);
+                    dataStream.Read(InfoHeader.ColorEncoding, Endian::Little);
+                    dataStream.Read(InfoHeader.ApplicationDefinedByte, Endian::Little);
+                }
 
                 break;
             }
@@ -115,7 +146,7 @@ BF::FileActionResult BF::BMP::Load(const wchar_t* filePath)
                 return FileActionResult::FormatNotSupported;
             }
         }
-    }    
+    }
     //-----------------------------------------------------------    
 
     PixelDataSize = InfoHeader.Width * InfoHeader.Height * (InfoHeader.NumberOfBitsPerPixel / 8);
@@ -129,14 +160,14 @@ BF::FileActionResult BF::BMP::Load(const wchar_t* filePath)
     size_t amountOfRows = PixelDataSize / fullRowSize;
     size_t pixelDataOffset = 0;
 
-    while (amountOfRows-- > 0)
+    while(amountOfRows-- > 0)
     {
         assert(pixelDataOffset <= PixelDataSize);
 
-        file.Read(PixelData + pixelDataOffset, dataRowSize);
+        dataStream.Read(PixelData + pixelDataOffset, dataRowSize);
 
         pixelDataOffset += dataRowSize;
-        file.DataCursorPosition += padding; // Move data, row + padding(padding can be 0)
+        dataStream.DataCursorPosition += padding; // Move data, row + padding(padding can be 0)
     }
 
     return FileActionResult::Successful;

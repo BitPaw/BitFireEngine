@@ -16,6 +16,7 @@ namespace BF
         IClientListener* EventCallBackClient;
 
         Client();
+        ~Client();
 
         SocketActionResult ConnectToServer(const char* ip, unsigned short port);
         void Disconnect();

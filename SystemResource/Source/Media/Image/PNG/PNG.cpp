@@ -33,8 +33,51 @@ unsigned int BF::PNG::BitsPerPixel()
     return ImageHeader.BitDepth * numberOfColorChannels;
 }
 
+BF::FileActionResult BF::PNG::Load(const char* filePath)
+{
+    File file;
+
+    {
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+        const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+
+        if(!sucessful)
+        {
+            return fileLoadingResult;
+        }
+    }
+
+    {
+        const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+
+        return fileParsingResult;
+    }
+}
+
 BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
 {   
+    File file;
+
+    {
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+        const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+
+        if(!sucessful)
+        {
+            return fileLoadingResult;
+        }
+    }
+
+    {
+        const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+
+        return fileParsingResult;
+    }
+}
+
+BF::FileActionResult BF::PNG::Load(const unsigned char* fileData, const size_t fileDataSize)
+{
+    ByteStream dataStream((unsigned char*)fileData, fileDataSize);
     size_t imageDataCounter = 0;
     size_t imageDataChunkCacheSizeUSED = 0;
     size_t imageDataChunkCacheSizeMAX = 0u;
@@ -43,36 +86,25 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
     Memory::Set(this, 0, sizeof(PNG));
 
     //---<Parse PNG File>------------------------------------------------------
-    {
-        File fileStream;
-      
-        bool parseFinished = false;
-
-        {
-            const FileActionResult fileActionResult = fileStream.MapToVirtualMemory(filePath);
-            const bool sucessful = fileActionResult == FileActionResult::Successful;
-
-            if(!sucessful)
-            {
-                return fileActionResult;
-            }
-        }     
-
-        // Allocate Memory for later ImageData Chunks
-        imageDataChunkCacheSizeMAX = fileStream.DataSize - 0u;
-        imageDataChunkCache = Memory::Allocate<Byte>(imageDataChunkCacheSizeMAX);
+    {     
+        bool parseFinished = false; 
 
         //---<Check PNG Header>------------------------------------------------
         {
             const Byte pngFileHeader[8] = PNGHeaderSequenz;
             const size_t pngFileHeaderSize = sizeof(pngFileHeader);
-            const bool isValidHeader = fileStream.ReadAndCompare(pngFileHeader, pngFileHeaderSize);
+            const bool isValidHeader = dataStream.ReadAndCompare(pngFileHeader, pngFileHeaderSize);
 
-            if (!isValidHeader)
+            if(!isValidHeader)
             {
-                return FileActionResult::FormatNotSupported;
-            }        
+                return FileActionResult::InvalidHeaderSignature;
+            }
         }
+
+        // Allocate Memory for later ImageData Chunks
+        imageDataChunkCacheSizeMAX = dataStream.DataSize - 0u;
+        imageDataChunkCache = Memory::Allocate<Byte>(imageDataChunkCacheSizeMAX);
+
         //---------------------------------------------------------------------
 
 #if PNGDebugInfo
@@ -85,14 +117,14 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
 #endif
 
         // Parse every chunk until finished.
-        while (!parseFinished)
+        while(!parseFinished)
         {
             PNGChunk chunk;
 
-            chunk.ChunkData = fileStream.Data + fileStream.DataCursorPosition;
+            chunk.ChunkData = dataStream.Data + dataStream.DataCursorPosition;
 
-            fileStream.Read(chunk.Lengh, Endian::Big);
-            fileStream.Read(chunk.ChunkTypeRaw.Data, 4u);
+            dataStream.Read(chunk.Lengh, Endian::Big);
+            dataStream.Read(chunk.ChunkTypeRaw.Data, 4u);
 
             chunk.Check();
 
@@ -113,21 +145,21 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
 #endif
 
             //---Get Chunk Data------------------------------------------
-            switch (chunk.ChunkType)
+            switch(chunk.ChunkType)
             {
                 case PNGChunkType::ImageHeader:
                 {
                     Byte colorTypeRaw = 0;
                     Byte interlaceMethodRaw = 0;
 
-                    fileStream.Read(ImageHeader.Width, Endian::Big); // 4 Bytes
-                    fileStream.Read(ImageHeader.Height, Endian::Big); // 4 Bytes
+                    dataStream.Read(ImageHeader.Width, Endian::Big); // 4 Bytes
+                    dataStream.Read(ImageHeader.Height, Endian::Big); // 4 Bytes
 
-                    fileStream.Read(ImageHeader.BitDepth); // 1 Byte
-                    fileStream.Read(colorTypeRaw); // 1 Byte
-                    fileStream.Read(ImageHeader.CompressionMethod); // 1 Byte
-                    fileStream.Read(ImageHeader.FilterMethod); // 1 Byte
-                    fileStream.Read(interlaceMethodRaw); // 1 Byte
+                    dataStream.Read(ImageHeader.BitDepth); // 1 Byte
+                    dataStream.Read(colorTypeRaw); // 1 Byte
+                    dataStream.Read(ImageHeader.CompressionMethod); // 1 Byte
+                    dataStream.Read(ImageHeader.FilterMethod); // 1 Byte
+                    dataStream.Read(interlaceMethodRaw); // 1 Byte
 
                     ImageHeader.ColorType = ConvertColorType(colorTypeRaw);
                     ImageHeader.InterlaceMethod = ConvertPNGInterlaceMethod(interlaceMethodRaw);
@@ -140,14 +172,14 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
                     // Green 1 byte
                     // Blue 	1 byte
 
-                    fileStream.Read(&Palette, 3u);
+                    dataStream.Read(&Palette, 3u);
 
                     break;
                 }
                 case PNGChunkType::ImageData:
                 {
                     /*
-                    ZLIB zlib(fileStream.Data + fileStream.DataCursorPosition, chunk.Lengh);
+                    ZLIB zlib(dataStream.Data + dataStream.DataCursorPosition, chunk.Lengh);
 
                     // Dump content into buffer
                     // There may be multiple IDAT chunks; if so, they shall appear consecutively with no other intervening chunks.
@@ -185,9 +217,9 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
                     //zlib.Unpack(imageDataChunkCache, imageDataChunkCacheSizeUSED);
 
 
-                    fileStream.Read(imageDataChunkCache + imageDataChunkCacheSizeUSED, chunk.Lengh);
+                    dataStream.Read(imageDataChunkCache + imageDataChunkCacheSizeUSED, chunk.Lengh);
                     imageDataChunkCacheSizeUSED += chunk.Lengh;
-                    
+
                     ++imageDataCounter;
 
                     break;
@@ -199,44 +231,44 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
                 }
                 case PNGChunkType::Transparency:
                 {
-                    fileStream.DataCursorPosition += chunk.Lengh;
+                    dataStream.DataCursorPosition += chunk.Lengh;
 
                     break;
                 }
                 case PNGChunkType::ImageGamma:
                 {
-                    fileStream.Read(Gamma, Endian::Big);
+                    dataStream.Read(Gamma, Endian::Big);
 
                     break;
                 }
                 case PNGChunkType::PrimaryChromaticities:
                 {
-                    fileStream.Read(PrimaryChromatics.WhiteX, Endian::Big);
-                    fileStream.Read(PrimaryChromatics.WhiteY, Endian::Big);
-                    fileStream.Read(PrimaryChromatics.RedX, Endian::Big);
-                    fileStream.Read(PrimaryChromatics.RedY, Endian::Big);
-                    fileStream.Read(PrimaryChromatics.GreenX, Endian::Big);
-                    fileStream.Read(PrimaryChromatics.GreenY, Endian::Big);
-                    fileStream.Read(PrimaryChromatics.BlueX, Endian::Big);
-                    fileStream.Read(PrimaryChromatics.BlueY, Endian::Big);
+                    dataStream.Read(PrimaryChromatics.WhiteX, Endian::Big);
+                    dataStream.Read(PrimaryChromatics.WhiteY, Endian::Big);
+                    dataStream.Read(PrimaryChromatics.RedX, Endian::Big);
+                    dataStream.Read(PrimaryChromatics.RedY, Endian::Big);
+                    dataStream.Read(PrimaryChromatics.GreenX, Endian::Big);
+                    dataStream.Read(PrimaryChromatics.GreenY, Endian::Big);
+                    dataStream.Read(PrimaryChromatics.BlueX, Endian::Big);
+                    dataStream.Read(PrimaryChromatics.BlueY, Endian::Big);
 
                     break;
                 }
                 case PNGChunkType::StandardRGBColorSpace:
                 {
-                    fileStream.Read(RenderingIntent);
+                    dataStream.Read(RenderingIntent);
 
                     break;
                 }
                 case PNGChunkType::EmbeddedICCProfile:
                 {
-                    fileStream.DataCursorPosition += chunk.Lengh;
+                    dataStream.DataCursorPosition += chunk.Lengh;
 
                     break;
                 }
                 case PNGChunkType::TextualData:
                 {
-                    fileStream.DataCursorPosition += chunk.Lengh;
+                    dataStream.DataCursorPosition += chunk.Lengh;
 
                     break;
                 }
@@ -247,52 +279,52 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
                     // Compression method 	        1 byte
                     // Compressed text datastream 	n bytes
 
-                    fileStream.DataCursorPosition += chunk.Lengh;
+                    dataStream.DataCursorPosition += chunk.Lengh;
 
                     break;
                 }
                 case PNGChunkType::InternationalTextualData:
                 {
-                    fileStream.DataCursorPosition += chunk.Lengh;
+                    dataStream.DataCursorPosition += chunk.Lengh;
 
                     break;
                 }
                 case PNGChunkType::BackgroundColor:
                 {
-                    switch (ImageHeader.ColorType)
+                    switch(ImageHeader.ColorType)
                     {
                         default:
                         case BF::PNGColorType::InvalidColorType:
                             break; // ERROR
-                     
+
                         case BF::PNGColorType::Grayscale:
                         case BF::PNGColorType::GrayscaleWithAlphaChannel:
-                        {   
-                            fileStream.Read(BackgroundColor.GreyScale, Endian::Big);
+                        {
+                            dataStream.Read(BackgroundColor.GreyScale, Endian::Big);
                             break;
                         }
                         case BF::PNGColorType::Truecolor:
-                        case BF::PNGColorType::TruecolorWithAlphaChannel: 
+                        case BF::PNGColorType::TruecolorWithAlphaChannel:
                         {
-                            fileStream.Read(BackgroundColor.Red, Endian::Big);
-                            fileStream.Read(BackgroundColor.Green, Endian::Big);
-                            fileStream.Read(BackgroundColor.Blue, Endian::Big);
+                            dataStream.Read(BackgroundColor.Red, Endian::Big);
+                            dataStream.Read(BackgroundColor.Green, Endian::Big);
+                            dataStream.Read(BackgroundColor.Blue, Endian::Big);
                             break;
                         }
                         case BF::PNGColorType::IndexedColor:
                         {
-                            fileStream.Read(BackgroundColor.PaletteIndex);
+                            dataStream.Read(BackgroundColor.PaletteIndex);
                             break;
-                        }   
+                        }
                     }
 
                     break;
                 }
                 case PNGChunkType::PhysicalPixelDimensions:
                 {
-                    fileStream.Read(PhysicalPixelDimension.PixelsPerUnit[0], Endian::Big);
-                    fileStream.Read(PhysicalPixelDimension.PixelsPerUnit[1], Endian::Big);
-                    fileStream.Read(PhysicalPixelDimension.UnitSpecifier);
+                    dataStream.Read(PhysicalPixelDimension.PixelsPerUnit[0], Endian::Big);
+                    dataStream.Read(PhysicalPixelDimension.PixelsPerUnit[1], Endian::Big);
+                    dataStream.Read(PhysicalPixelDimension.UnitSpecifier);
 
                     break;
                 }
@@ -317,7 +349,7 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
                             byteLength = 2;
                             break;
 
-                        case PNGColorType::TruecolorWithAlphaChannel: //  four bytes, 
+                        case PNGColorType::TruecolorWithAlphaChannel: //  four bytes,
                             byteLength = 4;
                             break;
                     }
@@ -326,20 +358,20 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
                     {
                         char calcbyte;
 
-                        fileStream.Read(calcbyte);
+                        dataStream.Read(calcbyte);
 
                         result = (result << (i * 8)) | calcbyte;
                     }
 
                     SignificantBits = result;*/
 
-                    fileStream.DataCursorPosition += chunk.Lengh;
+                    dataStream.DataCursorPosition += chunk.Lengh;
 
                     break;
                 }
                 case PNGChunkType::SuggestedPalette:
                 {
-                    fileStream.DataCursorPosition += chunk.Lengh;
+                    dataStream.DataCursorPosition += chunk.Lengh;
 
                     break;
                 }
@@ -350,52 +382,52 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
                     PaletteHistogram.ColorFrequencyListSize = listSize;
                     PaletteHistogram.ColorFrequencyList = Memory::Allocate<unsigned short>(listSize);
 
-                    for (size_t i = 0; i < listSize; i++)
+                    for(size_t i = 0; i < listSize; i++)
                     {
-                        fileStream.Read(PaletteHistogram.ColorFrequencyList[i], Endian::Big);
+                        dataStream.Read(PaletteHistogram.ColorFrequencyList[i], Endian::Big);
                     }
 
                     break;
                 }
                 case PNGChunkType::LastModificationTime:
                 {
-                    fileStream.Read(LastModificationTime.Year, Endian::Big);
-                    fileStream.Read(LastModificationTime.Month);
-                    fileStream.Read(LastModificationTime.Day);
-                    fileStream.Read(LastModificationTime.Hour);
-                    fileStream.Read(LastModificationTime.Minute);
-                    fileStream.Read(LastModificationTime.Second);
+                    dataStream.Read(LastModificationTime.Year, Endian::Big);
+                    dataStream.Read(LastModificationTime.Month);
+                    dataStream.Read(LastModificationTime.Day);
+                    dataStream.Read(LastModificationTime.Hour);
+                    dataStream.Read(LastModificationTime.Minute);
+                    dataStream.Read(LastModificationTime.Second);
 
                     break;
                 }
                 case PNGChunkType::Custom:
                 default:
                 {
-                    fileStream.DataCursorPosition += chunk.Lengh;
+                    dataStream.DataCursorPosition += chunk.Lengh;
                     break;
                 }
             }
             //---------------------------------------------------------------
 
-            fileStream.Read(chunk.CRC, Endian::Big); // 4 Bytes
+            dataStream.Read(chunk.CRC, Endian::Big); // 4 Bytes
 
             //---<Check CRC>---
             // TODO: Yes
             //-----------------
         }
-    }   
+            }
 
     //---<Allocate>------------------------------------------------------------
     PixelDataSize = ImageHeader.Width * ImageHeader.Height * NumberOfColorChannels(ImageHeader.ColorType);
-    PixelData = Memory::Allocate<Byte>(PixelDataSize);   
+    PixelData = Memory::Allocate<Byte>(PixelDataSize);
     //-------------------------------------------------------------------------    
 
     BitStreamHusk bitstream(imageDataChunkCache, imageDataChunkCacheSizeUSED);
-    ZLIB zlib(imageDataChunkCache, imageDataChunkCacheSizeUSED);       
+    ZLIB zlib(imageDataChunkCache, imageDataChunkCacheSizeUSED);
 
-    bitstream.CurrentPosition += 2u;    
+    bitstream.CurrentPosition += 2u;
 
-    switch (zlib.Header.CompressionMethod)
+    switch(zlib.Header.CompressionMethod)
     {
         case BF::ZLIBCompressionMethod::Deflate:
         {
@@ -409,11 +441,11 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
             Byte* adam7Cache = nullptr;
 
             do
-            {           
+            {
                 deflateBlock.Parse(bitstream);
-                deflateBlock.Inflate(bitstream, zlibCache, zlibDataCache);     
+                deflateBlock.Inflate(bitstream, zlibCache, zlibDataCache);
             }
-            while (!deflateBlock.IsLastBlock);
+            while(!deflateBlock.IsLastBlock);
 
             adam7Cache = Memory::Allocate<Byte>(expectedadam7CacheSize);
 
@@ -422,7 +454,7 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
             Memory::Release(zlibCache, zlibDataCache);
 
             PNGColorCompressor::Decompress(adam7Cache, PixelData, ImageHeader.Width, ImageHeader.Height, ImageHeader.BitDepth, ImageHeader.ColorType);
-       
+
             Memory::Release(adam7Cache, expectedadam7CacheSize);
 
             break;

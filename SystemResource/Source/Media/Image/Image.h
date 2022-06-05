@@ -9,6 +9,14 @@
 
 namespace BF
 {
+	struct ImageFileFormatDetectionInfo
+	{
+		public:
+		ImageFileFormat HintFileExtension;
+		ImageFileFormat GuessCurrent;
+		ImageFileFormat ResultDetected;
+	};
+
 	class Image : public Resource
 	{
 		public:
@@ -38,9 +46,13 @@ namespace BF
 
 		void FormatChange(ImageDataFormat imageFormat);
 
+		static ImageFileFormat FileFormatPeek(const char* filePath);
 		static ImageFileFormat FileFormatPeek(const wchar_t* filePath);
 
+		FileActionResult Load(const char* filePath);
 		FileActionResult Load(const wchar_t* filePath);
+		FileActionResult Load(const unsigned char* fileData, const size_t fileDataSize, const ImageFileFormat imageFileFormat);
+
 		FileActionResult Save(const wchar_t* filePath, ImageFileFormat imageFileFormat);
 
 		virtual size_t FullSizeInMemory() override;
