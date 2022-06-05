@@ -1,14 +1,12 @@
 #include "Restklassen.h"
 
 #include <stdio.h>
-#include <math.h>
-#include <map>
-
-
+#include<Math/Math.h>
+#include<Hardware/Memory/Memory.h>
 
 int Restklasse::set_Generator(int mod)
 {
-    int* all = new int[mod];
+    int* all = BF::Memory::Allocate<int>(mod);
     for (int z = 0; z <= mod - 1; z++)
     {
         all[z] = -1;
@@ -17,7 +15,7 @@ int Restklasse::set_Generator(int mod)
     {
         for (int j = 0; j <= mod - 1; j++)
         {
-            if (all[((int)pow((double)i, (double)j) % mod)] == -1)
+            if (all[((int)BF::Math::Power((double)i, (double)j) % mod)] == -1)
             {
                 all[j] = i;
             }
@@ -128,14 +126,14 @@ void Restklasse::print()
     {
         for (int y = 0; y <= restklasse[0][0]; y++)
         {
-            /*if (x == 0 && y == 0)
+            if (x == 0 && y == 0)
             {
-                printf(" | %s | ", operation);
+                printf(" | 0 | ");
             }
             else
-            {*/
+            {
             printf(" | %d | ", restklasse[x][y]);
-            //}
+            }
         }
         printf("\n");
     }
@@ -143,9 +141,9 @@ void Restklasse::print()
 }
 Restklasse::Restklasse(int mod, int(*function)(int, int))
 {
-    int** rest = new int* [mod + 1];
+    int** rest = BF::Memory::Allocate<int*>(mod+1);
     for (int i = 0; i < mod + 1; i++) {
-        rest[i] = new int[mod + 1];
+        rest[i] = BF::Memory::Allocate<int>(mod+1);
     }
     for (int x = 0; x <= mod; x++) {
         for (int y = 0; y <= mod; y++) {
@@ -174,10 +172,10 @@ Restklasse::Restklasse(int mod, int(*function)(int, int))
 
 Restklasse::Restklasse()
 {
-    Restklasse::restklasse = new int* [2];
+    Restklasse::restklasse = BF::Memory::Allocate<int*>(2);
     for (int i = 0; i <= 2; i++)
     {
-        Restklasse::restklasse[i] = new int[2];
+        Restklasse::restklasse[i] = BF::Memory::Allocate<int>(2);
         for (int j = 0; j <= 2; j++)
         {
             if (i == 0)
@@ -201,43 +199,4 @@ Restklasse::Restklasse()
     neutralelement = neutralElement();
     hat_neutralElement = neutralelement >= 0 ? true : false;
     zyklisch = Zyklisch();
-}
-/*TODO:
-    * controll all edgecases:
-        - Modulo 0
-        - ...
-    * implement Algorithim
-*/
-unsigned int Restklasse::chineseRemainder(unsigned int* remainderset, unsigned int* moduloset)
-{
-    unsigned int remaindercount = sizeof(remainderset) / sizeof(unsigned int);
-    unsigned int modulocount = sizeof(moduloset) / sizeof(unsigned int);
-
-    if (remaindercount != modulocount)
-    {
-        return 0;
-    }
-    std::map<unsigned int, unsigned int> doublecheck;
-    for (int i = 0; i < remaindercount; i++)
-    {
-        if (doublecheck.count(moduloset[i]) != 0)
-        {
-            return -1;
-        }
-        doublecheck[moduloset[i]] = remainderset[i];
-    }
-
-
-    unsigned int productModulo = 1;
-    for (int i = 0; i < modulocount; i++)
-    {
-        productModulo *= moduloset[i];
-    }
-
-    if (productModulo <= 1)
-    {
-        return 0;
-    }
-
-    return 0;
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-class Restklasse
+struct Restklasse
 {
 	private:
 	int** restklasse;
@@ -11,10 +11,6 @@ class Restklasse
 	bool hat_neutralElement;
 	int generator;
 	int neutralelement;
-	void Restring_plus(int mod);
-	void Restring_minus(int mod);
-	void Restring_mal(int mod);
-	void Restring_durch(int mod);
 	int set_Generator(int mod);
 	bool Zyklisch();
 	int neutralElement();
@@ -22,5 +18,4 @@ class Restklasse
 	void print();
 	Restklasse(int mod, int(*function)(int, int));
 	Restklasse();
-	static unsigned int chineseRemainder(unsigned int* remainderset, unsigned int* moduloset);
 };
