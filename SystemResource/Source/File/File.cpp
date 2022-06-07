@@ -591,6 +591,33 @@ BF::FileActionResult BF::File::ReadFromDisk(const wchar_t* filePath, Byte** targ
 	return BF::FileActionResult::Successful;
 }
 
+BF::FileActionResult BF::File::WriteToDisk(const char* format, ...)
+{
+	char* currentPos = (char*)CursorCurrentAdress();
+
+	size_t writtenBytes = Write(format, __argv);
+	const bool sucessful = writtenBytes > 0;
+
+	if(!writtenBytes)
+	{
+		return FileActionResult::WriteFailure;
+	}
+
+	return FileActionResult::Successful;
+}
+
+BF::FileActionResult BF::File::WriteIntoFile(const void* data, const size_t dataSize)
+{
+#if defined(OSUnix)
+	size_t writtenBytes = fwrite(data, sizeof(char), dataSize, FileHandle);
+#elif defined(OSWindows)
+	DWORD writtenBytes = 0;
+	const bool successful = WriteFile(FileHandle, data, dataSize, &writtenBytes, nullptr);
+#endif
+
+	return FileActionResult();
+}
+
 BF::FileActionResult BF::File::WriteToDisk(const char* filePath, FilePersistence filePersistence)
 {
 	File file;
@@ -601,12 +628,7 @@ BF::FileActionResult BF::File::WriteToDisk(const char* filePath, FilePersistence
 		return fileActionResult;
 	}
 
-#if defined(OSUnix)
-	size_t writtenBytes = fwrite(Data, sizeof(char), DataSize, file.FileHandle);
-#elif defined(OSWindows)
-	DWORD writtenBytes = 0;
-	const bool successful = WriteFile(file.FileHandle, Data, DataSize, &writtenBytes, nullptr);
-#endif
+	WriteIntoFile(Data, DataSize);
 
 	fileActionResult = file.Close();
 
@@ -616,21 +638,33 @@ BF::FileActionResult BF::File::WriteToDisk(const char* filePath, FilePersistence
 BF::FileActionResult BF::File::WriteToDisk(const wchar_t* filePath, FilePersistence filePersistence)
 {
 	File file;
-	FileActionResult fileActionResult = file.Open(filePath, FileOpenMode::Write);
 
-	if(fileActionResult != FileActionResult::Successful)
 	{
-		return fileActionResult;
+		const FileActionResult fileActionResult = file.Open(filePath, FileOpenMode::Write);
+		const bool sucessful = fileActionResult == FileActionResult::Successful;
+
+		if(!sucessful)
+		{
+			return fileActionResult;
+		}
 	}
 
 #if defined(OSUnix)
-	size_t writtenBytes = fwrite(Data, sizeof(char), DataSize, file.FileHandle);
+	size_t writtenBytes = fwrite(Data, sizeof(char), DataCursorPosition, file.FileHandle);
 #elif defined(OSWindows)
 	DWORD writtenBytes = 0;
-	const bool successful = WriteFile(file.FileHandle, Data, DataSize, &writtenBytes, nullptr);
+	const bool successful = WriteFile(file.FileHandle, Data, DataCursorPosition, &writtenBytes, nullptr);
 #endif
 
-	fileActionResult = file.Close();
+	{
+		const FileActionResult closeResult = file.Close();
+		const bool sucessful = closeResult == FileActionResult::Successful;
+
+		if(!sucessful)
+		{
+			return closeResult;
+		}
+	}
 
 	return BF::FileActionResult::Successful;
 }
@@ -776,10 +810,10 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 	wchar_t folderPathW[PathMaxSize];
 	size_t writtenBytes = Text::Copy(folderPath, PathMaxSize, folderPathW, PathMaxSize);
 
-	WIN32_FIND_DATA dataCursour;
+	WIN32_FIND_DATA dataCursour{0};
 	HANDLE hFind = 0;
 
-	Memory::Set(&dataCursour, 0, sizeof(WIN32_FIND_DATA));
+	//Memory::Set(&dataCursour, 0, sizeof(WIN32_FIND_DATA));
 
 	hFind = FindFirstFile(folderPathW, &dataCursour); 	// "/*.*";
 

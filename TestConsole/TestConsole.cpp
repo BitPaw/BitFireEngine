@@ -6,6 +6,7 @@
 #include <Network/Protocol/SBP/SBPQueue.h>
 #include <Time/StopWatch.h>
 #include <Media/Font/Font.h>
+#include <Media/Font/FNT/FNT.h>
 
 using namespace BF;
 
@@ -212,15 +213,20 @@ int main()
 
     StopWatch sw;
 
-    Font font;
+    FNT font;
 
     sw.Start();
 
     font.Load(L"B:\\Daten\\Fonts\\_BitMapFont\\arial.fnt");
 
-    float dx = sw.Stop();
+    float loadningTime = sw.Reset();
 
-    printf("Took : %3.2fus\n", dx*1000000);
+    font.Save(L"A:\\arial_COPY.fnt");
+
+    float savingTime = sw.Reset();
+
+    printf("Loading Took : %3.2fus\n", loadningTime * 1000000);
+    printf("Saveing Took : %3.2fus\n", savingTime * 1000000);
 
     return 0;
 }

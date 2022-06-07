@@ -171,6 +171,10 @@ namespace BF
 			FilePersistence filePersistence = FilePersistence::Permanent
 		);
 
+		FileActionResult WriteToDisk(const char* format, ...);
+
+		FileActionResult WriteIntoFile(const void* data, const size_t dataSize);
+
 		FileActionResult WriteToDisk(const char* filePath, FilePersistence filePersistence = FilePersistence::Permanent);
 		FileActionResult WriteToDisk(const wchar_t* filePath, FilePersistence filePersistence = FilePersistence::Permanent);
 

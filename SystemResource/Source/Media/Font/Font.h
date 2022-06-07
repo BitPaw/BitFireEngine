@@ -23,9 +23,14 @@ namespace BF
 
 		//---[ Public-Functions ]----------------------------------------------
 		size_t FullSizeInMemory();
+
+		static FontFormat FileFormatPeek(const char* filePath);
 		static FontFormat FileFormatPeek(const wchar_t* filePath);
 
+		FileActionResult Load(const char* filePath);
 		FileActionResult Load(const wchar_t* filePath);
+		FileActionResult Load(const unsigned char* fileData, const size_t fileDataSize, const FontFormat fontFormat);
+
 		FileActionResult Save(const wchar_t* filePath, FontFormat fontFormat);
 		//---------------------------------------------------------------------
 	};

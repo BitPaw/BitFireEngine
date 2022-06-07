@@ -15,6 +15,8 @@ namespace BF
 		OutOfMemory,
 		FileEmpty,
 
+		WriteFailure,
+
 		//
 		FileOpenFailure,
 		FileCloseFailure,

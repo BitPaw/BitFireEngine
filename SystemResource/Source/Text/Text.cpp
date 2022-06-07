@@ -265,7 +265,7 @@ size_t BF::Text::ToInt(const char* string, size_t dataSize, int& number)
 		isNegative = true;
 	}
 
-	for (; string[index] != '\0'; index++)
+	while (string[index] != '\0')
 	{
 		char character = string[index];
 		char isValidCharacter = (character >= '0' && character <= '9');
@@ -278,6 +278,8 @@ size_t BF::Text::ToInt(const char* string, size_t dataSize, int& number)
 
 		number *= 10; // "Shft number to left" Example 12 -> 120
 		number += numberElement; // ASCII character to actual number.
+
+		++index;
 	}
 
 	if (isNegative)

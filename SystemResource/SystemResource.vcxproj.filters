@@ -744,7 +744,7 @@
     <ClCompile Include="Source\Network\Protocol\SBP\SBPText.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="WebM.cpp">
+    <ClCompile Include="Source\Media\Video\WEBM\WebM.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Media\Image\ImageFileFormat.cpp">
@@ -1703,7 +1703,7 @@
     <ClInclude Include="Source\Network\Protocol\SBP\SBPText.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="WebM.h">
+    <ClInclude Include="Source\Media\Video\WEBM\WebM.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

@@ -389,26 +389,26 @@ BF::FileActionResult BF::Image::Load(const wchar_t* filePath)
         const FileActionResult fileParsingResult = Load(file.Data, file.DataSize, hint);
         const bool success = fileParsingResult == FileActionResult::Successful;
 
-        if(!success)
+        if(success)
         {
-            FileActionResult fileGuessResult = FileActionResult::Invalid;
-            unsigned int fileFormatID = 1;
-
-            do
-            {
-                const ImageFileFormat imageFileFormat = ConvertImageFileFormat(fileFormatID);
-
-                fileGuessResult = Load(file.Data, file.DataSize, imageFileFormat);
-
-                fileFormatID++;
-            }
-            while(fileGuessResult != FileActionResult::FormatNotSupported);
-
-            return FileActionResult::FormatNotSupported;
+            return FileActionResult::Successful;
         }
 
-        return fileParsingResult;
-    }  
+        FileActionResult fileGuessResult = FileActionResult::Invalid;
+        unsigned int fileFormatID = 1;
+
+        do
+        {
+            const ImageFileFormat imageFileFormat = ConvertImageFileFormat(fileFormatID);
+
+            fileGuessResult = Load(file.Data, file.DataSize, imageFileFormat);
+
+            fileFormatID++;
+        }
+        while(fileGuessResult == FileActionResult::InvalidHeaderSignature);
+
+        return fileGuessResult;
+    }
 }
 
 BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t fileDataSize, const ImageFileFormat imageFileFormat)

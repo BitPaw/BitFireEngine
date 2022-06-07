@@ -538,7 +538,7 @@
     <ClCompile Include="Source\Graphic\Vulcan\Vulcan.cpp" />
     <ClCompile Include="Source\Media\Image\SVG\SVG.cpp" />
     <ClCompile Include="Source\Media\Image\WEBP\WEBP.cpp" />
-    <ClCompile Include="WebM.cpp" />
+    <ClCompile Include="Source\Media\Video\WEBM\WebM.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Network\Protocol\SBP\SBPText.h" />
@@ -858,7 +858,7 @@
     <ClInclude Include="Source\Graphic\Vulcan\Vulcan.h" />
     <ClInclude Include="Source\Media\Image\SVG\SVG.h" />
     <ClInclude Include="Source\Media\Image\WEBP\WEBP.h" />
-    <ClInclude Include="WebM.h" />
+    <ClInclude Include="Source\Media\Video\WEBM\WebM.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

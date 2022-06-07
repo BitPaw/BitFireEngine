@@ -7,6 +7,7 @@
 #include <Hardware/Memory/Memory.h>
 
 #include <iso646.h>
+#include <cstdarg>
 
 #define InRange DataCursorPosition < DataSize	
 #define NotEndOfString Data[DataCursorPosition] != '\0'
@@ -389,4 +390,27 @@ void BF::ByteStream::Write(const void* value, size_t length)
 	Memory::Copy(Data + DataCursorPosition, value, length);
 
 	DataCursorPosition += length;
+}
+
+size_t BF::ByteStream::Write(const char* format, ...)
+{
+	char* currentPosition = (char*)Data + DataCursorPosition;
+
+	va_list args;
+	va_start(args, format);
+
+	int writtenBYtes = vsprintf(currentPosition, format, args);
+
+	va_end(args);
+	
+	const bool sucessful = writtenBYtes >= 0;
+
+	if(!sucessful)
+	{
+		return 0;
+	}
+
+	DataCursorPosition += writtenBYtes;
+
+	return writtenBYtes;
 }
