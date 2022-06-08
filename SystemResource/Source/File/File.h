@@ -14,12 +14,11 @@
 
 #include <ErrorCode.h>
 #include <OS/OSDefine.h>
+#include <File/FilePersistence.hpp>
 
 #define FileLineBufferSize 2048
 
-
 #if defined(OSUnix)
-
 
 #include <sys/stat.h>
 #include <sys/mman.h>
@@ -50,7 +49,6 @@
 
 #include <direct.h>
 #include <Windows.h>
-#include <File/FilePersistence.hpp>
 
 #define FileOpenA fopen
 #define FileOpenW _wfopen
@@ -66,101 +64,40 @@
 #define WorkingDirectoryChangeW _wchdir
 #endif
 
-#ifndef Byte
-#define Byte unsigned char
-#endif
-
 namespace BF
 {
-	struct FileMappingInfo
-	{
-		public:
-		FileMappingID ID;
-#if defined(OSWindows)
-		FileMappingID IDMapping;
-#endif
-		size_t Size;
-		void* Data;
-
-		FileMappingInfo()
-		{
-			ID = 0;
-#if defined(OSWindows)
-			IDMapping = 0;
-#endif
-
-			Size = 0;
-			Data = 0;
-		}
-	};
-
 	struct File : public ByteStream
 	{
 		protected:
-		FileLocation _fileLocation;
+		FileLocation _fileLocation; // Where the is stored, used as indicator how to clean up.
 
 		public:	
-		FileHandleType FileHandle; // Only used if file is used directly
-		FileMappingInfo FileMappingInfo; // only used if mapping is used		
+		FileHandleType FileHandle; // Only used if file is used directly	
+
+#if defined(OSWindows)
+		FILE* FileHandleCStyle; // Used for writing only, usage of fprintf()
+		FileMappingID IDMapping; // Only used while mapping a file
+#endif
 		
 		File();
-		~File();
+		~File();	
 
-		static bool DoesFileExist(const char* filePath);
-		static bool DoesFileExist(const wchar_t* filePath);
-
-		// Open
+		//---<Open>------------------------------------------------------------
 		FileActionResult Open(const char* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode = FileCachingMode::Default);
-		static FileActionResult Open(FileHandleType& fileHandle, const char* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode = FileCachingMode::Default);
 		FileActionResult Open(const wchar_t* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode = FileCachingMode::Default);
-		static FileActionResult Open(FileHandleType& fileHandle, const wchar_t* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode = FileCachingMode::Default);
-
-		// Load
-
-		FileActionResult ReadFromDisk(unsigned char** outPutBuffer, size_t& outPutBufferSize, const bool addTerminatorByte = false);
-
-		// Close
-
-		FileActionResult Close();
-		static FileActionResult Close(FileHandleType& fileHandle);
-
-
-
-		//---<Utility>--
-
-		static ErrorCode Remove(const char* filePath);
-		static ErrorCode Remove(const wchar_t* filePath);
-
-		static ErrorCode Rename(const char* oldName, const char* newName);
-		static ErrorCode Rename(const wchar_t* oldName, const wchar_t* newName);
-
-		static FileActionResult Copy(const char* sourceFilePath, const char* destinationFilePath);
-		static FileActionResult Copy(const wchar_t* sourceFilePath, const wchar_t* destinationFilePath);
-
 		//---------------------------------------------------------------------
 
-		// Directory
-
-		static ErrorCode DirectoryCreate(const char* directoryName);
-		static ErrorCode DirectoryCreate(const wchar_t* directoryName);
-		static ErrorCode WorkingDirectoryChange(const char* directoryName);
-		static ErrorCode WorkingDirectoryGet(char* workingDirectory, size_t workingDirectorySize);
-		static ErrorCode WorkingDirectoryGet(wchar_t* workingDirectory, size_t workingDirectorySize);
-		static ErrorCode WorkingDirectoryChange(const wchar_t* directoryName);
-		static ErrorCode DirectoryDelete(const char* directoryName);
-		static ErrorCode DirectoryDelete(const wchar_t* directoryName);
-
-		//---------------------------------------------------------------------		
-
-
+		//---<Mapping>---------------------------------------------------------
 		FileActionResult MapToVirtualMemory(const char* filePath);
 		FileActionResult MapToVirtualMemory(const wchar_t* filePath);
 		FileActionResult MapToVirtualMemory(const size_t size);
 		FileActionResult UnmapFromVirtualMemory();
+		//---------------------------------------------------------------------
 
+		//---<Read>------------------------------------------------------------
+		FileActionResult ReadFromDisk(unsigned char** outPutBuffer, size_t& outPutBufferSize, const bool addTerminatorByte = false);	
 		FileActionResult ReadFromDisk(const char* filePath, bool addNullTerminator = false, FilePersistence filePersistence = FilePersistence::Permanent);
 		FileActionResult ReadFromDisk(const wchar_t* filePath, bool addNullTerminator = false, FilePersistence filePersistence = FilePersistence::Permanent);
-	
 		static FileActionResult ReadFromDisk(FILE* file, Byte** targetBuffer, size_t& bufferSize, bool addNullTerminator = false);
 		static FileActionResult ReadFromDisk
 		(
@@ -170,18 +107,44 @@ namespace BF
 			bool addNullTerminator = false,
 			FilePersistence filePersistence = FilePersistence::Permanent
 		);
+		//---------------------------------------------------------------------
 
+		//---<Write>-----------------------------------------------------------
 		FileActionResult WriteToDisk(const char* format, ...);
-
 		FileActionResult WriteIntoFile(const void* data, const size_t dataSize);
-
 		FileActionResult WriteToDisk(const char* filePath, FilePersistence filePersistence = FilePersistence::Permanent);
 		FileActionResult WriteToDisk(const wchar_t* filePath, FilePersistence filePersistence = FilePersistence::Permanent);
+		//---------------------------------------------------------------------
 
+		//---<Close>-----------------------------------------------------------
+		FileActionResult Close();
+		//---------------------------------------------------------------------
+
+		//---<Utility>---------------------------------------------------------
+		static bool DoesFileExist(const char* filePath);
+		static bool DoesFileExist(const wchar_t* filePath);
+
+		static ErrorCode Remove(const char* filePath);
+		static ErrorCode Remove(const wchar_t* filePath);
+		static ErrorCode Rename(const char* oldName, const char* newName);
+		static ErrorCode Rename(const wchar_t* oldName, const wchar_t* newName);
+		static FileActionResult Copy(const char* sourceFilePath, const char* destinationFilePath);
+		static FileActionResult Copy(const wchar_t* sourceFilePath, const wchar_t* destinationFilePath);
 
 		static void PathSwapFile(const wchar_t* currnetPath, wchar_t* targetPath, const wchar_t* newFileName);
+		//---------------------------------------------------------------------
 
+		//---<Directory>-------------------------------------------------------
+		static ErrorCode DirectoryCreate(const char* directoryName);
+		static ErrorCode DirectoryCreate(const wchar_t* directoryName);
+		static ErrorCode WorkingDirectoryChange(const char* directoryName);
+		static ErrorCode WorkingDirectoryGet(char* workingDirectory, size_t workingDirectorySize);
+		static ErrorCode WorkingDirectoryGet(wchar_t* workingDirectory, size_t workingDirectorySize);
+		static ErrorCode WorkingDirectoryChange(const wchar_t* directoryName);
+		static ErrorCode DirectoryDelete(const char* directoryName);
+		static ErrorCode DirectoryDelete(const wchar_t* directoryName);
 		static void FilesInFolder(const char* folderPath, wchar_t*** list, size_t& listSize);
 		static void FilesInFolder(const wchar_t* folderPath, wchar_t*** list, size_t& listSize);
+		//---------------------------------------------------------------------	
 	};
 }

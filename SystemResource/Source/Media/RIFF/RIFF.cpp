@@ -1,4 +1,5 @@
 #include "RIFF.h"
+#include <File/ByteStream.h>
 
 #define RIFFSignature MakeInt('R', 'I', 'F', 'F')
 #define RIFXSignature MakeInt('R', 'I', 'F', 'X')
@@ -21,15 +22,17 @@ BF::RIFF::RIFF()
 	ChunkSize = 0;
 	Format = RIFFFormat::Invalid;
 }
-/*
-void BF::RIFF::Parse(FileStream& fileStream)
+
+size_t BF::RIFF::Parse(const unsigned char* data, const size_t dataSize)
 {
+	ByteStream dataStream(data, dataSize);
+
 	ByteCluster chunkID;
 	ByteCluster formatID;
 
-	fileStream.Read(chunkID.Data, 4);
-	fileStream.Read(ChunkSize, Endian::Little);
-	fileStream.Read(formatID.Data, 4);
+	dataStream.Read(chunkID.Data, 4);
+	dataStream.Read(ChunkSize, Endian::Little);
+	dataStream.Read(formatID.Data, 4);
 
 	switch(chunkID.Value) // Detect Endiantype
 	{
@@ -78,4 +81,6 @@ void BF::RIFF::Parse(FileStream& fileStream)
 	}
 
 	Valid = (EndianFormat != Endian::Invalid) && (Format != RIFFFormat::Invalid);
-}*/
+
+	return dataStream.DataCursorPosition;
+}

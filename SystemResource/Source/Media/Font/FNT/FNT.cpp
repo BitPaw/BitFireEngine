@@ -325,20 +325,18 @@ BF::FileActionResult BF::FNT::Save(const wchar_t* filePath)
 {
 	File file;	
 
-	// Allocate
+	// Open file
 	{
-		const size_t guessedSize = 128 + 64 + 32 + 128 + (128 * 100) * FontPageListSize;
-
-		const FileActionResult fileMappingResult = file.MapToVirtualMemory(guessedSize);
-		const bool sucessful = fileMappingResult == FileActionResult::Successful;
+		const FileActionResult openResult = file.Open(filePath, FileOpenMode::Write);
+		const bool sucessful = openResult == FileActionResult::Successful;
 
 		if(!sucessful)
 		{
-			return fileMappingResult;
+			return openResult;
 		}
 	}
 
-	file.Write
+	file.WriteToDisk
 	(
 		"info face=\"%s\" size=%i bold=%i italic=%i charset=%s unicode=%i stretchH=%i smooth=%i aa=%i padding=%i,%i,%i,%i spacing=%i,%i",
 		Info.Name,
@@ -358,7 +356,7 @@ BF::FileActionResult BF::FNT::Save(const wchar_t* filePath)
 		Info.SpacerOffset[1]
 	);
 
-	file.Write
+	file.WriteToDisk
 	(
 		"\ncommon lineHeight=%i base=%i scaleW=%i scaleH=%i pages=%i packed=%i",
 		CommonData.LineHeight,
@@ -373,7 +371,7 @@ BF::FileActionResult BF::FNT::Save(const wchar_t* filePath)
 	{
 		FNTPage& page = FontPageList[i];
 
-		file.Write
+		file.WriteToDisk
 		(
 			"\npage id=%i file=\"%s\""
 			"\nchars count=%zi",
@@ -386,7 +384,7 @@ BF::FileActionResult BF::FNT::Save(const wchar_t* filePath)
 		{
 			FNTCharacter& character = page.CharacteList[i];
 
-			file.Write
+			file.WriteToDisk
 			(
 				"\nchar id=%i x=%.2f y=%.2f width=%.2f height=%.2f xoffset=%.2f yoffset=%.2f xadvance=%i page=%i chnl=%i",
 				character.ID,
@@ -403,7 +401,16 @@ BF::FileActionResult BF::FNT::Save(const wchar_t* filePath)
 		}
 	}	
 
-	file.WriteToDisk(filePath);
+	// Close file
+	{
+		const FileActionResult closeResult = file.Close();
+		const bool sucessful = closeResult == FileActionResult::Successful;
+
+		if(!sucessful)
+		{
+			return closeResult;
+		}
+	}
 
 	return FileActionResult::Successful;
 }

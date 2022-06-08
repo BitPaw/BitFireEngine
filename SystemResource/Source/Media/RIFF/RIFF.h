@@ -20,6 +20,6 @@ namespace BF
 
 		RIFF();
 	
-		//void Parse(FileStream& fileStream);
+		size_t Parse(const unsigned char* data, const size_t dataSize);
 	};
 }

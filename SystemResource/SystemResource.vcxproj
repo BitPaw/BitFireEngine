@@ -294,6 +294,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Media\Sound\OGG\OGGPage.cpp" />
     <ClCompile Include="Source\Media\Image\ImageFileFormat.cpp" />
     <ClCompile Include="Source\Network\Protocol\SBP\SBPText.cpp" />
     <ClCompile Include="Source\Network\Protocol\SBP\SBPClient.cpp" />
@@ -541,6 +542,7 @@
     <ClCompile Include="Source\Media\Video\WEBM\WebM.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Media\Sound\OGG\OGGPage.h" />
     <ClInclude Include="Source\Network\Protocol\SBP\SBPText.h" />
     <ClInclude Include="Source\Network\Protocol\SBP\SBPClient.h" />
     <ClInclude Include="Source\Network\Protocol\SBP\SBPServer.h" />

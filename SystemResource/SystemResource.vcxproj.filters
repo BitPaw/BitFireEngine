@@ -750,6 +750,9 @@
     <ClCompile Include="Source\Media\Image\ImageFileFormat.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Media\Sound\OGG\OGGPage.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp">
@@ -1704,6 +1707,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Media\Video\WEBM\WebM.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Media\Sound\OGG\OGGPage.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

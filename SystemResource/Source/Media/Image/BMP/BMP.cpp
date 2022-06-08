@@ -174,14 +174,29 @@ BF::FileActionResult BF::BMP::Load(const unsigned char* fileData, const size_t f
 }
 
 BF::FileActionResult BF::BMP::Save(const wchar_t* filePath)
-{
-    unsigned int fileSize = InfoHeader.Width * InfoHeader.Height * 3 + 54u;
-    File file;// (fileSize);
+{ 
+    File file;
+
+    // Open file
+    {
+        const FileActionResult openResult = file.Open(filePath, FileOpenMode::Write);
+        const bool sucessful = openResult == FileActionResult::Successful;
+
+        if(!sucessful)
+        {
+            return openResult;
+        }
+    }
  
-    file.Write("BM", 2u);
-    file.Write(fileSize, Endian::Little);
-    file.Write(0u, Endian::Little);
-    file.Write(54u, Endian::Little);
+    // Write header
+    {
+        unsigned int fileSize = InfoHeader.Width * InfoHeader.Height * 3 + 54u;
+
+        file.Write("BM", 2u);
+        file.Write(fileSize, Endian::Little);
+        file.Write(0u, Endian::Little);
+        file.Write(54u, Endian::Little);
+    }   
 
     //------<Windows-Header>-----------
     file.Write(InfoHeader.HeaderSize, Endian::Little);
@@ -198,7 +213,16 @@ BF::FileActionResult BF::BMP::Save(const wchar_t* filePath)
 
     file.Write(PixelData, PixelDataSize);
 
-    file.WriteToDisk(filePath);
+    // Close file
+    {
+        const FileActionResult closeResult = file.Close();
+        const bool sucessful = closeResult == FileActionResult::Successful;
+
+        if(!sucessful)
+        {
+            return closeResult;
+        }
+    }
 
     return FileActionResult::Successful;
 }

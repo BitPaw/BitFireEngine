@@ -8,6 +8,7 @@ namespace BF
 
 		MappedVirtual, // Used 'VirtalAlloc()' / 'mmap()'
 		MappedFromDisk, // Used 'FileView()' / 'fmap()'
-		CachedFromDisk // Used existing file with 'fopen()'
+		CachedFromDisk, // When the file is cached into an internal buffer
+		Linked // Used existing file with 'fopen()'
 	};
 }

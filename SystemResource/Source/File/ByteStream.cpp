@@ -399,18 +399,20 @@ size_t BF::ByteStream::Write(const char* format, ...)
 	va_list args;
 	va_start(args, format);
 
-	int writtenBYtes = vsprintf(currentPosition, format, args);
+	int writtenBytes = vsprintf(currentPosition, format, args);
 
 	va_end(args);
 	
-	const bool sucessful = writtenBYtes >= 0;
-
-	if(!sucessful)
 	{
-		return 0;
-	}
+		const bool sucessful = writtenBytes >= 0;
 
-	DataCursorPosition += writtenBYtes;
+		if(!sucessful)
+		{
+			return 0;
+		}
+	}	
 
-	return writtenBYtes;
+	DataCursorPosition += writtenBytes;
+
+	return writtenBytes;
 }

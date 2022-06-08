@@ -32,9 +32,6 @@ namespace BF
         // Use only for bigger datablocks.
         static void* VirtualMemoryAllocate(const size_t size);
         static bool VirtualMemoryRelease(const void* adress, const size_t size);
-        static FileActionResult VirtualMemoryFileMap(const char* filePath, FileMappingInfo& fileMappingInfo);
-        static FileActionResult VirtualMemoryFileMap(const wchar_t* filePath, FileMappingInfo& fileMappingInfo);
-        static bool VirtualMemoryFileUnmap(FileMappingInfo& fileMappingInfo);
 
  
         static bool Advise(const void* adress, const size_t length, const FileCachingMode fileCachingMode)

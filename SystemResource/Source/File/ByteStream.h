@@ -5,7 +5,9 @@
 #include "Endian.h"
 #include "ByteCluster.h"
 
+#ifndef Byte
 #define Byte unsigned char
+#endif
 
 namespace BF
 {

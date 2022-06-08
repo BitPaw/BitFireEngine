@@ -7,6 +7,7 @@
 #include <Time/StopWatch.h>
 #include <Media/Font/Font.h>
 #include <Media/Font/FNT/FNT.h>
+#include <Media/Sound/OGG/OGG.h>
 
 using namespace BF;
 
@@ -211,6 +212,11 @@ int main()
     }
     */
 
+    OGG ogg;
+
+    ogg.Load("N:/NAS/Games/PC/OneShot/Audio/BGS/tv_static.ogg");
+
+#if 0
     StopWatch sw;
 
     FNT font;
@@ -227,6 +233,6 @@ int main()
 
     printf("Loading Took : %3.2fus\n", loadningTime * 1000000);
     printf("Saveing Took : %3.2fus\n", savingTime * 1000000);
-
+#endif
     return 0;
 }

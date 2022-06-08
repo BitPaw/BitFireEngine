@@ -1,14 +1,22 @@
 #include "File.h"
 
-#include "../Container/AsciiString.h"
-
 #include <Text/Text.h>
 #include <Hardware/Memory/Memory.h>
+
+#if defined(OSWindows)
+#include <fcntl.h>
+#include <io.h>
+#endif
 
 BF::File::File()
 {
 	_fileLocation = FileLocation::Invalid;
 	FileHandle = 0;
+
+#if defined(OSWindows)
+	FileHandleCStyle = nullptr;
+	IDMapping = nullptr;
+#endif
 }
 
 BF::File::~File()
@@ -26,20 +34,19 @@ BF::File::~File()
 		case  FileLocation::CachedFromDisk:
 			Memory::Release(Data, DataSize);
 			break;
+
+		case FileLocation::Linked:
+			Close();
+			break;
 	}
 }
 
 BF::FileActionResult BF::File::Open(const char* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode)
 {
-	return File::Open(FileHandle, filePath, fileOpenMode, fileCachingMode);
-}
-
-BF::FileActionResult BF::File::Open(FileHandleType& fileHandle, const char* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode)
-{
 #if defined(OSUnix)
 	const char* readMode = nullptr;
 
-	switch (fileOpenMode)
+	switch(fileOpenMode)
 	{
 		case BF::FileOpenMode::Read:
 			readMode = FileReadMode;
@@ -61,61 +68,22 @@ BF::FileActionResult BF::File::Open(FileHandleType& fileHandle, const char* file
 	return fileHandle ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
 
 #elif defined(OSWindows)
-	DWORD dwDesiredAccess = 0;
-	DWORD dwShareMode = 0;
-	//SECURITY_ATTRIBUTES securityAttributes = 0;
-	DWORD dwCreationDisposition = 0;
-	DWORD dwFlagsAndAttributes = FILE_ATTRIBUTE_NORMAL;
-	HANDLE hTemplateFile = 0;
+	wchar_t filePathW[PathMaxSize];
 
-	switch (fileOpenMode)
-	{
-		case FileOpenMode::Read:
-		{
-			dwCreationDisposition = OPEN_EXISTING;
-			dwDesiredAccess = GENERIC_READ;
-			break;
-		}
-		case  FileOpenMode::Write:
-		{
-			dwCreationDisposition = CREATE_ALWAYS;
-			dwDesiredAccess = GENERIC_WRITE;
-			break;
-		}
-	}
+	Text::Copy(filePath, PathMaxSize, filePathW, PathMaxSize);
 
-	dwFlagsAndAttributes |= ConvertFileCachingMode(fileCachingMode);
-
-	fileHandle = CreateFileA
-	(
-		filePath,
-		dwDesiredAccess,
-		dwShareMode,
-		nullptr,
-		dwCreationDisposition,
-		dwFlagsAndAttributes,
-		hTemplateFile
-	);
-
-	bool successful = fileHandle != INVALID_HANDLE_VALUE;
-
-	return successful ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
+	return Open(filePathW, fileOpenMode, fileCachingMode);
 #endif
 }
 
 BF::FileActionResult BF::File::Open(const wchar_t* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode)
-{
-	return File::Open(FileHandle, filePath, fileOpenMode, fileCachingMode);
-}
-
-BF::FileActionResult BF::File::Open(FileHandleType& fileHandle, const wchar_t* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode)
 {
 #if defined(OSUnix)
 	char filePathA[PathMaxSize];
 
 	Text::Copy(filePathA, filePath, PathMaxSize);
 
-	File::Open(fileHandle, filePathA, fileOpenMode);
+	Open(fileHandle, filePathA, fileOpenMode);
 
 	return fileHandle ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
 #elif defined(OSWindows)
@@ -126,7 +94,7 @@ BF::FileActionResult BF::File::Open(FileHandleType& fileHandle, const wchar_t* f
 	DWORD dwFlagsAndAttributes = FILE_ATTRIBUTE_NORMAL;
 	HANDLE hTemplateFile = nullptr;
 
-	switch (fileOpenMode)
+	switch(fileOpenMode)
 	{
 		case FileOpenMode::Read:
 		{
@@ -144,7 +112,7 @@ BF::FileActionResult BF::File::Open(FileHandleType& fileHandle, const wchar_t* f
 
 	dwFlagsAndAttributes |= ConvertFileCachingMode(fileCachingMode);
 
-	fileHandle = CreateFileW
+	FileHandle = CreateFileW
 	(
 		filePath,
 		dwDesiredAccess,
@@ -156,7 +124,7 @@ BF::FileActionResult BF::File::Open(FileHandleType& fileHandle, const wchar_t* f
 	);
 
 	{
-		const bool successful = fileHandle != INVALID_HANDLE_VALUE;
+		const bool successful = FileHandle != INVALID_HANDLE_VALUE;
 
 		if(!successful)
 		{
@@ -182,34 +150,89 @@ BF::FileActionResult BF::File::Open(FileHandleType& fileHandle, const wchar_t* f
 		}
 	}
 
+	// Get a FILE* from file HANDLE
+	{
+		int osHandleMode = 0;
+		const char* fdOpenMode = nullptr;
+
+		switch(fileOpenMode)
+		{
+			case FileOpenMode::Read:
+			{
+				osHandleMode = _O_RDONLY;
+				fdOpenMode = FileReadMode;
+				break;
+			}
+			case  FileOpenMode::Write:
+			{
+				osHandleMode = _O_WRONLY;
+				fdOpenMode = FileWriteMode;
+				break;
+			}
+		}
+
+		const int nHandle = _open_osfhandle((intptr_t)FileHandle, osHandleMode);
+		const bool sucessful = nHandle != -1;
+
+		if(sucessful)
+		{
+			FILE* fp = _fdopen(nHandle, fdOpenMode);
+			const bool result = fp;
+
+			if(result)
+			{
+				FileHandleCStyle = fp;
+			}
+			else
+			{
+				// handle?
+			}
+		}
+		else
+		{
+			// handle?
+		}
+	}
+
+	_fileLocation = FileLocation::Linked;
+
 	return FileActionResult::Successful;
 #endif
 }
 
 BF::FileActionResult BF::File::Close()
 {
-	return File::Close(FileHandle);
-}
-
-BF::FileActionResult BF::File::Close(FileHandleType& fileHandle)
-{
 #if defined(OSUnix)
-	int closeResult = fclose(fileHandle);
+	int closeResult = fclose(FileHandle);
 
-	switch (closeResult)
+	switch(closeResult)
 	{
 		case 0:
 			return FileActionResult::Successful;
 
 		default:
 			return FileActionResult::FileCloseFailure;
-}
+	}
 #elif defined(OSWindows)
-	bool successful = CloseHandle(fileHandle);
+	if(FileHandleCStyle)
+	{
+		_fclose_nolock(FileHandleCStyle);
 
-	fileHandle = nullptr;
+		FileHandleCStyle = nullptr;
 
-	return successful ? FileActionResult::Successful : FileActionResult::FileCloseFailure;
+		FileHandle = nullptr;
+	}
+
+	if(FileHandle)
+	{
+		bool successful = CloseHandle(FileHandle);
+
+		FileHandle = nullptr;
+
+		return successful ? FileActionResult::Successful : FileActionResult::FileCloseFailure;
+	}	
+
+	return FileActionResult::Successful;
 #endif
 }
 
@@ -432,19 +455,94 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const char* filePath)
 }
 
 BF::FileActionResult BF::File::MapToVirtualMemory(const wchar_t* filePath)
-{
-	void** adress = (void**)&Data;
-	const FileActionResult result = Memory::VirtualMemoryFileMap(filePath, FileMappingInfo);
-	const bool successful = result == FileActionResult::Successful;
+{	
+#if defined(OSUnix)
+	char filePathA[PathMaxSize];
 
-	if(successful)
+	Text::Copy(filePathA, filePath, PathMaxSize);
+
+	return VirtualMemoryFileMap(filePathA, fileMappingInfo);
+
+#elif defined(OSWindows)
+
+	// Open file
 	{
-		_fileLocation = FileLocation::MappedFromDisk;
-		Data = (Byte*)FileMappingInfo.Data;
-		DataSize = FileMappingInfo.Size;
+		const FileActionResult openResult = Open(filePath, FileOpenMode::Read, FileCachingMode::Sequential);
+		const bool openSuccess = openResult == FileActionResult::Successful;
+
+		if(!openSuccess)
+		{
+			return openResult; //openResult;
+		}
 	}
 
-	return result;
+	{
+		LARGE_INTEGER largeInt{ 0 };
+
+		const bool sizeResult = GetFileSizeEx(FileHandle, &largeInt);
+
+		DataSize = largeInt.QuadPart;
+	}
+
+	// Create mapping
+	{
+		SECURITY_ATTRIBUTES	fileMappingAttributes{ 0 };
+		DWORD				flProtect = PAGE_READONLY;
+		DWORD				dwMaximumSizeHigh = 0;
+		DWORD				dwMaximumSizeLow = 0; // Problem if file is 0 Length
+		wchar_t* name = nullptr;
+
+		const HANDLE fileMappingHandleResult = CreateFileMappingW
+		(
+			FileHandle,
+			nullptr,
+			flProtect,
+			dwMaximumSizeHigh,
+			dwMaximumSizeLow,
+			name
+		);
+		const bool successful = fileMappingHandleResult;
+
+		if(!successful)
+		{
+			return FileActionResult::FileMemoryMappingFailed;
+		}
+
+		IDMapping = fileMappingHandleResult;
+	}
+
+	{
+		DWORD desiredAccess = FILE_MAP_READ;//  FILE_MAP_ALL_ACCESS; FILE_MAP_WRITE
+		DWORD fileOffsetHigh = 0;
+		DWORD fileOffsetLow = 0;
+		size_t numberOfBytesToMap = 0;
+		void* baseAddressTarget = nullptr;
+		DWORD  numaNodePreferred = NUMA_NO_PREFERRED_NODE;
+
+		void* fileMapped = MapViewOfFileExNuma
+		(
+			IDMapping,
+			desiredAccess,
+			fileOffsetHigh,
+			fileOffsetLow,
+			numberOfBytesToMap,
+			baseAddressTarget,
+			numaNodePreferred
+		);
+
+		Data = (Byte*)fileMapped;
+
+		Memory::VirtualMemoryPrefetch(fileMapped, DataSize);
+	}
+#endif
+
+#if MemoryDebug
+	printf("[#][Memory] 0x%p (%10zi B) MMAP %ls\n", fileMappingInfo.Data, fileMappingInfo.Size, filePath);
+#endif
+
+	_fileLocation = FileLocation::MappedFromDisk;
+
+	return FileActionResult::Successful;
 }
 
 BF::FileActionResult BF::File::MapToVirtualMemory(const size_t size)
@@ -466,10 +564,56 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const size_t size)
 
 BF::FileActionResult BF::File::UnmapFromVirtualMemory()
 {
-	void** adress = (void**)&Data;
-	const bool x = Memory::VirtualMemoryFileUnmap(FileMappingInfo);
+#if MemoryDebug
+	printf("[#][Memory] 0x%p (%10zi B) MMAP-Release\n", fileMappingInfo.Data, fileMappingInfo.Size);
+#endif
 
-	return FileActionResult::Successful;
+#if defined(OSUnix)
+	const int result = munmap(fileMappingInfo.Data, fileMappingInfo.Size);
+	const bool sucessful = result != -1;
+
+	if(!sucessful)
+	{
+		const ErrorCode errorCode = GetCurrentError();
+
+		return false;
+	}
+
+	fileMappingInfo.ID = 0;
+	fileMappingInfo.Size = 0;
+	fileMappingInfo.Data = 0;
+
+	return true;
+
+#elif defined(OSWindows)
+	{
+		const bool unmappingSucessful = UnmapViewOfFile(Data);
+
+		if(!unmappingSucessful)
+		{
+			const ErrorCode error = GetCurrentError();
+
+			return FileActionResult::Invalid; // TODO: fix this
+		}
+
+		Data = nullptr;
+	}
+
+	{
+		const bool closeMappingSucessful = CloseHandle(IDMapping);
+
+		if(!closeMappingSucessful)
+		{
+			return FileActionResult::Invalid; // TODO: fix this
+		}
+
+		IDMapping = 0;
+	}
+
+	const FileActionResult closeFile = Close();
+
+	return closeFile;
+#endif
 }
 
 BF::FileActionResult BF::File::ReadFromDisk(const char* filePath, bool addNullTerminator, FilePersistence filePersistence)
@@ -593,12 +737,15 @@ BF::FileActionResult BF::File::ReadFromDisk(const wchar_t* filePath, Byte** targ
 
 BF::FileActionResult BF::File::WriteToDisk(const char* format, ...)
 {
-	char* currentPos = (char*)CursorCurrentAdress();
+	va_list args;
+	va_start(args, format);
 
-	size_t writtenBytes = Write(format, __argv);
-	const bool sucessful = writtenBytes > 0;
+	const int writtenBytes = vfprintf(FileHandleCStyle, format, args);
+	const bool sucessful = writtenBytes >= 0;
 
-	if(!writtenBytes)
+	va_end(args);
+
+	if(!sucessful)
 	{
 		return FileActionResult::WriteFailure;
 	}

@@ -470,8 +470,18 @@ BF::FileActionResult BF::PNG::Load(const unsigned char* fileData, const size_t f
 
 BF::FileActionResult BF::PNG::Save(const wchar_t* filePath)
 {
-    size_t fileLength = 500;
-    File file;// (fileLength);
+    File file;
+
+    // Open file
+    {
+        const FileActionResult openResult = file.Open(filePath, FileOpenMode::Write);
+        const bool sucessful = openResult == FileActionResult::Successful;
+
+        if(!sucessful)
+        {
+            return openResult;
+        }
+    }
 
     //---<Signature>---
     {
@@ -483,10 +493,9 @@ BF::FileActionResult BF::PNG::Save(const wchar_t* filePath)
 
     //---<IHDR> (Image Header)---
     {
-        unsigned char colorType = ConvertColorType(ImageHeader.ColorType);
-        unsigned char interlaceMethod = ConvertPNGInterlaceMethod(ImageHeader.InterlaceMethod);
-        unsigned int crc = 0;
-        unsigned char* chunkStart = file.Data + file.DataCursorPosition;
+        const unsigned char colorType = ConvertColorType(ImageHeader.ColorType);
+        const unsigned char interlaceMethod = ConvertPNGInterlaceMethod(ImageHeader.InterlaceMethod);     
+        const unsigned char* chunkStart = file.Data + file.DataCursorPosition;
 
         file.Write(13u, Endian::Big);
         file.Write("IHDR", 4u);
@@ -500,7 +509,7 @@ BF::FileActionResult BF::PNG::Save(const wchar_t* filePath)
         file.Write(ImageHeader.FilterMethod);
         file.Write(interlaceMethod);
 
-        crc = CRC32::Generate(chunkStart, 13+4);
+        const unsigned int crc = CRC32::Generate(chunkStart, 13+4);
 
         file.Write(crc, Endian::Big);
     }
@@ -531,7 +540,16 @@ BF::FileActionResult BF::PNG::Save(const wchar_t* filePath)
         file.Write(2923585666u, Endian::Big);
     }
 
-    file.WriteToDisk(filePath);
+    // Close file
+    {
+        const FileActionResult closeResult = file.Close();
+        const bool sucessful = closeResult == FileActionResult::Successful;
+
+        if(!sucessful)
+        {
+            return closeResult;
+        }
+    }
 
     return FileActionResult::Successful;
 }
