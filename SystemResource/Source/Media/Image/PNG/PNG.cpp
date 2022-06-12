@@ -78,6 +78,7 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
 BF::FileActionResult BF::PNG::Load(const unsigned char* fileData, const size_t fileDataSize)
 {
     ByteStream dataStream((unsigned char*)fileData, fileDataSize);
+
     size_t imageDataCounter = 0;
     size_t imageDataChunkCacheSizeUSED = 0;
     size_t imageDataChunkCacheSizeMAX = 0u;
@@ -466,6 +467,8 @@ BF::FileActionResult BF::PNG::Load(const unsigned char* fileData, const size_t f
             break;
         }
     }
+
+    return FileActionResult::Successful;
 }
 
 BF::FileActionResult BF::PNG::Save(const wchar_t* filePath)

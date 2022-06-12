@@ -14,10 +14,10 @@ namespace BF
 		MP3Layer Layer;
 		bool CRCErrorProtection;
 
-		unsigned char BitRate;
-		unsigned char Frequency;
-		bool PaddingBit;
-		bool PrivateBit; // Unused
+		unsigned int BitRate;
+		unsigned short SampleRate;
+		bool UsePadding;
+		bool IsPrivate; // Unused
 		MP3ChannelMode ChannelMode;
 		bool AudioModeIntensity;
 		bool AudioModeMS;
@@ -26,8 +26,10 @@ namespace BF
 		bool CopyOfOriginal;
 		MP3Emphasis Emphasis;
 
+		unsigned int FrameLength;
+
 		MP3Header();
 
-		void ExtractRawHeader(const char rawHeader[4]);
+		size_t Parse(const unsigned char* data, const size_t dataSize);
 	};
 }

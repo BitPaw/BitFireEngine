@@ -8,6 +8,7 @@
 #include <Media/Font/Font.h>
 #include <Media/Font/FNT/FNT.h>
 #include <Media/Sound/OGG/OGG.h>
+#include <Media/Sound/MP3/MP3.h>
 
 using namespace BF;
 
@@ -201,6 +202,18 @@ int main()
     }   
 #endif
 
+
+
+    MP3 mp3;
+
+   // mp3.Load("B:/Daten/Music/08-Bit/Dragon Ball Z Opening 8 bit.mp3");
+   // mp3.Load("B:/Daten/Music/08-Bit/Black Sabbath - Iron man.mp3");
+
+    mp3.Load("A:/F/Giygas Beat.mp3");
+
+#if 0 //OGG
+
+
     /*
     SBPClient client;
 
@@ -215,6 +228,8 @@ int main()
     OGG ogg;
 
     ogg.Load("N:/NAS/Games/PC/OneShot/Audio/BGS/tv_static.ogg");
+#endif
+
 
 #if 0
     StopWatch sw;

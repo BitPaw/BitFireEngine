@@ -5,8 +5,8 @@
 #include <File/File.h>
 #include <Hardware/Memory/Memory.h>
 
-#define MIDITrackHeaderID MakeInt('M','T','h','d')
-#define MIDITrackChunkID  MakeInt('M','T','r','k')
+#define MIDITrackHeaderID {'M','T','h','d'}
+#define MIDITrackChunkID  {'M','T','r','k'}
 
 BF::MID::MID()
 {
@@ -21,45 +21,74 @@ BF::MID::~MID()
 	delete[] TrackList;
 }
 
-BF::FileActionResult BF::MID::Load(const wchar_t* filePath)
-{	
-	const char midiTrackEndIndicator[5] = "\x00\xFF\x2F\x00";
-
+BF::FileActionResult BF::MID::Load(const char* filePath)
+{
 	File file;
 
 	{
-		const FileActionResult loadingResult = file.MapToVirtualMemory(filePath);
-		const bool successful = loadingResult == FileActionResult::Successful;
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
-		if(!successful)
+		if(!sucessful)
 		{
-			return loadingResult;
+			return fileLoadingResult;
 		}
 	}
 
-	// Pasre Chunk header
-	{		
-		unsigned int chunkLength = 0;
-		
+	{
+		const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+
+		return fileParsingResult;
+	}
+}
+
+BF::FileActionResult BF::MID::Load(const wchar_t* filePath)
+{	
+	File file;
+
+	{
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+
+		if(!sucessful)
 		{
-			ByteCluster headerSignature;
+			return fileLoadingResult;
+		}
+	}
 
-			file.Read(headerSignature.Data, 4u);
+	{
+		const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
 
-			const bool isValid = headerSignature.Value = MIDITrackHeaderID;
+		return fileParsingResult;
+	}
+}
+
+BF::FileActionResult BF::MID::Load(const unsigned char* fileData, const size_t fileDataSize)
+{
+	ByteStream dataStream(fileData, fileDataSize);
+
+	// Pasre Chunk header
+	{
+		unsigned int chunkLength = 0;
+
+		{			
+			const unsigned char headerSignature[] = MIDITrackHeaderID;
+			const size_t headerSignatureSize = sizeof(headerSignature);
+			const bool isValid = dataStream.ReadAndCompare(headerSignature, headerSignatureSize);
+		
 
 			if(!isValid)
 			{
 				return FileActionResult::InvalidHeaderSignature;
 			}
 		}
-	
-		
-		file.Read(chunkLength, Endian::Big);
-		file.Read(Format, Endian::Big);
-		file.Read(TrackListSize, Endian::Big);
-		file.Read(MusicSpeed, Endian::Big);	
-	}	
+
+
+		dataStream.Read(chunkLength, Endian::Big);
+		dataStream.Read(Format, Endian::Big);
+		dataStream.Read(TrackListSize, Endian::Big);
+		dataStream.Read(MusicSpeed, Endian::Big);
+	}
 
 	if(TrackListSize == 0)
 	{
@@ -69,68 +98,76 @@ BF::FileActionResult BF::MID::Load(const wchar_t* filePath)
 	TrackList = new MIDITrack[TrackListSize];
 
 	// Parse Track Header
-	for (size_t i = 0; i < TrackListSize; i++)
+	for(size_t i = 0; i < TrackListSize; i++)
 	{
 		MIDITrack& track = TrackList[i];
 		unsigned int chunkLength = 0;
 
 		{
-			ByteCluster headerSignature;
-
-			file.Read(headerSignature.Data, 4u);
-
-			const bool isValid = headerSignature.Value = MIDITrackChunkID;
+			const unsigned char headerSignature[] = MIDITrackChunkID;
+			const size_t headerSignatureSize = sizeof(headerSignature);
+			const bool isValid = dataStream.ReadAndCompare(headerSignature, headerSignatureSize);
 
 			if(!isValid)
 			{
 				return FileActionResult::InvalidHeaderSignature;
 			}
-		}		
+		}
 
-		file.Read(chunkLength, Endian::Big);
+		dataStream.Read(chunkLength, Endian::Big);
 
 		track.ID = i;
 		track.EventData = Memory::Allocate<Byte>(chunkLength);
 		track.EventDataSize = chunkLength;
 
-		file.Read(track.EventData, chunkLength);
+		dataStream.Read(track.EventData, chunkLength);
 	}
-		
+
 	return FileActionResult::Successful;
 }
 
 BF::FileActionResult BF::MID::Save(const wchar_t* filePath)
 {	
-	size_t fileSize = 14u;
-
-	for (unsigned int i = 0; i < TrackListSize; i++)
+	File file;
+	
 	{
-		MIDITrack& track = TrackList[i];
+		FileActionResult fileOpenResult = file.Open(filePath, FileOpenMode::Write);
+		const bool sucessful = fileOpenResult == FileActionResult::Successful;
 
-		fileSize += 8u + track.EventDataSize;
+		if(!sucessful)
+		{
+			return fileOpenResult;
+		}
 	}
 
-	File file;// (fileSize);
-	const ByteCluster midiTagData(MIDITrackHeaderID);
+	const char midiTagData[] = MIDITrackHeaderID;
 
-	file.Write(midiTagData.Data, 4u); // "MThd"
-	file.Write(6u, Endian::Big);
-	file.Write(Format, Endian::Big);
-	file.Write(TrackListSize, Endian::Big);
-	file.Write(MusicSpeed, Endian::Big);
+	file.WriteToDisk(midiTagData, 4u); // "MThd"
+	file.WriteToDisk(6u, Endian::Big);
+	file.WriteToDisk(Format, Endian::Big);
+	file.WriteToDisk(TrackListSize, Endian::Big);
+	file.WriteToDisk(MusicSpeed, Endian::Big);
 
 	for (size_t i = 0; i < TrackListSize; i++)
 	{
-		const ByteCluster midiTrackTag(MIDITrackChunkID);
+		const char midiTrackTag[] = MIDITrackChunkID;
 
 		MIDITrack& track = TrackList[i];
 
-		file.Write(midiTrackTag.Data, 4u);
-		file.Write(track.EventDataSize, Endian::Big);
-		file.Write(track.EventData, track.EventDataSize);
+		file.WriteToDisk(midiTrackTag, 4u);
+		file.WriteToDisk(track.EventDataSize, Endian::Big);
+		file.WriteToDisk(track.EventData, track.EventDataSize);
 	}	
 
-	file.WriteToDisk(filePath);
+	{
+		FileActionResult fileCloseResult = file.Close();
+		const bool sucessful = fileCloseResult == FileActionResult::Successful;
+
+		if(!sucessful)
+		{
+			return fileCloseResult;
+		}
+	}
 
 	return FileActionResult::Successful;
 }

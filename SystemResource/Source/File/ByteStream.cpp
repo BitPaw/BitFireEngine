@@ -61,6 +61,16 @@ void BF::ByteStream::CursorAdvance(const size_t steps)
 	DataCursorPosition += steps;
 }
 
+void BF::ByteStream::CursorRewind(const size_t steps)
+{
+	DataCursorPosition -= steps;
+}
+
+void BF::ByteStream::CursorToEnd()
+{
+	DataCursorPosition = DataSize;
+}
+
 unsigned int BF::ByteStream::ReadNextLineInto(char* exportBuffer)
 {
 	SkipEndOfLineCharacters();
@@ -250,6 +260,38 @@ void BF::ByteStream::Read(void* value, size_t length)
 	Memory::Copy(value, Data + DataCursorPosition, length);
 
 	DataCursorPosition += length;
+}
+
+void BF::ByteStream::ReadUntil(char* value, const size_t length, const char character)
+{
+	Byte* start = Data + DataCursorPosition;
+	size_t lengthCopy = 0;
+
+	while(InRange && Data[DataCursorPosition] != character && length <= lengthCopy)
+	{
+		++DataCursorPosition;
+	}
+
+	lengthCopy = DataCursorPosition;
+
+	Memory::Copy(value, start, lengthCopy);
+}
+
+void BF::ByteStream::ReadUntil(wchar_t* value, const size_t length, const wchar_t character)
+{	
+	wchar_t* start = (wchar_t*)(Data + DataCursorPosition);
+	const size_t characterOffset = sizeof(wchar_t);
+	size_t lengthCopy = 0;
+
+	while(InRange && *(wchar_t*)(Data + DataCursorPosition) != character && lengthCopy <= length)
+	{
+		DataCursorPosition += characterOffset;
+		lengthCopy += characterOffset;
+	}	
+
+	DataCursorPosition += characterOffset;
+
+	Memory::Copy(value, start, lengthCopy);
 }
 
 size_t BF::ByteStream::ReadSafe(Byte* value, const size_t length)

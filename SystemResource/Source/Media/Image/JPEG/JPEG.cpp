@@ -78,7 +78,7 @@ BF::FileActionResult BF::JPEG::Load(const unsigned char* fileData, const size_t 
         }
     }
 
-    while(true)
+    while(!dataStream.IsAtEnd())
     {
         unsigned char markerData[2];     
 

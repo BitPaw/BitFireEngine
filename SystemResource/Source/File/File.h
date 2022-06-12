@@ -110,7 +110,19 @@ namespace BF
 		//---------------------------------------------------------------------
 
 		//---<Write>-----------------------------------------------------------
+		FileActionResult WriteToDisk(const bool value);
+		FileActionResult WriteToDisk(const char value);
+		FileActionResult WriteToDisk(const unsigned char value);
+		FileActionResult WriteToDisk(const short value, const Endian endian);
+		FileActionResult WriteToDisk(const unsigned short value, const Endian endian);
+		FileActionResult WriteToDisk(const int value, const  Endian endian);
+		FileActionResult WriteToDisk(const unsigned int value, const Endian endian);
+		FileActionResult WriteToDisk(const char* string, const size_t length);
+		FileActionResult WriteToDisk(const unsigned char* string, const size_t length);
+		FileActionResult WriteToDisk(const unsigned long long& value, const Endian endian);
+		FileActionResult WriteToDisk(const void* value, const size_t length);
 		FileActionResult WriteToDisk(const char* format, ...);
+
 		FileActionResult WriteIntoFile(const void* data, const size_t dataSize);
 		FileActionResult WriteToDisk(const char* filePath, FilePersistence filePersistence = FilePersistence::Permanent);
 		FileActionResult WriteToDisk(const wchar_t* filePath, FilePersistence filePersistence = FilePersistence::Permanent);

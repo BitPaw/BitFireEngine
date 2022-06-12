@@ -5,65 +5,108 @@
 
 #include <File/File.h>
 
-#include <cstddef>
-#include <cstring>
+#include <Media/ID3/ID3.h>
+
+BF::FileActionResult BF::MP3::Load(const char* filePath)
+{
+	File file;
+
+	{
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+
+		if(!sucessful)
+		{
+			return fileLoadingResult;
+		}
+	}
+
+	{
+		const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+
+		return fileParsingResult;
+	}
+}
 
 BF::FileActionResult BF::MP3::Load(const wchar_t* filePath)
 {
 	File file;
 
 	{
-		const FileActionResult loadingResult = file.ReadFromDisk(filePath);
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
-		if(loadingResult != FileActionResult::Successful)
+		if(!sucessful)
 		{
-			return loadingResult;
+			return fileLoadingResult;
 		}
-	}	
-
-	MP3Header mp3Header;
-	MPEGAudioTag mpegAudioTag;
-
-	char rawHeader[4];
-
-	file.Read(rawHeader, 4);
-
-	mp3Header.ExtractRawHeader(rawHeader);
-
-
-	unsigned int frameLengthInBytes;
-
-	switch (mp3Header.Layer)
-	{
-		case MP3Layer::LayerI:
-			//frameLengthInBytes = (12 * mp3Header.BitRate / mp3Header.SampleRate + mp3Header.Padding) * 4;
-			break;
-
-		case MP3Layer::LayerII:
-		case MP3Layer::LayerIII:
-			//frameLengthInBytes = 144 * mp3Header.BitRate / mp3Header.SampleRate + mp3Header.Padding;
-			break;
-
-		default:
-			// Error
-			break;
 	}
 
+	{
+		const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
 
-	char tagBuffer[3];
-	unsigned char gere;
-	bool validInfoHeader = false;
+		return fileParsingResult;
+	}
+}
 
-	file.Read(tagBuffer, 3);
+BF::FileActionResult BF::MP3::Load(const unsigned char* fileData, const size_t fileDataSize)
+{
+	ByteStream dataStream(fileData, fileDataSize);
 
-	validInfoHeader = memcmp(tagBuffer, "TAG", 3) == 0;
+	ID3 id3;
 
-	file.Read(&mpegAudioTag, 124u);
-	file.Read(gere);	
+	{
+		const Byte* dataPosition = dataStream.CursorCurrentAdress();
+		const size_t dataSize = dataStream.ReadPossibleSize();
+		const size_t parsedBytes = id3.Parse(dataPosition, dataSize);
 
-	mpegAudioTag.Genre = MPEGGenreConvert(gere);
+		dataStream.CursorAdvance(parsedBytes);	
+	}
 
-	
+	while(!dataStream.IsAtEnd())
+	{		
+		MP3Header mp3Header;
+
+		// Parse header
+		{
+			const Byte* dataPosition = dataStream.CursorCurrentAdress();
+			const size_t dataSize = dataStream.ReadPossibleSize();
+			const size_t parsedBytes = mp3Header.Parse(dataPosition, dataSize);
+			const bool parsingSucessful = parsedBytes != 0;
+
+			if(parsingSucessful)
+			{
+				dataStream.CursorAdvance(parsedBytes);
+
+#if 0
+				printf
+				(
+					"[MP3][Frame] Bitrate : %6i | SampleRate : %5i | FrameLength : %5i |\n",
+					mp3Header.BitRate,
+					mp3Header.SampleRate,
+					mp3Header.FrameLength
+				);
+#endif
+
+				dataStream.CursorAdvance(mp3Header.FrameLength);
+			}
+			else
+			{
+				const bool tagDetected = dataStream.ReadAndCompare("TAG", 3u);
+
+				if(tagDetected)
+				{
+					const size_t offset = dataStream.ReadPossibleSize();
+
+					// I currently dont know what this is.
+					// But it comes at the end of the file.. so i am finished?
+
+					dataStream.CursorAdvance(offset);
+				}
+			}
+		}		
+	}
+
 	return FileActionResult::Successful;
 }
 

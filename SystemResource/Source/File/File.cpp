@@ -735,6 +735,70 @@ BF::FileActionResult BF::File::ReadFromDisk(const wchar_t* filePath, Byte** targ
 	return BF::FileActionResult::Successful;
 }
 
+BF::FileActionResult BF::File::WriteToDisk(const bool value)
+{
+	return WriteToDisk(&value, sizeof(bool));
+}
+
+BF::FileActionResult BF::File::WriteToDisk(const char value)
+{
+	return WriteToDisk(&value, sizeof(char));
+}
+
+BF::FileActionResult BF::File::WriteToDisk(const unsigned char value)
+{
+	return WriteToDisk(&value, sizeof(unsigned char));
+}
+
+BF::FileActionResult BF::File::WriteToDisk(const short value, const Endian endian)
+{
+	return WriteToDisk(&value, sizeof(unsigned char));
+}
+
+BF::FileActionResult BF::File::WriteToDisk(const unsigned short value, const Endian endian)
+{
+	return WriteToDisk(&value, sizeof(unsigned char));
+}
+
+BF::FileActionResult BF::File::WriteToDisk(const int value, const Endian endian)
+{
+	return WriteToDisk(&value, sizeof(unsigned char));
+}
+
+BF::FileActionResult BF::File::WriteToDisk(const unsigned int value, const Endian endian)
+{
+	return WriteToDisk(&value, sizeof(unsigned char));
+}
+
+BF::FileActionResult BF::File::WriteToDisk(const char* string, const size_t length)
+{
+	return WriteToDisk(string, length);
+}
+
+BF::FileActionResult BF::File::WriteToDisk(const unsigned char* string, const size_t length)
+{
+	return WriteToDisk(string, length);
+}
+
+BF::FileActionResult BF::File::WriteToDisk(const unsigned long long& value, const Endian endian)
+{
+	return WriteToDisk(&value, sizeof(unsigned char));
+}
+
+BF::FileActionResult BF::File::WriteToDisk(const void* value, const size_t length)
+{
+	const size_t writtenSize = fwrite(value, sizeof(Byte), length, FileHandleCStyle);
+
+	if(writtenSize > 0)
+	{
+		return FileActionResult::Successful;
+	}
+	else
+	{
+		return FileActionResult::WriteFailure;
+	}
+}
+
 BF::FileActionResult BF::File::WriteToDisk(const char* format, ...)
 {
 	va_list args;

@@ -33,6 +33,8 @@ namespace BF
 		void CursorToBeginning();
 		Byte* CursorCurrentAdress();
 		void CursorAdvance(const size_t steps);
+		void CursorRewind(const size_t steps);
+		void CursorToEnd();
 
 
 		unsigned int ReadNextLineInto(char* exportBuffer);
@@ -49,6 +51,8 @@ namespace BF
 		void Read(unsigned int& value, Endian endian);
 		void Read(unsigned long long& value, Endian endian);
 		void Read(void* value, size_t length);
+		void ReadUntil(char* value, const size_t length, const char character);
+		void ReadUntil(wchar_t* value, const size_t length, const wchar_t character);
 
 		// Additional check how many bytes are read.
 		// Slower version of Read(), this function can't fail.

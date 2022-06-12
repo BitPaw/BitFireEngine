@@ -753,6 +753,9 @@
     <ClCompile Include="Source\Media\Sound\OGG\OGGPage.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Media\ID3\ID3.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp">
@@ -1710,6 +1713,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Media\Sound\OGG\OGGPage.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Media\ID3\ID3.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
