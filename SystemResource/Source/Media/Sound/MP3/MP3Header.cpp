@@ -214,7 +214,7 @@ size_t BF::MP3Header::Parse(const unsigned char* data, const size_t dataSize)
 		}
 	}	
 
-	const float bitratePerSample = BitRate / (float)SampleRate + UsePadding;
+	const float bitratePerSample = BitRate / ((float)SampleRate + UsePadding);
 		 
 	switch(Layer)
 	{
@@ -226,7 +226,7 @@ size_t BF::MP3Header::Parse(const unsigned char* data, const size_t dataSize)
 		case MP3Layer::LayerII:
 		case MP3Layer::LayerIII:
 		{
-			FrameLength = (144 * bitratePerSample) -4;
+			FrameLength = (144 * bitratePerSample) -4 + UsePadding;
 			break;
 		}
 		case MP3Layer::Reserved:

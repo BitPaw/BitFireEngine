@@ -294,6 +294,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Media\Sound\M4A\M4AChunkID.cpp" />
+    <ClCompile Include="Source\Media\LAME\LAME.cpp" />
     <ClCompile Include="Source\Media\ID3\ID3.cpp" />
     <ClCompile Include="Source\Media\Sound\OGG\OGGPage.cpp" />
     <ClCompile Include="Source\Media\Image\ImageFileFormat.cpp" />
@@ -541,8 +543,11 @@
     <ClCompile Include="Source\Media\Image\SVG\SVG.cpp" />
     <ClCompile Include="Source\Media\Image\WEBP\WEBP.cpp" />
     <ClCompile Include="Source\Media\Video\WEBM\WebM.cpp" />
+    <ClCompile Include="Source\Media\XingInfo\XingInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Media\Sound\M4A\M4AChunkID.h" />
+    <ClInclude Include="Source\Media\LAME\LAME.h" />
     <ClInclude Include="Source\Media\ID3\ID3.h" />
     <ClInclude Include="Source\Media\Sound\OGG\OGGPage.h" />
     <ClInclude Include="Source\Network\Protocol\SBP\SBPText.h" />
@@ -863,6 +868,7 @@
     <ClInclude Include="Source\Media\Image\SVG\SVG.h" />
     <ClInclude Include="Source\Media\Image\WEBP\WEBP.h" />
     <ClInclude Include="Source\Media\Video\WEBM\WebM.h" />
+    <ClInclude Include="Source\Media\XingInfo\XingInfo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

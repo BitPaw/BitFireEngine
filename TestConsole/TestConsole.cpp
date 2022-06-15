@@ -9,6 +9,7 @@
 #include <Media/Font/FNT/FNT.h>
 #include <Media/Sound/OGG/OGG.h>
 #include <Media/Sound/MP3/MP3.h>
+#include <Media/Sound/M4A/M4A.h>
 
 using namespace BF;
 
@@ -204,12 +205,25 @@ int main()
 
 
 
+#if 1
+    M4A m4a;
+    
+    m4a.Load("A:/A.m4a");
+
+#endif
+
+
+#if 0
     MP3 mp3;
 
-   // mp3.Load("B:/Daten/Music/08-Bit/Dragon Ball Z Opening 8 bit.mp3");
-   // mp3.Load("B:/Daten/Music/08-Bit/Black Sabbath - Iron man.mp3");
+    mp3.Load("B:/Daten/Music/08-Bit/Dragon Ball Z Opening 8 bit.mp3");
+    // mp3.Load("B:/Daten/Music/08-Bit/Black Sabbath - Iron man.mp3");
 
-    mp3.Load("A:/F/Giygas Beat.mp3");
+     //mp3.Load("A:/F/Giygas Beat.mp3");
+#endif
+
+
+
 
 #if 0 //OGG
 

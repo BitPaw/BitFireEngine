@@ -315,6 +315,11 @@ bool BF::ByteStream::ReadAndCompare(const char* value, size_t length)
 	return ReadAndCompare((void*)value, length);
 }
 
+bool BF::ByteStream::ReadAndCompare(const char value)
+{
+	return ReadAndCompare(&value, sizeof(char));
+}
+
 bool BF::ByteStream::ReadAndCompare(void* value, size_t length)
 {
 	bool result = Memory::Compare(value, Data + DataCursorPosition, length) == 0;

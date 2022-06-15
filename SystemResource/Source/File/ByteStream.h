@@ -60,6 +60,7 @@ namespace BF
 
 		bool ReadAndCompare(const Byte* value, size_t length);
 		bool ReadAndCompare(const char* value, size_t length);
+		bool ReadAndCompare(const char value);
 		bool ReadAndCompare(void* value, size_t length);
 		bool ReadAndCompare(const unsigned int value);
 
