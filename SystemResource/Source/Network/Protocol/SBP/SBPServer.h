@@ -4,7 +4,6 @@
 
 #include <Network/Server.h>
 #include <Container/Dictionary.hpp>
-#include <File/ByteCluster.h>
 #include <Network/Protocol/SBP/SBPQueue.h>
 
 namespace BF

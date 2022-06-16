@@ -65,43 +65,35 @@ BF::FileActionResult BF::WAV::Load(const unsigned char* fileData, const size_t f
 	// RIFF
 	{
 		RIFF riff;
-		const unsigned char* riffHeaderStart = dataStream.CursorCurrentAdress();
+		const Byte* riffHeaderStart = dataStream.CursorCurrentAdress();
 		const size_t maximalSize = dataStream.ReadPossibleSize();
 		const size_t parsedBytes = riff.Parse(riffHeaderStart, maximalSize);
 
 		if(!riff.Valid)
 		{
-			return FileActionResult::FormatNotAsExpected;
+			return FileActionResult::InvalidHeaderSignature;
 		}
 
 		dataStream.CursorAdvance(parsedBytes);
 
 		endian = riff.EndianFormat;
 	}
-	//----------------
+	//-------------------------------------------------------------------------
 
-	//---<FMT Chunk>---------------------
+	//---<FMT Chunk>-----------------------------------------------------------
 	{
-		ByteCluster fmtHeader;
+		const Byte* fmtHeaderStart = dataStream.CursorCurrentAdress();
+		const size_t maximalSize = dataStream.ReadPossibleSize();
+		const size_t parsedBytes = Format.Parse(fmtHeaderStart, maximalSize, endian);
+		const bool sucessful = parsedBytes > 0;		
 
-		dataStream.Read(fmtHeader.Data, 4u);
-
-		const unsigned int expectedValue = MakeInt('f', 'm', 't', ' ');
-		const bool valid = expectedValue == fmtHeader.Value;
-
-		if(!valid)
+		if(!sucessful)
 		{
-			return FileActionResult::FormatNotSupported;
+			return FileActionResult::FormatNotAsExpected;
 		}
-	}
 
-	dataStream.Read(Format.ChunkSize, endian);
-	dataStream.Read(Format.AudioFormat, endian);
-	dataStream.Read(Format.NumerOfChannels, endian);
-	dataStream.Read(Format.SampleRate, endian);
-	dataStream.Read(Format.ByteRate, endian);
-	dataStream.Read(Format.BlockAllign, endian);
-	dataStream.Read(Format.BitsPerSample, endian);
+		dataStream.CursorAdvance(parsedBytes);
+	}
 	//---------------------------------------
 
 	//---------------------------------------	

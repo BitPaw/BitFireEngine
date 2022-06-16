@@ -2,6 +2,8 @@
 
 #include <File/File.h>
 
+#define M4ADebugLog 1
+
 BF::FileActionResult BF::M4A::Load(const char* filePath)
 {
 	File file;
@@ -53,7 +55,7 @@ BF::FileActionResult BF::M4A::Load(const unsigned char* fileData, const size_t f
 		M4AChunk chunk;
 
 		unsigned int chunkSize = 0;
-		ByteCluster typePrimaryID;
+		ClusterInt typePrimaryID;
 
 		dataStream.Read(chunkSize, Endian::Big);
 		dataStream.Read(typePrimaryID.Data, 4u);
@@ -61,15 +63,17 @@ BF::FileActionResult BF::M4A::Load(const unsigned char* fileData, const size_t f
 		const size_t positionPrediction = dataStream.DataCursorPosition + chunkSize - 8;
 		const M4AChunkID typePrimary = ConvertM4AChunkID(typePrimaryID.Value);
 
+#if M4ADebugLog
 		printf
 		(
 			"[M4A] Chunk (%c%c%c%c) %i Bytes\n",
-			typePrimaryID[0],
-			typePrimaryID[1],
-			typePrimaryID[2],
-			typePrimaryID[3],
+			typePrimaryID.A,
+			typePrimaryID.B,
+			typePrimaryID.C,
+			typePrimaryID.D,
 			chunkSize
 		);
+#endif
 
 		switch(typePrimary)
 		{
@@ -143,7 +147,9 @@ BF::FileActionResult BF::M4A::Load(const unsigned char* fileData, const size_t f
 		{
 			const unsigned int offset = positionPrediction - dataStream.DataCursorPosition;
 
+#if M4ADebugLog
 			printf("[M4A] Illegal allignment detected! Moving %i Bytes\n", offset);
+#endif
 
 			dataStream.DataCursorPosition = positionPrediction;
 		}

@@ -4,7 +4,7 @@
 
 #include "M4AChunkID.h"
 
-#include <File/ByteCluster.h>
+#include <Container/ClusterInt.h>
 
 namespace BF
 {

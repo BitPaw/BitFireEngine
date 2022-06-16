@@ -1,6 +1,6 @@
 #pragma once
 
-#include <File/ByteCluster.h>
+#include <Container/ClusterInt.h>
 
 namespace BF
 {
@@ -27,6 +27,6 @@ namespace BF
         OS2Pointer
     };
 
-    const BMPType ConvertBMPType(const ByteCluster byteCluster);
-    const ByteCluster ConvertBMPType(const BMPType type);
+    const BMPType ConvertBMPType(const ClusterInt byteCluster);
+    const ClusterInt ConvertBMPType(const BMPType type);
 }

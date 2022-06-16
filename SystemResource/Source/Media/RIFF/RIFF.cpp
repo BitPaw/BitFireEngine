@@ -27,12 +27,12 @@ size_t BF::RIFF::Parse(const unsigned char* data, const size_t dataSize)
 {
 	ByteStream dataStream(data, dataSize);
 
-	ByteCluster chunkID;
-	ByteCluster formatID;
+	ClusterInt chunkID;
+	ClusterInt formatID;
 
-	dataStream.Read(chunkID.Data, 4);
+	dataStream.Read(chunkID.Data, 4u);
 	dataStream.Read(ChunkSize, Endian::Little);
-	dataStream.Read(formatID.Data, 4);
+	dataStream.Read(formatID.Data, 4u);
 
 	switch(chunkID.Value) // Detect Endiantype
 	{

@@ -1,5 +1,9 @@
 #pragma once
 
+#include <cstddef>
+
+#include <File/Endian.h>
+
 namespace BF
 {
 	// Format header
@@ -15,5 +19,7 @@ namespace BF
 		unsigned short BitsPerSample;
 
 		FMT();
+
+		size_t Parse(const unsigned char* data, const size_t dataSize, const Endian endian);
 	};
 }

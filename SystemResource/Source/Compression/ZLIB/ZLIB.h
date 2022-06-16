@@ -12,14 +12,14 @@ namespace BF
 		ZLIBHeader Header;
 
 		size_t CompressedDataSize;
-		unsigned char* CompressedData;
+		const unsigned char* CompressedData;
 
 		Adler32 AdlerChecksum;
 
-		ZLIB(unsigned char* inputData, size_t inputDataSize);
+		ZLIB();
 		//ZLIB();
 
-		void Parse(unsigned char* inputData, size_t inputDataSize);
+		size_t Parse(const unsigned char* inputData, const size_t inputDataSize);
 		void Serialize(unsigned char* outputData, size_t& outputDataSize);
 
 

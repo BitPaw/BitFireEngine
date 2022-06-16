@@ -1,7 +1,6 @@
 #pragma once
 
-#include <File/ByteCluster.h>
-
+#include <Container/ClusterInt.h>
 
 #define ConnectionCreateReasonFile 'F'
 #define ConnectionCreateReasonData 'D'
@@ -43,7 +42,7 @@ namespace BF
 	struct SBPData
 	{
 		public:
-		ByteCluster Command;
+		ClusterInt Command;
 		unsigned int Source;
 		unsigned int Target;		
 		unsigned int ID;

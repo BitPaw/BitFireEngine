@@ -69,7 +69,7 @@ BF::FileActionResult BF::BMP::Load(const unsigned char* fileData, const size_t f
 
     //---[ Parsing Header ]----------------------------------------------------
     {
-        ByteCluster byteCluster;
+        ClusterInt byteCluster;
         unsigned int sizeOfFile = 0;
         unsigned int reservedBlock = 0;
         unsigned int dataOffset = 0;

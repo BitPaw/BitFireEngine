@@ -1,6 +1,6 @@
 #pragma once
 
-#include <File/ByteCluster.h>
+#include <Container/ClusterInt.h>
 
 namespace BF
 {
@@ -93,8 +93,8 @@ namespace BF
         Custom
     };
     
-    PNGChunkType ConvertChunkType(const ByteCluster cluster4Byte);
-    void ConvertChunkType(ByteCluster& cluster4Byte, const PNGChunkType pngchunkType);
+    PNGChunkType ConvertChunkType(const ClusterInt cluster4Byte);
+    void ConvertChunkType(ClusterInt& cluster4Byte, const PNGChunkType pngchunkType);
 
     const char* ChunkTypeToString(PNGChunkType pngchunkType);
 }

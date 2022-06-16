@@ -708,9 +708,6 @@
     <ClCompile Include="Source\Graphic\OpenGL\Sprite.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\File\ByteCluster.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Media\RIFF\RIFFFormat.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -763,6 +760,12 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Media\Sound\M4A\M4AChunkID.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Media\ID3\ID3v2xFrameTag.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Media\ID3\ID3Version.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1682,9 +1685,6 @@
     <ClInclude Include="Source\Graphic\OpenGL\SkyBox.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\File\ByteCluster.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Media\RIFF\RIFFFormat.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -1734,6 +1734,18 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Media\Sound\M4A\M4AChunkID.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Container\ClusterInt.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Container\ClusterShort.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Media\ID3\ID3v2xFrameTag.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Media\ID3\ID3Version.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

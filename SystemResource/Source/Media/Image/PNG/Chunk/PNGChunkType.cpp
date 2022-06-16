@@ -1,6 +1,6 @@
 #include "PNGChunkType.h"
 
-BF::PNGChunkType BF::ConvertChunkType(const ByteCluster chunkTypeID)
+BF::PNGChunkType BF::ConvertChunkType(const ClusterInt chunkTypeID)
 {
     switch (chunkTypeID.Value)
     {
@@ -27,7 +27,7 @@ BF::PNGChunkType BF::ConvertChunkType(const ByteCluster chunkTypeID)
     }
 }
 
-void BF::ConvertChunkType(ByteCluster& chunkTypeID, const PNGChunkType pngchunkType)
+void BF::ConvertChunkType(ClusterInt& chunkTypeID, const PNGChunkType pngchunkType)
 {
     // TODO: implement
 }

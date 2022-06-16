@@ -294,6 +294,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Media\ID3\ID3Version.cpp" />
+    <ClCompile Include="Source\Media\ID3\ID3v2xFrameTag.cpp" />
     <ClCompile Include="Source\Media\Sound\M4A\M4AChunkID.cpp" />
     <ClCompile Include="Source\Media\LAME\LAME.cpp" />
     <ClCompile Include="Source\Media\ID3\ID3.cpp" />
@@ -310,7 +312,6 @@
     <ClCompile Include="Source\File\FilePath.cpp" />
     <ClCompile Include="Source\File\FileLocation.cpp" />
     <ClCompile Include="Source\Media\RIFF\RIFFFormat.cpp" />
-    <ClCompile Include="Source\File\ByteCluster.cpp" />
     <ClCompile Include="Source\Graphic\OpenGL\Renderable.cpp" />
     <ClCompile Include="Source\Graphic\OpenGL\RenderableChunk.cpp" />
     <ClCompile Include="Source\Graphic\OpenGL\RenderableSegment.cpp" />
@@ -546,6 +547,10 @@
     <ClCompile Include="Source\Media\XingInfo\XingInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Media\ID3\ID3Version.h" />
+    <ClInclude Include="Source\Media\ID3\ID3v2xFrameTag.h" />
+    <ClInclude Include="Source\Container\ClusterInt.h" />
+    <ClInclude Include="Source\Container\ClusterShort.h" />
     <ClInclude Include="Source\Media\Sound\M4A\M4AChunkID.h" />
     <ClInclude Include="Source\Media\LAME\LAME.h" />
     <ClInclude Include="Source\Media\ID3\ID3.h" />
@@ -561,7 +566,6 @@
     <ClInclude Include="Source\File\FilePath.h" />
     <ClInclude Include="Source\File\FileLocation.h" />
     <ClInclude Include="Source\Media\RIFF\RIFFFormat.h" />
-    <ClInclude Include="Source\File\ByteCluster.h" />
     <ClInclude Include="Source\Graphic\OpenGL\Renderable.h" />
     <ClInclude Include="Source\Graphic\OpenGL\RenderableChunk.h" />
     <ClInclude Include="Source\Graphic\OpenGL\RenderableSegment.h" />

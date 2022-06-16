@@ -4,9 +4,9 @@
 #include "Chunk/PNGChunk.h"
 
 #include <File/File.h>
+#include <Compression/ZLIB/ZLIB.h>
 #include <Compression/ZLIB/ZLIBHeader.h>
 #include <Compression/ADAM7/ADAM7.h>
-#include <Compression/ZLIB/ZLIB.h>
 #include <Compression/DEFLATE/DeflateBlock.h>
 #include <Container/BitStreamHusk.h>
 #include <Algorithm/CRC32/CRC32.h>
@@ -77,7 +77,7 @@ BF::FileActionResult BF::PNG::Load(const wchar_t* filePath)
 
 BF::FileActionResult BF::PNG::Load(const unsigned char* fileData, const size_t fileDataSize)
 {
-    ByteStream dataStream((unsigned char*)fileData, fileDataSize);
+    ByteStream dataStream(fileData, fileDataSize);
 
     size_t imageDataCounter = 0;
     size_t imageDataChunkCacheSizeUSED = 0;
@@ -424,9 +424,9 @@ BF::FileActionResult BF::PNG::Load(const unsigned char* fileData, const size_t f
     //-------------------------------------------------------------------------    
 
     BitStreamHusk bitstream(imageDataChunkCache, imageDataChunkCacheSizeUSED);
-    ZLIB zlib(imageDataChunkCache, imageDataChunkCacheSizeUSED);
+    ZLIB zlib;
 
-    bitstream.CurrentPosition += 2u;
+    bitstream.CurrentPosition += zlib.Parse(imageDataChunkCache, imageDataChunkCacheSizeUSED);
 
     switch(zlib.Header.CompressionMethod)
     {
@@ -488,7 +488,7 @@ BF::FileActionResult BF::PNG::Save(const wchar_t* filePath)
 
     //---<Signature>---
     {
-        const char pngFileHeader[8] = PNGHeaderSequenz;
+        const Byte pngFileHeader[8] = PNGHeaderSequenz;
         const size_t pngFileHeaderSize = sizeof(pngFileHeader);
 
         file.Write(pngFileHeader, pngFileHeaderSize);

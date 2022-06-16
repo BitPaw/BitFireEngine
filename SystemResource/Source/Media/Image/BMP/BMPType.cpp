@@ -1,5 +1,7 @@
 #include "BMPType.h"
 
+#include <Container/ClusterShort.h>
+
 #define BMPHeaderIDOS2StructBitmapArray     MakeShort('B', 'M')
 #define BMPHeaderIDWindows                  MakeShort('B', 'A')
 #define BMPHeaderIDOS2StructColorIcon       MakeShort('C', 'I')
@@ -7,7 +9,7 @@
 #define BMPHeaderIDOS2StructIcon            MakeShort('I', 'C')
 #define BMPHeaderIDOS2Pointer               MakeShort('P', 'C')
 
-const BF::BMPType BF::ConvertBMPType(const ByteCluster byteCluster)
+const BF::BMPType BF::ConvertBMPType(const ClusterInt byteCluster)
 {
     switch(byteCluster.Value)
     {
@@ -34,9 +36,9 @@ const BF::BMPType BF::ConvertBMPType(const ByteCluster byteCluster)
     }
 }
 
-const ByteCluster BF::ConvertBMPType(const BMPType type)
+const ClusterInt BF::ConvertBMPType(const BMPType type)
 {
-    ByteCluster byteCluster;
+    ClusterInt byteCluster;
 
     switch(type)
     {

@@ -3,7 +3,9 @@
 #include <cstddef>
 
 #include "Endian.h"
-#include "ByteCluster.h"
+
+#include <Container/ClusterShort.h>
+#include <Container/ClusterInt.h>
 
 #ifndef Byte
 #define Byte unsigned char

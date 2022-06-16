@@ -6,21 +6,21 @@
 
 #include <stdlib.h>
 
-BF::ZLIB::ZLIB(unsigned char* inputData, size_t inputDataSize)
+BF::ZLIB::ZLIB()
 {
-    Parse(inputData, inputDataSize);
+
 }
 
-void BF::ZLIB::Parse(unsigned char* inputData, size_t inputDataSize)
+size_t BF::ZLIB::Parse(const unsigned char* inputData, const size_t inputDataSize)
 {
     const size_t headerSize = 2u;
     const size_t adlerSize = 4u;
     unsigned char compressionFormatByte = inputData[0];
     unsigned char flagByte = inputData[1];
     unsigned int adler32CheckSum =
-        (unsigned int)inputData[inputDataSize - 4] << 24 |
-        (unsigned int)inputData[inputDataSize - 3] << 16 |
-        (unsigned int)inputData[inputDataSize - 2] << 8 |
+        (unsigned int)inputData[inputDataSize - 4] << 24 +
+        (unsigned int)inputData[inputDataSize - 3] << 16 +
+        (unsigned int)inputData[inputDataSize - 2] << 8 +
         (unsigned int)inputData[inputDataSize - 1];
 
     Header.Parse(compressionFormatByte, flagByte);
@@ -44,6 +44,8 @@ void BF::ZLIB::Parse(unsigned char* inputData, size_t inputDataSize)
     CompressedData = inputData + headerSize;
 
     //AdlerChecksum.;
+
+    return 2u;
 }
 
 void BF::ZLIB::Serialize(unsigned char* outputData, size_t& outputDataSize)

@@ -1,10 +1,9 @@
 #pragma once
 
-#include <File/ByteCluster.h>
-
 #include "RIFFFormat.h"
 
 #include <cstddef>
+
 #include <File/Endian.h>
 
 namespace BF

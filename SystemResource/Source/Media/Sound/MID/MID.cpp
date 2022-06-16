@@ -74,15 +74,13 @@ BF::FileActionResult BF::MID::Load(const unsigned char* fileData, const size_t f
 		{			
 			const unsigned char headerSignature[] = MIDITrackHeaderID;
 			const size_t headerSignatureSize = sizeof(headerSignature);
-			const bool isValid = dataStream.ReadAndCompare(headerSignature, headerSignatureSize);
-		
+			const bool isValid = dataStream.ReadAndCompare(headerSignature, headerSignatureSize);		
 
 			if(!isValid)
 			{
 				return FileActionResult::InvalidHeaderSignature;
 			}
 		}
-
 
 		dataStream.Read(chunkLength, Endian::Big);
 		dataStream.Read(Format, Endian::Big);
@@ -131,7 +129,7 @@ BF::FileActionResult BF::MID::Save(const wchar_t* filePath)
 	File file;
 	
 	{
-		FileActionResult fileOpenResult = file.Open(filePath, FileOpenMode::Write);
+		const FileActionResult fileOpenResult = file.Open(filePath, FileOpenMode::Write);
 		const bool sucessful = fileOpenResult == FileActionResult::Successful;
 
 		if(!sucessful)
@@ -160,7 +158,7 @@ BF::FileActionResult BF::MID::Save(const wchar_t* filePath)
 	}	
 
 	{
-		FileActionResult fileCloseResult = file.Close();
+		const FileActionResult fileCloseResult = file.Close();
 		const bool sucessful = fileCloseResult == FileActionResult::Successful;
 
 		if(!sucessful)
