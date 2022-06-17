@@ -4115,3 +4115,2120 @@
 	"SBPText.h"
 	<Text/Text.h>
 
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Algorithm/ADLER/Adler32.cpp
+	"Adler32.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Algorithm/ADLER/Adler32.h
+	<cstddef>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Algorithm/CRC32/CRC32.cpp
+	"CRC32.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Algorithm/CRC32/CRC32.h
+	<cstddef>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Algorithm/ISBN/ISBN.cpp
+	"ISBN.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Algorithm/ISBN/ISBN.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Async/AsyncLock.cpp
+	"AsyncLock.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Async/AsyncLock.h
+	<OS/OSDefine.h>
+	<semaphore.h>
+	<windows.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/OS/OSDefine.h
+	<stdint.h>
+	<SdkDdkVer.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Async/Thread.cpp
+	"Thread.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Async/Thread.h
+	<OS/OSDefine.h>
+	<pthread.h>
+	<unistd.h>
+	<windows.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Camera/Camera.cpp
+	"Camera.h"
+	<stdio.h>
+	<cmath>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Camera/Camera.h
+	"CameraPerspective.hpp"
+	<Math/Geometry/Vector3.hpp>
+	<Math/Geometry/Matrix4x4.hpp>
+	<Math/Physic/PhysicsDynamic.hpp>
+	<Media/Video/RefreshRateMode.h>
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Camera/CameraPerspective.hpp
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Vector3.hpp
+	"../Math.h"
+	<cstdio>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Math.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Matrix4x4.hpp
+	"Vector3.hpp"
+	"Vector4.hpp"
+	"AngleRadians.hpp"
+	<cstring>
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Vector4.hpp
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/AngleRadians.hpp
+	"AngleDegree.hpp"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/AngleDegree.hpp
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Physic/PhysicsDynamic.hpp
+	"PhysicsStatic.hpp"
+	"../Geometry/Vector3.hpp"
+	<cassert>
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Physic/PhysicsStatic.hpp
+	"../Geometry/Matrix4x4.hpp"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Video/RefreshRateMode.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/ClipBoard/ClipBoard.cpp
+	"ClipBoard.h"
+	<OS/OSDefine.h>
+	<wtypes.h>
+	<WinUser.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/ClipBoard/ClipBoard.h
+	"../ErrorCode.h"
+	"ClipBoardFormat.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/ErrorCode.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/ClipBoard/ClipBoardFormat.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/ClipBoard/ClipBoardFormat.cpp
+	"ClipBoardFormat.h"
+	<OS/OSDefine.h>
+	<Windows.h>
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/ADAM7/ADAM7.cpp
+	"ADAM7.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/ADAM7/ADAM7.h
+	<cstddef>
+	<Media/Image/PNG/Chunk/PNGInterlaceMethod.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGInterlaceMethod.h
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/DEFLATE/DeflateBlock.cpp
+	"DeflateBlock.h"
+	"../../Container/BitStreamHusk.h"
+	"../HUFFMAN/HuffmanCodeType.h"
+	"../HUFFMAN/HuffmanSymbol.h"
+	"../HUFFMAN/HuffmanTree.h"
+	<stdio.h>
+	<cassert>
+	<Hardware/Memory/Memory.h>
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/DEFLATE/DeflateBlock.h
+	"DeflateEncodingMethod.h"
+	"../../Container/BitStreamHusk.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/DEFLATE/DeflateEncodingMethod.h
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Container/BitStreamHusk.h
+	<cstddef>
+	"../File/Endian.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/Endian.h
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/HUFFMAN/HuffmanCodeType.h
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/HUFFMAN/HuffmanSymbol.h
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/HUFFMAN/HuffmanTree.h
+	<stdlib.h>
+	<string.h>
+	"../../Container/BitStreamHusk.h"
+
+1655464043 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Hardware/Memory/Memory.h
+	"MemoryUsage.h"
+	<OS/OSDefine.h>
+	<ErrorCode.h>
+	<File/File.h>
+	<File/FileCachingMode.h>
+	<File/FileActionResult.hpp>
+	<cstddef>
+	<cstdlib>
+	<cstdio>
+	<cstring>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Hardware/Memory/MemoryUsage.h
+	<cstddef>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/File.h
+	<cstdlib>
+	<cstdio>
+	<cwchar>
+	<cassert>
+	"IFile.h"
+	"FileActionResult.hpp"
+	"FileCachingMode.h"
+	"FileLocation.h"
+	"FilePath.h"
+	"ByteStream.h"
+	<ErrorCode.h>
+	<OS/OSDefine.h>
+	<File/FilePersistence.hpp>
+	<sys/stat.h>
+	<sys/mman.h>
+	<unistd.h>
+	<dirent.h>
+	<libgen.h>
+	<direct.h>
+	<Windows.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/IFile.h
+	<cstdio>
+	"FileOpenMode.hpp"
+	"FileActionResult.hpp"
+	"FileCachingMode.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/FileOpenMode.hpp
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/FileActionResult.hpp
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/FileCachingMode.h
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/FileLocation.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/FilePath.h
+	<OS/OSDefine.h>
+	<cstddef>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/ByteStream.h
+	<cstddef>
+	"Endian.h"
+	<Container/ClusterShort.h>
+	<Container/ClusterInt.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Container/ClusterShort.h
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Container/ClusterInt.h
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/FilePersistence.hpp
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/DEFLATE/DeflateEncodingMethod.cpp
+	"DeflateEncodingMethod.h"
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/HUFFMAN/HuffmanCodeType.cpp
+	"HuffmanCodeType.h"
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/HUFFMAN/HuffmanNumberCode.cpp
+	"HuffmanNumberCode.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/HUFFMAN/HuffmanNumberCode.h
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/HUFFMAN/HuffmanSymbol.cpp
+	"HuffmanSymbol.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/HUFFMAN/HuffmanTree.cpp
+	"HuffmanTree.h"
+	"HuffmanSymbol.h"
+	"HuffmanNumberCode.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/ZLIB/ZLIB.cpp
+	"ZLIB.h"
+	"ZLIBHeader.h"
+	<Algorithm/ADLER/Adler32.h>
+	<stdlib.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/ZLIB/ZLIB.h
+	"ZLIBHeader.h"
+	<Algorithm/ADLER/Adler32.h>
+	<Media/Image/PNG/Chunk/PNGInterlaceMethod.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/ZLIB/ZLIBHeader.h
+	<cstddef>
+	"ZLIBCompressionLevel.h"
+	"ZLIBCompressionMethod.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/ZLIB/ZLIBCompressionLevel.h
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/ZLIB/ZLIBCompressionMethod.h
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/ZLIB/ZLIBCompressionLevel.cpp
+	"ZLIBCompressionLevel.h"
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/ZLIB/ZLIBCompressionMethod.cpp
+	"ZLIBCompressionMethod.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Compression/ZLIB/ZLIBHeader.cpp
+	"ZLIBHeader.h"
+	<cassert>
+	<Math/Math.h>
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Container/AsciiString.cpp
+	"AsciiString.h"
+	<cassert>
+	<cstdarg>
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Container/AsciiString.h
+	<cstddef>
+	<cstring>
+	<string>
+	"List.hpp"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Container/List.hpp
+	<stdlib.h>
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Container/BitStreamHusk.cpp
+	"BitStreamHusk.h"
+	<stdio.h>
+	<cassert>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Container/QueueMapping.cpp
+	"QueueMapping.h"
+	<Hardware/Memory/Memory.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Container/QueueMapping.h
+	<stddef.h>
+	<File/File.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Controller/ControllerData.cpp
+	"ControllerData.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Controller/ControllerData.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Controller/ControllerSystem.cpp
+	"ControllerSystem.h"
+	<OS/OSDefine.h>
+	<Windows.h>
+	<joystickapi.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Controller/ControllerSystem.h
+	"ControllerData.h"
+	<Window/Window.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Window/Window.h
+	<Async/Thread.h>
+	<Controller/KeyBoardKey.h>
+	<Controller/KeyBoardKey.h>
+	<Container/Dictionary.hpp>
+	<OS/OSDefine.h>
+	"CursorMode.h"
+	<X11/X.h>
+	<X11/Xlib.h>
+	<GL/glew.h>
+	<GL/gl.h>
+	<GL/glx.h>
+	<wtypes.h>
+	<windef.h>
+	"CursorIcon.h"
+	<Media/Image/Image.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Controller/KeyBoardKey.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Container/Dictionary.hpp
+	<stdlib.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Window/CursorMode.h
+
+1655431478 /home/bitpaw/Desktop/BGEII/BitFireEngine/__Dependencies__/include/GL/glew.h
+	<stddef.h>
+	<inttypes.h>
+	<stdint.h>
+	<inttypes.h>
+	<Availability.h>
+	<OpenGL/glu.h>
+	<GL/glu.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Window/CursorIcon.h
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/Image.h
+	"ImageDataFormat.h"
+	"ImageFileFormat.h"
+	<Resource.h>
+	<File/FileActionResult.hpp>
+	<Math/Geometry/Vector4.hpp>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/ImageDataFormat.h
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/ImageFileFormat.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Resource.h
+	"File/FileActionResult.hpp"
+	<cstddef>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Controller/KeyBoardKey.cpp
+	"KeyBoardKey.h"
+	<OS/OSDefine.h>
+	<Windows.h>
+	<WinUser.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/DataBase/DataBase.cpp
+	"DataBase.h"
+	<stdio.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/DataBase/DataBase.h
+	<OS/OSDefine.h>
+	"SQLType.h"
+	"SQLResult.h"
+	<cstddef>
+	<Windows.h>
+	<sqlext.h>
+	<sqltypes.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/DataBase/SQLType.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/DataBase/SQLResult.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/DataBase/SQLResult.cpp
+	"SQLResult.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/DataBase/SQLType.cpp
+	"SQLType.h"
+	<OS/OSDefine.h>
+	<Windows.h>
+	<sql.h>
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Email/EML.cpp
+	"EML.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Email/EML.h
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Encryption/Caesar.cpp
+	"Caesar.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Encryption/Caesar.h
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Encryption/ICypher.cpp
+	"ICypher.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Encryption/ICypher.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Encryption/MD5/MD5.cpp
+	"MD5.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Encryption/MD5/MD5.h
+	<cstddef>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Encryption/RSA/Euklid.cpp
+	"Euklid.h"
+	<iostream>
+	<Math/Math.h>
+	<Hardware/Memory/Memory.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Encryption/RSA/Euklid.h
+	<stdlib.h>
+	"Euklid_element.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Encryption/RSA/Euklid_element.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Encryption/RSA/Koerper.cpp
+	"Koerper.h"
+	<iostream>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Encryption/RSA/Koerper.h
+	"Restklassen.h"
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Encryption/RSA/Restklassen.h
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Encryption/RSA/Restklassen.cpp
+	"Restklassen.h"
+	<stdio.h>
+	<Math/Math.h>
+	<Hardware/Memory/Memory.h>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Encryption/RSA/RSA.cpp
+	"RSA.h"
+	"Euklid.h"
+	<Text/Text.h>
+	<Hardware/Memory/Memory.h>
+	<Math/Primes.h>
+	<iostream>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Encryption/RSA/RSA.h
+	<map>
+	"RSAKeys.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Encryption/RSA/RSAKeys.h
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Text/Text.h
+	<cwchar>
+	<File/ParsingToken.h>
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/ParsingToken.h
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Primes.h
+	<stdio.h>
+	<Math/Math.h>
+	<map>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Encryption/SHA/SHA1.cpp
+	"SHA1.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Encryption/SHA/SHA1.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/ErrorCode.cpp
+	"ErrorCode.h"
+	"OS/OSDefine.h"
+	<errno.h>
+	<windows.h>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/Bash.cpp
+	"Bash.h"
+	"FileTemporary.h"
+	"File.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/Bash.h
+	"FileActionResult.hpp"
+
+1643143091 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/FileTemporary.h
+	"FileActionResult.hpp"
+	"IFile.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/ByteStream.cpp
+	"ByteStream.h"
+	<cassert>
+	<cstring>
+	<Text/Text.h>
+	<Hardware/Memory/Memory.h>
+	<iso646.h>
+	<cstdarg>
+
+1655464070 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/File.cpp
+	"File.h"
+	<Text/Text.h>
+	<Hardware/Memory/Memory.h>
+	<stdarg.h>
+	<fcntl.h>
+	<sys/mman.h>
+	<sys/stat.h>
+	<io.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/FileCachingMode.cpp
+	"FileCachingMode.h"
+	<OS/OSDefine.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/FileLocation.cpp
+	"FileLocation.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/FileTemporary.cpp
+	"FileTemporary.h"
+	<OS/OSDefine.h>
+	<string>
+	<cassert>
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/IFile.cpp
+	"IFile.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/OpenFileDialog.cpp
+	"OpenFileDialog.h"
+	<OS/OSDefine.h>
+	<stdio.h>
+	<windows.h>
+	<shobjidl.h>
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/OpenFileDialog.h
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/ParsingToken.cpp
+	"ParsingToken.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/Program.cpp
+	"Program.h"
+	<OS/OSDefine.h>
+	<ErrorCode.h>
+	<stdio.h>
+	<thread>
+	<unistd.h>
+	<spawn.h>
+	<wait.h>
+	<windows.h>
+	<process.h>
+	<cstring>
+	"ProgramExecuteInfo.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/Program.h
+	"FileActionResult.hpp"
+	"ProgramExecuteResultListener.hpp"
+	"../Async/Thread.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/ProgramExecuteResultListener.hpp
+	"../ErrorCode.h"
+	<cstdlib>
+	<cstdint>
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/ProgramExecuteInfo.h
+	<cstddef>
+	"ProgramExecuteResultListener.hpp"
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/ProgramExecuteInfo.cpp
+	"ProgramExecuteInfo.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/GameCleaved/main.cpp
+	<iostream>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/DirectX/DirectX.cpp
+	"DirectX.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/DirectX/DirectX.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/Graphic.cpp
+	"Graphic.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/Graphic.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/ImageType.cpp
+	"ImageType.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/ImageType.h
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/OpenGL.cpp
+	"OpenGL.h"
+	<cassert>
+	<GL/glew.h>
+	<Hardware/Memory/Memory.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/OpenGL.h
+	"RenderMode.h"
+	<Media/Image/Image.h>
+	<Model/Model.h>
+	"Texture.h"
+	"TextureCube.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/RenderMode.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/Model.h
+	"Mesh.h"
+	"LinkedMesh.h"
+	"Material.h"
+	"../Resource.h"
+	"ModelType.h"
+	"../Math/Geometry/Shape/Shape.h"
+	"../Math/Geometry/Vector3.hpp"
+	"../Math/Geometry/Vector4.hpp"
+	"../Math/Geometry/Shape/Shape.h"
+	"../Math/Geometry/Matrix4x4.hpp"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/Mesh.h
+	"MeshSegment.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/MeshSegment.h
+	<cstddef>
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/LinkedMesh.h
+	"Vertex.h"
+	"MeshIndexData.h"
+	"../Container/List.hpp"
+	"../Math/Geometry/Vector2.hpp"
+	"../Math/Geometry/Vector3.hpp"
+	"../Math/Geometry/Vector4.hpp"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/Vertex.h
+	"../Math/Geometry/Vector3.hpp"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/MeshIndexData.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Vector2.hpp
+	<math.h>
+	"../Math.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/Material.h
+	<cstddef>
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/ModelType.h
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Shape.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/Texture.h
+	<Media/Image/Image.h>
+	"ImageType.h"
+	"ImageFilter.h"
+	"ImageLayout.h"
+	"ImageWrap.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/ImageFilter.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/ImageLayout.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/ImageWrap.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/TextureCube.h
+	<Media/Image/Image.h>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/Renderable.cpp
+	"Renderable.h"
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/Renderable.h
+	<Math/Geometry/Matrix4x4.hpp>
+	<Shader/ShaderProgram.h>
+	"RenderMode.h"
+	"RenderableChunk.h"
+	<Container/List.hpp>
+	<Shader/ShaderProgram.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Shader/ShaderProgram.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/RenderableChunk.h
+	<cstddef>
+	"RenderableSegment.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/RenderableSegment.h
+	"ImageType.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/RenderableChunk.cpp
+	"RenderableChunk.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/RenderableSegment.cpp
+	"RenderableSegment.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/Resource.cpp
+	"Resource.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/Resource.h
+	<cstddef>
+	"ResourceInfo.h"
+	"File/FileActionResult.hpp"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/ResourceInfo.h
+	<cwchar>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/ResourceAsyncLoadInfo.cpp
+	"ResourceAsyncLoadInfo.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/ResourceAsyncLoadInfo.h
+	<Resource.h>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/ResourceInfo.cpp
+	"ResourceInfo.h"
+	<Text/Text.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/SkyBox.cpp
+	"SkyBox.h"
+	<Math/Geometry/Form/Cube.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/SkyBox.h
+	<Media/Image/Image.h>
+	"TextureCube.h"
+	"Renderable.h"
+	<Shader/ShaderProgram.h>
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Cube.h
+	"Form.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Form.h
+	"../Shape/Shape.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/Sprite.cpp
+	"Sprite.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/Sprite.h
+	<Media/Image/Image.h>
+	"Texture.h"
+	"Renderable.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/Texture.cpp
+	"Texture.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/TextureCube.cpp
+	"TextureCube.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/Vulcan/Vulcan.cpp
+	"Vulcan.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/Vulcan/Vulcan.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Hardware/MainBoard/MainBoard.cpp
+	"MainBoard.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Hardware/MainBoard/MainBoard.h
+
+1655464146 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Hardware/Memory/Memory.cpp
+	"Memory.h"
+	<OS/OSDefine.h>
+	<Text/Text.h>
+	<sys/stat.h>
+	<fcntl.h>
+	<Windows.h>
+	<ErrorCode.h>
+	<ClipBoard/ClipBoard.cpp>
+	<File/File.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/ClipBoard/ClipBoard.cpp
+	"ClipBoard.h"
+	<OS/OSDefine.h>
+	<wtypes.h>
+	<WinUser.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Hardware/Memory/MemoryUsage.cpp
+	"MemoryUsage.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Hardware/Monitor/Monitor.cpp
+	"Monitor.h"
+	<stdio.h>
+	<Windows.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Hardware/Monitor/Monitor.h
+	<Window/Window.h>
+	<OS/OSDefine.h>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Hardware/Processor/Processor.cpp
+	"Processor.h"
+	<OS/OSDefine.h>
+	<Text/Text.h>
+	<cpuid.h>
+	<intrin.h>
+	<iostream>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Hardware/Processor/Processor.h
+	<cstddef>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Level/Level.cpp
+	<File/File.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Library/Library.cpp
+	"Library.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Library/Library.h
+	<OS/OSDefine.h>
+	<ErrorCode.h>
+	<sys/types.h>
+	<dlfcn.h>
+	<windows.h>
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Cone.cpp
+	"Cone.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Cone.h
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Cube.cpp
+	"Cube.h"
+	<string.h>
+	<cmath>
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Cuboid.cpp
+	"Cuboid.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Cuboid.h
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Cylinder.cpp
+	"Cylinder.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Cylinder.h
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Form.cpp
+	"Form.h"
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Icosahedron.cpp
+	"Icosahedron.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Icosahedron.h
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Sphere.cpp
+	"Sphere.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Sphere.h
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Form/SquarePyramid.cpp
+	"SquarePyramid.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Form/SquarePyramid.h
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Circle.cpp
+	"Circle.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Circle.h
+	"Shape.h"
+	"../../Math.h"
+	"../Vector2.hpp"
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Hexagon.cpp
+	"Hexagon.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Hexagon.h
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Pentagon.cpp
+	"Pentagon.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Pentagon.h
+	"Shape.h"
+	"../Vector2.hpp"
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Shape.cpp
+	"Shape.h"
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Square.cpp
+	"Square.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Square.h
+	"Shape.h"
+	"../Vector2.hpp"
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Star.cpp
+	"Star.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Star.h
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Triangle.cpp
+	"Triangle.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Triangle.h
+	"Shape.h"
+	"../Vector2.hpp"
+	"../Vector3.hpp"
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Interpolate.cpp
+	"Interpolate.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Interpolate.h
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Math.cpp
+	"Math.h"
+	<math.h>
+	<cstdlib>
+	<ctime>
+	"Interpolate.h"
+	<OS/OSDefine.h>
+
+1652543486 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Primes.cpp
+	<Math/Primes.h>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNT.cpp
+	"FNT.h"
+	"FNTCommand.h"
+	"FNTLineType.h"
+	<File/File.h>
+	<Text/Text.h>
+	<File/ParsingToken.h>
+	<Hardware/Memory/Memory.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNT.h
+	"FNTPage.h"
+	"FNTChanalMode.h"
+	"FNTInfo.h"
+	"FNTCommonData.h"
+	"../IFontFormat.hpp"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNTPage.h
+	<cstddef>
+	"FNTCharacter.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNTCharacter.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNTChanalMode.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNTInfo.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNTCommonData.h
+	"FNTChanalMode.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/IFontFormat.hpp
+	"Font.h"
+	<IFileFormat.hpp>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/Font.h
+	"FontFormat.h"
+	<Resource.h>
+	<File/FileActionResult.hpp>
+	<Media/Image/Image.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/FontFormat.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/IFileFormat.hpp
+	"File/FileActionResult.hpp"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNTCommand.h
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNTLineType.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNTCharacter.cpp
+	"FNTCharacter.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNTCommonData.cpp
+	"FNTCommonData.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNTInfo.cpp
+	"FNTInfo.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNTLineType.cpp
+	"FNTLineType.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNTPage.cpp
+	"FNTPage.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/Font.cpp
+	"Font.h"
+	"FNT/FNT.h"
+	"OTF/OTF.h"
+	"TTF/TTF.h"
+	<File/File.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/OTF/OTF.h
+	"../IFontFormat.hpp"
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/TTF.h
+	"Chunks/TTFHeader.h"
+	"Chunks/TTFHorizontalHeader.h"
+	"Chunks/TTFMaximumProfile.h"
+	"Chunks/TTFLinearThreshold.h"
+	"Chunks/TTFVerticalDeviceMetrics.h"
+	"Chunks/CMAP/TTFCharacterMapping.h"
+	"Chunks/OS2/TTFCompatibility.h"
+	"Chunks/DSIG/TTFDigitalSignature.h"
+	"../IFontFormat.hpp"
+	"Chunks/TTFPostScript.h"
+	"Chunks/KERN/TTFKerning.h"
+	"Chunks/CMAP/TTFCharacterMapping.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/TTFHeader.h
+	"TTFVersion.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/TTFVersion.h
+	"TTFVersionType.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/TTFVersionType.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/TTFHorizontalHeader.h
+	"TTFVersion.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/TTFMaximumProfile.h
+	"TTFVersion.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/TTFLinearThreshold.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/TTFVerticalDeviceMetrics.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/CMAP/TTFCharacterMapping.h
+	"EncodingRecord.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/CMAP/EncodingRecord.h
+	"PlatformID.h"
+	"EncodingID.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/CMAP/PlatformID.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/CMAP/EncodingID.h
+	"PlatformID.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/TTFCompatibility.h
+	"../TTFVersion.h"
+	"Panose/TTFPanose.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFPanose.h
+	"TTFFamilyType.h"
+	"TTFSerifStyle.h"
+	"TTFWeight.h"
+	"TTFProportion.h"
+	"TTFContrast.h"
+	"TTFStrokeVariatoon.h"
+	"TTFArmStyle.h"
+	"TTFLetterform.h"
+	"TTFMidline.h"
+	"TTFHeightX.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFFamilyType.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFSerifStyle.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFWeight.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFProportion.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFContrast.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFStrokeVariatoon.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFArmStyle.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFLetterform.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFMidline.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFHeightX.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/DSIG/TTFDigitalSignature.h
+	"TTFDigitalSignatureRecord.h"
+	"TTFDigitalSignatureBlock.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/DSIG/TTFDigitalSignatureRecord.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/DSIG/TTFDigitalSignatureBlock.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/TTFPostScript.h
+	"TTFVersion.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/KERN/TTFKerning.h
+	"TTFKerningSubtable.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/KERN/TTFKerningSubtable.h
+	"TTFSubtableFormat0.h"
+	"TTFSubtableFormat2.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/KERN/TTFSubtableFormat0.h
+	"TTFKerningPair.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/KERN/TTFKerningPair.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/KERN/TTFSubtableFormat2.h
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/OTF/OTF.cpp
+	"OTF.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/CMAP/EncodingID.cpp
+	"EncodingID.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/CMAP/EncodingRecord.cpp
+	"EncodingRecord.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/CMAP/PlatformID.cpp
+	"PlatformID.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/CMAP/TTFCharacterMapping.cpp
+	"TTFCharacterMapping.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/DSIG/TTFDigitalSignature.cpp
+	"TTFDigitalSignature.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/DSIG/TTFDigitalSignatureBlock.cpp
+	"TTFDigitalSignatureBlock.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/DSIG/TTFDigitalSignatureRecord.cpp
+	"TTFDigitalSignatureRecord.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/KERN/TTFKerning.cpp
+	"TTFKerning.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/KERN/TTFKerningPair.cpp
+	"TTFKerningPair.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/KERN/TTFKerningSubtable.cpp
+	"TTFKerningSubtable.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/KERN/TTFSubtableFormat0.cpp
+	"TTFSubtableFormat0.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/KERN/TTFSubtableFormat2.cpp
+	"TTFSubtableFormat2.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFArmStyle.cpp
+	"TTFArmStyle.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFContrast.cpp
+	"TTFContrast.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFFamilyType.cpp
+	"TTFFamilyType.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFHeightX.cpp
+	"TTFHeightX.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFLetterform.cpp
+	"TTFLetterform.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFMidline.cpp
+	"TTFMidline.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFPanose.cpp
+	"TTFPanose.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFProportion.cpp
+	"TTFProportion.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFSerifStyle.cpp
+	"TTFSerifStyle.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFStrokeVariatoon.cpp
+	"TTFStrokeVariatoon.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/Panose/TTFWeight.cpp
+	"TTFWeight.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/OS2/TTFCompatibility.cpp
+	"TTFCompatibility.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/TTFHeader.cpp
+	"TTFHeader.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/TTFHorizontalHeader.cpp
+	"TTFHorizontalHeader.h"
+	<stdio.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/TTFLinearThreshold.cpp
+	"TTFLinearThreshold.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/TTFMaximumProfile.cpp
+	"TTFMaximumProfile.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/TTFOffsetTable.cpp
+	"TTFOffsetTable.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/TTFOffsetTable.h
+	"TTFVersion.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/TTFPostScript.cpp
+	"TTFPostScript.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/TTFVersion.cpp
+	"TTFVersion.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/TTFVersionType.cpp
+	"TTFVersionType.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/TTFVerticalDeviceMetrics.cpp
+	"TTFVerticalDeviceMetrics.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/TTF.cpp
+	"TTF.h"
+	"TTFTableEntry.h"
+	"Chunks/TTFOffsetTable.h"
+	"Chunks/OS2/Panose/TTFPanose.h"
+	<File/File.h>
+	<Hardware/Memory/Memory.h>
+	<cassert>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/TTFTableEntry.h
+	"TTFTableEntryType.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/TTFTableEntryType.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/TTFTableEntry.cpp
+	"TTFTableEntry.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/TTF/TTFTableEntryType.cpp
+	"TTFTableEntryType.h"
+
+1652543580 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/ID3/ID3.cpp
+	"ID3.h"
+	<File/ByteStream.h>
+	<Text/Text.h>
+	"ID3Version.h"
+	"ID3v2xFrameTag.h"
+	<cstdio>
+
+1652543521 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/ID3/ID3.h
+	<cstddef>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/ID3/ID3Version.h
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/ID3/ID3v2xFrameTag.h
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/ID3/ID3v2xFrameTag.cpp
+	"ID3v2xFrameTag.h"
+	<Container/ClusterInt.h>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/ID3/ID3Version.cpp
+	"ID3Version.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/BMP/BMP.cpp
+	"BMP.h"
+	<cassert>
+	<File/File.h>
+	<Math/Math.h>
+	<Hardware/Memory/Memory.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/BMP/BMP.h
+	"BMPType.h"
+	"BMPInfoHeader.h"
+	"BMPInfoHeaderType.h"
+	"../IImageFormat.h"
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/BMP/BMPType.h
+	<Container/ClusterInt.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/BMP/BMPInfoHeader.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/BMP/BMPInfoHeaderType.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/IImageFormat.h
+	"Image.h"
+	<IFileFormat.hpp>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/BMP/BMPInfoHeader.cpp
+	"BMPInfoHeader.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/BMP/BMPInfoHeaderType.cpp
+	"BMPInfoHeaderType.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/BMP/BMPType.cpp
+	"BMPType.h"
+	<Container/ClusterShort.h>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/GIF/GIF.cpp
+	"GIF.h"
+	"GIFImageDescriptor.h"
+	<File/File.h>
+	<Math/Math.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/GIF/GIF.h
+	"../IImageFormat.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/GIF/GIFImageDescriptor.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/GIF/GIFImageDescriptor.cpp
+	"GIFImageDescriptor.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/Image.cpp
+	"Image.h"
+	"BMP/BMP.h"
+	"PNG/PNG.h"
+	"TGA/TGA.h"
+	"TIFF/TIFF.h"
+	"GIF/GIF.h"
+	"JPEG/JPEG.h"
+	"TIFF/TIFF.h"
+	<File/File.h>
+	<Math/Math.h>
+	<cstdlib>
+	<cstdio>
+	<cwchar>
+	<Text/Text.h>
+	<Hardware/Memory/Memory.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/PNG.h
+	"../IImageFormat.h"
+	"Chunk/PNGImageHeader.h"
+	"Chunk/PNGPalette.h"
+	"Chunk/PNGPrimaryChromatics.h"
+	"Chunk/PNGLastModificationTime.h"
+	"Chunk/PNGBackgroundColor.h"
+	"Chunk/PNGPaletteHistogram.h"
+	"Chunk/PNGSuggestedPalette.h"
+	"Chunk/PNGPhysicalPixelDimension.h"
+	"Chunk/PNGTransparency.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGImageHeader.h
+	"PNGColorType.h"
+	"PNGInterlaceMethod.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGColorType.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGPalette.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGPrimaryChromatics.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGLastModificationTime.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGBackgroundColor.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGPaletteHistogram.h
+	<cstddef>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGSuggestedPalette.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGPhysicalPixelDimension.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGTransparency.h
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/TGA/TGA.h
+	"TGAImageDataType.h"
+	"TGABitsPerPixel.h"
+	"../IImageFormat.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/TGA/TGAImageDataType.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/TGA/TGABitsPerPixel.h
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/TIFF/TIFF.h
+	"../IImageFormat.h"
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/JPEG/JPEG.h
+	"JPEGFileInfo.h"
+	"JPEGScanStart.h"
+	"JPEGHuffmanTable.h"
+	"../IImageFormat.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/JPEG/JPEGFileInfo.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/JPEG/JPEGScanStart.h
+	"JPEGScanSelector.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/JPEG/JPEGScanSelector.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/JPEG/JPEGHuffmanTable.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/ImageDataFormat.cpp
+	"ImageDataFormat.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/ImageFileFormat.cpp
+	"IImageFormat.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/JPEG/JPEG.cpp
+	"JPEG.h"
+	"JPEGMarker.h"
+	"JPEGFrame.h"
+	<cassert>
+	<stdlib.h>
+	<File/File.h>
+	<Hardware/Memory/Memory.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/JPEG/JPEGMarker.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/JPEG/JPEGFrame.h
+	"JPEGFrameComponent.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/JPEG/JPEGFrameComponent.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/JPEG/JPEGFileInfo.cpp
+	"JPEGFileInfo.h"
+	<stdlib.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/JPEG/JPEGFrame.cpp
+	"JPEGFrame.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/JPEG/JPEGFrameComponent.cpp
+	"JPEGFrameComponent.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/JPEG/JPEGHuffmanTable.cpp
+	"JPEGHuffmanTable.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/JPEG/JPEGMarker.cpp
+	"JPEGMarker.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/JPEG/JPEGScanSelector.cpp
+	"JPEGScanSelector.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/JPEG/JPEGScanStart.cpp
+	"JPEGScanStart.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGBackgroundColor.cpp
+	"PNGBackgroundColor.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGChunk.cpp
+	"PNGChunk.h"
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGChunk.h
+	"PNGChunkType.h"
+	<Container/ClusterInt.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGChunkType.h
+	<Container/ClusterInt.h>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGChunkType.cpp
+	"PNGChunkType.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGColorType.cpp
+	"PNGColorType.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGImageHeader.cpp
+	"PNGImageHeader.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGInterlaceMethod.cpp
+	"PNGInterlaceMethod.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGLastModificationTime.cpp
+	"PNGLastModificationTime.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGPalette.cpp
+	"PNGPalette.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGPaletteHistogram.cpp
+	"PNGPaletteHistogram.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGPhysicalPixelDimension.cpp
+	"PNGPhysicalPixelDimension.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGPrimaryChromatics.cpp
+	"PNGPrimaryChromatics.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGSuggestedPalette.cpp
+	"PNGSuggestedPalette.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGTransparency.cpp
+	"PNGTransparency.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/PNG.cpp
+	"PNG.h"
+	"PNGColorCompressor.h"
+	"Chunk/PNGChunk.h"
+	<File/File.h>
+	<Compression/ZLIB/ZLIB.h>
+	<Compression/ZLIB/ZLIBHeader.h>
+	<Compression/ADAM7/ADAM7.h>
+	<Compression/DEFLATE/DeflateBlock.h>
+	<Container/BitStreamHusk.h>
+	<Algorithm/CRC32/CRC32.h>
+	<Hardware/Memory/Memory.h>
+	<string>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/PNGColorCompressor.h
+	<cstddef>
+	"Chunk/PNGColorType.h"
+	"PNGColorTree.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/PNGColorTree.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/PNGColorCompressor.cpp
+	"PNGColorCompressor.h"
+	<string.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/PNG/PNGColorTree.cpp
+	"PNGColorTree.h"
+	<stdlib.h>
+	<string.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/QOI/QOI.cpp
+	"QOI.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/QOI/QOI.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/SVG/SVG.cpp
+	"SVG.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/SVG/SVG.h
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/TGA/TGA.cpp
+	"TGA.h"
+	<File/File.h>
+	<Hardware/Memory/Memory.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/TGA/TGABitsPerPixel.cpp
+	"TGABitsPerPixel.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/TGA/TGAImageDataType.cpp
+	"TGAImageDataType.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/TIFF/TIFF.cpp
+	"TIFF.h"
+	<File/File.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/WEBP/WEBP.cpp
+	"WEBP.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/WEBP/WEBP.h
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/LAME/LAME.cpp
+	"LAME.h"
+	<File/ByteStream.h>
+	<Text/Text.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/LAME/LAME.h
+	<cstddef>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/RIFF/RIFF.cpp
+	"RIFF.h"
+	<File/ByteStream.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/RIFF/RIFF.h
+	"RIFFFormat.h"
+	<cstddef>
+	<File/Endian.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/RIFF/RIFFFormat.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/RIFF/RIFFFormat.cpp
+	"RIFFFormat.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/AAC/AAC.cpp
+	"AAC.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/AAC/AAC.h
+	"../ISoundFormat.hpp"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/ISoundFormat.hpp
+	"Sound.h"
+	<IFileFormat.hpp>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/Sound.h
+	"SoundFormat.h"
+	<Resource.h>
+	<File/FileActionResult.hpp>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/SoundFormat.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/AudioClip.cpp
+	"AudioClip.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/AudioClip.h
+	"SoundPlayStyle.hpp"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/SoundPlayStyle.hpp
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/AudioConfig.cpp
+	"AudioConfig.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/AudioConfig.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/AudioSource.cpp
+	"AudioSource.h"
+	<cassert>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/AudioSource.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/FLAC/FLAC.cpp
+	"FLAC.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/FLAC/FLAC.h
+	"../ISoundFormat.hpp"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/M4A/M4A.cpp
+	"M4A.h"
+	<File/File.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/M4A/M4A.h
+	"../ISoundFormat.hpp"
+	"M4AChunkID.h"
+	<Container/ClusterInt.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/M4A/M4AChunkID.h
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/M4A/M4AChunkID.cpp
+	"M4AChunkID.h"
+	<Container/ClusterInt.h>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MID/MID.cpp
+	"MID.h"
+	"MIDICommand.h"
+	<File/File.h>
+	<Hardware/Memory/Memory.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MID/MID.h
+	"MIDITrack.h"
+	"../ISoundFormat.hpp"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MID/MIDITrack.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MID/MIDICommand.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MID/MIDICommand.cpp
+	"MIDICommand.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MID/MIDICommandExtended.cpp
+	"MIDICommandExtended.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MID/MIDICommandExtended.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MID/MIDINote.cpp
+	"MIDINote.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MID/MIDINote.h
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MID/MIDITrack.cpp
+	"MIDITrack.h"
+	<Hardware/Memory/Memory.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MID/MIDITrackHeader.cpp
+	"MIDITrackHeader.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MID/MIDITrackHeader.h
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MP3/MP3.cpp
+	"MP3.h"
+	"MP3Header.h"
+	"MPEGAudioTag.h"
+	<File/File.h>
+	<Media/ID3/ID3.h>
+	<Media/LAME/LAME.h>
+	<Media/XingInfo/XingInfo.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MP3/MP3.h
+	"../ISoundFormat.hpp"
+	<cstddef>
+
+1652544384 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MP3/MP3Header.h
+	<stddef.h>
+	"MP3Layer.hpp"
+	"MP3MPEGVersion.hpp"
+	"MP3ChannelMode.hpp"
+	"MP3Emphasis.hpp"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MP3/MP3Layer.hpp
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MP3/MP3MPEGVersion.hpp
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MP3/MP3ChannelMode.hpp
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MP3/MP3Emphasis.hpp
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MP3/MPEGAudioTag.h
+	"MPEGGenre.hpp"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MP3/MPEGGenre.hpp
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/XingInfo/XingInfo.h
+	<cstddef>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MP3/MP3Header.cpp
+	"MP3Header.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MP3/MPEGAudioTag.cpp
+	"MPEGAudioTag.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/MP3/MPEGGenre.cpp
+	"MPEGGenre.hpp"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/OGG/OGG.cpp
+	"OGG.h"
+	<File/File.h>
+	<Media/Sound/OGG/OGGPage.h>
+	<Hardware/Memory/Memory.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/OGG/OGG.h
+	"../ISoundFormat.hpp"
+
+1652544600 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/OGG/OGGPage.h
+	<cstddef>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/OGG/OGGPage.cpp
+	"OGGPage.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/Sound.cpp
+	"Sound.h"
+	"AAC/AAC.h"
+	"M4A/M4A.h"
+	"FLAC/FLAC.h"
+	"MID/MID.h"
+	"MP3/MP3.h"
+	"OGG/OGG.h"
+	"WAV/WAV.h"
+	"WMA/WMA.h"
+	<File/File.h>
+	<Hardware/Memory/Memory.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/WAV/WAV.h
+	"FMT.h"
+	<cstddef>
+	"../ISoundFormat.hpp"
+	<File/FileActionResult.hpp>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/WAV/FMT.h
+	<cstddef>
+	<File/Endian.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/WMA/WMA.h
+	"../ISoundFormat.hpp"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/WAV/FMT.cpp
+	"FMT.h"
+	<File/ByteStream.h>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/WAV/WAV.cpp
+	"WAV.h"
+	<File/File.h>
+	<Media/RIFF/RIFF.h>
+	<Hardware/Memory/Memory.h>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/WMA/WMA.cpp
+	"WMA.h"
+	<File/File.h>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Video/AVI/AVI.cpp
+	"AVI.h"
+	<File/File.h>
+	<Media/RIFF/RIFF.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Video/AVI/AVI.h
+	"AVIHeader.h"
+	"../IVideoFormat.hpp"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Video/AVI/AVIHeader.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Video/IVideoFormat.hpp
+	"Video.h"
+	<IFileFormat.hpp>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Video/Video.h
+	<Resource.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Video/AVI/AVIHeader.cpp
+	"AVIHeader.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Video/MP4/MP4.cpp
+	"MP4.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Video/MP4/MP4.h
+	"../IVideoFormat.hpp"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Video/Video.cpp
+	"Video.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Video/WEBM/WebM.cpp
+	"WebM.h"
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Video/WEBM/WebM.h
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/XingInfo/XingInfo.cpp
+	"XingInfo.h"
+	<File/ByteStream.h>
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/3DS/A3DS.cpp
+	"A3DS.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/3DS/A3DS.h
+	"../IModelFormat.hpp"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/IModelFormat.hpp
+	"Model.h"
+	"../IFileFormat.hpp"
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/FBX/FBX.cpp
+	"FBX.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/FBX/FBX.h
+	"../IModelFormat.hpp"
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/LinkedMesh.cpp
+	"LinkedMesh.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/Material.cpp
+	"Material.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/Mesh.cpp
+	"Mesh.h"
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/MeshIndexData.cpp
+	"MeshIndexData.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/MeshSegment.cpp
+	"MeshSegment.h"
+	<Hardware/Memory/Memory.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/Model.cpp
+	"Model.h"
+	"ModelType.h"
+	"3DS/A3DS.h"
+	"FBX/FBX.h"
+	"OBJ/OBJ.h"
+	"PLY/PLY.h"
+	"STL/STL.h"
+	"VRML/VRML.h"
+	<File/File.h>
+	<Text/Text.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/OBJ/OBJ.h
+	"OBJElement.h"
+	"MTL/MTL.h"
+	"OBJLineCommand.h"
+	"../IModelFormat.hpp"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/OBJ/OBJElement.h
+	"../../Container/AsciiString.h"
+	"../../Container/List.hpp"
+	"../../../../SystemResource/Source/Math/Geometry/Vector2.hpp"
+	"../../../../SystemResource/Source/Math/Geometry/Vector3.hpp"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/OBJ/MTL/MTL.h
+	<cstddef>
+	"MTLMaterial.h"
+	"../../../File/FileActionResult.hpp"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/OBJ/MTL/MTLMaterial.h
+	"IlluminationMode.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/OBJ/MTL/IlluminationMode.h
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/OBJ/OBJLineCommand.h
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/PLY/PLY.h
+	"../IModelFormat.hpp"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/STL/STL.h
+	"../IModelFormat.hpp"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/VRML/VRML.h
+	"../IModelFormat.hpp"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/OBJ/MTL/MTL.cpp
+	"MTL.h"
+	<File/File.h>
+	<Text/Text.h>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/OBJ/OBJ.cpp
+	"OBJ.h"
+	<File/File.h>
+	<Text/Text.h>
+	<Hardware/Memory/Memory.h>
+	<cassert>
+	<cstring>
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/OBJ/OBJElement.cpp
+	"OBJElement.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/PLY/PLY.cpp
+	"PLY.h"
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/STL/STL.cpp
+	"STL.h"
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/Vertex.cpp
+	"Vertex.h"
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/VRML/VRML.cpp
+	"VRML.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/Client.cpp
+	"Client.h"
+	<stdio.h>
+	"../ErrorCode.h"
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/Client.h
+	"IOSocket.h"
+	"../Async/Thread.h"
+	"IClientListener.hpp"
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/IOSocket.h
+	<OS/OSDefine.h>
+	<sys/types.h>
+	<sys/socket.h>
+	<unistd.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<netdb.h>
+	<windows.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<iphlpapi.h>
+	"SocketActionResult.h"
+	"IPVersion.h"
+	"IPAdressFamily.h"
+	"ProtocolMode.h"
+	"SocketType.h"
+	"IPAdressInfo.h"
+	"ISocketListener.h"
+	<Async/Thread.h>
+	<File/File.h>
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/SocketActionResult.h
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/IPVersion.h
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/IPAdressFamily.h
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/ProtocolMode.h
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/SocketType.h
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/IPAdressInfo.h
+	<OS/OSDefine.h>
+	<sys/types.h>
+	<sys/socket.h>
+	<unistd.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<netdb.h>
+	<windows.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<iphlpapi.h>
+	"ProtocolMode.h"
+	"IPAdressFamily.h"
+	"SocketType.h"
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/ISocketListener.h
+	"IOSocketMessage.h"
+	"IPAdressInfo.h"
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/IOSocketMessage.h
+	<cstddef>
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/IClientListener.hpp
+	"IPAdressInfo.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/IOSocket.cpp
+	"IOSocket.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"IOSocketMessage.h"
+	<ErrorCode.h>
+	<Hardware/Memory/Memory.h>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/IOSocketMessage.cpp
+	"IOSocketMessage.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/IPAdressFamily.cpp
+	"IPAdressFamily.h"
+	<OS/OSDefine.h>
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/IPAdressInfo.cpp
+	"IPAdressInfo.h"
+	<string.h>
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/IPVersion.cpp
+	"IPVersion.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPClient.cpp
+	"SBPClient.h"
+	<Network/Protocol/SBP/SBPData.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPClient.h
+	<Network/Client.h>
+	<Container/Dictionary.hpp>
+
+1652544716 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPData.h
+	<cstddef>
+	<Container/ClusterInt.h>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPData.cpp
+	"SBPData.h"
+	<File/ByteStream.h>
+	<Network/Protocol/SBP/SBPText.h>
+
+1652544730 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPText.h
+	<cstddef>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPQueue.cpp
+	"SBPQueue.h"
+	<Hardware/Memory/Memory.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPQueue.h
+	"SBPData.h"
+	<File/File.h>
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPServer.cpp
+	"SBPServer.h"
+	<cstdio>
+	<File/ByteStream.h>
+	<Text/Text.h>
+	<Network/Protocol/SBP/SBPText.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPServer.h
+	"SBPData.h"
+	<Network/Server.h>
+	<Container/Dictionary.hpp>
+	<Network/Protocol/SBP/SBPQueue.h>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/Server.h
+	"Client.h"
+	"IOSocket.h"
+	"IServerListener.h"
+	"SocketActionResult.h"
+	<Async/Thread.h>
+	<Async/AsyncLock.h>
+	<File/File.h>
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/IServerListener.h
+	"Client.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPText.cpp
+	"SBPText.h"
+	<Text/Text.h>
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/ProtocolMode.cpp
+	"ProtocolMode.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/Server.cpp
+	"Server.h"
+	<stdio.h>
+	<stdlib.h>
+	<cassert>
+	"../Async/Thread.h"
+	"SocketActionResult.h"
+	"ServerListeningThreadInfo.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/ServerListeningThreadInfo.h
+	"Server.h"
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/ServerListeningThreadInfo.cpp
+	"ServerListeningThreadInfo.h"
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/SocketActionResult.cpp
+	"SocketActionResult.h"
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Network/SocketType.cpp
+	"SocketType.h"
+	<OS/OSDefine.h>
+	<sys/socket.h>
+	<WinSock2.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/OS/Windows/Registry.cpp
+	"Registry.h"
+	<winerror.h>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/OS/Windows/Registry.h
+	"../OSDefine.h"
+	<Windows.h>
+	<winreg.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Resource.cpp
+	"Resource.h"
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Service/HTTP/HTTPError.cpp
+	"HTTPError.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Service/HTTP/HTTPError.h
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Service/HTTP/HTTPRequestMethod.cpp
+	"HTTPRequestMethod.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Service/HTTP/HTTPRequestMethod.h
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Service/HTTP/HTTPServer.cpp
+	"HTTPServer.h"
+	<cstring>
+
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Service/HTTP/HTTPServer.h
+	<Network/Server.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Shader/GLSL/ShaderType.cpp
+	"ShaderType.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Shader/GLSL/ShaderType.h
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Shader/Shader.cpp
+	"Shader.h"
+	<File/File.h>
+	<cstdlib>
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Shader/Shader.h
+	<Resource.h>
+	<File/FileActionResult.hpp>
+	<cstdlib>
+	<Shader/GLSL/ShaderType.h>
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Shader/ShaderProgram.cpp
+	"ShaderProgram.h"
+
+1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Text/Text.cpp
+	"Text.h"
+	<cstring>
+	<cassert>
+	<cstdarg>
+	<Hardware/Memory/Memory.h>
+	<Math/Math.h>
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Time/StopWatch.cpp
+	"StopWatch.h"
+
+1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Time/StopWatch.h
+	<chrono>
+	"../OS/OSDefine.h"
+
+1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Types/UUID.cpp
+	"UUID.h"
+
+1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Types/UUID.h
+
+1652538508 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Window/CursorIcon.cpp
+	"CursorIcon.h"
+	<OS/OSDefine.h>
+	<winuser.rh>
+
+1655421438 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Window/Window.cpp
+	"Window.h"
+	<GL/glew.h>
+	<GL/gl.h>
+	<stdio.h>
+	<X11/cursorfont.h>
+	<windowsx.h>
+	<WinUser.h>
+	<wtypes.h>
+	<hidusage.h>
+	<Dbt.h>
+	<Text/Text.h>
+	<File/File.h>
+	<Graphic/OpenGL/OpenGL.h>
+	"../Controller/ControllerData.h"
+	"../Controller/ControllerSystem.h"
+	<Hardware/Memory/Memory.h>
+
+1655463881 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/FilePath.cpp
+	"FilePath.h"
+	<Text/Text.h>
+	<cstdlib>
+	<libgen.h>
+

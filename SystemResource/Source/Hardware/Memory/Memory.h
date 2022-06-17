@@ -13,7 +13,7 @@
 #include <cstdio>
 #include <cstring>
 
-#define MemoryDebug 0
+#define MemoryDebug 1
 
 namespace BF
 {
@@ -26,14 +26,14 @@ namespace BF
 
         static bool VirtualMemoryPrefetch(const void* adress, const size_t size);
 
-        // Allocate memory in virtual memory space. 
+        // Allocate memory in virtual memory space.
         // The minimal size will be a pagefile (4KB).
         // The size will be rounded up to the next page boundary.
         // Use only for bigger datablocks.
         static void* VirtualMemoryAllocate(const size_t size);
         static bool VirtualMemoryRelease(const void* adress, const size_t size);
 
- 
+
         static bool Advise(const void* adress, const size_t length, const FileCachingMode fileCachingMode)
         {
             const int cachingModeID = ConvertFileCachingMode(fileCachingMode);

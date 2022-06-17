@@ -125,7 +125,8 @@ void* BF::Memory::VirtualMemoryAllocate(const size_t size)
 	void* address = nullptr;
 
 #if defined(OSUnix)
-#elif defined(OSWindows)       
+
+#elif defined(OSWindows)
 	DWORD allocationType = MEM_COMMIT | MEM_RESERVE;
 	DWORD protect = PAGE_READWRITE;
 
@@ -133,7 +134,7 @@ void* BF::Memory::VirtualMemoryAllocate(const size_t size)
 #endif
 
 #if MemoryDebug
-	printf("[#][Memory] 0x%p (%10zi B) Virtual allocation\n", adress, size);
+	printf("[#][Memory] 0x%p (%10zi B) Virtual allocation\n", address, size);
 #endif
 
 	return address;
@@ -144,7 +145,7 @@ bool BF::Memory::VirtualMemoryRelease(const void* adress, const size_t size)
 #if defined(OSUnix)
 	const bool result = true;
 
-#elif defined(OSWindows)       
+#elif defined(OSWindows)
 	DWORD freeType = MEM_RELEASE;
 	const bool result = VirtualFree((void*)adress, 0, freeType);
 #endif

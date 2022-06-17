@@ -493,7 +493,7 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const char* filePath)
 	_fileLocation = FileLocation::MappedFromDisk;
 
 #if MemoryDebug
-	printf("[#][Memory] 0x%p (%10zi B) MMAP %ls\n", Data, Size, filePath);
+	printf("[#][Memory] 0x%p (%10zi B) MMAP %ls\n", Data, DataSize, filePath);
 #endif
 
 	return FileActionResult::Successful;
@@ -592,7 +592,7 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const wchar_t* filePath)
 #endif
 
 #if MemoryDebug
-	printf("[#][Memory] 0x%p (%10zi B) MMAP %ls\n", fileMappingInfo.Data, fileMappingInfo.Size, filePath);
+	printf("[#][Memory] 0x%p (%10zi B) MMAP %ls\n", Data, DataSize, filePath);
 #endif
 
 	_fileLocation = FileLocation::MappedFromDisk;
