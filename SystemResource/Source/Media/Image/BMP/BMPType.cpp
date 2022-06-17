@@ -9,9 +9,9 @@
 #define BMPHeaderIDOS2StructIcon            MakeShort('I', 'C')
 #define BMPHeaderIDOS2Pointer               MakeShort('P', 'C')
 
-const BF::BMPType BF::ConvertBMPType(const ClusterInt byteCluster)
+const BF::BMPType BF::ConvertBMPType(const unsigned short bmpTypeID)
 {
-    switch(byteCluster.Value)
+    switch(bmpTypeID)
     {
         case BMPHeaderIDOS2StructBitmapArray:
             return BMPType::OS2StructBitmapArray;

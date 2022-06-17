@@ -27,6 +27,6 @@ namespace BF
         OS2Pointer
     };
 
-    const BMPType ConvertBMPType(const ClusterInt byteCluster);
+    const BMPType ConvertBMPType(const unsigned short bmpTypeID);
     const ClusterInt ConvertBMPType(const BMPType type);
 }

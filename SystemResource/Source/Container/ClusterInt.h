@@ -2,7 +2,9 @@
 
 #define ClusterIntDEFINED
 
-#define MakeInt(a, b, c, d) (((unsigned int)a) | ((unsigned int)b << 8) | ((unsigned int)c << 16) | ((unsigned int)d << 24))
+#define MakeInt(a, b, c, d) MakeIntLE(a, b, c, d)
+#define MakeIntBE(a, b, c, d) (((unsigned int)a << 24) | ((unsigned int)b << 16) | ((unsigned int)c << 8) | ((unsigned int)d))
+#define MakeIntLE(a, b, c, d) (((unsigned int)a) | ((unsigned int)b << 8) | ((unsigned int)c << 16) | ((unsigned int)d << 24))
 
 struct ClusterInt
 {

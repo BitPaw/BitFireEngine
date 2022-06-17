@@ -896,6 +896,11 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
             const DWORD width = LOWORD(lParam);
             const DWORD height = HIWORD(lParam);
 
+            window.Width = width;
+            window.Height = height;
+
+            window.HasSizeChanged = true;
+
             InvokeEvent(window.WindowSizeChangedCallBack, width, height);
 
             break;
@@ -982,7 +987,11 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
         case WindowEventType::SizeChange:
         {
             //wParam is unused
-            MINMAXINFO* minmaxInfo = (MINMAXINFO*)lParam;
+            const MINMAXINFO* minmaxInfo = (MINMAXINFO*)lParam;
+            const auto width = minmaxInfo->ptMaxSize.x;
+            const auto height = minmaxInfo->ptMaxSize.y;      
+
+            // not useable for resize event. Its not what it seems
 
             break;
         }
@@ -1752,6 +1761,8 @@ BF::Window::Window()
     CursorID = 0;
 #endif
 
+    HasSizeChanged = true;
+
     _cursorMode = CursorMode::Show;
 
     MouseScrollCallBack = 0;
@@ -1913,7 +1924,7 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
     void* lpParam = 0;
     const wchar_t* lpClassName = L"BFE::Window::AsyncThread";
 
-    const HCURSOR cursorID = LoadCursor(NULL, IDC_PERSON);
+    const HCURSOR cursorID = LoadCursor(NULL, IDC_WAIT);
     window.CursorID = cursorID;
 
     WNDCLASS wndclass{ 0 };
@@ -2305,6 +2316,8 @@ BF::CursorMode BF::Window::CursorCaptureMode()
 
 void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
 {
+    return;
+
 #if defined(OSUnix)
 #elif defined(OSWindows)
     RECT desktop;
@@ -2316,8 +2329,7 @@ void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
     // and the bottom right corner will have coordinates
     // (horizontal, vertical)
     unsigned int horizontal = desktop.right;
-    unsigned int vertical = desktop.bottom;
-
+    unsigned int vertical = desktop.bottom; 
 
     switch(cursorMode)
     {
@@ -2326,42 +2338,48 @@ void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
             //ClipCursor(&desktop);
             //ShowCursor(true);
 
-            SetCursor(LoadCursorW(NULL, IDC_ARROW));
+            while(ShowCursor(true) < 0);
 
-            ClipCursor(NULL);
+            const HCURSOR cursorLoad = LoadCursorW(NULL, IDC_HELP);
+            const bool clipResult = ClipCursor(NULL);
+            const HCURSOR cursorSet = SetCursor(cursorLoad);
+            const bool showResult = ShowCursor(true);    
 
             break;
         }
         case CursorMode::Lock:
         {
-            RECT clipRect;
-            GetClientRect(ID, &clipRect);
-            ClientToScreen(ID, (POINT*)&clipRect.left);
-            ClientToScreen(ID, (POINT*)&clipRect.right);
-            ClipCursor(&clipRect);
-
-            SetCursor(NULL);
+            // Capture cursor
+            {
+                RECT clipRect;
+                GetClientRect(ID, &clipRect);
+                ClientToScreen(ID, (POINT*)&clipRect.left);
+                ClientToScreen(ID, (POINT*)&clipRect.right);
+                ClipCursor(&clipRect);
+            }
 
             break;
         }
         case CursorMode::LockAndHide:
         {
-            RECT clipRect;
-            GetClientRect(ID, &clipRect);
-            ClientToScreen(ID, (POINT*)&clipRect.left);
-            ClientToScreen(ID, (POINT*)&clipRect.right);
+            {
+                RECT clipRect;
+                GetClientRect(ID, &clipRect);
+                ClientToScreen(ID, (POINT*)&clipRect.left);
+                ClientToScreen(ID, (POINT*)&clipRect.right);
 
-            int xOff = (clipRect.right - clipRect.left) / 2;
-            int yoFf = (clipRect.bottom - clipRect.top) / 2;
+                int xOff = (clipRect.right - clipRect.left) / 2;
+                int yoFf = (clipRect.bottom - clipRect.top) / 2;
 
-            clipRect.left += xOff;
-            clipRect.top += yoFf;
-            clipRect.right -= xOff;
-            clipRect.bottom -= yoFf;
+                clipRect.left += xOff;
+                clipRect.top += yoFf;
+                clipRect.right -= xOff;
+                clipRect.bottom -= yoFf;
 
-            ClipCursor(&clipRect);
+                bool sucessClip = ClipCursor(&clipRect);
+            }
 
-            SetCursor(NULL);
+            //SetCursor(NULL);
 
             break;
         }

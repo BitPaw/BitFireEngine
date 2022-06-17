@@ -1,5 +1,9 @@
 #pragma once
+
+#include "RSAKeys.h"
+
 #define RSAdebug 0
+
 class RSA
 {
 	public:
@@ -8,9 +12,11 @@ class RSA
 	unsigned int phi_n = 0;
 	RSAKey publicKey;
 	RSAKey privateKey;
+
 	RSA(int p, int q, int e);
 	RSA(int n, int e);
 	RSA();
+
 	RSAKey public_key();
 	RSAKey private_key();
 	char* encode_message(const char* m);

@@ -457,38 +457,51 @@ BF::ErrorCode BF::File::DirectoryDelete(const wchar_t* directoryName)
 BF::FileActionResult BF::File::MapToVirtualMemory(const char* filePath)
 {
 #if defined(OSUnix)
-    void* preferedAdress = nullptr;
     size_t fileLength = 0;
     int accessType = PROT_READ;
     int flags = MAP_PRIVATE | MAP_POPULATE;
     int fileDescriptor = 0;
     off64_t length = 0;
 
-    fileDescriptor = open64(filePath, O_RDONLY);
+	// Open file
+	{
+		const int openFlag = O_RDONLY;
+		const int fileDescriptor = open64(filePath, openFlag);
+		const bool sucessfulOpen = fileDescriptor;
 
-    const bool sucessfulOpen = fileDescriptor;
+		if(!sucessfulOpen)
+		{
+			return FileActionResult::FileOpenFailure;
+		}
 
-    if (!sucessfulOpen)
-    {
-        return FileActionResult::Invalid;
-    }
+		FileMappingID = fileDescriptor;		
+	}
 
-    fileLength = lseek64(fileDescriptor, 0, SEEK_END);
+	// Get file length
+	{
+		const size_t fileLength = lseek64(FileMappingID, 0, SEEK_END);
+		const bool sucessful = fileLength > 0;
 
-    void* data = mmap
-    (
-        preferedAdress,
-        fileLength,
-        accessType,
-        flags,
-        fileDescriptor,
-        0
-    );
-    const bool successfulMapping = data != MAP_FAILED;
+		if(!sucessful)
+		{
+			return FileActionResult::FileReadFailure;
+		}
 
-    Data = (Byte*)data;
-    DataSize = fileLength;
+		DataSize = fileLength;
+	}
 
+	// Map data
+	{
+		const void* mappedData = Memory::VirtualMemoryAllocate(DataSize, MemoryProtectionMode::ReadOnly, FileMappingID);
+		const bool successfulMapping = mappedData != MAP_FAILED;
+
+		if(!successfulMapping)
+		{
+			return FileActionResult::FileMemoryMappingFailed;
+		}
+
+		Data = (Byte*)mappedData;
+	}    
 
 	_fileLocation = FileLocation::MappedFromDisk;
 
@@ -503,7 +516,7 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const char* filePath)
 
 	Text::Copy(filePath, PathMaxSize, filePathW, PathMaxSize);
 
-	const FileActionResult fileActionResult = BF::Memory::VirtualMemoryAllocate(filePathW);
+	const FileActionResult fileActionResult = MapToVirtualMemory(filePathW);
 
 	return fileActionResult;
 #endif
@@ -602,7 +615,7 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const wchar_t* filePath)
 
 BF::FileActionResult BF::File::MapToVirtualMemory(const size_t size)
 {
-	const void* data = Memory::VirtualMemoryAllocate(size);
+	const void* data = Memory::VirtualMemoryAllocate(size, MemoryProtectionMode::ReadOnly, 0);
 	const bool successful = data;
 
 	if(!successful)

@@ -110,6 +110,8 @@ namespace BF
 		WindowID ID;
 		OpenGLConextID OpenGLConext;
 
+		bool HasSizeChanged;
+
 		unsigned int X;
 		unsigned int Y;
 		unsigned int Width;

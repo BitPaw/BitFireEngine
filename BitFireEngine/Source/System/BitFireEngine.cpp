@@ -324,6 +324,18 @@ void BF::BitFireEngine::Update()
 
    _mainWindow.FrameBufferSwap();
 
+   if(_mainWindow.HasSizeChanged)
+   {
+       const unsigned int width = _mainWindow.Width;
+       const unsigned int height = _mainWindow.Height;
+
+       printf("[Window] Size chnaged %i x %i\n", width, height);
+
+       glViewport(0, 0, width, height);
+
+       _mainWindow.HasSizeChanged = false;
+   }
+
     UpdateInput(_inputContainer);
     _callbackListener->OnUpdateInput(_inputContainer);
     //---------------------------------------------------------------------

@@ -1,14 +1,14 @@
 #include "RSA.h"
 
-#include "RSAKeys.h"
 #include "Euklid.h"
+
 #include <Text/Text.h>
 #include <Hardware/Memory/Memory.h>
 #include <Math/Primes.h>
 #include <Math/Math.h>
+
 RSA::RSA(int p, int q, int e)
 {
-
 	if (p == 0 || q == 0)
 	{
 		return;

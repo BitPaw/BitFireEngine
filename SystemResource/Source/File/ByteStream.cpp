@@ -19,14 +19,14 @@ BF::ByteStream::ByteStream()
 	DataSet(nullptr, 0);
 }
 
-BF::ByteStream::ByteStream(Byte* data, size_t dataSize)
+BF::ByteStream::ByteStream(Byte* data, const size_t dataSize)
 {
 	DataSet(data, dataSize);
 }
 
-BF::ByteStream::ByteStream(const Byte* data, size_t dataSize)
+BF::ByteStream::ByteStream(const Byte* data, const size_t dataSize)
 {
-	DataSet((Byte*)data, dataSize);
+	DataSet(data, dataSize);
 }
 
 size_t BF::ByteStream::ReadPossibleSize() const
@@ -39,9 +39,9 @@ bool BF::ByteStream::IsAtEnd() const
 	return ReadPossibleSize() == 0;
 }
 
-void BF::ByteStream::DataSet(Byte* data, size_t dataSize, size_t cursorPosition)
+void BF::ByteStream::DataSet(const Byte* data, const size_t dataSize, const size_t cursorPosition)
 {
-	Data = data;
+	Data = (Byte*)data;
 	DataSize = dataSize;
 	DataCursorPosition = cursorPosition;
 }
@@ -129,7 +129,9 @@ void BF::ByteStream::SkipLine()
 
 void BF::ByteStream::Read(bool& value)
 {
-	char byte = Data[DataCursorPosition++];
+	char byte = 0;
+
+	Read((unsigned char&)byte);
 
 	switch (byte)
 	{
@@ -154,108 +156,77 @@ void BF::ByteStream::Read(unsigned char& value)
 	value = Data[DataCursorPosition++];
 }
 
-void BF::ByteStream::Read(short& value, Endian endian)
+void BF::ByteStream::Read(short& value, const Endian endian)
 {
 	Read((unsigned short&)value, endian);
 }
 
-void BF::ByteStream::Read(unsigned short& value, Endian endian)
+void BF::ByteStream::Read(unsigned short& value, const Endian endian)
 {
-	unsigned char valueData[2];
-
-	Read(valueData, 2u);
+	const Byte* data = Data + DataCursorPosition;
 
 	switch (endian)
 	{
 		case Endian::Big:
-			value =
-				(valueData[0] << 8) |
-				(valueData[1]);
-
+			value = MakeShortBE(data[0], data[1]);
 			break;
 
 		default:
 		case Endian::Little:
-			value =
-				(valueData[0]) |
-				(valueData[1] << 8);
+			value = MakeShortLE(data[0], data[1]);
 			break;
 	}
 
-	//assert(value < 65408);
+	DataCursorPosition += sizeof(unsigned short);
 }
 
-void BF::ByteStream::Read(int& value, Endian endian)
+void BF::ByteStream::Read(int& value, const Endian endian)
 {
 	Read((unsigned int&)value, endian);
 }
 
-void BF::ByteStream::Read(unsigned int& value, Endian endian)
+void BF::ByteStream::Read(unsigned int& value, const Endian endian)
 {
-	unsigned char valueData[4];
-
-	Read(valueData, 4u);
+	const Byte* data = Data + DataCursorPosition;
 
 	switch (endian)
 	{
 		case Endian::Big:
-			value =
-				(valueData[0] << 24) |
-				(valueData[1] << 16) |
-				(valueData[2] << 8) |
-				(valueData[3]);
-
+			value = MakeIntBE(data[0], data[1], data[2], data[3]);
 			break;
 
 		default:
 		case Endian::Little:
-			value =
-				(valueData[0]) |
-				(valueData[1] << 8) |
-				(valueData[2] << 16) |
-				(valueData[3] << 24);
+			value = MakeIntLE(data[0], data[1], data[2], data[3]);
 			break;
 	}
+
+	DataCursorPosition += sizeof(unsigned int);
 }
 
-void BF::ByteStream::Read(unsigned long long& value, Endian endian)
+void BF::ByteStream::Read(unsigned long long& value, const Endian endian)
 {
-	unsigned char valueData[8];
-
-	Read(valueData, 8u);
+	const Byte* data = Data + DataCursorPosition;
 
 	switch (endian)
 	{
 		case Endian::Big:
 		{
-			value =
-				((unsigned long long)valueData[0] << 56LL) |
-				((unsigned long long)valueData[1] << 48LL) |
-				((unsigned long long)valueData[2] << 40LL) |
-				((unsigned long long)valueData[3] << 32LL) |
-				((unsigned long long)valueData[4] << 24LL) |
-				((unsigned long long)valueData[5] << 16LL) |
-				((unsigned long long)valueData[6] << 8LL) |
-				((unsigned long long)valueData[7]);
-
+			value = MakeLongLongBE(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]);
 			break;
 		}
 		default:
 		case Endian::Little:
-			value =
-				((unsigned long long)valueData[0]) |
-				((unsigned long long)valueData[1] << 8LL) |
-				((unsigned long long)valueData[2] << 16LL) |
-				((unsigned long long)valueData[3] << 24LL) |
-				((unsigned long long)valueData[4] << 32LL) |
-				((unsigned long long)valueData[5] << 40LL) |
-				((unsigned long long)valueData[6] << 48LL) |
-				((unsigned long long)valueData[7] << 56LL);
+		{
+			value = MakeLongLongLE(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]);
 			break;
+		}	
 	}
+
+	DataCursorPosition += sizeof(unsigned long long);
 }
 
-void BF::ByteStream::Read(void* value, size_t length)
+void BF::ByteStream::Read(void* value, const size_t length)
 {
 	Memory::Copy(value, Data + DataCursorPosition, length);
 
@@ -305,12 +276,12 @@ size_t BF::ByteStream::ReadSafe(Byte* value, const size_t length)
 	return readBytes;
 }
 
-bool BF::ByteStream::ReadAndCompare(const Byte* value, size_t length)
+bool BF::ByteStream::ReadAndCompare(const Byte* value, const size_t length)
 {
 	return ReadAndCompare((void*)value, length);
 }
 
-bool BF::ByteStream::ReadAndCompare(const char* value, size_t length)
+bool BF::ByteStream::ReadAndCompare(const char* value, const size_t length)
 {
 	return ReadAndCompare((void*)value, length);
 }
@@ -320,7 +291,7 @@ bool BF::ByteStream::ReadAndCompare(const char value)
 	return ReadAndCompare(&value, sizeof(char));
 }
 
-bool BF::ByteStream::ReadAndCompare(void* value, size_t length)
+bool BF::ByteStream::ReadAndCompare(const void* value, const size_t length)
 {
 	bool result = Memory::Compare(value, Data + DataCursorPosition, length) == 0;
 
@@ -341,98 +312,147 @@ bool BF::ByteStream::ReadAndCompare(const unsigned int value)
 	return isEqual;
 }
 
-void BF::ByteStream::Write(bool value)
+void BF::ByteStream::Write(const bool value)
 {
 	Data[DataCursorPosition++] = value;
 }
 
-void BF::ByteStream::Write(char value)
+void BF::ByteStream::Write(const char value)
 {
 	Data[DataCursorPosition++] = value;
 }
 
-void BF::ByteStream::Write(unsigned char value)
+void BF::ByteStream::Write(const unsigned char value)
 {
 	Data[DataCursorPosition++] = value;
 }
 
-void BF::ByteStream::Write(short value, Endian endian)
+void BF::ByteStream::Write(const short value, const Endian endian)
 {
 	Write((unsigned short)value, endian);
 }
 
-void BF::ByteStream::Write(unsigned short value, Endian endian)
+void BF::ByteStream::Write(const unsigned short value, const Endian endian)
 {
-	unsigned char valueData[2];
+	Byte* data = Data + DataCursorPosition;
+
+	ClusterShort clusterShort;
+
+	clusterShort.Value = value;
 
 	switch (endian)
 	{
 		case Endian::Big:
-		{
-			valueData[0] = (value & 0xFF00) >> 8;
-			valueData[1] = (value & 0x00FF);
+		{	
+			data[0] = clusterShort.A;
+			data[1] = clusterShort.B;
 			break;
 		}
 		default:
 		case Endian::Little:
 		{
-			valueData[0] = (value & 0x00FF);
-			valueData[1] = (value & 0xFF00) >> 8;
+			data[0] = clusterShort.B;
+			data[1] = clusterShort.A;
 			break;
 		}
 	}
 
-	Write(valueData, 2u);
+	DataCursorPosition += sizeof(unsigned short);
 }
 
-void BF::ByteStream::Write(int value, Endian endian)
+void BF::ByteStream::Write(const int value, const Endian endian)
 {
 	Write((unsigned int)value, endian);
 }
 
-void BF::ByteStream::Write(unsigned int value, Endian endian)
+void BF::ByteStream::Write(unsigned int value, const Endian endian)
 {
-	unsigned char valueData[4];
+	Byte* data = Data + DataCursorPosition;
+
+	ClusterInt clusterInt;
+
+	clusterInt.Value = value;
 
 	switch (endian)
 	{
 		case Endian::Big:
 		{
-			valueData[0] = (value & 0xFF000000) >> 24;
-			valueData[1] = (value & 0x00FF0000) >> 16;
-			valueData[2] = (value & 0x0000FF00) >> 8;
-			valueData[3] = value & 0x000000FF;
+			data[0] = clusterInt.A;
+			data[1] = clusterInt.B;
+			data[2] = clusterInt.C;
+			data[3] = clusterInt.D;
 			break;
 		}
 		default:
 		case Endian::Little:
 		{
-			valueData[0] = value & 0x000000FF;
-			valueData[1] = (value & 0x0000FF00) >> 8;
-			valueData[2] = (value & 0x00FF0000) >> 16;
-			valueData[3] = (value & 0xFF000000) >> 24;
+			data[0] = clusterInt.D;
+			data[1] = clusterInt.C;
+			data[2] = clusterInt.B;
+			data[3] = clusterInt.A;
 			break;
 		}
 	}
 
-	Write(valueData, 4u);
+	DataCursorPosition += sizeof(unsigned int);
 }
 
-void BF::ByteStream::Write(const char* string, size_t length)
+void BF::ByteStream::Write(const long long value, const Endian endian)
 {
-	Write((void*)string, length);
+	Write((unsigned long long)value, endian);
 }
 
-void BF::ByteStream::Write(const unsigned char* string, size_t length)
+void BF::ByteStream::Write(const unsigned long long value, const Endian endian)
 {
-	Write((void*)string, length);
+	Byte* data = Data + DataCursorPosition;
+
+	ClusterLongLong clusterLongLong;
+
+	clusterLongLong.Value = value;
+
+	switch(endian)
+	{
+		case Endian::Big:
+		{
+			data[0] = clusterLongLong.A;
+			data[1] = clusterLongLong.B;
+			data[2] = clusterLongLong.C;
+			data[3] = clusterLongLong.D;
+			data[4] = clusterLongLong.E;
+			data[5] = clusterLongLong.F;
+			data[6] = clusterLongLong.G;
+			data[7] = clusterLongLong.H;
+			break;
+		}
+		default:
+		case Endian::Little:
+		{
+			data[0] = clusterLongLong.H;
+			data[1] = clusterLongLong.G;
+			data[2] = clusterLongLong.F;
+			data[3] = clusterLongLong.E;
+			data[4] = clusterLongLong.D;
+			data[5] = clusterLongLong.C;
+			data[6] = clusterLongLong.B;
+			data[7] = clusterLongLong.A;
+			break;
+		}
+	}
+
+	DataCursorPosition += sizeof(unsigned long long);
 }
 
-void BF::ByteStream::Write(unsigned long long& value, Endian endian)
+void BF::ByteStream::Write(const char* value, const size_t length)
 {
+	Write((void*)value, length);
 }
 
-void BF::ByteStream::Write(const void* value, size_t length)
+void BF::ByteStream::Write(const unsigned char* value, const size_t length)
+{
+	Write((void*)value, length);
+}
+
+void BF::ByteStream::Write(const void* value, const size_t length)
 {
 	Memory::Copy(Data + DataCursorPosition, value, length);
 

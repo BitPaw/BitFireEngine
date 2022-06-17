@@ -2,7 +2,11 @@
 
 #define ClusterShortDEFINED
 
-#define MakeShort(a, b) (((unsigned short)a) | ((unsigned short)b << 8))
+// Detect current endianess on this system and then use #if
+#define MakeShort(a, b) MakeShortLE(a, b)
+
+#define MakeShortBE(a, b) (((unsigned short)a << 8) | ((unsigned short)b))
+#define MakeShortLE(a, b) (((unsigned short)a) | ((unsigned short)b << 8))
 
 struct ClusterShort
 {

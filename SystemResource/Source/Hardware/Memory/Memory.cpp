@@ -120,24 +120,58 @@ printf("[#][Memory] 0x%p (%10zi B) Pre-Fetched [NOT SUPPORTED] Skipped...\n", ad
 	return false;
 }
 
-void* BF::Memory::VirtualMemoryAllocate(const size_t size)
+void* BF::Memory::VirtualMemoryAllocate(const size_t size, const MemoryProtectionMode memoryProtectionMode, const int fileDescriptor)
 {
-	void* address = nullptr;
+	void* address¡llocated = nullptr;
+	void* addressPrefered = nullptr;
+
+	const MemoryProtectionModeType protectionModeID = ConvertMemoryProtectionMode(memoryProtectionMode);
 
 #if defined(OSUnix)
+	int flags = MAP_PRIVATE | MAP_POPULATE;
+	off64_t length = 0;
 
+	address¡llocated = mmap
+	(
+		addressPrefered,
+		size,
+		protectionModeID,
+		flags,
+		fileDescriptor,
+		0
+	);
 #elif defined(OSWindows)
 	DWORD allocationType = MEM_COMMIT | MEM_RESERVE;
-	DWORD protect = PAGE_READWRITE;
 
-	address = VirtualAlloc(address, size, allocationType, protect);
+	address¡llocated = VirtualAlloc(addressPrefered, size, allocationType, protectionModeID);
 #endif
 
 #if MemoryDebug
-	printf("[#][Memory] 0x%p (%10zi B) Virtual allocation\n", address, size);
+	const char* readMode;
+
+	switch(memoryProtectionMode)
+	{
+		case MemoryProtectionMode::WriteOnly:
+			readMode = "Write only";
+			break;
+
+		case MemoryProtectionMode::ReadOnly:
+			readMode = "Read only";
+			break;
+
+		case MemoryProtectionMode::ReadAndWrite:
+			readMode = "Read & Write";
+			break;
+
+		default:
+			readMode = "???";
+			break;
+	}
+
+	printf("[#][Memory] 0x%p (%10zi B) Virtual allocation [%s]\n", address¡llocated, size, readMode);
 #endif
 
-	return address;
+	return address¡llocated;
 }
 
 bool BF::Memory::VirtualMemoryRelease(const void* adress, const size_t size)

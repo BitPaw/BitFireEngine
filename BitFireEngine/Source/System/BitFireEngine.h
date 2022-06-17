@@ -32,7 +32,6 @@
 
 //#include "../Resource/Sprite.h"
 
-
 #include <Window/Window.h>
 
 #include "../Level/Level.h"
@@ -40,9 +39,6 @@
 #include <Graphic/OpenGL/Renderable.h>
 #include <Graphic/OpenGL/SkyBox.h>
 #include <Graphic/OpenGL/Sprite.h>
-
-
-
 
 namespace BF
 {

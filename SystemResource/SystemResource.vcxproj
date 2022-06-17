@@ -294,6 +294,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Hardware\Memory\MemoryProtectionMode.cpp" />
     <ClCompile Include="Source\Math\Primes.cpp" />
     <ClCompile Include="Source\Media\ID3\ID3Version.cpp" />
     <ClCompile Include="Source\Media\ID3\ID3v2xFrameTag.cpp" />
@@ -548,6 +549,8 @@
     <ClCompile Include="Source\Media\XingInfo\XingInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Container\ClusterLongLong.h" />
+    <ClInclude Include="Source\Hardware\Memory\MemoryProtectionMode.h" />
     <ClInclude Include="Source\Math\Primes.h" />
     <ClInclude Include="Source\Media\ID3\ID3Version.h" />
     <ClInclude Include="Source\Media\ID3\ID3v2xFrameTag.h" />

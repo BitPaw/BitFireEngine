@@ -79,7 +79,7 @@ BF::FileActionResult BF::BMP::Load(const unsigned char* fileData, const size_t f
         dataStream.Read(reservedBlock, Endian::Little);
         dataStream.Read(dataOffset, Endian::Little);
 
-        Type = ConvertBMPType(byteCluster);
+        Type = ConvertBMPType(byteCluster.Value);
 
         {
             const bool isValidType = Type != BMPType::Invalid;

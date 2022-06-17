@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Euklid_element.h"
+
 #define Eukliddebug 0
 
 class Euklid
