@@ -89,6 +89,8 @@
 		<Unit filename="Source/Container/BinaryTree/BinaryTreeNode.hpp" />
 		<Unit filename="Source/Container/BitStreamHusk.cpp" />
 		<Unit filename="Source/Container/BitStreamHusk.h" />
+		<Unit filename="Source/Container/ClusterInt.h" />
+		<Unit filename="Source/Container/ClusterShort.h" />
 		<Unit filename="Source/Container/Dictionary.hpp" />
 		<Unit filename="Source/Container/DictionaryStatic.hpp" />
 		<Unit filename="Source/Container/LinkedList.hpp" />
@@ -98,6 +100,8 @@
 		<Unit filename="Source/Container/QuadTree/QuadTreeChunk.hpp" />
 		<Unit filename="Source/Container/QuadTree/QuadTreeDirection.hpp" />
 		<Unit filename="Source/Container/Queue.hpp" />
+		<Unit filename="Source/Container/QueueMapping.cpp" />
+		<Unit filename="Source/Container/QueueMapping.h" />
 		<Unit filename="Source/Container/RingBuffer.hpp" />
 		<Unit filename="Source/Container/Table.hpp" />
 		<Unit filename="Source/Controller/ControllerData.cpp" />
@@ -137,8 +141,6 @@
 		<Unit filename="Source/Event/Event.hpp" />
 		<Unit filename="Source/File/Bash.cpp" />
 		<Unit filename="Source/File/Bash.h" />
-		<Unit filename="Source/File/ByteCluster.cpp" />
-		<Unit filename="Source/File/ByteCluster.h" />
 		<Unit filename="Source/File/ByteStream.cpp" />
 		<Unit filename="Source/File/ByteStream.h" />
 		<Unit filename="Source/File/Endian.h" />
@@ -153,8 +155,6 @@
 		<Unit filename="Source/File/FilePath.cpp" />
 		<Unit filename="Source/File/FilePath.h" />
 		<Unit filename="Source/File/FilePersistence.hpp" />
-		<Unit filename="Source/File/FileStream.cpp" />
-		<Unit filename="Source/File/FileStream.h" />
 		<Unit filename="Source/File/FileTemporary.cpp" />
 		<Unit filename="Source/File/FileTemporary.h" />
 		<Unit filename="Source/File/IFile.cpp" />
@@ -168,6 +168,7 @@
 		<Unit filename="Source/File/ProgramExecuteInfo.cpp" />
 		<Unit filename="Source/File/ProgramExecuteInfo.h" />
 		<Unit filename="Source/File/ProgramExecuteResultListener.hpp" />
+		<Unit filename="Source/GameCleaved/main.cpp" />
 		<Unit filename="Source/Graphic/DirectX/DirectX.cpp" />
 		<Unit filename="Source/Graphic/DirectX/DirectX.h" />
 		<Unit filename="Source/Graphic/Graphic.cpp" />
@@ -210,6 +211,8 @@
 		<Unit filename="Source/Hardware/Memory/Memory.h" />
 		<Unit filename="Source/Hardware/Memory/MemoryUsage.cpp" />
 		<Unit filename="Source/Hardware/Memory/MemoryUsage.h" />
+		<Unit filename="Source/Hardware/Monitor/Monitor.cpp" />
+		<Unit filename="Source/Hardware/Monitor/Monitor.h" />
 		<Unit filename="Source/Hardware/Processor/Processor.cpp" />
 		<Unit filename="Source/Hardware/Processor/Processor.h" />
 		<Unit filename="Source/IFileFormat.hpp" />
@@ -265,6 +268,8 @@
 		<Unit filename="Source/Math/Math.h" />
 		<Unit filename="Source/Math/Physic/PhysicsDynamic.hpp" />
 		<Unit filename="Source/Math/Physic/PhysicsStatic.hpp" />
+		<Unit filename="Source/Math/Primes.cpp" />
+		<Unit filename="Source/Math/Primes.h" />
 		<Unit filename="Source/Media/Font/FNT/FNT.cpp" />
 		<Unit filename="Source/Media/Font/FNT/FNT.h" />
 		<Unit filename="Source/Media/Font/FNT/FNTChanalMode.h" />
@@ -357,6 +362,12 @@
 		<Unit filename="Source/Media/Font/TTF/TTFTableEntry.h" />
 		<Unit filename="Source/Media/Font/TTF/TTFTableEntryType.cpp" />
 		<Unit filename="Source/Media/Font/TTF/TTFTableEntryType.h" />
+		<Unit filename="Source/Media/ID3/ID3.cpp" />
+		<Unit filename="Source/Media/ID3/ID3.h" />
+		<Unit filename="Source/Media/ID3/ID3Version.cpp" />
+		<Unit filename="Source/Media/ID3/ID3Version.h" />
+		<Unit filename="Source/Media/ID3/ID3v2xFrameTag.cpp" />
+		<Unit filename="Source/Media/ID3/ID3v2xFrameTag.h" />
 		<Unit filename="Source/Media/Image/BMP/BMP.cpp" />
 		<Unit filename="Source/Media/Image/BMP/BMP.h" />
 		<Unit filename="Source/Media/Image/BMP/BMPInfoHeader.cpp" />
@@ -374,6 +385,7 @@
 		<Unit filename="Source/Media/Image/Image.h" />
 		<Unit filename="Source/Media/Image/ImageDataFormat.cpp" />
 		<Unit filename="Source/Media/Image/ImageDataFormat.h" />
+		<Unit filename="Source/Media/Image/ImageFileFormat.cpp" />
 		<Unit filename="Source/Media/Image/ImageFileFormat.h" />
 		<Unit filename="Source/Media/Image/JPEG/JPEG.cpp" />
 		<Unit filename="Source/Media/Image/JPEG/JPEG.h" />
@@ -438,6 +450,8 @@
 		<Unit filename="Source/Media/Image/TIFF/TIFF.h" />
 		<Unit filename="Source/Media/Image/WEBP/WEBP.cpp" />
 		<Unit filename="Source/Media/Image/WEBP/WEBP.h" />
+		<Unit filename="Source/Media/LAME/LAME.cpp" />
+		<Unit filename="Source/Media/LAME/LAME.h" />
 		<Unit filename="Source/Media/RIFF/RIFF.cpp" />
 		<Unit filename="Source/Media/RIFF/RIFF.h" />
 		<Unit filename="Source/Media/RIFF/RIFFFormat.cpp" />
@@ -455,6 +469,8 @@
 		<Unit filename="Source/Media/Sound/ISoundFormat.hpp" />
 		<Unit filename="Source/Media/Sound/M4A/M4A.cpp" />
 		<Unit filename="Source/Media/Sound/M4A/M4A.h" />
+		<Unit filename="Source/Media/Sound/M4A/M4AChunkID.cpp" />
+		<Unit filename="Source/Media/Sound/M4A/M4AChunkID.h" />
 		<Unit filename="Source/Media/Sound/MID/MID.cpp" />
 		<Unit filename="Source/Media/Sound/MID/MID.h" />
 		<Unit filename="Source/Media/Sound/MID/MIDICommand.cpp" />
@@ -481,6 +497,8 @@
 		<Unit filename="Source/Media/Sound/MP3/MPEGGenre.hpp" />
 		<Unit filename="Source/Media/Sound/OGG/OGG.cpp" />
 		<Unit filename="Source/Media/Sound/OGG/OGG.h" />
+		<Unit filename="Source/Media/Sound/OGG/OGGPage.cpp" />
+		<Unit filename="Source/Media/Sound/OGG/OGGPage.h" />
 		<Unit filename="Source/Media/Sound/Sound.cpp" />
 		<Unit filename="Source/Media/Sound/Sound.h" />
 		<Unit filename="Source/Media/Sound/SoundFormat.h" />
@@ -501,6 +519,10 @@
 		<Unit filename="Source/Media/Video/RefreshRateMode.h" />
 		<Unit filename="Source/Media/Video/Video.cpp" />
 		<Unit filename="Source/Media/Video/Video.h" />
+		<Unit filename="Source/Media/Video/WEBM/WebM.cpp" />
+		<Unit filename="Source/Media/Video/WEBM/WebM.h" />
+		<Unit filename="Source/Media/XingInfo/XingInfo.cpp" />
+		<Unit filename="Source/Media/XingInfo/XingInfo.h" />
 		<Unit filename="Source/Model/3DS/A3DS.cpp" />
 		<Unit filename="Source/Model/3DS/A3DS.h" />
 		<Unit filename="Source/Model/FBX/FBX.cpp" />
@@ -552,6 +574,16 @@
 		<Unit filename="Source/Network/IPVersion.h" />
 		<Unit filename="Source/Network/IServerListener.h" />
 		<Unit filename="Source/Network/ISocketListener.h" />
+		<Unit filename="Source/Network/Protocol/SBP/SBPClient.cpp" />
+		<Unit filename="Source/Network/Protocol/SBP/SBPClient.h" />
+		<Unit filename="Source/Network/Protocol/SBP/SBPData.cpp" />
+		<Unit filename="Source/Network/Protocol/SBP/SBPData.h" />
+		<Unit filename="Source/Network/Protocol/SBP/SBPQueue.cpp" />
+		<Unit filename="Source/Network/Protocol/SBP/SBPQueue.h" />
+		<Unit filename="Source/Network/Protocol/SBP/SBPServer.cpp" />
+		<Unit filename="Source/Network/Protocol/SBP/SBPServer.h" />
+		<Unit filename="Source/Network/Protocol/SBP/SBPText.cpp" />
+		<Unit filename="Source/Network/Protocol/SBP/SBPText.h" />
 		<Unit filename="Source/Network/ProtocolMode.cpp" />
 		<Unit filename="Source/Network/ProtocolMode.h" />
 		<Unit filename="Source/Network/Server.cpp" />

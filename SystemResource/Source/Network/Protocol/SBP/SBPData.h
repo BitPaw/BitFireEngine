@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <Container/ClusterInt.h>
 
 #define ConnectionCreateReasonFile 'F'
@@ -15,8 +16,8 @@
 
 #define SBPFilePathSizeMaskTextType 0b1000000000000000 // 0=char* 1=wchar_t*
 #define SBPFilePathSizeMaskA        0b0100000000000000
-#define SBPFilePathSizeMaskB		0b0010000000000000 
-#define SBPFilePathSizeMaskC		0b0001000000000000 
+#define SBPFilePathSizeMaskB		0b0010000000000000
+#define SBPFilePathSizeMaskC		0b0001000000000000
 #define SBPFilePathSizeMask			0b1111000000000000
 
 // Source
@@ -27,7 +28,7 @@
 #define SourceLimitMaximum SourceServer
 
 // Target
-#define TargetInvalid		-1 
+#define TargetInvalid		-1
 #define TargetServer		-2 // Client(You) -> Server only
 #define TargetAll		-3 // Client(You) -> All Clients
 #define TargetSpecific	-4 // Client(You) -> specific Clients
@@ -44,7 +45,7 @@ namespace BF
 		public:
 		ClusterInt Command;
 		unsigned int Source;
-		unsigned int Target;		
+		unsigned int Target;
 		unsigned int ID;
 		unsigned int DataSize;
 		void* Data;
@@ -59,7 +60,7 @@ namespace BF
 			const unsigned int dataSize,
 			const void* adress
 		);
-		
+
 		void Set
 		(
 			const unsigned int command,

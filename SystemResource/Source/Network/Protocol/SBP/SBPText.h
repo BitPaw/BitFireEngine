@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 #define SBPTextTypeInvalid '?'
 #define SBPTextTypeNarrow 'A'
 #define SBPTextTypeWide 'W'
@@ -10,8 +12,8 @@ namespace BF
 	{
 		public:
 		unsigned char Type;
-		
-		union 
+
+		union
 		{
 			const void* Text;
 			const char* TextA;

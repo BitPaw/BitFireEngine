@@ -52,7 +52,7 @@ unsigned int BF::Primes::Eula_phi(unsigned int input)
 	int result = 1;
 	for (auto element : primes)
 	{
-		result *= pow(element.first, element.second - 1) * (element.first - 1);
+		result *= BF::Math::Power(element.first, element.second - 1) * (element.first - 1);
 	}
 	return result;
 }

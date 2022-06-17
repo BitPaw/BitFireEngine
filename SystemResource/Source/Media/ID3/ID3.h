@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 #define ID3TitleSize 30
 #define ID3ArtistSize 30
 #define ID3AlbumSize 30
@@ -20,8 +22,8 @@ namespace BF
 
 		// Version 1.1
 		unsigned char TrackID;
-		
-		// Version 2.x	
+
+		// Version 2.x
 		unsigned int BeatsPerMinute;
 		wchar_t Composer[ID3ArtistSize + 1];
 

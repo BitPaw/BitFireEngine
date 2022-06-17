@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stddef.h>
+
 #include "MP3Layer.hpp"
 #include "MP3MPEGVersion.hpp"
 #include "MP3ChannelMode.hpp"

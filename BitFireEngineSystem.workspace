@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="BitFireEngineSystems">
-		<Project filename="SystemResource/SystemResource.cbp" />
 		<Project filename="BitFireEngine/BitFireEngine.cbp" />
+		<Project filename="SystemResource/SystemResource.cbp" />
 		<Project filename="GameCleaved/GameCleaved.cbp" />
 		<Project filename="TestConsole/TestConsole.cbp" />
 		<Project filename="TestWindow/TestWindow.cbp" />

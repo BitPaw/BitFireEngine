@@ -124,22 +124,22 @@ void BF::Window::OnWindowEvent(BF::Window& window, const XEvent& event)
         }
         case EnterNotify:
         {
-            InvokeEvent(window.WindowMouseEnterCallBack);
+            InvokeEvent(window.MouseEnterCallBack);
             break;
         }
         case LeaveNotify:
         {
-            InvokeEvent(window.WindowMouseLeaveCallBack);
+            InvokeEvent(window.MouseLeaveCallBack);
             break;
         }
         case FocusIn:
         {
-            InvokeEvent(window.WindowFocusEnterCallBack);
+            InvokeEvent(window.FocusEnterCallBack);
             break;
         }
         case FocusOut:
         {
-            InvokeEvent(window.WindowFocusLeaveCallBack);
+            InvokeEvent(window.FocusLeaveCallBack);
             break;
         }
         case KeymapNotify:
@@ -1875,7 +1875,7 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
 
     char windowTitle[256];
 
-    Text::Copy(windowTitle, window.Title, 256);
+    Text::Copy(windowTitle, 256, window.Title, 256);
 
     XMapWindow(display, windowID);
     XStoreName(display, windowID, windowTitle);

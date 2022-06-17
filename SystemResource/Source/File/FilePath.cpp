@@ -140,7 +140,7 @@ void BF::FilePath::Splitt(const wchar_t* fullPath, size_t fullPathMaxSize, wchar
 	char fileNameA[FileNameMaxSize];
 	char extensionA[ExtensionMaxSize];
 
-	Text::Copy(fullPathA, fullPath, PathMaxSize);
+	Text::Copy(fullPath, PathMaxSize, fullPathA, PathMaxSize);
 
 	Splitt
 	(
@@ -151,10 +151,10 @@ void BF::FilePath::Splitt(const wchar_t* fullPath, size_t fullPathMaxSize, wchar
 		extensionA
 	);
 
-	Text::Copy(drive, driveA, DriveMaxSize);
-	Text::Copy(directory, directoryA, DirectoryMaxSize);
-	Text::Copy(fileName, fileNameA, FileNameMaxSize);
-	Text::Copy(extension, extensionA, ExtensionMaxSize);
+	Text::Copy(drive, DriveMaxSize, driveA, DriveMaxSize);
+	Text::Copy(directory, DirectoryMaxSize, directoryA, DirectoryMaxSize);
+	Text::Copy(fileName, FileNameMaxSize, fileNameA, FileNameMaxSize);
+	Text::Copy(extension, ExtensionMaxSize, extensionA, ExtensionMaxSize);
 #elif defined(OSWindows)
 	wchar_t extensionCache[FileNameMaxSize];
 

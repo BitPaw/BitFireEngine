@@ -3,8 +3,13 @@
 #include <Text/Text.h>
 #include <Hardware/Memory/Memory.h>
 
-#if defined(OSWindows)
+#include <stdarg.h>
 #include <fcntl.h>
+
+#if defined(OSUnix)
+#include <sys/mman.h>
+#include <sys/stat.h>
+#elif defined(OSWindows)
 #include <io.h>
 #endif
 
@@ -63,9 +68,9 @@ BF::FileActionResult BF::File::Open(const char* filePath, FileOpenMode fileOpenM
 	// int posix_fadvise(int fd, off_t offset, off_t len, int advice);
 	// int posix_fadvise64(int fd, off_t offset, off_t len, int advice);
 
-	fileHandle = fopen(filePath, readMode);
+	FileHandle = fopen(filePath, readMode);
 
-	return fileHandle ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
+	return FileHandle ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
 
 #elif defined(OSWindows)
 	wchar_t filePathW[PathMaxSize];
@@ -81,11 +86,17 @@ BF::FileActionResult BF::File::Open(const wchar_t* filePath, FileOpenMode fileOp
 #if defined(OSUnix)
 	char filePathA[PathMaxSize];
 
-	Text::Copy(filePathA, filePath, PathMaxSize);
+	Text::Copy(filePath, PathMaxSize, filePathA, PathMaxSize);
 
-	Open(fileHandle, filePathA, fileOpenMode);
+    const FileActionResult openResult = Open(filePathA, fileOpenMode);
+    const bool successful = openResult == FileActionResult::Successful;
 
-	return fileHandle ? FileActionResult::Successful : FileActionResult::FileOpenFailure;
+    if(!successful)
+    {
+        return openResult;
+    }
+
+	return FileActionResult::Successful;
 #elif defined(OSWindows)
 	DWORD dwDesiredAccess = 0;
 	DWORD dwShareMode = 0;
@@ -230,7 +241,7 @@ BF::FileActionResult BF::File::Close()
 		FileHandle = nullptr;
 
 		return successful ? FileActionResult::Successful : FileActionResult::FileCloseFailure;
-	}	
+	}
 
 	return FileActionResult::Successful;
 #endif
@@ -323,8 +334,8 @@ BF::FileActionResult BF::File::Copy(const wchar_t* sourceFilePath, const wchar_t
 	char sourceFilePathA[PathMaxSize];
 	char destinationFilePathA[PathMaxSize];
 
-	Text::Copy(sourceFilePathA, sourceFilePath, PathMaxSize);
-	Text::Copy(destinationFilePathA, destinationFilePath, PathMaxSize);
+	Text::Copy(sourceFilePath, PathMaxSize, sourceFilePathA, PathMaxSize);
+	Text::Copy(destinationFilePath, PathMaxSize, destinationFilePathA, PathMaxSize);
 
 	return File::Copy(sourceFilePathA, destinationFilePathA);
 #elif defined(OSWindows)
@@ -445,23 +456,67 @@ BF::ErrorCode BF::File::DirectoryDelete(const wchar_t* directoryName)
 
 BF::FileActionResult BF::File::MapToVirtualMemory(const char* filePath)
 {
+#if defined(OSUnix)
+    void* preferedAdress = nullptr;
+    size_t fileLength = 0;
+    int accessType = PROT_READ;
+    int flags = MAP_PRIVATE | MAP_POPULATE;
+    int fileDescriptor = 0;
+    off64_t length = 0;
+
+    fileDescriptor = open64(filePath, O_RDONLY);
+
+    const bool sucessfulOpen = fileDescriptor;
+
+    if (!sucessfulOpen)
+    {
+        return FileActionResult::Invalid;
+    }
+
+    fileLength = lseek64(fileDescriptor, 0, SEEK_END);
+
+    void* data = mmap
+    (
+        preferedAdress,
+        fileLength,
+        accessType,
+        flags,
+        fileDescriptor,
+        0
+    );
+    const bool successfulMapping = data != MAP_FAILED;
+
+    Data = (Byte*)data;
+    DataSize = fileLength;
+
+
+	_fileLocation = FileLocation::MappedFromDisk;
+
+#if MemoryDebug
+	printf("[#][Memory] 0x%p (%10zi B) MMAP %ls\n", Data, Size, filePath);
+#endif
+
+	return FileActionResult::Successful;
+
+#elif defined(OSWindows)
 	wchar_t filePathW[PathMaxSize];
 
 	Text::Copy(filePath, PathMaxSize, filePathW, PathMaxSize);
 
-	const FileActionResult fileActionResult = MapToVirtualMemory(filePathW);
+	const FileActionResult fileActionResult = BF::Memory::VirtualMemoryAllocate(filePathW);
 
 	return fileActionResult;
+#endif
 }
 
 BF::FileActionResult BF::File::MapToVirtualMemory(const wchar_t* filePath)
-{	
+{
 #if defined(OSUnix)
 	char filePathA[PathMaxSize];
 
-	Text::Copy(filePathA, filePath, PathMaxSize);
+	Text::Copy(filePath, PathMaxSize, filePathA, PathMaxSize);
 
-	return VirtualMemoryFileMap(filePathA, fileMappingInfo);
+	return MapToVirtualMemory(filePathA);
 
 #elif defined(OSWindows)
 
@@ -565,25 +620,24 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const size_t size)
 BF::FileActionResult BF::File::UnmapFromVirtualMemory()
 {
 #if MemoryDebug
-	printf("[#][Memory] 0x%p (%10zi B) MMAP-Release\n", fileMappingInfo.Data, fileMappingInfo.Size);
+	printf("[#][Memory] 0x%p (%10zi B) MMAP-Release\n", Data, DataSize);
 #endif
 
 #if defined(OSUnix)
-	const int result = munmap(fileMappingInfo.Data, fileMappingInfo.Size);
+	const int result = munmap(Data, DataSize);
 	const bool sucessful = result != -1;
 
 	if(!sucessful)
 	{
-		const ErrorCode errorCode = GetCurrentError();
+		const ErrorCode errorCode = GetCurrentError(); // Not quite well
 
-		return false;
+		return FileActionResult::FileMemoryMappingFailed;
 	}
 
-	fileMappingInfo.ID = 0;
-	fileMappingInfo.Size = 0;
-	fileMappingInfo.Data = 0;
+	Data = 0;
+	DataSize = 0;
 
-	return true;
+	return FileActionResult::Successful;
 
 #elif defined(OSWindows)
 	{
@@ -787,7 +841,13 @@ BF::FileActionResult BF::File::WriteToDisk(const unsigned long long& value, cons
 
 BF::FileActionResult BF::File::WriteToDisk(const void* value, const size_t length)
 {
-	const size_t writtenSize = fwrite(value, sizeof(Byte), length, FileHandleCStyle);
+#if defined(OSUnix)
+FILE* fileHandle = FileHandle;
+#elif defined(OSWindows)
+FILE* fileHandle = FileHandleCStyle;
+#endif
+
+	const size_t writtenSize = fwrite(value, sizeof(Byte), length, fileHandle);
 
 	if(writtenSize > 0)
 	{
@@ -801,10 +861,16 @@ BF::FileActionResult BF::File::WriteToDisk(const void* value, const size_t lengt
 
 BF::FileActionResult BF::File::WriteToDisk(const char* format, ...)
 {
+#if defined(OSUnix)
+    FILE* fileHandle = FileHandle;
+#elif defined(OSWindows)
+    FILE* fileHandle = FileHandleCStyle;
+#endif
+
 	va_list args;
 	va_start(args, format);
 
-	const int writtenBytes = vfprintf(FileHandleCStyle, format, args);
+	const int writtenBytes = vfprintf(fileHandle, format, args);
 	const bool sucessful = writtenBytes >= 0;
 
 	va_end(args);
@@ -992,17 +1058,17 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 
 		rewinddir(directory);
 
-		(*list) = (wchar_t**)malloc(listSize * sizeof(wchar_t*));
+		(*list) = Memory::Allocate<wchar_t*>(listSize);
 
 		for (size_t index = 0; directoryInfo = readdir(directory); index++)
 		{
-			bool isFile = directoryInfo->d_type == DT_REG || true;
+			const bool isFile = directoryInfo->d_type == DT_REG || true;
 
 			if (isFile)
 			{
 				const char* fileName = directoryInfo->d_name;
-				size_t length = Text::Length(fileName);
-				wchar_t* newString = (wchar_t*)malloc((length + 1) * sizeof(wchar_t));
+				const size_t length = Text::Length(fileName);
+				wchar_t* newString = Memory::Allocate<wchar_t>(length + 1);
 				wchar_t** target = &(*list)[index];
 
 				if (!newString)
@@ -1011,7 +1077,7 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 				}
 
 				(*target) = newString;
-				size_t writtenBytes = Text::Copy(*target, fileName, PathMaxSize);
+				size_t writtenBytes = Text::Copy(fileName, length, *target, length);
 			}
 		}
 

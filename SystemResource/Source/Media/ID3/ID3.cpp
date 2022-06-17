@@ -9,6 +9,10 @@
 #define ID3HeaderSignature {'I','D','3'}
 #define ID3Debug 1
 
+#if ID3Debug
+#include <cstdio>
+#endif
+
 BF::ID3::ID3()
 {
     Text::Clear(Title, ID3TitleSize);
@@ -37,14 +41,14 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
         {
             return 0;
         }
-    }  
+    }
 
     // Check Version
     {
         char versionTag[2];
 
         dataStream.Read(versionTag, 2);
-             
+
         switch(versionTag[0])
         {
             case 0x00:
@@ -64,11 +68,11 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
                 break;
 
             default: // Version is probably 1.x
-            {                      
+            {
                 const Byte* trackIDAdress = dataStream.CursorCurrentAdress() + ID3CommentSize - 2;
                 const unsigned short trackIDSymbol = ((unsigned short)trackIDAdress[0]) << 8 + trackIDAdress[1];
                 const bool isVersion1x0 = trackIDSymbol == 0x0000;
-                
+
                 if(isVersion1x0)
                 {
                     version = ID3Version::v1x0;
@@ -76,7 +80,7 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
                 else
                 {
                     version = ID3Version::v1x1;
-                }         
+                }
 
                 dataStream.CursorRewind(2u); // Go the steps back from the version, as 1.x does not have this field.
 
@@ -111,7 +115,7 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
             if(hasTrackID)
             {
                 dataStream.Read(Comment, ID3CommentSize - 1);
-                dataStream.Read(TrackID);               
+                dataStream.Read(TrackID);
             }
             else
             {
@@ -126,7 +130,7 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
             bool a = false;
             bool b = false;
             bool c = false;
-         
+
             // Read flags
             {
                 unsigned char flags = 0;
@@ -146,7 +150,7 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
 
                 // Size format: x000 x000 x000 x000 => 28 Bit int
                 // The first bit of each byte not only unused but shall be merged!
-                // Some banana thought this was a good idea, as to 
+                // Some banana thought this was a good idea, as to
                 // provide a limitation of how big the value can be.
 
                 const unsigned int as = (unsigned int)sizeCluster.A << (16 - 3);
@@ -169,7 +173,7 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
                     break;
                 case BF::ID3Version::v2x3:
                 case BF::ID3Version::v2x4:
-                {   
+                {
                     const size_t posCurrent = dataStream.DataSize;
                     const size_t posExpectedMax = dataStream.DataCursorPosition + sizeOfDataSegment;
 
@@ -188,7 +192,7 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
 
                         const ID3v2xFrameTag frameTag = ConvertID3v2xFrameTag(indentifier.Value);
                         const bool unkownTag = frameTag == ID3v2xFrameTag::Invalid;
-                     
+
                         if(unkownTag)
                         {
                             const bool emptyDataDertected = unkownTag && (frameSize == 0);
@@ -198,12 +202,12 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
                                 dataStream.CursorToEnd();
                                 break; // Cancel while loop, as there is nothing else to parse.
                             }
-                        }                      
+                        }
 
 #if ID3Debug
                         printf
                         (
-                            "[Chunk %c%c%c%c] %i Bytes\n",  
+                            "[Chunk %c%c%c%c] %i Bytes\n",
                             indentifier.A,
                             indentifier.B,
                             indentifier.C,
@@ -214,7 +218,7 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
 
                         size_t posAfterChunk = dataStream.DataCursorPosition + frameSize;
 
-                       
+
 #if 0 // Skip
                         dataStream.CursorAdvance(frameSize);
 #else
@@ -228,10 +232,10 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
                             case BF::ID3v2xFrameTag::Comments:
                             {
                                 unsigned char textEncoding = 0;
-                                char language[3];                          
+                                char language[3];
 
                                 dataStream.Read(textEncoding);
-                                dataStream.Read(language, 3u);                            
+                                dataStream.Read(language, 3u);
 
                                 size_t insertOffset = 0;
 
@@ -242,10 +246,10 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
                                     dataStream.Read(stringEncoding, 2u);
 
                                     dataStream.ReadUntil(Comment + insertOffset, frameSize - 3, L'\0');
-                                }                            
+                                }
 
                                 break;
-                            }                                
+                            }
                             case BF::ID3v2xFrameTag::CommercialFrame:
                                 break;
                             case BF::ID3v2xFrameTag::EncryptionMethodRegistration:
@@ -271,7 +275,7 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
                             case BF::ID3v2xFrameTag::PrivateFrame:
                             {
                                 break;
-                            }                          
+                            }
                             case BF::ID3v2xFrameTag::PlayCounter:
                                 break;
                             case BF::ID3v2xFrameTag::Popularimeter:
@@ -306,13 +310,13 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
                                 dataStream.Read(Album, frameSize-3);
 
                                 break;
-                            }                                
+                            }
                             case BF::ID3v2xFrameTag::BeatsPerMinute:
                             {
                                 // Is text, convert to int
                                 BeatsPerMinute = 0;
                                 break;
-                            }                              
+                            }
                             case BF::ID3v2xFrameTag::Composer:
                             {
                                 dataStream.CursorAdvance(3u);
@@ -321,9 +325,9 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
                             }
                             case BF::ID3v2xFrameTag::ContentType:
                             {
-                                // GenreString -> enum 
+                                // GenreString -> enum
                                 break;
-                            }                           
+                            }
                             case BF::ID3v2xFrameTag::CopyrightMessage:
                                 break;
                             case BF::ID3v2xFrameTag::Date:
@@ -345,7 +349,7 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
                                 dataStream.CursorAdvance(3u);
                                 dataStream.Read(Title, frameSize - 3);
                                 break;
-                            }                             
+                            }
                             case BF::ID3v2xFrameTag::Subtitle:
                             {
                                 break;
@@ -375,10 +379,10 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
                                 dataStream.CursorAdvance(3u);
                                 dataStream.Read(Artist, frameSize-3);
                                 break;
-                            }                             
+                            }
                             case BF::ID3v2xFrameTag::Band:
                             {
-                            
+
                                 break;
                             }
                             case BF::ID3v2xFrameTag::Conductor:
@@ -446,13 +450,13 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
 
                             dataStream.DataCursorPosition = posAfterChunk;
                         }
-                    }                  
+                    }
 
                     break;
                 }
             }
         }
-    }  
+    }
 
     return dataStream.DataCursorPosition;
 }
