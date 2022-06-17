@@ -1,9 +1,7 @@
 #pragma once
-#include <stdio.h>
-#include <Math/Math.h>
-#include <map>
 
 #define Primesdebug 0
+
 namespace BF
 {
 	class Primes

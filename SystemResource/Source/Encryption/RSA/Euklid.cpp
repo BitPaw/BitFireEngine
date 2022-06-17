@@ -1,8 +1,11 @@
 #include "Euklid.h"
-
-#include <iostream>
 #include <Math/Math.h>
 #include <Hardware/Memory/Memory.h>
+#include "Euklid_element.h"
+
+#if Eukliddebug
+#include <iostream>
+#endif
 
 Euklid::Euklid(int a, int b)
 {
@@ -47,7 +50,7 @@ void Euklid::Advanced()
         liste[i] = element;
     }
 }
-
+#if Eukliddebug
 void Euklid::print()
 {
     std::cout << "Int a = " << liste[0].a << " und Int b = " << liste[0].b << " bildet sich wie folgt.\n";
@@ -58,3 +61,4 @@ void Euklid::print()
         std::cout << "| " << liste[i].a << " | " << liste[i].b << " | " << liste[i].times << " | " << liste[i].remainder << " | " << liste[i].x << " | " << liste[i].y << " |\n";
     }
 }
+#endif 

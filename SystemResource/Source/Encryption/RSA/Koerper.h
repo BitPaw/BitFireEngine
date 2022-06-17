@@ -2,6 +2,8 @@
 
 #include "Restklassen.h"
 
+#define Koerperdebug 0
+
 class Koerper
 {
 	private:

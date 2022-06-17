@@ -1,7 +1,6 @@
 #pragma once
 
-#include <stdlib.h>
-#include "Euklid_element.h"
+#define Eukliddebug 0
 
 class Euklid
 {
@@ -12,5 +11,7 @@ class Euklid
 	Euklid(int a, int b);
 
 	void Advanced();
+#if Eukliddebug
 	void print();
+#endif
 };

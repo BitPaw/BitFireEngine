@@ -1,5 +1,7 @@
 #include "Koerper.h"
+#if Koerperdebug
 #include <iostream>
+#endif
 
 Koerper::Koerper()
 {

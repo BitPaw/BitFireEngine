@@ -294,6 +294,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Math\Primes.cpp" />
     <ClCompile Include="Source\Media\ID3\ID3Version.cpp" />
     <ClCompile Include="Source\Media\ID3\ID3v2xFrameTag.cpp" />
     <ClCompile Include="Source\Media\Sound\M4A\M4AChunkID.cpp" />
@@ -547,6 +548,7 @@
     <ClCompile Include="Source\Media\XingInfo\XingInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Math\Primes.h" />
     <ClInclude Include="Source\Media\ID3\ID3Version.h" />
     <ClInclude Include="Source\Media\ID3\ID3v2xFrameTag.h" />
     <ClInclude Include="Source\Container\ClusterInt.h" />

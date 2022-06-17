@@ -1,13 +1,11 @@
 #include "RSA.h"
 
+#include "RSAKeys.h"
 #include "Euklid.h"
-
 #include <Text/Text.h>
 #include <Hardware/Memory/Memory.h>
 #include <Math/Primes.h>
-
-#include <iostream>
-
+#include <Math/Math.h>
 RSA::RSA(int p, int q, int e)
 {
 
@@ -42,7 +40,10 @@ RSA::RSA(int p, int q, int e)
 
 	Euklid euklid(phi_n, e);
 	euklid.Advanced();
+
+#if RSAdebug
 	euklid.print();
+#endif
 
 	if (euklid.ggt != 1)
 	{
@@ -92,7 +93,10 @@ RSA::RSA(int n, int e)
 
 	Euklid euklid(phi_n, e);
 	euklid.Advanced();
+
+#if RSAdebug
 	euklid.print();
+#endif
 
 	if (euklid.ggt != 1)
 	{

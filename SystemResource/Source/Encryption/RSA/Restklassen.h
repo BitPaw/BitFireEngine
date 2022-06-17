@@ -1,5 +1,6 @@
 #pragma once
 
+#define Restklassendebug 0
 struct Restklasse
 {
 	private:
@@ -15,7 +16,9 @@ struct Restklasse
 	bool Zyklisch();
 	int neutralElement();
 	int inverse(int number);
+#if Restklassendebug
 	void print();
+#endif
 	Restklasse(int mod, int(*function)(int, int));
 	Restklasse();
 };

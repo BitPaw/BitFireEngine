@@ -1,13 +1,7 @@
 #pragma once
-
-#include <map>
-#include "RSAKeys.h"
-
-unsigned int pow_mod(unsigned int base, unsigned int exp, unsigned int mod);
-
+#define RSAdebug 0
 class RSA
 {
-	std::map<int, int> primes;
 	public:
 	unsigned int p = 0;
 	unsigned int q = 0;

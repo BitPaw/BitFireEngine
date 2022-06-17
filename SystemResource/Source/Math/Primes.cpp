@@ -1,4 +1,10 @@
 #include <Math/Primes.h>
+#include <Math/Math.h>
+#include <map>
+
+#ifdef Primesdebug
+#include <stdio.h>
+#endif
 
 unsigned int BF::Primes::firstPrimeInX(unsigned int input)
 {

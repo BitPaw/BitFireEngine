@@ -1,8 +1,10 @@
 #include "Restklassen.h"
-
-#include <stdio.h>
 #include<Math/Math.h>
 #include<Hardware/Memory/Memory.h>
+
+#if Restklassendebug
+#include <stdio.h>
+#endif
 
 int Restklasse::set_Generator(int mod)
 {
@@ -115,6 +117,7 @@ int Restklasse::inverse(int number)
 {
     return 0;
 }
+#if Restklassendebug
 void Restklasse::print()
 {
     if (restklasse == nullptr)
@@ -139,6 +142,7 @@ void Restklasse::print()
     }
     printf("der Zahlenraum ist %d\n", restklasse[0][0]);
 }
+#endif
 Restklasse::Restklasse(int mod, int(*function)(int, int))
 {
     int** rest = BF::Memory::Allocate<int*>(mod+1);
