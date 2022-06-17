@@ -13,8 +13,7 @@ namespace BF
     enum class MemoryProtectionMode
     {
         Invalid,
-
-        None,
+        NoReadWrite,
         ReadOnly,
         WriteOnly,
         ReadAndWrite

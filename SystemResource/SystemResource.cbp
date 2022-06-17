@@ -90,6 +90,7 @@
 		<Unit filename="Source/Container/BitStreamHusk.cpp" />
 		<Unit filename="Source/Container/BitStreamHusk.h" />
 		<Unit filename="Source/Container/ClusterInt.h" />
+		<Unit filename="Source/Container/ClusterLongLong.h" />
 		<Unit filename="Source/Container/ClusterShort.h" />
 		<Unit filename="Source/Container/Dictionary.hpp" />
 		<Unit filename="Source/Container/DictionaryStatic.hpp" />
@@ -209,6 +210,8 @@
 		<Unit filename="Source/Hardware/MainBoard/MainBoard.h" />
 		<Unit filename="Source/Hardware/Memory/Memory.cpp" />
 		<Unit filename="Source/Hardware/Memory/Memory.h" />
+		<Unit filename="Source/Hardware/Memory/MemoryProtectionMode.cpp" />
+		<Unit filename="Source/Hardware/Memory/MemoryProtectionMode.h" />
 		<Unit filename="Source/Hardware/Memory/MemoryUsage.cpp" />
 		<Unit filename="Source/Hardware/Memory/MemoryUsage.h" />
 		<Unit filename="Source/Hardware/Monitor/Monitor.cpp" />

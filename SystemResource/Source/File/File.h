@@ -71,16 +71,17 @@ namespace BF
 		protected:
 		FileLocation _fileLocation; // Where the is stored, used as indicator how to clean up.
 
-		public:	
-		FileHandleType FileHandle; // Only used if file is used directly	
+		public:
+		FileHandleType FileHandle; // Only used if file is used directly
+
+		FileMappingID IDMapping; // Only used while mapping a file
 
 #if defined(OSWindows)
 		FILE* FileHandleCStyle; // Used for writing only, usage of fprintf()
-		FileMappingID IDMapping; // Only used while mapping a file
 #endif
-		
+
 		File();
-		~File();	
+		~File();
 
 		//---<Open>------------------------------------------------------------
 		FileActionResult Open(const char* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode = FileCachingMode::Default);
@@ -95,7 +96,7 @@ namespace BF
 		//---------------------------------------------------------------------
 
 		//---<Read>------------------------------------------------------------
-		FileActionResult ReadFromDisk(unsigned char** outPutBuffer, size_t& outPutBufferSize, const bool addTerminatorByte = false);	
+		FileActionResult ReadFromDisk(unsigned char** outPutBuffer, size_t& outPutBufferSize, const bool addTerminatorByte = false);
 		FileActionResult ReadFromDisk(const char* filePath, bool addNullTerminator = false, FilePersistence filePersistence = FilePersistence::Permanent);
 		FileActionResult ReadFromDisk(const wchar_t* filePath, bool addNullTerminator = false, FilePersistence filePersistence = FilePersistence::Permanent);
 		static FileActionResult ReadFromDisk(FILE* file, Byte** targetBuffer, size_t& bufferSize, bool addNullTerminator = false);
@@ -157,6 +158,6 @@ namespace BF
 		static ErrorCode DirectoryDelete(const wchar_t* directoryName);
 		static void FilesInFolder(const char* folderPath, wchar_t*** list, size_t& listSize);
 		static void FilesInFolder(const wchar_t* folderPath, wchar_t*** list, size_t& listSize);
-		//---------------------------------------------------------------------	
+		//---------------------------------------------------------------------
 	};
 }

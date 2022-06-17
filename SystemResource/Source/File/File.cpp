@@ -474,12 +474,12 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const char* filePath)
 			return FileActionResult::FileOpenFailure;
 		}
 
-		FileMappingID = fileDescriptor;		
+		IDMapping = fileDescriptor;
 	}
 
 	// Get file length
 	{
-		const size_t fileLength = lseek64(FileMappingID, 0, SEEK_END);
+		const size_t fileLength = lseek64(IDMapping, 0, SEEK_END);
 		const bool sucessful = fileLength > 0;
 
 		if(!sucessful)
@@ -492,7 +492,7 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const char* filePath)
 
 	// Map data
 	{
-		const void* mappedData = Memory::VirtualMemoryAllocate(DataSize, MemoryProtectionMode::ReadOnly, FileMappingID);
+		const void* mappedData = Memory::VirtualMemoryAllocate(DataSize, MemoryProtectionMode::ReadOnly, IDMapping);
 		const bool successfulMapping = mappedData != MAP_FAILED;
 
 		if(!successfulMapping)
@@ -501,9 +501,13 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const char* filePath)
 		}
 
 		Data = (Byte*)mappedData;
-	}    
+	}
 
 	_fileLocation = FileLocation::MappedFromDisk;
+
+	close(IDMapping);
+
+	IDMapping = 0;
 
 #if MemoryDebug
 	printf("[#][Memory] 0x%p (%10zi B) MMAP %ls\n", Data, DataSize, filePath);
