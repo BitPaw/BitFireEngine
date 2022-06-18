@@ -102,15 +102,14 @@ namespace BF
 		private:
 		static Dictionary<WindowID, Window*> _windowLookup;
 
-		CursorMode _cursorMode;
-
-
 		public:
 		bool IsRunning;
 		WindowID ID;
 		OpenGLConextID OpenGLConext;
 
+		// Live data
 		bool HasSizeChanged;
+		CursorMode CursorModeCurrent;
 
 		unsigned int X;
 		unsigned int Y;
@@ -185,7 +184,6 @@ namespace BF
 		void Cursor();
 		void Cursor(const CursorIcon cursorIcon);
 		void CursorTexture();
-		CursorMode CursorCaptureMode();
 		void CursorCaptureMode(const CursorMode cursorMode);
 
 		void ScreenShotTake(Image image);
@@ -194,5 +192,8 @@ namespace BF
 		bool FrameBufferSwap();
 		bool FrameBufferContextRegister();
 		bool FrameBufferContextRelease();
+
+
+		bool Interactable();
 	};
 }

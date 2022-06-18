@@ -973,8 +973,16 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
             const HWND windowsHandle = (HWND)wParam;
             const WORD hitTestResult = LOWORD(lParam);
             const WORD sourceMessage = HIWORD(lParam);
+            const bool showCursor = !(window.CursorModeCurrent == CursorMode::Invisible || window.CursorModeCurrent == CursorMode::LockAndHide);
 
-            SetCursor(NULL);
+            if(showCursor)
+            {
+                while(ShowCursor(true) < 0);
+            }
+            else
+            {
+                while(ShowCursor(false) >= 0);
+            }
 
             return true; // prevent further processing
         }
@@ -991,7 +999,7 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
             const auto width = minmaxInfo->ptMaxSize.x;
             const auto height = minmaxInfo->ptMaxSize.y;      
 
-            // not useable for resize event. Its not what it seems
+            // Not useable for resize event. Its not what it seems
 
             break;
         }
@@ -1134,8 +1142,12 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
                         {
                             const LONG mouseX = rawInput.data.mouse.lLastX;
                             const LONG mouseY = rawInput.data.mouse.lLastY;
+                            const bool interactable = window.Interactable();
 
-                            InvokeEvent(window.MouseMoveCallBack, mouseX, mouseY);
+                            if(interactable)
+                            {
+                                InvokeEvent(window.MouseMoveCallBack, mouseX, mouseY);
+                            }                   
 
                             // Wheel data needs to be pointer casted to interpret an unsigned short as a short, with no conversion
                             // otherwise it'll overflow when going negative.
@@ -1763,7 +1775,7 @@ BF::Window::Window()
 
     HasSizeChanged = true;
 
-    _cursorMode = CursorMode::Show;
+    CursorModeCurrent = CursorMode::Show;
 
     MouseScrollCallBack = 0;
     MouseClickCallBack = 0;
@@ -1924,7 +1936,7 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
     void* lpParam = 0;
     const wchar_t* lpClassName = L"BFE::Window::AsyncThread";
 
-    const HCURSOR cursorID = LoadCursor(NULL, IDC_WAIT);
+    const HCURSOR cursorID = LoadCursor(hInstance, IDC_WAIT);
     window.CursorID = cursorID;
 
     WNDCLASS wndclass{ 0 };
@@ -1934,7 +1946,7 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
     wndclass.cbWndExtra = 0;
     wndclass.hInstance = hInstance;
     wndclass.hIcon = LoadIcon(NULL, IDI_HAND);
-    wndclass.hCursor = cursorID;
+    wndclass.hCursor = window.CursorID;
     wndclass.hbrBackground = (HBRUSH)GetStockObject(COLOR_BACKGROUND);
     wndclass.lpszMenuName = 0;
     wndclass.lpszClassName = lpClassName;
@@ -1999,8 +2011,8 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
             0, 0, 0
         };
 
-        int letWindowsChooseThisPixelFormat = ChoosePixelFormat(windowHandleToDeviceContext, &pfd);
-        bool sucessul = SetPixelFormat(windowHandleToDeviceContext, letWindowsChooseThisPixelFormat, &pfd);
+        const int letWindowsChooseThisPixelFormat = ChoosePixelFormat(windowHandleToDeviceContext, &pfd);
+        const bool sucessul = SetPixelFormat(windowHandleToDeviceContext, letWindowsChooseThisPixelFormat, &pfd);
 
     }
 
@@ -2309,15 +2321,8 @@ void BF::Window::CursorTexture()
 
 }
 
-BF::CursorMode BF::Window::CursorCaptureMode()
-{
-    return _cursorMode;
-}
-
 void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
 {
-    return;
-
 #if defined(OSUnix)
 #elif defined(OSWindows)
     RECT desktop;
@@ -2338,17 +2343,133 @@ void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
             //ClipCursor(&desktop);
             //ShowCursor(true);
 
+            printf("[Cursor] Show\n");
+
             while(ShowCursor(true) < 0);
 
-            const HCURSOR cursorLoad = LoadCursorW(NULL, IDC_HELP);
+            /*
+            HCURSOR cursor = GetCursor();
+            const bool hasCursor = cursor;
+
+            if(!hasCursor)
+            {
+                HINSTANCE hInst = nullptr; // A handle to the current instance of the application creating the cursor.
+                int xHotSpot = 19;
+                int yHotSpot = 2;
+                const int nWidth = GetSystemMetrics(SM_CXCURSOR);
+                const int nHeight = GetSystemMetrics(SM_CYCURSOR);
+                void* pvANDPlane=0;
+                void* pvXORPlane=0;        
+
+                BYTE ANDmaskCursor[] =
+                {
+                    0xFF, 0xFC, 0x3F, 0xFF,   // line 1 
+                    0xFF, 0xC0, 0x1F, 0xFF,   // line 2 
+                    0xFF, 0x00, 0x3F, 0xFF,   // line 3 
+                    0xFE, 0x00, 0xFF, 0xFF,   // line 4 
+
+                    0xF7, 0x01, 0xFF, 0xFF,   // line 5 
+                    0xF0, 0x03, 0xFF, 0xFF,   // line 6 
+                    0xF0, 0x03, 0xFF, 0xFF,   // line 7 
+                    0xE0, 0x07, 0xFF, 0xFF,   // line 8 
+
+                    0xC0, 0x07, 0xFF, 0xFF,   // line 9 
+                    0xC0, 0x0F, 0xFF, 0xFF,   // line 10 
+                    0x80, 0x0F, 0xFF, 0xFF,   // line 11 
+                    0x80, 0x0F, 0xFF, 0xFF,   // line 12 
+
+                    0x80, 0x07, 0xFF, 0xFF,   // line 13 
+                    0x00, 0x07, 0xFF, 0xFF,   // line 14 
+                    0x00, 0x03, 0xFF, 0xFF,   // line 15 
+                    0x00, 0x00, 0xFF, 0xFF,   // line 16 
+
+                    0x00, 0x00, 0x7F, 0xFF,   // line 17 
+                    0x00, 0x00, 0x1F, 0xFF,   // line 18 
+                    0x00, 0x00, 0x0F, 0xFF,   // line 19 
+                    0x80, 0x00, 0x0F, 0xFF,   // line 20 
+
+                    0x80, 0x00, 0x07, 0xFF,   // line 21 
+                    0x80, 0x00, 0x07, 0xFF,   // line 22 
+                    0xC0, 0x00, 0x07, 0xFF,   // line 23 
+                    0xC0, 0x00, 0x0F, 0xFF,   // line 24 
+
+                    0xE0, 0x00, 0x0F, 0xFF,   // line 25 
+                    0xF0, 0x00, 0x1F, 0xFF,   // line 26 
+                    0xF0, 0x00, 0x1F, 0xFF,   // line 27 
+                    0xF8, 0x00, 0x3F, 0xFF,   // line 28 
+
+                    0xFE, 0x00, 0x7F, 0xFF,   // line 29 
+                    0xFF, 0x00, 0xFF, 0xFF,   // line 30 
+                    0xFF, 0xC3, 0xFF, 0xFF,   // line 31 
+                    0xFF, 0xFF, 0xFF, 0xFF    // line 32 
+                };
+
+                // Yin-shaped cursor XOR mask 
+
+                BYTE XORmaskCursor[] =
+                {
+                    0x00, 0x00, 0x00, 0x00,   // line 1 
+                    0x00, 0x03, 0xC0, 0x00,   // line 2 
+                    0x00, 0x3F, 0x00, 0x00,   // line 3 
+                    0x00, 0xFE, 0x00, 0x00,   // line 4 
+
+                    0x0E, 0xFC, 0x00, 0x00,   // line 5 
+                    0x07, 0xF8, 0x00, 0x00,   // line 6 
+                    0x07, 0xF8, 0x00, 0x00,   // line 7 
+                    0x0F, 0xF0, 0x00, 0x00,   // line 8 
+
+                    0x1F, 0xF0, 0x00, 0x00,   // line 9 
+                    0x1F, 0xE0, 0x00, 0x00,   // line 10 
+                    0x3F, 0xE0, 0x00, 0x00,   // line 11 
+                    0x3F, 0xE0, 0x00, 0x00,   // line 12 
+
+                    0x3F, 0xF0, 0x00, 0x00,   // line 13 
+                    0x7F, 0xF0, 0x00, 0x00,   // line 14 
+                    0x7F, 0xF8, 0x00, 0x00,   // line 15 
+                    0x7F, 0xFC, 0x00, 0x00,   // line 16 
+
+                    0x7F, 0xFF, 0x00, 0x00,   // line 17 
+                    0x7F, 0xFF, 0x80, 0x00,   // line 18 
+                    0x7F, 0xFF, 0xE0, 0x00,   // line 19 
+                    0x3F, 0xFF, 0xE0, 0x00,   // line 20 
+
+                    0x3F, 0xC7, 0xF0, 0x00,   // line 21 
+                    0x3F, 0x83, 0xF0, 0x00,   // line 22 
+                    0x1F, 0x83, 0xF0, 0x00,   // line 23 
+                    0x1F, 0x83, 0xE0, 0x00,   // line 24 
+
+                    0x0F, 0xC7, 0xE0, 0x00,   // line 25 
+                    0x07, 0xFF, 0xC0, 0x00,   // line 26 
+                    0x07, 0xFF, 0xC0, 0x00,   // line 27 
+                    0x01, 0xFF, 0x80, 0x00,   // line 28 
+
+                    0x00, 0xFF, 0x00, 0x00,   // line 29 
+                    0x00, 0x3C, 0x00, 0x00,   // line 30 
+                    0x00, 0x00, 0x00, 0x00,   // line 31 
+                    0x00, 0x00, 0x00, 0x00    // line 32 
+                };
+
+                cursor = CreateCursor(hInst, xHotSpot, yHotSpot, nWidth, nHeight, ANDmaskCursor, XORmaskCursor);
+            }
+
+            CURSORINFO cursorInfo{ 0 };
+            cursorInfo.cbSize = sizeof(CURSORINFO);
+
+            const bool sucessfulInfoGet = GetCursorInfo(&cursorInfo);
+            */
+
+
+            //const HCURSOR cursorLoad = CreateCursor(NULL, IDC_HELP);
             const bool clipResult = ClipCursor(NULL);
-            const HCURSOR cursorSet = SetCursor(cursorLoad);
-            const bool showResult = ShowCursor(true);    
+            const HCURSOR cursorSet = SetCursor(CursorID);
+           //const bool showResult = ShowCursor(true);    
 
             break;
         }
         case CursorMode::Lock:
         {
+            printf("[Cursor] Lock\n");
+
             // Capture cursor
             {
                 RECT clipRect;
@@ -2362,6 +2483,10 @@ void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
         }
         case CursorMode::LockAndHide:
         {
+            printf("[Cursor] Lock and hide\n");
+
+            while(ShowCursor(false) >= 0);
+            
             {
                 RECT clipRect;
                 GetClientRect(ID, &clipRect);
@@ -2379,13 +2504,26 @@ void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
                 bool sucessClip = ClipCursor(&clipRect);
             }
 
-            //SetCursor(NULL);
+
+            CURSORINFO cursorInfo{ 0 };
+            cursorInfo.cbSize = sizeof(CURSORINFO);
+
+            const bool sucessfulInfoGet = GetCursorInfo(&cursorInfo);
+
+            HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+
+            CONSOLE_CURSOR_INFO lpCursor;
+            lpCursor.bVisible = false;
+            lpCursor.dwSize = sizeof(CONSOLE_CURSOR_INFO);
+            bool y = SetConsoleCursorInfo(console, &lpCursor);
+
+            printf("");
 
             break;
         }
     }
 
-    _cursorMode = cursorMode;
+    CursorModeCurrent = cursorMode;
 #endif
 }
 
@@ -2460,4 +2598,25 @@ bool BF::Window::FrameBufferContextRelease()
 #endif
 
     return successful;
+}
+
+bool BF::Window::Interactable()
+{
+    bool react = false;
+
+    switch(CursorModeCurrent)
+    {
+        case CursorMode::Ignore:
+        case CursorMode::Show:
+            react = false;
+            break;
+
+        case CursorMode::Invisible:
+        case CursorMode::Lock:
+        case CursorMode::LockAndHide:
+            react = true;
+            break;
+    }
+
+    return react;
 }

@@ -533,7 +533,7 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
 
     if(keyboard.R.IsShortPressed())
     {
-        switch(_mainWindow.CursorCaptureMode())
+        switch(_mainWindow.CursorModeCurrent)
         {
             case CursorMode::Show:
             {
