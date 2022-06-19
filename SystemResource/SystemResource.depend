@@ -4140,7 +4140,7 @@
 	<semaphore.h>
 	<windows.h>
 
-1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/OS/OSDefine.h
+1655597215 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/OS/OSDefine.h
 	<stdint.h>
 	<SdkDdkVer.h>
 
@@ -4171,7 +4171,7 @@
 	"../Math.h"
 	<cstdio>
 
-1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Math.h
+1655591593 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Math.h
 
 1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Matrix4x4.hpp
 	"Vector3.hpp"
@@ -4416,7 +4416,7 @@
 	"ControllerData.h"
 	<Window/Window.h>
 
-1655505646 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Window/Window.h
+1655649759 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Window/Window.h
 	<Async/Thread.h>
 	<Controller/KeyBoardKey.h>
 	<Controller/KeyBoardKey.h>
@@ -4960,7 +4960,7 @@
 1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Shape.cpp
 	"Shape.h"
 
-1643113130 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Square.cpp
+1655591604 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Square.cpp
 	"Square.h"
 
 1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Square.h
@@ -5325,7 +5325,7 @@
 1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/ID3/ID3Version.cpp
 	"ID3Version.h"
 
-1655505646 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/BMP/BMP.cpp
+1655591604 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/BMP/BMP.cpp
 	"BMP.h"
 	<cassert>
 	<File/File.h>
@@ -6209,12 +6209,15 @@
 	<OS/OSDefine.h>
 	<winuser.rh>
 
-1655421438 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Window/Window.cpp
+1655649732 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Window/Window.cpp
 	"Window.h"
 	<GL/glew.h>
 	<GL/gl.h>
 	<stdio.h>
 	<X11/cursorfont.h>
+	<X11/extensions/XInput.h>
+	<X11/extensions/XInput2.h>
+	<X11/Xmd.h>
 	<windowsx.h>
 	<WinUser.h>
 	<wtypes.h>
@@ -6233,8 +6236,13 @@
 	<cstdlib>
 	<libgen.h>
 
-1655505646 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Hardware/Memory/MemoryProtectionMode.h
+1655506036 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Hardware/Memory/MemoryProtectionMode.h
 	<OS/OSDefine.h>
 
 1655505646 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Container/ClusterLongLong.h
+
+1655505646 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Hardware/Memory/MemoryProtectionMode.cpp
+	"MemoryProtectionMode.h"
+	<sys/mman.h>
+	<Windows.h>
 

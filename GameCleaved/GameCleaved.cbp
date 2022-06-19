@@ -24,6 +24,8 @@
 					<Add library="GL" />
 					<Add library="GLEW" />
 					<Add library="pthread" />
+					<Add library="Xext" />
+					<Add library="Xi" />
 				</Linker>
 			</Target>
 			<Target title="Release">

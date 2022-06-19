@@ -82,10 +82,10 @@ namespace BF
 	typedef void (*MouseScrollEvent)(const MouseScrollDirection mouseScrollDirection);
 	typedef void (*MouseClickEvent)(const MouseButton mouseButton, const ButtonState buttonState);
 	typedef void (*MouseClickDoubleEvent)(const MouseButton mouseButton);
-	typedef void (*MouseMoveEvent)(const short x, const short y);	
+	typedef void (*MouseMoveEvent)(const double positionX, const double positionY, const double deltaX, const double deltaY);
 	typedef void (*MouseEnterEvent)();
 	typedef void (*MouseLeaveEvent)();
-	
+
 	// Keyboard
 	typedef void (*KeyBoardKeyEvent)(const KeyBoardKeyInfo keyBoardKeyInfo);
 
@@ -111,6 +111,11 @@ namespace BF
 		bool HasSizeChanged;
 		CursorMode CursorModeCurrent;
 
+		double MousePositionX;
+		double MousePositionY;
+		double MouseDeltaX;
+		double MouseDeltaY;
+
 		unsigned int X;
 		unsigned int Y;
 		unsigned int Width;
@@ -118,7 +123,7 @@ namespace BF
 
 		wchar_t Title[WindowTitleSizeMax];
 
-		#if defined(OSUnix) 
+		#if defined(OSUnix)
 		Display* DisplayCurrent;
 		WindowID WindowRoot;
 		#elif defined(OSWindows)

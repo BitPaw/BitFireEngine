@@ -69,7 +69,7 @@ namespace BF
         LinkedList<Collider*> _physicList;
         //---------------
 
-        // Render -runtime info      
+        // Render -runtime info
         unsigned int _lastUsedShaderProgram;
         unsigned int _defaultShaderID;
         unsigned int _defaultTextureID;
@@ -83,12 +83,12 @@ namespace BF
         // ASYNC LOCKS
         AsyncLock _imageAdd;
         AsyncLock _modelAdd;
-        //-------------------------        
+        //-------------------------
 
         static void GLAPIENTRY ErrorMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 
         static void OnMouseButton(const MouseButton mouseButton, const ButtonState buttonState);
-        static void OnMouseMove(const short x, const short y);
+        static void OnMouseMove(const double positionX, const double positionY, const double deltaX, const double deltaY);
         static void OnKeyBoardKey(const KeyBoardKeyInfo keyBoardKeyInfo);
         static void OnWindowCreated(Window& window);
         static void OnWindowSizeChanged(const size_t width, const size_t height);
@@ -100,7 +100,7 @@ namespace BF
         //---------------------------------------------------------------------
 
 		public:
-		bool IsRunning;  
+		bool IsRunning;
         Camera MainCamera;
         Font* DefaultFont;
         SkyBox* DefaultSkyBox;
@@ -122,16 +122,16 @@ namespace BF
 
 
 
-       
+
 
        // ShaderProgram ShaderHitBox;
 
-       // BF::Model CubeHitBoxViewModel;      
+       // BF::Model CubeHitBoxViewModel;
 
         //void Load(Sprite& sprite, const char* model, const char* texturePath);
       //  Matrix4x4<float> TransformBoundingBox(Matrix4x4<float> modelMatrix, Vector3<float> boundingBox, bool half);
 
-     
+
         void Register(Texture& texture);
         void Register(TextureCube& textureCube);
         void Register(Renderable& renderable, const Model& model);
@@ -159,11 +159,11 @@ namespace BF
 
         FileActionResult Load(Resource* resource, const wchar_t* filePath, const bool loadAsynchronously = true);
         FileActionResult Load(Level& level, const wchar_t* filePath, const bool loadAsynchronously = true);
-       
 
-        FileActionResult Load(Font& font, const wchar_t* filePath, bool loadAsynchronously = true);     
+
+        FileActionResult Load(Font& font, const wchar_t* filePath, bool loadAsynchronously = true);
         FileActionResult Load(ShaderProgram& shaderProgram, const wchar_t* vertexShaderFilePath, const wchar_t* fragmentShaderFilePath);
-       
+
         // Model
         FileActionResult Load(Model& model, const wchar_t* filePath, const bool loadAsynchronously = true);
         FileActionResult Load(Renderable& renderable, const wchar_t* filePath, bool loadAsynchronously = true);
@@ -177,8 +177,8 @@ namespace BF
         // Audio
         FileActionResult Load(Sound& sound, const wchar_t* filePath, const bool loadAsynchronously = true);
         FileActionResult Load(AudioClip& audioClip, const wchar_t* filePath, bool loadAsynchronously = true);
-        
-   
+
+
         FileActionResult Load(Collider* collider);
         FileActionResult Load
         (
@@ -194,7 +194,7 @@ namespace BF
         );
 
         void UnloadAll();
- 
+
 
         void ModelsPhysicsApply(float deltaTime);
 
@@ -207,7 +207,7 @@ namespace BF
 
         // Convert
         static const unsigned short ToRenderMode(const RenderMode renderMode);
-        
+
         static const ShaderType ToShaderType(const OpenGLID token);
         static const OpenGLID ToShaderType(const ShaderType shaderType);
 

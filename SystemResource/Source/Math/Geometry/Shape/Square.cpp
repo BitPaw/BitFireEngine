@@ -1,7 +1,7 @@
 #include "Square.h"
 
 BF::Square::Square()
-{	
+{
 	Set(1);
 }
 
@@ -17,7 +17,7 @@ BF::Square::Square(Vector2<float> size)
 
 float BF::Square::SideLength()
 {
-	return Math::Absolute(PointA.X - PointB.X);
+	return Math::Absolute__(PointA.X - PointB.X);
 }
 
 float BF::Square::SurfaceArea()

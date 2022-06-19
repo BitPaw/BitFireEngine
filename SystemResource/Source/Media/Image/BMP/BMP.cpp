@@ -92,7 +92,7 @@ BF::FileActionResult BF::BMP::Load(const unsigned char* fileData, const size_t f
     }
     //-------------------------------------------------------------------------
 
-    //---[ DIP ]---------------------------------------------------------------    
+    //---[ DIP ]---------------------------------------------------------------
     {
         dataStream.Read(InfoHeader.HeaderSize, Endian::Little);
 
@@ -125,7 +125,7 @@ BF::FileActionResult BF::BMP::Load(const unsigned char* fileData, const size_t f
 
                 if(InfoHeaderType == BMPInfoHeaderType::OS22XBitMapHeader)
                 {
-                    unsigned short paddingBytes = 0; // Padding.Ignored and should be zero                    
+                    unsigned short paddingBytes = 0; // Padding.Ignored and should be zero
 
                     dataStream.Read(InfoHeader.HorizontalandVerticalResolutions, Endian::Little);
                     dataStream.Read(paddingBytes, Endian::Little);
@@ -142,21 +142,21 @@ BF::FileActionResult BF::BMP::Load(const unsigned char* fileData, const size_t f
             }
             default:
             {
-                // Unkown Header 
+                // Unkown Header
                 return FileActionResult::FormatNotSupported;
             }
         }
     }
-    //-----------------------------------------------------------    
+    //-----------------------------------------------------------
 
     PixelDataSize = InfoHeader.Width * InfoHeader.Height * (InfoHeader.NumberOfBitsPerPixel / 8);
 
     PixelData = Memory::Allocate<Byte>(PixelDataSize);
 
-    //---[ Pixel Data ]--------------------------------------------------------    
+    //---[ Pixel Data ]--------------------------------------------------------
     const size_t dataRowSize = InfoHeader.Width * (InfoHeader.NumberOfBitsPerPixel / 8);
     const size_t fullRowSize = Math::Floor((InfoHeader.NumberOfBitsPerPixel * InfoHeader.Width + 31) / 32.0f) * 4;
-    const size_t padding = Math::Absolute((int)fullRowSize - (int)dataRowSize);
+    const size_t padding = Math::Absolute__((int)fullRowSize - (int)dataRowSize);
     size_t amountOfRows = PixelDataSize / fullRowSize;
     size_t pixelDataOffset = 0;
 
@@ -174,7 +174,7 @@ BF::FileActionResult BF::BMP::Load(const unsigned char* fileData, const size_t f
 }
 
 BF::FileActionResult BF::BMP::Save(const wchar_t* filePath)
-{ 
+{
     File file;
 
     // Open file
@@ -187,7 +187,7 @@ BF::FileActionResult BF::BMP::Save(const wchar_t* filePath)
             return openResult;
         }
     }
- 
+
     // Write header
     {
         unsigned int fileSize = InfoHeader.Width * InfoHeader.Height * 3 + 54u;
@@ -196,7 +196,7 @@ BF::FileActionResult BF::BMP::Save(const wchar_t* filePath)
         file.Write(fileSize, Endian::Little);
         file.Write(0u, Endian::Little);
         file.Write(54u, Endian::Little);
-    }   
+    }
 
     //------<Windows-Header>-----------
     file.Write(InfoHeader.HeaderSize, Endian::Little);
@@ -248,7 +248,7 @@ BF::FileActionResult BF::BMP::ConvertFrom(Image& image)
 }
 
 BF::FileActionResult BF::BMP::ConvertTo(Image& image)
-{    
+{
     unsigned char* pixelData = Memory::Allocate<unsigned char>(PixelDataSize);
 
     if (!pixelData)
@@ -265,7 +265,7 @@ BF::FileActionResult BF::BMP::ConvertTo(Image& image)
     Memory::Copy(image.PixelData, PixelData, image.PixelDataSize);
 
     //image.FlipHorizontal(); ??
-    
+
     //image.RemoveColor(0,0,0);
 
     return FileActionResult::Successful;

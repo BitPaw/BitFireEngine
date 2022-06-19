@@ -9,6 +9,9 @@
 #if defined(OSUnix)
 
 #include <X11/cursorfont.h>
+#include <X11/extensions/XInput.h>
+#include <X11/extensions/XInput2.h>
+#include <X11/Xmd.h>
 
 #define DefautPositionX 00000000000000
 #define DefautPositionY 00000000000000
@@ -315,7 +318,58 @@ void BF::Window::OnWindowEvent(BF::Window& window, const XEvent& event)
         }
         case GenericEvent:
         {
-            printf("[Event] GenericEvent \n");
+            XGenericEventCookie cookie = event.xcookie; // Make Copy
+
+            const int result = XGetEventData(window.DisplayCurrent, &cookie);
+            const bool sucessful = result != 0 && cookie.data;
+
+            if (sucessful)
+            {
+                switch(cookie.evtype)
+                {
+                    case XI_RawMotion:
+                    {
+                        XIRawEvent* re = (XIRawEvent*)cookie.data;
+
+                        if (re->valuators.mask_len)
+                        {
+                            const double* values = re->raw_values;
+                            const bool isX = XIMaskIsSet(re->valuators.mask, 0);
+                            const bool isY = XIMaskIsSet(re->valuators.mask, 1);
+                            double xpos = 0;
+                            double ypos = 0;
+
+                            if (isX)
+                            {
+                                xpos += *values;
+                                ++values;
+                            }
+
+                            if(isY)
+                            {
+                                ypos += *values;
+                            }
+
+
+                            window.MouseDeltaX = window.MousePositionX - xpos;
+                            window.MouseDeltaY = window.MousePositionY - ypos;
+
+                            window.MousePositionX = xpos;
+                            window.MousePositionY = ypos;
+
+                            printf("[Event] RawMotion %5.4lf %5.4lf\n", window.MouseDeltaX, window.MouseDeltaY);
+
+                            InvokeEvent(window.MouseMoveCallBack, window.MousePositionX, window.MousePositionY, window.MouseDeltaX, window.MouseDeltaY);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                printf("[Event] GenericEvent %i\n", cookie.evtype);
+            }
+
+            XFreeEventData(window.DisplayCurrent, &cookie);
 
             break;
         }
@@ -997,7 +1051,7 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
             //wParam is unused
             const MINMAXINFO* minmaxInfo = (MINMAXINFO*)lParam;
             const auto width = minmaxInfo->ptMaxSize.x;
-            const auto height = minmaxInfo->ptMaxSize.y;      
+            const auto height = minmaxInfo->ptMaxSize.y;
 
             // Not useable for resize event. Its not what it seems
 
@@ -1147,7 +1201,7 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
                             if(interactable)
                             {
                                 InvokeEvent(window.MouseMoveCallBack, mouseX, mouseY);
-                            }                   
+                            }
 
                             // Wheel data needs to be pointer casted to interpret an unsigned short as a short, with no conversion
                             // otherwise it'll overflow when going negative.
@@ -1806,6 +1860,7 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
 
     BF::Window& window = *((Window*)windowAdress);
 
+
 #if defined(OSUnix)
     XInitThreads();
 
@@ -1907,8 +1962,8 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
 
     window.OpenGLConext = glContext;
 
-#if 0
-    bool   ret    = false;
+#if 0 // Grab means literally Drag%Drop grab. This is not mouse motion
+    //bool   ret    = false;
     XID cursor = XCreateFontCursor(display, XC_crosshair);
     int    root   = DefaultRootWindow(display);
 
@@ -1917,14 +1972,37 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
         display,
         root,
         0,
-        ButtonMotionMask | ButtonPressMask | ButtonReleaseMask,
+        ButtonMotionMask,
         GrabModeAsync,
         GrabModeAsync,
         root,
-        cursor,
+        None,
         CurrentTime
     );
 #endif
+
+
+    // Raw mouse movement
+
+    const int root = DefaultRootWindow(display);
+
+    XIEventMask eventmask{0};
+    const size_t maskLength = (XI_LASTEVENT + 7)/8;
+    unsigned char mask[maskLength]{0};
+
+
+    memset(mask, 0, maskLength);
+    XISetMask(mask, XI_RawMotion);
+    //XISetMask(mask, XI_RawButtonPress);
+    //XISetMask(mask, XI_RawKeyPress);
+
+    eventmask.deviceid = XIAllMasterDevices;
+    eventmask.mask_len = maskLength;
+    eventmask.mask = mask;
+
+
+    XISelectEvents(display, root, &eventmask, 1);
+    XFlush(display);
 
 
 #elif defined(OSWindows)
@@ -2097,6 +2175,36 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
 
     window.IsRunning = true;
 
+
+    int numberOfDevices = 0;
+
+    const XDeviceInfo* deviceInfoList = XListInputDevices(display, &numberOfDevices);
+
+    for(int i = 0; i < numberOfDevices ; ++i)
+    {
+        const XDeviceInfo& xDeviceInfo = deviceInfoList[i];
+
+        printf
+        (
+            "[Device] ID:%i Name:%s Use:%i\n",
+            xDeviceInfo.id,
+            xDeviceInfo.name,
+            xDeviceInfo.use
+        );
+
+        // XOpenDevice(display, i); // Cannot open mouse or keyboard??  invalid call
+
+        // XEventClass eventList[8]={0,0,0,0,0,0,0,0};
+       //  int listSize = xDeviceInfo.num_classes;
+
+       //  int resultE = XSelectExtensionEvent(display, windowID, eventList, listSize);
+
+        // printf("");
+    }
+
+
+
+
     while(window.IsRunning)
     {
 #if defined(OSUnix)
@@ -2126,12 +2234,13 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
         );*/
 
 
-        XLockDisplay(window.DisplayCurrent);
 
+
+        XLockDisplay(window.DisplayCurrent);
 
         XNextEvent(display, &windowEvent);
 
-              XUnlockDisplay(window.DisplayCurrent);
+        XUnlockDisplay(window.DisplayCurrent);
 
         OnWindowEvent(window, windowEvent);
 
@@ -2334,7 +2443,7 @@ void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
     // and the bottom right corner will have coordinates
     // (horizontal, vertical)
     unsigned int horizontal = desktop.right;
-    unsigned int vertical = desktop.bottom; 
+    unsigned int vertical = desktop.bottom;
 
     switch(cursorMode)
     {
@@ -2359,94 +2468,94 @@ void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
                 const int nWidth = GetSystemMetrics(SM_CXCURSOR);
                 const int nHeight = GetSystemMetrics(SM_CYCURSOR);
                 void* pvANDPlane=0;
-                void* pvXORPlane=0;        
+                void* pvXORPlane=0;
 
                 BYTE ANDmaskCursor[] =
                 {
-                    0xFF, 0xFC, 0x3F, 0xFF,   // line 1 
-                    0xFF, 0xC0, 0x1F, 0xFF,   // line 2 
-                    0xFF, 0x00, 0x3F, 0xFF,   // line 3 
-                    0xFE, 0x00, 0xFF, 0xFF,   // line 4 
+                    0xFF, 0xFC, 0x3F, 0xFF,   // line 1
+                    0xFF, 0xC0, 0x1F, 0xFF,   // line 2
+                    0xFF, 0x00, 0x3F, 0xFF,   // line 3
+                    0xFE, 0x00, 0xFF, 0xFF,   // line 4
 
-                    0xF7, 0x01, 0xFF, 0xFF,   // line 5 
-                    0xF0, 0x03, 0xFF, 0xFF,   // line 6 
-                    0xF0, 0x03, 0xFF, 0xFF,   // line 7 
-                    0xE0, 0x07, 0xFF, 0xFF,   // line 8 
+                    0xF7, 0x01, 0xFF, 0xFF,   // line 5
+                    0xF0, 0x03, 0xFF, 0xFF,   // line 6
+                    0xF0, 0x03, 0xFF, 0xFF,   // line 7
+                    0xE0, 0x07, 0xFF, 0xFF,   // line 8
 
-                    0xC0, 0x07, 0xFF, 0xFF,   // line 9 
-                    0xC0, 0x0F, 0xFF, 0xFF,   // line 10 
-                    0x80, 0x0F, 0xFF, 0xFF,   // line 11 
-                    0x80, 0x0F, 0xFF, 0xFF,   // line 12 
+                    0xC0, 0x07, 0xFF, 0xFF,   // line 9
+                    0xC0, 0x0F, 0xFF, 0xFF,   // line 10
+                    0x80, 0x0F, 0xFF, 0xFF,   // line 11
+                    0x80, 0x0F, 0xFF, 0xFF,   // line 12
 
-                    0x80, 0x07, 0xFF, 0xFF,   // line 13 
-                    0x00, 0x07, 0xFF, 0xFF,   // line 14 
-                    0x00, 0x03, 0xFF, 0xFF,   // line 15 
-                    0x00, 0x00, 0xFF, 0xFF,   // line 16 
+                    0x80, 0x07, 0xFF, 0xFF,   // line 13
+                    0x00, 0x07, 0xFF, 0xFF,   // line 14
+                    0x00, 0x03, 0xFF, 0xFF,   // line 15
+                    0x00, 0x00, 0xFF, 0xFF,   // line 16
 
-                    0x00, 0x00, 0x7F, 0xFF,   // line 17 
-                    0x00, 0x00, 0x1F, 0xFF,   // line 18 
-                    0x00, 0x00, 0x0F, 0xFF,   // line 19 
-                    0x80, 0x00, 0x0F, 0xFF,   // line 20 
+                    0x00, 0x00, 0x7F, 0xFF,   // line 17
+                    0x00, 0x00, 0x1F, 0xFF,   // line 18
+                    0x00, 0x00, 0x0F, 0xFF,   // line 19
+                    0x80, 0x00, 0x0F, 0xFF,   // line 20
 
-                    0x80, 0x00, 0x07, 0xFF,   // line 21 
-                    0x80, 0x00, 0x07, 0xFF,   // line 22 
-                    0xC0, 0x00, 0x07, 0xFF,   // line 23 
-                    0xC0, 0x00, 0x0F, 0xFF,   // line 24 
+                    0x80, 0x00, 0x07, 0xFF,   // line 21
+                    0x80, 0x00, 0x07, 0xFF,   // line 22
+                    0xC0, 0x00, 0x07, 0xFF,   // line 23
+                    0xC0, 0x00, 0x0F, 0xFF,   // line 24
 
-                    0xE0, 0x00, 0x0F, 0xFF,   // line 25 
-                    0xF0, 0x00, 0x1F, 0xFF,   // line 26 
-                    0xF0, 0x00, 0x1F, 0xFF,   // line 27 
-                    0xF8, 0x00, 0x3F, 0xFF,   // line 28 
+                    0xE0, 0x00, 0x0F, 0xFF,   // line 25
+                    0xF0, 0x00, 0x1F, 0xFF,   // line 26
+                    0xF0, 0x00, 0x1F, 0xFF,   // line 27
+                    0xF8, 0x00, 0x3F, 0xFF,   // line 28
 
-                    0xFE, 0x00, 0x7F, 0xFF,   // line 29 
-                    0xFF, 0x00, 0xFF, 0xFF,   // line 30 
-                    0xFF, 0xC3, 0xFF, 0xFF,   // line 31 
-                    0xFF, 0xFF, 0xFF, 0xFF    // line 32 
+                    0xFE, 0x00, 0x7F, 0xFF,   // line 29
+                    0xFF, 0x00, 0xFF, 0xFF,   // line 30
+                    0xFF, 0xC3, 0xFF, 0xFF,   // line 31
+                    0xFF, 0xFF, 0xFF, 0xFF    // line 32
                 };
 
-                // Yin-shaped cursor XOR mask 
+                // Yin-shaped cursor XOR mask
 
                 BYTE XORmaskCursor[] =
                 {
-                    0x00, 0x00, 0x00, 0x00,   // line 1 
-                    0x00, 0x03, 0xC0, 0x00,   // line 2 
-                    0x00, 0x3F, 0x00, 0x00,   // line 3 
-                    0x00, 0xFE, 0x00, 0x00,   // line 4 
+                    0x00, 0x00, 0x00, 0x00,   // line 1
+                    0x00, 0x03, 0xC0, 0x00,   // line 2
+                    0x00, 0x3F, 0x00, 0x00,   // line 3
+                    0x00, 0xFE, 0x00, 0x00,   // line 4
 
-                    0x0E, 0xFC, 0x00, 0x00,   // line 5 
-                    0x07, 0xF8, 0x00, 0x00,   // line 6 
-                    0x07, 0xF8, 0x00, 0x00,   // line 7 
-                    0x0F, 0xF0, 0x00, 0x00,   // line 8 
+                    0x0E, 0xFC, 0x00, 0x00,   // line 5
+                    0x07, 0xF8, 0x00, 0x00,   // line 6
+                    0x07, 0xF8, 0x00, 0x00,   // line 7
+                    0x0F, 0xF0, 0x00, 0x00,   // line 8
 
-                    0x1F, 0xF0, 0x00, 0x00,   // line 9 
-                    0x1F, 0xE0, 0x00, 0x00,   // line 10 
-                    0x3F, 0xE0, 0x00, 0x00,   // line 11 
-                    0x3F, 0xE0, 0x00, 0x00,   // line 12 
+                    0x1F, 0xF0, 0x00, 0x00,   // line 9
+                    0x1F, 0xE0, 0x00, 0x00,   // line 10
+                    0x3F, 0xE0, 0x00, 0x00,   // line 11
+                    0x3F, 0xE0, 0x00, 0x00,   // line 12
 
-                    0x3F, 0xF0, 0x00, 0x00,   // line 13 
-                    0x7F, 0xF0, 0x00, 0x00,   // line 14 
-                    0x7F, 0xF8, 0x00, 0x00,   // line 15 
-                    0x7F, 0xFC, 0x00, 0x00,   // line 16 
+                    0x3F, 0xF0, 0x00, 0x00,   // line 13
+                    0x7F, 0xF0, 0x00, 0x00,   // line 14
+                    0x7F, 0xF8, 0x00, 0x00,   // line 15
+                    0x7F, 0xFC, 0x00, 0x00,   // line 16
 
-                    0x7F, 0xFF, 0x00, 0x00,   // line 17 
-                    0x7F, 0xFF, 0x80, 0x00,   // line 18 
-                    0x7F, 0xFF, 0xE0, 0x00,   // line 19 
-                    0x3F, 0xFF, 0xE0, 0x00,   // line 20 
+                    0x7F, 0xFF, 0x00, 0x00,   // line 17
+                    0x7F, 0xFF, 0x80, 0x00,   // line 18
+                    0x7F, 0xFF, 0xE0, 0x00,   // line 19
+                    0x3F, 0xFF, 0xE0, 0x00,   // line 20
 
-                    0x3F, 0xC7, 0xF0, 0x00,   // line 21 
-                    0x3F, 0x83, 0xF0, 0x00,   // line 22 
-                    0x1F, 0x83, 0xF0, 0x00,   // line 23 
-                    0x1F, 0x83, 0xE0, 0x00,   // line 24 
+                    0x3F, 0xC7, 0xF0, 0x00,   // line 21
+                    0x3F, 0x83, 0xF0, 0x00,   // line 22
+                    0x1F, 0x83, 0xF0, 0x00,   // line 23
+                    0x1F, 0x83, 0xE0, 0x00,   // line 24
 
-                    0x0F, 0xC7, 0xE0, 0x00,   // line 25 
-                    0x07, 0xFF, 0xC0, 0x00,   // line 26 
-                    0x07, 0xFF, 0xC0, 0x00,   // line 27 
-                    0x01, 0xFF, 0x80, 0x00,   // line 28 
+                    0x0F, 0xC7, 0xE0, 0x00,   // line 25
+                    0x07, 0xFF, 0xC0, 0x00,   // line 26
+                    0x07, 0xFF, 0xC0, 0x00,   // line 27
+                    0x01, 0xFF, 0x80, 0x00,   // line 28
 
-                    0x00, 0xFF, 0x00, 0x00,   // line 29 
-                    0x00, 0x3C, 0x00, 0x00,   // line 30 
-                    0x00, 0x00, 0x00, 0x00,   // line 31 
-                    0x00, 0x00, 0x00, 0x00    // line 32 
+                    0x00, 0xFF, 0x00, 0x00,   // line 29
+                    0x00, 0x3C, 0x00, 0x00,   // line 30
+                    0x00, 0x00, 0x00, 0x00,   // line 31
+                    0x00, 0x00, 0x00, 0x00    // line 32
                 };
 
                 cursor = CreateCursor(hInst, xHotSpot, yHotSpot, nWidth, nHeight, ANDmaskCursor, XORmaskCursor);
@@ -2462,7 +2571,7 @@ void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
             //const HCURSOR cursorLoad = CreateCursor(NULL, IDC_HELP);
             const bool clipResult = ClipCursor(NULL);
             const HCURSOR cursorSet = SetCursor(CursorID);
-           //const bool showResult = ShowCursor(true);    
+           //const bool showResult = ShowCursor(true);
 
             break;
         }
@@ -2486,7 +2595,7 @@ void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
             printf("[Cursor] Lock and hide\n");
 
             while(ShowCursor(false) >= 0);
-            
+
             {
                 RECT clipRect;
                 GetClientRect(ID, &clipRect);

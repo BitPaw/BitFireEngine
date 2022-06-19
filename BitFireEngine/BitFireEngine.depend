@@ -1215,7 +1215,7 @@
 	"../Math.h"
 	<cstdio>
 
-1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Math.h
+1655591593 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Math.h
 
 1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/AngleRadians.hpp
 	"AngleDegree.hpp"
@@ -1418,7 +1418,7 @@
 
 1655431476 /home/bitpaw/Desktop/BGEII/BitFireEngine/BitFireEngine/Source/Player/Player.h
 
-1655431476 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/BitFireEngine/Source/System/BitFireEngine.cpp
+1655580683 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/BitFireEngine/Source/System/BitFireEngine.cpp
 	"BitFireEngine.h"
 	"Device/InputContainer.h"
 	"../UI/UIText.h"
@@ -1433,7 +1433,7 @@
 	<Hardware/Memory/Memory.h>
 	<stdlib.h>
 
-1655431476 /home/bitpaw/Desktop/BGEII/BitFireEngine/BitFireEngine/Source/System/BitFireEngine.h
+1655505646 /home/bitpaw/Desktop/BGEII/BitFireEngine/BitFireEngine/Source/System/BitFireEngine.h
 	"IBitFireEngineListener.hpp"
 	<GL/glew.h>
 	<Graphic/OpenGL/OpenGL.h>
@@ -1486,7 +1486,7 @@
 	<chrono>
 	"../OS/OSDefine.h"
 
-1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/OS/OSDefine.h
+1655597215 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/OS/OSDefine.h
 	<stdint.h>
 	<SdkDdkVer.h>
 
@@ -1513,7 +1513,7 @@
 
 1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/AudioSource.h
 
-1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Window/Window.h
+1655649759 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Window/Window.h
 	<Async/Thread.h>
 	<Controller/KeyBoardKey.h>
 	<Controller/KeyBoardKey.h>
@@ -1553,7 +1553,7 @@
 1655431476 /home/bitpaw/Desktop/BGEII/BitFireEngine/BitFireEngine/Source/UI/UIElement.h
 	"../../../SystemResource/Source/Model/Model.h"
 
-1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/File.h
+1655505841 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/File.h
 	<cstdlib>
 	<cstdio>
 	<cwchar>
@@ -1591,17 +1591,18 @@
 	<OS/OSDefine.h>
 	<cstddef>
 
-1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/ByteStream.h
+1655505646 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/ByteStream.h
 	<cstddef>
 	"Endian.h"
 	<Container/ClusterShort.h>
 	<Container/ClusterInt.h>
+	<Container/ClusterLongLong.h>
 
 1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/Endian.h
 
-1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Container/ClusterShort.h
+1655505646 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Container/ClusterShort.h
 
-1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Container/ClusterInt.h
+1655505646 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Container/ClusterInt.h
 
 1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/ErrorCode.h
 
@@ -1613,7 +1614,7 @@
 	"BMPInfoHeaderType.h"
 	"../IImageFormat.h"
 
-1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/BMP/BMPType.h
+1655505646 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/BMP/BMPType.h
 	<Container/ClusterInt.h>
 
 1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/BMP/BMPInfoHeader.h
@@ -1641,8 +1642,9 @@
 
 1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Graphic/OpenGL/ResourceType.hpp
 
-1655464043 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Hardware/Memory/Memory.h
+1655505646 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Hardware/Memory/Memory.h
 	"MemoryUsage.h"
+	"MemoryProtectionMode.h"
 	<OS/OSDefine.h>
 	<ErrorCode.h>
 	<File/File.h>
@@ -1732,4 +1734,9 @@
 	<IFileFormat.hpp>
 
 1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Interpolate.h
+
+1655505646 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Container/ClusterLongLong.h
+
+1655506036 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Hardware/Memory/MemoryProtectionMode.h
+	<OS/OSDefine.h>
 

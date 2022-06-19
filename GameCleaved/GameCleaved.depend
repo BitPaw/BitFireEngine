@@ -951,7 +951,7 @@
 	<System/Device/InputContainer.h>
 	<Camera/Camera.h>
 
-1655505646 /home/bitpaw/Desktop/BGEII/BitFireEngine/BitFireEngine/Source/System/BitFireEngine.h
+1655649814 /home/bitpaw/Desktop/BGEII/BitFireEngine/BitFireEngine/Source/System/BitFireEngine.h
 	"IBitFireEngineListener.hpp"
 	<GL/glew.h>
 	<Graphic/OpenGL/OpenGL.h>
@@ -1051,7 +1051,7 @@
 	"../Math.h"
 	<cstdio>
 
-1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Math.h
+1655591593 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Math.h
 
 1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Model/MeshIndexData.h
 
@@ -1102,7 +1102,7 @@
 	<chrono>
 	"../OS/OSDefine.h"
 
-1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/OS/OSDefine.h
+1655597215 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/OS/OSDefine.h
 	<stdint.h>
 	<SdkDdkVer.h>
 
@@ -1167,7 +1167,7 @@
 
 1655431476 /home/bitpaw/Desktop/BGEII/BitFireEngine/BitFireEngine/Source/Player/Player.h
 
-1655505646 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Window/Window.h
+1655649759 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Window/Window.h
 	<Async/Thread.h>
 	<Controller/KeyBoardKey.h>
 	<Controller/KeyBoardKey.h>

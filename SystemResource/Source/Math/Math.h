@@ -30,7 +30,7 @@ namespace BF
 		static const float GravityOnMars;
 
 		static float FastInverseSqaureRoot(float number);
-		
+
 		static double Power(double base, double exponent);
 		static double PowerOfTwo(double base);
 		static unsigned int PowerModulo(unsigned int base, unsigned int exponent, unsigned int modulo);
@@ -43,7 +43,7 @@ namespace BF
 
 		static double Pythagoras(double a, double b);
 		static double PythagorasReverse(double c, double a);
-		
+
 		static double Logarithmus(int base, double exponent);
 		static double LogarithmusBase2(double exponent);
 		static double LogarithmusBase10(double exponent);
@@ -82,8 +82,8 @@ namespace BF
 			return (int)value;
 		}
 
-		template<typename NumberType>
-		static inline constexpr NumberType Absolute(const NumberType value)
+        template<typename NumberType>
+		static inline constexpr NumberType Absolute__(const NumberType value)
 		{
 			return value < 0 ? -value : value;
 		}

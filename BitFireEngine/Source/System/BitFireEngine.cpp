@@ -368,22 +368,22 @@ void BF::BitFireEngine::OnMouseButton(const MouseButton mouseButton, const Butto
     //printf("[#][OnMouseButton]\n");
 }
 
-void BF::BitFireEngine::OnMouseMove(const short x, const short y)
+void BF::BitFireEngine::OnMouseMove(const double positionX, const double positionY, const double deltaX, const double deltaY)
 {
     BitFireEngine* engine = BitFireEngine::Instance();
     Mouse& mouse = engine->_inputContainer.MouseInput;
     Camera& camera = engine->MainCamera;
 
 #if UseRawMouseData
-    mouse.InputAxis[0] = -x;
-    mouse.InputAxis[1] = -y;
+    mouse.InputAxis[0] = -deltaX;
+    mouse.InputAxis[1] = -deltaY;
 
-    mouse.Position[0] -= x;
-    mouse.Position[1] -= y;
+    mouse.Position[0] -= deltaX;
+    mouse.Position[1] -= deltaY;
 #else
     // Calculate relative input
-    mouse.InputAxis[0] = mouse.Position[0] - x;
-    mouse.InputAxis[1] = mouse.Position[1] - y;
+    mouse.InputAxis[0] = mouse.Position[0] - deltaX;
+    mouse.InputAxis[1] = mouse.Position[1] - deltaY;
 
     // Update position
     mouse.Position[0] = x;
@@ -827,7 +827,7 @@ void BF::BitFireEngine::Register(Renderable& renderable, const Model& model)
 
                 printf
                 (
-                    "| %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f |\n", 
+                    "| %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f |\n",
                     x,
                     y,
                     z,
@@ -1656,7 +1656,7 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
                     //loadedModel->Scale(scale);
                     //loadedModel->UpdateGlobalMesh();
 
-                    Renderable* renderable = new Renderable();                
+                    Renderable* renderable = new Renderable();
 
                     Register(*renderable, *loadedModel);
 
@@ -1675,9 +1675,9 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
 
                 char filePathA[PathMaxSize];
                 wchar_t filePathW[PathMaxSize];
- 
+
                 sscanf(currentLineBuffer, "%s %s", dummyBuffer, filePathA);
-        
+
                 Text::Copy(filePathA, PathMaxSize, filePathW, PathMaxSize);
 
                 Load(*texture, filePathW, true);
