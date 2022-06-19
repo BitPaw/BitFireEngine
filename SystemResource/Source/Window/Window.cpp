@@ -357,9 +357,13 @@ void BF::Window::OnWindowEvent(BF::Window& window, const XEvent& event)
                             window.MousePositionX = xpos;
                             window.MousePositionY = ypos;
 
-                            printf("[Event] RawMotion %5.4lf %5.4lf\n", window.MouseDeltaX, window.MouseDeltaY);
+                            printf("[Event] RawMotion %5.4lf %5.4lf\n", xpos, ypos);
 
-                            InvokeEvent(window.MouseMoveCallBack, window.MousePositionX, window.MousePositionY, window.MouseDeltaX, window.MouseDeltaY);
+                            InvokeEvent(window.MouseMoveCallBack, window.MousePositionX, window.MousePositionY, xpos, ypos);
+
+                            //printf("[Event] RawMotion %5.4lf %5.4lf\n", window.MouseDeltaX, window.MouseDeltaY);
+
+                            //InvokeEvent(window.MouseMoveCallBack, window.MousePositionX, window.MousePositionY, window.MouseDeltaX, window.MouseDeltaY);
                         }
                     }
                 }
