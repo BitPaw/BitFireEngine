@@ -502,8 +502,10 @@ void BF::BitFireEngine::OnWindowCreated(Window& window)
         OpenGL::TextureMaxLoaded()
     );
 
+#if 0 // Debug
     glDebugMessageCallback(BF::BitFireEngine::ErrorMessageCallback, 0);
     glEnable(GL_DEBUG_OUTPUT);
+#endif
 }
 
 void BF::BitFireEngine::OnWindowSizeChanged(const size_t width, const size_t height)

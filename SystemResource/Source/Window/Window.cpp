@@ -1204,7 +1204,7 @@ LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, L
 
                             if(interactable)
                             {
-                                InvokeEvent(window.MouseMoveCallBack, mouseX, mouseY);
+                                InvokeEvent(window.MouseMoveCallBack, window.MousePositionX, window.MousePositionY ,mouseX, mouseY);
                             }
 
                             // Wheel data needs to be pointer casted to interpret an unsigned short as a short, with no conversion
@@ -2179,12 +2179,13 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
 
     window.IsRunning = true;
 
-
+#if defined(OSUnix)
+#if 0
     int numberOfDevices = 0;
 
     const XDeviceInfo* deviceInfoList = XListInputDevices(display, &numberOfDevices);
 
-    for(int i = 0; i < numberOfDevices ; ++i)
+    for (int i = 0; i < numberOfDevices; ++i)
     {
         const XDeviceInfo& xDeviceInfo = deviceInfoList[i];
 
@@ -2205,9 +2206,8 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
 
         // printf("");
     }
-
-
-
+#endif
+#endif
 
     while(window.IsRunning)
     {
