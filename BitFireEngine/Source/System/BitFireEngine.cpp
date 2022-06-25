@@ -513,6 +513,8 @@ void BF::BitFireEngine::OnWindowSizeChanged(const size_t width, const size_t hei
     BitFireEngine* engine = BitFireEngine::Instance();
     Camera& camera = engine->MainCamera;
 
+    printf("[Camera] Is now %li x %li\n", width, height);
+
     glViewport(0, 0, width, height);
 
     camera.AspectRatioSet(width, height);
@@ -662,8 +664,8 @@ void BF::BitFireEngine::Register(Texture& texture)
 {
     Image& image = texture.DataImage;
 
-    const float format = ToImageFormat(image.Format);
-    const float textureType = ToImageType(texture.Type);
+    const OpenGLID format = ToImageFormat(image.Format);
+    const OpenGLID textureType = ToImageType(texture.Type);
 
     if(!image.PixelData)
     {
@@ -757,6 +759,8 @@ void BF::BitFireEngine::Register(Renderable& renderable, const Model& model)
 
     glGenVertexArrays(1, &renderable.ID); // Create VAO
 
+    glBindVertexArray(renderable.ID);
+
     // VBO creator
     {
         const size_t numberOfMeshes = model.MeshListSize;
@@ -790,6 +794,7 @@ void BF::BitFireEngine::Register(Renderable& renderable, const Model& model)
 
             OpenGL::VertexAttributeArrayDefine(sizeof(float), mesh.VertexDataStructureListSize, mesh.VertexDataStructureList);
 
+#if 0
             printf("+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+\n");
 
             printf
@@ -846,11 +851,11 @@ void BF::BitFireEngine::Register(Renderable& renderable, const Model& model)
             }
 
             printf("+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+\n");
-
+#endif
             size_t segmentIndexCounter = 0;
 
             OpenGLID segmentIDList[128u];
-            memset(segmentIDList, -1, 128u * sizeof(OpenGLID));
+            Memory::Set(segmentIDList, -1, 128u * sizeof(OpenGLID));
 
             glGenBuffers(segmentListSize, segmentIDList); // Generate IBO
 
@@ -858,15 +863,28 @@ void BF::BitFireEngine::Register(Renderable& renderable, const Model& model)
             {
                 const MeshSegment& meshSegment = mesh.SegmentList[segmentIndex];
                 const OpenGLID indexBufferID = segmentIDList[segmentIndexCounter++];
+                RenderableSegment& segment = chunk.SegmentList[segmentIndex];            
 
-                assert(indexBufferID != -1);
-
-                RenderableSegment& segment = chunk.SegmentList[segmentIndex];
+                assert(indexBufferID != -1);               
 
                 segment.ID = indexBufferID;
                 segment.Size = meshSegment.IndexDataListSize;
 
-#if 1
+
+                segment.MaterialRangeSize = meshSegment.MaterialInfoSize;
+                segment.MaterialRange = new SegmentMaterialRange[meshSegment.MaterialInfoSize];
+
+                for(size_t i = 0; i < meshSegment.MaterialInfoSize; i++)
+                {
+                    const OBJElementMaterialInfo& info = meshSegment.MaterialInfo[i];
+                    SegmentMaterialRange& range = segment.MaterialRange[i];
+
+                    range.Size = info.Size;
+                    range.TextureID = 3;
+                    
+                }
+
+#if 0
 
                 for(size_t i = 0; i < meshSegment.IndexDataListSize; )
                 {
@@ -884,11 +902,15 @@ void BF::BitFireEngine::Register(Renderable& renderable, const Model& model)
         }
     }
 
-    //printf("[OpenGL] Register Mesh <%ls> from <%ls>. Sub-Meshes <%zu>\n", model.Name, model.FilePath, model.MeshListSize);
+   // printf("[OpenGL] Register Mesh <%ls> from <%ls>. Sub-Meshes <%zu>\n", , model.FilePath, model.MeshListSize);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+
+
+
+    // Merge
 }
 
 void BF::BitFireEngine::Register(Renderable& renderable, const float* vertexData, const size_t vertexDataSize, const unsigned int* indexList, const size_t indexListSize)
@@ -932,6 +954,8 @@ void BF::BitFireEngine::Register(Renderable& renderable, const float* vertexData
     renderable.ChunkList->SegmentList = new RenderableSegment();
     renderable.ChunkList->SegmentList[0].ID = id[2];
     renderable.ChunkList->SegmentList[0].Size = indexListSize;
+    renderable.ChunkList->SegmentList[0].MaterialRange = new SegmentMaterialRange();
+    renderable.ChunkList->SegmentList[0].MaterialRangeSize = 1;
 }
 
 void BF::BitFireEngine::Register(SkyBox& skyBox)
@@ -964,9 +988,7 @@ void BF::BitFireEngine::Register(SkyBox& skyBox)
     Register(renderable, vertexData, vertexDataSize, indexList, indexListSize);
     Register(textureCube);
 
-
-    renderable.ChunkList->SegmentList[0].TextureID = textureCube.ID;
-    // TODO:TEST REMOVAL !!!   renderable.TextureID = textureCube.ID;
+    renderable.TextureUse(textureCube.ID);
 }
 
 bool BF::BitFireEngine::Register(ShaderProgram& shaderProgram, const wchar_t* vertexShaderFilePath, const wchar_t* fragmentShaderFilePath)
@@ -1291,8 +1313,8 @@ BF::FileActionResult BF::BitFireEngine::Load(Texture& texture, const wchar_t* fi
             texture.Filter = ImageFilter::NoFilter;
             texture.LayoutNear = ImageLayout::Nearest;
             texture.LayoutFar = ImageLayout::Nearest;
-            texture.WrapHeight = ImageWrap::StrechEdges;
-            texture.WrapWidth = ImageWrap::StrechEdges;
+            texture.WrapHeight = ImageWrap::Repeat;
+            texture.WrapWidth = ImageWrap::Repeat;
 
             Register(texture);
         }
@@ -1651,6 +1673,7 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
                     rotation.Y = Math::DegreeToRadians(rotation.Y);
                     rotation.Z = Math::DegreeToRadians(rotation.Z);
 
+<<<<<<< Updated upstream
                     //--[Apply Data]-------------
                     //loadedModel->DirectMorth = false;
                     //loadedModel->ModelMatrix.Move(position);
@@ -1659,14 +1682,59 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
                     //loadedModel->UpdateGlobalMesh();
 
                     Renderable* renderable = new Renderable();
+=======
+              
+                    Renderable* renderable = new Renderable();                
+>>>>>>> Stashed changes
 
                     Register(*renderable, *loadedModel);
 
                     renderable->ShaderUse(_defaultShaderID);
                     renderable->TextureUse(_defaultTextureID);
 
+                    //--[Apply Data]-------------
+              //loadedModel->DirectMorth = false;
+                    renderable->MoveTo(position);
+                    renderable->Rotate(rotation);
+                    renderable->Scale(scale);
+
+
+                    // Load additinal images
+                    {
+                        RenderableSegment& segment = renderable->ChunkList[0].SegmentList[0];
+
+                        for(size_t i = 0; i < loadedModel->MaterialListSize; i++)
+                        {
+                            const Material material = loadedModel->MaterialList[i];
+                            Texture* texture = new Texture();
+
+                            const FileActionResult loadResult = Load(*texture, material.TextureFilePath, false);
+                            const bool sucessful = loadResult == FileActionResult::Successful;
+
+                            if(sucessful)
+                            {
+                                SegmentMaterialRange& materialRange = segment.MaterialRange[i];
+
+                                materialRange.TextureID = texture->ID;
+                            }
+                        }
+                    }
+
+
+
+
+
+
+
+
+
+
+
+
                     _renderList.Add(renderable);
                 }
+
+              
 
                 //-----------------------
                 break;
@@ -1759,7 +1827,7 @@ BF::FileActionResult BF::BitFireEngine::Load(Sprite& sprite, const wchar_t* file
 
         // TODO:TEST REMOVAL !!!    renderable.TextureID = loadedTexture.ID;
 
-        renderable.ChunkList[0].SegmentList[0].TextureID = loadedTexture.ID;
+        renderable.ChunkList[0].SegmentList[0].MaterialRange[0].TextureID = loadedTexture.ID;
         renderable.Scale(width, height, 1.0f);
     }
 
@@ -1802,8 +1870,6 @@ BF::FileActionResult BF::BitFireEngine::Load
 
     Load(shaderProgram, shaderVertex, shaderFragment);
 
-    // TODO:TEST REMOVAL !!!   skyBox.RenderInfo.ShaderID = shaderProgram.ID;
-
     Image* imageList = skyBox.Texture.ImageList;
 
     const FileActionResult textureRightResult = imageList[0].Load(textureRight);
@@ -1812,7 +1878,7 @@ BF::FileActionResult BF::BitFireEngine::Load
     const FileActionResult textureBottomResult = imageList[3].Load(textureBottom);
     const FileActionResult textureBackResult = imageList[4].Load(textureBack);
     const FileActionResult textureFrontResult = imageList[5].Load(textureFront);
-
+    
     Register(skyBox);
 
     DefaultSkyBox = &skyBox;
@@ -1964,7 +2030,7 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
             glBindBuffer(GL_ARRAY_BUFFER, vbo);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
-            Use(ImageType::TextureCubeContainer, renderable.ChunkList[0].SegmentList[0].TextureID);
+            Use(ImageType::TextureCubeContainer, renderable.ChunkList[0].SegmentList[0].MaterialRange[0].TextureID);
 
             glDrawElements(GL_QUADS, 24, GL_UNSIGNED_INT, 0);
 
@@ -1978,8 +2044,8 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
         }
     }
 
-    //glPointSize(10);
-    //glLineWidth(5);
+    glPointSize(10);
+    glLineWidth(5);
 
     for(LinkedListNode<Renderable*>* currentModel = _renderList.GetFirst(); currentModel; currentModel = currentModel->Next)
     {
@@ -2017,44 +2083,59 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
             for(size_t segmentIndex = 0; segmentIndex < chunk.SegmentListSize; ++segmentIndex)
             {
                 const RenderableSegment& segment = chunk.SegmentList[segmentIndex];
-                const ImageType textureType = segment.TextureType;
+                ImageType textureType = segment.TextureType;
                 const OpenGLID indexBufferID = segment.ID;
-                const OpenGLID shaderID = segment.ShaderID != -1 ? segment.ShaderID : _defaultShaderID;
-                const OpenGLID textureID = segment.TextureID != -1 ? segment.TextureID : _defaultTextureID;
-                const OpenGLID size = segment.Size;
+                const size_t chunkSizeFull = segment.Size;
+                size_t chunkSizeConsumed = 0;
 
-               // assert(textureID != -1);
-                assert(indexBufferID != -1);
-                assert(size > 0 && size != -1);
+                for(size_t i = 0; i < segment.MaterialRangeSize; i++)
+                {
+                    const SegmentMaterialRange& segmentMaterialRange = segment.MaterialRange[i];
 
-                // Check if shader need to be changed
+                    const OpenGLID shaderID = segmentMaterialRange.ShaderID != -1 ? segmentMaterialRange.ShaderID : _defaultShaderID;
+                    const OpenGLID textureID = segmentMaterialRange.TextureID != -1 ? segmentMaterialRange.TextureID : _defaultTextureID;
+                    const size_t chunkSizeElement = segmentMaterialRange.Size != -1 ? segmentMaterialRange.Size : chunkSizeFull;
 
-                OpenGL::UseShaderProgram(shaderID);
-                CameraDataGet(shaderID);
-                CameraDataUpdate(MainCamera);
-                OpenGL::ShaderSetUniformMatrix4x4(_matrixModelID, renderable.Data);
+                    // assert(textureID != -1);
+                    assert(indexBufferID != -1);
 
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID); // IBO
 
-                Use(textureType, textureID);
+                    //printf("[Render] T:%i\n", textureID);
+
+                    // Check if shader need to be changed
+
+                    OpenGL::UseShaderProgram(shaderID);
+                    CameraDataGet(shaderID);
+                    CameraDataUpdate(MainCamera);
+                    OpenGL::ShaderSetUniformMatrix4x4(_matrixModelID, renderable.Data);
+
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID); // IBO
+
+                    Use(textureType, textureID);
 #if 0
-                glDrawElements(GL_POINTS, size, GL_UNSIGNED_INT, 0);
-                //glDrawElements(GL_LINES, size, GL_UNSIGNED_INT, 0);
-                glDrawElements(renderModeID, size, GL_UNSIGNED_INT, 0);
+                    glDrawElements(GL_POINTS, size, GL_UNSIGNED_INT, 0);
+                    glDrawElements(GL_LINES, size, GL_UNSIGNED_INT, 0);
+                    glDrawElements(renderModeID, size, GL_UNSIGNED_INT, 0);
 #else
-                glDrawArrays(GL_POINTS, 0, size);
-                glDrawArrays(renderModeID, 0, size);
+                    size_t offset = chunkSizeConsumed;
+
+                    //glDrawArrays(GL_POINTS, offset, chunkSizeElement);
+                    //glDrawArrays(GL_LINES, offset, chunkSizeElement);
+                    glDrawArrays(renderModeID, offset, chunkSizeElement);
 #endif // 0
 
-                Use(textureType, 0);
+                    chunkSizeConsumed += chunkSizeElement;
+
+                   // Use(textureType, 0);
+                }              
 
                 //printf("[>] Render %i\n", indexBufferID);
             }
         }
 
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
+        //glBindBuffer(GL_ARRAY_BUFFER, 0);
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        //glBindVertexArray(0);
 
 
 
@@ -2228,14 +2309,25 @@ void BF::BitFireEngine::PrintContent(bool detailed)
 
                     printf
                     (
-                        "| Segment ID:%3i (%3zi/%3zi) | %5i | %8i | %9i |\n",
+                        "| Segment ID:%3i (%3zi/%3zi) | %5i |\n",
                         segment.ID,
                         i + 1,
                         segmentListSize,
-                        segment.Size,
-                        segment.ShaderID,
-                        segment.TextureID
+                        segment.Size     
                     );
+
+                    for(size_t i = 0; i < segment.MaterialRangeSize; i++)
+                    {
+                        const SegmentMaterialRange& segmentMaterialRange = segment.MaterialRange[i];
+
+                        printf
+                        (
+                            "| >>> | %8i | %9i | %9i |\n",        
+                            segmentMaterialRange.ShaderID,
+                            segmentMaterialRange.TextureID,
+                            segmentMaterialRange.Size
+                        );
+                    }
                 }
             }
         }

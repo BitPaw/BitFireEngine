@@ -9,12 +9,20 @@
 
 namespace BF
 {
+	struct OBJElementMaterialInfo
+	{
+		size_t MaterialIndex;
+		size_t Size; // Size of buffer to use given material		
+	};
+
 	struct OBJElement
 	{
 		public:
-		char Name[OBJElementNameLength];
-		unsigned int MaterialListIndex;
+		char Name[OBJElementNameLength];	
 		float Smoothing;
+
+		OBJElementMaterialInfo* MaterialInfo;
+		size_t MaterialInfoSize;
 
 		// List of geometric vertices, with (x, y, z [,w]) coordinates, w is optional and defaults to 1.
 		List<Vector3<float>> VertexPositionList;

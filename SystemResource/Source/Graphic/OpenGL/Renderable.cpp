@@ -43,12 +43,7 @@ void BF::Renderable::MeshShare(const Renderable& rendable)
 
 void BF::Renderable::ShaderUse(const ShaderProgram& shaderProgram)
 {
-	if (ChunkList)
-	{
-		ChunkList[0].SegmentList[0].ShaderID = shaderProgram.ID;
-	}
-
-	//ShaderID = shaderProgram.ID;
+	ShaderUse(shaderProgram.ID);
 }
 
 void BF::Renderable::ShaderUse(const unsigned int shaderProgramID)
@@ -61,7 +56,12 @@ void BF::Renderable::ShaderUse(const unsigned int shaderProgramID)
 		{
 			RenderableSegment& renderableSegment = renderableChunk.SegmentList[j];
 
-			renderableSegment.ShaderID = shaderProgramID;
+			for(size_t i = 0; i < renderableSegment.MaterialRangeSize; i++)
+			{
+				SegmentMaterialRange& SegmentMaterialRange = renderableSegment.MaterialRange[i];
+								
+				SegmentMaterialRange.ShaderID = shaderProgramID;
+			}
 		}
 	}
 }
@@ -76,7 +76,12 @@ void BF::Renderable::TextureUse(const unsigned int texturteID)
 		{
 			RenderableSegment& renderableSegment = renderableChunk.SegmentList[j];
 
-			renderableSegment.TextureID = texturteID;
+			for(size_t i = 0; i < renderableSegment.MaterialRangeSize; i++)
+			{
+				SegmentMaterialRange& SegmentMaterialRange = renderableSegment.MaterialRange[i];
+
+				SegmentMaterialRange.TextureID = texturteID;
+			}
 		}
 	}
 }

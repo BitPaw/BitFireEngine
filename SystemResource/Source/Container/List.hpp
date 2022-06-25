@@ -33,7 +33,7 @@ namespace BF
 			return Size() == 0;
 		}
 
-		size_t Size()
+		size_t Size() const
 		{
 			return _size;
 		}

@@ -1,11 +1,14 @@
 #include "OBJElement.h"
 
+#include <Text/Text.h>
+
 BF::OBJElement::OBJElement()
 {
-	strcpy(Name, "[N/A]");
+	Text::Copy("[N/A]", 5, Name, OBJElementNameLength);
 
 	Smoothing = 0;
-	MaterialListIndex = -1;
+	MaterialInfo = nullptr;
+	MaterialInfoSize = 0;
 }
 
 void BF::OBJElement::Allocate(size_t vertexSize, size_t texturePointSize, size_t normalPointSize, size_t vertexParameterSize, size_t faceElementSize)

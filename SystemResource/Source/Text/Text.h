@@ -28,6 +28,10 @@ namespace BF
 
 		static int Compare(const char* a, const size_t aSize, const char* b, const size_t bSize);
 
+		static size_t CountUntil(const char* text, const size_t textSize, const char target, const char stopAt);
+		static size_t CountUntil(const unsigned char* text, const size_t textSize, const unsigned char target, const unsigned char stopAt);
+		static size_t CountUntil(const wchar_t* text, const size_t textSize, const wchar_t target, const wchar_t stopAt);
+
 		static int Compare(const char* a, const char* b, const size_t stringSize);
 		static int Compare(const wchar_t* a, const wchar_t* b, const size_t stringSize);
 		static int Compare(const char* a, const wchar_t* b, const size_t stringSize);
@@ -50,7 +54,7 @@ namespace BF
 
 		static void TerminateBeginFromFirst(char* string, const size_t dataSize, const char character);
 
-		static void Parse(char* buffer, size_t bufferSize, const char* syntax, ...);
+		static void Parse(const char* buffer, const size_t bufferSize, const char* syntax, ...);
 
 		static void FindAll(const char* string, const size_t stringSize, const ParsingToken* parsingTokenList, const size_t parsingTokenListSize);
 	};

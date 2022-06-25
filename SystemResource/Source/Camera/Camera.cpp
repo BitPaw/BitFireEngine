@@ -57,7 +57,6 @@ void BF::Camera::ViewChangeOrthographic(const float width, const float height, c
 void BF::Camera::ViewChangePerspective(const float fieldOfView, const float aspectRatio, const float near, const float far)
 {
 	FieldOfView = fieldOfView;
-	//aspectRatio = TODO
 	Near = near;
 	Far = far;
 

@@ -63,8 +63,7 @@ void ZEE::ZEEGameSystem::OnStartUp()
         L"Texture/SkyBox/Bottom.png",
         L"Texture/SkyBox/Back.png",
         L"Texture/SkyBox/Front.png"
-    );
-
+    );    
 
     //GameSystem.Load(textureBix, "Model/Dialog/DialogBox.obj");
 
@@ -76,16 +75,17 @@ void ZEE::ZEEGameSystem::OnStartUp()
    // _worldGravity.PullDirection.Set(0, -1, 0);
    // GameSystem.Resource.Add(&_worldGravity);
 
-   // GameSystem.Load(_level, L"Level/MainMenu.lev");
+    GameSystem.Load(_level, L"Level/MainMenu.lev");
 
     //GameSystem.Resource.Load(L"B:/Daten/Textures/PR/Countrry/Neo/FI/Country.obj");
 
     GameSystem.Load(_cubeModel, L"Model/Cube.obj", false);
    // _cubeModel.Move(0,50,0);
    // _cubeModel.Scale(100.0f);
-    _cubeModel.ChunkList[0].SegmentList[0].ShaderID = _worldShader.ID;
-    _cubeModel.ChunkList[0].SegmentList[0].TextureID = _blockTexture.ID;
-        
+    _cubeModel.ShaderUse(_worldShader.ID);
+    _cubeModel.TextureUse(_blockTexture.ID);
+    _cubeModel.Scale(100);
+    _cubeModel.Move(250, 0, 0);
         
         //cube.EnablePhysics = true;
     //cube.Mass = 1000;
@@ -205,8 +205,8 @@ void ZEE::ZEEGameSystem::OnUpdateInput(BF::InputContainer& input)
     keyboard.IncrementButtonTick();
     mouse.ResetAxis();
 
-    auto x = GameSystem.MainCamera.MatrixModel.PositionXYZ();
-    printf("Camera Pos : %5.2f %5.2f %5.2f\n", x.X, x.Y, x.Z);
+   // auto x = GameSystem.MainCamera.MatrixModel.PositionXYZ();
+   // printf("Camera Pos : %5.2f %5.2f %5.2f\n", x.X, x.Y, x.Z);
 }
 
 void ZEE::ZEEGameSystem::OnUpdateUI()

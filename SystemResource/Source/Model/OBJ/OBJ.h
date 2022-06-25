@@ -6,16 +6,16 @@
 
 #include "../IModelFormat.hpp"
 
-namespace BF
-{
 #define OBJNameSize 64u
 
+namespace BF
+{
 	// [.OBJ] Wavefront - 3D model format
 	struct OBJ : public IModelFormat
 	{
 		private:
 		static inline bool ShouldCreateNewMesh(OBJLineCommand objLineCommand, bool isCurrentlyInFaces);
-		static inline OBJLineCommand PeekCommandLine(const char* commandLine);
+		static inline OBJLineCommand PeekCommandLine(const unsigned short lineTagID);
 
 		public:
 		wchar_t Name[OBJNameSize];
@@ -38,7 +38,10 @@ namespace BF
 		Vector3<unsigned int>* GlobalFaceElement(size_t index);
 		//------------------
 
+		FileActionResult Load(const char* filePath);
 		FileActionResult Load(const wchar_t* filePath);
+		FileActionResult Load(const unsigned char* data, const size_t dataSize, const wchar_t* fileName);
+
 		FileActionResult Save(const wchar_t* filePath);
 		FileActionResult ConvertTo(Model& model);
 		FileActionResult ConvertFrom(Model& model);

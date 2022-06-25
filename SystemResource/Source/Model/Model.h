@@ -6,12 +6,6 @@
 #include "../Resource.h"
 
 #include "ModelType.h"
-#include "../Math/Geometry/Shape/Shape.h"
-
-#include "../Math/Geometry/Vector3.hpp"
-#include "../Math/Geometry/Vector4.hpp"
-#include "../Math/Geometry/Shape/Shape.h"
-#include "../Math/Geometry/Matrix4x4.hpp"
 
 namespace BF
 {

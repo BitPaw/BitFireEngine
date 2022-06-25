@@ -4,8 +4,9 @@ BF::RenderableSegment::RenderableSegment()
 {
 	ID = -1;
 	Size = 0;
-	ShaderID = -1;
-	TextureID = -1;
 
-	TextureType = ImageType::Invalid;
+	MaterialRangeSize = 0;
+	MaterialRange = nullptr;
+
+	TextureType = ImageType::Texture2D;
 }

@@ -129,6 +129,26 @@ int BF::Text::Compare(const char* a, const size_t aSize, const char* b, const si
 	return (index == samecounter) && ((index == aSize) && (index == bSize));
 }
 
+size_t BF::Text::CountUntil(const char* text, const size_t textSize, const char target, const char stopAt)
+{
+	return CountUntil(text, textSize, target, stopAt);
+}
+
+size_t BF::Text::CountUntil(const unsigned char* text, const size_t textSize, const unsigned char target, const unsigned char stopAt)
+{
+	size_t samecounter = 0;
+
+	for(size_t index = 0; (index < textSize) && (text[index] != '\0' && text[index] != stopAt); ++index)
+		samecounter += target == text[index];
+
+	return samecounter;
+}
+
+size_t BF::Text::CountUntil(const wchar_t* text, const size_t textSize, const wchar_t target, const wchar_t stopAt)
+{
+	return size_t();
+}
+
 int BF::Text::Compare(const char* a, const char* b, const size_t stringSize)
 {
 	size_t index = 0;
@@ -475,42 +495,51 @@ void BF::Text::TerminateBeginFromFirst(char* string, const size_t dataSize, cons
 	}
 }
 
-void BF::Text::Parse(char* buffer, size_t bufferSize, const char* syntax, ...)
+void BF::Text::Parse(const char* buffer, const size_t bufferSize, const char* syntax, ...)
 {
 	va_list args;
 	va_start(args, syntax);
 
-	int startIndex = 0;
-	int stopIndex = 0;
-	int command = 0;
-	bool finished = false;
+	size_t offsetData = 0;
 
-	while (!finished)
+	for (size_t commandIndex = 0 ; syntax[commandIndex] != '\0' ; ++commandIndex)
 	{
-		char commandKey = syntax[command++];
-		bool commandIsNumber = commandKey == 'i' || commandKey == 'f' || commandKey == 'u';
+		const char commandKey = syntax[commandIndex];
+		//const bool commandIsNumber = commandKey == 'i' || commandKey == 'f' || commandKey == 'u';
 
-		while (true)
+		size_t offsetLength = offsetData;
+
+		// Get length until new block
 		{
-			char current = buffer[stopIndex++];
-			finished = current == '\0';
-
-			if (commandIsNumber && current == '/' || current == ' ' || finished)
+			while(offsetLength < bufferSize)
 			{
-				break;
+				const char symbol = buffer[offsetLength];
+				const bool stop = symbol == '\n' || symbol == '\0' || symbol == ' ';
+				//const bool skip = symbol == '\n'; 	if(commandIsNumber && current == '/' || current == ' ' || finished)
+
+				if(stop)
+				{				
+					break; // End of string
+				}
+
+				++offsetLength;
 			}
-		}
+		}		
 
 		switch (commandKey)
 		{
+			case '§':
+			{
+				++offsetData;
+				break;
+			}
 			case 's':
 			{
 				char* destination = va_arg(args, char*);
-				char* source = &buffer[startIndex];
-				unsigned int length = stopIndex - startIndex - 1;
+				const char* source = buffer + offsetData;
 
-				Memory::Copy(destination, source, length);
-				destination[length] = '\0';
+				Memory::Copy(destination, source, offsetLength);
+				destination[offsetLength] = '\0';
 				break;
 			}
 			case 'i':
@@ -518,34 +547,46 @@ void BF::Text::Parse(char* buffer, size_t bufferSize, const char* syntax, ...)
 			case 'u':
 			{
 				int* i = va_arg(args, int*);
-				char* source = &buffer[startIndex];
+				const char* source = buffer + offsetData;
 
-				ToInt(source, 5, *i);
+				offsetData += ToInt(source, offsetLength, *i);
 
 				break;
 			}
 			case 'f':
 			{
 				float* number = va_arg(args, float*);
-				char* source = &buffer[startIndex];
+				const char* source = buffer + offsetData;
 
-				ToFloat(source, 5, (*number));
+				offsetData += ToFloat(source, offsetLength, (*number));
 
 				break;
 			}
 			case 'c':
 			{
 				char* character = va_arg(args, char*);
+				const char* source = buffer + offsetData;
 
-				*character = buffer[startIndex];
+				*character = *source;
 
 				break;
 			}
 			default:
 				break;
-		}
+		}		
 
-		startIndex = stopIndex;
+		while(offsetData < bufferSize)
+		{
+			const char symbol = buffer[offsetData];
+			const bool stop = !(symbol == ' ' || symbol == '\0');
+
+			if(stop)
+			{
+				break;
+			}
+
+			++offsetData;
+		}
 	}
 
 	va_end(args);

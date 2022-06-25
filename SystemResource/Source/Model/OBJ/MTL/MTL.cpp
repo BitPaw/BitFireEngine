@@ -14,69 +14,119 @@ BF::MTL::~MTL()
 	free(MaterialList);
 }
 
-BF::FileActionResult BF::MTL::Load(const wchar_t* filePath)
+BF::MTLLineType BF::MTL::PeekLine(const char* data) const
 {
-	size_t materialIndex = 0;
-	const char _newMaterialCharacter = 'n';
-	const char _colorCharacter = 'K';
-	const char _ambientCharacter = 'a';
-	const char _diffuseCharacter = 'd';
-	const char _specularCharacter = 's';
-	//static const char _newMaterialCharacter = 'e';
-	//static const char _newMaterialCharacter = 'N';
-	const char _weightCharacter = 's';
-	//static const char _newMaterialCharacter = 'i';
+	const unsigned short tagID = MakeShort(data[0], data[1]);
 
+	switch(tagID)
+	{
+		case MakeShort('m', 'a'): return MTLLineType::Texture;
+		case MakeShort('n', 'e'): return MTLLineType::Name;
+		case MakeShort('N', 's'): return MTLLineType::Weight;
+		case MakeShort('N', 'i'): return MTLLineType::Density;		 
+		case MakeShort('K', 'a'): return MTLLineType::Ambient;
+		case MakeShort('K', 'd'): return MTLLineType::Diffuse;
+		case MakeShort('K', 's'): return MTLLineType::Specular;
+		case MakeShort('K', 'e'): return MTLLineType::Emission;
+		case MakeShort('d', ' '): return MTLLineType::Dissolved;
+		case MakeShort('i', 'l'): return MTLLineType::Illumination;
+		default: 
+			return MTLLineType::Invalid;
+	}	
+}
 
+BF::FileActionResult BF::MTL::Load(const char* filePath)
+{
 	File file;
 
-	{		
-		const FileActionResult fileActionResult = file.ReadFromDisk(filePath);
+	{
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
-		if(fileActionResult != FileActionResult::Successful)
+		if(!sucessful)
 		{
-			return fileActionResult;
+			return fileLoadingResult;
 		}
 	}
 
-	const size_t currentLineBufferSize = 512;
-	char currentLineBuffer[currentLineBufferSize];
+	{
+		const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+
+		return fileParsingResult;
+	}
+}
+
+BF::FileActionResult BF::MTL::Load(const wchar_t* filePath)
+{
+	File file;
+
+	{
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+
+		if(!sucessful)
+		{
+			return fileLoadingResult;
+		}
+	}
+
+	{
+		const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+
+		return fileParsingResult;
+	}
+}
+
+BF::FileActionResult BF::MTL::Load(const unsigned char* data, const size_t dataSize)
+{
+	ByteStream byteStream(data, dataSize);
 
 	// Count How many materials are needed
 	{
+		size_t materialCounter = 0;
 
-		while (file.ReadNextLineInto(currentLineBuffer))
-		{			
-			const char commandChar = currentLineBuffer[0];
-			const bool isNewMaterialUsed = commandChar == 'n';
+		do
+		{
+			const Byte* currentLine = byteStream.CursorCurrentAdress();
+			const bool isNewMaterialUsed = *currentLine == 'n';
 
-			if (isNewMaterialUsed)
+			if(isNewMaterialUsed)
 			{
-				MaterialListSize++;
+				++materialCounter;
 			}
 		}
+		while(byteStream.SkipLine());
+				
+		MaterialListSize = materialCounter;
+		MaterialList = new MTLMaterial[materialCounter];
 
-		MaterialList = new MTLMaterial[MaterialListSize];
+		byteStream.CursorToBeginning();
 	}
 
 	// Raw Parse
 	MTLMaterial* material = nullptr; // current material, has to be here, its state dependend
+	size_t materialIndex = 0;
 
-	file.CursorToBeginning();
-
-	while (file.ReadNextLineInto(currentLineBuffer))
+	do
 	{
-		char commandChar = currentLineBuffer[0];
+		const char* currentLine = (char*)byteStream.CursorCurrentAdress();
+		const MTLLineType lineType = PeekLine(currentLine);
 
-		switch (commandChar)
+		// Skip forst element
+		byteStream.SkipBlock();
+
+		const char* dataPoint = (char*)byteStream.CursorCurrentAdress();
+		const size_t maxSize = byteStream.ReadPossibleSize();
+		const size_t lineSize = Text::LengthUntil(dataPoint, maxSize, '\n');
+
+		switch(lineType)
 		{
-			case 'm':
-			{
-				Text::Parse(currentLineBuffer, currentLineBufferSize, "§s", material->TextureFilePath);
+			default:
+			case BF::MTLLineType::Invalid:
+				// Do nothing
 				break;
-			}
 
-			case 'n':
+			case BF::MTLLineType::Name:
 			{
 				material = &MaterialList[materialIndex++];
 
@@ -85,88 +135,65 @@ BF::FileActionResult BF::MTL::Load(const wchar_t* filePath)
 
 				Text::Copy(internalText, internalTextSize, material->TextureFilePath, MTLFilePath);
 
-				Text::Parse(currentLineBuffer, currentLineBufferSize, "§s", material->Name);
+				Text::Parse(dataPoint, lineSize, "s", material->Name);
 
 				break;
 			}
-
-			case 'N':
+			case BF::MTLLineType::Texture:
 			{
-				float* value = nullptr;
-				commandChar = currentLineBuffer[1];
-
-				switch (commandChar)
-				{
-					case 's':
-					{
-						value = &material->Weight;
-						break;
-					}
-
-					case 'i':
-					{
-						value = &material->Density;
-						break;
-					}					
-				}
-
-				Text::Parse(currentLineBuffer, currentLineBufferSize, "§f", value);
-
+				Text::Parse(dataPoint, lineSize, "s", material->TextureFilePath);
+				break;
+			}		
+			case BF::MTLLineType::Weight:
+			{
+				Text::Parse(dataPoint, lineSize, "f", &material->Weight);
 				break;
 			}
-
-			case 'K':
+			case BF::MTLLineType::Ambient:
+			case BF::MTLLineType::Diffuse:
+			case BF::MTLLineType::Specular:
+			case BF::MTLLineType::Emission:
 			{
 				float* colorVector = nullptr;
 
-				commandChar = currentLineBuffer[1];
-
-				switch (commandChar)
+				switch(lineType)
 				{
-					case 'a':
-					{
+					case BF::MTLLineType::Ambient:
 						colorVector = material->Ambient;
 						break;
-					}
-
-					case 'd':
-					{
+					case BF::MTLLineType::Diffuse:
 						colorVector = material->Diffuse;
 						break;
-					}
-
-					case 's':
-					{
+					case BF::MTLLineType::Specular:
 						colorVector = material->Specular;
 						break;
-					}
-
-					case 'e':
-					{
+					case BF::MTLLineType::Emission:
 						colorVector = material->Emission;
 						break;
-					}
 				}
 
-				Text::Parse(currentLineBuffer, currentLineBufferSize, "§fff", &colorVector[0], &colorVector[1], &colorVector[2]);
+				Text::Parse(dataPoint, lineSize, "fff", &colorVector[0], &colorVector[1], &colorVector[2]);
 
 				break;
 			}
-
-			case 'd':
+			case BF::MTLLineType::Dissolved:
 			{
-				Text::Parse(currentLineBuffer, currentLineBufferSize, "§f", &material->Dissolved);
+				Text::Parse(dataPoint, lineSize, "f", &material->Dissolved);
 				break;
 			}
-
-			case 'i':
+			case BF::MTLLineType::Density:
+			{
+				Text::Parse(dataPoint, lineSize, "f", &material->Density);
+				break;
+			}
+			case BF::MTLLineType::Illumination:
 			{
 				IlluminationMode mode = IlluminationMode::None;
 				int number = -1;
 
-				Text::Parse(currentLineBuffer, currentLineBufferSize, "§i", &number);
+				Text::Parse(dataPoint, lineSize, "i", &number);
 
-				switch (number)
+				switch(number)
 				{
 					case 0:
 						mode = IlluminationMode::ColorAndAmbientDisable;
@@ -217,17 +244,12 @@ BF::FileActionResult BF::MTL::Load(const wchar_t* filePath)
 
 				break;
 			}
-
-			case ' ':
-			case '#':
-			default:
-				break;
 		}
 	}
+	while(byteStream.SkipLine());
 
 	return FileActionResult::Successful;
 }
-
 
 void BF::MTL::PrintContent()
 {

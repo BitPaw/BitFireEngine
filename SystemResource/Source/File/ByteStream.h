@@ -46,7 +46,14 @@ namespace BF
 		unsigned int ReadNextLineInto(char* exportBuffer);
 
 		void SkipEndOfLineCharacters();
-		void SkipLine();
+		void SkipEmpty();
+
+		// Skips current block thats seperated with spaces.
+		// Example : '|' is the cursor.
+		// Before : |AAAA  BBBB CCC
+		// After :  AAAA |BBBB CCC
+		void SkipBlock();
+		size_t SkipLine();
 
 		void Read(bool& value);
 		void Read(char& value);

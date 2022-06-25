@@ -9,10 +9,12 @@
 #include <iso646.h>
 #include <cstdarg>
 
-#define InRange DataCursorPosition < DataSize	
-#define NotEndOfString Data[DataCursorPosition] != '\0'
-#define EndOfString Data[DataCursorPosition] == '\0'
-#define EndOfLineCharacter (Data[DataCursorPosition] == '\r' || Data[DataCursorPosition] == '\n')
+#define IsInRange DataCursorPosition < DataSize	
+#define IsNotEndOfString Data[DataCursorPosition] != '\0'
+#define IsEndOfString Data[DataCursorPosition] == '\0'
+#define IsNotEmptySpace Data[DataCursorPosition] != ' '
+#define IsEmptySpace Data[DataCursorPosition] == ' '
+#define IsEndOfLineCharacter (Data[DataCursorPosition] == '\r' || Data[DataCursorPosition] == '\n')
 
 BF::ByteStream::ByteStream()
 {
@@ -79,7 +81,7 @@ unsigned int BF::ByteStream::ReadNextLineInto(char* exportBuffer)
 	const char* input = (char*)Data + beginningPosition;
 	size_t length = 0;
 
-	while(InRange and !EndOfLineCharacter and NotEndOfString) ++DataCursorPosition;
+	while(IsInRange and !IsEndOfLineCharacter and IsNotEndOfString) ++DataCursorPosition;
 
 	length = DataCursorPosition - beginningPosition;
 
@@ -97,9 +99,9 @@ unsigned int BF::ByteStream::ReadNextLineInto(char* exportBuffer)
 
 void BF::ByteStream::SkipEndOfLineCharacters()
 {
-	while(InRange)
+	while(IsInRange)
 	{
-		const bool advance = EndOfLineCharacter and NotEndOfString;
+		const bool advance = IsEndOfLineCharacter and IsNotEndOfString;
 
 		if(!advance)
 		{
@@ -110,11 +112,31 @@ void BF::ByteStream::SkipEndOfLineCharacters()
 	}
 }
 
-void BF::ByteStream::SkipLine()
+void BF::ByteStream::SkipEmpty()
 {
-	while(InRange)
+	while(IsInRange and IsEmptySpace)
 	{
-		const bool advance = !EndOfLineCharacter and NotEndOfString;
+		++DataCursorPosition;
+	}
+}
+
+void BF::ByteStream::SkipBlock()
+{
+	while(IsInRange and IsNotEndOfString and IsNotEmptySpace)
+	{
+		++DataCursorPosition;
+	}
+
+	SkipEmpty();
+}
+
+size_t BF::ByteStream::SkipLine()
+{
+	const size_t positionBefore = DataCursorPosition;
+
+	while(IsInRange)
+	{
+		const bool advance = !IsEndOfLineCharacter and IsNotEndOfString;
 
 		if(!advance)
 		{
@@ -125,6 +147,10 @@ void BF::ByteStream::SkipLine()
 	}
 
 	SkipEndOfLineCharacters();
+
+	const size_t skippedBytes = DataCursorPosition - positionBefore;
+
+	return skippedBytes;
 }
 
 void BF::ByteStream::Read(bool& value)
@@ -238,7 +264,7 @@ void BF::ByteStream::ReadUntil(char* value, const size_t length, const char char
 	Byte* start = Data + DataCursorPosition;
 	size_t lengthCopy = 0;
 
-	while(InRange && Data[DataCursorPosition] != character && length <= lengthCopy)
+	while(IsInRange && Data[DataCursorPosition] != character && length <= lengthCopy)
 	{
 		++DataCursorPosition;
 	}
@@ -254,7 +280,7 @@ void BF::ByteStream::ReadUntil(wchar_t* value, const size_t length, const wchar_
 	const size_t characterOffset = sizeof(wchar_t);
 	size_t lengthCopy = 0;
 
-	while(InRange && *(wchar_t*)(Data + DataCursorPosition) != character && lengthCopy <= length)
+	while(IsInRange && *(wchar_t*)(Data + DataCursorPosition) != character && lengthCopy <= length)
 	{
 		DataCursorPosition += characterOffset;
 		lengthCopy += characterOffset;

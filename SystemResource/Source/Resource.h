@@ -14,5 +14,9 @@ namespace BF
 		virtual FileActionResult Load(const wchar_t* filePath) = 0;
 
 		//virtual ~Resource() = 0;
+
+		//FileActionResult Load(const char* filePath);
+		//tatic FileActionResult Load(const wchar_t* filePath);
+
 	};
 }

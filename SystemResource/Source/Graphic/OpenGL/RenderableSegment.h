@@ -2,8 +2,24 @@
 
 #include "ImageType.h"
 
+#include <cstddef>
+
 namespace BF
 {
+	struct SegmentMaterialRange
+	{
+		unsigned int ShaderID;
+		unsigned int TextureID;
+		size_t Size;
+
+		SegmentMaterialRange()
+		{
+			ShaderID = -1;
+			TextureID = -1;
+			Size = -1;
+		}
+	};
+
 	struct RenderableSegment
 	{
 		public:
@@ -12,8 +28,8 @@ namespace BF
 
 		ImageType TextureType;
 
-		unsigned int ShaderID;
-		unsigned int TextureID;
+		size_t MaterialRangeSize;
+		SegmentMaterialRange* MaterialRange;
 
 		RenderableSegment();
 	};

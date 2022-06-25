@@ -153,220 +153,197 @@ bool BF::OBJ::ShouldCreateNewMesh(OBJLineCommand objLineCommand, bool isCurrentl
     }
 }
 
-BF::OBJLineCommand BF::OBJ::PeekCommandLine(const char* commandLine)
+BF::OBJLineCommand BF::OBJ::PeekCommandLine(const unsigned short lineTagID)
 {
-    unsigned char functionChar = commandLine[0];
-
-    switch (functionChar)
+    switch (lineTagID)
     {
-        case 'v':
+        case MakeShort('v', ' ') : return OBJLineCommand::VertexGeometric;
+        case MakeShort('v', 't') : return OBJLineCommand::VertexTexture;
+        case MakeShort('v', 'n') : return OBJLineCommand::VertexNormal;
+        case MakeShort('v', 'p') : return OBJLineCommand::VertexParameter;
+        case MakeShort('f', ' ') : return OBJLineCommand::FaceElement;
+        case MakeShort('m', 't') : return OBJLineCommand::MaterialLibraryInclude;
+        case MakeShort('u', 's') : return OBJLineCommand::MaterialLibraryUse;
+        case MakeShort('#', ' ') : return OBJLineCommand::Comment;
+        case MakeShort('o', ' ') : return OBJLineCommand::ObjectName;
+        case MakeShort('s', ' ') : return OBJLineCommand::SmoothShading;
+
+        default: return OBJLineCommand::Invalid;
+    }
+}
+
+BF::FileActionResult BF::OBJ::Load(const char* filePath)
+{
+    File file;
+
+    {
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+        const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+
+        if(!sucessful)
         {
-            functionChar = commandLine[1];
-
-            switch (functionChar)
-            {
-                case ' ':
-                    return OBJLineCommand::VertexGeometric;
-
-                case 't':
-                    return OBJLineCommand::VertexTexture;
-
-                case 'n':
-                    return OBJLineCommand::VertexNormal;
-
-                case 'p':
-                    return OBJLineCommand::VertexParameter;
-
-                default:
-                    return OBJLineCommand::Invalid;
-            }
-
-            break;
+            return fileLoadingResult;
         }
+    }    
 
-        case 'f':    
-            return OBJLineCommand::FaceElement;
+    {
+        wchar_t filePathW[PathMaxSize];
 
-        case 'm':
-            return OBJLineCommand::MaterialLibraryInclude;
+        Text::Copy(filePath, PathMaxSize, filePathW, PathMaxSize);
 
-        case 'u':
-            return OBJLineCommand::MaterialLibraryUse;
+        const FileActionResult fileParsingResult = Load(file.Data, file.DataSize, filePathW);
 
-        case '#':
-            return OBJLineCommand::Comment;
-
-        case 'o':
-            return OBJLineCommand::ObjectName;
-
-        case 's':
-            return OBJLineCommand::SmoothShading;
-
-        case ' ': 
-            return OBJLineCommand::None;
-
-        default:
-            return OBJLineCommand::Invalid;
+        return fileParsingResult;
     }
 }
 
 BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
 {
-    const size_t currentLineBufferSize = 1024;
-    char currentLineBuffer[currentLineBufferSize];
-    bool isFirstVertex = true;
-    File file; 
+    File file;
 
     {
-        const FileActionResult fileActionResult = file.MapToVirtualMemory(filePath); // TODO: true
-        const bool successful = fileActionResult == FileActionResult::Successful;
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath);
+        const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
-        if(!successful)
+        if(!sucessful)
         {
-            return fileActionResult;
+            return fileLoadingResult;
         }
     }
-   
 
-    Text::Copy(filePath, OBJNameSize, Name, OBJNameSize);
+    {
+        const FileActionResult fileParsingResult = Load(file.Data, file.DataSize, filePath);
+
+        return fileParsingResult;
+    }
+}
+
+BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataSize, const wchar_t* fileName)
+{
+    ByteStream dataStream(data, dataSize);
+
+    bool isFirstVertex = true;
+
+    ElementListSize = 1;
+    ElementList = new OBJElement();
+
+    struct OBJSegmentData
+    {
+        size_t Position;
+        size_t Texture;
+        size_t Normal;
+        size_t Parameter;
+        size_t Face;
+        size_t Material;
+    };
 
     //---<Cound needed Space and allocate>----------------------------------
     {
-        bool isInMesh = false;  
+        OBJSegmentData segmentData[128]{ 0 };
+        size_t segmentAmount = 0;
+        size_t materialCounter = 0;
 
-        size_t vertexPositionListSize = 0;
-        size_t vertexTextureCoordinateListSize = 0;
-        size_t vertexNormalPositionListSize = 0;
-        size_t vertexParameterListSize = 0;
-        size_t faceElementListSize = 0;
+        OBJElement* currentSegment = ElementList;
+        bool isInMesh = false;
 
-        ElementListSize = 1;
-        ElementList = new OBJElement();
+        do
+        {
+            const Byte* currentLine = dataStream.CursorCurrentAdress();
+            const unsigned short lineTagID = MakeShort(currentLine[0], currentLine[1]);
+            const OBJLineCommand command = PeekCommandLine(lineTagID);
 
-        while (file.ReadNextLineInto(currentLineBuffer))
-        {                
-            const OBJLineCommand command = PeekCommandLine(currentLineBuffer);
+            OBJSegmentData& currentSegmentData = segmentData[segmentAmount];
 
-            switch (command)
+            switch(command)
             {
-                default:
-                case OBJLineCommand::Invalid:
-                case OBJLineCommand::None:
-                case OBJLineCommand::Comment:
-                    break;
-
                 case OBJLineCommand::MaterialLibraryInclude:
-                    ++MaterialFileListSize;
+                    ++materialCounter;
                     break;
 
                 case OBJLineCommand::MaterialLibraryUse:
+                    ++currentSegmentData.Material;
                     break;
+
                 case OBJLineCommand::ObjectName:
+                    ++segmentAmount;
                     break;
+
                 case OBJLineCommand::VertexGeometric:
-                    ++vertexPositionListSize;
+                    ++currentSegmentData.Position;
                     break;
 
                 case OBJLineCommand::VertexTexture:
-                    ++vertexTextureCoordinateListSize;
+                    ++currentSegmentData.Texture;
                     break;
 
                 case OBJLineCommand::VertexNormal:
-                    ++vertexNormalPositionListSize;
+                    ++currentSegmentData.Normal;
                     break;
 
                 case OBJLineCommand::VertexParameter:
-                    ++vertexParameterListSize;
+                    ++currentSegmentData.Parameter;
                     break;
 
-                case OBJLineCommand::SmoothShading:
-                    break;
                 case OBJLineCommand::FaceElement:
                 {
-                    AsciiString characters(currentLineBuffer);
-                    unsigned char amount = static_cast<char>(characters.Count('/')) / 2;
+                    const size_t amount = Text::CountUntil(currentLine + 2, dataStream.ReadPossibleSize(), '/', '\n') / 2;
 
-                    faceElementListSize += amount;
+                    currentSegmentData.Face += amount;
 
                     isInMesh = true;
 
-                    if (VertexStructureSize < amount)
+                    if(VertexStructureSize < amount)
                         VertexStructureSize = amount;
 
                     break;
                 }
-            }  
-
-            bool fetchNextMesh = ShouldCreateNewMesh(command, isInMesh);
-
-            /*
-            if (!(lineIndex < numberOfLines))
-            {
-                OBJElement& element = ElementList[ElementListSize - 1];
-
-                element.VertexPositionList.ReSize(vertexPositionListSize);
-                element.TextureCoordinateList.ReSize(vertexTextureCoordinateListSize);
-                element.VertexNormalPositionList.ReSize(vertexNormalPositionListSize);
-                element.VertexParameterList.ReSize(vertexParameterListSize);
-                element.FaceElementList.ReSize(faceElementListSize);
-            }*/
-
-            if (fetchNextMesh)
-            {
-                OBJElement* newelementList = Memory::Reallocate<OBJElement>(ElementList, ++ElementListSize);
-
-                if (!newelementList)
-                {
-                    return FileActionResult::OutOfMemory;
-                }
-
-                ElementList = newelementList;
-
-                OBJElement& oldElement = newelementList[ElementListSize - 2];
-                OBJElement& newElement = newelementList[ElementListSize - 1];
-
-                newElement = OBJElement();
-
-                oldElement.Allocate
-                (
-                    vertexPositionListSize,
-                    vertexTextureCoordinateListSize,
-                    vertexNormalPositionListSize,
-                    vertexParameterListSize,
-                    faceElementListSize
-                );
-
-                vertexPositionListSize = 0;
-                vertexTextureCoordinateListSize = 0;
-                vertexNormalPositionListSize = 0;
-                vertexParameterListSize = 0;
-                faceElementListSize = 0;              
-
-                isInMesh = false;
             }
-        } 
-
-        ElementList[ElementListSize - 1].Allocate
-        (
-            vertexPositionListSize,
-            vertexTextureCoordinateListSize,
-            vertexNormalPositionListSize,
-            vertexParameterListSize,
-            faceElementListSize
-        );
-
-        if (MaterialFileListSize > 0)
-        {
-            MaterialFileList = new MTL[MaterialFileListSize];
         }
-     }
-     //--------------------------------------------------------------------
+        while(dataStream.SkipLine());
+
+        dataStream.CursorToBeginning();
+
+        MaterialFileListSize = materialCounter;
+        MaterialFileList = new MTL[materialCounter];
+
+        for(size_t i = 0; i < segmentAmount; i++)
+        {
+            const OBJSegmentData& currentSegmentData = segmentData[segmentAmount];
+
+            OBJElement& segment = *currentSegment;
+
+            segment.Allocate
+            (
+                currentSegmentData.Position,
+                currentSegmentData.Texture,
+                currentSegmentData.Normal,
+                currentSegmentData.Parameter,
+                currentSegmentData.Face
+            );
+
+            segment.MaterialInfoSize = currentSegmentData.Material;
+            segment.MaterialInfo = new OBJElementMaterialInfo[currentSegmentData.Material];
+
+            printf
+            (
+                "[OBJ][Segment (%li/%li)] V:%li T:%li N:%li P:%li F:%li M:%i\n",
+                i+1, 
+                segmentAmount,
+                currentSegmentData.Position,
+                currentSegmentData.Texture,
+                currentSegmentData.Normal,
+                currentSegmentData.Parameter,
+                currentSegmentData.Face,
+                currentSegmentData.Material
+            );
+        }
+    }    
+    //--------------------------------------------------------------------
 
     assert(VertexStructureSize == 3 || VertexStructureSize == 4);
 
     // Exact Parse
-    {    
-        size_t elementIndex = 0;
+    {
         size_t currentPositionElement = 0;
         size_t currentTextureElement = 0;
         size_t currentNormalElement = 0;
@@ -375,62 +352,60 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
         size_t materialIndex = 0;
         size_t materialIDCounter = 0;
 
-        OBJElement* elemtent = &ElementList[elementIndex++];
-        bool isInMesh = false;      
-        
-        file.CursorToBeginning();
+        size_t elementIndex = -1;
+        OBJElement* elemtentAdress = ElementList;
+        bool isInMesh = false;
+
+        size_t materialInfoIndex = 0;
+        size_t materialInfoBlockSize = 0;
 
         // Parse
-        while (file.ReadNextLineInto(currentLineBuffer))
+        do
         {
-            const OBJLineCommand command = PeekCommandLine(currentLineBuffer);            
-            
-            {
-                const bool fetchNextMesh = ShouldCreateNewMesh(command, isInMesh);
+            const Byte* currentLine = dataStream.CursorCurrentAdress();         
+            const unsigned short lineTagID = MakeShort(currentLine[0], currentLine[1]);
+            const OBJLineCommand command = PeekCommandLine(lineTagID);
 
-                if (fetchNextMesh)
-                {
-                    elemtent = &ElementList[elementIndex++];
+            dataStream.SkipBlock();
 
-                    currentPositionElement = 0;
-                    currentTextureElement = 0;
-                    currentNormalElement = 0;
-                    currentParameterElement = 0;
-                    currentFaceElement = 0;
-                }
-            }           
+            const char* dataPoint = (char*)dataStream.CursorCurrentAdress();
+            const size_t maximalSize = dataStream.ReadPossibleSize();
+            const size_t currentLineLength = Text::LengthUntil(dataPoint, maximalSize, '\n');
 
-            switch (command)
+            OBJElement& currentElemtent = *elemtentAdress;
+
+            switch(command)
             {
                 case OBJLineCommand::MaterialLibraryInclude:
-                { 
-                    wchar_t materialFilePath[PathMaxSize];
+                {                  
+                    char materialFilePathA[PathMaxSize];
+                    wchar_t materialFilePathW[PathMaxSize];
+                    wchar_t materialFilePathFullW[PathMaxSize];
                     MTL& material = MaterialFileList[materialIndex++];
 
                     // Parse materialPath
                     {
-                        char materialFilePathTempA[PathMaxSize];
-                        wchar_t materialFilePathTempW[PathMaxSize];
-
                         Text::Parse
                         (
-                            currentLineBuffer,
-                            currentLineBufferSize,
-                            "$s",
-                            materialFilePathTempA
+                            dataPoint,
+                            currentLineLength,
+                            "s",
+                            materialFilePathA
                         );
-
-                        Text::Copy(materialFilePathTempA, PathMaxSize, materialFilePathTempW, PathMaxSize);
-
-                        File::PathSwapFile(filePath, materialFilePath, materialFilePathTempW);
-                    }              
-
-                    const BF::FileActionResult materialLoadResult = material.Load(materialFilePath);
-
-                    if (materialLoadResult != FileActionResult::Successful)
-                    {
-                        printf("[Warning] Material (.mtl) file is missing at path <%ls>\n", materialFilePath);
                     }
+
+                    Text::Copy(materialFilePathA, PathMaxSize, materialFilePathW, PathMaxSize);
+                    File::PathSwapFile(fileName, materialFilePathFullW, materialFilePathW);
+
+                    {
+                        const FileActionResult materialLoadResult = material.Load(materialFilePathFullW);
+                        const bool sucessful = materialLoadResult == FileActionResult::Successful;
+
+                        if(!sucessful)
+                        {
+                            printf("[Warning] Material (.mtl) file is missing at path <%ls>\n", materialFilePathFullW);
+                        }
+                    }                  
 
                     break;
                 }
@@ -438,28 +413,28 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
                 {
                     char usedMaterialName[MTLNameSize];
                     unsigned int materialID = -1;
-                 
+
                     Text::Parse
                     (
-                        currentLineBuffer,
-                        currentLineBufferSize,
-                        "$s",
+                        dataPoint,
+                        currentLineLength,
+                        "s",
                         usedMaterialName
                     );
 
-                    for (size_t i = 0; i < MaterialFileListSize; i++)
+                    for(size_t i = 0; i < MaterialFileListSize; i++)
                     {
                         const MTL& mtl = MaterialFileList[i];
                         const size_t materialListSize = mtl.MaterialListSize;
 
-                        for (size_t j = 0; j < materialListSize; j++)
+                        for(size_t j = 0; j < materialListSize; j++)
                         {
-                            const MTLMaterial& material = mtl.MaterialList[j];     
+                            const MTLMaterial& material = mtl.MaterialList[j];
                             const size_t matertalALength = Text::Length(material.Name);
                             const size_t matertalBLength = Text::Length(usedMaterialName);
                             const bool isSameName = Text::Compare(material.Name, matertalALength, usedMaterialName, matertalBLength);
 
-                            if (isSameName)
+                            if(isSameName)
                             {
                                 materialID = j;
                                 break;
@@ -467,16 +442,46 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
                         }
                     }
 
-                    elemtent->MaterialListIndex = materialID;
+                    if(materialInfoIndex > 0)
+                    {
+                        OBJElementMaterialInfo& infoBefore = currentElemtent.MaterialInfo[materialInfoIndex - 1];
+                        OBJElementMaterialInfo& infoNew = currentElemtent.MaterialInfo[materialInfoIndex++];
+
+                        infoNew.MaterialIndex = materialID;
+                        infoNew.Size = -1;
+
+                        const size_t faceSize = currentElemtent.FaceElementList.Size()*3;
+                        size_t newSize = (currentFaceElement * 3);
+
+                        infoBefore.Size = faceSize - (newSize );    
+
+                        materialInfoBlockSize += infoBefore.Size;
+
+                        if(materialInfoIndex + 1 == currentElemtent.MaterialInfoSize)
+                        {
+                            // Last entry
+                            infoNew.Size = faceSize - materialInfoBlockSize;
+                        }
+                    }
+                    else
+                    {
+                        OBJElementMaterialInfo& info = currentElemtent.MaterialInfo[materialInfoIndex++];
+
+                        info.MaterialIndex = materialID;
+                        info.Size = -1;
+                    }                 
 
                     break;
                 }
 
                 case OBJLineCommand::ObjectName:
                 {
-                    const size_t offset = 2;
+                    OBJElement* elemtentAdress = &ElementList[elementIndex++];                                
 
-                    Text::Copy(currentLineBuffer + offset, currentLineBufferSize - offset, elemtent->Name, OBJElementNameLength);
+                    materialInfoIndex = 0;
+                    materialInfoBlockSize = 0;
+                   
+                    Text::Copy(dataPoint, currentLineLength, currentElemtent.Name, OBJElementNameLength);
                     break;
                 }
 
@@ -486,20 +491,18 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
                 {
                     Vector3<float>* currentVectorValue = nullptr;
 
-                    assert(elemtent);
-
-                    switch (command)
+                    switch(command)
                     {
                         case OBJLineCommand::VertexParameter:
-                            currentVectorValue = &elemtent->VertexParameterList[currentParameterElement++];
+                            currentVectorValue = &currentElemtent.VertexParameterList[currentParameterElement++];
                             break;
 
                         case OBJLineCommand::VertexNormal:
-                            currentVectorValue = &elemtent->VertexNormalPositionList[currentNormalElement++];
+                            currentVectorValue = &currentElemtent.VertexNormalPositionList[currentNormalElement++];
                             break;
 
                         case OBJLineCommand::VertexGeometric:
-                            currentVectorValue = &elemtent->VertexPositionList[currentPositionElement++];
+                            currentVectorValue = &currentElemtent.VertexPositionList[currentPositionElement++];
                             break;
                     }
 
@@ -507,50 +510,49 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
 
                     Text::Parse
                     (
-                        currentLineBuffer,
-                        currentLineBufferSize,
-                        "$fff",
-                        &currentVectorValue->X, 
+                        (char*)dataPoint,
+                        currentLineLength,
+                        "fff",
+                        &currentVectorValue->X,
                         &currentVectorValue->Y,
                         &currentVectorValue->Z
                     );
                     break;
-                }          
+                }
 
                 case OBJLineCommand::VertexTexture:
                 {
-                    Vector2<float>& point = elemtent->TextureCoordinateList[currentTextureElement++];
+                    Vector2<float>& point = currentElemtent.TextureCoordinateList[currentTextureElement++];
 
                     Text::Parse
                     (
-                        currentLineBuffer,
-                        currentLineBufferSize,
-                        "$ff",
-                        &point.X, &point.Y 
+                        (char*)dataPoint,
+                        currentLineLength,
+                        "ff",
+                        &point.X, 
+                        &point.Y
                     );
 
                     break;
-                }        
+                }
                 case OBJLineCommand::SmoothShading:
                     break;
 
                 case OBJLineCommand::FaceElement:
-                {     
-                    assert(currentFaceElement < elemtent->FaceElementList.Size());
+                {
+                    Vector3<unsigned int>& vectorA = currentElemtent.FaceElementList[currentFaceElement++];
+                    Vector3<unsigned int>& vectorB = currentElemtent.FaceElementList[currentFaceElement++];
+                    Vector3<unsigned int>& vectorC = currentElemtent.FaceElementList[currentFaceElement++];
 
-                    Vector3<unsigned int>& vectorA = elemtent->FaceElementList[currentFaceElement++];
-                    Vector3<unsigned int>& vectorB = elemtent->FaceElementList[currentFaceElement++];
-                    Vector3<unsigned int>& vectorC = elemtent->FaceElementList[currentFaceElement++];
-
-                    switch (VertexStructureSize)
+                    switch(VertexStructureSize)
                     {
                         case 3:
                         {
                             Text::Parse
                             (
-                                currentLineBuffer,
-                                currentLineBufferSize,
-                                "$uuuuuuuuu",
+                                (char*)dataPoint,
+                                currentLineLength,
+                                "u§u§uu§u§uu§u§u",
                                 &vectorA.X, &vectorA.Y, &vectorA.Z,
                                 &vectorB.X, &vectorB.Y, &vectorB.Z,
                                 &vectorC.X, &vectorC.Y, &vectorC.Z
@@ -559,13 +561,15 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
                         }
                         case 4:
                         {
-                            Vector3<unsigned int>& vectorD = elemtent->FaceElementList[currentFaceElement++];
+                            const Byte* dataPoint = dataStream.CursorCurrentAdress();
+                            const size_t readableSize = dataStream.ReadPossibleSize();
+                            Vector3<unsigned int>& vectorD = currentElemtent.FaceElementList[currentFaceElement++];
 
                             Text::Parse
                             (
-                                currentLineBuffer,
-                                currentLineBufferSize,
-                                "$uuuuuuuuuuuu",                                
+                                (char*)dataPoint,
+                                readableSize,
+                                "u§u§u§uu§u§u§uu§u§u§uu§u§u§u",
                                 &vectorA.X, &vectorA.Y, &vectorA.Z,
                                 &vectorB.X, &vectorB.Y, &vectorB.Z,
                                 &vectorC.X, &vectorC.Y, &vectorC.Z,
@@ -576,7 +580,7 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
 
                         default:
                             break;
-                    }                   
+                    }
 
                     isInMesh = true;
 
@@ -590,6 +594,7 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
                     break;
             }
         }
+        while(dataStream.SkipLine());
     }
 
     return FileActionResult::Successful;
@@ -614,11 +619,11 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
 
         for (size_t materialIndex = 0; materialIndex < materialListSize; materialIndex++)
         {
-            MTLMaterial& mtlMaterial = mtl.MaterialList[materialIndex];
+            const MTLMaterial& mtlMaterial = mtl.MaterialList[materialIndex];
             Material& material = model.MaterialList[materialIndex];
 
             Text::Copy(mtlMaterial.Name, MTLNameSize, material.Name, MaterialNameLength);
-          //  Text::Copy(material.FilePath, mtlMaterial.TextureFilePath, MTLFilePath);
+            Text::Copy(mtlMaterial.TextureFilePath, MTLFilePath, material.TextureFilePath, MaterialTextureFilePathLength);
                        
             Memory::Copy(material.Ambient, mtlMaterial.Ambient, 3 * sizeof(float));
             Memory::Copy(material.Diffuse, mtlMaterial.Diffuse, 3 * sizeof(float));
@@ -668,6 +673,29 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
         size_t vertecDataIndex = 0;
         float* vertexDataArray = mesh.VertexDataList;
 
+
+        if(element.MaterialInfoSize > 0)
+        {
+            meshSegment.MaterialInfoSize = element.MaterialInfoSize;
+            meshSegment.MaterialInfo = new OBJElementMaterialInfo[element.MaterialInfoSize];
+
+            for(size_t i = 0; i < element.MaterialInfoSize; i++)
+            {
+                const OBJElementMaterialInfo& infoA = element.MaterialInfo[i];
+                OBJElementMaterialInfo& infoB = meshSegment.MaterialInfo[i];
+
+                infoB.MaterialIndex = infoA.MaterialIndex;
+                infoB.Size = infoA.Size;
+            }
+        }
+        else
+        {
+            meshSegment.MaterialInfoSize = 1;
+            meshSegment.MaterialInfo = new OBJElementMaterialInfo[1];
+            meshSegment.MaterialInfo->Size = element.FaceElementList.Size();
+            meshSegment.MaterialInfo->MaterialIndex = -1;
+        }
+      
 
         for (size_t i = 0; i < faceElementListSize; i++)
         {
@@ -773,19 +801,20 @@ void BF::OBJ::PrintData()
 
     for (unsigned int i = 0; i < ElementListSize; i++)
     {
-        OBJElement* waveFrontElement = &ElementList[i];
+        const OBJElement& waveFrontElement = ElementList[i];
 
-        unsigned int sizePos = waveFrontElement->VertexPositionList.Size();
-        unsigned int sizeNormal = waveFrontElement->VertexNormalPositionList.Size();
-        unsigned int sizeText = waveFrontElement->TextureCoordinateList.Size();
-        unsigned int sizePara = waveFrontElement->VertexParameterList.Size();
-        unsigned int sizeFace = waveFrontElement->FaceElementList.Size();                
+        size_t sizePos = waveFrontElement.VertexPositionList.Size();
+        size_t sizeNormal = waveFrontElement.VertexNormalPositionList.Size();
+        size_t sizeText = waveFrontElement.TextureCoordinateList.Size();
+        size_t sizePara = waveFrontElement.VertexParameterList.Size();
+        size_t sizeFace = waveFrontElement.FaceElementList.Size();
         char* materialName = nullptr;
 
+        /*
         if (waveFrontElement->MaterialListIndex != -1)
         {
             materialName = MaterialFileList[0].MaterialList[waveFrontElement->MaterialListIndex].Name;
-        }
+        }*/
 
         printf
         (
@@ -795,7 +824,7 @@ void BF::OBJ::PrintData()
             sizeText,
             sizePara, 
             sizeFace, 
-            &waveFrontElement->Name[0],
+            0, //&waveFrontElement->Name[0],
             materialName
         );
     }
