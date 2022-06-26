@@ -1672,20 +1672,8 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
                     rotation.X = Math::DegreeToRadians(rotation.X);
                     rotation.Y = Math::DegreeToRadians(rotation.Y);
                     rotation.Z = Math::DegreeToRadians(rotation.Z);
-
-<<<<<<< Updated upstream
-                    //--[Apply Data]-------------
-                    //loadedModel->DirectMorth = false;
-                    //loadedModel->ModelMatrix.Move(position);
-                    //loadedModel->ModelMatrix.Rotate(rotation);
-                    //loadedModel->Scale(scale);
-                    //loadedModel->UpdateGlobalMesh();
-
-                    Renderable* renderable = new Renderable();
-=======
               
                     Renderable* renderable = new Renderable();                
->>>>>>> Stashed changes
 
                     Register(*renderable, *loadedModel);
 
@@ -1720,21 +1708,8 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
                         }
                     }
 
-
-
-
-
-
-
-
-
-
-
-
                     _renderList.Add(renderable);
-                }
-
-              
+                }              
 
                 //-----------------------
                 break;
