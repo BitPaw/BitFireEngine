@@ -18,7 +18,7 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="../__Export__/X64B-Release - Linux/BitFireEngine_Release.lib" prefix_auto="0" extension_auto="0" />
+				<Option output="../__Export__/X64B-Release - Linux/BitFireEngine_RELEASE.lib" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="" />
 				<Option object_output="../__Temp__/X64B-Release - Linux/BitFireEngine/" />
 				<Option type="2" />

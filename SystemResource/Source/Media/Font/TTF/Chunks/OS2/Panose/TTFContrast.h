@@ -8,7 +8,7 @@ namespace BF
 
 		Any,
 		NoFit,
-		None,
+		NoneContrast,
 		VeryLow,
 		Low,
 		MediumLow,

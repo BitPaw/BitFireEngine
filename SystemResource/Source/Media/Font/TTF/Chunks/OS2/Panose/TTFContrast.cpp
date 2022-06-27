@@ -6,7 +6,7 @@ BF::TTFContrast BF::ConvertTTFContrast(unsigned char contrast)
 	{
 		case 0: return BF::TTFContrast::Any;
 		case 1: return BF::TTFContrast::NoFit;
-		case 2: return BF::TTFContrast::None;
+		case 2: return BF::TTFContrast::NoneContrast;
 		case 3:	return BF::TTFContrast::VeryLow;
 		case 4:	return BF::TTFContrast::Low;
 		case 5:	return BF::TTFContrast::MediumLow;

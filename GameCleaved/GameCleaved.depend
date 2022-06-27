@@ -454,7 +454,7 @@
 	<OS/OSDefine.h>
 	<cstddef>
 
-1652541952 source:/home/bitpaw/Desktop/BitFireEngine/GameCleaved/Source/CleavedGameSystem.cpp
+1656358018 source:/home/bitpaw/Desktop/BitFireEngine/GameCleaved/Source/CleavedGameSystem.cpp
 	"CleavedGameSystem.h"
 	<stdio.h>
 	<stdlib.h>
@@ -537,7 +537,7 @@
 
 1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/ImageFileFormat.h
 
-1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Resource.h
+1656358018 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Resource.h
 	"File/FileActionResult.hpp"
 	<cstddef>
 
@@ -545,23 +545,19 @@
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Math/Geometry/Vector4.hpp
 
-1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Model/Model.h
+1656358018 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Model/Model.h
 	"Mesh.h"
 	"LinkedMesh.h"
 	"Material.h"
 	"../Resource.h"
 	"ModelType.h"
-	"../Math/Geometry/Shape/Shape.h"
-	"../Math/Geometry/Vector3.hpp"
-	"../Math/Geometry/Vector4.hpp"
-	"../Math/Geometry/Shape/Shape.h"
-	"../Math/Geometry/Matrix4x4.hpp"
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Model/Mesh.h
 	"MeshSegment.h"
 
-1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Model/MeshSegment.h
+1656358018 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Model/MeshSegment.h
 	<cstddef>
+	<Model/OBJ/OBJElement.h>
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Model/LinkedMesh.h
 	"Vertex.h"
@@ -582,7 +578,7 @@
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Model/MeshIndexData.h
 
-1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/List.hpp
+1656358018 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/List.hpp
 	<stdlib.h>
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Math/Geometry/Vector2.hpp
@@ -752,7 +748,7 @@
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Math/Geometry/Rectangle.hpp
 
-1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Graphic/OpenGL/Renderable.h
+1656358018 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Graphic/OpenGL/Renderable.h
 	<Math/Geometry/Matrix4x4.hpp>
 	<Shader/ShaderProgram.h>
 	"RenderMode.h"
@@ -766,8 +762,9 @@
 	<cstddef>
 	"RenderableSegment.h"
 
-1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Graphic/OpenGL/RenderableSegment.h
+1656358018 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Graphic/OpenGL/RenderableSegment.h
 	"ImageType.h"
+	<cstddef>
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Graphic/OpenGL/SkyBox.h
 	<Media/Image/Image.h>
@@ -857,7 +854,7 @@
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/IFileFormat.hpp
 	"File/FileActionResult.hpp"
 
-1652542754 source:/home/bitpaw/Desktop/BitFireEngine/GameCleaved/Source/Main.cpp
+1655657225 source:/home/bitpaw/Desktop/BitFireEngine/GameCleaved/Source/Main.cpp
 	<stdio.h>
 	<signal.h>
 	<OS/OSDefine.h>
@@ -868,8 +865,9 @@
 	"CleavedGameSystem.h"
 	<windows.h>
 
-1652542754 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/Memory.h
+1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/Memory.h
 	"MemoryUsage.h"
+	"MemoryProtectionMode.h"
 	<OS/OSDefine.h>
 	<ErrorCode.h>
 	<File/File.h>
@@ -880,12 +878,12 @@
 	<cstdio>
 	<cstring>
 
-1652538508 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/MemoryUsage.h
+1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/MemoryUsage.h
 	<cstddef>
 
-1643113130 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/ErrorCode.h
+1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/ErrorCode.h
 
-1652542754 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/File.h
+1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/File.h
 	<cstdlib>
 	<cstdio>
 	<cwchar>
@@ -907,25 +905,26 @@
 	<direct.h>
 	<Windows.h>
 
-1652542754 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/FileLocation.h
+1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/FileLocation.h
 
-1652538508 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/FilePath.h
+1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/FilePath.h
 	<OS/OSDefine.h>
 	<cstddef>
 
-1652542754 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/ByteStream.h
+1656358018 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/ByteStream.h
 	<cstddef>
 	"Endian.h"
 	<Container/ClusterShort.h>
 	<Container/ClusterInt.h>
+	<Container/ClusterLongLong.h>
 
-1652538508 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/Endian.h
+1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/Endian.h
 
-1652542754 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/ClusterShort.h
+1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/ClusterShort.h
 
-1652542754 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/ClusterInt.h
+1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/ClusterInt.h
 
-1643113130 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/FilePersistence.hpp
+1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/FilePersistence.hpp
 
 1652542754 source:/home/bitpaw/Desktop/BGEII/BitFireEngine/GameCleaved/Source/CleavedGameSystem.cpp
 	"CleavedGameSystem.h"
@@ -1406,4 +1405,21 @@
 	<OS/OSDefine.h>
 
 1655505646 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Container/ClusterLongLong.h
+
+1656358018 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Model/OBJ/OBJElement.h
+	"../../Container/AsciiString.h"
+	"../../Container/List.hpp"
+	"../../../../SystemResource/Source/Math/Geometry/Vector2.hpp"
+	"../../../../SystemResource/Source/Math/Geometry/Vector3.hpp"
+
+1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/AsciiString.h
+	<cstddef>
+	<cstring>
+	<string>
+	"List.hpp"
+
+1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/MemoryProtectionMode.h
+	<OS/OSDefine.h>
+
+1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/ClusterLongLong.h
 
