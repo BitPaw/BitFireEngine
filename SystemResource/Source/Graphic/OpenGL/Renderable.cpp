@@ -36,7 +36,22 @@ void BF::Renderable::MeshShare(const Renderable& rendable)
 			const RenderableSegment& sourceSegment = sourceChunk.SegmentList[i];
 			RenderableSegment& targetSegment = targetChunk.SegmentList[i];
 
-			targetSegment = sourceSegment;
+			targetSegment.ID = sourceSegment.ID;
+			targetSegment.Size = sourceSegment.Size;
+			targetSegment.TextureType = sourceSegment.TextureType;
+
+			targetSegment.MaterialRangeSize = sourceSegment.MaterialRangeSize;
+			targetSegment.MaterialRange = new SegmentMaterialRange[sourceSegment.MaterialRangeSize];
+
+			for(size_t i = 0; i < sourceSegment.MaterialRangeSize; i++)
+			{
+				SegmentMaterialRange& segmentTarget = targetSegment.MaterialRange[i];
+				SegmentMaterialRange& segmentSource = sourceSegment.MaterialRange[i];
+
+				segmentTarget.ShaderID = segmentSource.ShaderID;
+				segmentTarget.TextureID = segmentSource.TextureID;
+				segmentTarget.Size = segmentSource.Size;
+			}
 		}
 	}
 }

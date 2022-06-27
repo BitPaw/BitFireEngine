@@ -84,9 +84,9 @@ BF::Camera::Camera()
 	_walkSpeed = 0.2;
 	_viewSpeed = 0.5;
 
-	FieldOfView = 75;
-	Height = 1000;
-	Width = 1000;
+	FieldOfView = 60;
+	Height = 1;
+	Width = 1;
 	Near = 0.01;
 	Far = 10000;
 

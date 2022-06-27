@@ -1,4 +1,7 @@
-#version 330
+#version 300 es
+
+precision highp float;
+precision mediump int;
 
 layout(location = 0) in vec3 position;
 
@@ -9,10 +12,9 @@ uniform mat4 MatrixProjection;
 
 void main() 
  {
-
     vec4 pos = MatrixProjection *  MatrixView * vec4(position, 1.0);
    
-    TexturePosition = vec3(position.x, position.y, position.z);
+    TexturePosition = position;
 
-   gl_Position = pos;
+    gl_Position = pos;
 }

@@ -1,14 +1,17 @@
-#version 330
+#version 300 es
+
+precision highp float;
+precision mediump int;
 
 out vec4 fragcolor;
 
 in vec3 TexturePosition;
 
-uniform samplerCube Skybox;
+uniform samplerCube SkyBoxTexture;
 
 void main()
 {
-	vec3 texturePositionCurrected = vec3(-TexturePosition.x, TexturePosition.y, -TexturePosition.z);
+	vec4 textureColor = texture(SkyBoxTexture, TexturePosition);
 
-	fragcolor = texture(Skybox, texturePositionCurrected);
+	fragcolor = textureColor;
 }

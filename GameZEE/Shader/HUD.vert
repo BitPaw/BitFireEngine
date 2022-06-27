@@ -1,4 +1,4 @@
-#version 330
+#version 300 es
 
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
@@ -10,9 +10,11 @@ out vec3 vertexNormal;
 out vec4 vertexColor;
 out vec2 vertexTexturePosition;
 
+uniform mat4 MatrixModel;
+
 void main() 
 {
-    gl_Position = vec4(position,1);
+    gl_Position = MatrixModel * vec4(position,1);
 	
     vertexColor = color;
     vertexNormal = normal;

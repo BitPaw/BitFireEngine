@@ -357,7 +357,8 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
         bool isInMesh = false;
 
         size_t materialInfoIndex = 0;
-        size_t materialInfoBlockSize = 0;
+        size_t materialFaceCounter = 0;
+        size_t materialFaceCounterMAX = 0;
 
         // Parse
         do
@@ -422,12 +423,12 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
                         usedMaterialName
                     );
 
-                    for(size_t i = 0; i < MaterialFileListSize; i++)
+                    for(size_t i = 0; i < MaterialFileListSize; ++i)
                     {
                         const MTL& mtl = MaterialFileList[i];
                         const size_t materialListSize = mtl.MaterialListSize;
 
-                        for(size_t j = 0; j < materialListSize; j++)
+                        for(size_t j = 0; j < materialListSize; ++j)
                         {
                             const MTLMaterial& material = mtl.MaterialList[j];
                             const size_t matertalALength = Text::Length(material.Name);
@@ -450,17 +451,17 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
                         infoNew.MaterialIndex = materialID;
                         infoNew.Size = -1;
 
-                        const size_t faceSize = currentElemtent.FaceElementList.Size()*3;
                         size_t newSize = (currentFaceElement * 3);
 
-                        infoBefore.Size = faceSize - (newSize );    
+                        infoBefore.Size = materialFaceCounter;
 
-                        materialInfoBlockSize += infoBefore.Size;
+                        materialFaceCounterMAX += materialFaceCounter;
+                        materialFaceCounter = 0;
 
-                        if(materialInfoIndex + 1 == currentElemtent.MaterialInfoSize)
+                        if(materialInfoIndex == currentElemtent.MaterialInfoSize)
                         {
                             // Last entry
-                            infoNew.Size = faceSize - materialInfoBlockSize;
+                            infoNew.Size = currentElemtent.FaceElementList.Size() - materialFaceCounterMAX;
                         }
                     }
                     else
@@ -479,7 +480,6 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
                     OBJElement* elemtentAdress = &ElementList[elementIndex++];                                
 
                     materialInfoIndex = 0;
-                    materialInfoBlockSize = 0;
                    
                     Text::Copy(dataPoint, currentLineLength, currentElemtent.Name, OBJElementNameLength);
                     break;
@@ -544,6 +544,8 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
                     Vector3<unsigned int>& vectorB = currentElemtent.FaceElementList[currentFaceElement++];
                     Vector3<unsigned int>& vectorC = currentElemtent.FaceElementList[currentFaceElement++];
 
+                    materialFaceCounter += VertexStructureSize;
+
                     switch(VertexStructureSize)
                     {
                         case 3:
@@ -596,6 +598,8 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
         }
         while(dataStream.SkipLine());
     }
+
+    PrintData();
 
     return FileActionResult::Successful;
 }
@@ -793,6 +797,21 @@ void BF::OBJ::PrintData()
     printf(line);
     printf("| (OBJ) Name: %-64ls |\n", Name);
     printf(line);
+
+
+    for(size_t i = 0; i < ElementListSize; i++)
+    {
+        const OBJElement& element = ElementList[i];
+
+        for(size_t j = 0; j < element.MaterialInfoSize; j++)
+        {
+            const OBJElementMaterialInfo& info = element.MaterialInfo[j];
+
+            printf("[>>>] Part (%2i/%2i) | Size:%i MaterialID:%i\n", j+1, element.MaterialInfoSize, info.Size, info.MaterialIndex);
+        }
+    }
+
+#if 0
     printf
     (
         "| %5s | %5s | %5s | %5s | %5s | %-17s | %-16s |\n",
@@ -830,6 +849,7 @@ void BF::OBJ::PrintData()
     }
 
     printf(line);
+#endif
 
     if (MaterialFileListSize == 0)
     {

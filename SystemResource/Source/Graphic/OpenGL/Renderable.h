@@ -30,7 +30,10 @@ namespace BF
 		void MeshShare(const Renderable& rendable);
 		void ShaderUse(const ShaderProgram& shaderProgram);
 		void ShaderUse(const unsigned int shaderProgramID);
+
+
 		void TextureUse(const unsigned int texturteID);
+		//void TextureUse(const Textrue& texturteID);
 
 		constexpr bool IsRegistered() const { return ID != -1; } ;
 	};

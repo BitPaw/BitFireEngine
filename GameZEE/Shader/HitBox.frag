@@ -19,11 +19,11 @@ in struct Vertex
   vec2 TexturePosition;
 } vertex;
 
-uniform sampler2D MaterialTexture;
+uniform vec4 HitBoxColor;
 
 void main()
 {
-    vec3 color = vertex.Color.xyz;
+   vec3 color = vertex.Color.xyz;
 
-   fragcolor = texture(MaterialTexture, vertex.TexturePosition) * vec4(color, 1.0f);
+   fragcolor = HitBoxColor;// + vec4(color, 1.0f);
 }
