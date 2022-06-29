@@ -1,6 +1,5 @@
 #include <Math/Primes.h>
 #include <Math/Math.h>
-#include <map>
 
 #ifdef Primesdebug
 #include <stdio.h>
@@ -46,19 +45,43 @@ unsigned int BF::Primes::Eula_phi(unsigned int input)
 		return input - 1;
 	}
 
-	std::map<int, int> primes;
-	int rest = input;
+	unsigned int primes[28] = { 0 };
 
-	while (rest != 1)
-	{
-		int i = firstPrimeInX(rest);
-		primes[i] = primes[i]++;
-		rest /= i;
-	}
+	BF::Primes::Primefactors(input, primes, 14);
+
 	int result = 1;
-	for (auto element : primes)
+	for (unsigned int i = 0; i < 14; i++)
 	{
-		result *= BF::Math::Power(element.first, element.second - 1) * (element.first - 1);
+		if (primes[i * 2] == 0)
+		{
+			break;
+		}
+		result *= BF::Math::Power(primes[i * 2], primes[i * 2 + 1] - 1) * (primes[i * 2] - 1);
 	}
 	return result;
+}
+
+int BF::Primes::Primefactors(unsigned int input, unsigned int* result, unsigned int size)
+{
+	int rest = input;
+	while (rest != 1)
+	{
+		int prime = firstPrimeInX(rest);
+		for (int i = 0; i < size; i++)
+		{
+			if (result[i * 2] == prime)
+			{
+				result[i * 2 + 1]++;
+				break;
+			}
+			if (result[i * 2] == 0)
+			{
+				result[i * 2] = prime;
+				result[i * 2 + 1] = 1;
+				break;
+			}
+		}
+		rest /= prime;
+	}
+	return 0;
 }
