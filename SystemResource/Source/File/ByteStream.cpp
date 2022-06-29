@@ -223,7 +223,7 @@ void BF::ByteStream::Read(unsigned int& value, const Endian endian)
 
 		default:
 		case Endian::Little:
-			value = MakeIntLE(data[0], data[1], data[2], data[3]);
+			value = *(unsigned int*)data;
 			break;
 	}
 
@@ -412,10 +412,9 @@ void BF::ByteStream::Write(unsigned int value, const Endian endian)
 		default:
 		case Endian::Little:
 		{
-			data[0] = clusterInt.D;
-			data[1] = clusterInt.C;
-			data[2] = clusterInt.B;
-			data[3] = clusterInt.A;
+			unsigned int* adress = (unsigned int*)data;
+
+			*adress = value;
 			break;
 		}
 	}

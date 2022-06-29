@@ -47,6 +47,8 @@ void BF::SBPServer::CreateText(const wchar_t* text, Byte* buffer, size_t& buffer
 
 void BF::SBPServer::Start(const unsigned short port)
 {
+	_server.EventCallBackSocket = this;
+
 	_server.Start(port);
 }
 
@@ -184,12 +186,76 @@ void BF::SBPServer::SendTextToClient(const unsigned int clientID, const wchar_t*
 	_server.SendMessageToClient(clientID, buffer, size);
 }
 
+void BF::SBPServer::OnSocketCreating(const IPAdressInfo& adressInfo, bool& use)
+{
+}
+
+void BF::SBPServer::OnSocketCreated(const IPAdressInfo& adressInfo, bool& use)
+{
+}
+
 void BF::SBPServer::OnMessageSend(IOSocketMessage socketMessage)
 {
+
+
+	printf("[SBP] ");
 	//_inputQueue.Enqueue();
 }
 
 void BF::SBPServer::OnMessageReceive(IOSocketMessage socketMessage)
 {
+	SBPData data;
 
+	PackageParse(data, socketMessage.Message, socketMessage.MessageSize);
+
+	printf("[SBP] ");
+}
+
+void BF::SBPServer::OnConnectionListening(const IPAdressInfo& adressInfo)
+{
+
+}
+
+void BF::SBPServer::OnConnectionLinked(const IPAdressInfo& adressInfo)
+{
+}
+
+void BF::SBPServer::OnConnectionEstablished(const IPAdressInfo& adressInfo)
+{
+}
+
+void BF::SBPServer::OnConnectionTerminated(const IPAdressInfo& adressInfo)
+{
+}
+
+int BF::SBPServer::PackageParse(SBPData& data, const void* inputData, const size_t inputDataSize)
+{
+	// Check length
+	{
+		const size_t sizeMaximal = 512u;
+		const size_t sizeMinimal = 20u;
+		const bool isValidLength = inputDataSize >= sizeMinimal && inputDataSize <= sizeMaximal;
+
+		if(!isValidLength)
+		{
+			return -1;
+		}
+	}
+
+	{
+		ByteStream dataStream((Byte*)inputData, inputDataSize);
+
+		data.Clear();
+
+		const bool validHeader = dataStream.ReadAndCompare("°°", 2u);
+		dataStream.Read(data.Command.Data, 4u);
+		dataStream.Read(data.SourceID, Endian::Little);
+		dataStream.Read(data.TargetID, Endian::Little);
+		dataStream.Read(data.ID, Endian::Little);
+		dataStream.Read(data.DataSize, Endian::Little);
+
+		data.Data = dataStream.CursorCurrentAdress();
+	}
+
+	return 0;
 }

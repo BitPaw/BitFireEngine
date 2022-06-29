@@ -547,6 +547,7 @@
     <ClCompile Include="Source\Media\Image\WEBP\WEBP.cpp" />
     <ClCompile Include="Source\Media\Video\WEBM\WebM.cpp" />
     <ClCompile Include="Source\Media\XingInfo\XingInfo.cpp" />
+    <ClCompile Include="Source\OS\User.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Container\ClusterLongLong.h" />
@@ -878,6 +879,7 @@
     <ClInclude Include="Source\Media\Image\WEBP\WEBP.h" />
     <ClInclude Include="Source\Media\Video\WEBM\WebM.h" />
     <ClInclude Include="Source\Media\XingInfo\XingInfo.h" />
+    <ClInclude Include="Source\OS\User.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -4,8 +4,8 @@
 
 BF::SBPData::SBPData()
 {
-	Source = SourceInvalid;
-	Target = TargetInvalid;
+	SourceID = SourceInvalid;
+	TargetID = TargetInvalid;
 	Command.Value = MakeInt('#', '#', '#', '#');
 	ID = 0;
 	DataSize = 0;
@@ -28,8 +28,8 @@ void BF::SBPData::Set
 )
 {
 	Command.Value = command;
-	Source = source;
-	Target = target;
+	SourceID = source;
+	TargetID = target;
 	ID = id;
 	DataSize = dataSize;
 	Data = (void*)adress;
@@ -42,15 +42,11 @@ unsigned int BF::SBPData::Size()
 
 void BF::SBPData::Clear()
 {
-	const unsigned int clearValue = MakeInt('#', '#', '#', '#');
-	const unsigned int size = DataSize;
-	char* adress = (char*)Data;
-
-	Source = clearValue;
-	Target = clearValue;
-	Command.Value = clearValue;
-	ID = clearValue;
-	DataSize = clearValue;
+	Command.Value = MakeInt('#', '#', '#', '#');
+	SourceID = -1;
+	TargetID = -1;
+	ID = -1;
+	DataSize = 0;
 	Data = nullptr;
 }
 
@@ -60,8 +56,8 @@ void BF::SBPData::GenerateMessage(const SBPData& data, unsigned char* buffer, si
 
 	stream.Write("°°", 2u);
 	stream.Write(data.Command.Data, 4u);
-	stream.Write(data.Source, Endian::Little);
-	stream.Write(data.Target, Endian::Little);
+	stream.Write(data.SourceID, Endian::Little);
+	stream.Write(data.TargetID, Endian::Little);
 	stream.Write(data.ID, Endian::Little);
 	stream.Write(data.DataSize, Endian::Little);
 

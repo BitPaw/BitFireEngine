@@ -774,6 +774,9 @@
     <ClCompile Include="Source\Hardware\Memory\MemoryProtectionMode.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\OS\User.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp">
@@ -1761,6 +1764,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Container\ClusterLongLong.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\OS\User.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

@@ -21,11 +21,21 @@
 #define SBPFilePathSizeMask			0b1111000000000000
 
 // Source
+
 #define SourceInvalid	-1
 #define SourceMe	-2 // Request the reciever (Server mostly) to fill in data.
 #define SourceServer	-3 // Server is the owner of this message
 
 #define SourceLimitMaximum SourceServer
+
+enum class SBPSource
+{
+	Invalid = SourceInvalid,
+
+	// Sending
+	Me = SourceMe,
+	Server = SourceServer
+};
 
 // Target
 #define TargetInvalid		-1
@@ -38,14 +48,40 @@
 
 #define TargetLimitMaximum TargetEveryBody
 
+enum class SBPTarget
+{
+	Invalid = TargetInvalid,
+
+	// Sending
+	Server = TargetServer,
+	All = TargetAll,
+	Spesific = TargetSpecific,
+
+	// Recieving
+	You = TargetYou,
+	YouAndOthers = TargetYouAndOthers,
+	Everybody = TargetEveryBody
+};
+
 namespace BF
 {
 	struct SBPData
 	{
 		public:
 		ClusterInt Command;
-		unsigned int Source;
-		unsigned int Target;
+
+		union
+		{
+			unsigned int SourceID;
+			SBPSource Source;
+		};
+
+		union
+		{
+			unsigned int TargetID;
+			SBPTarget Target;
+		};
+		
 		unsigned int ID;
 		unsigned int DataSize;
 		void* Data;

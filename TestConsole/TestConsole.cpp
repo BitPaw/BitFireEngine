@@ -29,11 +29,11 @@ void SBPDataPrint(const SBPData& sbpData)
     char sourceText[10];
     char targetText[10];
 
-    if(sbpData.Source >= (unsigned int)SourceLimitMaximum)
+    if(sbpData.SourceID >= (unsigned int)SourceLimitMaximum)
     {
         const char* textINN = nullptr;
 
-        switch(sbpData.Target)
+        switch(sbpData.TargetID)
         {
             default:
             case SourceInvalid:
@@ -56,11 +56,11 @@ void SBPDataPrint(const SBPData& sbpData)
         sprintf(sourceText, "%8X", sbpData.Source);
     }
 
-    if(sbpData.Target >= (unsigned int)TargetLimitMaximum)
+    if(sbpData.TargetID >= (unsigned int)TargetLimitMaximum)
     {
         const char* textINN = nullptr;
 
-        switch(sbpData.Target)
+        switch(sbpData.TargetID)
         {
             default:
             case TargetInvalid:
@@ -145,8 +145,8 @@ int main()
     const char text[] = "Hallo i bims";
 
     sbpData[0].Set(x, SourceMe, TargetEveryBody, -1, 0, nullptr);
-    sbpData[1].Set(MakeInt('C', 'o', 'n', '#'), SourceMe, TargetMeToServer, -1, 0, (void*)1u);
-    sbpData[2].Set(MakeInt('I', '\'', 'a', 'm'), SourceMe, TargetMeToAll, -1, 0, (void*)2u);
+    sbpData[1].Set(MakeInt('C', 'o', 'n', '#'), SourceMe, TargetServer, -1, 0, (void*)1u);
+    sbpData[2].Set(MakeInt('I', '\'', 'a', 'm'), SourceMe, TargetAll, -1, 0, (void*)2u);
     sbpData[3].Set(MakeInt('W', 'h', 'o', '?'), SourceMe, TargetEveryBody, -1, 0, (void*)3u);
     sbpData[4].Set(MakeInt('T', 'e', 'x', 't'), SourceMe, TargetEveryBody, -1, sizeof(text), text);
 
@@ -189,6 +189,24 @@ int main()
 
 #endif
 
+#if 1
+    SBPClient client;
+    SBPServer server;
+
+    server.Start(25666);
+    
+    client.ConnectToServer("127.0.0.1", 25666);
+
+    
+
+
+    while(true)
+    {
+        //server.SendFile("C:/Users/BitPaw/Videos/Compile Info.txt");
+
+        //Sleep(5000);
+    }
+#endif
 
 #if 0
     SBPServer server;    
@@ -205,7 +223,7 @@ int main()
 
 
 
-#if 1
+#if 0
     M4A m4a;
     
     m4a.Load("A:/A.m4a");

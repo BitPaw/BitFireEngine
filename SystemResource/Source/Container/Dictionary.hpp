@@ -1,6 +1,9 @@
 #pragma once
 
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstddef>
+
+#include <Hardware/Memory/Memory.h>
 
 namespace BF
 {
@@ -20,6 +23,12 @@ namespace BF
 			ValueList = nullptr;
 			SizeUsed = 0;
 			SizeAllocated = 0;
+		}
+
+		~Dictionary()
+		{
+			delete[] KeyList;
+			delete[] ValueList;
 		}
 
 		Value* GetValue(Key key)
@@ -47,14 +56,14 @@ namespace BF
 
 				SizeAllocated += riseAmount;
 
-				Key* newKeyAdress = (Key*)realloc(KeyList, SizeAllocated * sizeof(Key));
+				Key* newKeyAdress = Memory::Reallocate<Key>(KeyList, SizeAllocated);
 
 				if (!newKeyAdress)
 				{
 					// OutOfMemory
 				}
 
-				Value* newValueAdress = (Value*)realloc(ValueList, SizeAllocated * sizeof(Value));
+				Value* newValueAdress = Memory::Reallocate<Value>(ValueList, SizeAllocated);
 
 				if (!newValueAdress)
 				{

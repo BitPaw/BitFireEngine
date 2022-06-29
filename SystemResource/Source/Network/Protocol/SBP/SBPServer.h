@@ -63,6 +63,7 @@ namespace BF
 		virtual void OnConnectionTerminated(const IPAdressInfo& adressInfo);
 
 
+		int PackageParse(SBPData& data, const void* inputData, const size_t inputDataSize);
 
 
 		void CreateText(const char* text, Byte* buffer, size_t& bufferSize, const size_t bufferSizeMax);
