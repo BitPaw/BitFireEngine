@@ -7,6 +7,10 @@ namespace BF
 		InvalidResult,
 		Successful,
 
+
+		OuputBufferTooSmal,
+
+
 		SocketInavlidAdressFamily,
 		SocketCreationFailure,
 		SocketOptionFailure,

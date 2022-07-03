@@ -1,9 +1,8 @@
 #pragma once
 
-#include "../../Container/AsciiString.h"
-#include "../../Container/List.hpp"
-#include "../../../../SystemResource/Source/Math/Geometry/Vector2.hpp"
-#include "../../../../SystemResource/Source/Math/Geometry/Vector3.hpp"
+#include <Container/List.hpp>
+#include <Math/Geometry/Vector2.hpp>
+#include <Math/Geometry/Vector3.hpp>
 
 #define OBJElementNameLength 50u
 

@@ -6,45 +6,6 @@
 #include <Text/Text.h>
 #include <Network/Protocol/SBP/SBPText.h>
 
-void BF::SBPServer::CreateText(const char* text, Byte* buffer, size_t& bufferSize, const size_t bufferSizeMax)
-{
-	const size_t size = Text::Length(text) + 1; // length + nullbyte 
-
-	SBPText sbpText(text);
-
-	const SBPData sbpData
-	(
-		SBPIDText,
-		SourceMe,
-		TargetAll,
-		-1,
-		size + 1, // +string indicator
-		&sbpText
-	);
-
-	SBPData::GenerateMessage(sbpData, buffer, bufferSize, bufferSizeMax);
-}
-
-void BF::SBPServer::CreateText(const wchar_t* text, Byte* buffer, size_t& bufferSize, const size_t bufferSizeMax)
-{
-	ByteStream byteStream(buffer, bufferSize);
-
-	const SBPText sbpText(text);
-	const size_t size = sbpText.SizeInBytes();
-
-	const SBPData sbpData
-	(
-		SBPIDText,
-		SourceMe,
-		TargetAll,
-		-1,
-		size + 1, // +string indicator
-		&sbpText
-	);
-
-	SBPData::GenerateMessage(sbpData, buffer, bufferSize, bufferSizeMax);
-}
-
 void BF::SBPServer::Start(const unsigned short port)
 {
 	_server.EventCallBackSocket = this;
@@ -90,12 +51,12 @@ void BF::SBPServer::SendFile(const ClientID clientID, const char* text)
 		size_t bufferSize = 0;
 		Byte buffer[bufferSizeMax];
 
-		SBPData::GenerateMessage(data, buffer, bufferSize, bufferSizeMax);
+		//SBPData::GenerateMessage(data, buffer, bufferSize, bufferSizeMax);
 
 
 
 
-		_server.SendMessageToClient(clientID, buffer, bufferSize);
+		//_server.SendMessageToClient(clientID, buffer, bufferSize);
 	}
 
 	// Create "i want to send" package
@@ -109,13 +70,13 @@ void BF::SBPServer::SendFile(const ClientID clientID, const char* text)
 	// Wait for response
 
 
-
+	/*
 	for(size_t i = 0; i < _server.NumberOfConnectedClients; i++)
 	{
 		auto& client = _server.ClientList[i];
 
 		client.SendFile(text);
-	}	
+	}	*/
 }
 
 size_t randomIDGenerator = 420;
@@ -131,7 +92,7 @@ bool BF::SBPServer::SendMessageWaitResponse(const ClientID clientID, const Respo
 
 
 
-	_server.SendMessageToClient(clientID, buffer, bufferSize);
+	//_server.SendMessageToClient(clientID, buffer, bufferSize);
 
 	/*
 	// wait for message
@@ -150,9 +111,9 @@ void BF::SBPServer::SendTextToAll(const char* text)
 	size_t size = 0;
 	Byte buffer[bufferSize]{ 0 };
 
-	CreateText(text, buffer, size, bufferSize);
+	//CreateText(text, buffer, size, bufferSize);
 
-	_server.SendMessageToAll(buffer, size);
+	//_server.SendMessageToAll(buffer, size);
 }
 
 void BF::SBPServer::SendTextToAll(const wchar_t* text)
@@ -161,9 +122,9 @@ void BF::SBPServer::SendTextToAll(const wchar_t* text)
 	size_t size = 0;
 	Byte buffer[bufferSize]{ 0 };
 	
-	CreateText(text, buffer, size, bufferSize);
+	//CreateText(text, buffer, size, bufferSize);
 
-	_server.SendMessageToAll(buffer, size);
+	//_server.SendMessageToAll(buffer, size);
 }
 
 void BF::SBPServer::SendTextToClient(const unsigned int clientID, const char* text)
@@ -181,9 +142,9 @@ void BF::SBPServer::SendTextToClient(const unsigned int clientID, const wchar_t*
 	size_t size = 0;
 	Byte buffer[bufferSize]{ 0 };
 
-	CreateText(text, buffer, size, bufferSize);
+	//CreateText(text, buffer, size, bufferSize);
 
-	_server.SendMessageToClient(clientID, buffer, size);
+	//_server.SendMessageToClient(clientID, buffer, size);
 }
 
 void BF::SBPServer::OnSocketCreating(const IPAdressInfo& adressInfo, bool& use)
@@ -198,64 +159,72 @@ void BF::SBPServer::OnMessageSend(IOSocketMessage socketMessage)
 {
 
 
-	printf("[SBP] ");
+	printf("[SBP] OnMessageSend\n");
 	//_inputQueue.Enqueue();
 }
 
 void BF::SBPServer::OnMessageReceive(IOSocketMessage socketMessage)
 {
+	printf("[SBP][Server] Message %zi Bytes from <%i>\n",socketMessage.MessageSize, socketMessage.SocketID);
+
+
 	SBPData data;
+	const size_t read = SBPData::PackageParse(data, socketMessage.Message, socketMessage.MessageSize);
 
-	PackageParse(data, socketMessage.Message, socketMessage.MessageSize);
+	data.Print();
 
-	printf("[SBP] ");
+	if(read)
+	{
+		switch(data.Command)
+		{
+			case BF::SBPCommand::Custom:
+				break;
+			case BF::SBPCommand::Iam:
+			{
+				const size_t bufferSize = 1024u;
+				size_t bufferActural = 0;
+				Byte buffer[bufferSize]{0};			
+
+				const size_t written = SBPData::PackageSerialize(buffer, bufferSize, SourceMe, TargetYou, SBPData::PackageCreateResponse, data.ID);
+
+				printf("[SBP][Server] Sending response\n");
+
+				_server.SendMessageToClient(socketMessage.SocketID, buffer, written);			
+
+				break;
+			}				
+			case BF::SBPCommand::ConnectionCreate:
+				break;
+			case BF::SBPCommand::ConnectionInfo:
+				break;
+			case BF::SBPCommand::ConnectionQuit:
+				break;
+			case BF::SBPCommand::Text:
+				break;
+			case BF::SBPCommand::File:
+				break;
+			default:
+				break;
+		}
+	}
 }
 
 void BF::SBPServer::OnConnectionListening(const IPAdressInfo& adressInfo)
 {
-
+	printf("[SBP][Server][%li] Listening on IP:%s Port:%i\n", adressInfo.SocketID, adressInfo.IP, adressInfo.Port);
 }
 
 void BF::SBPServer::OnConnectionLinked(const IPAdressInfo& adressInfo)
 {
+	printf("[SBP][Server] Linked \n");
 }
 
 void BF::SBPServer::OnConnectionEstablished(const IPAdressInfo& adressInfo)
 {
+	printf("[SBP][Server] Established <%i>\n", adressInfo.SocketID);
 }
 
 void BF::SBPServer::OnConnectionTerminated(const IPAdressInfo& adressInfo)
 {
-}
-
-int BF::SBPServer::PackageParse(SBPData& data, const void* inputData, const size_t inputDataSize)
-{
-	// Check length
-	{
-		const size_t sizeMaximal = 512u;
-		const size_t sizeMinimal = 20u;
-		const bool isValidLength = inputDataSize >= sizeMinimal && inputDataSize <= sizeMaximal;
-
-		if(!isValidLength)
-		{
-			return -1;
-		}
-	}
-
-	{
-		ByteStream dataStream((Byte*)inputData, inputDataSize);
-
-		data.Clear();
-
-		const bool validHeader = dataStream.ReadAndCompare("°°", 2u);
-		dataStream.Read(data.Command.Data, 4u);
-		dataStream.Read(data.SourceID, Endian::Little);
-		dataStream.Read(data.TargetID, Endian::Little);
-		dataStream.Read(data.ID, Endian::Little);
-		dataStream.Read(data.DataSize, Endian::Little);
-
-		data.Data = dataStream.CursorCurrentAdress();
-	}
-
-	return 0;
+	printf("[SBP][Server] Terminated <%i>\n", adressInfo.SocketID);
 }

@@ -14,7 +14,7 @@ BF::SBPQueue::SBPQueue()
 
 unsigned char BF::SBPQueue::Enqueue(const SBPData& SBPData)
 {
-	_file.Write(SBPData.Command.Data, 4u);
+	_file.Write(SBPData.CommandID.Data, 4u);
 	_file.Write(SBPData.SourceID, Endian::Little);
 	_file.Write(SBPData.TargetID, Endian::Little);
 	_file.Write(SBPData.ID, Endian::Little);
@@ -39,7 +39,7 @@ bool BF::SBPQueue::Dequeue(SBPData& sbpData)
 
 	_file.DataCursorPosition = _dequeuedDataCursorPosition; // Override, for following read
 
-	_file.Read(sbpData.Command.Data, 4u);
+	_file.Read(sbpData.CommandID.Data, 4u);
 	_file.Read(sbpData.SourceID, Endian::Little);
 	_file.Read(sbpData.TargetID, Endian::Little);
 	_file.Read(sbpData.ID, Endian::Little);

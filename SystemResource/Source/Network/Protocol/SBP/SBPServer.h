@@ -37,7 +37,7 @@ namespace BF
 
 #define ResponseID unsigned int
 
-	class SBPServer : protected ISocketListener
+	class SBPServer :  protected ISocketListener
 	{
 		protected:
 		Server _server;
@@ -62,12 +62,6 @@ namespace BF
 		virtual void OnConnectionEstablished(const IPAdressInfo& adressInfo);
 		virtual void OnConnectionTerminated(const IPAdressInfo& adressInfo);
 
-
-		int PackageParse(SBPData& data, const void* inputData, const size_t inputDataSize);
-
-
-		void CreateText(const char* text, Byte* buffer, size_t& bufferSize, const size_t bufferSizeMax);
-		void CreateText(const wchar_t* text, Byte* buffer, size_t& bufferSize, const size_t bufferSizeMax);
 
 		public:
 		void Start(const unsigned short port);

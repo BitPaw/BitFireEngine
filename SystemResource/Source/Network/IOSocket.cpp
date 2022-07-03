@@ -6,6 +6,8 @@
 
 #include "IOSocketMessage.h"
 
+#include <Event/Event.hpp>
+
 #define SocketPackageIDFileBegin 'F'
 #define SocketPackageIDFileEnd '/'
 
@@ -150,6 +152,11 @@ BF::IOSocket::IOSocket()
     EventCallBackSocket = 0;
 }
 
+BF::IOSocket::~IOSocket()
+{
+    //Close();
+}
+
 void BF::IOSocket::Close()
 {
     char isSocketUsed = IsCurrentlyUsed();
@@ -219,129 +226,128 @@ BF::SocketActionResult BF::IOSocket::Create
     return SocketActionResult::Successful;
 }
 
-BF::SocketActionResult BF::IOSocket::Receive(Byte* message, const size_t messageLength)
+BF::SocketActionResult BF::IOSocket::Send(const void* inputBuffer, const size_t inputBufferSize)
 {
-    unsigned int byteRead = 0;
-
-    if (!IsCurrentlyUsed())
+    // Check if socket is active and ready to send
     {
-        return SocketActionResult::SocketIsNotConnected;
-    }
+        const bool isReady = IsCurrentlyUsed();
 
-    // Read
-    {
-        char* data = (char*)message;
-
-        StateChange(SocketState::DataReceiving);
-
-#if defined(OSUnix)
-        byteRead = read(AdressInfo.SocketID, data, messageLength);
-#elif defined(OSWindows)
-        byteRead = recv(AdressInfo.SocketID, data, messageLength, 0);
-#endif
-
-        StateChange(SocketState::IDLE);
-    }
-
-    switch (byteRead)
-    {
-        case (unsigned int)-1:
-            return SocketActionResult::SocketRecieveFailure;
-
-        case 0:// endOfFile
+        if(!isReady)
         {
-            Close();
-
-            return SocketActionResult::SocketRecieveConnectionClosed;
-        }  
-        default:
-        {
-            if (EventCallBackSocket)
-            {
-                IOSocketMessage socketMessage(AdressInfo.SocketID, message, byteRead);
-
-                EventCallBackSocket->OnMessageReceive(socketMessage);
-            }
-
-            return SocketActionResult::Successful;
-        }          
-    }
-}
-
-BF::SocketActionResult BF::IOSocket::Send(const Byte* message, const size_t messageLength)
-{
-    unsigned int writtenBytes = 0;
-
-    if (!IsCurrentlyUsed())
-    {
-        return SocketActionResult::SocketIsNotConnected;
-    }
-
-    if (messageLength == 0)
-    {
-        return SocketActionResult::Successful; // Do not send anything if the message is empty
-    }
-
-    if (EventCallBackSocket)
-    {
-        IOSocketMessage socketMessage(AdressInfo.SocketID, message, messageLength);
-
-        EventCallBackSocket->OnMessageSend(socketMessage);
-    }
-
-    // Send into stream
-    {
-        const char* data = (const char*)message;
-
-#if defined(OSUnix)
-        writtenBytes = write(AdressInfo.SocketID, data, messageLength);
-#elif defined(OSWindows)
-        writtenBytes = send(AdressInfo.SocketID, data, messageLength, 0);
-#endif 
-    }
-    
-    switch (writtenBytes)
-    {
-        case (unsigned int)-1:
-            return SocketActionResult::SocketSendFailure;
-
-        default:
-            return SocketActionResult::Successful;
-    }   
-}
-
-BF::SocketActionResult BF::IOSocket::SendFile(const char* filePath, const size_t sendBufferSize)
-{
-    File file;   
-
-    // Load file
-    {
-        const FileActionResult loadResult = file.MapToVirtualMemory(filePath);
-        const bool sucess = loadResult == FileActionResult::Successful;
-
-        if(!sucess)
-        {
-            return SocketActionResult::FileNotFound;
+            return SocketActionResult::SocketIsNotConnected;
         }
     }
 
+    // Do we even send anything? If not, quit
     {
-        const size_t bufferSize = 2048;
-        const size_t fileSize = file.DataSize;
-        size_t readSize = 0;
-        Byte* currentPosition = file.CursorCurrentAdress();
+        const bool hasDataToSend = inputBuffer && inputBufferSize > 0; // if NULL or 0 Bytes, return
 
-        while(readSize < fileSize)
+        if(!hasDataToSend)
         {
-            const size_t possibleReadBytes = file.ReadPossibleSize();
-            const bool canFulfil = bufferSize <= possibleReadBytes;
-            const size_t bytesToRead = canFulfil ? bufferSize : possibleReadBytes;
+            return SocketActionResult::Successful; // Do not send anything if the message is empty
+        }
+    }
 
-            Send(currentPosition, bytesToRead);
+    // Call recievers before sending
+    {
+        if(EventCallBackSocket)
+        {
+            IOSocketMessage socketMessage(AdressInfo.SocketID, (Byte*)inputBuffer, inputBufferSize);
 
-            file.DataCursorPosition += bytesToRead;
+            EventCallBackSocket->OnMessageSend(socketMessage);
+        }
+    }
 
-            readSize += bytesToRead;
+    printf("[Socket] Send -> <%z>\n", AdressInfo.SocketID);
+
+    // Send data
+    {
+        const char* data = (const char*)inputBuffer;
+
+        const unsigned int writtenBytes =
+#if defined(OSUnix)
+        write(AdressInfo.SocketID, data, inputBufferSize);
+#elif defined(OSWindows)
+        send(AdressInfo.SocketID, data, inputBufferSize, 0);
+#endif 
+        const bool sucessfulSend = writtenBytes != -1;
+
+        if(!sucessfulSend)
+        {
+            return SocketActionResult::SocketSendFailure;
+        }     
+    }
+
+    return SocketActionResult::Successful;
+}
+
+BF::SocketActionResult BF::IOSocket::Receive(void* outputBuffer, const size_t outputBufferSizeMax, size_t& outputBufferSizeWritten)
+{    
+    // I did not read any data yet
+    outputBufferSizeWritten = 0;
+
+ 
+
+    // Check if socket is active and ready to send
+    {
+        const bool isReady = IsCurrentlyUsed();
+
+        if(!isReady)
+        {
+            return SocketActionResult::SocketIsNotConnected;
+        }
+    }
+
+    // Is output valid
+    {
+        const bool canWriteOutput = outputBuffer && outputBufferSizeMax > 0;
+
+        if(!canWriteOutput)
+        {
+            return SocketActionResult::OuputBufferTooSmal;
+        }
+    }
+
+    // Read data
+    {
+        char* data = (char*)outputBuffer;
+        int length = outputBufferSizeMax;
+
+        StateChange(SocketState::DataReceiving);
+
+        const unsigned int byteRead =
+#if defined(OSUnix)
+        read(AdressInfo.SocketID, data, length);
+#elif defined(OSWindows)
+        recv(AdressInfo.SocketID, data, length, 0);
+#endif
+
+        StateChange(SocketState::IDLE);
+
+        switch(byteRead)
+        {
+            case (unsigned int)-1:
+                return SocketActionResult::SocketRecieveFailure;
+
+            case 0:// endOfFile
+            {
+                Close();
+
+                return SocketActionResult::SocketRecieveConnectionClosed;
+            }
+            default:
+            {
+                outputBufferSizeWritten = byteRead;
+
+                printf("[Socket] Reading on <%li>\n", AdressInfo.SocketID);
+
+                if(EventCallBackSocket)
+                {
+                    IOSocketMessage socketMessage(AdressInfo.SocketID, (Byte*)data, byteRead);
+
+                    EventCallBackSocket->OnMessageReceive(socketMessage);
+                }
+            }
         }
     }
 

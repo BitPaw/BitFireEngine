@@ -3,16 +3,35 @@
 #include <cstddef>
 #include <Container/ClusterInt.h>
 
+namespace BF
+{
+
 #define ConnectionCreateReasonFile 'F'
 #define ConnectionCreateReasonData 'D'
 
 #define SBPIDIAM MakeInt('I', '\'', 'a', 'm')
+#define SBPIDResponse MakeInt('R', 'e', 's', 'p')
 #define SBPIDConnectionCreate MakeInt('C', 'o', 'n', '+')
 #define SBPIDConnectionResult MakeInt('C', 'o', 'n', '#')
 #define SBPIDConnectionKill MakeInt('C', 'o', 'n', '-')
 
 #define SBPIDText MakeInt('T', 'e', 'x', 't')
 #define SBPIDFile MakeInt('F', 'i', 'l', 'e')
+
+enum class SBPCommand
+{
+	Custom,
+	
+	Iam = SBPIDIAM,
+	Response = SBPIDResponse,
+	ConnectionCreate = SBPIDConnectionCreate,
+	ConnectionInfo = SBPIDConnectionResult,
+	ConnectionQuit = SBPIDConnectionKill,
+
+	Text = SBPIDText,
+	File = SBPIDFile
+};
+
 
 #define SBPFilePathSizeMaskTextType 0b1000000000000000 // 0=char* 1=wchar_t*
 #define SBPFilePathSizeMaskA        0b0100000000000000
@@ -48,6 +67,8 @@ enum class SBPSource
 
 #define TargetLimitMaximum TargetEveryBody
 
+#define ResponseID unsigned int
+
 enum class SBPTarget
 {
 	Invalid = TargetInvalid,
@@ -63,12 +84,43 @@ enum class SBPTarget
 	Everybody = TargetEveryBody
 };
 
-namespace BF
-{
+
+	enum class SBPResult
+	{
+		Invalid,
+
+		PackageSendingFailure,
+
+		// Nobody is listening for a result
+		PackageSendSucessfulButNoResponder,
+
+		PackageAnswered,
+		PackageTimeout,
+
+		PackageDetectedRegistered,
+		PackageDetectedCustom,
+
+		InvalidHeader
+	};
+
+	struct SBPData;
+
+	typedef void (*PackageBuilderFunction)(SBPData& data, void* payloadBuffer);
+
+	// Recieve custom package, this is only called for unregistered packages
+	typedef void (*PackageRecieveEvent)(const SBPData& data);
+
+	typedef void (*PackageIAMRecieveEvent)(wchar_t* name);
+
 	struct SBPData
 	{
 		public:
-		ClusterInt Command;
+
+		union
+		{
+			ClusterInt CommandID;
+			SBPCommand Command;
+		};	
 
 		union
 		{
@@ -111,12 +163,28 @@ namespace BF
 
 		void Clear();
 
-		static void GenerateMessage
+		void Print();
+
+		bool IsCommandRegistered();
+
+
+		static size_t PackageParse(SBPData& data, const void* inputBuffer, const size_t& inputBufferSize);
+		static size_t PackageSerialize(const SBPData& data, void* outputBuffer, const size_t outputBufferSize);
+		static size_t PackageSerialize
 		(
-			const SBPData& data,
-			unsigned char* buffer,
-			size_t& bufferSize,
-			const size_t bufferSizeMax
+			void* outputBuffer, 
+			const size_t outputBufferSize,
+			const unsigned int source,
+			const unsigned int target, 
+			PackageBuilderFunction packageBuilderFunction, 
+			const ResponseID responseID
 		);
+
+		static void PackageCreateIAM(SBPData& data, void* payloadBuffer);
+		static void PackageCreateResponse(SBPData& data, void* payloadBuffer);
+		static void PackageCreateConnectionAdd(SBPData& data, void* payloadBuffer);
+		static void PackageCreateConnectionQuit(SBPData& data, void* payloadBuffer);
+		static void PackageCreateText(SBPData& data, void* payloadBuffer);
+		static void PackageCreateFile(SBPData& data, void* payloadBuffer);
 	};
 }

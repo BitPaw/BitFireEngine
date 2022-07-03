@@ -1,5 +1,7 @@
 #pragma once
 
+#define InvokeEvent(FunctionPoniter, ...) if(FunctionPoniter) FunctionPoniter(__VA_ARGS__)
+
 namespace BF
 {
 	template<class FunctionPonter>

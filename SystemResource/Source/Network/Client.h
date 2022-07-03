@@ -16,10 +16,8 @@ namespace BF
         IClientListener* EventCallBackClient;
 
         Client();
-        ~Client();
 
-        SocketActionResult ConnectToServer(const char* ip, unsigned short port);
-        void Disconnect();
+        SocketActionResult ConnectToServer(const char* ip, unsigned short port, const void* threadObject, const ThreadFunction threadFunction);
 
         static ThreadFunctionReturnType CommunicationFunctionAsync(void* ioSocket);
     }; 

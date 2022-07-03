@@ -25,16 +25,16 @@ namespace BF
 
 		//---------------------------------------------------------------------
 		ByteStream();
-		ByteStream(Byte* data, const size_t dataSize);
+		ByteStream(void* data, const size_t dataSize);
 
 		// WARNING! If this constructor is used, guarantee that it will only be "read".
 		// A write operation will be illegal to do, a crash may accur. 
-		ByteStream(const Byte* data, const size_t dataSize);
+		ByteStream(const void* data, const size_t dataSize);
 
 		size_t ReadPossibleSize() const;
 		bool IsAtEnd() const;
 
-		void DataSet(const Byte* data, const size_t dataSize, const size_t cursorPosition = 0);
+		void DataSet(const void* data, const size_t dataSize, const size_t cursorPosition = 0);
 		
 		void CursorToBeginning();
 		Byte* CursorCurrentAdress();

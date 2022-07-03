@@ -19,7 +19,7 @@ namespace BF
 
 		SBPQueue();
 
-
+		ByteStream& DataStream() { return _file; }
 
 		unsigned char Enqueue(const SBPData& SBPData);
 		bool Dequeue(SBPData& SBPData);

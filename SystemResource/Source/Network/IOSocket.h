@@ -95,6 +95,7 @@ namespace BF
 
 
 		IOSocket();
+		~IOSocket();
 
 		bool IsCurrentlyUsed();
 		void Close();
@@ -120,9 +121,8 @@ namespace BF
 			IPAdressInfo** adressInfoList
 		);
 
-		SocketActionResult Receive(Byte* message, const size_t messageLength);
-		SocketActionResult Send(const Byte* message, const size_t messageLength);
-		SocketActionResult SendFile(const char* filePath, const size_t sendBufferSize = 2048);
+		SocketActionResult Send(const void* inputBuffer, const size_t inputBufferSize);
+		SocketActionResult Receive(void* outputBuffer, const size_t outputBufferSizeMax, size_t& outputBufferSizeWritten);	
 
 #if defined(OSWindows)
 		static SocketActionResult WindowsSocketAgentStartup();

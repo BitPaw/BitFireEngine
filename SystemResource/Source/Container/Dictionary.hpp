@@ -31,11 +31,11 @@ namespace BF
 			delete[] ValueList;
 		}
 
-		Value* GetValue(Key key)
+		Value* Find(const Key& key)
 		{
 			for (size_t i = 0; i < SizeUsed; i++)
 			{
-				Key currentKey = KeyList[i];
+				const Key& currentKey = KeyList[i];
 
 				if (currentKey == key)
 				{
@@ -46,7 +46,19 @@ namespace BF
 			return nullptr;
 		}
 
-		void Add(const Key key, const Value value)
+		bool Update(const Key& key, const Value& value)
+		{
+			Value* valueAdress = Find(key);
+
+			if(!value)
+			{
+				return false;
+			}
+
+			*valueAdress = value;
+		}
+
+		void Add(const Key& key, const Value& value)
 		{
 			bool needMoreSpace = (SizeUsed + 1) > SizeAllocated;
 
@@ -109,6 +121,5 @@ namespace BF
 		{
 			return 0;
 		}
-
 	};
 }

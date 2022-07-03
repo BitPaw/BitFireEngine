@@ -21,12 +21,12 @@ BF::ByteStream::ByteStream()
 	DataSet(nullptr, 0);
 }
 
-BF::ByteStream::ByteStream(Byte* data, const size_t dataSize)
+BF::ByteStream::ByteStream(void* data, const size_t dataSize)
 {
 	DataSet(data, dataSize);
 }
 
-BF::ByteStream::ByteStream(const Byte* data, const size_t dataSize)
+BF::ByteStream::ByteStream(const void* data, const size_t dataSize)
 {
 	DataSet(data, dataSize);
 }
@@ -41,7 +41,7 @@ bool BF::ByteStream::IsAtEnd() const
 	return ReadPossibleSize() == 0;
 }
 
-void BF::ByteStream::DataSet(const Byte* data, const size_t dataSize, const size_t cursorPosition)
+void BF::ByteStream::DataSet(const void* data, const size_t dataSize, const size_t cursorPosition)
 {
 	Data = (Byte*)data;
 	DataSize = dataSize;

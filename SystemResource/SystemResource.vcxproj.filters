@@ -777,6 +777,12 @@
     <ClCompile Include="Source\OS\User.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Time\Time.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Container\ResponseCache.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp">
@@ -1767,6 +1773,12 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\OS\User.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Time\Time.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Container\ResponseCache.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

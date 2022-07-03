@@ -37,12 +37,10 @@
 #include <Text/Text.h>
 #include <File/File.h>
 #include <Graphic/OpenGL/OpenGL.h>
-
-#include "../Controller/ControllerData.h"
-#include "../Controller/ControllerSystem.h"
+#include <Controller/ControllerData.h>
+#include <Controller/ControllerSystem.h>
 #include <Hardware/Memory/Memory.h>
-
-#define InvokeEvent(FunctionPoniter, ...) if(FunctionPoniter) FunctionPoniter(__VA_ARGS__)
+#include <Event/Event.hpp>
 
 BF::Dictionary<WindowID, BF::Window*> BF::Window::_windowLookup;
 
@@ -926,7 +924,7 @@ WindowEventType ToWindowEventType(const unsigned int windowEventID)
 LRESULT BF::Window::OnWindowEvent(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM lParam)
 {
     const WindowEventType windowEventType = ToWindowEventType(eventID);
-    BF::Window** windowAdressReference = _windowLookup.GetValue(windowsID);
+    BF::Window** windowAdressReference = _windowLookup.Find(windowsID);
 
     if(!windowAdressReference)
     {

@@ -4,7 +4,9 @@
 #include <stdlib.h>
 #include <cassert>
 
-#include "../Async/Thread.h"
+#include <Async/Thread.h>
+#include <Hardware/Memory/Memory.h>
+
 #include "SocketActionResult.h"
 #include "ServerListeningThreadInfo.h"
 
@@ -45,7 +47,7 @@ BF::Client* BF::Server::GetNextClient()
 
     size_t riseAmount = 10;
     size_t newNumberOfMaximalClients = NumberOfMaximalClients + riseAmount;
-    Client* movedMemory = (Client*)realloc(ClientList, newNumberOfMaximalClients * sizeof(Client));
+    Client* movedMemory = Memory::Reallocate<Client>(ClientList, newNumberOfMaximalClients);
 
     if (!movedMemory)
     {
@@ -189,7 +191,7 @@ void BF::Server::KickClient(int socketID)
 {
     Client* client = GetClientViaID(socketID);
 
-    client->Disconnect();
+  //  client->Disconnect();
 }
 
 BF::Client* BF::Server::GetClientViaID(int socketID)
@@ -286,7 +288,9 @@ BF::SocketActionResult BF::Server::SendFileToClient(int clientID, const char* fi
         return SocketActionResult::NoClientWithThisID;
     }        
 
-    return client->SendFile(filePath);
+  //  return client->SendFile(filePath);
+
+    return SocketActionResult::NoClientWithThisID;
 }
 
 BF::SocketActionResult BF::Server::SendFileToClient(int clientID, const wchar_t* filePath)
@@ -331,11 +335,11 @@ BF::SocketActionResult BF::Server::BroadcastFileToClients(const char* filePath)
 
         if (isUsed)
         {
-            SocketActionResult currentResult = client->SendFile(filePath);
+           // SocketActionResult currentResult = client->SendFile(filePath);
 
             if (socketActionResult != SocketActionResult::Successful)
             {
-                socketActionResult = currentResult;
+               // socketActionResult = currentResult;
             }
         }
     }
@@ -370,6 +374,8 @@ ThreadFunctionReturnType BF::Server::ClientListeningThread(void* data)
            (int*)&clientSocket.AdressInfo.IPRawByteSize
 #endif        
         );
+
+        printf("[Server] New client accepted <%zi>\n", clientSocket.AdressInfo.SocketID);
 
         bool sucessful = clientSocket.IsCurrentlyUsed();
 

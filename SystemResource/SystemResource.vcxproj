@@ -294,6 +294,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Container\ResponseCache.cpp" />
     <ClCompile Include="Source\Hardware\Memory\MemoryProtectionMode.cpp" />
     <ClCompile Include="Source\Math\Primes.cpp" />
     <ClCompile Include="Source\Media\ID3\ID3Version.cpp" />
@@ -548,8 +549,10 @@
     <ClCompile Include="Source\Media\Video\WEBM\WebM.cpp" />
     <ClCompile Include="Source\Media\XingInfo\XingInfo.cpp" />
     <ClCompile Include="Source\OS\User.cpp" />
+    <ClCompile Include="Source\Time\Time.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Container\ResponseCache.h" />
     <ClInclude Include="Source\Container\ClusterLongLong.h" />
     <ClInclude Include="Source\Hardware\Memory\MemoryProtectionMode.h" />
     <ClInclude Include="Source\Math\Primes.h" />
@@ -880,6 +883,7 @@
     <ClInclude Include="Source\Media\Video\WEBM\WebM.h" />
     <ClInclude Include="Source\Media\XingInfo\XingInfo.h" />
     <ClInclude Include="Source\OS\User.h" />
+    <ClInclude Include="Source\Time\Time.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
