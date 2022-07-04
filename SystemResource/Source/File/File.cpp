@@ -465,8 +465,28 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const char* filePath, const Me
 
 	// Open file
 	{
-		const int openFlag = O_RDONLY;
-		const int fileDescriptor = open64(filePath, openFlag);
+		int openFlag = 0;
+
+        switch(protectionMode)
+		{
+			case MemoryProtectionMode::NoReadWrite:
+				openFlag = 0;
+				break;
+
+			case MemoryProtectionMode::ReadOnly:
+				openFlag = O_RDONLY;
+				break;
+
+			case MemoryProtectionMode::WriteOnly:
+				openFlag = O_WRONLY;
+				break;
+
+			case MemoryProtectionMode::ReadAndWrite:
+				openFlag = O_RDWR;
+				break;
+		}
+
+        const int fileDescriptor = open64(filePath, openFlag);
 		const bool sucessfulOpen = fileDescriptor;
 
 		if(!sucessfulOpen)
@@ -533,7 +553,7 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const wchar_t* filePath, const
 
 	Text::Copy(filePath, PathMaxSize, filePathA, PathMaxSize);
 
-	return MapToVirtualMemory(filePathA);
+	return MapToVirtualMemory(filePathA, protectionMode);
 
 #elif defined(OSWindows)
 
@@ -608,7 +628,7 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const wchar_t* filePath, const
 		DWORD fileOffsetLow = 0;
 		size_t numberOfBytesToMap = 0;
 		void* baseAddressTarget = nullptr;
-		DWORD  numaNodePreferred = NUMA_NO_PREFERRED_NODE;		
+		DWORD  numaNodePreferred = NUMA_NO_PREFERRED_NODE;
 
 		switch(protectionMode)
 		{
@@ -747,7 +767,7 @@ BF::FileActionResult BF::File::ReadFromDisk(const char* filePath, bool addNullTe
 			return result;
 		}
 	}
-	
+
 	// Close
 	{
 		const FileActionResult result = file.Close();

@@ -120,6 +120,8 @@ printf("[#][Memory] 0x%p (%10zi B) Pre-Fetched [NOT SUPPORTED] Skipped...\n", ad
 	return false;
 }
 
+#include <cerrno>
+
 void* BF::Memory::VirtualMemoryAllocate(const size_t size, const MemoryProtectionMode memoryProtectionMode, const int fileDescriptor)
 {
     void* addressAllocated = nullptr;
@@ -140,6 +142,16 @@ void* BF::Memory::VirtualMemoryAllocate(const size_t size, const MemoryProtectio
 		fileDescriptor,
 		0
 	);
+
+	const bool sucessful = addressAllocated != (void*)-1;
+
+	if (!sucessful)
+	{
+        int x = errno;
+
+        return malloc(size);
+	}
+
 #elif defined(OSWindows)
 	DWORD allocationType = MEM_COMMIT | MEM_RESERVE;
 

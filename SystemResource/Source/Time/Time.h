@@ -1,25 +1,27 @@
 #pragma once
 
+#include <stddef.h>
+
 namespace BF
 {
-	enum class DayOfWeek
+	enum class TimeDayOfWeek
 	{
 		Invalid,
-	
+
 		Monday,
-		Tuesday,	
-		Wednesday,	
+		Tuesday,
+		Wednesday,
 		Thursday,
-		Friday,	
+		Friday,
 		Saturday,
 		Sunday
 	};
 
-	enum class Month
+	enum class TimeMonth
 	{
 		Invalid,
 
-		January,	
+		January,
 		February,
 		March,
 		April,
@@ -28,7 +30,7 @@ namespace BF
 		July,
 		August,
 		September,
-		October,		
+		October,
 		November,
 		December
 	};
@@ -36,8 +38,8 @@ namespace BF
 	struct Time
 	{
 		unsigned short Year;
-		Month Month;
-		DayOfWeek DayOfWeek;
+		TimeMonth Month;
+		TimeDayOfWeek DayOfWeek;
 		unsigned short Day;
 		unsigned short Hour;
 		unsigned short Minute;

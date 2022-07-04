@@ -36,12 +36,12 @@ BF::ResponseCacheResult BF::ResponseCache::Fill(const ResponseID responseID, con
     {
         const size_t currentPosition = _cache.DataCursorPosition;
 
-        _cache.Write(dataSize, Endian::Little);
+         _cache.Write((unsigned long long)dataSize, Endian::Little);
         _cache.Write(data, dataSize);
 
         _responseIDLookup.Update(responseID, currentPosition);
     }
-    
+
     return ResponseCacheResult::Success;
 }
 
@@ -64,9 +64,9 @@ BF::ResponseCacheResult BF::ResponseCache::Find(const ResponseID responseID, Res
     {
         const size_t entry = *adressEntry != -1;
 
-        if(!entry) 
+        if(!entry)
         {
-            return ResponseCacheResult::WaitingForResponse; 
+            return ResponseCacheResult::WaitingForResponse;
         }
     }
 
@@ -75,7 +75,7 @@ BF::ResponseCacheResult BF::ResponseCache::Find(const ResponseID responseID, Res
 
         _cache.DataCursorPosition = *adressEntry;
 
-        _cache.Read(responseCacheEntry.Length, Endian::Little);
+        _cache.Read((unsigned long long&)responseCacheEntry.Length, Endian::Little);
 
         responseCacheEntry.Data = _cache.CursorCurrentAdress();
 

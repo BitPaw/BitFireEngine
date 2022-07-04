@@ -10,8 +10,8 @@
 BF::Time::Time()
 {
 	Year = -1;
-	Month = Month::Invalid;
-	DayOfWeek = DayOfWeek::Invalid;;
+	Month = TimeMonth::Invalid;
+	DayOfWeek = TimeDayOfWeek::Invalid;;
 	Day = -1;
 	Hour = -1;
 	Minute = -1;
@@ -56,7 +56,7 @@ void BF::Time::Now(Time& time)
 		case 5u: time.DayOfWeek = DayOfWeek::Friday; break;
 		case 6u: time.DayOfWeek = DayOfWeek::Saturday; break;
 		case 0u: time.DayOfWeek = DayOfWeek::Sunday; break;
-		default: time.DayOfWeek = DayOfWeek::Invalid; break;		
+		default: time.DayOfWeek = DayOfWeek::Invalid; break;
 	}
 
 	time.Day = systemTime.wDay;

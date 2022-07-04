@@ -103,6 +103,8 @@
 		<Unit filename="Source/Container/Queue.hpp" />
 		<Unit filename="Source/Container/QueueMapping.cpp" />
 		<Unit filename="Source/Container/QueueMapping.h" />
+		<Unit filename="Source/Container/ResponseCache.cpp" />
+		<Unit filename="Source/Container/ResponseCache.h" />
 		<Unit filename="Source/Container/RingBuffer.hpp" />
 		<Unit filename="Source/Container/Table.hpp" />
 		<Unit filename="Source/Controller/ControllerData.cpp" />
@@ -598,6 +600,8 @@
 		<Unit filename="Source/Network/SocketType.cpp" />
 		<Unit filename="Source/Network/SocketType.h" />
 		<Unit filename="Source/OS/OSDefine.h" />
+		<Unit filename="Source/OS/User.cpp" />
+		<Unit filename="Source/OS/User.h" />
 		<Unit filename="Source/OS/Windows/Registry.cpp" />
 		<Unit filename="Source/OS/Windows/Registry.h" />
 		<Unit filename="Source/Resource.cpp" />
@@ -618,6 +622,8 @@
 		<Unit filename="Source/Text/Text.h" />
 		<Unit filename="Source/Time/StopWatch.cpp" />
 		<Unit filename="Source/Time/StopWatch.h" />
+		<Unit filename="Source/Time/Time.cpp" />
+		<Unit filename="Source/Time/Time.h" />
 		<Unit filename="Source/Types/UUID.cpp" />
 		<Unit filename="Source/Types/UUID.h" />
 		<Unit filename="Source/Window/CursorIcon.cpp" />

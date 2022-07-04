@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stddef.h>
+
 namespace BF
 {
 	struct User

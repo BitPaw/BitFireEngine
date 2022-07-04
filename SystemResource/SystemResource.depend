@@ -2220,8 +2220,10 @@
 
 1652635307 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Controller/KeyBoardKey.h
 
-1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/Dictionary.hpp
-	<stdlib.h>
+1656975194 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/Dictionary.hpp
+	<cstdlib>
+	<cstddef>
+	<Hardware/Memory/Memory.h>
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/CursorMode.h
 
@@ -2381,7 +2383,7 @@
 	<cstdlib>
 	<Windows.h>
 
-1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/File.h
+1656975194 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/File.h
 	<cstdlib>
 	<cstdio>
 	<cwchar>
@@ -2395,6 +2397,7 @@
 	<ErrorCode.h>
 	<OS/OSDefine.h>
 	<File/FilePersistence.hpp>
+	<Hardware/Memory/MemoryProtectionMode.h>
 	<sys/stat.h>
 	<sys/mman.h>
 	<unistd.h>
@@ -2411,7 +2414,7 @@
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/FilePersistence.hpp
 
-1656358018 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/ByteStream.h
+1656975194 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/ByteStream.h
 	<cstddef>
 	"Endian.h"
 	<Container/ClusterShort.h>
@@ -2423,7 +2426,7 @@
 1652303052 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/ByteCluster.cpp
 	"ByteCluster.h"
 
-1656358018 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/ByteStream.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/ByteStream.cpp
 	"ByteStream.h"
 	<cassert>
 	<cstring>
@@ -2448,7 +2451,7 @@
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/MemoryUsage.h
 	<cstddef>
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/File.cpp
+1656977399 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/File.cpp
 	"File.h"
 	<Text/Text.h>
 	<Hardware/Memory/Memory.h>
@@ -2717,7 +2720,7 @@
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/MainBoard/MainBoard.h
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/Memory.cpp
+1656977965 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/Memory.cpp
 	"Memory.h"
 	<OS/OSDefine.h>
 	<Text/Text.h>
@@ -2727,6 +2730,7 @@
 	<ErrorCode.h>
 	<ClipBoard/ClipBoard.cpp>
 	<File/File.h>
+	<cerrno>
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/ClipBoard/ClipBoard.cpp
 	"ClipBoard.h"
@@ -2855,7 +2859,7 @@
 	"Interpolate.h"
 	<OS/OSDefine.h>
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNT.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNT.cpp
 	"FNT.h"
 	"FNTCommand.h"
 	"FNTLineType.h"
@@ -2918,7 +2922,7 @@
 1652303052 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Font/FNT/FNTPage.cpp
 	"FNTPage.h"
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Font/Font.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Font/Font.cpp
 	"Font.h"
 	"FNT/FNT.h"
 	"OTF/OTF.h"
@@ -3139,7 +3143,7 @@
 1652303052 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Font/TTF/Chunks/TTFVerticalDeviceMetrics.cpp
 	"TTFVerticalDeviceMetrics.h"
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Font/TTF/TTF.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Font/TTF/TTF.cpp
 	"TTF.h"
 	"TTFTableEntry.h"
 	"Chunks/TTFOffsetTable.h"
@@ -3159,7 +3163,7 @@
 1652303052 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Font/TTF/TTFTableEntryType.cpp
 	"TTFTableEntryType.h"
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/BMP/BMP.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/BMP/BMP.cpp
 	"BMP.h"
 	<cassert>
 	<File/File.h>
@@ -3193,7 +3197,7 @@
 	"BMPType.h"
 	<Container/ClusterShort.h>
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/GIF/GIF.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/GIF/GIF.cpp
 	"GIF.h"
 	"GIFImageDescriptor.h"
 	<File/File.h>
@@ -3207,7 +3211,7 @@
 1652303052 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/GIF/GIFImageDescriptor.cpp
 	"GIFImageDescriptor.h"
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/Image.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/Image.cpp
 	"Image.h"
 	"BMP/BMP.h"
 	"PNG/PNG.h"
@@ -3289,7 +3293,7 @@
 1652303052 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/ImageDataFormat.cpp
 	"ImageDataFormat.h"
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/JPEG/JPEG.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/JPEG/JPEG.cpp
 	"JPEG.h"
 	"JPEGMarker.h"
 	"JPEGFrame.h"
@@ -3373,7 +3377,7 @@
 1652303052 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/PNG/Chunk/PNGTransparency.cpp
 	"PNGTransparency.h"
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/PNG/PNG.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/PNG/PNG.cpp
 	"PNG.h"
 	"PNGColorCompressor.h"
 	"Chunk/PNGChunk.h"
@@ -3413,7 +3417,7 @@
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/SVG/SVG.h
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/TGA/TGA.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/TGA/TGA.cpp
 	"TGA.h"
 	<File/File.h>
 	<Hardware/Memory/Memory.h>
@@ -3424,7 +3428,7 @@
 1652303052 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/TGA/TGAImageDataType.cpp
 	"TGAImageDataType.h"
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/TIFF/TIFF.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/TIFF/TIFF.cpp
 	"TIFF.h"
 	<File/File.h>
 
@@ -3489,7 +3493,7 @@
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Sound/FLAC/FLAC.h
 	"../ISoundFormat.hpp"
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Sound/M4A/M4A.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Sound/M4A/M4A.cpp
 	"M4A.h"
 	<File/File.h>
 
@@ -3498,7 +3502,7 @@
 	"M4AChunkID.h"
 	<Container/ClusterInt.h>
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Sound/MID/MID.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Sound/MID/MID.cpp
 	"MID.h"
 	"MIDICommand.h"
 	<File/File.h>
@@ -3534,7 +3538,7 @@
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Sound/MID/MIDITrackHeader.h
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Sound/MP3/MP3.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Sound/MP3/MP3.cpp
 	"MP3.h"
 	"MP3Header.h"
 	"MPEGAudioTag.h"
@@ -3576,7 +3580,7 @@
 1652303052 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Sound/MP3/MPEGGenre.cpp
 	"MPEGGenre.hpp"
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Sound/OGG/OGG.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Sound/OGG/OGG.cpp
 	"OGG.h"
 	<File/File.h>
 	<Media/Sound/OGG/OGGPage.h>
@@ -3615,7 +3619,7 @@
 	"FMT.h"
 	<File/ByteStream.h>
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Sound/WAV/WAV.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Sound/WAV/WAV.cpp
 	"WAV.h"
 	<File/File.h>
 	<Media/RIFF/RIFF.h>
@@ -3625,7 +3629,7 @@
 	"WMA.h"
 	<File/File.h>
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Video/AVI/AVI.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Video/AVI/AVI.cpp
 	"AVI.h"
 	<File/File.h>
 	<Media/RIFF/RIFF.h>
@@ -3705,11 +3709,10 @@
 	"OBJLineCommand.h"
 	"../IModelFormat.hpp"
 
-1656358018 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Model/OBJ/OBJElement.h
-	"../../Container/AsciiString.h"
-	"../../Container/List.hpp"
-	"../../../../SystemResource/Source/Math/Geometry/Vector2.hpp"
-	"../../../../SystemResource/Source/Math/Geometry/Vector3.hpp"
+1656975194 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Model/OBJ/OBJElement.h
+	<Container/List.hpp>
+	<Math/Geometry/Vector2.hpp>
+	<Math/Geometry/Vector3.hpp>
 
 1656358018 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Model/OBJ/MTL/MTL.h
 	<cstddef>
@@ -3732,12 +3735,12 @@
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Model/VRML/VRML.h
 	"../IModelFormat.hpp"
 
-1656358018 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Model/OBJ/MTL/MTL.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Model/OBJ/MTL/MTL.cpp
 	"MTL.h"
 	<File/File.h>
 	<Text/Text.h>
 
-1656358018 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Model/OBJ/OBJ.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Model/OBJ/OBJ.cpp
 	"OBJ.h"
 	<File/File.h>
 	<Text/Text.h>
@@ -3761,17 +3764,17 @@
 1652303052 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Model/VRML/VRML.cpp
 	"VRML.h"
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Client.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Client.cpp
 	"Client.h"
 	<stdio.h>
 	"../ErrorCode.h"
 
-1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Client.h
+1656975194 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Client.h
 	"IOSocket.h"
 	"../Async/Thread.h"
 	"IClientListener.hpp"
 
-1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/IOSocket.h
+1656975194 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/IOSocket.h
 	<OS/OSDefine.h>
 	<sys/types.h>
 	<sys/socket.h>
@@ -3793,7 +3796,7 @@
 	<Async/Thread.h>
 	<File/File.h>
 
-1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/SocketActionResult.h
+1656975194 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/SocketActionResult.h
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/IPVersion.h
 
@@ -3829,12 +3832,13 @@
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/IClientListener.hpp
 	"IPAdressInfo.h"
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/IOSocket.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/IOSocket.cpp
 	"IOSocket.h"
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	"IOSocketMessage.h"
+	<Event/Event.hpp>
 	<ErrorCode.h>
 	<Hardware/Memory/Memory.h>
 
@@ -3855,12 +3859,13 @@
 1652303052 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/ProtocolMode.cpp
 	"ProtocolMode.h"
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Server.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Server.cpp
 	"Server.h"
 	<stdio.h>
 	<stdlib.h>
 	<cassert>
-	"../Async/Thread.h"
+	<Async/Thread.h>
+	<Hardware/Memory/Memory.h>
 	"SocketActionResult.h"
 	"ServerListeningThreadInfo.h"
 
@@ -3964,7 +3969,7 @@
 	<OS/OSDefine.h>
 	<winuser.rh>
 
-1656358018 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/Window.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/Window.cpp
 	"Window.h"
 	<GL/glew.h>
 	<GL/gl.h>
@@ -3981,15 +3986,16 @@
 	<Text/Text.h>
 	<File/File.h>
 	<Graphic/OpenGL/OpenGL.h>
-	"../Controller/ControllerData.h"
-	"../Controller/ControllerSystem.h"
+	<Controller/ControllerData.h>
+	<Controller/ControllerSystem.h>
 	<Hardware/Memory/Memory.h>
+	<Event/Event.hpp>
 
 1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/ClusterShort.h
 
 1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/ClusterInt.h
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/QueueMapping.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/QueueMapping.cpp
 	"QueueMapping.h"
 	<Hardware/Memory/Memory.h>
 
@@ -3997,7 +4003,7 @@
 	<stddef.h>
 	<File/File.h>
 
-1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Math/Primes.h
+1656975194 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Math/Primes.h
 
 1652303052 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/GameCleaved/main.cpp
 	<iostream>
@@ -4011,10 +4017,9 @@
 	<Window/Window.h>
 	<OS/OSDefine.h>
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Math/Primes.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Math/Primes.cpp
 	<Math/Primes.h>
 	<Math/Math.h>
-	<map>
 	<stdio.h>
 
 1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/ID3/ID3v2xFrameTag.cpp
@@ -4074,42 +4079,50 @@
 	"XingInfo.h"
 	<File/ByteStream.h>
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPClient.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPClient.cpp
 	"SBPClient.h"
 	<Network/Protocol/SBP/SBPData.h>
+	<Hardware/Memory/Memory.h>
+	<Text/Text.h>
+	<OS/User.h>
+	<Time/Time.h>
+	<Time/StopWatch.h>
 
-1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPClient.h
+1656975194 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPClient.h
+	"SBPData.h"
 	<Network/Client.h>
-	<Container/Dictionary.hpp>
+	<Container/ResponseCache.h>
+	<Async/Thread.h>
 
-1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPData.h
+1656975194 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPData.h
 	<cstddef>
 	<Container/ClusterInt.h>
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPData.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPData.cpp
 	"SBPData.h"
 	<File/ByteStream.h>
-	<Network/Protocol/SBP/SBPText.h>
+	<OS/User.h>
+	<Hardware/Memory/Memory.h>
 
 1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPText.h
 	<cstddef>
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPQueue.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPQueue.cpp
 	"SBPQueue.h"
 	<Hardware/Memory/Memory.h>
 
-1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPQueue.h
+1656975194 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPQueue.h
 	"SBPData.h"
 	<File/File.h>
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPServer.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPServer.cpp
 	"SBPServer.h"
 	<cstdio>
 	<File/ByteStream.h>
 	<Text/Text.h>
 	<Network/Protocol/SBP/SBPText.h>
 
-1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPServer.h
+1656975194 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Network/Protocol/SBP/SBPServer.h
 	"SBPData.h"
 	<Network/Server.h>
 	<Container/Dictionary.hpp>
@@ -6250,13 +6263,38 @@
 	<sys/mman.h>
 	<Windows.h>
 
-1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/MemoryProtectionMode.h
+1656975194 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/MemoryProtectionMode.h
 	<OS/OSDefine.h>
 
 1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/ClusterLongLong.h
 
-1655657225 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/MemoryProtectionMode.cpp
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/MemoryProtectionMode.cpp
 	"MemoryProtectionMode.h"
 	<sys/mman.h>
+	<Windows.h>
+
+1656975194 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Event/Event.hpp
+
+1656975828 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/OS/User.h
+	<stddef.h>
+
+1656975796 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/ResponseCache.cpp
+	"ResponseCache.h"
+
+1656975194 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/ResponseCache.h
+	<Container/Dictionary.hpp>
+	<File/File.h>
+
+1656975858 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Time/Time.h
+	<stddef.h>
+
+1656975194 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/OS/User.cpp
+	"User.h"
+	<OS/OSDefine.h>
+	<Windows.h>
+
+1656975875 source:/home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Time/Time.cpp
+	"Time.h"
+	<OS/OSDefine.h>
 	<Windows.h>
 
