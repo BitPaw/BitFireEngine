@@ -454,7 +454,7 @@ BF::ErrorCode BF::File::DirectoryDelete(const wchar_t* directoryName)
 	return ErrorCode::Successful;
 }
 
-BF::FileActionResult BF::File::MapToVirtualMemory(const char* filePath)
+BF::FileActionResult BF::File::MapToVirtualMemory(const char* filePath, const MemoryProtectionMode protectionMode)
 {
 #if defined(OSUnix)
     size_t fileLength = 0;
@@ -492,7 +492,7 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const char* filePath)
 
 	// Map data
 	{
-		const void* mappedData = Memory::VirtualMemoryAllocate(DataSize, MemoryProtectionMode::ReadOnly, IDMapping);
+		const void* mappedData = Memory::VirtualMemoryAllocate(DataSize, protectionMode, IDMapping);
 		const bool successfulMapping = mappedData != MAP_FAILED;
 
 		if(!successfulMapping)
@@ -520,13 +520,13 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const char* filePath)
 
 	Text::Copy(filePath, PathMaxSize, filePathW, PathMaxSize);
 
-	const FileActionResult fileActionResult = MapToVirtualMemory(filePathW);
+	const FileActionResult fileActionResult = MapToVirtualMemory(filePathW, protectionMode);
 
 	return fileActionResult;
 #endif
 }
 
-BF::FileActionResult BF::File::MapToVirtualMemory(const wchar_t* filePath)
+BF::FileActionResult BF::File::MapToVirtualMemory(const wchar_t* filePath, const MemoryProtectionMode protectionMode)
 {
 #if defined(OSUnix)
 	char filePathA[PathMaxSize];
@@ -559,10 +559,29 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const wchar_t* filePath)
 	// Create mapping
 	{
 		SECURITY_ATTRIBUTES	fileMappingAttributes{ 0 };
-		DWORD				flProtect = PAGE_READONLY;
+		DWORD				flProtect = 0;
 		DWORD				dwMaximumSizeHigh = 0;
 		DWORD				dwMaximumSizeLow = 0; // Problem if file is 0 Length
 		wchar_t* name = nullptr;
+
+		switch(protectionMode)
+		{
+			case MemoryProtectionMode::NoReadWrite:
+				flProtect = PAGE_NOACCESS;
+				break;
+
+			case MemoryProtectionMode::ReadOnly:
+				flProtect = PAGE_READONLY;
+				break;
+
+			case MemoryProtectionMode::WriteOnly:
+				flProtect = PAGE_WRITECOPY;
+				break;
+
+			case MemoryProtectionMode::ReadAndWrite:
+				flProtect = PAGE_READWRITE;
+				break;
+		}
 
 		const HANDLE fileMappingHandleResult = CreateFileMappingW
 		(
@@ -584,12 +603,27 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const wchar_t* filePath)
 	}
 
 	{
-		DWORD desiredAccess = FILE_MAP_READ;//  FILE_MAP_ALL_ACCESS; FILE_MAP_WRITE
+		DWORD desiredAccess = 0;
 		DWORD fileOffsetHigh = 0;
 		DWORD fileOffsetLow = 0;
 		size_t numberOfBytesToMap = 0;
 		void* baseAddressTarget = nullptr;
-		DWORD  numaNodePreferred = NUMA_NO_PREFERRED_NODE;
+		DWORD  numaNodePreferred = NUMA_NO_PREFERRED_NODE;		
+
+		switch(protectionMode)
+		{
+			case MemoryProtectionMode::ReadOnly:
+				desiredAccess = FILE_MAP_READ;
+				break;
+
+			case MemoryProtectionMode::WriteOnly:
+				desiredAccess = FILE_MAP_WRITE;
+				break;
+
+			case MemoryProtectionMode::ReadAndWrite:
+				desiredAccess = FILE_MAP_ALL_ACCESS;
+				break;
+		}
 
 		void* fileMapped = MapViewOfFileExNuma
 		(
@@ -617,9 +651,9 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const wchar_t* filePath)
 	return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::File::MapToVirtualMemory(const size_t size)
+BF::FileActionResult BF::File::MapToVirtualMemory(const size_t size, const MemoryProtectionMode protectionMode)
 {
-	const void* data = Memory::VirtualMemoryAllocate(size, MemoryProtectionMode::ReadOnly, 0);
+	const void* data = Memory::VirtualMemoryAllocate(size, protectionMode, 0);
 	const bool successful = data;
 
 	if(!successful)
@@ -690,26 +724,39 @@ BF::FileActionResult BF::File::UnmapFromVirtualMemory()
 BF::FileActionResult BF::File::ReadFromDisk(const char* filePath, bool addNullTerminator, FilePersistence filePersistence)
 {
 	File file;
-	FileActionResult result = file.Open(filePath, FileOpenMode::Read, FileCachingMode::Sequential);
 
-	if(result != FileActionResult::Successful)
+	// Open file
 	{
-		return result;
+		const FileActionResult result = file.Open(filePath, FileOpenMode::Read, FileCachingMode::Sequential);
+		const bool sucessful = result == FileActionResult::Successful;
+
+		if(!sucessful)
+		{
+			return result;
+		}
 	}
 
-	result = file.ReadFromDisk(&Data, DataSize, addNullTerminator);
-
-	if(result != FileActionResult::Successful)
+	// Read
 	{
-		file.Close();
-		return result;
+		const FileActionResult result = file.ReadFromDisk(&Data, DataSize, addNullTerminator);
+		const bool sucessful = result == FileActionResult::Successful;
+
+		if(!sucessful)
+		{
+			file.Close();
+			return result;
+		}
 	}
-
-	result = file.Close();
-
-	if(result != FileActionResult::Successful)
+	
+	// Close
 	{
-		return result;
+		const FileActionResult result = file.Close();
+		const bool sucessful = result == FileActionResult::Successful;
+
+		if(!sucessful)
+		{
+			return result;
+		}
 	}
 
 	_fileLocation = FileLocation::CachedFromDisk;

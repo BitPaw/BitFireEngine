@@ -15,6 +15,7 @@
 #include <ErrorCode.h>
 #include <OS/OSDefine.h>
 #include <File/FilePersistence.hpp>
+#include <Hardware/Memory/MemoryProtectionMode.h>
 
 #define FileLineBufferSize 2048
 
@@ -89,9 +90,9 @@ namespace BF
 		//---------------------------------------------------------------------
 
 		//---<Mapping>---------------------------------------------------------
-		FileActionResult MapToVirtualMemory(const char* filePath);
-		FileActionResult MapToVirtualMemory(const wchar_t* filePath);
-		FileActionResult MapToVirtualMemory(const size_t size);
+		FileActionResult MapToVirtualMemory(const char* filePath, const MemoryProtectionMode protectionMode);
+		FileActionResult MapToVirtualMemory(const wchar_t* filePath, const MemoryProtectionMode protectionMode);
+		FileActionResult MapToVirtualMemory(const size_t size, const MemoryProtectionMode protectionMode);
 		FileActionResult UnmapFromVirtualMemory();
 		//---------------------------------------------------------------------
 

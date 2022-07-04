@@ -258,7 +258,9 @@ BF::SocketActionResult BF::IOSocket::Send(const void* inputBuffer, const size_t 
         }
     }
 
-    printf("[Socket] Send -> <%z>\n", AdressInfo.SocketID);
+#if SocketDebug
+    printf("[Socket] Send -> <%zi> %li Bytes\n", AdressInfo.SocketID, inputBufferSize);
+#endif
 
     // Send data
     {
@@ -339,7 +341,9 @@ BF::SocketActionResult BF::IOSocket::Receive(void* outputBuffer, const size_t ou
             {
                 outputBufferSizeWritten = byteRead;
 
-                printf("[Socket] Reading on <%li>\n", AdressInfo.SocketID);
+#if SocketDebug
+                printf("[Socket] Reading <- <%li> %i Bytes\n", AdressInfo.SocketID, byteRead);
+#endif
 
                 if(EventCallBackSocket)
                 {

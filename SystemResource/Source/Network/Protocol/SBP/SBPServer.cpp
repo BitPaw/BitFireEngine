@@ -24,7 +24,7 @@ void BF::SBPServer::SendFile(const ClientID clientID, const char* text)
 
 	// Check if file exists
 	{
-		const FileActionResult fileActionResult = file.MapToVirtualMemory(text);
+		const FileActionResult fileActionResult = file.MapToVirtualMemory(text, MemoryProtectionMode::ReadOnly);
 		const bool sucessful = fileActionResult == FileActionResult::Successful;
 
 		if(!sucessful)
@@ -157,24 +157,27 @@ void BF::SBPServer::OnSocketCreated(const IPAdressInfo& adressInfo, bool& use)
 
 void BF::SBPServer::OnMessageSend(IOSocketMessage socketMessage)
 {
-
-
+#if SocketDebug
 	printf("[SBP] OnMessageSend\n");
-	//_inputQueue.Enqueue();
+#endif
 }
 
 void BF::SBPServer::OnMessageReceive(IOSocketMessage socketMessage)
 {
-	printf("[SBP][Server] Message %zi Bytes from <%i>\n",socketMessage.MessageSize, socketMessage.SocketID);
-
+#if SocketDebug
+	printf("[SBP][Server] Message from <%i> %zi Bytes\n",socketMessage.SocketID, socketMessage.MessageSize);
+#endif
 
 	SBPData data;
 	const size_t read = SBPData::PackageParse(data, socketMessage.Message, socketMessage.MessageSize);
 
-	data.Print();
-
 	if(read)
 	{
+#if SocketDebug
+		printf("[SBP][Server] SBP Pachage detected Command:%c%c%c%c\n", data.CommandID.A, data.CommandID.B, data.CommandID.C, data.CommandID.D);
+#endif
+		//data.Print();
+
 		switch(data.Command)
 		{
 			case BF::SBPCommand::Custom:
@@ -187,8 +190,9 @@ void BF::SBPServer::OnMessageReceive(IOSocketMessage socketMessage)
 
 				const size_t written = SBPData::PackageSerialize(buffer, bufferSize, SourceMe, TargetYou, SBPData::PackageCreateResponse, data.ID);
 
+#if SocketDebug
 				printf("[SBP][Server] Sending response\n");
-
+#endif
 				_server.SendMessageToClient(socketMessage.SocketID, buffer, written);			
 
 				break;
@@ -211,7 +215,7 @@ void BF::SBPServer::OnMessageReceive(IOSocketMessage socketMessage)
 
 void BF::SBPServer::OnConnectionListening(const IPAdressInfo& adressInfo)
 {
-	printf("[SBP][Server][%li] Listening on IP:%s Port:%i\n", adressInfo.SocketID, adressInfo.IP, adressInfo.Port);
+	printf("[SBP][Server][%zi] Listening on IP:%s Port:%i\n", adressInfo.SocketID, adressInfo.IP, adressInfo.Port);
 }
 
 void BF::SBPServer::OnConnectionLinked(const IPAdressInfo& adressInfo)
@@ -221,10 +225,10 @@ void BF::SBPServer::OnConnectionLinked(const IPAdressInfo& adressInfo)
 
 void BF::SBPServer::OnConnectionEstablished(const IPAdressInfo& adressInfo)
 {
-	printf("[SBP][Server] Established <%i>\n", adressInfo.SocketID);
+	printf("[SBP][Server] Established <%zi>\n", adressInfo.SocketID);
 }
 
 void BF::SBPServer::OnConnectionTerminated(const IPAdressInfo& adressInfo)
 {
-	printf("[SBP][Server] Terminated <%i>\n", adressInfo.SocketID);
+	printf("[SBP][Server] Terminated <%zi>\n", adressInfo.SocketID);
 }

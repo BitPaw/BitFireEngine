@@ -5,11 +5,15 @@
 #include <Text/Text.h>
 #include <OS/User.h>
 #include <Time/Time.h>
+#include <Time/StopWatch.h>
 
 #define TimeOutLimit 5000u // 5s
 
 BF::SBPClient::SBPClient()
 {
+	SubConnectionList = nullptr;
+	SubConnectionListSize = 0;
+
 	_client.EventCallBackSocket = this;
 }
 
@@ -92,7 +96,9 @@ BF::SBPResult BF::SBPClient::SendAndWaitResponse
 					responseData = responseCacheEntry.Data;
 					responseDataSize = responseCacheEntry.Length;
 
+#if SocketDebug
 					printf("[SBP] Package answered!\n");
+#endif
 
 					return SBPResult::PackageAnswered;
 				}
@@ -116,6 +122,12 @@ void BF::SBPClient::ConnectToServer(const char* ip, const unsigned short port)
 	char outputBuffer[2048]{ 0 };
 	size_t outputBufferSize = 2024;
 
+	StopWatch stopwatch;
+
+	printf("[Benchmark] Package sending...\n");
+
+	stopwatch.Start();
+
 	const SBPResult result = SendAndWaitResponse
 	(
 		inputBuffer,
@@ -127,7 +139,12 @@ void BF::SBPClient::ConnectToServer(const char* ip, const unsigned short port)
 		SBPData::PackageCreateIAM
 	);
 
-	printf("\n");
+	double x = stopwatch.Stop();
+
+	if(result == SBPResult::PackageAnswered)
+	{
+		printf("[Benchmark] Package answered! took %.2lfms", x*1000);
+	}
 }
 
 void BF::SBPClient::ConnectToServer(const wchar_t* ip, const unsigned short port)
@@ -186,22 +203,26 @@ void BF::SBPClient::SendFile(const char* filePath)
 
 void BF::SBPClient::OnSocketCreating(const IPAdressInfo& adressInfo, bool& use)
 {
-	printf("[SBP][Client] terminated\n");
+	printf("[SBP][Client] Createding <%zi> %s:%i\n", adressInfo.SocketID, adressInfo.IP, adressInfo.Port);
 }
 
 void BF::SBPClient::OnSocketCreated(const IPAdressInfo& adressInfo, bool& use)
 {
-	printf("[SBP][Client] OnSocketCreated\n");
+	printf("[SBP][Client] Created <%zi> %s:%i\n", adressInfo.SocketID, adressInfo.IP, adressInfo.Port);
 }
 
 void BF::SBPClient::OnMessageSend(IOSocketMessage socketMessage)
 {
-	printf("[SBP][Client] OnMessageSend\n");
+#if SocketDebug
+	printf("[SBP][Client] Send %zi Bytes to <%zi>\n", socketMessage.MessageSize, socketMessage.SocketID);
+#endif
 }
 
 void BF::SBPClient::OnMessageReceive(IOSocketMessage socketMessage)
 {
-	printf("[SBP][Client] OnMessageReceive\n");
+#if SocketDebug
+	printf("[SBP][Client] Receive %zi Bytes from <%zi>\n", socketMessage.MessageSize, socketMessage.SocketID);
+#endif
 }
 
 void BF::SBPClient::OnConnectionListening(const IPAdressInfo& adressInfo)
@@ -240,47 +261,57 @@ ThreadFunctionReturnType BF::SBPClient::ReciveDataThread(void* sbpClientAdress)
 		const auto receiveingResult = client._client.Receive(buffer, bufferSizeMax, bufferSize);
 		
 		// Convert raw bytes into data object
-		SBPData::PackageParse(data, buffer, bufferSize);
+		const size_t parsedBytes = SBPData::PackageParse(data, buffer, bufferSize);
 
-		// Handle packaage
-		switch(data.Command)
+		if(parsedBytes)
 		{
-			case SBPCommand::Iam:
-			{
-				wchar_t* name = (wchar_t*)data.Data;
+#if SocketDebug
+			printf("[SBP][Client] SBP detected %c%c%c%c\n", data.CommandID.A, data.CommandID.B, data.CommandID.C, data.CommandID.D);
+#endif
+			client._responseCache.Fill(data.ID, buffer, bufferSize);
 
-				printf("[SBP][I'am] %ls\n", name);
+			//_responseCache.;
 
-				//InvokeEvent(PackageIAMRecieveCallBack, name);
+			// Handle packaage
+			switch(data.Command)
+			{
+				case SBPCommand::Iam:
+				{
+					wchar_t* name = (wchar_t*)data.Data;
 
-				break;
+					//printf("[SBP][I'am] %ls\n", name);
+
+					//InvokeEvent(PackageIAMRecieveCallBack, name);
+
+					break;
+				}
+				case SBPCommand::ConnectionCreate:
+				{
+					break;
+				}
+				case SBPCommand::ConnectionInfo:
+				{
+					break;
+				}
+				case SBPCommand::ConnectionQuit:
+				{
+					break;
+				}
+				case SBPCommand::Text:
+				{
+					break;
+				}
+				case SBPCommand::File:
+				{
+					break;
+				}
+				default:
+				{
+					//PackageRecieveCallBack(data);
+					//return SBPResult::PackageDetectedCustom;
+				}
 			}
-			case SBPCommand::ConnectionCreate:
-			{
-				break;
-			}
-			case SBPCommand::ConnectionInfo:
-			{
-				break;
-			}
-			case SBPCommand::ConnectionQuit:
-			{
-				break;
-			}
-			case SBPCommand::Text:
-			{
-				break;
-			}
-			case SBPCommand::File:
-			{
-				break;
-			}
-			default:
-			{
-				//PackageRecieveCallBack(data);
-				//return SBPResult::PackageDetectedCustom;
-			}
-		}
+		}	
 
 		//return SBPResult::PackageDetectedRegistered;
 

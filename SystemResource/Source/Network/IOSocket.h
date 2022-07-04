@@ -37,6 +37,8 @@
 
 #define ClientID unsigned int
 
+#define SocketDebug 0
+
 namespace BF
 {
 	enum class SocketState

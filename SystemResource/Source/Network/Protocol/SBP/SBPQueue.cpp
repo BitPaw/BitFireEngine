@@ -8,7 +8,7 @@ BF::SBPQueue::SBPQueue()
 	{
 		const size_t preferedSize = 4096u;
 
-		_file.MapToVirtualMemory(preferedSize);
+		_file.MapToVirtualMemory(preferedSize, MemoryProtectionMode::NoReadWrite);
 	}
 }
 

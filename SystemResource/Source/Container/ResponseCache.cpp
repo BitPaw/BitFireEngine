@@ -2,7 +2,7 @@
 
 BF::ResponseCache::ResponseCache()
 {
-    _cache.MapToVirtualMemory(4096u);
+    _cache.MapToVirtualMemory(4096u, MemoryProtectionMode::ReadAndWrite);
 }
 
 ResponseID BF::ResponseCache::Register()
@@ -24,9 +24,9 @@ BF::ResponseCacheResult BF::ResponseCache::Fill(const ResponseID responseID, con
     // Is an entry there but has no data? return if not
     {
         const ResponseCacheResult findResult = Find(responseID, responseCacheEntry);
-        const bool isRegistered = findResult != ResponseCacheResult::WaitingForResponse;
+        const bool isWaiting = findResult == ResponseCacheResult::WaitingForResponse;
 
-        if(!isRegistered)
+        if(!isWaiting)
         {
             return ResponseCacheResult::NotRegistered;
         }

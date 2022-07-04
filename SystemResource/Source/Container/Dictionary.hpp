@@ -50,7 +50,7 @@ namespace BF
 		{
 			Value* valueAdress = Find(key);
 
-			if(!value)
+			if(!valueAdress)
 			{
 				return false;
 			}

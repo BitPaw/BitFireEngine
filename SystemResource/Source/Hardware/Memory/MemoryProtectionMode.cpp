@@ -23,8 +23,8 @@ MemoryProtectionModeType BF::ConvertMemoryProtectionMode(const MemoryProtectionM
 	switch(memoryProtectionMode)
 	{
 		case MemoryProtectionMode::ReadOnly: return ProtectionIDRead;
-		case MemoryProtectionMode::WriteOnly: return ProtectionIDRead;
-		case MemoryProtectionMode::ReadAndWrite: return ProtectionIDRead;
+		case MemoryProtectionMode::WriteOnly: return ProtectionIDWrite;
+		case MemoryProtectionMode::ReadAndWrite: return ProtectionIDReadWrite;
 
 		default: return 0;
 	}
