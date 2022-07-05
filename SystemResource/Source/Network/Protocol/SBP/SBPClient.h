@@ -8,48 +8,11 @@
 
 namespace BF
 {
-	enum class ResponseState
-	{
-		Invalid, // Initialisation value, do not use otherwise
-
-		Waiting, // Package got send, waiting for response
-
-		Finished
-	};
-
-	struct ResponseToken
-	{
-		unsigned char State;
-		unsigned char Value;
-	};
-
 	struct SendFileThreadData
 	{
 		char FilePath[PathMaxSize];
 		char IP[IPv6LengthMax];
 		unsigned short Port;
-	};
-
-
-#define ResponseDataStateInvalid 0x00
-#define ResponseDataStateWaiting 0x01
-#define ResponseDataStateTimeout  0x02
-#define ResponseDataStateAnswered  0x03
-
-
-	struct ResponseData
-	{
-		unsigned int State;
-		void* Data;
-	};
-
-	struct SBPPackageTransfareInfo
-	{
-		void* InputData;
-		size_t InputDataSize;
-		void* ResponseData;
-		size_t ResponseDataSize;
-		ResponseID ID;
 	};
 
 	class SBPClient : protected ISocketListener

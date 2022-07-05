@@ -12,6 +12,7 @@
 #include <Graphic/OpenGL/OpenGL.h>
 #include <Graphic/OpenGL/ResourceType.hpp>
 #include <Hardware/Memory/Memory.h>
+#include <Async/Await.h>
 
 #include <stdlib.h>
 
@@ -186,9 +187,7 @@ void BF::BitFireEngine::ErrorMessageCallback(GLenum source, GLenum type, GLuint 
 
 void BF::BitFireEngine::Start()
 {
-    BF::StopWatch stopwatch;
-
-    stopwatch.Start();
+    BF::StopWatch stopwatch;  
 
     printf
     (
@@ -203,7 +202,6 @@ void BF::BitFireEngine::Start()
         __TIME__
     );
 
-
     _imageAdd.Create();
     _modelAdd.Create();
 
@@ -215,6 +213,8 @@ void BF::BitFireEngine::Start()
     _mainWindow.KeyBoardKeyCallBack = OnKeyBoardKey;
     _mainWindow.WindowCreatedCallBack = OnWindowCreated;
     _mainWindow.WindowSizeChangedCallBack = OnWindowSizeChanged;
+
+    stopwatch.Start();
 
     _mainWindow.Create(600 * 2, 400 * 2, "[BFE] <BitFireEngine>");
 
@@ -264,6 +264,8 @@ void BF::BitFireEngine::Start()
     }*/
 
     while(!_mainWindow.IsRunning);
+
+    //AwaitChange(!_mainWindow.IsRunning);
 
     _mainWindow.FrameBufferContextRegister();
 

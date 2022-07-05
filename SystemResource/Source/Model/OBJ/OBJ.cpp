@@ -324,6 +324,8 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
             segment.MaterialInfoSize = currentSegmentData.Material;
             segment.MaterialInfo = new OBJElementMaterialInfo[currentSegmentData.Material];
 
+#if OBJDebug
+
             printf
             (
                 "[OBJ][Segment (%li/%li)] V:%li T:%li N:%li P:%li F:%li M:%i\n",
@@ -336,6 +338,7 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
                 currentSegmentData.Face,
                 currentSegmentData.Material
             );
+#endif
         }
     }    
     //--------------------------------------------------------------------
@@ -404,7 +407,9 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
 
                         if(!sucessful)
                         {
+#if OBJDebug
                             printf("[Warning] Material (.mtl) file is missing at path <%ls>\n", materialFilePathFullW);
+#endif
                         }
                     }                  
 
@@ -598,8 +603,6 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
         }
         while(dataStream.SkipLine());
     }
-
-    PrintData();
 
     return FileActionResult::Successful;
 }

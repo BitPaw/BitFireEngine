@@ -32,31 +32,31 @@ void BF::Time::Now(Time& time)
 
 	switch(systemTime.wMonth)
 	{
-		case 1u: time.Month = Month::January; break;
-		case 2u: time.Month = Month::February; break;
-		case 3u: time.Month = Month::March; break;
-		case 4u: time.Month = Month::April; break;
-		case 5u: time.Month = Month::March; break;
-		case 6u: time.Month = Month::June; break;
-		case 7u: time.Month = Month::July; break;
-		case 8u: time.Month = Month::August; break;
-		case 9u: time.Month = Month::September; break;
-		case 10u: time.Month = Month::October; break;
-		case 11u: time.Month = Month::November; break;
-		case 12u: time.Month = Month::December; break;
-		default: time.Month = Month::Invalid; break;
+		case 1u: time.Month = TimeMonth::January; break;
+		case 2u: time.Month = TimeMonth::February; break;
+		case 3u: time.Month = TimeMonth::March; break;
+		case 4u: time.Month = TimeMonth::April; break;
+		case 5u: time.Month = TimeMonth::March; break;
+		case 6u: time.Month = TimeMonth::June; break;
+		case 7u: time.Month = TimeMonth::July; break;
+		case 8u: time.Month = TimeMonth::August; break;
+		case 9u: time.Month = TimeMonth::September; break;
+		case 10u: time.Month = TimeMonth::October; break;
+		case 11u: time.Month = TimeMonth::November; break;
+		case 12u: time.Month = TimeMonth::December; break;
+		default: time.Month = TimeMonth::Invalid; break;
 	}
 
 	switch(systemTime.wDayOfWeek)
 	{
-		case 1u: time.DayOfWeek = DayOfWeek::Monday; break;
-		case 2u: time.DayOfWeek = DayOfWeek::Tuesday; break;
-		case 3u: time.DayOfWeek = DayOfWeek::Wednesday; break;
-		case 4u: time.DayOfWeek = DayOfWeek::Thursday; break;
-		case 5u: time.DayOfWeek = DayOfWeek::Friday; break;
-		case 6u: time.DayOfWeek = DayOfWeek::Saturday; break;
-		case 0u: time.DayOfWeek = DayOfWeek::Sunday; break;
-		default: time.DayOfWeek = DayOfWeek::Invalid; break;
+		case 1u: time.DayOfWeek = TimeDayOfWeek::Monday; break;
+		case 2u: time.DayOfWeek = TimeDayOfWeek::Tuesday; break;
+		case 3u: time.DayOfWeek = TimeDayOfWeek::Wednesday; break;
+		case 4u: time.DayOfWeek = TimeDayOfWeek::Thursday; break;
+		case 5u: time.DayOfWeek = TimeDayOfWeek::Friday; break;
+		case 6u: time.DayOfWeek = TimeDayOfWeek::Saturday; break;
+		case 0u: time.DayOfWeek = TimeDayOfWeek::Sunday; break;
+		default: time.DayOfWeek = TimeDayOfWeek::Invalid; break;
 	}
 
 	time.Day = systemTime.wDay;

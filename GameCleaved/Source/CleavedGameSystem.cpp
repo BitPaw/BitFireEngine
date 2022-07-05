@@ -213,7 +213,8 @@ void Cleaved::CleavedGameSystem::OnStartUp()
 
 
 
-    GameSystem.PrintContent(true);
+    //GameSystem.PrintContent(true);
+
     //text = new BF::UIText("SampleText", *GameSystem.Resource.DefaultFont, -1, -0.8);
     //text->RenderInformation.ShaderProgramID = hudShaderID.ID;
     //text->SetFont(*Resource.DefaultFont);

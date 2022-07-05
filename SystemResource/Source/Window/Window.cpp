@@ -1862,6 +1862,7 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
 
     BF::Window& window = *((Window*)windowAdress);
 
+    window.IsRunning = false;
 
 #if defined(OSUnix)
     XInitThreads();
@@ -2067,10 +2068,7 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
 
     // Create OpenGL Context
     {
-        const HDC windowHandleToDeviceContext = GetDC(windowID);
-
-        window.HandleDeviceContext = windowHandleToDeviceContext;
-
+        const HDC windowHandleToDeviceContext = GetDC(windowID);   
         const PIXELFORMATDESCRIPTOR pfd =
         {
             sizeof(PIXELFORMATDESCRIPTOR),
@@ -2090,10 +2088,10 @@ ThreadFunctionReturnType BF::Window::WindowCreateThread(void* windowAdress)
             0,
             0, 0, 0
         };
-
         const int letWindowsChooseThisPixelFormat = ChoosePixelFormat(windowHandleToDeviceContext, &pfd);
         const bool sucessul = SetPixelFormat(windowHandleToDeviceContext, letWindowsChooseThisPixelFormat, &pfd);
 
+        window.HandleDeviceContext = windowHandleToDeviceContext;
     }
 
     // Register input device
@@ -2451,129 +2449,12 @@ void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
     {
         case CursorMode::Show:
         {
-            //ClipCursor(&desktop);
-            //ShowCursor(true);
-
             printf("[Cursor] Show\n");
 
             while(ShowCursor(true) < 0);
 
-            /*
-            HCURSOR cursor = GetCursor();
-            const bool hasCursor = cursor;
-
-            if(!hasCursor)
-            {
-                HINSTANCE hInst = nullptr; // A handle to the current instance of the application creating the cursor.
-                int xHotSpot = 19;
-                int yHotSpot = 2;
-                const int nWidth = GetSystemMetrics(SM_CXCURSOR);
-                const int nHeight = GetSystemMetrics(SM_CYCURSOR);
-                void* pvANDPlane=0;
-                void* pvXORPlane=0;
-
-                BYTE ANDmaskCursor[] =
-                {
-                    0xFF, 0xFC, 0x3F, 0xFF,   // line 1
-                    0xFF, 0xC0, 0x1F, 0xFF,   // line 2
-                    0xFF, 0x00, 0x3F, 0xFF,   // line 3
-                    0xFE, 0x00, 0xFF, 0xFF,   // line 4
-
-                    0xF7, 0x01, 0xFF, 0xFF,   // line 5
-                    0xF0, 0x03, 0xFF, 0xFF,   // line 6
-                    0xF0, 0x03, 0xFF, 0xFF,   // line 7
-                    0xE0, 0x07, 0xFF, 0xFF,   // line 8
-
-                    0xC0, 0x07, 0xFF, 0xFF,   // line 9
-                    0xC0, 0x0F, 0xFF, 0xFF,   // line 10
-                    0x80, 0x0F, 0xFF, 0xFF,   // line 11
-                    0x80, 0x0F, 0xFF, 0xFF,   // line 12
-
-                    0x80, 0x07, 0xFF, 0xFF,   // line 13
-                    0x00, 0x07, 0xFF, 0xFF,   // line 14
-                    0x00, 0x03, 0xFF, 0xFF,   // line 15
-                    0x00, 0x00, 0xFF, 0xFF,   // line 16
-
-                    0x00, 0x00, 0x7F, 0xFF,   // line 17
-                    0x00, 0x00, 0x1F, 0xFF,   // line 18
-                    0x00, 0x00, 0x0F, 0xFF,   // line 19
-                    0x80, 0x00, 0x0F, 0xFF,   // line 20
-
-                    0x80, 0x00, 0x07, 0xFF,   // line 21
-                    0x80, 0x00, 0x07, 0xFF,   // line 22
-                    0xC0, 0x00, 0x07, 0xFF,   // line 23
-                    0xC0, 0x00, 0x0F, 0xFF,   // line 24
-
-                    0xE0, 0x00, 0x0F, 0xFF,   // line 25
-                    0xF0, 0x00, 0x1F, 0xFF,   // line 26
-                    0xF0, 0x00, 0x1F, 0xFF,   // line 27
-                    0xF8, 0x00, 0x3F, 0xFF,   // line 28
-
-                    0xFE, 0x00, 0x7F, 0xFF,   // line 29
-                    0xFF, 0x00, 0xFF, 0xFF,   // line 30
-                    0xFF, 0xC3, 0xFF, 0xFF,   // line 31
-                    0xFF, 0xFF, 0xFF, 0xFF    // line 32
-                };
-
-                // Yin-shaped cursor XOR mask
-
-                BYTE XORmaskCursor[] =
-                {
-                    0x00, 0x00, 0x00, 0x00,   // line 1
-                    0x00, 0x03, 0xC0, 0x00,   // line 2
-                    0x00, 0x3F, 0x00, 0x00,   // line 3
-                    0x00, 0xFE, 0x00, 0x00,   // line 4
-
-                    0x0E, 0xFC, 0x00, 0x00,   // line 5
-                    0x07, 0xF8, 0x00, 0x00,   // line 6
-                    0x07, 0xF8, 0x00, 0x00,   // line 7
-                    0x0F, 0xF0, 0x00, 0x00,   // line 8
-
-                    0x1F, 0xF0, 0x00, 0x00,   // line 9
-                    0x1F, 0xE0, 0x00, 0x00,   // line 10
-                    0x3F, 0xE0, 0x00, 0x00,   // line 11
-                    0x3F, 0xE0, 0x00, 0x00,   // line 12
-
-                    0x3F, 0xF0, 0x00, 0x00,   // line 13
-                    0x7F, 0xF0, 0x00, 0x00,   // line 14
-                    0x7F, 0xF8, 0x00, 0x00,   // line 15
-                    0x7F, 0xFC, 0x00, 0x00,   // line 16
-
-                    0x7F, 0xFF, 0x00, 0x00,   // line 17
-                    0x7F, 0xFF, 0x80, 0x00,   // line 18
-                    0x7F, 0xFF, 0xE0, 0x00,   // line 19
-                    0x3F, 0xFF, 0xE0, 0x00,   // line 20
-
-                    0x3F, 0xC7, 0xF0, 0x00,   // line 21
-                    0x3F, 0x83, 0xF0, 0x00,   // line 22
-                    0x1F, 0x83, 0xF0, 0x00,   // line 23
-                    0x1F, 0x83, 0xE0, 0x00,   // line 24
-
-                    0x0F, 0xC7, 0xE0, 0x00,   // line 25
-                    0x07, 0xFF, 0xC0, 0x00,   // line 26
-                    0x07, 0xFF, 0xC0, 0x00,   // line 27
-                    0x01, 0xFF, 0x80, 0x00,   // line 28
-
-                    0x00, 0xFF, 0x00, 0x00,   // line 29
-                    0x00, 0x3C, 0x00, 0x00,   // line 30
-                    0x00, 0x00, 0x00, 0x00,   // line 31
-                    0x00, 0x00, 0x00, 0x00    // line 32
-                };
-
-                cursor = CreateCursor(hInst, xHotSpot, yHotSpot, nWidth, nHeight, ANDmaskCursor, XORmaskCursor);
-            }
-
-            CURSORINFO cursorInfo{ 0 };
-            cursorInfo.cbSize = sizeof(CURSORINFO);
-
-            const bool sucessfulInfoGet = GetCursorInfo(&cursorInfo);
-            */
-
-
-            //const HCURSOR cursorLoad = CreateCursor(NULL, IDC_HELP);
             const bool clipResult = ClipCursor(NULL);
             const HCURSOR cursorSet = SetCursor(CursorID);
-           //const bool showResult = ShowCursor(true);
 
             break;
         }
@@ -2627,8 +2508,6 @@ void BF::Window::CursorCaptureMode(const CursorMode cursorMode)
             lpCursor.bVisible = false;
             lpCursor.dwSize = sizeof(CONSOLE_CURSOR_INFO);
             bool y = SetConsoleCursorInfo(console, &lpCursor);
-
-            printf("");
 
             break;
         }
@@ -2686,11 +2565,11 @@ bool BF::Window::FrameBufferContextRegister()
 #if defined(OSUnix)
     const bool successful = glXMakeCurrent(DisplayCurrent, ID, OpenGLConext);
 
-    printf("[%x][OpenGL] Make context %p %i %p\n", threadID, DisplayCurrent, ID, OpenGLConext);
+    //printf("[%x][OpenGL] Make context %p %i %p\n", threadID, DisplayCurrent, ID, OpenGLConext);
 #elif defined(OSWindows)
     const bool successful = wglMakeCurrent(HandleDeviceContext, OpenGLConext);
 
-    printf("[%x][OpenGL] Make context %p %p\n", threadID, HandleDeviceContext, OpenGLConext);
+    //printf("[%x][OpenGL] Make context %p %p\n", threadID, HandleDeviceContext, OpenGLConext);
 #endif
 
     return successful;
@@ -2700,7 +2579,7 @@ bool BF::Window::FrameBufferContextRelease()
 {
     const size_t threadID = Thread::ThreadCurrentID();
 
-    printf("[%x][OpenGL] Remove context \n", threadID);
+    //printf("[%x][OpenGL] Remove context \n", threadID);
 
 #if defined(OSUnix)
     const bool successful = glXMakeCurrent(0, ID, OpenGLConext);

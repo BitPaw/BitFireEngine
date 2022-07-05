@@ -132,7 +132,7 @@ void ZEE::ZEEGameSystem::OnStartUp()
     GameSystem.MainCamera.Update(0);
     GameSystem.MainCamera.Move(0, 0, -100);
 
-    GameSystem.PrintContent(true);
+    //GameSystem.PrintContent(true);
 }
 
 void ZEE::ZEEGameSystem::OnShutDown()

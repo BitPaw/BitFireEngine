@@ -1,7 +1,6 @@
 #include "Memory.h"
 
 #include <OS/OSDefine.h>
-#include <Text/Text.h>
 
 #if defined(OSUnix)
 #include <sys/stat.h>
@@ -10,10 +9,10 @@
 #include <Windows.h>
 #endif
 
+#include <Text/Text.h>
 #include <ErrorCode.h>
 #include <ClipBoard/ClipBoard.cpp>
 #include <File/File.h>
-
 
 void* operator new(const size_t size)
 {
@@ -153,7 +152,7 @@ void* BF::Memory::VirtualMemoryAllocate(const size_t size, const MemoryProtectio
 #elif defined(OSWindows)
 	DWORD allocationType = MEM_COMMIT | MEM_RESERVE;
 
-	const void* addressAllocated = VirtualAlloc(addressPrefered, size, allocationType, protectionModeID);
+	const void* addressAllocated = VirtualAlloc((void*)addressPrefered, size, allocationType, protectionModeID);
 #endif
 
 #if MemoryDebug

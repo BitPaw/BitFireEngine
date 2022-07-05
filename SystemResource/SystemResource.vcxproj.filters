@@ -1781,5 +1781,8 @@
     <ClInclude Include="Source\Container\ResponseCache.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Async\Await.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

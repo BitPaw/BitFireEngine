@@ -103,7 +103,7 @@ namespace BF
 		static Dictionary<WindowID, Window*> _windowLookup;
 
 		public:
-		bool IsRunning;
+		volatile bool IsRunning;
 		WindowID ID;
 		OpenGLConextID OpenGLConext;
 

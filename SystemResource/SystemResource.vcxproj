@@ -552,6 +552,7 @@
     <ClCompile Include="Source\Time\Time.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Async\Await.h" />
     <ClInclude Include="Source\Container\ResponseCache.h" />
     <ClInclude Include="Source\Container\ClusterLongLong.h" />
     <ClInclude Include="Source\Hardware\Memory\MemoryProtectionMode.h" />

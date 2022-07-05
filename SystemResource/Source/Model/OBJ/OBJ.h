@@ -8,6 +8,8 @@
 
 #define OBJNameSize 64u
 
+#define OBJDebug 0
+
 namespace BF
 {
 	// [.OBJ] Wavefront - 3D model format
