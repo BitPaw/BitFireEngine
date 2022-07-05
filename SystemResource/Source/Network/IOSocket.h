@@ -5,7 +5,7 @@
 #define SocketBufferSize 2048u
 
 #ifdef OSUnix
-#include <sys/types.h> 
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <netinet/in.h>
@@ -37,7 +37,7 @@
 
 #define ClientID unsigned int
 
-#define SocketDebug 0
+#define SocketDebug 1
 
 namespace BF
 {
@@ -59,7 +59,7 @@ namespace BF
 		// Server only
 		WaitingForConnection, // listenung
 
-		
+
 
 		IDLE
 	};
@@ -79,7 +79,7 @@ namespace BF
 	typedef void (*ConnectionTerminatedEvent)(const IPAdressInfo& adressInfo);
 
 	class IOSocket
-	{	
+	{
 		public:
 		SocketState State;
 
@@ -103,10 +103,10 @@ namespace BF
 		void Close();
 
 		void StateChange(const SocketState socketState);
-		
+
 		static SocketActionResult Create
 		(
-			const IPAdressFamily adressFamily, 
+			const IPAdressFamily adressFamily,
 			const SocketType socketType,
 			const ProtocolMode protocolMode,
 			size_t& socketID
@@ -124,7 +124,7 @@ namespace BF
 		);
 
 		SocketActionResult Send(const void* inputBuffer, const size_t inputBufferSize);
-		SocketActionResult Receive(void* outputBuffer, const size_t outputBufferSizeMax, size_t& outputBufferSizeWritten);	
+		SocketActionResult Receive(void* outputBuffer, const size_t outputBufferSizeMax, size_t& outputBufferSizeWritten);
 
 #if defined(OSWindows)
 		static SocketActionResult WindowsSocketAgentStartup();

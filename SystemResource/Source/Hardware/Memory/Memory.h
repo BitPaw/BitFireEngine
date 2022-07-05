@@ -31,7 +31,7 @@ namespace BF
         // The minimal size will be a pagefile (4KB).
         // The size will be rounded up to the next page boundary.
         // Use only for bigger datablocks.
-        static void* VirtualMemoryAllocate(const size_t size, const MemoryProtectionMode memoryProtectionMode, const int fileDescriptor);
+        static void* VirtualMemoryAllocate(const size_t size, const MemoryProtectionMode memoryProtectionMode);
         static bool VirtualMemoryRelease(const void* adress, const size_t size);
 
 

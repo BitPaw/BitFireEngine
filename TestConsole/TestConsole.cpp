@@ -37,7 +37,7 @@ int main()
 
 
     SBPQueue sbpQueue;
-    
+
     //sbpQueue.Allocate(1024);
 
 
@@ -70,14 +70,16 @@ int main()
 #endif
 
 #if 1
+    printf("Start..\n");
+
     SBPClient client;
     SBPServer server;
 
     server.Start(25666);
-    
+
     client.ConnectToServer("127.0.0.1", 25666);
 
-    
+
 
 
     while(true)
@@ -89,7 +91,7 @@ int main()
 #endif
 
 #if 0
-    SBPServer server;    
+    SBPServer server;
 
     server.Start(25565);
 
@@ -98,14 +100,14 @@ int main()
        server.SendFile("C:/Users/BitPaw/Videos/Compile Info.txt");
 
        Sleep(5000);
-    }   
+    }
 #endif
 
 
 
 #if 0
     M4A m4a;
-    
+
     m4a.Load("A:/A.m4a");
 
 #endif

@@ -65,7 +65,7 @@ BF::SBPResult BF::SBPClient::SendAndWaitResponse
 
 		Time::Now(timestampStart);
 
-		while(true) // Wait aslong as response is there 
+		while(true) // Wait aslong as response is there
 		{
 			// Check if timeout
 			{
@@ -85,7 +85,7 @@ BF::SBPResult BF::SBPClient::SendAndWaitResponse
 				}
 			}
 
-			// Check if answered 
+			// Check if answered
 			{
 				ResponseCacheEntry responseCacheEntry;
 				const ResponseCacheResult responseCacheResult = _responseCache.Find(responseID, responseCacheEntry);
@@ -105,6 +105,8 @@ BF::SBPResult BF::SBPClient::SendAndWaitResponse
 			}
 		}
 	}
+
+	return SBPResult::Invalid;
 }
 
 void BF::SBPClient::ConnectToServer(const char* ip, const unsigned short port)
@@ -159,7 +161,7 @@ void BF::SBPClient::DisconnectFromServer()
 
 void BF::SBPClient::RegisterMe()
 {
-	
+
 
 
 }
@@ -259,7 +261,7 @@ ThreadFunctionReturnType BF::SBPClient::ReciveDataThread(void* sbpClientAdress)
 
 		// Get raw bytes
 		const auto receiveingResult = client._client.Receive(buffer, bufferSizeMax, bufferSize);
-		
+
 		// Convert raw bytes into data object
 		const size_t parsedBytes = SBPData::PackageParse(data, buffer, bufferSize);
 
@@ -311,7 +313,7 @@ ThreadFunctionReturnType BF::SBPClient::ReciveDataThread(void* sbpClientAdress)
 					//return SBPResult::PackageDetectedCustom;
 				}
 			}
-		}	
+		}
 
 		//return SBPResult::PackageDetectedRegistered;
 

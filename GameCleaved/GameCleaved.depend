@@ -709,8 +709,10 @@
 
 1652635307 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Controller/KeyBoardKey.h
 
-1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/Dictionary.hpp
-	<stdlib.h>
+1656975194 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/Dictionary.hpp
+	<cstdlib>
+	<cstddef>
+	<Hardware/Memory/Memory.h>
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Window/CursorMode.h
 
@@ -865,7 +867,7 @@
 	"CleavedGameSystem.h"
 	<windows.h>
 
-1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/Memory.h
+1657030833 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/Memory.h
 	"MemoryUsage.h"
 	"MemoryProtectionMode.h"
 	<OS/OSDefine.h>
@@ -883,7 +885,7 @@
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/ErrorCode.h
 
-1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/File.h
+1656975194 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/File.h
 	<cstdlib>
 	<cstdio>
 	<cwchar>
@@ -897,6 +899,7 @@
 	<ErrorCode.h>
 	<OS/OSDefine.h>
 	<File/FilePersistence.hpp>
+	<Hardware/Memory/MemoryProtectionMode.h>
 	<sys/stat.h>
 	<sys/mman.h>
 	<unistd.h>
@@ -911,7 +914,7 @@
 	<OS/OSDefine.h>
 	<cstddef>
 
-1656358018 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/ByteStream.h
+1656975194 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/ByteStream.h
 	<cstddef>
 	"Endian.h"
 	<Container/ClusterShort.h>
@@ -1406,11 +1409,10 @@
 
 1655505646 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Container/ClusterLongLong.h
 
-1656358018 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Model/OBJ/OBJElement.h
-	"../../Container/AsciiString.h"
-	"../../Container/List.hpp"
-	"../../../../SystemResource/Source/Math/Geometry/Vector2.hpp"
-	"../../../../SystemResource/Source/Math/Geometry/Vector3.hpp"
+1656975194 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Model/OBJ/OBJElement.h
+	<Container/List.hpp>
+	<Math/Geometry/Vector2.hpp>
+	<Math/Geometry/Vector3.hpp>
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/AsciiString.h
 	<cstddef>
@@ -1418,7 +1420,7 @@
 	<string>
 	"List.hpp"
 
-1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/MemoryProtectionMode.h
+1656975194 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Hardware/Memory/MemoryProtectionMode.h
 	<OS/OSDefine.h>
 
 1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Container/ClusterLongLong.h

@@ -120,42 +120,40 @@ printf("[#][Memory] 0x%p (%10zi B) Pre-Fetched [NOT SUPPORTED] Skipped...\n", ad
 	return false;
 }
 
-#include <cerrno>
-
-void* BF::Memory::VirtualMemoryAllocate(const size_t size, const MemoryProtectionMode memoryProtectionMode, const int fileDescriptor)
+void* BF::Memory::VirtualMemoryAllocate(const size_t size, const MemoryProtectionMode memoryProtectionMode)
 {
-    void* addressAllocated = nullptr;
-	void* addressPrefered = nullptr;
-
+	const void* addressPrefered = nullptr;
 	const MemoryProtectionModeType protectionModeID = ConvertMemoryProtectionMode(memoryProtectionMode);
 
 #if defined(OSUnix)
-	int flags = MAP_PRIVATE | MAP_POPULATE;
-	off64_t length = 0;
+	const int flags = MAP_PRIVATE | MAP_POPULATE | MAP_ANONYMOUS;
+	const int fileDescriptor = -1;
+	const off_t offset = 0;
 
-	addressAllocated = mmap
+	const void* addressAllocated = mmap
 	(
-		addressPrefered,
+		(void*)addressPrefered,
 		size,
 		protectionModeID,
 		flags,
 		fileDescriptor,
-		0
+		offset
 	);
 
-	const bool sucessful = addressAllocated != (void*)-1;
-
-	if (!sucessful)
+	// Check if mmap was sucessful
 	{
-        int x = errno;
+        const bool sucessful = addressAllocated != MAP_FAILED;
 
-        return malloc(size);
+        if (!sucessful)
+        {
+            return nullptr;
+        }
 	}
 
 #elif defined(OSWindows)
 	DWORD allocationType = MEM_COMMIT | MEM_RESERVE;
 
-	addressAllocated = VirtualAlloc(addressPrefered, size, allocationType, protectionModeID);
+	const void* addressAllocated = VirtualAlloc(addressPrefered, size, allocationType, protectionModeID);
 #endif
 
 #if MemoryDebug
@@ -183,7 +181,7 @@ void* BF::Memory::VirtualMemoryAllocate(const size_t size, const MemoryProtectio
 	printf("[#][Memory] 0x%p (%10zi B) Virtual allocation [%s]\n", addressAllocated, size, readMode);
 #endif
 
-	return addressAllocated;
+	return (void*)addressAllocated;
 }
 
 bool BF::Memory::VirtualMemoryRelease(const void* adress, const size_t size)

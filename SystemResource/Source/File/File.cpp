@@ -512,8 +512,20 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const char* filePath, const Me
 
 	// Map data
 	{
-		const void* mappedData = Memory::VirtualMemoryAllocate(DataSize, protectionMode, IDMapping);
-		const bool successfulMapping = mappedData != MAP_FAILED;
+		const MemoryProtectionModeType protectionModeID = ConvertMemoryProtectionMode(protectionMode);
+        const int flags = MAP_PRIVATE | MAP_POPULATE;
+        const off_t offset = 0;
+
+        const void* mappedData = mmap
+        (
+            nullptr, // addressPrefered
+            DataSize,
+            protectionModeID,
+            flags,
+            IDMapping, // fileDescriptor
+            offset
+        );
+        const bool successfulMapping = mappedData;
 
 		if(!successfulMapping)
 		{
@@ -673,7 +685,7 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const wchar_t* filePath, const
 
 BF::FileActionResult BF::File::MapToVirtualMemory(const size_t size, const MemoryProtectionMode protectionMode)
 {
-	const void* data = Memory::VirtualMemoryAllocate(size, protectionMode, 0);
+	const void* data = Memory::VirtualMemoryAllocate(size, protectionMode);
 	const bool successful = data;
 
 	if(!successful)
