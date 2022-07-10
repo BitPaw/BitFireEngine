@@ -296,7 +296,7 @@ BF::FileActionResult BF::File::Copy(const char* sourceFilePath, const char* dest
 	bool fileOpenSuccesful = fileSource && fileDestination;
 
 	const size_t swapBufferSize = 2048;
-	Byte swapBuffer[swapBufferSize];
+	Byte__ swapBuffer[swapBufferSize];
 
 	if (!fileOpenSuccesful)
 	{
@@ -532,7 +532,7 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const char* filePath, const Me
 			return FileActionResult::FileMemoryMappingFailed;
 		}
 
-		Data = (Byte*)mappedData;
+		Data = (Byte__*)mappedData;
 	}
 
 	_fileLocation = FileLocation::MappedFromDisk;
@@ -668,7 +668,7 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const wchar_t* filePath, const
 			numaNodePreferred
 		);
 
-		Data = (Byte*)fileMapped;
+		Data = (Byte__*)fileMapped;
 
 		Memory::VirtualMemoryPrefetch(fileMapped, DataSize);
 	}
@@ -694,7 +694,7 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const size_t size, const Memor
 	}
 
 	_fileLocation = FileLocation::MappedVirtual;
-	Data = (Byte*)data;
+	Data = (Byte__*)data;
 	DataSize = size;
 
 	return FileActionResult::Successful;
@@ -826,7 +826,7 @@ BF::FileActionResult BF::File::ReadFromDisk(const wchar_t* filePath, bool addNul
 	return BF::FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::File::ReadFromDisk(FILE* file, Byte** targetBuffer, size_t& bufferSize, bool addNullTerminator)
+BF::FileActionResult BF::File::ReadFromDisk(FILE* file, Byte__** targetBuffer, size_t& bufferSize, bool addNullTerminator)
 {
 	fseek(file, 0, SEEK_END); // Jump to end of file
 	bufferSize = ftell(file); // Get current 'data-cursor' position
@@ -843,7 +843,7 @@ BF::FileActionResult BF::File::ReadFromDisk(FILE* file, Byte** targetBuffer, siz
 		++bufferSize;
 	}
 
-	Byte* dataBuffer = Memory::Allocate<Byte>(bufferSize);
+	Byte__* dataBuffer = Memory::Allocate<Byte__>(bufferSize);
 
 	if(!dataBuffer) // If malloc failed
 	{
@@ -866,7 +866,7 @@ BF::FileActionResult BF::File::ReadFromDisk(FILE* file, Byte** targetBuffer, siz
 	return FileActionResult::Successful;
 }
 
-BF::FileActionResult BF::File::ReadFromDisk(const wchar_t* filePath, Byte** targetBuffer, size_t& bufferSize, bool addNullTerminator, FilePersistence filePersistence)
+BF::FileActionResult BF::File::ReadFromDisk(const wchar_t* filePath, Byte__** targetBuffer, size_t& bufferSize, bool addNullTerminator, FilePersistence filePersistence)
 {
 	File file;
 	FileActionResult result = file.Open(filePath, FileOpenMode::Read);
@@ -943,7 +943,7 @@ FILE* fileHandle = FileHandle;
 FILE* fileHandle = FileHandleCStyle;
 #endif
 
-	const size_t writtenSize = fwrite(value, sizeof(Byte), length, fileHandle);
+	const size_t writtenSize = fwrite(value, sizeof(Byte__), length, fileHandle);
 
 	if(writtenSize > 0)
 	{

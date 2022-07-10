@@ -113,7 +113,7 @@ BF::FileActionResult BF::TGA::Load(const unsigned char* fileData, const size_t f
 		PixelDepth = ConvertPixelDepth(pixelDepth);
 
 		ImageDataSize = Width * Height * (pixelDepth / 8u);
-		ImageData = Memory::Allocate<Byte>(ImageDataSize);
+		ImageData = Memory::Allocate<Byte__>(ImageDataSize);
 	}
 	//----------------------------------------------------
 
@@ -142,7 +142,7 @@ BF::FileActionResult BF::TGA::Load(const unsigned char* fileData, const size_t f
 		unsigned int compareLength = stringLengh;
 		const unsigned char lastCharacter = dataStream.Data[dataStream.DataSize - 1];
 		const bool isLastCharacter = lastCharacter == '.';
-		Byte* string = dataStream.Data + (dataStream.DataSize - stringLengh);
+		Byte__* string = dataStream.Data + (dataStream.DataSize - stringLengh);
 		bool isTGAVersionTwo = false;
 
 		if(isLastCharacter)

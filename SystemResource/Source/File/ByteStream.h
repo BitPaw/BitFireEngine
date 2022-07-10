@@ -8,8 +8,8 @@
 #include <Container/ClusterInt.h>
 #include <Container/ClusterLongLong.h>
 
-#ifndef Byte
-#define Byte unsigned char
+#ifndef Byte__
+#define Byte__ unsigned char
 #endif
 
 namespace BF
@@ -18,7 +18,7 @@ namespace BF
 	{
 		public:
 		//---------------------------------------------------------------------
-		Byte* Data;
+		Byte__* Data;
 		size_t DataSize;
 		size_t DataCursorPosition;
 		//---------------------------------------------------------------------
@@ -37,7 +37,7 @@ namespace BF
 		void DataSet(const void* data, const size_t dataSize, const size_t cursorPosition = 0);
 		
 		void CursorToBeginning();
-		Byte* CursorCurrentAdress();
+		Byte__* CursorCurrentAdress();
 		void CursorAdvance(const size_t steps);
 		void CursorRewind(const size_t steps);
 		void CursorToEnd();
@@ -69,9 +69,9 @@ namespace BF
 
 		// Additional check how many bytes are read.
 		// Slower version of Read(), this function can't fail.
-		size_t ReadSafe(Byte* value, const size_t length);
+		size_t ReadSafe(Byte__* value, const size_t length);
 
-		bool ReadAndCompare(const Byte* value, const size_t length);
+		bool ReadAndCompare(const Byte__* value, const size_t length);
 		bool ReadAndCompare(const char* value, const size_t length);
 		bool ReadAndCompare(const char value);
 		bool ReadAndCompare(const void* value, const size_t length);

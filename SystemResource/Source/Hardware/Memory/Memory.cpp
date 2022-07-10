@@ -199,3 +199,65 @@ bool BF::Memory::VirtualMemoryRelease(const void* adress, const size_t size)
 
 	return result;
 }
+
+bool BF::Memory::Advise(const void* adress, const size_t length, const FileCachingMode fileCachingMode)
+{
+	const int cachingModeID = ConvertFileCachingMode(fileCachingMode);
+
+#if defined(OSUnix)
+	const int result = madvise((void*)adress, length, cachingModeID);
+	const ErrorCode errorCode = ConvertErrorCode(result);
+	const bool successful = errorCode == ErrorCode::Successful;
+
+	return successful;
+
+#elif defined(OSWindows)
+	return true;
+#endif
+}
+
+void BF::Memory::Release(void* adress, const size_t size)
+{
+#if MemoryDebug
+	printf("[#][Memory] 0x%p (%10zi B) Free\n", adress, size);
+#endif
+
+	free(adress);
+}
+
+void BF::Memory::Set(void* target, const unsigned char value, const size_t size)
+{
+	assert(target);
+
+#if MemoryDebug
+	printf("[#][Memory] 0x%p (%10zi B) Set with %x\n", target, size, value);
+#endif    
+
+#if MemoryUseSystemCalls
+	memset(target, value, size);
+#else
+	for(size_t i = 0; i < size; ++i)
+	{
+		((unsigned char*)target)[i] = value;
+	}
+#endif
+}
+
+void BF::Memory::Copy(void* target, const void* source, const size_t size)
+{
+	assert(target);
+	assert(source);
+
+#if MemoryDebug
+	printf("[#][Memory] 0x%p (%10zi B) Copy from 0x%p\n", target, size, source);
+#endif
+
+#if MemoryUseSystemCalls
+	memcpy(target, source, size);
+#else
+	for(size_t i = 0; i < size; ++i)
+	{
+		((unsigned char*)target)[i] = ((unsigned char*)source)[i];
+	}
+#endif
+}

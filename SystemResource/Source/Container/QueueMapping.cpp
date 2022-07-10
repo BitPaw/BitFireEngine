@@ -33,7 +33,7 @@ bool BF::QueueMapping::Dequeue(void* target, size_t sizeInBytes)
 		}
 	}
 
-	const Byte* adressStart = Data + _offsetBytesUsed;
+	const Byte__* adressStart = Data + _offsetBytesUsed;
 
 	Memory::Copy(target, adressStart, sizeInBytes);
 

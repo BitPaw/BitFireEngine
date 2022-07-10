@@ -19,7 +19,7 @@ BF::MP3Header::MP3Header()
 
 size_t BF::MP3Header::Parse(const unsigned char* data, const size_t dataSize)
 {		
-	// Parse First Byte
+	// Parse First Byte__
 	{
 		const unsigned short byteA = data[0];
 		const unsigned short byteB = data[1];
@@ -33,7 +33,7 @@ size_t BF::MP3Header::Parse(const unsigned char* data, const size_t dataSize)
 		}
 	}
 
-	// Parse secound Byte
+	// Parse secound Byte__
 	{
 		const unsigned char byteB = data[1];
 
@@ -83,7 +83,7 @@ size_t BF::MP3Header::Parse(const unsigned char* data, const size_t dataSize)
 		}
 	}
 
-	// Parse third Byte
+	// Parse third Byte__
 	{
 		const unsigned char byteC = data[2];
 		const bool isMPEGVersion1 = MPEGVersion == MP3MPEGVersion::MPEGVersion1;
@@ -162,7 +162,7 @@ size_t BF::MP3Header::Parse(const unsigned char* data, const size_t dataSize)
 		IsPrivate = (byteC & 0b00000001);
 	}
 
-	// Parse forth Byte
+	// Parse forth Byte__
 	{
 		const unsigned char byteD = data[3];
 

@@ -252,14 +252,14 @@ BF::SocketActionResult BF::IOSocket::Send(const void* inputBuffer, const size_t 
     {
         if(EventCallBackSocket)
         {
-            IOSocketMessage socketMessage(AdressInfo.SocketID, (Byte*)inputBuffer, inputBufferSize);
+            IOSocketMessage socketMessage(AdressInfo.SocketID, (Byte__*)inputBuffer, inputBufferSize);
 
             EventCallBackSocket->OnMessageSend(socketMessage);
         }
     }
 
 #if SocketDebug
-    printf("[Socket] Send -> <%zi> %li Bytes\n", AdressInfo.SocketID, inputBufferSize);
+    printf("[#][Socket][Send] You >>> <%zi> %li Bytes\n", AdressInfo.SocketID, inputBufferSize);
 #endif
 
     // Send data
@@ -286,9 +286,7 @@ BF::SocketActionResult BF::IOSocket::Send(const void* inputBuffer, const size_t 
 BF::SocketActionResult BF::IOSocket::Receive(void* outputBuffer, const size_t outputBufferSizeMax, size_t& outputBufferSizeWritten)
 {    
     // I did not read any data yet
-    outputBufferSizeWritten = 0;
-
- 
+    outputBufferSizeWritten = 0; 
 
     // Check if socket is active and ready to send
     {
@@ -342,12 +340,12 @@ BF::SocketActionResult BF::IOSocket::Receive(void* outputBuffer, const size_t ou
                 outputBufferSizeWritten = byteRead;
 
 #if SocketDebug
-                printf("[Socket] Reading <- <%li> %i Bytes\n", AdressInfo.SocketID, byteRead);
+                printf("[#][Socket][Read] You <<< <%li> %i Bytes\n", AdressInfo.SocketID, byteRead);
 #endif
 
                 if(EventCallBackSocket)
                 {
-                    IOSocketMessage socketMessage(AdressInfo.SocketID, (Byte*)data, byteRead);
+                    IOSocketMessage socketMessage(AdressInfo.SocketID, (Byte__*)data, byteRead);
 
                     EventCallBackSocket->OnMessageReceive(socketMessage);
                 }

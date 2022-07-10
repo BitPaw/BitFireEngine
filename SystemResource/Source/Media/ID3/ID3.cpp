@@ -69,7 +69,7 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
 
             default: // Version is probably 1.x
             {
-                const Byte* trackIDAdress = dataStream.CursorCurrentAdress() + ID3CommentSize - 2;
+                const Byte__* trackIDAdress = dataStream.CursorCurrentAdress() + ID3CommentSize - 2;
                 const unsigned short trackIDSymbol = ((unsigned short)trackIDAdress[0]) << 8 + trackIDAdress[1];
                 const bool isVersion1x0 = trackIDSymbol == 0x0000;
 
@@ -280,7 +280,7 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
                                 break;
                             case BF::ID3v2xFrameTag::Popularimeter:
                             {
-                                const Byte* emailToUser = dataStream.CursorCurrentAdress();
+                                const Byte__* emailToUser = dataStream.CursorCurrentAdress();
                                 const size_t emailToUserSize = Text::Length((char*)emailToUser); //frameSize - 6u;
                                 unsigned char rating = 0;
                                 // counter?

@@ -82,7 +82,7 @@ BF::FileActionResult BF::PNG::Load(const unsigned char* fileData, const size_t f
     size_t imageDataCounter = 0;
     size_t imageDataChunkCacheSizeUSED = 0;
     size_t imageDataChunkCacheSizeMAX = 0u;
-    Byte* imageDataChunkCache = nullptr;
+    Byte__* imageDataChunkCache = nullptr;
 
     Memory::Set(this, 0, sizeof(PNG));
 
@@ -92,7 +92,7 @@ BF::FileActionResult BF::PNG::Load(const unsigned char* fileData, const size_t f
 
         //---<Check PNG Header>------------------------------------------------
         {
-            const Byte pngFileHeader[8] = PNGHeaderSequenz;
+            const Byte__ pngFileHeader[8] = PNGHeaderSequenz;
             const size_t pngFileHeaderSize = sizeof(pngFileHeader);
             const bool isValidHeader = dataStream.ReadAndCompare(pngFileHeader, pngFileHeaderSize);
 
@@ -104,7 +104,7 @@ BF::FileActionResult BF::PNG::Load(const unsigned char* fileData, const size_t f
 
         // Allocate Memory for later ImageData Chunks
         imageDataChunkCacheSizeMAX = dataStream.DataSize - 0u;
-        imageDataChunkCache = Memory::Allocate<Byte>(imageDataChunkCacheSizeMAX);
+        imageDataChunkCache = Memory::Allocate<Byte__>(imageDataChunkCacheSizeMAX);
 
         //---------------------------------------------------------------------
 
@@ -150,17 +150,17 @@ BF::FileActionResult BF::PNG::Load(const unsigned char* fileData, const size_t f
             {
                 case PNGChunkType::ImageHeader:
                 {
-                    Byte colorTypeRaw = 0;
-                    Byte interlaceMethodRaw = 0;
+                    Byte__ colorTypeRaw = 0;
+                    Byte__ interlaceMethodRaw = 0;
 
                     dataStream.Read(ImageHeader.Width, Endian::Big); // 4 Bytes
                     dataStream.Read(ImageHeader.Height, Endian::Big); // 4 Bytes
 
-                    dataStream.Read(ImageHeader.BitDepth); // 1 Byte
-                    dataStream.Read(colorTypeRaw); // 1 Byte
-                    dataStream.Read(ImageHeader.CompressionMethod); // 1 Byte
-                    dataStream.Read(ImageHeader.FilterMethod); // 1 Byte
-                    dataStream.Read(interlaceMethodRaw); // 1 Byte
+                    dataStream.Read(ImageHeader.BitDepth); // 1 Byte__
+                    dataStream.Read(colorTypeRaw); // 1 Byte__
+                    dataStream.Read(ImageHeader.CompressionMethod); // 1 Byte__
+                    dataStream.Read(ImageHeader.FilterMethod); // 1 Byte__
+                    dataStream.Read(interlaceMethodRaw); // 1 Byte__
 
                     ImageHeader.ColorType = ConvertColorType(colorTypeRaw);
                     ImageHeader.InterlaceMethod = ConvertPNGInterlaceMethod(interlaceMethodRaw);
@@ -420,7 +420,7 @@ BF::FileActionResult BF::PNG::Load(const unsigned char* fileData, const size_t f
 
     //---<Allocate>------------------------------------------------------------
     PixelDataSize = ImageHeader.Width * ImageHeader.Height * NumberOfColorChannels(ImageHeader.ColorType);
-    PixelData = Memory::Allocate<Byte>(PixelDataSize);
+    PixelData = Memory::Allocate<Byte__>(PixelDataSize);
     //-------------------------------------------------------------------------    
 
     BitStreamHusk bitstream(imageDataChunkCache, imageDataChunkCacheSizeUSED);
@@ -438,8 +438,8 @@ BF::FileActionResult BF::PNG::Load(const unsigned char* fileData, const size_t f
             const size_t bitsPerPixel = BitsPerPixel();
             const size_t expectedzlibCacheSize = ZLIB::CalculateExpectedSize(ImageHeader.Width, ImageHeader.Height, bitsPerPixel, ImageHeader.InterlaceMethod);
             const size_t expectedadam7CacheSize = ADAM7::CaluclateExpectedSize(ImageHeader.Width, ImageHeader.Height, bitsPerPixel);
-            Byte* zlibCache = Memory::Allocate<Byte>(expectedzlibCacheSize);
-            Byte* adam7Cache = nullptr;
+            Byte__* zlibCache = Memory::Allocate<Byte__>(expectedzlibCacheSize);
+            Byte__* adam7Cache = nullptr;
 
             do
             {
@@ -448,7 +448,7 @@ BF::FileActionResult BF::PNG::Load(const unsigned char* fileData, const size_t f
             }
             while(!deflateBlock.IsLastBlock);
 
-            adam7Cache = Memory::Allocate<Byte>(expectedadam7CacheSize);
+            adam7Cache = Memory::Allocate<Byte__>(expectedadam7CacheSize);
 
             ADAM7::ScanlinesDecode(adam7Cache, zlibCache, ImageHeader.Width, ImageHeader.Height, bitsPerPixel, ImageHeader.InterlaceMethod);
 
@@ -488,7 +488,7 @@ BF::FileActionResult BF::PNG::Save(const wchar_t* filePath)
 
     //---<Signature>---
     {
-        const Byte pngFileHeader[8] = PNGHeaderSequenz;
+        const Byte__ pngFileHeader[8] = PNGHeaderSequenz;
         const size_t pngFileHeaderSize = sizeof(pngFileHeader);
 
         file.Write(pngFileHeader, pngFileHeaderSize);

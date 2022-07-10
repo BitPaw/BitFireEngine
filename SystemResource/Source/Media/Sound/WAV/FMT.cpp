@@ -21,7 +21,7 @@ size_t BF::FMT::Parse(const unsigned char* data, const size_t dataSize, const En
 
 	// Check header signature
 	{
-		const Byte expectedValue[] = FMTSignature;
+		const Byte__ expectedValue[] = FMTSignature;
 
 		ClusterInt fmtHeader;
 

@@ -151,7 +151,7 @@ BF::FileActionResult BF::BMP::Load(const unsigned char* fileData, const size_t f
 
     PixelDataSize = InfoHeader.Width * InfoHeader.Height * (InfoHeader.NumberOfBitsPerPixel / 8);
 
-    PixelData = Memory::Allocate<Byte>(PixelDataSize);
+    PixelData = Memory::Allocate<Byte__>(PixelDataSize);
 
     //---[ Pixel Data ]--------------------------------------------------------
     const size_t dataRowSize = InfoHeader.Width * (InfoHeader.NumberOfBitsPerPixel / 8);

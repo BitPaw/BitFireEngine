@@ -172,23 +172,6 @@ void BF::SBPData::Print()
 	}
 }
 
-bool BF::SBPData::IsCommandRegistered()
-{
-	switch(Command)
-	{
-		case SBPCommand::Iam:
-		case SBPCommand::ConnectionCreate:
-		case SBPCommand::ConnectionInfo:
-		case SBPCommand::ConnectionQuit:
-		case SBPCommand::Text:
-		case SBPCommand::File:
-			return true;
-
-		default:
-			return false;
-	}
-}
-
 size_t BF::SBPData::PackageParse(SBPData& data, const void* inputBuffer, const size_t& inputBufferSize)
 {
 	ByteStream dataStream(inputBuffer, inputBufferSize);
@@ -246,7 +229,7 @@ size_t BF::SBPData::PackageSerialize
 	const size_t outputBufferSize,
 	const unsigned int source,
 	const unsigned int target,
-	PackageBuilderFunction packageBuilderFunction,
+	const SBPDataPackage* dataPackage,
 	const ResponseID responseID
 )
 {
@@ -255,58 +238,16 @@ size_t BF::SBPData::PackageSerialize
 	data.SourceID = source;
 	data.TargetID = target;
 	data.ID = responseID;
+	data.CommandID.Value = dataPackage->SymbolID.Value;
 
-	char buffer[512]{ 0 };
-	size_t bufferSize = 0;
 
-	packageBuilderFunction(data, buffer);
+	const size_t bufferSize = 512u;
+	char buffer[bufferSize]{ 0 };
+
+	data.DataSize = dataPackage->Serialize(buffer, bufferSize);
+	data.Data = buffer;
 
 	const size_t result = PackageSerialize(data, outputBuffer, outputBufferSize);
 
 	return result;
-}
-
-void BF::SBPData::PackageCreateIAM(SBPData& data, void* payloadBuffer)
-{
-	const size_t nameSizeMAX = 256u;
-	wchar_t name[nameSizeMAX]{ 0 };
-	size_t nameSize = 0;
-
-	const bool read = User::Name(name, nameSizeMAX, nameSize);
-
-	nameSize *= 2; // wchars are 2 Bytes long
-
-	Memory::Copy(payloadBuffer, name, nameSize);
-
-	data.CommandID.Value = SBPIDIAM;
-	data.DataSize = nameSize;
-	data.Data = payloadBuffer;
-}
-
-void BF::SBPData::PackageCreateResponse(SBPData& data, void* payloadBuffer)
-{
-	const size_t nameSizeMAX = 2;
-	char name[] = "OK";	
-
-	Memory::Copy(payloadBuffer, name, nameSizeMAX);
-
-	data.CommandID.Value = SBPIDIAM;
-	data.DataSize = nameSizeMAX;
-	data.Data = payloadBuffer;
-}
-
-void BF::SBPData::PackageCreateConnectionAdd(SBPData& data, void* payloadBuffer)
-{
-}
-
-void BF::SBPData::PackageCreateConnectionQuit(SBPData& data, void* payloadBuffer)
-{
-}
-
-void BF::SBPData::PackageCreateText(SBPData& data, void* payloadBuffer)
-{
-}
-
-void BF::SBPData::PackageCreateFile(SBPData& data, void* payloadBuffer)
-{
 }

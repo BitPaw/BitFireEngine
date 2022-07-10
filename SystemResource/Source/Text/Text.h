@@ -13,7 +13,7 @@ namespace BF
 {
 	struct Text
 	{
-		public:
+		public:		
 		static void Clear(char* string, const size_t stringSize);
 		static void Clear(wchar_t* string, const size_t stringSize);
 

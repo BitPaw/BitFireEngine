@@ -1,20 +1,17 @@
 #pragma once
 
-#include "SBPData.h"
+//#include <Network/Client.h>
+//#include <Async/Thread.h>
+#include <Container/ResponseCache.h>
+
+//#include "SBPData.h"
+#include "SBPResult.h"
+#include "SBPDataPackage.h"
 
 #include <Network/Client.h>
-#include <Container/ResponseCache.h>
-#include <Async/Thread.h>
 
 namespace BF
 {
-	struct SendFileThreadData
-	{
-		char FilePath[PathMaxSize];
-		char IP[IPv6LengthMax];
-		unsigned short Port;
-	};
-
 	class SBPClient : protected ISocketListener
 	{
 		private: 
@@ -41,8 +38,10 @@ namespace BF
 
 			const unsigned int sourceID,
 			const unsigned int targetID,
-			const PackageBuilderFunction packageBuilderFunction
+			const SBPDataPackage* dataPackage
 		);	
+
+
 
 		void ConnectToServer(const char* ip, const unsigned short port);
 		void ConnectToServer(const wchar_t* ip, const unsigned short port);

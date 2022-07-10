@@ -115,7 +115,7 @@ BF::FileActionResult BF::MID::Load(const unsigned char* fileData, const size_t f
 		dataStream.Read(chunkLength, Endian::Big);
 
 		track.ID = i;
-		track.EventData = Memory::Allocate<Byte>(chunkLength);
+		track.EventData = Memory::Allocate<Byte__>(chunkLength);
 		track.EventDataSize = chunkLength;
 
 		dataStream.Read(track.EventData, chunkLength);

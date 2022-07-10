@@ -43,7 +43,7 @@ bool BF::ByteStream::IsAtEnd() const
 
 void BF::ByteStream::DataSet(const void* data, const size_t dataSize, const size_t cursorPosition)
 {
-	Data = (Byte*)data;
+	Data = (Byte__*)data;
 	DataSize = dataSize;
 	DataCursorPosition = cursorPosition;
 }
@@ -53,7 +53,7 @@ void BF::ByteStream::CursorToBeginning()
 	DataCursorPosition = 0;
 }
 
-Byte* BF::ByteStream::CursorCurrentAdress()
+Byte__* BF::ByteStream::CursorCurrentAdress()
 {
 	return Data + DataCursorPosition;
 }
@@ -189,7 +189,7 @@ void BF::ByteStream::Read(short& value, const Endian endian)
 
 void BF::ByteStream::Read(unsigned short& value, const Endian endian)
 {
-	const Byte* data = Data + DataCursorPosition;
+	const Byte__* data = Data + DataCursorPosition;
 
 	switch (endian)
 	{
@@ -213,7 +213,7 @@ void BF::ByteStream::Read(int& value, const Endian endian)
 
 void BF::ByteStream::Read(unsigned int& value, const Endian endian)
 {
-	const Byte* data = Data + DataCursorPosition;
+	const Byte__* data = Data + DataCursorPosition;
 
 	switch (endian)
 	{
@@ -232,7 +232,7 @@ void BF::ByteStream::Read(unsigned int& value, const Endian endian)
 
 void BF::ByteStream::Read(unsigned long long& value, const Endian endian)
 {
-	const Byte* data = Data + DataCursorPosition;
+	const Byte__* data = Data + DataCursorPosition;
 
 	switch (endian)
 	{
@@ -261,7 +261,7 @@ void BF::ByteStream::Read(void* value, const size_t length)
 
 void BF::ByteStream::ReadUntil(char* value, const size_t length, const char character)
 {
-	Byte* start = Data + DataCursorPosition;
+	Byte__* start = Data + DataCursorPosition;
 	size_t lengthCopy = 0;
 
 	while(IsInRange && Data[DataCursorPosition] != character && length <= lengthCopy)
@@ -291,7 +291,7 @@ void BF::ByteStream::ReadUntil(wchar_t* value, const size_t length, const wchar_
 	Memory::Copy(value, start, lengthCopy);
 }
 
-size_t BF::ByteStream::ReadSafe(Byte* value, const size_t length)
+size_t BF::ByteStream::ReadSafe(Byte__* value, const size_t length)
 {
 	const size_t possibleReadSize = ReadPossibleSize();
 	const bool canFullfill = possibleReadSize >= length;
@@ -302,7 +302,7 @@ size_t BF::ByteStream::ReadSafe(Byte* value, const size_t length)
 	return readBytes;
 }
 
-bool BF::ByteStream::ReadAndCompare(const Byte* value, const size_t length)
+bool BF::ByteStream::ReadAndCompare(const Byte__* value, const size_t length)
 {
 	return ReadAndCompare((void*)value, length);
 }
@@ -360,7 +360,7 @@ void BF::ByteStream::Write(const short value, const Endian endian)
 
 void BF::ByteStream::Write(const unsigned short value, const Endian endian)
 {
-	Byte* data = Data + DataCursorPosition;
+	Byte__* data = Data + DataCursorPosition;
 
 	ClusterShort clusterShort;
 
@@ -393,7 +393,7 @@ void BF::ByteStream::Write(const int value, const Endian endian)
 
 void BF::ByteStream::Write(unsigned int value, const Endian endian)
 {
-	Byte* data = Data + DataCursorPosition;
+	Byte__* data = Data + DataCursorPosition;
 
 	ClusterInt clusterInt;
 
@@ -429,7 +429,7 @@ void BF::ByteStream::Write(const long long value, const Endian endian)
 
 void BF::ByteStream::Write(const unsigned long long value, const Endian endian)
 {
-	Byte* data = Data + DataCursorPosition;
+	Byte__* data = Data + DataCursorPosition;
 
 	ClusterLongLong clusterLongLong;
 

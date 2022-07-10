@@ -141,7 +141,7 @@
     <ClCompile>
       <WarningLevel>Level2</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WINSOCKAPI_;WIN32_LEAN_AND_MEAN;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <ExceptionHandling>Sync</ExceptionHandling>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
@@ -156,18 +156,22 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <DisableSpecificWarnings>4464;4577;4820;9002;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <BasicRuntimeChecks>StackFrameRuntimeCheck</BasicRuntimeChecks>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level2</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINSOCKAPI_;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -219,7 +223,7 @@
     <ClCompile>
       <WarningLevel>Level2</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WINSOCKAPI_;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>StackFrameRuntimeCheck</BasicRuntimeChecks>
@@ -235,18 +239,22 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <DisableSpecificWarnings>4464;4577;4820;9002;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level2</WarningLevel>
+      <WarningLevel>Level1</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINSOCKAPI_;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -294,6 +302,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Network\Protocol\SBP\SBPDataPackageConnectionCreate.cpp" />
+    <ClCompile Include="Source\Network\Protocol\SBP\SBPDataPackageResponse.cpp" />
+    <ClCompile Include="Source\Network\Protocol\SBP\SBPDataPackageFile.cpp" />
+    <ClCompile Include="Source\Network\Protocol\SBP\SBPDataPackageIam.cpp" />
+    <ClCompile Include="Source\Network\Protocol\SBP\SBPDataPackage.cpp" />
     <ClCompile Include="Source\Container\ResponseCache.cpp" />
     <ClCompile Include="Source\Hardware\Memory\MemoryProtectionMode.cpp" />
     <ClCompile Include="Source\Math\Primes.cpp" />
@@ -304,7 +317,6 @@
     <ClCompile Include="Source\Media\ID3\ID3.cpp" />
     <ClCompile Include="Source\Media\Sound\OGG\OGGPage.cpp" />
     <ClCompile Include="Source\Media\Image\ImageFileFormat.cpp" />
-    <ClCompile Include="Source\Network\Protocol\SBP\SBPText.cpp" />
     <ClCompile Include="Source\Network\Protocol\SBP\SBPClient.cpp" />
     <ClCompile Include="Source\Network\Protocol\SBP\SBPServer.cpp" />
     <ClCompile Include="Source\Network\Protocol\SBP\SBPQueue.cpp" />
@@ -552,6 +564,11 @@
     <ClCompile Include="Source\Time\Time.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Network\Protocol\SBP\SBPDataPackageConnectionCreate.h" />
+    <ClInclude Include="Source\Network\Protocol\SBP\SBPDataPackageResponse.h" />
+    <ClInclude Include="Source\Network\Protocol\SBP\SBPDataPackageFile.h" />
+    <ClInclude Include="Source\Network\Protocol\SBP\SBPDataPackageIam.h" />
+    <ClInclude Include="Source\Network\Protocol\SBP\SBPDataPackage.h" />
     <ClInclude Include="Source\Async\Await.h" />
     <ClInclude Include="Source\Container\ResponseCache.h" />
     <ClInclude Include="Source\Container\ClusterLongLong.h" />
@@ -565,7 +582,7 @@
     <ClInclude Include="Source\Media\LAME\LAME.h" />
     <ClInclude Include="Source\Media\ID3\ID3.h" />
     <ClInclude Include="Source\Media\Sound\OGG\OGGPage.h" />
-    <ClInclude Include="Source\Network\Protocol\SBP\SBPText.h" />
+    <ClInclude Include="Source\Network\Protocol\SBP\SBPResult.h" />
     <ClInclude Include="Source\Network\Protocol\SBP\SBPClient.h" />
     <ClInclude Include="Source\Network\Protocol\SBP\SBPServer.h" />
     <ClInclude Include="Source\Network\Protocol\SBP\SBPQueue.h" />
@@ -827,6 +844,7 @@
     <ClInclude Include="Source\Media\Sound\Sound.h" />
     <ClInclude Include="Source\Media\Sound\SoundFormat.h" />
     <ClInclude Include="Source\Media\Sound\WAV\WAV.h" />
+    <ClInclude Include="Source\Text\TextFormat.h" />
     <ClInclude Include="Source\Time\StopWatch.h" />
     <ClInclude Include="Source\File\Endian.h" />
     <ClInclude Include="Source\Types\UUID.h" />

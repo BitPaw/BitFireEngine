@@ -1,8 +1,9 @@
 #pragma once
 
 #include "IOSocket.h"
-#include "../Async/Thread.h"
 #include "IClientListener.hpp"
+
+#include <Async/Thread.h>
 
 #define IPSize 60
 

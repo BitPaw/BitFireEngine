@@ -65,7 +65,7 @@ BF::FileActionResult BF::WAV::Load(const unsigned char* fileData, const size_t f
 	// RIFF
 	{
 		RIFF riff;
-		const Byte* riffHeaderStart = dataStream.CursorCurrentAdress();
+		const Byte__* riffHeaderStart = dataStream.CursorCurrentAdress();
 		const size_t maximalSize = dataStream.ReadPossibleSize();
 		const size_t parsedBytes = riff.Parse(riffHeaderStart, maximalSize);
 
@@ -82,7 +82,7 @@ BF::FileActionResult BF::WAV::Load(const unsigned char* fileData, const size_t f
 
 	//---<FMT Chunk>-----------------------------------------------------------
 	{
-		const Byte* fmtHeaderStart = dataStream.CursorCurrentAdress();
+		const Byte__* fmtHeaderStart = dataStream.CursorCurrentAdress();
 		const size_t maximalSize = dataStream.ReadPossibleSize();
 		const size_t parsedBytes = Format.Parse(fmtHeaderStart, maximalSize, endian);
 		const bool sucessful = parsedBytes > 0;		

@@ -64,7 +64,7 @@ void BF::ZLIBHeader::Parse(unsigned char compressionFormatByte, unsigned char fl
         assert(validFlags);
     }
 
-    //---<Parse First Byte - Compression Info>---------------------------------
+    //---<Parse First Byte__ - Compression Info>---------------------------------
     {
         unsigned char compressionMethodValue = (compressionFormatByte & 0b00001111);
         CompressionMethod = ConvertCompressionMethod(compressionMethodValue);
@@ -81,7 +81,7 @@ void BF::ZLIBHeader::Parse(unsigned char compressionFormatByte, unsigned char fl
     }
     //-------------------------------------------------------------------------
 
-    //---<Parse Second Byte - Flags>-------------------------------------------
+    //---<Parse Second Byte__ - Flags>-------------------------------------------
     {
         unsigned char compressionLevelValue = (flagByte & 0b11000000) >> 6;
 
@@ -95,7 +95,7 @@ void BF::ZLIBHeader::Parse(unsigned char compressionFormatByte, unsigned char fl
 
 void BF::ZLIBHeader::Serialize(unsigned char& compressionFormatByte, unsigned char& flagByte)
 {
-    //---<Parse First Byte - Compression Info>---------------------------------
+    //---<Parse First Byte__ - Compression Info>---------------------------------
     {
         unsigned char WindowSizeValue = Math::LogarithmusBase2(WindowSize) - 8;
         unsigned char compressionMethodValue = ConvertCompressionMethod(CompressionMethod);
@@ -105,7 +105,7 @@ void BF::ZLIBHeader::Serialize(unsigned char& compressionFormatByte, unsigned ch
     }
     //-------------------------------------------------------------------------
 
-    //---<Parse Second Byte - Flags>-------------------------------------------
+    //---<Parse Second Byte__ - Flags>-------------------------------------------
     {
         unsigned char compressionLevelValue = ConvertCompressionLevel(CompressionLevel);
 

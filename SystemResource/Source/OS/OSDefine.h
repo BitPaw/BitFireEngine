@@ -19,9 +19,10 @@
 		#define System32Bit
 	#endif
 
-	#if defined(_WIN32) || defined(_WIN64)
+	#if (defined(_WIN32) || defined(_WIN64)) && !defined(WINVER)
 		#define OSWindows
 		#include <SdkDdkVer.h>
+		//#include <Windows.h>
 
 		#define Version_Windows WINVER
 

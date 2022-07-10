@@ -106,7 +106,7 @@ BF::FileActionResult BF::FNT::Load(const unsigned char* fileData, const size_t f
 
 	while(!dataStream.IsAtEnd())
 	{
-		const Byte* currentPosition = dataStream.CursorCurrentAdress();
+		const Byte__* currentPosition = dataStream.CursorCurrentAdress();
 		FNTLineType lineType = ConvertFNTLineType(currentPosition);
 
 		switch(lineType)

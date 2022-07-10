@@ -1,11 +1,14 @@
 #include "SBPClient.h"
 
-#include <Network/Protocol/SBP/SBPData.h>
+#include "SBPData.h"
+#include "SBPDataPackageIam.h"
+
 #include <Hardware/Memory/Memory.h>
 #include <Text/Text.h>
 #include <OS/User.h>
 #include <Time/Time.h>
 #include <Time/StopWatch.h>
+#include <Network/Protocol/SBP/SBPDataPackageResponse.h>
 
 #define TimeOutLimit 5000u // 5s
 
@@ -25,7 +28,7 @@ BF::SBPResult BF::SBPClient::SendAndWaitResponse
 	size_t& responseDataSize,
 	const unsigned int sourceID,
 	const unsigned int targetID,
-	const PackageBuilderFunction packageBuilderFunction
+	const SBPDataPackage* dataPackage
 )
 {
 	responseData = 0;
@@ -33,7 +36,7 @@ BF::SBPResult BF::SBPClient::SendAndWaitResponse
 
 	const ResponseID responseID = _responseCache.Register();
 
-	const size_t writtenBytes = SBPData::PackageSerialize(inputData, inputDataSize, SourceMe, TargetServer, packageBuilderFunction, responseID);
+	const size_t writtenBytes = SBPData::PackageSerialize(inputData, inputDataSize, SourceMe, TargetServer, dataPackage, responseID);
 
 	// Send stuff
 	{
@@ -67,17 +70,18 @@ BF::SBPResult BF::SBPClient::SendAndWaitResponse
 
 		while(true) // Wait aslong as response is there
 		{
-			// Check if timeout
-			{
-				Time::Now(timestampCurrent);
+			Time::Now(timestampCurrent);
 
-				const size_t millisecondsDelta = Time::MillisecondsDelta(timestampStart, timestampCurrent);
+			const size_t millisecondsDelta = Time::MillisecondsDelta(timestampStart, timestampCurrent);
+
+			// Check if timeout
+			{			
 
 				const bool isTimeout = millisecondsDelta > TimeOutLimit;
 
 				if(isTimeout)
 				{
-					printf("[SBP] Package timed out!\n");
+					printf("[x][SBP-Client] Package timed out!\n");
 
 					_responseCache.Remove(responseID); // We assume that the message does not come anymore or is not needed
 
@@ -97,7 +101,7 @@ BF::SBPResult BF::SBPClient::SendAndWaitResponse
 					responseDataSize = responseCacheEntry.Length;
 
 #if SocketDebug
-					printf("[SBP] Package answered!\n");
+					printf("[!][SBP-Client] Package answered! Took %3zi\n", millisecondsDelta);
 #endif
 
 					return SBPResult::PackageAnswered;
@@ -124,11 +128,15 @@ void BF::SBPClient::ConnectToServer(const char* ip, const unsigned short port)
 	char outputBuffer[2048]{ 0 };
 	size_t outputBufferSize = 2024;
 
-	StopWatch stopwatch;
+	//StopWatch stopwatch;
 
-	printf("[Benchmark] Package sending...\n");
+	//printf("[Benchmark] Package sending...\n");
 
-	stopwatch.Start();
+	//stopwatch.Start();
+
+	SBPDataPackageIam dataPackageIam;
+
+	dataPackageIam.Fill();
 
 	const SBPResult result = SendAndWaitResponse
 	(
@@ -138,15 +146,15 @@ void BF::SBPClient::ConnectToServer(const char* ip, const unsigned short port)
 		outputBufferSize,
 		SourceMe,
 		TargetServer,
-		SBPData::PackageCreateIAM
+		&dataPackageIam
 	);
 
-	double x = stopwatch.Stop();
+	//double x = stopwatch.Stop();
 
-	if(result == SBPResult::PackageAnswered)
-	{
-		printf("[Benchmark] Package answered! took %.2lfms", x*1000);
-	}
+	//if(result == SBPResult::PackageAnswered)
+	//{
+		//printf("[Benchmark] Package answered! took %.2lfms", x*1000);
+	//}
 }
 
 void BF::SBPClient::ConnectToServer(const wchar_t* ip, const unsigned short port)
@@ -173,78 +181,162 @@ void BF::SBPClient::SendText(const char* text)
 
 void BF::SBPClient::SendFile(const char* filePath)
 {
+	printf("[SBP-Client] Sending file <%s>...\n", filePath);
+
 	/*
-	SendFileThreadData* sendFileThreadData = new SendFileThreadData();
+	Client clientFileSender;
 
-	Text::Copy(filePath, PathMaxSize, sendFileThreadData->FilePath, PathMaxSize);
-
-	const char* ip = _client.AdressInfo.IP;
-	const unsigned short port = _client.AdressInfo.Port;
-	Client client;
-
+	// Request new connection
 	{
-		const SocketActionResult connectResult = client.ConnectToServer(ip, port);
-		const bool sucessful = connectResult == SocketActionResult::Successful;
+		char inputBuffer[2048]{ 0 };
+		size_t inputBufferSize = 2024;
+		char outputBuffer[2048]{ 0 };
+		size_t outputBufferSize = 2024;
+
+		const SBPResult result = SendAndWaitResponse
+		(
+			inputBuffer,
+			inputBufferSize,
+			outputBuffer,
+			outputBufferSize,
+			SourceMe,
+			TargetServer,
+			SBPData::PackageCreateConnectionRequest
+		);
+		const bool sucessful = result == SBPResult::PackageAnswered;
 
 		if(!sucessful)
 		{
-			return; // No connection
+			printf("[SBP-Client] File cannot be send, no new connection allowed\n");
+			return;
+		}
+
+		printf("[SBP-Client] File-Send Response parsing...\n");
+
+		// Parse
+		{
+			SBPData data;
+
+			SBPData::PackageParse(data, outputBuffer, outputBufferSize);
+
+			bool isExpected = data.CommandID.Value == SBPIDResponse;
 		}
 	}
 
+	// Open new connection
 	{
-		SocketActionResult socketActionResult = client.SendFile(filePath);
-		const bool sucessful = socketActionResult == SocketActionResult::Successful;
+		// Get current connection info
+		const char* ip = _client.AdressInfo.IP;
+		const unsigned short port = _client.AdressInfo.Port;
 
-		if(!sucessful)
 		{
-			return; // File, something
+			const SocketActionResult connectResult = clientFileSender.ConnectToServer(ip, port, &clientFileSender, Client::CommunicationFunctionAsync);
+			const bool sucessful = connectResult == SocketActionResult::Successful;
+
+			if(!sucessful)
+			{
+				return; // No connection
+			}
 		}
-	}*/
+	}
+
+	// Send file info
+	{
+		char inputBuffer[2048]{ 0 };
+		size_t inputBufferSize = 2024;
+		char outputBuffer[2048]{ 0 };
+		size_t outputBufferSize = 2024;
+
+		const SBPResult result = SendAndWaitResponse
+		(
+			inputBuffer,
+			inputBufferSize,
+			outputBuffer,
+			outputBufferSize,
+			SourceMe,
+			TargetServer,
+			SBPData::PackageCreateFile
+		);
+		const bool sucessful = result == SBPResult::PackageAnswered;
+	}
+
+	// Map file
+	{
+		File file;	
+
+		{
+			const FileActionResult fileActionResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+			const bool isLoaded = fileActionResult == FileActionResult::Successful;
+
+			if(!isLoaded)
+			{
+				return; // No mapping
+			}
+		}
+
+		const size_t fileBufferSize = 2048u;
+		char fileBuffer[fileBufferSize]{ 0 };
+
+		do
+		{
+			const Byte__* start = file.CursorCurrentAdress();
+			const size_t canRead = file.ReadPossibleSize();
+			const size_t sendSize = canRead < fileBufferSize ? canRead : fileBufferSize;
+
+			clientFileSender.Send(start, sendSize);
+
+			file.CursorAdvance(sendSize);
+		}
+		while(file.IsAtEnd());
+	}
+
+	clientFileSender.Close();
+	*/
+	return;
 }
 
 void BF::SBPClient::OnSocketCreating(const IPAdressInfo& adressInfo, bool& use)
 {
-	printf("[SBP][Client] Createding <%zi> %s:%i\n", adressInfo.SocketID, adressInfo.IP, adressInfo.Port);
+	printf("[?][SBP-Client] Should the socket <%zi> %s:%i be created?\n", adressInfo.SocketID, adressInfo.IP, adressInfo.Port);
 }
 
 void BF::SBPClient::OnSocketCreated(const IPAdressInfo& adressInfo, bool& use)
 {
-	printf("[SBP][Client] Created <%zi> %s:%i\n", adressInfo.SocketID, adressInfo.IP, adressInfo.Port);
+	printf("[+][SBP-Client] Created <%zi> %s:%i\n", adressInfo.SocketID, adressInfo.IP, adressInfo.Port);
 }
 
 void BF::SBPClient::OnMessageSend(IOSocketMessage socketMessage)
 {
 #if SocketDebug
-	printf("[SBP][Client] Send %zi Bytes to <%zi>\n", socketMessage.MessageSize, socketMessage.SocketID);
+	printf("[#][SBP-Client] Send %zi Bytes to <%zi>\n", socketMessage.MessageSize, socketMessage.SocketID);
 #endif
 }
 
 void BF::SBPClient::OnMessageReceive(IOSocketMessage socketMessage)
 {
 #if SocketDebug
-	printf("[SBP][Client] Receive %zi Bytes from <%zi>\n", socketMessage.MessageSize, socketMessage.SocketID);
+	printf("[#][SBP-Client]Receive %zi Bytes from <%zi>\n", socketMessage.MessageSize, socketMessage.SocketID);
 #endif
 }
 
 void BF::SBPClient::OnConnectionListening(const IPAdressInfo& adressInfo)
 {
-	printf("[SBP][Client] OnConnectionListening\n");
+	printf("[i][SBP-Client] OnConnectionListening\n");
 }
 
 void BF::SBPClient::OnConnectionLinked(const IPAdressInfo& adressInfo)
 {
-	printf("[SBP][Client] OnConnectionLinked\n");
+	printf("[i][SBP-Client] OnConnectionLinked\n");
 }
 
 void BF::SBPClient::OnConnectionEstablished(const IPAdressInfo& adressInfo)
 {
-	printf("[SBP][Client] OnConnectionEstablished\n");
+	printf("[i][SBP-Client] OnConnectionEstablished\n");
 }
 
 void BF::SBPClient::OnConnectionTerminated(const IPAdressInfo& adressInfo)
 {
-	printf("[SBP][Client] OnConnectionTerminated\n");
+	printf("[-][SBP-Client] OnConnectionTerminated\n");
 }
 
 ThreadFunctionReturnType BF::SBPClient::ReciveDataThread(void* sbpClientAdress)
@@ -268,16 +360,16 @@ ThreadFunctionReturnType BF::SBPClient::ReciveDataThread(void* sbpClientAdress)
 		if(parsedBytes)
 		{
 #if SocketDebug
-			printf("[SBP][Client] SBP detected %c%c%c%c\n", data.CommandID.A, data.CommandID.B, data.CommandID.C, data.CommandID.D);
+			printf("[i][SBP-Client] SBP detected %c%c%c%c\n", data.CommandID.A, data.CommandID.B, data.CommandID.C, data.CommandID.D);
 #endif
 			client._responseCache.Fill(data.ID, buffer, bufferSize);
 
 			//_responseCache.;
 
 			// Handle packaage
-			switch(data.Command)
+			switch(data.CommandID.Value)
 			{
-				case SBPCommand::Iam:
+				case SBPDataPackageIamID:
 				{
 					wchar_t* name = (wchar_t*)data.Data;
 
@@ -286,7 +378,15 @@ ThreadFunctionReturnType BF::SBPClient::ReciveDataThread(void* sbpClientAdress)
 					//InvokeEvent(PackageIAMRecieveCallBack, name);
 
 					break;
+				}				
+				case SBPDataPackageResponseID:
+				{
+
+
+					break;
 				}
+
+				/*
 				case SBPCommand::ConnectionCreate:
 				{
 					break;
@@ -306,11 +406,12 @@ ThreadFunctionReturnType BF::SBPClient::ReciveDataThread(void* sbpClientAdress)
 				case SBPCommand::File:
 				{
 					break;
-				}
+				}*/
 				default:
 				{
 					//PackageRecieveCallBack(data);
 					//return SBPResult::PackageDetectedCustom;
+					break;
 				}
 			}
 		}

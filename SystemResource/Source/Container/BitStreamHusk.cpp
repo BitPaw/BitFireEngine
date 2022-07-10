@@ -69,7 +69,7 @@ unsigned int BF::BitStreamHusk::ExtractBits(unsigned char amountOfBits)
 	unsigned int result = bitBlock & bitMask;
 
 #if defined(DEBUG)
-	printf("Extract %i Bits. Byte:%i Offset:%i\n", amountOfBits, CurrentPosition, CurrentBitOffset);
+	printf("Extract %i Bits. Byte__:%i Offset:%i\n", amountOfBits, CurrentPosition, CurrentBitOffset);
 	printf("BitBlock : ");
 	PrintBinary(bitBlock);
 	printf("BitMask  : ");
@@ -97,7 +97,7 @@ void BF::BitStreamHusk::Move(size_t amount)
 
 void BF::BitStreamHusk::Allign()
 {
-	while (CurrentBitOffset >= 8) // Move a Byte at the time forward, 8 Bits = 1 Byte.
+	while (CurrentBitOffset >= 8) // Move a Byte__ at the time forward, 8 Bits = 1 Byte__.
 	{
 		CurrentPosition++;
 		CurrentBitOffset -= 8;

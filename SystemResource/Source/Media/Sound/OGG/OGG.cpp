@@ -73,7 +73,7 @@ BF::FileActionResult BF::OGG::Load(const unsigned char* fileData, const size_t f
 		{
 			// Header tag does exist multible times.
 			// You can refocus it when the file is corrupted.
-			const Byte headerSignature[] = OGGHeaderSignature;
+			const Byte__ headerSignature[] = OGGHeaderSignature;
 			const size_t headerSignatureSize = sizeof(headerSignature);
 			const bool validHeaderSignature = dataStream.ReadAndCompare(headerSignature, headerSignatureSize);
 
@@ -92,7 +92,7 @@ BF::FileActionResult BF::OGG::Load(const unsigned char* fileData, const size_t f
 		dataStream.Read(page.CRC32CheckSum, Endian::Little);
 		dataStream.Read(page.PageSegments);
 
-		Byte segmentSizeList[0xFF];
+		Byte__ segmentSizeList[0xFF];
 
 		printf
 		(
@@ -132,11 +132,11 @@ BF::FileActionResult BF::OGG::Load(const unsigned char* fileData, const size_t f
 
 		for(size_t i = 0; i < page.PageSegments; ++i)
 		{
-			Byte x = segmentSizeList[i];
+			Byte__ x = segmentSizeList[i];
 
 			for(size_t i = 0; i < x; i++)
 			{
-				Byte* currentPos = dataStream.CursorCurrentAdress() + i;
+				Byte__* currentPos = dataStream.CursorCurrentAdress() + i;
 
 				char print = (*currentPos >= ' ' && *currentPos <= '~') ? *currentPos : '.';
 

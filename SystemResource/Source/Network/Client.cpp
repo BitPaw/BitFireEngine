@@ -31,7 +31,7 @@ BF::SocketActionResult BF::Client::ConnectToServer(const char* ip, unsigned shor
 
     bool wasSucessful = false;
 
-    for(size_t i = 0; i < adressInfoListSize; i++)
+    for(size_t i = 0; i < adressInfoListSize; ++i)
     {
         IPAdressInfo& adressInfo = adressInfoList[i];
         const SocketActionResult socketCreateResult = Create(adressInfo.Family, adressInfo.Type, adressInfo.Protocol, adressInfo.SocketID);
@@ -75,7 +75,7 @@ ThreadFunctionReturnType BF::Client::CommunicationFunctionAsync(void* data)
     {
         const size_t bufferSizeMax = 2048;
         size_t bufferSize = 0;
-        Byte buffer[bufferSizeMax]{0};
+        Byte__ buffer[bufferSizeMax]{0};
 
         const SocketActionResult receiveingResult = client.Receive(buffer, bufferSizeMax, bufferSize);
         const bool sucessful = receiveingResult == SocketActionResult::Successful;

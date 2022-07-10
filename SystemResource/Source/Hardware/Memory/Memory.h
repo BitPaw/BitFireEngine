@@ -15,6 +15,7 @@
 #include <cstring>
 
 #define MemoryDebug 0
+#define MemoryUseSystemCalls 0
 
 namespace BF
 {
@@ -34,22 +35,12 @@ namespace BF
         static void* VirtualMemoryAllocate(const size_t size, const MemoryProtectionMode memoryProtectionMode);
         static bool VirtualMemoryRelease(const void* adress, const size_t size);
 
+        static bool Advise(const void* adress, const size_t length, const FileCachingMode fileCachingMode);  
+        static void Set(void* target, const unsigned char value, const size_t size);
+        static void Copy(void* target, const void* source, const size_t size);
 
-        static bool Advise(const void* adress, const size_t length, const FileCachingMode fileCachingMode)
-        {
-            const int cachingModeID = ConvertFileCachingMode(fileCachingMode);
-
-#if defined(OSUnix)
-            const int result = madvise((void*)adress, length, cachingModeID);
-            const ErrorCode errorCode = ConvertErrorCode(result);
-            const bool successful = errorCode == ErrorCode::Successful;
-
-            return successful;
-
-#elif defined(OSWindows)
-            return true;
-#endif
-        }
+        // Give back memory that you allocated before.
+        static void Release(void* adress, const size_t size);
 
         // Allocates memory on the HEAP.
         // Returns NULL if systems is "out of memory"
@@ -89,40 +80,6 @@ namespace BF
 #endif
 
             return adressReallocated;
-        }
-
-        // Give back memory that you allocated before.
-        static void Release(void* adress, const size_t size)
-        {
-#if MemoryDebug
-            printf("[#][Memory] 0x%p (%10zi B) Free\n", adress, size);
-#endif
-
-            free(adress);
-        }
-
-        static void Set(void* target, const unsigned char value, const size_t size)
-        {
-#if MemoryDebug
-            printf("[#][Memory] 0x%p (%10zi B) Set with %x\n", target, size, value);
-#endif
-            memset(target, value, size);
-        }
-
-        static void Copy(void* target, const void* source, const size_t size)
-        {
-            if(!size)
-            {
-                return;
-            }
-
-            assert(target);
-            assert(source);
-
-#if MemoryDebug
-            printf("[#][Memory] 0x%p (%10zi B) Copy from 0x%p\n", target, size, source);
-#endif
-            memcpy(target, source, size);
         }
     };
 }

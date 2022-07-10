@@ -52,7 +52,7 @@ bool BF::SBPQueue::Dequeue(SBPData& sbpData)
 		const unsigned int offset = (4u * 5u) + sbpData.DataSize;
 
 #if DoDataClear
-		Byte* adress = (Byte*)_file.Data + _dequeuedDataCursorPosition;
+		Byte__* adress = (Byte__*)_file.Data + _dequeuedDataCursorPosition;
 
 		Memory::Set(adress, '#', (4u * 5u));
 #endif

@@ -2,41 +2,12 @@
 
 #include "SBPData.h"
 
-#include <Network/Server.h>
 #include <Container/Dictionary.hpp>
+#include <Network/Server.h>
 #include <Network/Protocol/SBP/SBPQueue.h>
 
 namespace BF
 {
-	struct SBPFile
-	{
-		unsigned short PathSourceSize;
-
-		union 
-		{
-			char* TextA;
-			wchar_t* TextW;
-		} PathSource;
-
-		unsigned short PathTargetSize;
-
-		union
-		{
-			char* TextA;
-			wchar_t* TextW;
-		} PathTarget;
-
-		size_t FileSize; // HAs to be 8 Byte!
-
-		// S:N T:N => Invalid
-		// S:N T:Y => Create
-		// S:Y T:N => Delete
-		// S:Y T:Y => Copy
-
-	};
-
-#define ResponseID unsigned int
-
 	class SBPServer :  protected ISocketListener
 	{
 		protected:
@@ -44,8 +15,7 @@ namespace BF
 
 		SBPQueue _inputQueue;
 
-		Dictionary<ResponseID, Byte*> _responseLookup;
-
+		Dictionary<ResponseID, Byte__*> _responseLookup;
 
 
 		virtual void OnSocketCreating(const IPAdressInfo& adressInfo, bool& use);
@@ -75,7 +45,7 @@ namespace BF
 		(
 			const ClientID clientID,
 			const ResponseID responseID,
-			const Byte* buffer, 
+			const Byte__* buffer, 
 			const size_t& bufferSize
 		);
 

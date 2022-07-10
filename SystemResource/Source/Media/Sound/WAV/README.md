@@ -26,8 +26,8 @@
 |:-:|:-:|:-:|:-:|:-:|
 | 36 | 4                        | char[4]      | Header signature| 'data'                 |
 | 40 | 4                        | unsigned int | Size            | Maximal = FileSize - 44|
-| 44 | From FMT<br>Block allign | Byte[]       | DataBlock 1     | Musicdata Bytes      |
-| ?? | From FMT<br>Block allign | Byte[]       | DataBlock 2     | Musicdata Bytes       |
+| 44 | From FMT<br>Block allign | Byte__[]       | DataBlock 1     | Musicdata Bytes      |
+| ?? | From FMT<br>Block allign | Byte__[]       | DataBlock 2     | Musicdata Bytes       |
 | ?? |...|...|...|...|
 
 > Repeat until finished.

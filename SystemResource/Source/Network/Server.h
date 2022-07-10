@@ -42,8 +42,8 @@ namespace BF
 
         void RegisterClient(IOSocket* client);
 
-        SocketActionResult SendMessageToAll(const Byte* data, const size_t dataSize);
-        SocketActionResult SendMessageToClient(const ClientID clientID, const Byte* data, const size_t dataSize);
+        SocketActionResult SendMessageToAll(const Byte__* data, const size_t dataSize);
+        SocketActionResult SendMessageToClient(const ClientID clientID, const Byte__* data, const size_t dataSize);
 
         SocketActionResult SendFileToClient(int clientID, const char* filePath);
         SocketActionResult SendFileToClient(int clientID, const wchar_t* filePath);

@@ -5,11 +5,6 @@
 #include "ResourceInfo.h"
 #include "File/FileActionResult.hpp"
 
-#ifndef Byte
-#define Byte unsigned char
-#endif
-
-
 #define StringAscii char*
 #define StringUnicode wchar_t*
 

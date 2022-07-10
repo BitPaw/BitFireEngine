@@ -248,7 +248,7 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
 
         do
         {
-            const Byte* currentLine = dataStream.CursorCurrentAdress();
+            const Byte__* currentLine = dataStream.CursorCurrentAdress();
             const unsigned short lineTagID = MakeShort(currentLine[0], currentLine[1]);
             const OBJLineCommand command = PeekCommandLine(lineTagID);
 
@@ -366,7 +366,7 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
         // Parse
         do
         {
-            const Byte* currentLine = dataStream.CursorCurrentAdress();         
+            const Byte__* currentLine = dataStream.CursorCurrentAdress();         
             const unsigned short lineTagID = MakeShort(currentLine[0], currentLine[1]);
             const OBJLineCommand command = PeekCommandLine(lineTagID);
 
@@ -568,7 +568,7 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
                         }
                         case 4:
                         {
-                            const Byte* dataPoint = dataStream.CursorCurrentAdress();
+                            const Byte__* dataPoint = dataStream.CursorCurrentAdress();
                             const size_t readableSize = dataStream.ReadPossibleSize();
                             Vector3<unsigned int>& vectorD = currentElemtent.FaceElementList[currentFaceElement++];
 

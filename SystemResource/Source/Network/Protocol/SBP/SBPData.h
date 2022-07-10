@@ -1,7 +1,12 @@
 #pragma once
 
 #include <cstddef>
+
 #include <Container/ClusterInt.h>
+#include <File/File.h>
+#include "SBPDataPackageIam.h"
+
+#include "SBPDataPackage.h"
 
 namespace BF
 {
@@ -9,28 +14,13 @@ namespace BF
 #define ConnectionCreateReasonFile 'F'
 #define ConnectionCreateReasonData 'D'
 
-#define SBPIDIAM MakeInt('I', '\'', 'a', 'm')
-#define SBPIDResponse MakeInt('R', 'e', 's', 'p')
+
 #define SBPIDConnectionCreate MakeInt('C', 'o', 'n', '+')
 #define SBPIDConnectionResult MakeInt('C', 'o', 'n', '#')
 #define SBPIDConnectionKill MakeInt('C', 'o', 'n', '-')
 
 #define SBPIDText MakeInt('T', 'e', 'x', 't')
 #define SBPIDFile MakeInt('F', 'i', 'l', 'e')
-
-enum class SBPCommand
-{
-	Custom,
-	
-	Iam = SBPIDIAM,
-	Response = SBPIDResponse,
-	ConnectionCreate = SBPIDConnectionCreate,
-	ConnectionInfo = SBPIDConnectionResult,
-	ConnectionQuit = SBPIDConnectionKill,
-
-	Text = SBPIDText,
-	File = SBPIDFile
-};
 
 
 #define SBPFilePathSizeMaskTextType 0b1000000000000000 // 0=char* 1=wchar_t*
@@ -39,7 +29,7 @@ enum class SBPCommand
 #define SBPFilePathSizeMaskC		0b0001000000000000
 #define SBPFilePathSizeMask			0b1111000000000000
 
-// Source
+	// Source
 
 #define SourceInvalid	-1
 #define SourceMe	-2 // Request the reciever (Server mostly) to fill in data.
@@ -47,16 +37,16 @@ enum class SBPCommand
 
 #define SourceLimitMaximum SourceServer
 
-enum class SBPSource
-{
-	Invalid = SourceInvalid,
+	enum class SBPSource
+	{
+		Invalid = SourceInvalid,
 
-	// Sending
-	Me = SourceMe,
-	Server = SourceServer
-};
+		// Sending
+		Me = SourceMe,
+		Server = SourceServer
+	};
 
-// Target
+	// Target
 #define TargetInvalid		-1
 #define TargetServer		-2 // Client(You) -> Server only
 #define TargetAll		-3 // Client(You) -> All Clients
@@ -69,58 +59,25 @@ enum class SBPSource
 
 #define ResponseID unsigned int
 
-enum class SBPTarget
-{
-	Invalid = TargetInvalid,
-
-	// Sending
-	Server = TargetServer,
-	All = TargetAll,
-	Spesific = TargetSpecific,
-
-	// Recieving
-	You = TargetYou,
-	YouAndOthers = TargetYouAndOthers,
-	Everybody = TargetEveryBody
-};
-
-
-	enum class SBPResult
+	enum class SBPTarget
 	{
-		Invalid,
+		Invalid = TargetInvalid,
 
-		PackageSendingFailure,
+		// Sending
+		Server = TargetServer,
+		All = TargetAll,
+		Spesific = TargetSpecific,
 
-		// Nobody is listening for a result
-		PackageSendSucessfulButNoResponder,
-
-		PackageAnswered,
-		PackageTimeout,
-
-		PackageDetectedRegistered,
-		PackageDetectedCustom,
-
-		InvalidHeader
+		// Recieving
+		You = TargetYou,
+		YouAndOthers = TargetYouAndOthers,
+		Everybody = TargetEveryBody
 	};
-
-	struct SBPData;
-
-	typedef void (*PackageBuilderFunction)(SBPData& data, void* payloadBuffer);
-
-	// Recieve custom package, this is only called for unregistered packages
-	typedef void (*PackageRecieveEvent)(const SBPData& data);
-
-	typedef void (*PackageIAMRecieveEvent)(wchar_t* name);
 
 	struct SBPData
 	{
 		public:
-
-		union
-		{
-			ClusterInt CommandID;
-			SBPCommand Command;
-		};	
+		ClusterInt CommandID;
 
 		union
 		{
@@ -133,7 +90,7 @@ enum class SBPTarget
 			unsigned int TargetID;
 			SBPTarget Target;
 		};
-		
+
 		unsigned int ID;
 		unsigned int DataSize;
 		void* Data;
@@ -165,26 +122,19 @@ enum class SBPTarget
 
 		void Print();
 
-		bool IsCommandRegistered();
-
-
 		static size_t PackageParse(SBPData& data, const void* inputBuffer, const size_t& inputBufferSize);
 		static size_t PackageSerialize(const SBPData& data, void* outputBuffer, const size_t outputBufferSize);
 		static size_t PackageSerialize
 		(
-			void* outputBuffer, 
+			void* outputBuffer,
 			const size_t outputBufferSize,
 			const unsigned int source,
-			const unsigned int target, 
-			PackageBuilderFunction packageBuilderFunction, 
+			const unsigned int target,
+			const SBPDataPackage* dataPackage,
 			const ResponseID responseID
 		);
-
-		static void PackageCreateIAM(SBPData& data, void* payloadBuffer);
-		static void PackageCreateResponse(SBPData& data, void* payloadBuffer);
-		static void PackageCreateConnectionAdd(SBPData& data, void* payloadBuffer);
-		static void PackageCreateConnectionQuit(SBPData& data, void* payloadBuffer);
-		static void PackageCreateText(SBPData& data, void* payloadBuffer);
-		static void PackageCreateFile(SBPData& data, void* payloadBuffer);
 	};
+
+	// Recieve custom package, this is only called for unregistered packages
+	typedef void (*PackageRecieveEvent)(const SBPData& data);
 }

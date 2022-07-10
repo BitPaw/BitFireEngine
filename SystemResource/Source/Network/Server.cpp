@@ -243,7 +243,7 @@ void BF::Server::RegisterClient(IOSocket* clientSocket)
     */
 }
 
-BF::SocketActionResult BF::Server::SendMessageToAll(const Byte* data, const size_t dataSize)
+BF::SocketActionResult BF::Server::SendMessageToAll(const Byte__* data, const size_t dataSize)
 {
     unsigned int failCounter = 0;
 
@@ -267,7 +267,7 @@ BF::SocketActionResult BF::Server::SendMessageToAll(const Byte* data, const size
     return SocketActionResult::Successful;
 }
 
-BF::SocketActionResult BF::Server::SendMessageToClient(const ClientID clientID, const Byte* data, const size_t dataSize)
+BF::SocketActionResult BF::Server::SendMessageToClient(const ClientID clientID, const Byte__* data, const size_t dataSize)
 {
     Client* client = GetClientViaID(clientID);
 
@@ -353,7 +353,7 @@ ThreadFunctionReturnType BF::Server::ClientListeningThread(void* data)
     Server* server = serverListeningInfo->ServerAdress;
     IOSocket* serverSocket = serverListeningInfo->ServerSocket;
 
-    free(data); // there was a new, but we only need to get this here.
+    Memory::Release(data, 0); // there was a new, but we only need to get this here.
 
     while (serverSocket->IsCurrentlyUsed())
     {
@@ -375,7 +375,9 @@ ThreadFunctionReturnType BF::Server::ClientListeningThread(void* data)
 #endif        
         );
 
-        printf("[Server] New client accepted <%zi>\n", clientSocket.AdressInfo.SocketID);
+#if SocketDebug
+        printf("[i][Server] New client accepted <%zi>\n", clientSocket.AdressInfo.SocketID);
+#endif
 
         bool sucessful = clientSocket.IsCurrentlyUsed();
 

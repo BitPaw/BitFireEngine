@@ -104,9 +104,9 @@ void BF::Image::FlipHorizontal()
         {
             size_t indexA = x + (y * rowSize);
             size_t indexB = xB + (y * rowSize);
-            Byte tempByte[4] = {0,0,0,0};
-            Byte* pixelA = PixelData + indexA;
-            Byte* pixelB = PixelData + indexB;
+            Byte__ tempByte[4] = {0,0,0,0};
+            Byte__* pixelA = PixelData + indexA;
+            Byte__* pixelB = PixelData + indexB;
 
             memcpy(tempByte, pixelA, bbp);
             memcpy(pixelA, pixelB, bbp);
@@ -189,7 +189,7 @@ void BF::Image::Resize(const size_t width, const size_t height)
     }
 
     PixelDataSize = width * height * pixelSize;
-    PixelData = Memory::Reallocate<Byte>(PixelData, PixelDataSize);
+    PixelData = Memory::Reallocate<Byte__>(PixelData, PixelDataSize);
 }
 
 void BF::Image::FillRandome()
@@ -586,5 +586,5 @@ BF::FileActionResult BF::Image::Save(const wchar_t* filePath, ImageFileFormat im
 
 size_t BF::Image::FullSizeInMemory()
 {
-    return sizeof(Image) + (PixelDataSize * sizeof(Byte));
+    return sizeof(Image) + (PixelDataSize * sizeof(Byte__));
 }

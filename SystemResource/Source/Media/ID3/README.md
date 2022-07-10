@@ -4,32 +4,32 @@
 ### Version 1.0 (ID3v1) (128 Bytes) [obsolete]
 |Offset|Size|Type|Name|Expected content|
 |:-:|:-:|:-:|:-:|:-:|
-|0| 3 Byte | char[3] | Signature | 'ID3' |
-|3| 30 Byte |  char[30] | Title | Text |
-|33| 30 Byte |  char[30] | Artist | Text |
-|63| 30 Byte |  char[30] | Album | Text |
-|93| 4 Byte |  char[4] | Release year | Text |
-|97| 30 Byte |  char[30] | Comment | Text |
-|127| 1 Byte | unsigned char<br>(enum) | Genre | ... |
+|0| 3 Byte__ | char[3] | Signature | 'ID3' |
+|3| 30 Byte__ |  char[30] | Title | Text |
+|33| 30 Byte__ |  char[30] | Artist | Text |
+|63| 30 Byte__ |  char[30] | Album | Text |
+|93| 4 Byte__ |  char[4] | Release year | Text |
+|97| 30 Byte__ |  char[30] | Comment | Text |
+|127| 1 Byte__ | unsigned char<br>(enum) | Genre | ... |
 
 ***
 ### Version 1.1 (ID3v1.1) (128 Bytes) [obsolete]
 >Changes from 1.0
 >> Comment is 2 Bytes less long.<br>
->> Force first Byte to be 0x00 to terminate the string<br>
->> Use the secound Byte for a title number<br>
+>> Force first Byte__ to be 0x00 to terminate the string<br>
+>> Use the secound Byte__ for a title number<br>
 
 |Offset|Size|Type|Name|Expected content|
 |:-:|:-:|:-:|:-:|:-:|
-|0| 3 Byte | char[3] | Signature | 'ID3' |
-|3| 30 Byte |  char[30] | Title | Text |
-|33| 30 Byte |  char[30] | Artist | Text |
-|63| 30 Byte |  char[30] | Album | Text |
-|93| 4 Byte |  char[4] | Release year | Text |
-|97| 30 Byte |  char[28] | Comment | Text |
-|125| 1 Byte | unsigned char | Null Byte | 0x00 |
-|126| 1 Byte | unsigned char | Title Number | 0-255 |
-|127| 1 Byte | unsigned char<br>(enum) | Genre | ... |
+|0| 3 Byte__ | char[3] | Signature | 'ID3' |
+|3| 30 Byte__ |  char[30] | Title | Text |
+|33| 30 Byte__ |  char[30] | Artist | Text |
+|63| 30 Byte__ |  char[30] | Album | Text |
+|93| 4 Byte__ |  char[4] | Release year | Text |
+|97| 30 Byte__ |  char[28] | Comment | Text |
+|125| 1 Byte__ | unsigned char | Null Byte__ | 0x00 |
+|126| 1 Byte__ | unsigned char | Title Number | 0-255 |
+|127| 1 Byte__ | unsigned char<br>(enum) | Genre | ... |
 
 ***
 ### Version 2.0 (ID3v2) [obsolete]
@@ -40,10 +40,10 @@
 #### Header
 |Offset|Size|Type|Name|Expected content|
 |:-:|:-:|:-:|:-:|:-:|
-|0| 3 Byte | char[3] | Signature | 'ID3' |
-|3| 2 Byte |  char[2] | Version | Text |
-|5| 1 Byte |  unsigned char | Flags | ... |
-|6| 4 Byte |  char[2] | Size | 0-256MB |
+|0| 3 Byte__ | char[3] | Signature | 'ID3' |
+|3| 2 Byte__ |  char[2] | Version | Text |
+|5| 1 Byte__ |  unsigned char | Flags | ... |
+|6| 4 Byte__ |  char[2] | Size | 0-256MB |
 ...
 
 ##### Flags
@@ -58,8 +58,8 @@ As this shall be considered to be the maximum size for this ID3 tag.
 #### Frame
 |Offset|Size|Type|Name|Expected content|
 |:-:|:-:|:-:|:-:|:-:|
-|0| 3 Byte |  char[3] | Identifier  | ... |
-|3| 3 Byte |  unsigned int | Size | Number |
+|0| 3 Byte__ |  char[3] | Identifier  | ... |
+|3| 3 Byte__ |  unsigned int | Size | Number |
 
 
 
@@ -78,16 +78,16 @@ As this shall be considered to be the maximum size for this ID3 tag.
 #### Extended Header
 |Offset|Size|Type|Name|Expected content|
 |:-:|:-:|:-:|:-:|:-:|
-|0| 4 Byte |  unsigned int | Size  | Number |
-|4| 2 Byte |  unsigned short | Flags  | ... |
-|6| 4 Byte |  unsigned int | Padding  | Number |
+|0| 4 Byte__ |  unsigned int | Size  | Number |
+|4| 2 Byte__ |  unsigned short | Flags  | ... |
+|6| 4 Byte__ |  unsigned int | Padding  | Number |
 
 #### Frame
 |Offset|Size|Type|Name|Expected content|
 |:-:|:-:|:-:|:-:|:-:|
-|0| 4 Byte |  char[4] | ID  | A-Z and 0-9 |
-|4| 4 Byte |  unsigned int | Size  | Number |
-|6| 2 Byte |  unsigned short | Flags  | ... |
+|0| 4 Byte__ |  char[4] | ID  | A-Z and 0-9 |
+|4| 4 Byte__ |  unsigned int | Size  | Number |
+|6| 2 Byte__ |  unsigned short | Flags  | ... |
 
 ##### Frame Types
 

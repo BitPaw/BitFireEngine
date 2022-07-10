@@ -404,7 +404,7 @@ BF::FileActionResult BF::TTF::Load(const unsigned char* fileData, const size_t f
 				chunkData.Read(LinearThreshold.Version, Endian::Big);
 				chunkData.Read(LinearThreshold.NumberOfGlyphs, Endian::Big);
 
-				LinearThreshold.PelsHeightList = Memory::Allocate<Byte>(LinearThreshold.NumberOfGlyphs);
+				LinearThreshold.PelsHeightList = Memory::Allocate<Byte__>(LinearThreshold.NumberOfGlyphs);
 
 				chunkData.Read(LinearThreshold.PelsHeightList, LinearThreshold.NumberOfGlyphs);
 
@@ -412,7 +412,7 @@ BF::FileActionResult BF::TTF::Load(const unsigned char* fileData, const size_t f
 			}
 			case TTFTableEntryType::DigitalSignature:
 			{
-				Byte* startPointer = chunkData.Data + chunkData.DataCursorPosition;
+				Byte__* startPointer = chunkData.Data + chunkData.DataCursorPosition;
 
 				chunkData.Read(DigitalSignature.Version, Endian::Big);
 				chunkData.Read(DigitalSignature.NumberOfSignatures, Endian::Big);

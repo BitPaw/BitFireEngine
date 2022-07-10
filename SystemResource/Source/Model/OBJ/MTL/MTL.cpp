@@ -87,7 +87,7 @@ BF::FileActionResult BF::MTL::Load(const unsigned char* data, const size_t dataS
 
 		do
 		{
-			const Byte* currentLine = byteStream.CursorCurrentAdress();
+			const Byte__* currentLine = byteStream.CursorCurrentAdress();
 			const bool isNewMaterialUsed = *currentLine == 'n';
 
 			if(isNewMaterialUsed)

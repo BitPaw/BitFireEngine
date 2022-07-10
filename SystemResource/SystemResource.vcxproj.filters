@@ -738,9 +738,6 @@
     <ClCompile Include="Source\Network\Protocol\SBP\SBPServer.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Network\Protocol\SBP\SBPText.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Media\Video\WEBM\WebM.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -781,6 +778,24 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Container\ResponseCache.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Network\Protocol\SBP\SBPDataPackage.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Network\Protocol\SBP\SBPDataPackageIam.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Network\Protocol\SBP\SBPDataPackageFile.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Network\Protocol\SBP\SBPDataPackageResponse.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Network\Protocol\SBP\SBPDataPackageConnectionCreate.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Network\Protocol\SBP\SBPText.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1730,9 +1745,6 @@
     <ClInclude Include="Source\Network\Protocol\SBP\SBPServer.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Network\Protocol\SBP\SBPText.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Media\Video\WEBM\WebM.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -1782,6 +1794,30 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Async\Await.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Network\Protocol\SBP\SBPDataPackage.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Network\Protocol\SBP\SBPDataPackageIam.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Network\Protocol\SBP\SBPDataPackageFile.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Network\Protocol\SBP\SBPDataPackageResponse.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Network\Protocol\SBP\SBPResult.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\TextFormat.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Network\Protocol\SBP\SBPDataPackageConnectionCreate.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Network\Protocol\SBP\SBPText.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

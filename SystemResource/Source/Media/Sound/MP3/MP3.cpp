@@ -58,7 +58,7 @@ BF::FileActionResult BF::MP3::Load(const unsigned char* fileData, const size_t f
 	ID3 id3;
 
 	{
-		const Byte* dataPosition = dataStream.CursorCurrentAdress();
+		const Byte__* dataPosition = dataStream.CursorCurrentAdress();
 		const size_t dataSize = dataStream.ReadPossibleSize();
 		const size_t parsedBytes = id3.Parse(dataPosition, dataSize);
 
@@ -74,7 +74,7 @@ BF::FileActionResult BF::MP3::Load(const unsigned char* fileData, const size_t f
 
 		// Parse mp3
 		{
-			const Byte* dataPosition = dataStream.CursorCurrentAdress();
+			const Byte__* dataPosition = dataStream.CursorCurrentAdress();
 			const size_t dataSize = dataStream.ReadPossibleSize();
 			const size_t parsedBytes = mp3Header.Parse(dataPosition, dataSize);
 
@@ -102,7 +102,7 @@ BF::FileActionResult BF::MP3::Load(const unsigned char* fileData, const size_t f
 
 		// info header
 		{
-			const Byte* dataPosition = dataStream.CursorCurrentAdress();
+			const Byte__* dataPosition = dataStream.CursorCurrentAdress();
 			const size_t dataSize = dataStream.ReadPossibleSize();
 			const size_t parsedBytes = xingInfo.Parse(dataPosition, dataSize);
 
@@ -149,7 +149,7 @@ BF::FileActionResult BF::MP3::Load(const unsigned char* fileData, const size_t f
 		{
 			LAME lame;
 
-			const Byte* dataPosition = dataStream.CursorCurrentAdress();
+			const Byte__* dataPosition = dataStream.CursorCurrentAdress();
 			const size_t dataSize = cursorPositionPredict - dataStream.DataCursorPosition;
 			const size_t parsedBytes = lame.Parse(dataPosition, dataSize);
 

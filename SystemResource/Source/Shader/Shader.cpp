@@ -59,5 +59,5 @@ BF::FileActionResult BF::Shader::Load(const wchar_t* filePath)
     return ShaderType::Unkown;
 	*/
 
-     return File::ReadFromDisk(filePath, (Byte**)&Content, ContentSize, true);
+     return File::ReadFromDisk(filePath, (Byte__**)&Content, ContentSize, true);
 }

@@ -48,8 +48,8 @@
 #define FileHandleType HANDLE
 #define FileMappingID HANDLE
 
+#include <windows.h>
 #include <direct.h>
-#include <Windows.h>
 
 #define FileOpenA fopen
 #define FileOpenW _wfopen
@@ -100,11 +100,11 @@ namespace BF
 		FileActionResult ReadFromDisk(unsigned char** outPutBuffer, size_t& outPutBufferSize, const bool addTerminatorByte = false);
 		FileActionResult ReadFromDisk(const char* filePath, bool addNullTerminator = false, FilePersistence filePersistence = FilePersistence::Permanent);
 		FileActionResult ReadFromDisk(const wchar_t* filePath, bool addNullTerminator = false, FilePersistence filePersistence = FilePersistence::Permanent);
-		static FileActionResult ReadFromDisk(FILE* file, Byte** targetBuffer, size_t& bufferSize, bool addNullTerminator = false);
+		static FileActionResult ReadFromDisk(FILE* file, Byte__** targetBuffer, size_t& bufferSize, bool addNullTerminator = false);
 		static FileActionResult ReadFromDisk
 		(
 			const wchar_t* filePath,
-			Byte** targetBuffer,
+			Byte__** targetBuffer,
 			size_t& bufferSize,
 			bool addNullTerminator = false,
 			FilePersistence filePersistence = FilePersistence::Permanent
