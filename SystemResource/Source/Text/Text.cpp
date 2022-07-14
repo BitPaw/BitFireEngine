@@ -9,6 +9,30 @@
 #include <Math/Math.h>
 
 
+BF::Text::Text()
+{
+	Format = TextFormat::Invalid;
+	SizeInCharacters = 0;
+	SizeInBytes = 0;
+	TextData = nullptr;
+}
+
+BF::Text::Text(const char* text)
+{
+	Format = TextFormat::TextASCII;
+	SizeInCharacters = 0;
+	SizeInBytes = 0;
+	TextA = (char*)text;
+}
+
+BF::Text::Text(const wchar_t* text)
+{
+	Format = TextFormat::TextUNICODE;
+	SizeInCharacters = 0;
+	SizeInBytes = 0;
+	TextW = (wchar_t*)text;
+}
+
 void BF::Text::Clear(char* string, const size_t stringSize)
 {
 	Memory::Set(string, 0, sizeof(char) * stringSize);

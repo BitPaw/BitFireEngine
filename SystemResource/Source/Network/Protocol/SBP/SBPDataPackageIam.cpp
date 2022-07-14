@@ -25,25 +25,24 @@ size_t BF::SBPDataPackageIam::Parse(const void* inputData, const size_t inputDat
 
 	// Add name
 	{
-		unsigned char type = 0;
+		unsigned char formatType = 0;
 		unsigned short size = 0;
 
-		byteStream.Read(type);
+		byteStream.Read(formatType);
 		byteStream.Read(size, Endian::Little);
 
 		NameSize = size;
+		Format = ConvertTextFormat(formatType);
 
 		const Byte__* nameStart = byteStream.CursorCurrentAdress();
 
-		switch(type)
+		switch(Format)
 		{
-			case TextFormatASCII:
-				Format = TextFormat::TextASCII;
+			case TextFormat::TextASCII:
 				Memory::Copy(NameA, nameStart, size);
 				break;
 
-			case TextFormatUNICODE:
-				Format = TextFormat::TextUNICODE;
+			case TextFormat::TextUNICODE:
 				Memory::Copy(NameW, nameStart, size);
 				break;
 
@@ -61,25 +60,10 @@ size_t BF::SBPDataPackageIam::Serialize(void* outputData, const size_t outputDat
 
 	// Add name
 	{	
-		unsigned char type = 0;
+		const unsigned char formatType = ConvertTextFormat(Format);
 		unsigned short size = NameSize;
 
-		switch(Format)
-		{
-			case BF::TextFormat::TextASCII:
-				type = TextFormatASCII;
-				break;
-
-			case BF::TextFormat::TextUNICODE:
-				type = TextFormatUNICODE;
-				break;
-
-			case BF::TextFormat::TextUTF8:
-				type = TextFormatUTF8;
-				break;
-		}
-
-		byteStream.Write(type);
+		byteStream.Write(formatType);
 		byteStream.Write(size, Endian::Little);
 		byteStream.Write(NameW, size);
 	}

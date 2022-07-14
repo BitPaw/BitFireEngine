@@ -15,6 +15,7 @@
 #include <Async/Await.h>
 
 #include <stdlib.h>
+#include <signal.h>
 
 OpenGLID _matrixModelID;
 OpenGLID _matrixViewID;
@@ -214,6 +215,17 @@ void BF::BitFireEngine::Start()
     _mainWindow.WindowCreatedCallBack = OnWindowCreated;
     _mainWindow.WindowSizeChangedCallBack = OnWindowSizeChanged;
 
+    // Set signal
+    {
+        const auto functionPointer = signal(SIGABRT, OnSystemSignal);
+        const bool validLinkage = functionPointer != SIG_ERR;
+
+        if(!validLinkage)
+        {
+            fputs("[x][Core] An error occurred while setting a signal handler.\n", stderr);
+        }
+    }
+
     stopwatch.Start();
 
     _mainWindow.Create(600 * 2, 400 * 2, "[BFE] <BitFireEngine>");
@@ -332,6 +344,8 @@ void BF::BitFireEngine::Update()
        const unsigned int height = _mainWindow.Height;
 
        printf("[Window] Size chnaged %i x %i\n", width, height);
+
+       MainCamera.AspectRatioSet(width, height);
 
        glViewport(0, 0, width, height);
 
@@ -520,6 +534,11 @@ void BF::BitFireEngine::OnWindowSizeChanged(const size_t width, const size_t hei
     glViewport(0, 0, width, height);
 
     camera.AspectRatioSet(width, height);
+}
+
+void BF::BitFireEngine::OnSystemSignal(int signalID)
+{
+
 }
 
 void BF::BitFireEngine::UpdateInput(InputContainer& input)

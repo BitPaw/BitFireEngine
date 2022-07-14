@@ -302,6 +302,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\OS\Sound\AudioDeviceCapabilities.cpp" />
+    <ClCompile Include="Source\OS\Sound\AudioDeviceInput.cpp" />
+    <ClCompile Include="Source\OS\Sound\AudioDeviceOutput.cpp" />
+    <ClCompile Include="Source\OS\Sound\AudioResult.cpp" />
+    <ClCompile Include="Source\OS\Sound\AudioSystem.cpp" />
+    <ClCompile Include="Source\UI\Label.cpp" />
+    <ClCompile Include="Source\UI\Button.cpp" />
+    <ClCompile Include="Source\Network\Protocol\SBP\SBPDataPackageText.cpp" />
     <ClCompile Include="Source\Network\Protocol\SBP\SBPDataPackageConnectionCreate.cpp" />
     <ClCompile Include="Source\Network\Protocol\SBP\SBPDataPackageResponse.cpp" />
     <ClCompile Include="Source\Network\Protocol\SBP\SBPDataPackageFile.cpp" />
@@ -508,6 +516,7 @@
     <ClCompile Include="Source\Media\Sound\OGG\OGG.cpp" />
     <ClCompile Include="Source\Media\Sound\Sound.cpp" />
     <ClCompile Include="Source\Media\Sound\WAV\WAV.cpp" />
+    <ClCompile Include="Source\Text\TextFormat.cpp" />
     <ClCompile Include="Source\Time\StopWatch.cpp" />
     <ClCompile Include="Source\Types\UUID.cpp" />
     <ClCompile Include="Source\Media\Video\Video.cpp" />
@@ -562,8 +571,17 @@
     <ClCompile Include="Source\Media\XingInfo\XingInfo.cpp" />
     <ClCompile Include="Source\OS\User.cpp" />
     <ClCompile Include="Source\Time\Time.cpp" />
+    <ClCompile Include="Source\UI\TextBox.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\OS\Sound\AudioDeviceCapabilities.h" />
+    <ClInclude Include="Source\OS\Sound\AudioDeviceInput.h" />
+    <ClInclude Include="Source\OS\Sound\AudioDeviceOutput.h" />
+    <ClInclude Include="Source\OS\Sound\AudioResult.h" />
+    <ClInclude Include="Source\OS\Sound\AudioSystem.h" />
+    <ClInclude Include="Source\UI\Label.h" />
+    <ClInclude Include="Source\UI\Button.h" />
+    <ClInclude Include="Source\Network\Protocol\SBP\SBPDataPackageText.h" />
     <ClInclude Include="Source\Network\Protocol\SBP\SBPDataPackageConnectionCreate.h" />
     <ClInclude Include="Source\Network\Protocol\SBP\SBPDataPackageResponse.h" />
     <ClInclude Include="Source\Network\Protocol\SBP\SBPDataPackageFile.h" />
@@ -903,6 +921,7 @@
     <ClInclude Include="Source\Media\XingInfo\XingInfo.h" />
     <ClInclude Include="Source\OS\User.h" />
     <ClInclude Include="Source\Time\Time.h" />
+    <ClInclude Include="Source\UI\TextBox.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

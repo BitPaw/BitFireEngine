@@ -7,6 +7,8 @@
 #include <File/FilePath.h>
 #include <Text/TextFormat.h>
 
+#define SBPDataPackageFileID MakeInt('F', 'i', 'l', 'e')
+
 namespace BF
 {
 	enum class SBPDataPackageFileMode
@@ -42,6 +44,9 @@ namespace BF
 		};		
 
 		size_t FileSize; // HAs to be 8 Byte__!
+
+
+		SBPDataPackageFile();
 
 		// S:N T:N => Invalid
 		// S:N T:Y => Create

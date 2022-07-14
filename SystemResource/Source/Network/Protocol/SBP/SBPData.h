@@ -20,7 +20,7 @@ namespace BF
 #define SBPIDConnectionKill MakeInt('C', 'o', 'n', '-')
 
 #define SBPIDText MakeInt('T', 'e', 'x', 't')
-#define SBPIDFile MakeInt('F', 'i', 'l', 'e')
+
 
 
 #define SBPFilePathSizeMaskTextType 0b1000000000000000 // 0=char* 1=wchar_t*

@@ -5,6 +5,8 @@
 #include <Network/Protocol/SBP/SBPClient.h>
 //#include <Network/Protocol/SBP/SBPQueue.h>
 #include <Time/StopWatch.h>
+#include <OS/Sound/AudioSystem.h>
+#include <Media/Sound/WAV/WAV.h>
 //#include <Media/Font/Font.h>
 //#include <Media/Font/FNT/FNT.h>
 //#include <Media/Sound/OGG/OGG.h>
@@ -69,7 +71,7 @@ int main()
 
 #endif
 
-#if 1
+#if 0
     printf("Start..\n");
 
     SBPClient client;
@@ -162,6 +164,79 @@ int main()
 
     printf("Loading Took : %3.2fus\n", loadningTime * 1000000);
     printf("Saveing Took : %3.2fus\n", savingTime * 1000000);
+#endif
+
+
+#if 1 // Audio
+
+    WAV wave;
+
+    FileActionResult fileActionResult = wave.Load("A:/CatFeet.wav");
+
+
+    AudioSystem audioSystem;
+
+    AudioDeviceCapabilities audioDeviceCapabilities[12];
+    size_t audioDeviceOutputSize = 0;
+
+    audioSystem.DevicesFetchOutput(audioDeviceCapabilities, 12, audioDeviceOutputSize);
+
+    for(size_t i = 0; i < audioDeviceOutputSize; i++)
+    {
+        audioDeviceCapabilities[i].Prinf();
+    }
+
+
+    audioSystem.DevicesFetchInput(audioDeviceCapabilities, 12, audioDeviceOutputSize);
+
+    for(size_t i = 0; i < audioDeviceOutputSize; i++)
+    {
+        audioDeviceCapabilities[i].Prinf();
+    }
+
+
+    AudioDeviceOutput audioDeviceOutput;
+    AudioResult openRes = audioSystem.OutputOpen
+    (
+        audioDeviceOutput,
+        audioDeviceCapabilities[0].DeviceID,
+        wave.Format.AudioFormat,
+        wave.Format.NumerOfChannels,
+        wave.Format.SampleRate,
+        wave.Format.ByteRate,
+        wave.Format.BlockAllign,
+        wave.Format.BitsPerSample,
+        wave.Format.ChunkSize
+    );
+
+    AudioResult openWrite = audioSystem.OutputWrite
+    (
+        audioDeviceOutput,
+        wave.SoundData,
+        wave.SoundDataSize,
+        0,
+        0,
+        WHDR_BEGINLOOP | WHDR_ENDLOOP,
+        100
+    );
+
+ 
+
+   audioSystem.OutputPlaybackRateSet(audioDeviceOutput, 0x000F8000);
+
+    while(true)
+    {
+        for(size_t i = 0; i < 0xFFFF; i++)
+        {
+           // audioSystem.OutputVolumeSet(audioDeviceOutput, i, i);
+
+            for(size_t w = 0;w< 1; w++)
+            {
+               // printf(".");                   
+            }
+        }
+    }
+
 #endif
     return 0;
 }

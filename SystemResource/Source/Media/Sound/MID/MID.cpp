@@ -96,7 +96,7 @@ BF::FileActionResult BF::MID::Load(const unsigned char* fileData, const size_t f
 	TrackList = new MIDITrack[TrackListSize];
 
 	// Parse Track Header
-	for(size_t i = 0; i < TrackListSize; i++)
+	for(size_t i = 0; i < TrackListSize; ++i)
 	{
 		MIDITrack& track = TrackList[i];
 		unsigned int chunkLength = 0;

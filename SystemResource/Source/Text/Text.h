@@ -1,6 +1,9 @@
 #pragma once
 
 #include <cwchar>
+#include <cstddef>
+
+#include "TextFormat.h"
 
 #include <File/ParsingToken.h>
 
@@ -14,6 +17,21 @@ namespace BF
 	struct Text
 	{
 		public:		
+		TextFormat Format;
+		size_t SizeInCharacters;
+		size_t SizeInBytes;
+		union
+		{
+			char* TextA;
+			wchar_t* TextW;
+			void* TextData;
+		};
+
+		Text();
+		Text(const char* text);
+		Text(const wchar_t* text);
+
+
 		static void Clear(char* string, const size_t stringSize);
 		static void Clear(wchar_t* string, const size_t stringSize);
 

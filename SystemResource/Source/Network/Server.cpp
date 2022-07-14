@@ -328,10 +328,10 @@ BF::SocketActionResult BF::Server::BroadcastFileToClients(const char* filePath)
 {
     SocketActionResult socketActionResult = SocketActionResult::Successful;
 
-    for (unsigned int i = 0; i < NumberOfMaximalClients; i++)
+    for (size_t i = 0; i < NumberOfMaximalClients; i++)
     {
-        Client* client = &ClientList[i];
-        char isUsed = client->IsCurrentlyUsed();
+        Client& client = ClientList[i];
+        char isUsed = client.IsCurrentlyUsed();
 
         if (isUsed)
         {

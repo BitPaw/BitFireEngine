@@ -95,6 +95,8 @@ namespace BF
         static void OnWindowsMouseCaptureChanged();
 
 
+        static void __CRTDECL OnSystemSignal(int signalID);
+
 		void UpdateInput(InputContainer& input);
 
         //---------------------------------------------------------------------

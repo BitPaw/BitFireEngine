@@ -89,7 +89,7 @@ BF::FileActionResult BF::MP3::Load(const unsigned char* fileData, const size_t f
 
 			dataStream.CursorAdvance(32u);
 
-#if 1
+#if MP3Debug
 			printf
 			(
 				"[MP3][Frame] Bitrate : %6i | SampleRate : %5i | FrameLength : %5i |\n",
@@ -110,7 +110,7 @@ BF::FileActionResult BF::MP3::Load(const unsigned char* fileData, const size_t f
 
 			if(parsedBytes)
 			{
-#if 1
+#if MP3Debug
 				printf
 				(
 					"[MP3][Info] Number of Frames : %6i | %6i Bytes |\n",
@@ -129,7 +129,7 @@ BF::FileActionResult BF::MP3::Load(const unsigned char* fileData, const size_t f
 
 			if(isTag)
 			{
-#if 1
+#if MP3Debug
 				printf
 				(
 					"[MP3][???] Lavc chunk... what is that? |\n"
@@ -157,7 +157,7 @@ BF::FileActionResult BF::MP3::Load(const unsigned char* fileData, const size_t f
 
 			if(parsedBytes)
 			{
-#if 1
+#if MP3Debug
 				printf
 				(
 					"[MP3][LAME] Chunk |\n"
@@ -193,7 +193,9 @@ BF::FileActionResult BF::MP3::Load(const unsigned char* fileData, const size_t f
 			{
 				int offset = cursorPositionPredict - dataStream.DataCursorPosition;
 
+#if MP3Debug
 				printf("[MP3] detected failed allignment! Off by : %i Bytes\n", offset);
+#endif
 
 				dataStream.DataCursorPosition = cursorPositionPredict;
 				//dataStream.CursorAdvance(mp3Header.FrameLength);

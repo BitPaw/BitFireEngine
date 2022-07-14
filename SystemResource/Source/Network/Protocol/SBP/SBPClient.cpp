@@ -2,13 +2,14 @@
 
 #include "SBPData.h"
 #include "SBPDataPackageIam.h"
+#include "SBPDataPackageResponse.h"
+#include "SBPDataPackageFile.h"
 
 #include <Hardware/Memory/Memory.h>
 #include <Text/Text.h>
 #include <OS/User.h>
 #include <Time/Time.h>
 #include <Time/StopWatch.h>
-#include <Network/Protocol/SBP/SBPDataPackageResponse.h>
 
 #define TimeOutLimit 5000u // 5s
 
@@ -81,7 +82,9 @@ BF::SBPResult BF::SBPClient::SendAndWaitResponse
 
 				if(isTimeout)
 				{
+#if SocketDebug
 					printf("[x][SBP-Client] Package timed out!\n");
+#endif
 
 					_responseCache.Remove(responseID); // We assume that the message does not come anymore or is not needed
 
@@ -308,35 +311,43 @@ void BF::SBPClient::OnSocketCreated(const IPAdressInfo& adressInfo, bool& use)
 void BF::SBPClient::OnMessageSend(IOSocketMessage socketMessage)
 {
 #if SocketDebug
-	printf("[#][SBP-Client] Send %zi Bytes to <%zi>\n", socketMessage.MessageSize, socketMessage.SocketID);
+	printf("[#][SBP-Client] Send %zi Bytes to <%i>\n", socketMessage.MessageSize, socketMessage.SocketID);
 #endif
 }
 
 void BF::SBPClient::OnMessageReceive(IOSocketMessage socketMessage)
 {
-#if SocketDebug
-	printf("[#][SBP-Client]Receive %zi Bytes from <%zi>\n", socketMessage.MessageSize, socketMessage.SocketID);
+#if SocketDebug 
+	printf("[#][SBP-Client] Receive %zi Bytes from <%i>\n", socketMessage.MessageSize, socketMessage.SocketID);
 #endif
 }
 
 void BF::SBPClient::OnConnectionListening(const IPAdressInfo& adressInfo)
 {
+#if SocketDebug
 	printf("[i][SBP-Client] OnConnectionListening\n");
+#endif
 }
 
 void BF::SBPClient::OnConnectionLinked(const IPAdressInfo& adressInfo)
 {
+#if SocketDebug
 	printf("[i][SBP-Client] OnConnectionLinked\n");
+#endif
 }
 
 void BF::SBPClient::OnConnectionEstablished(const IPAdressInfo& adressInfo)
 {
+#if SocketDebug
 	printf("[i][SBP-Client] OnConnectionEstablished\n");
+#endif
 }
 
 void BF::SBPClient::OnConnectionTerminated(const IPAdressInfo& adressInfo)
 {
+#if SocketDebug
 	printf("[-][SBP-Client] OnConnectionTerminated\n");
+#endif
 }
 
 ThreadFunctionReturnType BF::SBPClient::ReciveDataThread(void* sbpClientAdress)
@@ -360,7 +371,7 @@ ThreadFunctionReturnType BF::SBPClient::ReciveDataThread(void* sbpClientAdress)
 		if(parsedBytes)
 		{
 #if SocketDebug
-			printf("[i][SBP-Client] SBP detected %c%c%c%c\n", data.CommandID.A, data.CommandID.B, data.CommandID.C, data.CommandID.D);
+			printf("[i][SBP-Client] SBP detected! Command:<%c%c%c%c>\n", data.CommandID.A, data.CommandID.B, data.CommandID.C, data.CommandID.D);
 #endif
 			client._responseCache.Fill(data.ID, buffer, bufferSize);
 
@@ -382,6 +393,11 @@ ThreadFunctionReturnType BF::SBPClient::ReciveDataThread(void* sbpClientAdress)
 				case SBPDataPackageResponseID:
 				{
 
+
+					break;
+				}
+				case SBPDataPackageFileID:
+				{
 
 					break;
 				}

@@ -4,6 +4,8 @@
 
 #include <cstddef>
 
+#define MP3Debug 1
+
 namespace BF
 {
 	// MPEG audio file 

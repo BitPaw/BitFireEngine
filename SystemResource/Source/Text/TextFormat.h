@@ -1,10 +1,5 @@
 #pragma once
 
-#define TextFormatInvalid 0xFF
-#define TextFormatASCII 0x01
-#define TextFormatUNICODE 0x02
-#define TextFormatUTF8 0x03
-
 namespace BF
 {
 	enum class TextFormat
@@ -21,4 +16,7 @@ namespace BF
 		TextUTF8,
 		TextUTF16
 	};
+
+	TextFormat ConvertTextFormat(const unsigned char textFormatID);
+	unsigned char ConvertTextFormat(const TextFormat textFormat);
 }

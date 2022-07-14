@@ -105,6 +105,10 @@ BF::FileActionResult BF::WAV::Load(const unsigned char* fileData, const size_t f
 		{
 			dataStream.DataCursorPosition += 30u;
 		}
+		else
+		{
+			dataStream.CursorRewind(4);
+		}
 	}
 	//---------------------------------------
 	{
