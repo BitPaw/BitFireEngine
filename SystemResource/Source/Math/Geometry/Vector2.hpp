@@ -1,7 +1,7 @@
 #pragma once
 
 #include <math.h>
-#include "../Math.h"
+#include <Math/Math.h>
 
 namespace BF
 {
@@ -161,7 +161,7 @@ namespace BF
 		NumberType DistanceTo(Vector2<NumberType> point)
 		{
 			// d = Root((x2?x1)^2 + (y2?y1)^2)
-			return Math::SquareRoot(Math::PowerOfTwo(point.X - X) + Math::PowerOfTwo(point.Y - Y));
+			return MathSquareRoot(MathPowerOfTwo(point.X - X) + MathPowerOfTwo(point.Y - Y));
 		}
 		/*
 		// a x b
@@ -204,17 +204,17 @@ namespace BF
 		/*
 		virtual void CalculateX()
 		{
-			this->X = Magnitude * (NumberType)Math::Cosinus(Angle);
+			this->X = Magnitude * (NumberType)MathCosinus(Angle);
 		}
 
 		virtual void CalculateY()
 		{
-			this->Y = Magnitude * (NumberType)Math::Sinus(Angle);
+			this->Y = Magnitude * (NumberType)MathSinus(Angle);
 		}
 
 		virtual void CalculateMagnitude()
 		{
-			Magnitude = (NumberType)Math::Pythagoras(this->X, this->Y);
+			Magnitude = (NumberType)MathPythagoras(this->X, this->Y);
 		}
 		virtual void CalculateAngle()
 		{

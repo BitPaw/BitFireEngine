@@ -1,6 +1,6 @@
 #include "ErrorCode.h"
 
-#include "OS/OSDefine.h"
+#include <OS/OSVersion.h>
 
 #if defined(OSUnix)
 	#include <errno.h>

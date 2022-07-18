@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../OSDefine.h"
+#include <OS/OSVersion.h>
 
 #if defined(OSWindows)
 #include <Windows.h>

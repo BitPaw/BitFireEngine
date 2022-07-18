@@ -209,11 +209,11 @@ void BF::BitFireEngine::Start()
     //SYSTEM_INFO systemInfo; // Windows SystemInfo
     //GetSystemInfo(&systemInfo);
 
-    _mainWindow.MouseClickCallBack = OnMouseButton;
-    _mainWindow.MouseMoveCallBack = OnMouseMove;
-    _mainWindow.KeyBoardKeyCallBack = OnKeyBoardKey;
-    _mainWindow.WindowCreatedCallBack = OnWindowCreated;
-    _mainWindow.WindowSizeChangedCallBack = OnWindowSizeChanged;
+    _mainWindow._window.MouseClickCallBack = OnMouseButton;
+    _mainWindow._window.MouseMoveCallBack = OnMouseMove;
+    _mainWindow._window.KeyBoardKeyCallBack = OnKeyBoardKey;
+    _mainWindow._window.WindowCreatedCallBack = OnWindowCreated;
+    _mainWindow._window.WindowSizeChangedCallBack = OnWindowSizeChanged;
 
     // Set signal
     {
@@ -275,7 +275,7 @@ void BF::BitFireEngine::Start()
         * /
     }*/
 
-    while(!_mainWindow.IsRunning);
+    while(!_mainWindow._window.IsRunning);
 
     //AwaitChange(!_mainWindow.IsRunning);
 
@@ -338,10 +338,10 @@ void BF::BitFireEngine::Update()
 
    _mainWindow.FrameBufferSwap();
 
-   if(_mainWindow.HasSizeChanged)
+   if(_mainWindow._window.HasSizeChanged)
    {
-       const unsigned int width = _mainWindow.Width;
-       const unsigned int height = _mainWindow.Height;
+       const unsigned int width = _mainWindow._window.Width;
+       const unsigned int height = _mainWindow._window.Height;
 
        printf("[Window] Size chnaged %i x %i\n", width, height);
 
@@ -349,7 +349,7 @@ void BF::BitFireEngine::Update()
 
        glViewport(0, 0, width, height);
 
-       _mainWindow.HasSizeChanged = false;
+       _mainWindow._window.HasSizeChanged = false;
    }
 
     UpdateInput(_inputContainer);
@@ -364,17 +364,17 @@ void BF::BitFireEngine::OnMouseButton(const MouseButton mouseButton, const Butto
 
     switch(mouseButton)
     {
-        case MouseButton::Left:
+        case MouseButtonLeft:
         {
             mouse.LeftButton.IncrementIfAlreadyPressed();
             break;
         }
-        case MouseButton::Middle:
+        case MouseButtonMiddle:
         {
             mouse.ScrollButton.IncrementIfAlreadyPressed();
             break;
         }
-        case MouseButton::Right:
+        case MouseButtonRight:
         {
             mouse.RightButton.IncrementIfAlreadyPressed();
             break;
@@ -485,12 +485,12 @@ void BF::BitFireEngine::OnKeyBoardKey(const KeyBoardKeyInfo keyBoardKeyInfo)
 
     switch(keyBoardKeyInfo.Mode)
     {
-        case ButtonState::Down:
+        case ButtonDown:
         {
             inputButton->Increment();
             break;
         }
-        case ButtonState::Release:
+        case ButtonRelease:
         {
             inputButton->Reset();
             break;
@@ -498,8 +498,10 @@ void BF::BitFireEngine::OnKeyBoardKey(const KeyBoardKeyInfo keyBoardKeyInfo)
     }
 }
 
-void BF::BitFireEngine::OnWindowCreated(Window& window)
+void BF::BitFireEngine::OnWindowCreated(void* windowAdress)
 {
+    Window& window = *(Window*)windowAdress;
+
     printf
     (
         "+------------------------------------------------------+\n"
@@ -558,16 +560,16 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
 
     if(keyboard.R.IsShortPressed())
     {
-        switch(_mainWindow.CursorModeCurrent)
+        switch(_mainWindow._window.CursorModeCurrent)
         {
-            case CursorMode::Show:
+            case WindowCursorShow:
             {
-                _mainWindow.CursorCaptureMode(CursorMode::LockAndHide);
+                _mainWindow.CursorCaptureMode(WindowCursorLockAndHide);
                 break;
             }
-            case CursorMode::LockAndHide:
+            case WindowCursorLockAndHide:
             {
-                _mainWindow.CursorCaptureMode(CursorMode::Show);
+                _mainWindow.CursorCaptureMode(WindowCursorShow);
                 break;
             }
         }
@@ -788,7 +790,7 @@ void BF::BitFireEngine::Register(Renderable& renderable, const Model& model)
         size_t meshIndexCounter = 0;
 
         OpenGLID meshIDList[128u];
-        Memory::Set(meshIDList, -1, 128u * sizeof(OpenGLID));
+        MemorySet(meshIDList, 128u * sizeof(OpenGLID), -1);
 
         glGenBuffers(numberOfMeshes, meshIDList); // Create VBO Buffers
 
@@ -876,7 +878,7 @@ void BF::BitFireEngine::Register(Renderable& renderable, const Model& model)
             size_t segmentIndexCounter = 0;
 
             OpenGLID segmentIDList[128u];
-            Memory::Set(segmentIDList, -1, 128u * sizeof(OpenGLID));
+            MemorySet(segmentIDList, 128u * sizeof(OpenGLID), -1);
 
             glGenBuffers(segmentListSize, segmentIDList); // Generate IBO
 
@@ -1320,7 +1322,7 @@ BF::FileActionResult BF::BitFireEngine::Load(Texture& texture, const wchar_t* fi
 
     if(loadAsynchronously)
     {
-        Thread::Run(LoadResourceAsync, &image);
+        ThreadRun(LoadResourceAsync, &image);
 
         return FileActionResult::Successful;
     }
@@ -1674,7 +1676,7 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
 
 
                 wchar_t filePathW[PathMaxSize];
-                Text::Copy(filePathA, PathMaxSize, filePathW, PathMaxSize);
+                TextCopyAW(filePathA, PathMaxSize, filePathW, PathMaxSize);
 
 
                 const FileActionResult result = Load(*loadedModel, filePathW, false);
@@ -1691,9 +1693,9 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
                     level.ModelList[modelCounter++] = loadedModel;
                     //-------------------
 
-                    rotation.X = Math::DegreeToRadians(rotation.X);
-                    rotation.Y = Math::DegreeToRadians(rotation.Y);
-                    rotation.Z = Math::DegreeToRadians(rotation.Z);
+                    rotation.X = MathDegreeToRadians(rotation.X);
+                    rotation.Y = MathDegreeToRadians(rotation.Y);
+                    rotation.Z = MathDegreeToRadians(rotation.Z);
               
                     Renderable* renderable = new Renderable();                
 
@@ -1760,7 +1762,7 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
 
                 sscanf(currentLineBuffer, "%s %s", dummyBuffer, filePathA);
 
-                Text::Copy(filePathA, PathMaxSize, filePathW, PathMaxSize);
+                TextCopyAW(filePathA, PathMaxSize, filePathW, PathMaxSize);
 
                 const FileActionResult fileActionResult = Load(*texture, filePathW, true);
                 const bool sucessful = fileActionResult == FileActionResult::Successful;
@@ -1779,7 +1781,7 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
                 sscanf(currentLineBuffer, "%s %s", dummyBuffer, filePathA);
 
                 wchar_t filePathW[PathMaxSize];
-                Text::Copy(filePathA, PathMaxSize, filePathW, PathMaxSize);
+                TextCopyAW(filePathA, PathMaxSize, filePathW, PathMaxSize);
 
                 Sound* sound = new Sound();
 
@@ -1793,7 +1795,7 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
                 sscanf(currentLineBuffer, "%s %s", dummyBuffer, filePathA);
 
                 wchar_t filePathW[PathMaxSize];
-                Text::Copy(filePathA, PathMaxSize, filePathW, PathMaxSize);
+                TextCopyAW(filePathA, PathMaxSize, filePathW, PathMaxSize);
 
                 Font* font = new Font();
 

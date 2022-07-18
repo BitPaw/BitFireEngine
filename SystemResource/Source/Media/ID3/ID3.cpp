@@ -1,6 +1,7 @@
 #include "ID3.h"
 
 #include <File/ByteStream.h>
+
 #include <Text/Text.h>
 
 #include "ID3Version.h"
@@ -15,11 +16,11 @@
 
 BF::ID3::ID3()
 {
-    Text::Clear(Title, ID3TitleSize);
-    Text::Clear(Artist, ID3ArtistSize);
-    Text::Clear(Album, ID3AlbumSize);
-    Text::Clear(Year, ID3YearSize);
-    Text::Clear(Comment, ID3CommentSize);
+    TextClearW(Title, ID3TitleSize);
+    TextClearW(Artist, ID3ArtistSize);
+    TextClearW(Album, ID3AlbumSize);
+    TextClearW(Year, ID3YearSize);
+    TextClearW(Comment, ID3CommentSize);
 
     Genre = -1;
     TrackID = -1;
@@ -175,7 +176,7 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
                 case BF::ID3Version::v2x4:
                 {
                     const size_t posCurrent = dataStream.DataSize;
-                    const size_t posExpectedMax = dataStream.DataCursorPosition + sizeOfDataSegment;
+                    const size_t posExpectedMax = dataStream.DataCursor + sizeOfDataSegment;
 
                     dataStream.DataSize = (posCurrent < posExpectedMax) ? posCurrent : posExpectedMax;
 
@@ -187,8 +188,8 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
                         unsigned short frameFlags = 0;
 
                         dataStream.Read(indentifier.Data, 4u);
-                        dataStream.Read(frameSize, Endian::Big);
-                        dataStream.Read(frameFlags, Endian::Big);
+                        dataStream.Read(frameSize, EndianBig);
+                        dataStream.Read(frameFlags, EndianBig);
 
                         const ID3v2xFrameTag frameTag = ConvertID3v2xFrameTag(indentifier.Value);
                         const bool unkownTag = frameTag == ID3v2xFrameTag::Invalid;
@@ -216,7 +217,7 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
                          );
 #endif
 
-                        size_t posAfterChunk = dataStream.DataCursorPosition + frameSize;
+                        size_t posAfterChunk = dataStream.DataCursor + frameSize;
 
 
 #if 0 // Skip
@@ -239,7 +240,7 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
 
                                 size_t insertOffset = 0;
 
-                                while(dataStream.DataCursorPosition < posAfterChunk) // There can be multible comments, but only one language.
+                                while(dataStream.DataCursor < posAfterChunk) // There can be multible comments, but only one language.
                                 {
                                     char stringEncoding[2];
 
@@ -281,7 +282,8 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
                             case BF::ID3v2xFrameTag::Popularimeter:
                             {
                                 const Byte__* emailToUser = dataStream.CursorCurrentAdress();
-                                const size_t emailToUserSize = Text::Length((char*)emailToUser); //frameSize - 6u;
+                                const size_t maximalToRead = dataStream.ReadPossibleSize() - 6u;
+                                const size_t emailToUserSize = TextLengthA((char*)emailToUser, maximalToRead);
                                 unsigned char rating = 0;
                                 // counter?
 
@@ -444,11 +446,11 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
                                 break;
                         }
 #endif
-                        if(dataStream.DataCursorPosition < posAfterChunk)
+                        if(dataStream.DataCursor < posAfterChunk)
                         {
                             printf("Unhandle chunk detected!\n");
 
-                            dataStream.DataCursorPosition = posAfterChunk;
+                            dataStream.DataCursor = posAfterChunk;
                         }
                     }
 
@@ -458,5 +460,5 @@ size_t BF::ID3::Parse(const unsigned char* data, const size_t dataSize)
         }
     }
 
-    return dataStream.DataCursorPosition;
+    return dataStream.DataCursor;
 }

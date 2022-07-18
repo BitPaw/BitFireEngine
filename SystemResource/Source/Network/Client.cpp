@@ -51,7 +51,7 @@ BF::SocketActionResult BF::Client::ConnectToServer(const char* ip, unsigned shor
                     EventCallBackSocket->OnConnectionEstablished(adressInfo);
                 }
 
-                CommunicationThread.Run(threadFunction, threadObject);
+                CommunicationThread = ThreadRun(threadFunction, threadObject);
 
                 wasSucessful = true;
                 break;

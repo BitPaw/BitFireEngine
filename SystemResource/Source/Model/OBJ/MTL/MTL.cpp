@@ -40,7 +40,7 @@ BF::FileActionResult BF::MTL::Load(const char* filePath)
 	File file;
 
 	{
-		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
 		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
 		if(!sucessful)
@@ -61,7 +61,7 @@ BF::FileActionResult BF::MTL::Load(const wchar_t* filePath)
 	File file;
 
 	{
-		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
 		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
 		if(!sucessful)
@@ -117,7 +117,7 @@ BF::FileActionResult BF::MTL::Load(const unsigned char* data, const size_t dataS
 
 		const char* dataPoint = (char*)byteStream.CursorCurrentAdress();
 		const size_t maxSize = byteStream.ReadPossibleSize();
-		const size_t lineSize = Text::LengthUntil(dataPoint, maxSize, '\n');
+		const size_t lineSize = TextLengthUntilA(dataPoint, maxSize, '\n');
 
 		switch(lineType)
 		{
@@ -133,20 +133,20 @@ BF::FileActionResult BF::MTL::Load(const unsigned char* data, const size_t dataS
 				const char internalText[] = "<internal>";
 				const size_t internalTextSize = sizeof(internalText);
 
-				Text::Copy(internalText, internalTextSize, material->TextureFilePath, MTLFilePath);
+				TextCopyA(internalText, internalTextSize, material->TextureFilePath, MTLFilePath);
 
-				Text::Parse(dataPoint, lineSize, "s", material->Name);
+				TextParseA(dataPoint, lineSize, "s", material->Name);
 
 				break;
 			}
 			case BF::MTLLineType::Texture:
 			{
-				Text::Parse(dataPoint, lineSize, "s", material->TextureFilePath);
+				TextParseA(dataPoint, lineSize, "s", material->TextureFilePath);
 				break;
 			}		
 			case BF::MTLLineType::Weight:
 			{
-				Text::Parse(dataPoint, lineSize, "f", &material->Weight);
+				TextParseA(dataPoint, lineSize, "f", &material->Weight);
 				break;
 			}
 			case BF::MTLLineType::Ambient:
@@ -172,18 +172,18 @@ BF::FileActionResult BF::MTL::Load(const unsigned char* data, const size_t dataS
 						break;
 				}
 
-				Text::Parse(dataPoint, lineSize, "fff", &colorVector[0], &colorVector[1], &colorVector[2]);
+				TextParseA(dataPoint, lineSize, "fff", &colorVector[0], &colorVector[1], &colorVector[2]);
 
 				break;
 			}
 			case BF::MTLLineType::Dissolved:
 			{
-				Text::Parse(dataPoint, lineSize, "f", &material->Dissolved);
+				TextParseA(dataPoint, lineSize, "f", &material->Dissolved);
 				break;
 			}
 			case BF::MTLLineType::Density:
 			{
-				Text::Parse(dataPoint, lineSize, "f", &material->Density);
+				TextParseA(dataPoint, lineSize, "f", &material->Density);
 				break;
 			}
 			case BF::MTLLineType::Illumination:
@@ -191,7 +191,7 @@ BF::FileActionResult BF::MTL::Load(const unsigned char* data, const size_t dataS
 				IlluminationMode mode = IlluminationMode::None;
 				int number = -1;
 
-				Text::Parse(dataPoint, lineSize, "i", &number);
+				TextParseA(dataPoint, lineSize, "i", &number);
 
 				switch(number)
 				{

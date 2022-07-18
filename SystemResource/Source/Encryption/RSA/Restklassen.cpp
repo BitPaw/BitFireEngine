@@ -17,7 +17,7 @@ int Restklasse::set_Generator(int mod)
     {
         for (int j = 0; j <= mod - 1; j++)
         {
-            if (all[((int)BF::Math::Power((double)i, (double)j) % mod)] == -1)
+            if (all[((int)MathPower((double)i, (double)j) % mod)] == -1)
             {
                 all[j] = i;
             }

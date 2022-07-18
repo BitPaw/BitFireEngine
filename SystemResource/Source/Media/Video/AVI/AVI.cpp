@@ -8,7 +8,7 @@ BF::FileActionResult BF::AVI::Load(const char* filePath)
     File file;
     
     {
-        const FileActionResult loadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+        const FileActionResult loadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
 
         if(loadingResult != FileActionResult::Successful)
         {
@@ -30,7 +30,7 @@ BF::FileActionResult BF::AVI::Load(const char* filePath)
 
     unsigned int size = 0;
   
-    file.Read(size, Endian::Big);
+    file.Read(size, EndianBig);
 
     return FileActionResult::Successful;
 }

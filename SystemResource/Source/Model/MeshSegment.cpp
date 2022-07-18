@@ -1,6 +1,6 @@
 #include "MeshSegment.h"
 
-#include <Hardware/Memory/Memory.h>
+#include <Memory/Memory.h>
 
 BF::MeshSegment::MeshSegment()
 {
@@ -14,5 +14,5 @@ BF::MeshSegment::MeshSegment()
 
 BF::MeshSegment::~MeshSegment()
 {
-	Memory::Release(IndexDataList, IndexDataListSize);
+	MemoryRelease(IndexDataList, IndexDataListSize);
 }

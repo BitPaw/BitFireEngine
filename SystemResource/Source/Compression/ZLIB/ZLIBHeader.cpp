@@ -77,7 +77,7 @@ void BF::ZLIBHeader::Parse(unsigned char compressionFormatByte, unsigned char fl
 
         assert(CompressionInfo <= 7u);
 
-        WindowSize = Math::Power(2, CompressionInfo + 8);      
+        WindowSize = MathPower(2, CompressionInfo + 8);      
     }
     //-------------------------------------------------------------------------
 
@@ -97,7 +97,7 @@ void BF::ZLIBHeader::Serialize(unsigned char& compressionFormatByte, unsigned ch
 {
     //---<Parse First Byte__ - Compression Info>---------------------------------
     {
-        unsigned char WindowSizeValue = Math::LogarithmusBase2(WindowSize) - 8;
+        unsigned char WindowSizeValue = MathLogarithmusBase2(WindowSize) - 8;
         unsigned char compressionMethodValue = ConvertCompressionMethod(CompressionMethod);
 
         compressionFormatByte = compressionMethodValue << 4; // 0b11110000

@@ -24,7 +24,7 @@ BF::FileActionResult BF::OGG::Load(const char* filePath)
 	File file;
 
 	{
-		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
 		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
 		if(!sucessful)
@@ -45,7 +45,7 @@ BF::FileActionResult BF::OGG::Load(const wchar_t* filePath)
 	File file;
 
 	{
-		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
 		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
 		if(!sucessful)
@@ -86,10 +86,10 @@ BF::FileActionResult BF::OGG::Load(const unsigned char* fileData, const size_t f
 
 		dataStream.Read(page.Version);
 		dataStream.Read(page.HeaderType);
-		dataStream.Read(page.GranulePosition, Endian::Little);
-		dataStream.Read(page.SerialNumber, Endian::Little);
-		dataStream.Read(page.SequenceNumber, Endian::Little);
-		dataStream.Read(page.CRC32CheckSum, Endian::Little);
+		dataStream.Read(page.GranulePosition, EndianLittle);
+		dataStream.Read(page.SerialNumber, EndianLittle);
+		dataStream.Read(page.SequenceNumber, EndianLittle);
+		dataStream.Read(page.CRC32CheckSum, EndianLittle);
 		dataStream.Read(page.PageSegments);
 
 		Byte__ segmentSizeList[0xFF];

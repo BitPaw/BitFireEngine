@@ -17,13 +17,13 @@
 #include <Entity/Sign.h>
 #include <Physic/GravityCube.h>
 #include <Shader/ShaderProgram.h>
-#include <Media/Font/FNT/FNT.h>
+#include <File/Format/FNT/FNT.h>
 
 using namespace BF;
 
 float _deltaTime = 0;
 
-BF::FNT fnt;
+FNT fnt;
 BF::Font font;
 BF::Texture testTextue;
 
@@ -333,13 +333,13 @@ void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
 
 void Cleaved::CleavedGameSystem::OnUpdateUI()
 {
-    //wsprintfW(_dialogBox.Content.TextContent, L"FPS: %4i", (BF::Math::Ceiling(1 / _deltaTime)));
+    //wsprintfW(_dialogBox.Content.TextContent, L"FPS: %4i", (BF::MathCeiling(1 / _deltaTime)));
 
     //text.UpdateText();
 
  // wsprintf_s(text.TextContent, "FPS: %4i", );
 
-  // printf("FPS: %4i", (BF::Math::Ceiling(1 / _deltaTime));
+  // printf("FPS: %4i", (BF::MathCeiling(1 / _deltaTime));
 
    // Vector4<float> position = _camera->MatrixModel.CurrentPosition();
 

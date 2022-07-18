@@ -171,7 +171,7 @@ unsigned int BF::OpenGL::ShaderCompile(unsigned int type, char* shaderString)
                 message
             );
 
-            Memory::Release(message, lengh);
+            MemoryRelease(message, lengh);
 
             glDeleteShader(id);
 

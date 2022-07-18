@@ -12,7 +12,7 @@ BF::WAV::WAV()
 
 BF::WAV::~WAV()
 {
-	Memory::Release(SoundData, SoundDataSize);
+	MemoryRelease(SoundData, SoundDataSize);
 }
 
 BF::FileActionResult BF::WAV::Load(const char* filePath)
@@ -20,7 +20,7 @@ BF::FileActionResult BF::WAV::Load(const char* filePath)
 	File file;
 
 	{
-		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
 		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
 		if(!sucessful)
@@ -41,7 +41,7 @@ BF::FileActionResult BF::WAV::Load(const wchar_t* filePath)
 	File file;
 
 	{
-		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
 		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
 		if(!sucessful)
@@ -60,7 +60,7 @@ BF::FileActionResult BF::WAV::Load(const wchar_t* filePath)
 BF::FileActionResult BF::WAV::Load(const unsigned char* fileData, const size_t fileDataSize)
 {
 	ByteStream dataStream(fileData, fileDataSize);
-	Endian endian = Endian::Invalid;
+	Endian endian = EndianInvalid;
 
 	// RIFF
 	{
@@ -103,7 +103,7 @@ BF::FileActionResult BF::WAV::Load(const unsigned char* fileData, const size_t f
 
 		if(isRIFFListChunk)
 		{
-			dataStream.DataCursorPosition += 30u;
+			dataStream.DataCursor += 30u;
 		}
 		else
 		{
@@ -135,7 +135,7 @@ BF::FileActionResult BF::WAV::Save(const wchar_t* filePath)
 	// Note: The sample data must end on an even byte boundary. Whatever that means. 
 	File fileStream;
 
-	const Endian endian = Endian::Little;
+	const Endian endian = EndianLittle;
 	unsigned int riffSize = 0;
 
 	fileStream.Write("RIFF", 4);
@@ -170,7 +170,7 @@ BF::FileActionResult BF::WAV::ConvertTo(Sound& sound)
 	sound.DataSize = SoundDataSize;
 	sound.Data = Memory::Allocate<unsigned char>(SoundDataSize);
 
-	Memory::Copy(sound.Data, SoundData, SoundDataSize);
+	MemoryCopy(SoundData, SoundDataSize, sound.Data, sound.DataSize);
 
 	return FileActionResult::Successful;
 }

@@ -9,7 +9,7 @@ BF::FileActionResult BF::M4A::Load(const char* filePath)
 	File file;
 
 	{
-		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
 		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
 		if(!sucessful)
@@ -30,7 +30,7 @@ BF::FileActionResult BF::M4A::Load(const wchar_t* filePath)
 	File file;
 
 	{
-		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
 		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
 		if(!sucessful)
@@ -57,10 +57,10 @@ BF::FileActionResult BF::M4A::Load(const unsigned char* fileData, const size_t f
 		unsigned int chunkSize = 0;
 		ClusterInt typePrimaryID;
 
-		dataStream.Read(chunkSize, Endian::Big);
+		dataStream.Read(chunkSize, EndianBig);
 		dataStream.Read(typePrimaryID.Data, 4u);
 
-		const size_t positionPrediction = dataStream.DataCursorPosition + chunkSize - 8;
+		const size_t positionPrediction = dataStream.DataCursor + chunkSize - 8;
 		const M4AChunkID typePrimary = ConvertM4AChunkID(typePrimaryID.Value);
 
 #if M4ADebugLog
@@ -83,7 +83,7 @@ BF::FileActionResult BF::M4A::Load(const unsigned char* fileData, const size_t f
 				char isoSignature[8]; // isom3gp4
 
 				dataStream.Read(chunk.TypeSub, 4);
-				dataStream.Read(sizeB, Endian::Big);
+				dataStream.Read(sizeB, EndianBig);
 				dataStream.Read(isoSignature, 8u);
 
 				break;
@@ -143,15 +143,15 @@ BF::FileActionResult BF::M4A::Load(const unsigned char* fileData, const size_t f
 			}
 		}		
 
-		if(dataStream.DataCursorPosition < positionPrediction)
+		if(dataStream.DataCursor < positionPrediction)
 		{
-			const unsigned int offset = positionPrediction - dataStream.DataCursorPosition;
+			const unsigned int offset = positionPrediction - dataStream.DataCursor;
 
 #if M4ADebugLog
 			printf("[M4A] Illegal allignment detected! Moving %i Bytes\n", offset);
 #endif
 
-			dataStream.DataCursorPosition = positionPrediction;
+			dataStream.DataCursor = positionPrediction;
 		}
 	}
 

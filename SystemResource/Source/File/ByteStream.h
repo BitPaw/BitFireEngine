@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-#include "Endian.h"
+#include <File/ParsingStream.h>
 
 #include <Container/ClusterShort.h>
 #include <Container/ClusterInt.h>
@@ -14,15 +14,9 @@
 
 namespace BF
 {
-	struct ByteStream
+	struct ByteStream : public ParsingStream
 	{
 		public:
-		//---------------------------------------------------------------------
-		Byte__* Data;
-		size_t DataSize;
-		size_t DataCursorPosition;
-		//---------------------------------------------------------------------
-
 		//---------------------------------------------------------------------
 		ByteStream();
 		ByteStream(void* data, const size_t dataSize);
@@ -31,10 +25,10 @@ namespace BF
 		// A write operation will be illegal to do, a crash may accur. 
 		ByteStream(const void* data, const size_t dataSize);
 
-		size_t ReadPossibleSize() const;
-		bool IsAtEnd() const;
+		size_t ReadPossibleSize();
+		bool IsAtEnd();
 
-		void DataSet(const void* data, const size_t dataSize, const size_t cursorPosition = 0);
+		void DataSet(void* data, const size_t dataSize, const size_t cursorPosition = 0);
 		
 		void CursorToBeginning();
 		Byte__* CursorCurrentAdress();

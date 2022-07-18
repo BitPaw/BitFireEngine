@@ -2,7 +2,7 @@
 
 #include "ControllerData.h"
 
-#include <Window/Window.h>
+#include <Window/WindowP.h>
 
 #define ControllerID unsigned int
 

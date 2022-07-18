@@ -156,7 +156,7 @@ void BF::SBPClient::ConnectToServer(const char* ip, const unsigned short port)
 
 	//if(result == SBPResult::PackageAnswered)
 	//{
-		//printf("[Benchmark] Package answered! took %.2lfms", x*1000);
+	//	//printf("[Benchmark] Package answered! took %.2lfms", x*1000);
 	//}
 }
 
@@ -179,7 +179,7 @@ void BF::SBPClient::RegisterMe()
 
 void BF::SBPClient::SendText(const char* text)
 {
-
+	
 }
 
 void BF::SBPClient::SendFile(const char* filePath)
@@ -201,7 +201,7 @@ void BF::SBPClient::SendFile(const char* filePath)
 			inputBuffer,
 			inputBufferSize,
 			outputBuffer,
-			outputBufferSize,
+			outputBufferSize,7
 			SourceMe,
 			TargetServer,
 			SBPData::PackageCreateConnectionRequest

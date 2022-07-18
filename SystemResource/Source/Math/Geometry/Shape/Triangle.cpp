@@ -17,7 +17,7 @@ BF::Triangle::Triangle(Vector2<float> a, Vector2<float> b, Vector2<float> c)
 
 float BF::Triangle::Height()
 {
-	return Math::PythagorasReverse(LengthOfSideA(), Width());
+	return MathPythagorasReverse(LengthOfSideA(), Width());
 }
 
 float BF::Triangle::Width()

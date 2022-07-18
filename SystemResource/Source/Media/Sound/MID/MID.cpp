@@ -26,7 +26,7 @@ BF::FileActionResult BF::MID::Load(const char* filePath)
 	File file;
 
 	{
-		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
 		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
 		if(!sucessful)
@@ -47,7 +47,7 @@ BF::FileActionResult BF::MID::Load(const wchar_t* filePath)
 	File file;
 
 	{
-		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
 		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
 		if(!sucessful)
@@ -82,10 +82,10 @@ BF::FileActionResult BF::MID::Load(const unsigned char* fileData, const size_t f
 			}
 		}
 
-		dataStream.Read(chunkLength, Endian::Big);
-		dataStream.Read(Format, Endian::Big);
-		dataStream.Read(TrackListSize, Endian::Big);
-		dataStream.Read(MusicSpeed, Endian::Big);
+		dataStream.Read(chunkLength, EndianBig);
+		dataStream.Read(Format, EndianBig);
+		dataStream.Read(TrackListSize, EndianBig);
+		dataStream.Read(MusicSpeed, EndianBig);
 	}
 
 	if(TrackListSize == 0)
@@ -112,7 +112,7 @@ BF::FileActionResult BF::MID::Load(const unsigned char* fileData, const size_t f
 			}
 		}
 
-		dataStream.Read(chunkLength, Endian::Big);
+		dataStream.Read(chunkLength, EndianBig);
 
 		track.ID = i;
 		track.EventData = Memory::Allocate<Byte__>(chunkLength);
@@ -141,10 +141,10 @@ BF::FileActionResult BF::MID::Save(const wchar_t* filePath)
 	const char midiTagData[] = MIDITrackHeaderID;
 
 	file.WriteToDisk(midiTagData, 4u); // "MThd"
-	file.WriteToDisk(6u, Endian::Big);
-	file.WriteToDisk(Format, Endian::Big);
-	file.WriteToDisk(TrackListSize, Endian::Big);
-	file.WriteToDisk(MusicSpeed, Endian::Big);
+	file.WriteToDisk(6u, EndianBig);
+	file.WriteToDisk(Format, EndianBig);
+	file.WriteToDisk(TrackListSize, EndianBig);
+	file.WriteToDisk(MusicSpeed, EndianBig);
 
 	for (size_t i = 0; i < TrackListSize; i++)
 	{
@@ -153,7 +153,7 @@ BF::FileActionResult BF::MID::Save(const wchar_t* filePath)
 		MIDITrack& track = TrackList[i];
 
 		file.WriteToDisk(midiTrackTag, 4u);
-		file.WriteToDisk(track.EventDataSize, Endian::Big);
+		file.WriteToDisk(track.EventDataSize, EndianBig);
 		file.WriteToDisk(track.EventData, track.EventDataSize);
 	}	
 

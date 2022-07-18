@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Shape.h"
-#include "../../Math.h"
+#include <Math/Math.h>
 #include "../Vector2.hpp"
 
 namespace BF

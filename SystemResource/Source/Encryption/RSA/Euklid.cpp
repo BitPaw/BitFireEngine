@@ -9,7 +9,7 @@
 
 Euklid::Euklid(int a, int b)
 {
-    int maxEntries = a < b ? BF::Math::LogarithmusBase2(a) + 1 : BF::Math::LogarithmusBase2(b) + 1;
+    int maxEntries = a < b ? MathLogarithmusBase2(a) + 1 : MathLogarithmusBase2(b) + 1;
     liste = BF::Memory::Allocate<Euklid_element>(maxEntries);
     Euklid_element element;
 
@@ -55,7 +55,7 @@ void Euklid::print()
 {
     std::cout << "Int a = " << liste[0].a << " und Int b = " << liste[0].b << " bildet sich wie folgt.\n";
     std::cout << "| a | b | mal | rest | x | y |\n";
-    int limit = ((int)(BF::Math::LogarithmusBase2(liste[0].b) + 1));
+    int limit = ((int)(BF::MathLogarithmusBase2(liste[0].b) + 1));
     for (int i = 0; i < limit && (liste[i - 1].remainder != 0 || i == 0); i++)
     {
         std::cout << "| " << liste[i].a << " | " << liste[i].b << " | " << liste[i].times << " | " << liste[i].remainder << " | " << liste[i].x << " | " << liste[i].y << " |\n";

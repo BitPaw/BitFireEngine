@@ -1,6 +1,6 @@
 #include "UIText.h"
 
-#include <Media/Font/FNT/FNT.h>
+#include <File/Format/FNT/FNT.h>
 #include <Math/Interpolate.h>
 #include <Text/Text.h>
 
@@ -54,7 +54,7 @@ void BF::UIText::SetText(const char* text)
 		return;
 	}
 
-	TextSizeCurrent = Text::Copy(text, TextSizeMax, TextContent, TextSizeMax);
+	TextSizeCurrent = TextCopyAW(text, TextSizeMax, TextContent, TextSizeMax);
 }
 
 void BF::UIText::SetText(const wchar_t* text)
@@ -64,7 +64,7 @@ void BF::UIText::SetText(const wchar_t* text)
 		return;
 	}
 
-	TextSizeCurrent = Text::Copy(text, TextSizeMax, TextContent, TextSizeMax);
+	TextSizeCurrent = TextCopyW(text, TextSizeMax, TextContent, TextSizeMax);
 }
 
 void BF::UIText::UpdateText()

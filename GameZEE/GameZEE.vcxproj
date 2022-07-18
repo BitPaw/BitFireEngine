@@ -37,6 +37,9 @@
     <ProjectReference Include="..\BitFireEngine\BitFireEngine.vcxproj">
       <Project>{1420d6d2-264b-4789-9adf-2fd0093760ad}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\PXUltima\PXUltima.vcxproj">
+      <Project>{7d027ed8-ed69-414c-a832-40cd80be72d7}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\SystemResource\SystemResource.vcxproj">
       <Project>{398c5630-9092-486f-920c-c9992f8b7f6c}</Project>
     </ProjectReference>
@@ -144,7 +147,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;GLEW_NO_GLU;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine/Source;$(SolutionDir)Dependencies/include;$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine/Source;$(SolutionDir)PXUltima/Source;$(SolutionDir)Dependencies/include;$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -163,10 +166,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;GLEW_NO_GLU;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine/Source;$(SolutionDir)Dependencies/include;$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine/Source;$(SolutionDir)PXUltima/Source;$(SolutionDir)Dependencies/include;$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -183,7 +185,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;GLEW_NO_GLU;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine/Source;$(SolutionDir)PXUltima/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -202,10 +204,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;GLEW_NO_GLU;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine/Source;$(SolutionDir)Dependencies/include;$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine/Source;$(SolutionDir)PXUltima/Source;$(SolutionDir)Dependencies/include;$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -223,7 +224,7 @@
       <ShowProgress>LinkVerbose</ShowProgress>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine/Source;$(SolutionDir)Dependencies/include;$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine/Source;$(SolutionDir)PXUltima/Source;$(SolutionDir)Dependencies/include;$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PreprocessorDefinitions>GLEW_STATIC;GLEW_NO_GLU;_USING_V110_SDK71_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -238,7 +239,7 @@
       <ShowProgress>LinkVerbose</ShowProgress>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine/Source;$(SolutionDir)Dependencies/include;$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine/Source;$(SolutionDir)PXUltima/Source;$(SolutionDir)Dependencies/include;$(SolutionDir)SystemResource/Source;$(SolutionDir)BitFireEngine\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PreprocessorDefinitions>GLEW_STATIC;GLEW_NO_GLU;_USING_V110_SDK71_;%(PreprocessorDefinitions)</PreprocessorDefinitions>

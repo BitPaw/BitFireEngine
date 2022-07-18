@@ -32,7 +32,7 @@ void BF::FilePath::Splitt(const char* filePath)
 {
 	wchar_t filePathW[PathMaxSize];
 
-	Text::Copy(filePath, PathMaxSize, filePathW, PathMaxSize);
+	TextCopyAW(filePath, PathMaxSize, filePathW, PathMaxSize);
 
 	FilePath::Splitt
 	(
@@ -111,8 +111,8 @@ void BF::FilePath::Splitt(const char* fullPath, size_t fullPathMaxSize, char* dr
 
 		if(isDot)
 		{
-			Text::Copy(extension + i, extensionMaxSize, fileNameCache, FileNameMaxSize);
-			Text::Copy(fileNameCache, FileNameMaxSize, extension, extensionMaxSize);
+			TextCopyA(extension + i, extensionMaxSize, fileNameCache, FileNameMaxSize);
+			TextCopyA(fileNameCache, FileNameMaxSize, extension, extensionMaxSize);
 			break;
 		}
 	}
@@ -173,8 +173,8 @@ void BF::FilePath::Splitt(const wchar_t* fullPath, size_t fullPathMaxSize, wchar
 
 		if(isDot)
 		{
-			Text::Copy(extension + i + 1, extensionMaxSize, extensionCache, FileNameMaxSize);
-			Text::Copy(extensionCache, FileNameMaxSize, extension, extensionMaxSize);
+			TextCopyW(extension + i + 1, extensionMaxSize, extensionCache, FileNameMaxSize);
+			TextCopyW(extensionCache, FileNameMaxSize, extension, extensionMaxSize);
 			break;
 		}
 	}
@@ -190,10 +190,10 @@ void BF::FilePath::GetFileExtension(const char* filePath, char* fileExtension)
 
 bool BF::FilePath::ExtensionEquals(const char* extension)
 {
-	return Text::CompareIgnoreCase(Extension, extension, ExtensionMaxSize);
+	return TextCompareIgnoreCaseWA(Extension, ExtensionMaxSize, extension, ExtensionMaxSize);
 }
 
 bool BF::FilePath::ExtensionEquals(const wchar_t* extension)
 {
-	return Text::CompareIgnoreCase(Extension, extension, ExtensionMaxSize);
+	return TextCompareIgnoreCaseW(Extension, ExtensionMaxSize, extension, ExtensionMaxSize);
 }

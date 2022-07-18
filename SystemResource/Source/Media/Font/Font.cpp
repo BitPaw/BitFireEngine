@@ -1,6 +1,7 @@
 #include "Font.h"
 
-#include "FNT/FNT.h"
+#include <File/Format/FNT/FNT.h>
+
 #include "OTF/OTF.h"
 #include "TTF/TTF.h"
 
@@ -11,7 +12,7 @@ BF::FileActionResult BF::Font::Load(const char* filePath)
     File file;
 
     {
-        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
         const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
         if(!sucessful)
@@ -62,12 +63,12 @@ BF::FileActionResult BF::Font::Load(const unsigned char* fileData, const size_t 
             FNT* fnt = new FNT();
 
             {
-                const FileActionResult fileActionResult = fnt->Load(fileData, fileDataSize);
-                const bool sucessful = fileActionResult == FileActionResult::Successful;
+                const unsigned char fileActionResult = FNTLoad(fnt, fileData, fileDataSize);
+                const bool sucessful = fileActionResult == 0;
 
                 if(sucessful)
                 {
-                    fnt->ConvertTo(*this);
+                    //fnt->ConvertTo(*this);
 
                     return FileActionResult::Successful;
                 }
@@ -132,8 +133,8 @@ BF::FileActionResult BF::Font::Save(const wchar_t* filePath, FontFormat fontForm
         case BF::FontFormat::FormatFNT:
         {
             FNT fnt;
-            fnt.ConvertFrom(*this);
-            fnt.Save(filePath);
+            //fnt.ConvertFrom(*this);
+            //fnt.Save(filePath);
             break;
         }       
         case BF::FontFormat::FormatOFT:

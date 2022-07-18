@@ -13,9 +13,9 @@
 #include "ByteStream.h"
 
 #include <ErrorCode.h>
-#include <OS/OSDefine.h>
+#include <OS/OSVersion.h>
 #include <File/FilePersistence.hpp>
-#include <Hardware/Memory/MemoryProtectionMode.h>
+#include <Memory/Memory.h>
 
 #define FileLineBufferSize 2048
 

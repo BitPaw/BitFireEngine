@@ -2,6 +2,7 @@
 
 #include <File/File.h>
 #include <Text/Text.h>
+
 #include <Hardware/Memory/Memory.h>
 
 #include <cassert>
@@ -12,7 +13,7 @@ BF::OBJ::OBJ()
     const char na[] = "[N/A]";
     const size_t naSize = sizeof(na);
 
-    Text::Copy(na, naSize, Name, OBJNameSize);
+    TextCopyAW(na, naSize, Name, OBJNameSize);
 
     VertexStructureSize = 0;
 
@@ -177,7 +178,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
     File file;
 
     {
-        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
         const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
         if(!sucessful)
@@ -189,7 +190,7 @@ BF::FileActionResult BF::OBJ::Load(const char* filePath)
     {
         wchar_t filePathW[PathMaxSize];
 
-        Text::Copy(filePath, PathMaxSize, filePathW, PathMaxSize);
+        TextCopyAW(filePath, PathMaxSize, filePathW, PathMaxSize);
 
         const FileActionResult fileParsingResult = Load(file.Data, file.DataSize, filePathW);
 
@@ -202,7 +203,7 @@ BF::FileActionResult BF::OBJ::Load(const wchar_t* filePath)
     File file;
 
     {
-        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
         const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
         if(!sucessful)
@@ -248,7 +249,7 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
 
         do
         {
-            const Byte__* currentLine = dataStream.CursorCurrentAdress();
+            const char* currentLine = (char*)dataStream.CursorCurrentAdress();
             const unsigned short lineTagID = MakeShort(currentLine[0], currentLine[1]);
             const OBJLineCommand command = PeekCommandLine(lineTagID);
 
@@ -286,7 +287,7 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
 
                 case OBJLineCommand::FaceElement:
                 {
-                    const size_t amount = Text::CountUntil(currentLine + 2, dataStream.ReadPossibleSize(), '/', '\n') / 2;
+                    const size_t amount = TextCountUntilA(currentLine + 2, dataStream.ReadPossibleSize(), '/', '\n') / 2;
 
                     currentSegmentData.Face += amount;
 
@@ -374,7 +375,7 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
 
             const char* dataPoint = (char*)dataStream.CursorCurrentAdress();
             const size_t maximalSize = dataStream.ReadPossibleSize();
-            const size_t currentLineLength = Text::LengthUntil(dataPoint, maximalSize, '\n');
+            const size_t currentLineLength = TextLengthUntilA(dataPoint, maximalSize, '\n');
 
             OBJElement& currentElemtent = *elemtentAdress;
 
@@ -389,7 +390,7 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
 
                     // Parse materialPath
                     {
-                        Text::Parse
+                        TextParseA
                         (
                             dataPoint,
                             currentLineLength,
@@ -398,7 +399,8 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
                         );
                     }
 
-                    Text::Copy(materialFilePathA, PathMaxSize, materialFilePathW, PathMaxSize);
+                    TextCopyAW(materialFilePathA, PathMaxSize, materialFilePathW, PathMaxSize);
+                   
                     File::PathSwapFile(fileName, materialFilePathFullW, materialFilePathW);
 
                     {
@@ -420,7 +422,7 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
                     char usedMaterialName[MTLNameSize];
                     unsigned int materialID = -1;
 
-                    Text::Parse
+                    TextParseA
                     (
                         dataPoint,
                         currentLineLength,
@@ -436,9 +438,9 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
                         for(size_t j = 0; j < materialListSize; ++j)
                         {
                             const MTLMaterial& material = mtl.MaterialList[j];
-                            const size_t matertalALength = Text::Length(material.Name);
-                            const size_t matertalBLength = Text::Length(usedMaterialName);
-                            const bool isSameName = Text::Compare(material.Name, matertalALength, usedMaterialName, matertalBLength);
+                            const size_t matertalALength = TextLengthA(material.Name, MTLNameSize);
+                            const size_t matertalBLength = TextLengthA(usedMaterialName, MTLNameSize);
+                            const bool isSameName = TextCompareA(material.Name, matertalALength, usedMaterialName, matertalBLength);
 
                             if(isSameName)
                             {
@@ -486,7 +488,7 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
 
                     materialInfoIndex = 0;
                    
-                    Text::Copy(dataPoint, currentLineLength, currentElemtent.Name, OBJElementNameLength);
+                    TextCopyA(dataPoint, currentLineLength, currentElemtent.Name, OBJElementNameLength);
                     break;
                 }
 
@@ -513,9 +515,9 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
 
                     assert(currentVectorValue);
 
-                    Text::Parse
+                    TextParseA
                     (
-                        (char*)dataPoint,
+                        dataPoint,
                         currentLineLength,
                         "fff",
                         &currentVectorValue->X,
@@ -529,7 +531,7 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
                 {
                     Vector2<float>& point = currentElemtent.TextureCoordinateList[currentTextureElement++];
 
-                    Text::Parse
+                    TextParseA
                     (
                         (char*)dataPoint,
                         currentLineLength,
@@ -555,9 +557,9 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
                     {
                         case 3:
                         {
-                            Text::Parse
+                            TextParseA
                             (
-                                (char*)dataPoint,
+                                dataPoint,
                                 currentLineLength,
                                 "u§u§uu§u§uu§u§u",
                                 &vectorA.X, &vectorA.Y, &vectorA.Z,
@@ -568,14 +570,12 @@ BF::FileActionResult BF::OBJ::Load(const unsigned char* data, const size_t dataS
                         }
                         case 4:
                         {
-                            const Byte__* dataPoint = dataStream.CursorCurrentAdress();
-                            const size_t readableSize = dataStream.ReadPossibleSize();
                             Vector3<unsigned int>& vectorD = currentElemtent.FaceElementList[currentFaceElement++];
 
-                            Text::Parse
+                            TextParseA
                             (
-                                (char*)dataPoint,
-                                readableSize,
+                                dataPoint,
+                                currentLineLength,
                                 "u§u§u§uu§u§u§uu§u§u§uu§u§u§u",
                                 &vectorA.X, &vectorA.Y, &vectorA.Z,
                                 &vectorB.X, &vectorB.Y, &vectorB.Z,
@@ -629,13 +629,15 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
             const MTLMaterial& mtlMaterial = mtl.MaterialList[materialIndex];
             Material& material = model.MaterialList[materialIndex];
 
-            Text::Copy(mtlMaterial.Name, MTLNameSize, material.Name, MaterialNameLength);
-            Text::Copy(mtlMaterial.TextureFilePath, MTLFilePath, material.TextureFilePath, MaterialTextureFilePathLength);
+            TextCopyAW(mtlMaterial.Name, MTLNameSize, material.Name, MaterialNameLength);
+            TextCopyAW(mtlMaterial.TextureFilePath, MTLFilePath, material.TextureFilePath, MaterialTextureFilePathLength);
                        
-            Memory::Copy(material.Ambient, mtlMaterial.Ambient, 3 * sizeof(float));
-            Memory::Copy(material.Diffuse, mtlMaterial.Diffuse, 3 * sizeof(float));
-            Memory::Copy(material.Specular, mtlMaterial.Specular, 3 * sizeof(float));
-            Memory::Copy(material.Emission, mtlMaterial.Emission, 3 * sizeof(float));
+            const size_t trippleFloat = 3u * sizeof(float);
+
+            MemoryCopy(mtlMaterial.Ambient, trippleFloat, material.Ambient, trippleFloat);
+            MemoryCopy(mtlMaterial.Diffuse, trippleFloat, material.Diffuse, trippleFloat);
+            MemoryCopy(mtlMaterial.Specular, trippleFloat, material.Specular, trippleFloat);
+            MemoryCopy(mtlMaterial.Emission, trippleFloat, material.Emission, trippleFloat);
         }
     }
 
@@ -662,7 +664,7 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
         const size_t faceElementListSize = element.FaceElementList.Size();
         const size_t verexDataSize = faceElementListSize * (3 + 3 + 4 + 2);
 
-        Text::Copy(element.Name, OBJElementNameLength, meshSegment.Name, MeshSegmentNameLength);          
+        TextCopyAW(element.Name, OBJElementNameLength, meshSegment.Name, MeshSegmentNameLength);          
 
         mesh.VertexDataListSize = verexDataSize;
         mesh.VertexDataList = Memory::Allocate<float>(verexDataSize);
@@ -767,7 +769,7 @@ BF::FileActionResult BF::OBJ::ConvertTo(Model& model)
 
             meshSegment.IndexDataList[i] = i;
 
-            Memory::Copy(vertexDataArray + vertecDataIndex, data, sizeof(float) * dataSize);
+            MemoryCopy(data, sizeof(float) * dataSize, vertexDataArray + vertecDataIndex, -1);
 
             vertecDataIndex += dataSize;        
         }

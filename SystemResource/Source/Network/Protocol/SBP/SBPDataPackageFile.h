@@ -5,7 +5,7 @@
 #include "SBPDataPackage.h"
 
 #include <File/FilePath.h>
-#include <Text/TextFormat.h>
+#include <Text/Text.h>
 
 #define SBPDataPackageFileID MakeInt('F', 'i', 'l', 'e')
 

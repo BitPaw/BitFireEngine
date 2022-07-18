@@ -32,7 +32,7 @@
 
 //#include "../Resource/Sprite.h"
 
-#include <Window/Window.h>
+#include <Window/WindowP.h>
 
 #include "../Level/Level.h"
 #include "../Physic/Collider.h"
@@ -47,7 +47,7 @@ namespace BF
 		private:
 		//---[Elements}---------------------------------
 		StopWatch _stopWatch;
-        Window _mainWindow;
+        WindowP _mainWindow;
 		float _deltaTime;
         static BitFireEngine* _instance;
 
@@ -90,7 +90,7 @@ namespace BF
         static void OnMouseButton(const MouseButton mouseButton, const ButtonState buttonState);
         static void OnMouseMove(const double positionX, const double positionY, const double deltaX, const double deltaY);
         static void OnKeyBoardKey(const KeyBoardKeyInfo keyBoardKeyInfo);
-        static void OnWindowCreated(Window& window);
+        static void OnWindowCreated(void* window);
         static void OnWindowSizeChanged(const size_t width, const size_t height);
         static void OnWindowsMouseCaptureChanged();
 

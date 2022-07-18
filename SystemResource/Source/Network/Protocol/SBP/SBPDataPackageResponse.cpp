@@ -41,7 +41,7 @@ size_t BF::SBPDataPackageResponse::Parse(const void* inputData, const size_t inp
 		}
 	}
 
-	return byteStream.DataCursorPosition;
+	return byteStream.DataCursor;
 }
 
 size_t BF::SBPDataPackageResponse::Serialize(void* outputData, const size_t outputDataSize) const
@@ -71,5 +71,5 @@ size_t BF::SBPDataPackageResponse::Serialize(void* outputData, const size_t outp
 
 	byteStream.Write(typeID);
 
-	return byteStream.DataCursorPosition;
+	return byteStream.DataCursor;
 }

@@ -27,8 +27,8 @@ BF::TGA::TGA()
 
 BF::TGA::~TGA()
 {
-	Memory::Release(ColorMapData, ColorMapDataSize);
-	Memory::Release(ImageData, ImageDataSize);
+	MemoryRelease(ColorMapData, ColorMapDataSize);
+	MemoryRelease(ImageData, ImageDataSize);
 }
 
 BF::FileActionResult BF::TGA::Load(const char* filePath)
@@ -36,7 +36,7 @@ BF::FileActionResult BF::TGA::Load(const char* filePath)
 	File file;
 
 	{
-		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
 		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
 		if(!sucessful)
@@ -57,7 +57,7 @@ BF::FileActionResult BF::TGA::Load(const wchar_t* filePath)
 	File file;
 
 	{
-		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
 		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
 		if(!sucessful)
@@ -96,14 +96,14 @@ BF::FileActionResult BF::TGA::Load(const unsigned char* fileData, const size_t f
 		dataStream.Read(ColorPaletteType);
 		dataStream.Read(imageTypeValue);
 
-		dataStream.Read(colorPaletteChunkEntryIndex, Endian::Little);
-		dataStream.Read(colorPaletteChunkSize, Endian::Little);
+		dataStream.Read(colorPaletteChunkEntryIndex, EndianLittle);
+		dataStream.Read(colorPaletteChunkSize, EndianLittle);
 		dataStream.Read(colorPaletteEntrySizeInBits);
 
-		dataStream.Read(OriginX, Endian::Little);
-		dataStream.Read(OriginY, Endian::Little);
-		dataStream.Read(Width, Endian::Little);
-		dataStream.Read(Height, Endian::Little);
+		dataStream.Read(OriginX, EndianLittle);
+		dataStream.Read(OriginY, EndianLittle);
+		dataStream.Read(Width, EndianLittle);
+		dataStream.Read(Height, EndianLittle);
 		dataStream.Read(pixelDepth);
 		dataStream.Read(ImageDescriptor);
 
@@ -127,7 +127,7 @@ BF::FileActionResult BF::TGA::Load(const unsigned char* fileData, const size_t f
 	//---[Parse Color-Palette]----------
 	if(colorPaletteChunkSize > 0)
 	{
-		dataStream.DataCursorPosition += colorPaletteChunkSize;
+		dataStream.DataCursor += colorPaletteChunkSize;
 	}
 	//--------------------------------
 
@@ -143,7 +143,6 @@ BF::FileActionResult BF::TGA::Load(const unsigned char* fileData, const size_t f
 		const unsigned char lastCharacter = dataStream.Data[dataStream.DataSize - 1];
 		const bool isLastCharacter = lastCharacter == '.';
 		Byte__* string = dataStream.Data + (dataStream.DataSize - stringLengh);
-		bool isTGAVersionTwo = false;
 
 		if(isLastCharacter)
 		{
@@ -153,7 +152,7 @@ BF::FileActionResult BF::TGA::Load(const unsigned char* fileData, const size_t f
 
 		footerEntryIndex = dataStream.DataSize - (26u - 1u);
 
-		isTGAVersionTwo = Memory::Compare(TGAFileIdentifier, string, compareLength - 1) == 0; // Is this string at this address?;
+		const bool isTGAVersionTwo = MemoryCompare(TGAFileIdentifier, TGAFileIdentifierSize, string, compareLength - 1); // Is this string at this address?;
 
 		if(!isTGAVersionTwo) // Is this a TGA v.1.0 dataStream?
 		{
@@ -161,19 +160,19 @@ BF::FileActionResult BF::TGA::Load(const unsigned char* fileData, const size_t f
 		}
 	}
 
-	firstFieldAfterHeader = dataStream.DataCursorPosition;
+	firstFieldAfterHeader = dataStream.DataCursor;
 
 	//---[ Parse Footer ]--------------------------------------------------------
-	dataStream.DataCursorPosition = footerEntryIndex; // Move 26 Bytes before the end. Start of the TGA-Footer.
+	dataStream.DataCursor = footerEntryIndex; // Move 26 Bytes before the end. Start of the TGA-Footer.
 
-	dataStream.Read(extensionOffset, Endian::Little);
-	dataStream.Read(developerAreaOffset, Endian::Little);
+	dataStream.Read(extensionOffset, EndianLittle);
+	dataStream.Read(developerAreaOffset, EndianLittle);
 	//---------------------------------------------------------------------------
 
 	//---------------------------------------------------------------------------
 	if(developerAreaOffset > 0)
 	{
-		dataStream.DataCursorPosition = developerAreaOffset;// Jump to Developer Block
+		dataStream.DataCursor = developerAreaOffset;// Jump to Developer Block
 		// Parse Developer Fields
 		// Parse Developer Directory
 	}
@@ -184,8 +183,8 @@ BF::FileActionResult BF::TGA::Load(const unsigned char* fileData, const size_t f
 	{
 		unsigned short extensionSize = 0;
 
-		dataStream.DataCursorPosition = extensionOffset; // Jump to Extension Header
-		dataStream.Read(extensionSize, Endian::Little);
+		dataStream.DataCursor = extensionOffset; // Jump to Extension Header
+		dataStream.Read(extensionSize, EndianLittle);
 
 		const bool isExtensionSizeAsExpected = extensionSize == 495u;
 
@@ -198,35 +197,35 @@ BF::FileActionResult BF::TGA::Load(const unsigned char* fileData, const size_t f
 		dataStream.Read(AuthorComment, 324u);
 
 		// 12 Bytes
-		dataStream.Read(DateTimeMonth, Endian::Little);
-		dataStream.Read(JobTimeDay, Endian::Little);
-		dataStream.Read(JobTimeYear, Endian::Little);
-		dataStream.Read(JobTimeHour, Endian::Little);
-		dataStream.Read(JobTimeMinute, Endian::Little);
-		dataStream.Read(JobTimeSecond, Endian::Little);
+		dataStream.Read(DateTimeMonth, EndianLittle);
+		dataStream.Read(JobTimeDay, EndianLittle);
+		dataStream.Read(JobTimeYear, EndianLittle);
+		dataStream.Read(JobTimeHour, EndianLittle);
+		dataStream.Read(JobTimeMinute, EndianLittle);
+		dataStream.Read(JobTimeSecond, EndianLittle);
 
 		dataStream.Read(JobID, 41u);
 
 		// 6 Bytes
-		dataStream.Read(JobTimeHours, Endian::Little);
-		dataStream.Read(JobTimeMinutes, Endian::Little);
-		dataStream.Read(JobTimeSeconds, Endian::Little);
+		dataStream.Read(JobTimeHours, EndianLittle);
+		dataStream.Read(JobTimeMinutes, EndianLittle);
+		dataStream.Read(JobTimeSeconds, EndianLittle);
 
-		dataStream.DataCursorPosition += 12u;
+		dataStream.DataCursor += 12u;
 
 		dataStream.Read(SoftwareName, 41u);
 
-		dataStream.Read(VersionNumber, Endian::Little);
+		dataStream.Read(VersionNumber, EndianLittle);
 		dataStream.Read(SoftwareVersion);
 
-		dataStream.Read(BackGroundColor, Endian::Little);
-		dataStream.Read(PixelAspectRatioCounter, Endian::Little);
-		dataStream.Read(PixelAspectRatioDenominator, Endian::Little);
-		dataStream.Read(GammaCounter, Endian::Little);
-		dataStream.Read(GammaDenominator, Endian::Little);
-		dataStream.Read(ColorCorrectionOffset, Endian::Little);
-		dataStream.Read(PostagestampOffset, Endian::Little);
-		dataStream.Read(ScanlineOffset, Endian::Little);
+		dataStream.Read(BackGroundColor, EndianLittle);
+		dataStream.Read(PixelAspectRatioCounter, EndianLittle);
+		dataStream.Read(PixelAspectRatioDenominator, EndianLittle);
+		dataStream.Read(GammaCounter, EndianLittle);
+		dataStream.Read(GammaDenominator, EndianLittle);
+		dataStream.Read(ColorCorrectionOffset, EndianLittle);
+		dataStream.Read(PostagestampOffset, EndianLittle);
+		dataStream.Read(ScanlineOffset, EndianLittle);
 		dataStream.Read(AttributesType);
 
 		/*
@@ -324,7 +323,7 @@ BF::FileActionResult BF::TGA::ConvertTo(Image& image)
 	image.PixelData = newImageData;
 	image.PixelDataSize = pixelDataLengh;
 
-	Memory::Copy(newImageData, ImageData, pixelDataLengh);
+	MemoryCopy(ImageData, pixelDataLengh, newImageData, pixelDataLengh);
 }
 
 BF::FileActionResult BF::TGA::ConvertFrom(Image& image)

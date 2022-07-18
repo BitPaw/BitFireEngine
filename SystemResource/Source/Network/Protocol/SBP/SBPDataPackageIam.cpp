@@ -1,11 +1,13 @@
 #include "SBPDataPackageIam.h"
 
 #include <OS/User.h>
-#include <Hardware/Memory/Memory.h>
+
+#include <Memory/Memory.h>
+#include <File/ByteStream.h>
 
 BF::SBPDataPackageIam::SBPDataPackageIam()
 {
-	Format = TextFormat::Invalid;
+	Format = TextFormatInvalid;
 	NameSize = 0;
 	NameW[0] = L'\0';
 
@@ -14,9 +16,9 @@ BF::SBPDataPackageIam::SBPDataPackageIam()
 
 void BF::SBPDataPackageIam::Fill()
 {
-	Format = TextFormat::TextUNICODE;
+	Format = TextFormatUNICODE;
 
-	User::Name(NameW, PathMaxSize, NameSize);
+	UserNameGetW(NameW, PathMaxSize, &NameSize);
 }
 
 size_t BF::SBPDataPackageIam::Parse(const void* inputData, const size_t inputDataSize)
@@ -29,21 +31,21 @@ size_t BF::SBPDataPackageIam::Parse(const void* inputData, const size_t inputDat
 		unsigned short size = 0;
 
 		byteStream.Read(formatType);
-		byteStream.Read(size, Endian::Little);
+		byteStream.Read(size, EndianLittle);
 
 		NameSize = size;
-		Format = ConvertTextFormat(formatType);
+		Format = (TextFormat)formatType;
 
 		const Byte__* nameStart = byteStream.CursorCurrentAdress();
 
 		switch(Format)
 		{
-			case TextFormat::TextASCII:
-				Memory::Copy(NameA, nameStart, size);
+			case TextFormatASCII:
+				MemoryCopy(nameStart, size, NameA, PathMaxSize);
 				break;
 
-			case TextFormat::TextUNICODE:
-				Memory::Copy(NameW, nameStart, size);
+			case TextFormatUNICODE:
+				MemoryCopy(nameStart, size, NameW, PathMaxSize);
 				break;
 
 			default:
@@ -51,7 +53,7 @@ size_t BF::SBPDataPackageIam::Parse(const void* inputData, const size_t inputDat
 		}	
 	}
 
-	return byteStream.DataCursorPosition;
+	return byteStream.DataCursor;
 }
 
 size_t BF::SBPDataPackageIam::Serialize(void* outputData, const size_t outputDataSize) const
@@ -60,13 +62,13 @@ size_t BF::SBPDataPackageIam::Serialize(void* outputData, const size_t outputDat
 
 	// Add name
 	{	
-		const unsigned char formatType = ConvertTextFormat(Format);
+		const unsigned char formatType = (TextFormat)Format;
 		unsigned short size = NameSize;
 
 		byteStream.Write(formatType);
-		byteStream.Write(size, Endian::Little);
+		byteStream.Write(size, EndianLittle);
 		byteStream.Write(NameW, size);
 	}
 
-	return byteStream.DataCursorPosition;
+	return byteStream.DataCursor;
 }

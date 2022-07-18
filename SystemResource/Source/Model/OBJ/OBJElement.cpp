@@ -4,7 +4,7 @@
 
 BF::OBJElement::OBJElement()
 {
-	Text::Copy("[N/A]", 5, Name, OBJElementNameLength);
+	TextCopyA("[N/A]", 5, Name, OBJElementNameLength);
 
 	Smoothing = 0;
 	MaterialInfo = nullptr;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstddef>
-#include "../File/Endian.h"
+#include <File/Endian.h>
 
 namespace BF
 {

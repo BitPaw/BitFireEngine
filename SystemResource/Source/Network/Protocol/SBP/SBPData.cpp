@@ -198,14 +198,14 @@ size_t BF::SBPData::PackageParse(SBPData& data, const void* inputBuffer, const s
 	}
 
 	dataStream.Read(data.CommandID.Data, 4u);
-	dataStream.Read(data.SourceID, Endian::Little);
-	dataStream.Read(data.TargetID, Endian::Little);
-	dataStream.Read(data.ID, Endian::Little);
-	dataStream.Read(data.DataSize, Endian::Little);
+	dataStream.Read(data.SourceID, EndianLittle);
+	dataStream.Read(data.TargetID, EndianLittle);
+	dataStream.Read(data.ID, EndianLittle);
+	dataStream.Read(data.DataSize, EndianLittle);
 
 	data.Data = dataStream.CursorCurrentAdress();
 
-	return dataStream.DataCursorPosition;
+	return dataStream.DataCursor;
 }
 
 size_t BF::SBPData::PackageSerialize(const SBPData& data, void* outputBuffer, const size_t outputBufferSize)
@@ -214,13 +214,13 @@ size_t BF::SBPData::PackageSerialize(const SBPData& data, void* outputBuffer, co
 
 	stream.Write("°°", 2u);
 	stream.Write(data.CommandID.Data, 4u);
-	stream.Write(data.SourceID, Endian::Little);
-	stream.Write(data.TargetID, Endian::Little);
-	stream.Write(data.ID, Endian::Little);
-	stream.Write(data.DataSize, Endian::Little);
+	stream.Write(data.SourceID, EndianLittle);
+	stream.Write(data.TargetID, EndianLittle);
+	stream.Write(data.ID, EndianLittle);
+	stream.Write(data.DataSize, EndianLittle);
 	stream.Write(data.Data, data.DataSize);
 
-	return stream.DataCursorPosition;
+	return stream.DataCursor;
 }
 
 size_t BF::SBPData::PackageSerialize

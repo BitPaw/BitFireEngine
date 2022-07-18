@@ -1,6 +1,6 @@
 #pragma once
 
-#include <OS/OSDefine.h>
+#include <OS/OSVersion.h>
 
 #ifdef OSUnix
 #include <sys/types.h> 

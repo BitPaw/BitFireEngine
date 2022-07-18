@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Math.h"
+#include <Math/Math.h>
 
 #include <cstdio>
 
@@ -173,7 +173,7 @@ namespace BF
 			NumberType z = Z;
 			NumberType sum = x * x + y * y + z * z;
 
-			return Math::SquareRoot(sum);
+			return MathSquareRoot(sum);
 		}
 
 		Vector3<NumberType> CrossProduct(Vector3 vector3)
@@ -219,13 +219,13 @@ namespace BF
 			NumberType y = Y;
 			NumberType z = Z;
 
-			rotation.X = Math::DegreeToRadians(rotation.X);
-			rotation.Y = Math::DegreeToRadians(rotation.Y);
-			rotation.Z = Math::DegreeToRadians(rotation.Z);
+			rotation.X = MathDegreeToRadians(rotation.X);
+			rotation.Y = MathDegreeToRadians(rotation.Y);
+			rotation.Z = MathDegreeToRadians(rotation.Z);
 
-			x = Math::DegreeToRadians(x);
-			y = Math::DegreeToRadians(y);
-			z = Math::DegreeToRadians(z);
+			x = MathDegreeToRadians(x);
+			y = MathDegreeToRadians(y);
+			z = MathDegreeToRadians(z);
 
 			NumberType tempX = 0;
 			NumberType tempY = 0;
@@ -235,8 +235,8 @@ namespace BF
 			NumberType angleCos;
 
 			//--[Z-Axis rotation]-----------------------------------
-			angleSin = Math::Sinus(rotation.Z);
-			angleCos = Math::Cosinus(rotation.Z);
+			angleSin = MathSinus(rotation.Z);
+			angleCos = MathCosinus(rotation.Z);
 
 			tempX = angleCos * x - angleSin * y;
 			tempY = angleSin * x + angleCos * y;
@@ -246,8 +246,8 @@ namespace BF
 			//------------------------------------------------------
 
 			//--[Y-Axis rotation]-----------------------------------
-			angleSin = Math::Sinus(rotation.Y);
-			angleCos = Math::Cosinus(rotation.Y);
+			angleSin = MathSinus(rotation.Y);
+			angleCos = MathCosinus(rotation.Y);
 
 			tempX = angleCos * x + angleSin * z;
 			tempZ = -angleSin * x + angleCos * z;
@@ -257,8 +257,8 @@ namespace BF
 			//------------------------------------------------------
 
 			//--[X-Axis rotation]-----------------------------------
-			angleSin = Math::Sinus(rotation.X);
-			angleCos = Math::Cosinus(rotation.X);
+			angleSin = MathSinus(rotation.X);
+			angleCos = MathCosinus(rotation.X);
 
 			tempY = angleCos * y - angleSin * z;
 			tempZ = angleSin * y + angleCos * z;
@@ -267,9 +267,9 @@ namespace BF
 			z = tempZ;
 			//------------------------------------------------------
 
-			x = Math::RadiansToDegree(x);
-			y = Math::RadiansToDegree(y);
-			z = Math::RadiansToDegree(z);
+			x = MathRadiansToDegree(x);
+			y = MathRadiansToDegree(y);
+			z = MathRadiansToDegree(z);
 
 			 X = x;
 			 Y = y;

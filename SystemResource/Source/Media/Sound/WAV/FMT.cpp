@@ -47,5 +47,5 @@ size_t BF::FMT::Parse(const unsigned char* data, const size_t dataSize, const En
 	dataStream.Read(BlockAllign, endian);
 	dataStream.Read(BitsPerSample, endian);
 
-	return dataStream.DataCursorPosition;
+	return dataStream.DataCursor;
 }

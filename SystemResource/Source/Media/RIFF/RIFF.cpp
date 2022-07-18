@@ -18,7 +18,7 @@
 BF::RIFF::RIFF()
 {
 	Valid = false;
-	EndianFormat = Endian::Invalid;
+	EndianFormat = EndianInvalid;
 	ChunkSize = 0;
 	Format = RIFFFormat::Invalid;
 }
@@ -31,21 +31,21 @@ size_t BF::RIFF::Parse(const unsigned char* data, const size_t dataSize)
 	ClusterInt formatID;
 
 	dataStream.Read(chunkID.Data, 4u);
-	dataStream.Read(ChunkSize, Endian::Little);
+	dataStream.Read(ChunkSize, EndianLittle);
 	dataStream.Read(formatID.Data, 4u);
 
 	switch(chunkID.Value) // Detect Endiantype
 	{
 		case RIFXSignature:
-			EndianFormat = Endian::Big;
+			EndianFormat = EndianBig;
 			break;
 
 		case RIFFSignature:
-			EndianFormat = Endian::Little;
+			EndianFormat = EndianLittle;
 			break;
 
 		default:
-			EndianFormat = Endian::Invalid;
+			EndianFormat = EndianInvalid;
 			break;
 	}
 
@@ -80,7 +80,7 @@ size_t BF::RIFF::Parse(const unsigned char* data, const size_t dataSize)
 			break;
 	}
 
-	Valid = (EndianFormat != Endian::Invalid) && (Format != RIFFFormat::Invalid);
+	Valid = (EndianFormat != EndianInvalid) && (Format != RIFFFormat::Invalid);
 
-	return dataStream.DataCursorPosition;
+	return dataStream.DataCursor;
 }

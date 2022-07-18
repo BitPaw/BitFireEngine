@@ -123,8 +123,8 @@ void BF::Camera::Rotate(float x, float y)
 		CurrentRotation.Y = minValue;
 	}
 
-	float pitchRAD = Math::DegreeToRadians(CurrentRotation.Y);
-	float yawRAD = Math::DegreeToRadians(CurrentRotation.X);
+	float pitchRAD = MathDegreeToRadians(CurrentRotation.Y);
+	float yawRAD = MathDegreeToRadians(CurrentRotation.X);
 	float rx = cos(pitchRAD) * cos(yawRAD);
 	float ry = sin(pitchRAD);
 	float rz = cos(pitchRAD) * sin(yawRAD);

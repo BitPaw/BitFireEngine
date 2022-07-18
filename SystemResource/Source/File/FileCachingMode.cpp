@@ -1,5 +1,5 @@
 #include "FileCachingMode.h"
-#include <OS/OSDefine.h>
+#include <OS/OSVersion.h>
 
 #define FileCachingModeDefault 0 //POSIX_FADV_NORMAL
 

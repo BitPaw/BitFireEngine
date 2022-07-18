@@ -33,8 +33,8 @@ size_t BF::LAME::Parse(const unsigned char* data, const size_t dataSize)
 		int a = 0;
 		int b = 0;
 
-		Text::ToInt(&majorVersionText, 1u, a);
-		Text::ToInt(minorVersionText, 2u, b);
+		TextToIntA(&majorVersionText, 1u, &a);
+		TextToIntA(minorVersionText, 2u, &b);
 
 		MajorVersion = a;
 		MinorVersion = b;
@@ -44,12 +44,12 @@ size_t BF::LAME::Parse(const unsigned char* data, const size_t dataSize)
 	dataStream.Read(Revision);
 	dataStream.Read(VBRType);
 	dataStream.Read(LowpassFrequency);
-	dataStream.Read(Peak_signal, Endian::Big);
-	dataStream.Read(Radio_replay_pad, Endian::Big);
-	dataStream.Read(Radio_replay_set_name, Endian::Big);
-	dataStream.Read(Radio_replay_originator_code, Endian::Big);
-	dataStream.Read(Radio_replay_gain, Endian::Big);
-	dataStream.Read(Audiophile_replay_gain, Endian::Big);
+	dataStream.Read(Peak_signal, EndianBig);
+	dataStream.Read(Radio_replay_pad, EndianBig);
+	dataStream.Read(Radio_replay_set_name, EndianBig);
+	dataStream.Read(Radio_replay_originator_code, EndianBig);
+	dataStream.Read(Radio_replay_gain, EndianBig);
+	dataStream.Read(Audiophile_replay_gain, EndianBig);
 	dataStream.Read(Flag_ath_type);
 	dataStream.Read(Flag_expn_psy_tune);
 	dataStream.Read(Flag_safe_joint);
@@ -95,9 +95,9 @@ size_t BF::LAME::Parse(const unsigned char* data, const size_t dataSize)
 	}
 
 	dataStream.Read(Unused);
-	dataStream.Read(Preset, Endian::Big);
-	dataStream.Read(MusicLength, Endian::Big);
+	dataStream.Read(Preset, EndianBig);
+	dataStream.Read(MusicLength, EndianBig);
 
 
-	return dataStream.DataCursorPosition;
+	return dataStream.DataCursor;
 }

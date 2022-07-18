@@ -214,7 +214,7 @@ void ZEE::ZEEGameSystem::OnUpdateUI()
 
   
 
-    //sprintf_s(text->TextContent, "FPS: %4i", (BF::Math::Ceiling(1 / _deltaTime)));
+    //sprintf_s(text->TextContent, "FPS: %4i", (BF::MathCeiling(1 / _deltaTime)));
     //text->SetText(text->TextContent);
 
     if (model == nullptr)

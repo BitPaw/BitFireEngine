@@ -1,6 +1,6 @@
 #pragma once
 
-#include <OS/OSDefine.h>
+#include <OS/OSVersion.h>
 
 #define SocketBufferSize 2048u
 
@@ -88,7 +88,7 @@ namespace BF
 		//----------------------------
 
 		//---<Internal IO>------------
-		Thread CommunicationThread;
+		ThreadID CommunicationThread;
 		//----------------------------
 
 		//---<Event CallBack>---------

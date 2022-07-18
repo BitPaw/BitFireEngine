@@ -16,24 +16,24 @@ size_t BF::SBPDataPackageText::Parse(const void* inputData, const size_t inputDa
 
 		byteStream.Read(textModeID);
 
-		TextData.Format = ConvertTextFormat(textModeID);
+		TextData.Format = (TextFormat)textModeID;
 	}
 
-	byteStream.Read(TextData.SizeInBytes, Endian::Little);
+	byteStream.Read(TextData.SizeInBytes, EndianLittle);
 	byteStream.Read(TextData.TextData, TextData.SizeInBytes);
 
-	return byteStream.DataCursorPosition;
+	return byteStream.DataCursor;
 }
 
 size_t BF::SBPDataPackageText::Serialize(void* outputData, const size_t outputDataSize) const
 {
 	ByteStream byteStream(outputData, outputDataSize);
 
-	const unsigned char textModeID = ConvertTextFormat(TextData.Format);
+	const unsigned char textModeID = (TextFormat)TextData.Format;
 
 	byteStream.Write(textModeID);
-	byteStream.Write(TextData.SizeInBytes, Endian::Little);
+	byteStream.Write(TextData.SizeInBytes, EndianLittle);
 	byteStream.Write(TextData.TextData, TextData.SizeInBytes);
 
-	return byteStream.DataCursorPosition;
+	return byteStream.DataCursor;
 }

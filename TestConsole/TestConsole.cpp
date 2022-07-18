@@ -1,12 +1,15 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 
-#include <Network/Protocol/SBP/SBPServer.h>
-#include <Network/Protocol/SBP/SBPClient.h>
+//#include <Network/Protocol/SBP/SBPServer.h>
+//#include <Network/Protocol/SBP/SBPClient.h>
 //#include <Network/Protocol/SBP/SBPQueue.h>
 #include <Time/StopWatch.h>
-#include <OS/Sound/AudioSystem.h>
-#include <Media/Sound/WAV/WAV.h>
+//#include <OS/Sound/AudioSystem.h>
+//#include <Media/Sound/WAV/WAV.h>
+#include <File/Format/FNT/FNT.h>
+#include <File/File.h>
 //#include <Media/Font/Font.h>
 //#include <Media/Font/FNT/FNT.h>
 //#include <Media/Sound/OGG/OGG.h>
@@ -14,6 +17,7 @@
 //#include <Media/Sound/M4A/M4A.h>
 
 using namespace BF;
+
 
 
 int main()
@@ -147,27 +151,34 @@ int main()
 #endif
 
 
-#if 0
+#if 1
     StopWatch sw;
+
+    const char* filePath = "B:\\Daten\\Fonts\\_BitMapFont\\arial.fnt";
 
     FNT font;
 
     sw.Start();
 
-    font.Load(L"B:\\Daten\\Fonts\\_BitMapFont\\arial.fnt");
+    File file;
+
+    const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
+    const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+
+    const unsigned char fileParsingResult = FNTLoad(&font, file.Data, file.DataSize);
 
     float loadningTime = sw.Reset();
 
-    font.Save(L"A:\\arial_COPY.fnt");
+    //FNTSave(L"A:\\arial_COPY.fnt");
 
-    float savingTime = sw.Reset();
+  //  float savingTime = sw.Reset();
 
     printf("Loading Took : %3.2fus\n", loadningTime * 1000000);
-    printf("Saveing Took : %3.2fus\n", savingTime * 1000000);
+   // printf("Saveing Took : %3.2fus\n", savingTime * 1000000);
 #endif
 
 
-#if 1 // Audio
+#if 0 // Audio
 
     WAV wave;
 

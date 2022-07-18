@@ -1,6 +1,6 @@
 #include "AudioSystem.h"
 
-#include <OS/OSDefine.h>
+#include <OS/OSVersion.h>
 
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -266,7 +266,7 @@ BF::AudioResult BF::AudioSystem::DevicesFetchOutput(AudioDeviceCapabilities* aud
 		audioDeviceCapabilities.DriverVersionMajor = HIBYTE(wAVEOUTCAPSW.vDriverVersion);
 		audioDeviceCapabilities.DriverVersionMinor = LOBYTE(wAVEOUTCAPSW.vDriverVersion);
 
-		Text::Copy(wAVEOUTCAPSW.szPname, MAXPNAMELEN, audioDeviceCapabilities.ProductName, SoundDeviceProductName);
+		TextCopyW(wAVEOUTCAPSW.szPname, MAXPNAMELEN, audioDeviceCapabilities.ProductName, SoundDeviceProductName);
 
 		audioDeviceCapabilities.Channels = wAVEOUTCAPSW.wChannels;
 	}
@@ -313,7 +313,7 @@ BF::AudioResult BF::AudioSystem::DevicesFetchInput(AudioDeviceCapabilities* audi
 		audioDeviceCapabilities.DriverVersionMajor = HIBYTE(waveInputCapabilitiesW.vDriverVersion);
 		audioDeviceCapabilities.DriverVersionMinor = LOBYTE(waveInputCapabilitiesW.vDriverVersion);
 
-		Text::Copy(waveInputCapabilitiesW.szPname, MAXPNAMELEN, audioDeviceCapabilities.ProductName, SoundDeviceProductName);
+		TextCopyW(waveInputCapabilitiesW.szPname, MAXPNAMELEN, audioDeviceCapabilities.ProductName, SoundDeviceProductName);
 
 		audioDeviceCapabilities.Channels = waveInputCapabilitiesW.wChannels;		
 	}

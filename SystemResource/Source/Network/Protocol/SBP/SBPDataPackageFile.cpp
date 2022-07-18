@@ -17,11 +17,11 @@ BF::SBPDataPackageFile::SBPDataPackageFile()
 
 	Mode = SBPDataPackageFileMode::Invalid;
 
-	FilePathSourceFormat = TextFormat::Invalid;
+	FilePathSourceFormat = TextFormatInvalid;
 	FilePathSourceSize = 0;
 	FilePathSourceW[0] = L'0';
 
-	FilePathTargetFormat = TextFormat::Invalid;
+	FilePathTargetFormat = TextFormatInvalid;
 	FilePathTargetSize = 0;
 	FilePathTargetW[0] = L'0';
 
@@ -32,11 +32,11 @@ void BF::SBPDataPackageFile::Fill(const SBPDataPackageFileMode mode, const char*
 {
     Mode = mode;
 
-	FilePathSourceFormat = TextFormat::TextASCII;
-	FilePathSourceSize = Text::Copy(source, PathMaxSize, FilePathSourceA, PathMaxSize);
+	FilePathSourceFormat = TextFormatASCII;
+	FilePathSourceSize = TextCopyA(source, PathMaxSize, FilePathSourceA, PathMaxSize);
 	
-	FilePathTargetFormat = TextFormat::TextASCII;
-	FilePathTargetSize = Text::Copy(target, PathMaxSize, FilePathTargetA, PathMaxSize);
+	FilePathTargetFormat = TextFormatASCII;
+	FilePathTargetSize = TextCopyA(target, PathMaxSize, FilePathTargetA, PathMaxSize);
 
 	FileSize = 0;
 }
@@ -87,12 +87,12 @@ size_t BF::SBPDataPackageFile::Parse(const void* inputData, const size_t inputDa
 	{
 		unsigned int FilePathSourceInfoBlock = 0;
 
-		byteStream.Read(FilePathSourceInfoBlock, Endian::Little);		
+		byteStream.Read(FilePathSourceInfoBlock, EndianLittle);		
 
 		unsigned char filePathSourceFormatID = (~bitMask & FilePathSourceInfoBlock) >> 28u;
 
 		FilePathSourceSize = (bitMask & FilePathSourceInfoBlock);
-		FilePathSourceFormat = ConvertTextFormat(filePathSourceFormatID);
+		FilePathSourceFormat = (TextFormat)filePathSourceFormatID;
 
 		byteStream.Read(FilePathSourceA, FilePathSourceSize);
 	}
@@ -101,19 +101,19 @@ size_t BF::SBPDataPackageFile::Parse(const void* inputData, const size_t inputDa
 	{
 		unsigned int FilePathSourceInfoBlock = 0;
 
-		byteStream.Read(FilePathSourceInfoBlock, Endian::Little);
+		byteStream.Read(FilePathSourceInfoBlock, EndianLittle);
 
 		unsigned char filePathSourceFormatID = (~bitMask & FilePathSourceInfoBlock) >> 28u;
 
 		FilePathTargetSize = (bitMask & FilePathSourceInfoBlock);
-		FilePathTargetFormat = ConvertTextFormat(filePathSourceFormatID);
+		FilePathTargetFormat = (TextFormat)filePathSourceFormatID;
 
 		byteStream.Read(FilePathTargetW, FilePathSourceSize);
 	}
 
-	byteStream.Read(FileSize, Endian::Little);
+	byteStream.Read(FileSize, EndianLittle);
 
-	return byteStream.DataCursorPosition;
+	return byteStream.DataCursor;
 }
 
 size_t BF::SBPDataPackageFile::Serialize(void* outputData, const size_t outputDataSize) const
@@ -163,25 +163,25 @@ size_t BF::SBPDataPackageFile::Serialize(void* outputData, const size_t outputDa
 
 	// FilePath
 	{
-		const unsigned char filePathSourceFormatID = ConvertTextFormat(FilePathSourceFormat);
+		const unsigned char filePathSourceFormatID = (TextFormat)FilePathSourceFormat;
 		unsigned int FilePathSourceInfoBlock = FilePathSourceSize | (filePathSourceFormatID << 28u);
 
-		byteStream.Write(FilePathSourceInfoBlock, Endian::Little);
+		byteStream.Write(FilePathSourceInfoBlock, EndianLittle);
 
 		byteStream.Write(FilePathSourceA, FilePathSourceSize);
 	}
 
 	// FilePath
 	{
-		const unsigned char filePathSourceFormatID = ConvertTextFormat(FilePathTargetFormat);
+		const unsigned char filePathSourceFormatID = (TextFormat)FilePathTargetFormat;
 		unsigned int FilePathSourceInfoBlock = FilePathTargetSize | (filePathSourceFormatID << 28u);
 
-		byteStream.Write(FilePathSourceInfoBlock, Endian::Little);
+		byteStream.Write(FilePathSourceInfoBlock, EndianLittle);
 
 		byteStream.Write(FilePathTargetA, FilePathTargetSize);
 	}
 
-	byteStream.Write(FileSize, Endian::Little);
+	byteStream.Write(FileSize, EndianLittle);
 
-    return byteStream.DataCursorPosition;
+    return byteStream.DataCursor;
 }

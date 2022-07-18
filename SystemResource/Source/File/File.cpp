@@ -1,6 +1,8 @@
 #include "File.h"
 
 #include <Text/Text.h>
+#include <Memory/Memory.h>
+
 #include <Hardware/Memory/Memory.h>
 
 #include <stdarg.h>
@@ -33,11 +35,11 @@ BF::File::~File()
 			break;
 
 		case FileLocation::MappedVirtual:
-			Memory::VirtualMemoryRelease(Data, DataSize);
+			MemoryVirtualRelease(Data, DataSize);
 			break;
 
 		case  FileLocation::CachedFromDisk:
-			Memory::Release(Data, DataSize);
+			MemoryRelease(Data, DataSize);
 			break;
 
 		case FileLocation::Linked:
@@ -75,7 +77,7 @@ BF::FileActionResult BF::File::Open(const char* filePath, FileOpenMode fileOpenM
 #elif defined(OSWindows)
 	wchar_t filePathW[PathMaxSize];
 
-	Text::Copy(filePath, PathMaxSize, filePathW, PathMaxSize);
+	TextCopyAW(filePath, PathMaxSize, filePathW, PathMaxSize);
 
 	return Open(filePathW, fileOpenMode, fileCachingMode);
 #endif
@@ -550,7 +552,7 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const char* filePath, const Me
 #elif defined(OSWindows)
 	wchar_t filePathW[PathMaxSize];
 
-	Text::Copy(filePath, PathMaxSize, filePathW, PathMaxSize);
+	TextCopyAW(filePath, PathMaxSize, filePathW, PathMaxSize);
 
 	const FileActionResult fileActionResult = MapToVirtualMemory(filePathW, protectionMode);
 
@@ -598,19 +600,19 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const wchar_t* filePath, const
 
 		switch(protectionMode)
 		{
-			case MemoryProtectionMode::NoReadWrite:
+			case MemoryNoReadWrite:
 				flProtect = PAGE_NOACCESS;
 				break;
 
-			case MemoryProtectionMode::ReadOnly:
+			case MemoryReadOnly:
 				flProtect = PAGE_READONLY;
 				break;
 
-			case MemoryProtectionMode::WriteOnly:
+			case MemoryWriteOnly:
 				flProtect = PAGE_WRITECOPY;
 				break;
 
-			case MemoryProtectionMode::ReadAndWrite:
+			case MemoryReadAndWrite:
 				flProtect = PAGE_READWRITE;
 				break;
 		}
@@ -644,15 +646,15 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const wchar_t* filePath, const
 
 		switch(protectionMode)
 		{
-			case MemoryProtectionMode::ReadOnly:
+			case MemoryReadOnly:
 				desiredAccess = FILE_MAP_READ;
 				break;
 
-			case MemoryProtectionMode::WriteOnly:
+			case MemoryWriteOnly:
 				desiredAccess = FILE_MAP_WRITE;
 				break;
 
-			case MemoryProtectionMode::ReadAndWrite:
+			case MemoryReadAndWrite:
 				desiredAccess = FILE_MAP_ALL_ACCESS;
 				break;
 		}
@@ -670,7 +672,7 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const wchar_t* filePath, const
 
 		Data = (Byte__*)fileMapped;
 
-		Memory::VirtualMemoryPrefetch(fileMapped, DataSize);
+		MemoryVirtualPrefetch(fileMapped, DataSize);
 	}
 #endif
 
@@ -685,7 +687,7 @@ BF::FileActionResult BF::File::MapToVirtualMemory(const wchar_t* filePath, const
 
 BF::FileActionResult BF::File::MapToVirtualMemory(const size_t size, const MemoryProtectionMode protectionMode)
 {
-	const void* data = Memory::VirtualMemoryAllocate(size, protectionMode);
+	const void* data = MemoryVirtualAllocate(size, protectionMode);
 	const bool successful = data;
 
 	if(!successful)
@@ -1026,7 +1028,7 @@ BF::FileActionResult BF::File::WriteToDisk(const wchar_t* filePath, FilePersiste
 	size_t writtenBytes = fwrite(Data, sizeof(char), DataCursorPosition, file.FileHandle);
 #elif defined(OSWindows)
 	DWORD writtenBytes = 0;
-	const bool successful = WriteFile(file.FileHandle, Data, DataCursorPosition, &writtenBytes, nullptr);
+	const bool successful = WriteFile(file.FileHandle, Data, DataCursor, &writtenBytes, nullptr);
 #endif
 
 	{
@@ -1126,15 +1128,15 @@ BF::FileActionResult BF::File::ReadFromDisk(unsigned char** outPutBuffer, size_t
 
 void BF::File::PathSwapFile(const wchar_t* currnetPath, wchar_t* targetPath, const wchar_t* newFileName)
 {
-	const size_t index = Text::FindLast(currnetPath, PathMaxSize, '/');
+	const size_t index = TextFindLastW(currnetPath, PathMaxSize, '/');
 	const bool found = index != -1;
 
 	if (found)
 	{
-		const size_t copyedBytes = Text::Copy(currnetPath, index + 1, targetPath, index + 1);
+		const size_t copyedBytes = TextCopyW(currnetPath, index + 1, targetPath, index + 1);
 		const size_t toCopy = PathMaxSize - copyedBytes;
 
-		Text::Copy(newFileName, toCopy, targetPath + copyedBytes, toCopy);
+		TextCopyW(newFileName, toCopy, targetPath + copyedBytes, toCopy);
 	}
 }
 
@@ -1181,7 +1183,7 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 	}
 #elif defined(OSWindows)
 	wchar_t folderPathW[PathMaxSize];
-	size_t writtenBytes = Text::Copy(folderPath, PathMaxSize, folderPathW, PathMaxSize);
+	size_t writtenBytes = TextCopyAW(folderPath, PathMaxSize, folderPathW, PathMaxSize);
 
 	WIN32_FIND_DATA dataCursour{0};
 	HANDLE hFind = 0;
@@ -1201,7 +1203,7 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 
 	for (; FindNextFile(hFind, &dataCursour); listSize++);
 
-	Memory::Set(&dataCursour, 0, sizeof(WIN32_FIND_DATA));
+	MemorySet(&dataCursour, 0, sizeof(WIN32_FIND_DATA));
 
 	(*list) = Memory::Allocate<wchar_t*>(listSize);
 
@@ -1210,7 +1212,7 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 
 	do
 	{
-		const size_t length = Text::Length(dataCursour.cFileName);
+		const size_t length = TextLengthW(dataCursour.cFileName);
 		const wchar_t* filePathSource = dataCursour.cFileName;
 		wchar_t* newString = Memory::Allocate<wchar_t>(length + 1);
 
@@ -1219,7 +1221,7 @@ void BF::File::FilesInFolder(const char* folderPath, wchar_t*** list, size_t& li
 			return; // Error: OutOfMemory
 		}
 
-		Text::Copy(filePathSource, length, newString, length);
+		TextCopyW(filePathSource, length, newString, length);
 
 		(*list)[fileIndex] = newString;
 

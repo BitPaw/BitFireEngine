@@ -14,7 +14,7 @@ BF::FileActionResult BF::MP3::Load(const char* filePath)
 	File file;
 
 	{
-		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
 		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
 		if(!sucessful)
@@ -35,7 +35,7 @@ BF::FileActionResult BF::MP3::Load(const wchar_t* filePath)
 	File file;
 
 	{
-		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
 		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
 		if(!sucessful)
@@ -85,7 +85,7 @@ BF::FileActionResult BF::MP3::Load(const unsigned char* fileData, const size_t f
 
 			dataStream.CursorAdvance(parsedBytes);		
 
-			cursorPositionPredict = dataStream.DataCursorPosition + mp3Header.FrameLength;
+			cursorPositionPredict = dataStream.DataCursor + mp3Header.FrameLength;
 
 			dataStream.CursorAdvance(32u);
 
@@ -150,7 +150,7 @@ BF::FileActionResult BF::MP3::Load(const unsigned char* fileData, const size_t f
 			LAME lame;
 
 			const Byte__* dataPosition = dataStream.CursorCurrentAdress();
-			const size_t dataSize = cursorPositionPredict - dataStream.DataCursorPosition;
+			const size_t dataSize = cursorPositionPredict - dataStream.DataCursor;
 			const size_t parsedBytes = lame.Parse(dataPosition, dataSize);
 
 			dataStream.CursorAdvance(parsedBytes);
@@ -187,17 +187,17 @@ BF::FileActionResult BF::MP3::Load(const unsigned char* fileData, const size_t f
 
 		// Check if reader is still alligned
 		{
-			const bool isAlligned = cursorPositionPredict == dataStream.DataCursorPosition;
+			const bool isAlligned = cursorPositionPredict == dataStream.DataCursor;
 
 			if(!isAlligned)
 			{
-				int offset = cursorPositionPredict - dataStream.DataCursorPosition;
+				int offset = cursorPositionPredict - dataStream.DataCursor;
 
 #if MP3Debug
 				printf("[MP3] detected failed allignment! Off by : %i Bytes\n", offset);
 #endif
 
-				dataStream.DataCursorPosition = cursorPositionPredict;
+				dataStream.DataCursor = cursorPositionPredict;
 				//dataStream.CursorAdvance(mp3Header.FrameLength);
 			}		
 		}

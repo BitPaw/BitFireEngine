@@ -1,6 +1,6 @@
 #include "Program.h"
 
-#include <OS/OSDefine.h>
+#include <OS/OSVersion.h>
 #include <ErrorCode.h>
 
 #include <stdio.h>
@@ -86,7 +86,7 @@ BF::FileActionResult BF::Program::Execute(const char* programPath, const char* p
     {          
         programExecuteInfo->CallBack = callback;    
 
-        ThreadID threadID = Thread::Run(Program::ExecuteThreadFunction, programExecuteInfo);
+        ThreadID threadID = ThreadRun(Program::ExecuteThreadFunction, programExecuteInfo);
     }
     else
     {
@@ -136,7 +136,7 @@ BF::FileActionResult BF::Program::Execute(const char* programPath, const char** 
     {
         programExecuteInfo->CallBack = callback;
 
-        ThreadID threadID = Thread::Run(Program::ExecuteThreadFunction, programExecuteInfo);
+        ThreadID threadID = ThreadRun(Program::ExecuteThreadFunction, programExecuteInfo);
     }
     else
     {

@@ -22,7 +22,7 @@ BF::FileActionResult BF::JPEG::Load(const char* filePath)
     File file;
 
     {
-        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
         const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
         if(!sucessful)
@@ -43,7 +43,7 @@ BF::FileActionResult BF::JPEG::Load(const wchar_t* filePath)
     File file;
 
     {
-        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
         const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
         if(!sucessful)
@@ -93,9 +93,9 @@ BF::FileActionResult BF::JPEG::Load(const unsigned char* fileData, const size_t 
             {
                 unsigned short length = 0;
 
-                dataStream.Read(length, Endian::Big);
+                dataStream.Read(length, EndianBig);
 
-                dataStream.DataCursorPosition += length - 2;
+                dataStream.DataCursor += length - 2;
 
                 break;
             }
@@ -116,9 +116,9 @@ BF::FileActionResult BF::JPEG::Load(const unsigned char* fileData, const size_t 
                 unsigned short length = 0;
                 JPEGFrame frame;
 
-                dataStream.Read(length, Endian::Big);
-                dataStream.Read(frame.Precusion, Endian::Little);
-                dataStream.Read(frame.LineNb, Endian::Little);
+                dataStream.Read(length, EndianBig);
+                dataStream.Read(frame.Precusion, EndianLittle);
+                dataStream.Read(frame.LineNb, EndianLittle);
                 dataStream.Read(frame.LineSamples);
                 dataStream.Read(frame.ComponentListSize);
 
@@ -144,7 +144,7 @@ BF::FileActionResult BF::JPEG::Load(const unsigned char* fileData, const size_t 
                 unsigned char chrominance = 0;
                 unsigned char buffer[64];
 
-                dataStream.Read(length, Endian::Big);
+                dataStream.Read(length, EndianBig);
                 dataStream.Read(chrominance);
 
                 dataStream.Read(buffer, 64);
@@ -157,11 +157,11 @@ BF::FileActionResult BF::JPEG::Load(const unsigned char* fileData, const size_t 
                 unsigned short length = 0;
                 JPEGHuffmanTable jpegHuffmanTable;
 
-                dataStream.Read(length, Endian::Big);
+                dataStream.Read(length, EndianBig);
                 dataStream.Read(jpegHuffmanTable.Class);
                 dataStream.Read(jpegHuffmanTable.Destination);
 
-                dataStream.DataCursorPosition += (length - 2) - 2;
+                dataStream.DataCursor += (length - 2) - 2;
 
                 break;
             }
@@ -169,7 +169,7 @@ BF::FileActionResult BF::JPEG::Load(const unsigned char* fileData, const size_t 
             case BF::JPEGMarker::StartOfScan:
             {
                 unsigned short length = 0;
-                dataStream.Read(length, Endian::Big);
+                dataStream.Read(length, EndianBig);
                 dataStream.Read(ScanStart.ScanSelectorSize);
 
                 for(size_t i = 0; i < ScanStart.ScanSelectorSize; i++)
@@ -188,7 +188,7 @@ BF::FileActionResult BF::JPEG::Load(const unsigned char* fileData, const size_t 
                 dataStream.Read(ScanStart.SpectralSelectTo);
                 dataStream.Read(ScanStart.SuccessiveAproximation);
 
-                CompressedImageDataSize = dataStream.DataSize - dataStream.DataCursorPosition - 2;
+                CompressedImageDataSize = dataStream.DataSize - dataStream.DataCursor - 2;
                 CompressedImageData = Memory::Allocate<unsigned char>(CompressedImageDataSize);
 
                 dataStream.Read(CompressedImageData, CompressedImageDataSize);
@@ -197,13 +197,13 @@ BF::FileActionResult BF::JPEG::Load(const unsigned char* fileData, const size_t 
             }
             case BF::JPEGMarker::HeaderFileInfo:
             {
-                dataStream.Read(FileInfo.Length, Endian::Little);
+                dataStream.Read(FileInfo.Length, EndianLittle);
                 dataStream.Read(FileInfo.Identifier, 5u);
                 dataStream.Read(FileInfo.VersionMajor);
                 dataStream.Read(FileInfo.VersionMinor);
                 dataStream.Read(FileInfo.DensityUnits);
-                dataStream.Read(FileInfo.DensityX, Endian::Little);
-                dataStream.Read(FileInfo.DensityY, Endian::Little);
+                dataStream.Read(FileInfo.DensityX, EndianLittle);
+                dataStream.Read(FileInfo.DensityY, EndianLittle);
                 dataStream.Read(FileInfo.ThumbnailX);
                 dataStream.Read(FileInfo.ThumbnailY);
 
@@ -228,7 +228,7 @@ BF::FileActionResult BF::JPEG::Save(const wchar_t* filePath)
 
 BF::JPEG::~JPEG()
 {
-    Memory::Release(CompressedImageData, CompressedImageDataSize);
+    MemoryRelease(CompressedImageData, CompressedImageDataSize);
 }
 
 BF::FileActionResult BF::JPEG::ConvertTo(Image& image)

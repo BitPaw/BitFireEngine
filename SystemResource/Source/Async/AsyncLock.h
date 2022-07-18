@@ -1,23 +1,14 @@
 #ifndef AsyncLockIncluded
 #define AsyncLockIncluded
 
-#include <OS/OSDefine.h>
-
-#if defined(OSUnix)
-#include <semaphore.h>
-#define AsyncLockID sem_t
-#elif defined(OSWindows)
-#include <windows.h>
-//#include <process.h>
-#define AsyncLockID HANDLE
-#endif
+#include <Async/Lock.h>
 
 namespace BF
 {
 	class AsyncLock
 	{
 		private:
-		AsyncLockID HandleID;
+		LockID _lockID;
 
 		public:
 		AsyncLock();

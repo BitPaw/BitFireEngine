@@ -101,41 +101,41 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)__Dependencies__/include;$(ProjectDir)Source/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(ProjectDir)Source/;$(SolutionDir)PXUltima/Source;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)__Export__/x86 Debug/</OutDir>
     <IntDir>$(SolutionDir)__Temp__/x86 Debug/$(ProjectName)/</IntDir>
     <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_32_Debug/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)__Dependencies__/include;$(ProjectDir)Source/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(ProjectDir)Source/;$(SolutionDir)PXUltima/Source;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)__Export__/x86 Release/</OutDir>
     <IntDir>$(SolutionDir)__Temp__/x86 Release/$(ProjectName)/</IntDir>
     <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_32_Release/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)__Dependencies__/include;$(ProjectDir)Source/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(ProjectDir)Source/;$(SolutionDir)PXUltima/Source;$(IncludePath)</IncludePath>
     <IntDir>$(SolutionDir)__Temp__/x86 XP/$(ProjectName)</IntDir>
     <OutDir>$(SolutionDir)__Export__/x86 XP</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)__Dependencies__/include;$(ProjectDir)Source/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(ProjectDir)Source/;$(SolutionDir)PXUltima/Source;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)__Export__/x64 Debug/</OutDir>
     <IntDir>$(SolutionDir)__Temp__/x64 Debug/$(ProjectName)/</IntDir>
     <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_64_Debug/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)__Dependencies__/include;$(ProjectDir)Source/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(ProjectDir)Source/;$(SolutionDir)PXUltima/Source;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)__Export__/x64 Release/</OutDir>
     <IntDir>$(SolutionDir)__Temp__/x64 Release/$(ProjectName)/</IntDir>
     <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_64_Release/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)__Dependencies__/include;$(ProjectDir)Source/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)__Dependencies__/include;$(ProjectDir)Source/;$(SolutionDir)PXUltima/Source;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -316,7 +316,6 @@
     <ClCompile Include="Source\Network\Protocol\SBP\SBPDataPackageIam.cpp" />
     <ClCompile Include="Source\Network\Protocol\SBP\SBPDataPackage.cpp" />
     <ClCompile Include="Source\Container\ResponseCache.cpp" />
-    <ClCompile Include="Source\Hardware\Memory\MemoryProtectionMode.cpp" />
     <ClCompile Include="Source\Math\Primes.cpp" />
     <ClCompile Include="Source\Media\ID3\ID3Version.cpp" />
     <ClCompile Include="Source\Media\ID3\ID3v2xFrameTag.cpp" />
@@ -344,7 +343,6 @@
     <ClCompile Include="Source\Graphic\OpenGL\SkyBox.cpp" />
     <ClCompile Include="Source\Graphic\OpenGL\Sprite.cpp" />
     <ClCompile Include="Source\Media\Image\QOI\QOI.cpp" />
-    <ClCompile Include="Source\Text\Text.cpp" />
     <ClCompile Include="Source\Graphic\OpenGL\ImageType.cpp" />
     <ClCompile Include="Source\Graphic\OpenGL\Texture.cpp" />
     <ClCompile Include="Source\Graphic\OpenGL\TextureCube.cpp" />
@@ -364,15 +362,11 @@
     <ClCompile Include="Source\ClipBoard\ClipBoard.cpp" />
     <ClCompile Include="Source\Hardware\Memory\MemoryUsage.cpp" />
     <ClCompile Include="Source\Hardware\Memory\Memory.cpp" />
-    <ClCompile Include="Source\Controller\KeyBoardKey.cpp" />
     <ClCompile Include="Source\Controller\ControllerData.cpp" />
     <ClCompile Include="Source\Controller\ControllerSystem.cpp" />
-    <ClCompile Include="Source\Library\Library.cpp" />
     <ClCompile Include="Source\DataBase\DataBase.cpp" />
     <ClCompile Include="Source\Resource.cpp" />
     <ClCompile Include="Source\File\FileCachingMode.cpp" />
-    <ClCompile Include="Source\File\ParsingToken.cpp" />
-    <ClCompile Include="Source\Media\Font\FNT\FNTLineType.cpp" />
     <ClCompile Include="Source\Media\Image\GIF\GIFImageDescriptor.cpp" />
     <ClCompile Include="Source\Encryption\RSA\Euklid.cpp" />
     <ClCompile Include="Source\Encryption\RSA\Restklassen.cpp" />
@@ -412,8 +406,6 @@
     <ClCompile Include="Source\File\ByteStream.cpp" />
     <ClCompile Include="Source\File\FileTemporary.cpp" />
     <ClCompile Include="Source\Model\MeshSegment.cpp" />
-    <ClCompile Include="Source\Media\Font\FNT\FNTCommonData.cpp" />
-    <ClCompile Include="Source\Media\Font\FNT\FNTInfo.cpp" />
     <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGColorType.cpp" />
     <ClCompile Include="Source\Model\Model.cpp" />
     <ClCompile Include="Source\Network\SocketActionResult.cpp" />
@@ -452,16 +444,12 @@
     <ClCompile Include="Source\Media\Sound\WAV\FMT.cpp" />
     <ClCompile Include="Source\Media\RIFF\RIFF.cpp" />
     <ClCompile Include="Source\Async\AsyncLock.cpp" />
-    <ClCompile Include="Source\Async\Thread.cpp" />
     <ClCompile Include="Source\Algorithm\ADLER\Adler32.cpp" />
     <ClCompile Include="Source\Algorithm\CRC32\CRC32.cpp" />
     <ClCompile Include="Source\Container\AsciiString.cpp" />
     <ClCompile Include="Source\Container\BitStreamHusk.cpp" />
     <ClCompile Include="Source\Email\EML.cpp" />
     <ClCompile Include="Source\File\File.cpp" />
-    <ClCompile Include="Source\Media\Font\FNT\FNT.cpp" />
-    <ClCompile Include="Source\Media\Font\FNT\FNTCharacter.cpp" />
-    <ClCompile Include="Source\Media\Font\FNT\FNTPage.cpp" />
     <ClCompile Include="Source\Media\Font\Font.cpp" />
     <ClCompile Include="Source\Media\Font\OTF\OTF.cpp" />
     <ClCompile Include="Source\Media\Font\TTF\TTF.cpp" />
@@ -492,7 +480,6 @@
     <ClCompile Include="Source\Math\Geometry\Shape\Star.cpp" />
     <ClCompile Include="Source\Math\Geometry\Shape\Triangle.cpp" />
     <ClCompile Include="Source\Math\Interpolate.cpp" />
-    <ClCompile Include="Source\Math\Math.cpp" />
     <ClCompile Include="Source\Model\3DS\A3DS.cpp" />
     <ClCompile Include="Source\Model\FBX\FBX.cpp" />
     <ClCompile Include="Source\Model\LinkedMesh.cpp" />
@@ -516,7 +503,6 @@
     <ClCompile Include="Source\Media\Sound\OGG\OGG.cpp" />
     <ClCompile Include="Source\Media\Sound\Sound.cpp" />
     <ClCompile Include="Source\Media\Sound\WAV\WAV.cpp" />
-    <ClCompile Include="Source\Text\TextFormat.cpp" />
     <ClCompile Include="Source\Time\StopWatch.cpp" />
     <ClCompile Include="Source\Types\UUID.cpp" />
     <ClCompile Include="Source\Media\Video\Video.cpp" />
@@ -561,7 +547,7 @@
     <ClCompile Include="Source\Media\Font\TTF\Chunks\KERN\TTFKerningPair.cpp" />
     <ClCompile Include="Source\Service\HTTP\HTTPServer.cpp" />
     <ClCompile Include="Source\Window\CursorIcon.cpp" />
-    <ClCompile Include="Source\Window\Window.cpp" />
+    <ClCompile Include="Source\Window\WindowP.cpp" />
     <ClCompile Include="Source\DataBase\SQLType.cpp" />
     <ClCompile Include="Source\DataBase\SQLResult.cpp" />
     <ClCompile Include="Source\Graphic\Vulcan\Vulcan.cpp" />
@@ -569,7 +555,6 @@
     <ClCompile Include="Source\Media\Image\WEBP\WEBP.cpp" />
     <ClCompile Include="Source\Media\Video\WEBM\WebM.cpp" />
     <ClCompile Include="Source\Media\XingInfo\XingInfo.cpp" />
-    <ClCompile Include="Source\OS\User.cpp" />
     <ClCompile Include="Source\Time\Time.cpp" />
     <ClCompile Include="Source\UI\TextBox.cpp" />
   </ItemGroup>
@@ -587,10 +572,8 @@
     <ClInclude Include="Source\Network\Protocol\SBP\SBPDataPackageFile.h" />
     <ClInclude Include="Source\Network\Protocol\SBP\SBPDataPackageIam.h" />
     <ClInclude Include="Source\Network\Protocol\SBP\SBPDataPackage.h" />
-    <ClInclude Include="Source\Async\Await.h" />
     <ClInclude Include="Source\Container\ResponseCache.h" />
     <ClInclude Include="Source\Container\ClusterLongLong.h" />
-    <ClInclude Include="Source\Hardware\Memory\MemoryProtectionMode.h" />
     <ClInclude Include="Source\Math\Primes.h" />
     <ClInclude Include="Source\Media\ID3\ID3Version.h" />
     <ClInclude Include="Source\Media\ID3\ID3v2xFrameTag.h" />
@@ -646,24 +629,19 @@
     <ClInclude Include="Source\ClipBoard\ClipBoard.h" />
     <ClInclude Include="Source\Hardware\Memory\MemoryUsage.h" />
     <ClInclude Include="Source\Hardware\Memory\Memory.h" />
-    <ClInclude Include="Source\Controller\KeyBoardKey.h" />
     <ClInclude Include="Source\Controller\ControllerData.h" />
     <ClInclude Include="Source\Controller\ControllerSystem.h" />
-    <ClInclude Include="Source\Library\Library.h" />
     <ClInclude Include="Source\DataBase\DataBase.h" />
     <ClInclude Include="Source\Math\Physic\PhysicsDynamic.hpp" />
     <ClInclude Include="Source\Math\Physic\PhysicsStatic.hpp" />
     <ClInclude Include="Source\Resource.h" />
     <ClInclude Include="Source\File\FileCachingMode.h" />
-    <ClInclude Include="Source\File\ParsingToken.h" />
-    <ClInclude Include="Source\Media\Font\FNT\FNTLineType.h" />
     <ClInclude Include="Source\Media\Image\GIF\GIFImageDescriptor.h" />
     <ClInclude Include="Source\Encryption\RSA\Euklid.h" />
     <ClInclude Include="Source\Encryption\RSA\Euklid_element.h" />
     <ClInclude Include="Source\Encryption\RSA\Restklassen.h" />
     <ClInclude Include="Source\Encryption\RSA\RSA.h" />
     <ClInclude Include="Source\Encryption\RSA\RSAKeys.h" />
-    <ClInclude Include="Source\Text\Text.h" />
     <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGTransparency.h" />
     <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGPhysicalPixelDimension.h" />
     <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGSuggestedPalette.h" />
@@ -707,8 +685,6 @@
     <ClInclude Include="Source\File\ProgramExecuteResultListener.hpp" />
     <ClInclude Include="Source\Media\Image\Image.h" />
     <ClInclude Include="Source\Model\MeshSegment.h" />
-    <ClInclude Include="Source\Media\Font\FNT\FNTCommonData.h" />
-    <ClInclude Include="Source\Media\Font\FNT\FNTInfo.h" />
     <ClInclude Include="Source\Media\Font\IFontFormat.hpp" />
     <ClInclude Include="Source\Model\IModelFormat.hpp" />
     <ClInclude Include="Source\Model\Model.h" />
@@ -753,11 +729,9 @@
     <ClInclude Include="Source\Media\Video\AVI\AVI.h" />
     <ClInclude Include="Source\Media\Sound\WAV\FMT.h" />
     <ClInclude Include="Source\Media\RIFF\RIFF.h" />
-    <ClInclude Include="Source\Event\Event.hpp" />
     <ClInclude Include="Source\Math\Geometry\AngleDegree.hpp" />
     <ClInclude Include="Source\Math\Geometry\AngleRadians.hpp" />
     <ClInclude Include="Source\Async\AsyncLock.h" />
-    <ClInclude Include="Source\Async\Thread.h" />
     <ClInclude Include="Source\Algorithm\ADLER\Adler32.h" />
     <ClInclude Include="Source\Algorithm\CRC32\CRC32.h" />
     <ClInclude Include="Source\Container\AsciiString.h" />
@@ -777,11 +751,6 @@
     <ClInclude Include="Source\Email\EML.h" />
     <ClInclude Include="Source\File\FileActionResult.hpp" />
     <ClInclude Include="Source\File\File.h" />
-    <ClInclude Include="Source\Media\Font\FNT\FNT.h" />
-    <ClInclude Include="Source\Media\Font\FNT\FNTChanalMode.h" />
-    <ClInclude Include="Source\Media\Font\FNT\FNTCharacter.h" />
-    <ClInclude Include="Source\Media\Font\FNT\FNTCommand.h" />
-    <ClInclude Include="Source\Media\Font\FNT\FNTPage.h" />
     <ClInclude Include="Source\Media\Font\Font.h" />
     <ClInclude Include="Source\Media\Font\FontFormat.h" />
     <ClInclude Include="Source\Media\Font\OTF\OTF.h" />
@@ -832,7 +801,6 @@
     <ClInclude Include="Source\Math\Geometry\Vector3.hpp" />
     <ClInclude Include="Source\Math\Geometry\Vector4.hpp" />
     <ClInclude Include="Source\Math\Interpolate.h" />
-    <ClInclude Include="Source\Math\Math.h" />
     <ClInclude Include="Source\Model\3DS\A3DS.h" />
     <ClInclude Include="Source\Model\FBX\FBX.h" />
     <ClInclude Include="Source\Model\LinkedMesh.h" />
@@ -855,16 +823,13 @@
     <ClInclude Include="Source\Network\IOSocket.h" />
     <ClInclude Include="Source\Network\IPVersion.h" />
     <ClInclude Include="Source\Network\Server.h" />
-    <ClInclude Include="Source\OS\OSDefine.h" />
     <ClInclude Include="Source\Media\Sound\MID\MID.h" />
     <ClInclude Include="Source\Media\Sound\MP3\MP3.h" />
     <ClInclude Include="Source\Media\Sound\OGG\OGG.h" />
     <ClInclude Include="Source\Media\Sound\Sound.h" />
     <ClInclude Include="Source\Media\Sound\SoundFormat.h" />
     <ClInclude Include="Source\Media\Sound\WAV\WAV.h" />
-    <ClInclude Include="Source\Text\TextFormat.h" />
     <ClInclude Include="Source\Time\StopWatch.h" />
-    <ClInclude Include="Source\File\Endian.h" />
     <ClInclude Include="Source\Types\UUID.h" />
     <ClInclude Include="Source\Media\Video\IVideoFormat.hpp" />
     <ClInclude Include="Source\Media\Video\RefreshRateMode.h" />
@@ -911,7 +876,7 @@
     <ClInclude Include="Source\Service\HTTP\HTTPServer.h" />
     <ClInclude Include="Source\Window\CursorIcon.h" />
     <ClInclude Include="Source\Window\CursorMode.h" />
-    <ClInclude Include="Source\Window\Window.h" />
+    <ClInclude Include="Source\Window\WindowP.h" />
     <ClInclude Include="Source\DataBase\SQLType.h" />
     <ClInclude Include="Source\DataBase\SQLResult.h" />
     <ClInclude Include="Source\Graphic\Vulcan\Vulcan.h" />
@@ -919,9 +884,13 @@
     <ClInclude Include="Source\Media\Image\WEBP\WEBP.h" />
     <ClInclude Include="Source\Media\Video\WEBM\WebM.h" />
     <ClInclude Include="Source\Media\XingInfo\XingInfo.h" />
-    <ClInclude Include="Source\OS\User.h" />
     <ClInclude Include="Source\Time\Time.h" />
     <ClInclude Include="Source\UI\TextBox.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PXUltima\PXUltima.vcxproj">
+      <Project>{7d027ed8-ed69-414c-a832-40cd80be72d7}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

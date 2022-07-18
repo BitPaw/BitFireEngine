@@ -1,20 +1,5 @@
 #include "ByteStream.h"
-
-#include <cassert>
-#include <cstring>
-
-#include <Text/Text.h>
-#include <Hardware/Memory/Memory.h>
-
-#include <iso646.h>
 #include <cstdarg>
-
-#define IsInRange DataCursorPosition < DataSize	
-#define IsNotEndOfString Data[DataCursorPosition] != '\0'
-#define IsEndOfString Data[DataCursorPosition] == '\0'
-#define IsNotEmptySpace Data[DataCursorPosition] != ' '
-#define IsEmptySpace Data[DataCursorPosition] == ' '
-#define IsEndOfLineCharacter (Data[DataCursorPosition] == '\r' || Data[DataCursorPosition] == '\n')
 
 BF::ByteStream::ByteStream()
 {
@@ -28,267 +13,131 @@ BF::ByteStream::ByteStream(void* data, const size_t dataSize)
 
 BF::ByteStream::ByteStream(const void* data, const size_t dataSize)
 {
-	DataSet(data, dataSize);
+	DataSet((void*)data, dataSize);
 }
 
-size_t BF::ByteStream::ReadPossibleSize() const
+size_t BF::ByteStream::ReadPossibleSize()
 {
-	return DataSize - DataCursorPosition;
+	return ParsingStreamRemainingSize(this);
 }
 
-bool BF::ByteStream::IsAtEnd() const
+bool BF::ByteStream::IsAtEnd()
 {
-	return ReadPossibleSize() == 0;
+	return ParsingStreamIsAtEnd(this);
 }
 
-void BF::ByteStream::DataSet(const void* data, const size_t dataSize, const size_t cursorPosition)
+void BF::ByteStream::DataSet(void* data, const size_t dataSize, const size_t cursorPosition)
 {
-	Data = (Byte__*)data;
-	DataSize = dataSize;
-	DataCursorPosition = cursorPosition;
+	ParsingStreamConstruct(this, data, dataSize);
 }
 
 void BF::ByteStream::CursorToBeginning()
 {
-	DataCursorPosition = 0;
+	ParsingStreamCursorToBeginning(this);
 }
 
 Byte__* BF::ByteStream::CursorCurrentAdress()
 {
-	return Data + DataCursorPosition;
+	return ParsingStreamCursorPosition(this);
 }
 
 void BF::ByteStream::CursorAdvance(const size_t steps)
 {
-	DataCursorPosition += steps;
+	ParsingStreamCursorAdvance(this, steps);
 }
 
 void BF::ByteStream::CursorRewind(const size_t steps)
 {
-	DataCursorPosition -= steps;
+	ParsingStreamCursorRewind(this, steps);
 }
 
 void BF::ByteStream::CursorToEnd()
 {
-	DataCursorPosition = DataSize;
+	ParsingStreamCursorToEnd(this);
 }
 
 unsigned int BF::ByteStream::ReadNextLineInto(char* exportBuffer)
 {
-	SkipEndOfLineCharacters();
-
-	const size_t beginningPosition = DataCursorPosition;	
-	const char* input = (char*)Data + beginningPosition;
-	size_t length = 0;
-
-	while(IsInRange and !IsEndOfLineCharacter and IsNotEndOfString) ++DataCursorPosition;
-
-	length = DataCursorPosition - beginningPosition;
-
-	if (length == 0)
-	{
-		return 0;
-	}
-
-	Text::Copy(input, length, exportBuffer, length);
-
-	SkipEndOfLineCharacters();
-
-	return length;
+	return ParsingStreamReadNextLineInto(this, exportBuffer, -1);
 }
 
 void BF::ByteStream::SkipEndOfLineCharacters()
 {
-	while(IsInRange)
-	{
-		const bool advance = IsEndOfLineCharacter and IsNotEndOfString;
-
-		if(!advance)
-		{
-			break;
-		}
-
-		++DataCursorPosition;
-	}
+	ParsingStreamSkipEndOfLineCharacters(this);
 }
 
 void BF::ByteStream::SkipEmpty()
 {
-	while(IsInRange and IsEmptySpace)
-	{
-		++DataCursorPosition;
-	}
+	ParsingStreamSkipEmptySpace(this);
 }
 
 void BF::ByteStream::SkipBlock()
 {
-	while(IsInRange and IsNotEndOfString and IsNotEmptySpace)
-	{
-		++DataCursorPosition;
-	}
-
-	SkipEmpty();
+	ParsingStreamSkipBlock(this);
 }
 
 size_t BF::ByteStream::SkipLine()
 {
-	const size_t positionBefore = DataCursorPosition;
-
-	while(IsInRange)
-	{
-		const bool advance = !IsEndOfLineCharacter and IsNotEndOfString;
-
-		if(!advance)
-		{
-			break;
-		}
-
-		++DataCursorPosition;
-	}
-
-	SkipEndOfLineCharacters();
-
-	const size_t skippedBytes = DataCursorPosition - positionBefore;
-
-	return skippedBytes;
+	return ParsingStreamSkipLine(this);
 }
 
 void BF::ByteStream::Read(bool& value)
 {
-	char byte = 0;
+	unsigned char byte = 0;
 
-	Read((unsigned char&)byte);
+	ParsingStreamReadCU(this, &byte);
 
-	switch (byte)
-	{
-		case '1':
-		case 1:
-			value = true;
-			break;
-
-		default:
-			value = false;
-			break;
-	}
+	value = byte;
 }
 
 void BF::ByteStream::Read(char& value)
 {
-	Read((unsigned char&)value);
+	ParsingStreamReadC(this, &value);
 }
 
 void BF::ByteStream::Read(unsigned char& value)
 {
-	value = Data[DataCursorPosition++];
+	ParsingStreamReadCU(this, &value);
 }
 
 void BF::ByteStream::Read(short& value, const Endian endian)
 {
-	Read((unsigned short&)value, endian);
+	ParsingStreamReadS(this, &value, endian);
 }
 
 void BF::ByteStream::Read(unsigned short& value, const Endian endian)
 {
-	const Byte__* data = Data + DataCursorPosition;
-
-	switch (endian)
-	{
-		case Endian::Big:
-			value = MakeShortBE(data[0], data[1]);
-			break;
-
-		default:
-		case Endian::Little:
-			value = MakeShortLE(data[0], data[1]);
-			break;
-	}
-
-	DataCursorPosition += sizeof(unsigned short);
+	ParsingStreamReadSU(this, &value, endian);
 }
 
 void BF::ByteStream::Read(int& value, const Endian endian)
 {
-	Read((unsigned int&)value, endian);
+	ParsingStreamReadI(this, &value, endian);
 }
 
 void BF::ByteStream::Read(unsigned int& value, const Endian endian)
 {
-	const Byte__* data = Data + DataCursorPosition;
-
-	switch (endian)
-	{
-		case Endian::Big:
-			value = MakeIntBE(data[0], data[1], data[2], data[3]);
-			break;
-
-		default:
-		case Endian::Little:
-			value = *(unsigned int*)data;
-			break;
-	}
-
-	DataCursorPosition += sizeof(unsigned int);
+	ParsingStreamReadIU(this, &value, endian);
 }
 
 void BF::ByteStream::Read(unsigned long long& value, const Endian endian)
 {
-	const Byte__* data = Data + DataCursorPosition;
-
-	switch (endian)
-	{
-		case Endian::Big:
-		{
-			value = MakeLongLongBE(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]);
-			break;
-		}
-		default:
-		case Endian::Little:
-		{
-			value = MakeLongLongLE(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]);
-			break;
-		}	
-	}
-
-	DataCursorPosition += sizeof(unsigned long long);
+	ParsingStreamReadULL(this, &value, endian);
 }
 
 void BF::ByteStream::Read(void* value, const size_t length)
 {
-	Memory::Copy(value, Data + DataCursorPosition, length);
-
-	DataCursorPosition += length;
+	ParsingStreamReadD(this, value, length);
 }
 
 void BF::ByteStream::ReadUntil(char* value, const size_t length, const char character)
 {
-	Byte__* start = Data + DataCursorPosition;
-	size_t lengthCopy = 0;
-
-	while(IsInRange && Data[DataCursorPosition] != character && length <= lengthCopy)
-	{
-		++DataCursorPosition;
-	}
-
-	lengthCopy = DataCursorPosition;
-
-	Memory::Copy(value, start, lengthCopy);
+	ParsingStreamReadUntil(this, value, length, character);
 }
 
 void BF::ByteStream::ReadUntil(wchar_t* value, const size_t length, const wchar_t character)
 {	
-	wchar_t* start = (wchar_t*)(Data + DataCursorPosition);
-	const size_t characterOffset = sizeof(wchar_t);
-	size_t lengthCopy = 0;
-
-	while(IsInRange && *(wchar_t*)(Data + DataCursorPosition) != character && lengthCopy <= length)
-	{
-		DataCursorPosition += characterOffset;
-		lengthCopy += characterOffset;
-	}	
-
-	DataCursorPosition += characterOffset;
-
-	Memory::Copy(value, start, lengthCopy);
+	ParsingStreamReadUntil(this, value, length, character);
 }
 
 size_t BF::ByteStream::ReadSafe(Byte__* value, const size_t length)
@@ -319,192 +168,84 @@ bool BF::ByteStream::ReadAndCompare(const char value)
 
 bool BF::ByteStream::ReadAndCompare(const void* value, const size_t length)
 {
-	bool result = Memory::Compare(value, Data + DataCursorPosition, length) == 0;
-
-	DataCursorPosition += length;
-
-	return result;
+	return ParsingStreamReadAndCompare(this, value, length);
 }
 
 bool BF::ByteStream::ReadAndCompare(const unsigned int value)
 {
-	const unsigned char* sourceAdress = Data + DataCursorPosition;
-	const unsigned int sourceValue = *((unsigned int*)sourceAdress);
-
-	const bool isEqual = sourceValue == value;
-
-	DataCursorPosition += 4;
-
-	return isEqual;
+	return ParsingStreamReadAndCompare(this, &value, sizeof(unsigned int));
 }
 
 void BF::ByteStream::Write(const bool value)
 {
-	Data[DataCursorPosition++] = value;
+	const unsigned char valueChar = value;
+
+	Write(valueChar);
 }
 
 void BF::ByteStream::Write(const char value)
 {
-	Data[DataCursorPosition++] = value;
+	ParsingStreamWriteC(this, value);
 }
 
 void BF::ByteStream::Write(const unsigned char value)
 {
-	Data[DataCursorPosition++] = value;
+	ParsingStreamWriteC(this, value);
 }
 
 void BF::ByteStream::Write(const short value, const Endian endian)
 {
-	Write((unsigned short)value, endian);
+	ParsingStreamWriteS(this, value, endian);
 }
 
 void BF::ByteStream::Write(const unsigned short value, const Endian endian)
 {
-	Byte__* data = Data + DataCursorPosition;
-
-	ClusterShort clusterShort;
-
-	clusterShort.Value = value;
-
-	switch (endian)
-	{
-		case Endian::Big:
-		{	
-			data[0] = clusterShort.A;
-			data[1] = clusterShort.B;
-			break;
-		}
-		default:
-		case Endian::Little:
-		{
-			data[0] = clusterShort.B;
-			data[1] = clusterShort.A;
-			break;
-		}
-	}
-
-	DataCursorPosition += sizeof(unsigned short);
+	ParsingStreamWriteSU(this, value, endian);
 }
 
 void BF::ByteStream::Write(const int value, const Endian endian)
 {
-	Write((unsigned int)value, endian);
+	ParsingStreamWriteSU(this, value, endian);
 }
 
 void BF::ByteStream::Write(unsigned int value, const Endian endian)
 {
-	Byte__* data = Data + DataCursorPosition;
-
-	ClusterInt clusterInt;
-
-	clusterInt.Value = value;
-
-	switch (endian)
-	{
-		case Endian::Big:
-		{
-			data[0] = clusterInt.A;
-			data[1] = clusterInt.B;
-			data[2] = clusterInt.C;
-			data[3] = clusterInt.D;
-			break;
-		}
-		default:
-		case Endian::Little:
-		{
-			unsigned int* adress = (unsigned int*)data;
-
-			*adress = value;
-			break;
-		}
-	}
-
-	DataCursorPosition += sizeof(unsigned int);
+	ParsingStreamWriteSU(this, value, endian);
 }
 
 void BF::ByteStream::Write(const long long value, const Endian endian)
 {
-	Write((unsigned long long)value, endian);
+	ParsingStreamWriteSU(this, value, endian);
 }
 
 void BF::ByteStream::Write(const unsigned long long value, const Endian endian)
 {
-	Byte__* data = Data + DataCursorPosition;
-
-	ClusterLongLong clusterLongLong;
-
-	clusterLongLong.Value = value;
-
-	switch(endian)
-	{
-		case Endian::Big:
-		{
-			data[0] = clusterLongLong.A;
-			data[1] = clusterLongLong.B;
-			data[2] = clusterLongLong.C;
-			data[3] = clusterLongLong.D;
-			data[4] = clusterLongLong.E;
-			data[5] = clusterLongLong.F;
-			data[6] = clusterLongLong.G;
-			data[7] = clusterLongLong.H;
-			break;
-		}
-		default:
-		case Endian::Little:
-		{
-			data[0] = clusterLongLong.H;
-			data[1] = clusterLongLong.G;
-			data[2] = clusterLongLong.F;
-			data[3] = clusterLongLong.E;
-			data[4] = clusterLongLong.D;
-			data[5] = clusterLongLong.C;
-			data[6] = clusterLongLong.B;
-			data[7] = clusterLongLong.A;
-			break;
-		}
-	}
-
-	DataCursorPosition += sizeof(unsigned long long);
+	ParsingStreamWriteSU(this, value, endian);
 }
 
 void BF::ByteStream::Write(const char* value, const size_t length)
 {
-	Write((void*)value, length);
+	ParsingStreamWriteD(this, (void*)value, length);
 }
 
 void BF::ByteStream::Write(const unsigned char* value, const size_t length)
 {
-	Write((void*)value, length);
+	ParsingStreamWriteD(this, (void*)value, length);
 }
 
 void BF::ByteStream::Write(const void* value, const size_t length)
 {
-	Memory::Copy(Data + DataCursorPosition, value, length);
-
-	DataCursorPosition += length;
+	ParsingStreamWriteD(this, (void*)value, length);
 }
 
 size_t BF::ByteStream::Write(const char* format, ...)
 {
-	char* currentPosition = (char*)Data + DataCursorPosition;
-
 	va_list args;
 	va_start(args, format);
 
-	int writtenBytes = vsprintf(currentPosition, format, args);
+	size_t readBytes = ParsingStreamWrite(this, format, args);
 
 	va_end(args);
 	
-	{
-		const bool sucessful = writtenBytes >= 0;
-
-		if(!sucessful)
-		{
-			return 0;
-		}
-	}	
-
-	DataCursorPosition += writtenBytes;
-
-	return writtenBytes;
+	return readBytes;
 }

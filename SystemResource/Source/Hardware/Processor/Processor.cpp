@@ -1,6 +1,6 @@
 #include "Processor.h"
 
-#include <OS/OSDefine.h>
+#include <OS/OSVersion.h>
 #include <Text/Text.h>
 
 #if defined(OSUnix)
@@ -63,7 +63,7 @@ bool BF::Processor::FetchInfo(ProcessorInfo& processorInfo)
 
     // Capture vendor string
     {
-        Text::Clear(processorInfo.VendorName, sizeof(processorInfo.VendorName));
+        TextClearA(processorInfo.VendorName, sizeof(processorInfo.VendorName));
 
         *reinterpret_cast<int*>(processorInfo.VendorName) = data_[0][1];
         *reinterpret_cast<int*>(processorInfo.VendorName + 4) = data_[0][3];
@@ -72,8 +72,8 @@ bool BF::Processor::FetchInfo(ProcessorInfo& processorInfo)
         const char* vendorNameIntel = "GenuineIntel";
         const char* vendorNameAMD = "AuthenticAMD";
 
-        isIntel = Text::Compare(vendorNameIntel, processorInfo.VendorName, sizeof(vendorNameIntel));
-        isAMD = Text::Compare(vendorNameAMD, processorInfo.VendorName, sizeof(vendorNameAMD));
+        isIntel = TextCompareA(vendorNameIntel, sizeof(vendorNameIntel),processorInfo.VendorName, sizeof(vendorNameIntel));
+        isAMD = TextCompareA(vendorNameAMD, sizeof(vendorNameAMD), processorInfo.VendorName, sizeof(vendorNameAMD));
 
         if (isIntel)
         {
@@ -142,7 +142,7 @@ bool BF::Processor::FetchInfo(ProcessorInfo& processorInfo)
         {
             const char* brandName = (const char*)extdata_ + 32;
 
-            Text::Copy(brandName, brandNameSize, processorInfo.BrandName, brandNameSize);
+            TextCopyA(brandName, brandNameSize, processorInfo.BrandName, brandNameSize);
         }
     }
 

@@ -3,7 +3,7 @@
 #include "FileActionResult.hpp"
 #include "ProgramExecuteResultListener.hpp"
 
-#include "../Async/Thread.h"
+#include <Async/Thread.h>
 
 namespace BF
 {

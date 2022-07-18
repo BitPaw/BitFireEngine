@@ -25,7 +25,7 @@ void BF::SBPServer::SendFile(const ClientID clientID, const char* text)
 
 	// Check if file exists
 	{
-		const FileActionResult fileActionResult = file.MapToVirtualMemory(text, MemoryProtectionMode::ReadOnly);
+		const FileActionResult fileActionResult = file.MapToVirtualMemory(text, MemoryReadOnly);
 		const bool sucessful = fileActionResult == FileActionResult::Successful;
 
 		if(!sucessful)

@@ -17,12 +17,12 @@ BF::Square::Square(Vector2<float> size)
 
 float BF::Square::SideLength()
 {
-	return Math::Absolute__(PointA.X - PointB.X);
+	return MathAbsolute(PointA.X - PointB.X);
 }
 
 float BF::Square::SurfaceArea()
 {
-	return Math::PowerOfTwo(SideLength());
+	return MathPowerOfTwo(SideLength());
 }
 
 float BF::Square::Perimeter()

@@ -34,12 +34,12 @@ float BF::Circle::SurfaceArea()
 {
 	float radius = Radius();
 
-	return PI * radius * radius;
+	return MathConstantPI * radius * radius;
 }
 
 float BF::Circle::Perimeter()
 {
-	return 2 * PI * Radius();
+	return 2 * MathConstantPI * Radius();
 }
 
 void BF::Circle::Set(float radius)

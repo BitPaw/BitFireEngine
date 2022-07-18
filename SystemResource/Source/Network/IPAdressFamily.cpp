@@ -1,6 +1,6 @@
 #include "IPAdressFamily.h"
 
-#include <OS/OSDefine.h>
+#include <OS/OSVersion.h>
 
 #define IPAF_UNSPEC 0 // Unspecified
 #define IPAF_LOCAL 1 // Local to host (pipes and file-domain). 

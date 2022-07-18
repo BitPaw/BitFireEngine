@@ -46,7 +46,7 @@ size_t BF::XingInfo::Parse(const unsigned char* data, const size_t dataSize)
 
 	unsigned int flags = 0;
 
-	dataStream.Read(flags, Endian::Big);
+	dataStream.Read(flags, EndianBig);
 
 	const bool hasNumberOfFrames = flags & 0b00000001;
 	const bool hasSizeInBytes = (flags & 0b00000010) >> 1;
@@ -57,7 +57,7 @@ size_t BF::XingInfo::Parse(const unsigned char* data, const size_t dataSize)
 	// It represents the total number of frames in the Audio file.
 	if(hasNumberOfFrames)
 	{
-		dataStream.Read(NumberOfFrames, Endian::Big);
+		dataStream.Read(NumberOfFrames, EndianBig);
 	}
 
 	// (0x0002) is set, then read one 32 bit integer in Big Endian. 
@@ -65,7 +65,7 @@ size_t BF::XingInfo::Parse(const unsigned char* data, const size_t dataSize)
 	// This does not include the ID3 tag, however, it includes this very tag.
 	if(hasSizeInBytes)
 	{
-		dataStream.Read(SizeInBytes, Endian::Big);
+		dataStream.Read(SizeInBytes, EndianBig);
 	}
 
 	if(hasTOCData)
@@ -75,8 +75,8 @@ size_t BF::XingInfo::Parse(const unsigned char* data, const size_t dataSize)
 
 	if(hasVBRScale)
 	{
-		dataStream.Read(VBRScale, Endian::Big);
+		dataStream.Read(VBRScale, EndianBig);
 	}
 
-	return dataStream.DataCursorPosition;
+	return dataStream.DataCursor;
 }

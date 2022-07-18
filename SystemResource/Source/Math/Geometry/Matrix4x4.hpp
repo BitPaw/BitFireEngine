@@ -338,8 +338,8 @@ namespace BF
 			//-----<X ROT>-----
 			{
 		
-				float cosResult = Math::Cosinus(x);
-				float sinResult = Math::Sinus(x);
+				float cosResult = MathCosinus(x);
+				float sinResult = MathSinus(x);
 
 				xRotation.Data[5] = cosResult;
 				xRotation.Data[6] = sinResult;
@@ -351,8 +351,8 @@ namespace BF
 			//-----<X ROT>-----
 			{
 			
-				float cosResult = Math::Cosinus(y);
-				float sinResult = Math::Sinus(y);
+				float cosResult = MathCosinus(y);
+				float sinResult = MathSinus(y);
 
 				yRotation.Data[0] = cosResult;
 				yRotation.Data[2] = -sinResult;
@@ -363,8 +363,8 @@ namespace BF
 			//-----<X ROT>-----
 			{
 			
-				float cosResult = Math::Cosinus(z);
-				float sinResult = Math::Sinus(z);
+				float cosResult = MathCosinus(z);
+				float sinResult = MathSinus(z);
 
 				zRotation.Data[0] = cosResult;
 				zRotation.Data[1] = -sinResult;
@@ -552,8 +552,8 @@ namespace BF
 		void Perspective(const NumberType fielfOfView, const NumberType aspectRatio, const NumberType near, const NumberType far)
 		{
 			const NumberType difference = (NumberType)far - (NumberType)near;
-			const NumberType fielfOfViewRadians = Math::DegreeToRadians(fielfOfView);
-			const float tanHalfFovy = Math::Tangens(fielfOfViewRadians / 2.0f);
+			const NumberType fielfOfViewRadians = MathDegreeToRadians(fielfOfView);
+			const float tanHalfFovy = MathTangens(fielfOfViewRadians / 2.0f);
 
 			Reset();		
 

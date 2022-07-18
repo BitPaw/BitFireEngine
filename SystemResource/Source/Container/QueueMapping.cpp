@@ -10,7 +10,7 @@ BF::QueueMapping::QueueMapping()
 
 void BF::QueueMapping::Allocate(const size_t sizeInBytes)
 {
-	MapToVirtualMemory(sizeInBytes, MemoryProtectionMode::ReadAndWrite);
+	MapToVirtualMemory(sizeInBytes, MemoryReadAndWrite);
 }
 
 bool BF::QueueMapping::Enqueue(const void* source, const size_t sizeInBytes)
@@ -35,7 +35,7 @@ bool BF::QueueMapping::Dequeue(void* target, size_t sizeInBytes)
 
 	const Byte__* adressStart = Data + _offsetBytesUsed;
 
-	Memory::Copy(target, adressStart, sizeInBytes);
+	MemoryCopy(adressStart, sizeInBytes, target, -1);
 
 	_offsetBytesUsed += sizeInBytes;
 

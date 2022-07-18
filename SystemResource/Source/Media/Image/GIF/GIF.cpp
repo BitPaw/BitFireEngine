@@ -21,7 +21,7 @@ BF::FileActionResult BF::GIF::Load(const char* filePath)
     File file;
 
     {
-        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
         const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
         if(!sucessful)
@@ -42,7 +42,7 @@ BF::FileActionResult BF::GIF::Load(const wchar_t* filePath)
     File file;
 
     {
-        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
         const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
         if(!sucessful)
@@ -94,8 +94,8 @@ BF::FileActionResult BF::GIF::Load(const unsigned char* fileData, const size_t f
 
     // Logical Screen Descriptor.
     {
-        dataStream.Read(Width, Endian::Little);
-        dataStream.Read(Height, Endian::Little);
+        dataStream.Read(Width, EndianLittle);
+        dataStream.Read(Height, EndianLittle);
 
         unsigned char packedFields = 0;
 
@@ -113,17 +113,17 @@ BF::FileActionResult BF::GIF::Load(const unsigned char* fileData, const size_t f
             //---<Image Descriptor>--------------------------------------------
 
             // 3 x 2^(Size of Global Color Table+1).
-            size_t size = 3 * Math::PowerOfTwo(GlobalColorTableSize + 1); // ???
+            size_t size = 3 * MathPowerOfTwo(GlobalColorTableSize + 1); // ???
 
             GIFImageDescriptor imageDescriptor;
 
             unsigned char packedFields = 0;
 
             dataStream.Read(imageDescriptor.Separator);
-            dataStream.Read(imageDescriptor.LeftPosition, Endian::Little);
-            dataStream.Read(imageDescriptor.TopPosition, Endian::Little);
-            dataStream.Read(imageDescriptor.Width, Endian::Little);
-            dataStream.Read(imageDescriptor.Height, Endian::Little);
+            dataStream.Read(imageDescriptor.LeftPosition, EndianLittle);
+            dataStream.Read(imageDescriptor.TopPosition, EndianLittle);
+            dataStream.Read(imageDescriptor.Width, EndianLittle);
+            dataStream.Read(imageDescriptor.Height, EndianLittle);
             dataStream.Read(packedFields);
 
             imageDescriptor.LocalColorTableSize = (packedFields & 0b00000111);

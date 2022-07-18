@@ -3,6 +3,7 @@
 #include "Euklid.h"
 
 #include <Text/Text.h>
+
 #include <Hardware/Memory/Memory.h>
 #include <Math/Primes.h>
 #include <Math/Math.h>
@@ -137,9 +138,10 @@ char* RSA::encode_message(const char* m)
 	{
 		return nullptr;
 	}
-	int length = BF::Text::Length(m);
+	int length = TextLengthA(m, TextUnkownLength);
 	char* encoded = BF::Memory::Allocate<char>(length + 1);
-	BF::Text::Copy(m, length, encoded, length);
+
+	TextCopyA(m, length, encoded, length);
 
 	for (int i = 0; i < length; i++)
 	{
@@ -147,7 +149,7 @@ char* RSA::encode_message(const char* m)
 
 		current_char = current_char < (p* q) ? current_char : 1;
 
-		encoded[i] = BF::Math::PowerModulo(current_char, publicKey.f, publicKey.n);
+		encoded[i] = MathPowerModulo(current_char, publicKey.f, publicKey.n);
 	}
 	return encoded;
 }
@@ -158,7 +160,7 @@ unsigned int RSA::encode_message(unsigned int m)
 	{
 		return -1;
 	}
-	return BF::Math::PowerModulo(m, publicKey.f, publicKey.n);
+	return MathPowerModulo(m, publicKey.f, publicKey.n);
 }
 
 char* RSA::decode_message(const char* c)
@@ -168,9 +170,9 @@ char* RSA::decode_message(const char* c)
 		return nullptr;
 	}
 
-	int length = BF::Text::Length(c);
+	int length = TextLengthA(c, TextUnkownLength);
 	char* decoded = BF::Memory::Allocate<char>(length + 1);
-	BF::Text::Copy(c, length, decoded, length);
+	TextCopyA(c, length, decoded, length);
 
 	for (int i = 0; i < length; i++)
 	{
@@ -178,7 +180,7 @@ char* RSA::decode_message(const char* c)
 
 		current_char = current_char < (p* q) ? current_char : 1;
 
-		decoded[i] = BF::Math::PowerModulo(current_char, privateKey.f, privateKey.n);
+		decoded[i] = MathPowerModulo(current_char, privateKey.f, privateKey.n);
 	}
 	return decoded;
 }
@@ -189,7 +191,7 @@ unsigned int RSA::decode_message(unsigned int c)
 	{
 		return -1;
 	}
-	return BF::Math::PowerModulo(c, privateKey.f, privateKey.n);
+	return MathPowerModulo(c, privateKey.f, privateKey.n);
 }
 
 unsigned int RSA::number_of_Publickeys()

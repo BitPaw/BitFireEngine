@@ -47,7 +47,7 @@ void BF::DeflateBlock::Inflate(BitStreamHusk& bitStream, unsigned char* dataOut,
 
             assert(validLength);          
                         
-            Memory::Copy(dataOut + dataOutSize, sourceAdress, length);
+            MemoryCopy(sourceAdress, -1, dataOut + dataOutSize, length);
 
             dataOutSize += length;
             bitStream.Move(bitsToJump);
@@ -181,7 +181,7 @@ void BF::DeflateBlock::Inflate(BitStreamHusk& bitStream, unsigned char* dataOut,
 
                         if (distance < length)
                         {
-                            Memory::Copy(dataOut + start, dataOut + backward, distance);
+                            MemoryCopy(dataOut + backward, distance, dataOut + start, distance);
 
                             start += distance;
 
@@ -192,7 +192,7 @@ void BF::DeflateBlock::Inflate(BitStreamHusk& bitStream, unsigned char* dataOut,
                         }
                         else
                         {
-                            Memory::Copy(dataOut + start, dataOut + backward, length);
+                            MemoryCopy(dataOut + backward, length, dataOut + start, length);
                         }
                         break;
                     }

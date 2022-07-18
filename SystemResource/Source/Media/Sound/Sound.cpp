@@ -24,7 +24,7 @@ BF::Sound::Sound()
 
 BF::Sound::~Sound()
 {
-    Memory::Release(Data, DataSize);
+    MemoryRelease(Data, DataSize);
 }
 
 BF::SoundFormat BF::Sound::FileFormatPeek(const wchar_t* filePath)

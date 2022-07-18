@@ -172,8 +172,9 @@ BF::SocketActionResult BF::Server::Start(const unsigned short port)
         }
 
         ServerListeningThreadInfo* serverListeningThreadInfo = new ServerListeningThreadInfo(&SocketList[i], this);
+               
 
-        ioSocket.CommunicationThread.Run(Server::ClientListeningThread, serverListeningThreadInfo);
+        ioSocket.CommunicationThread = ThreadRun(Server::ClientListeningThread, serverListeningThreadInfo);
     }       
 
     return SocketActionResult::Successful;
@@ -227,7 +228,7 @@ void BF::Server::RegisterClient(IOSocket* clientSocket)
         EventCallBackServer->OnClientConnected(*indexedClient);
     }
 
-    indexedClient->CommunicationThread.Run(Client::CommunicationFunctionAsync, indexedClient);
+    indexedClient->CommunicationThread = ThreadRun(Client::CommunicationFunctionAsync, indexedClient);
 
     /*
     * ADD in this /\
@@ -353,7 +354,7 @@ ThreadFunctionReturnType BF::Server::ClientListeningThread(void* data)
     Server* server = serverListeningInfo->ServerAdress;
     IOSocket* serverSocket = serverListeningInfo->ServerSocket;
 
-    Memory::Release(data, 0); // there was a new, but we only need to get this here.
+    MemoryRelease(data, 0); // there was a new, but we only need to get this here.
 
     while (serverSocket->IsCurrentlyUsed())
     {

@@ -11,5 +11,5 @@ BF::MIDITrack::MIDITrack()
 
 BF::MIDITrack::~MIDITrack()
 {
-	Memory::Release(EventData, EventDataSize);
+	MemoryRelease(EventData, EventDataSize);
 }

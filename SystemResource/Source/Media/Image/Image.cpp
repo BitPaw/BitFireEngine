@@ -158,12 +158,12 @@ void BF::Image::FlipVertical()
         unsigned char* bufferA = PixelData + (scanlineIndex * scanLineWidthSize);
         unsigned char* bufferB = PixelData + ((height - scanlineIndex) * scanLineWidthSize) - scanLineWidthSize;
 
-        Memory::Copy(copyBufferRow, bufferB, scanLineWidthSize); // A -> Buffer 'Save A'
-        Memory::Copy(bufferB, bufferA, scanLineWidthSize); // B -> A 'Move B to A(override)'
-        Memory::Copy(bufferA, copyBufferRow, scanLineWidthSize); // Buffer -> B 'Move SaveCopy (A) to B'
+        MemoryCopy(bufferB, scanLineWidthSize, copyBufferRow, scanLineWidthSize); // A -> Buffer 'Save A'
+        MemoryCopy(bufferA, scanLineWidthSize, bufferB, scanLineWidthSize); // B -> A 'Move B to A(override)'
+        MemoryCopy(copyBufferRow, scanLineWidthSize, bufferA, scanLineWidthSize); // Buffer -> B 'Move SaveCopy (A) to B'
     }
 
-    Memory::Release(copyBufferRow, scanLineWidthSize);
+    MemoryRelease(copyBufferRow, scanLineWidthSize);
 }
 
 void BF::Image::Resize(const size_t width, const size_t height)
@@ -196,7 +196,7 @@ void BF::Image::FillRandome()
 {
     for (size_t i = 0; i < PixelDataSize; i++)
     {
-        PixelData[i] = Math::RandomeNumber() % 255;
+        PixelData[i] = MathRandomeNumber() % 255;
     }
 }
 
@@ -249,21 +249,21 @@ void BF::Image::FormatChange(ImageDataFormat imageFormat)
                     const size_t newSize = (oldSize / 3) * 4;
                     size_t newIndex = 0;                
                     unsigned char* newData = Memory::Allocate<unsigned char>(newSize);
-                    unsigned char* oldData = PixelData;
+                    const unsigned char* oldData = PixelData;
 
                     if (!newData)
                     {
                         return;
                     }
  
-                    Memory::Set(newData, 0xFF, newSize);
+                    MemorySet(newData, 0xFF, newSize);
 
-                    for (unsigned int oldIndex = 0; oldIndex < oldSize; oldIndex += 3)
+                    for (size_t oldIndex = 0; oldIndex < oldSize; oldIndex += 3)
                     {
-                        unsigned char* source = &oldData[oldIndex];
-                        unsigned char* destination = &newData[newIndex];
+                        const unsigned char* source = oldData + oldIndex;
+                        unsigned char* destination = newData + newIndex;
 
-                        Memory::Copy(destination, source, 3);
+                        MemoryCopy(source, 3, destination, -1);
 
                         newIndex += 4;
                     }
@@ -272,7 +272,7 @@ void BF::Image::FormatChange(ImageDataFormat imageFormat)
                     PixelData = newData;
                     PixelDataSize = newSize;
 
-                    Memory::Release(oldData, oldSize);
+                    MemoryRelease(oldData, oldSize);
 
                     break;
                 }          
@@ -334,7 +334,7 @@ BF::FileActionResult BF::Image::Load(const char* filePath)
     File file;
 
     {
-        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
         const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
         if(!sucessful)
@@ -375,7 +375,7 @@ BF::FileActionResult BF::Image::Load(const wchar_t* filePath)
     File file;
 
     {
-        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
         const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
         if(!sucessful)

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Window/Window.h>
-#include <OS/OSDefine.h>
+#include <Window/WindowP.h>
+#include <OS/OSVersion.h>
 
 namespace BF
 {

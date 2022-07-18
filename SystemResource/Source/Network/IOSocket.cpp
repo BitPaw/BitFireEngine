@@ -6,7 +6,7 @@
 
 #include "IOSocketMessage.h"
 
-#include <Event/Event.hpp>
+#include <Event/Event.h>
 
 #define SocketPackageIDFileBegin 'F'
 #define SocketPackageIDFileEnd '/'

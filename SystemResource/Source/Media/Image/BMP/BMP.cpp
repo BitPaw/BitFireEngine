@@ -18,7 +18,7 @@ BF::BMP::BMP()
 
 BF::BMP::~BMP()
 {
-    Memory::Release(PixelData, PixelDataSize);
+    MemoryRelease(PixelData, PixelDataSize);
 }
 
 BF::FileActionResult BF::BMP::Load(const char* filePath)
@@ -26,7 +26,7 @@ BF::FileActionResult BF::BMP::Load(const char* filePath)
     File file;
 
     {
-        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
         const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
         if(!sucessful)
@@ -47,7 +47,7 @@ BF::FileActionResult BF::BMP::Load(const wchar_t* filePath)
     File file;
 
     {
-        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
         const bool sucessful = fileLoadingResult == FileActionResult::Successful;
 
         if(!sucessful)
@@ -75,9 +75,9 @@ BF::FileActionResult BF::BMP::Load(const unsigned char* fileData, const size_t f
         unsigned int dataOffset = 0;
 
         dataStream.Read(byteCluster.Data, 2u);
-        dataStream.Read(sizeOfFile, Endian::Little);
-        dataStream.Read(reservedBlock, Endian::Little);
-        dataStream.Read(dataOffset, Endian::Little);
+        dataStream.Read(sizeOfFile, EndianLittle);
+        dataStream.Read(reservedBlock, EndianLittle);
+        dataStream.Read(dataOffset, EndianLittle);
 
         Type = ConvertBMPType(byteCluster.Value);
 
@@ -94,7 +94,7 @@ BF::FileActionResult BF::BMP::Load(const unsigned char* fileData, const size_t f
 
     //---[ DIP ]---------------------------------------------------------------
     {
-        dataStream.Read(InfoHeader.HeaderSize, Endian::Little);
+        dataStream.Read(InfoHeader.HeaderSize, EndianLittle);
 
         InfoHeaderType = ConvertBMPInfoHeaderType(InfoHeader.HeaderSize);
 
@@ -102,40 +102,40 @@ BF::FileActionResult BF::BMP::Load(const unsigned char* fileData, const size_t f
         {
             case BMPInfoHeaderType::BitMapInfoHeader:
             {
-                dataStream.Read(InfoHeader.Width, Endian::Little);
-                dataStream.Read(InfoHeader.Height, Endian::Little);
-                dataStream.Read(InfoHeader.NumberOfColorPlanes, Endian::Little);
-                dataStream.Read(InfoHeader.NumberOfBitsPerPixel, Endian::Little);
-                dataStream.Read(InfoHeader.CompressionMethod, Endian::Little);
-                dataStream.Read(InfoHeader.ImageSize, Endian::Little);
-                dataStream.Read(InfoHeader.HorizontalResolution, Endian::Little);
-                dataStream.Read(InfoHeader.VerticalResolution, Endian::Little);
-                dataStream.Read(InfoHeader.NumberOfColorsInTheColorPalette, Endian::Little);
-                dataStream.Read(InfoHeader.NumberOfImportantColorsUsed, Endian::Little);
+                dataStream.Read(InfoHeader.Width, EndianLittle);
+                dataStream.Read(InfoHeader.Height, EndianLittle);
+                dataStream.Read(InfoHeader.NumberOfColorPlanes, EndianLittle);
+                dataStream.Read(InfoHeader.NumberOfBitsPerPixel, EndianLittle);
+                dataStream.Read(InfoHeader.CompressionMethod, EndianLittle);
+                dataStream.Read(InfoHeader.ImageSize, EndianLittle);
+                dataStream.Read(InfoHeader.HorizontalResolution, EndianLittle);
+                dataStream.Read(InfoHeader.VerticalResolution, EndianLittle);
+                dataStream.Read(InfoHeader.NumberOfColorsInTheColorPalette, EndianLittle);
+                dataStream.Read(InfoHeader.NumberOfImportantColorsUsed, EndianLittle);
 
                 break;
             }
             case BMPInfoHeaderType::OS21XBitMapHeader:
             case BMPInfoHeaderType::OS22XBitMapHeader:
             {
-                dataStream.Read((unsigned short&)InfoHeader.Width, Endian::Little);
-                dataStream.Read((unsigned short&)InfoHeader.Height, Endian::Little);
-                dataStream.Read(InfoHeader.NumberOfColorPlanes, Endian::Little);
-                dataStream.Read(InfoHeader.NumberOfBitsPerPixel, Endian::Little);
+                dataStream.Read((unsigned short&)InfoHeader.Width, EndianLittle);
+                dataStream.Read((unsigned short&)InfoHeader.Height, EndianLittle);
+                dataStream.Read(InfoHeader.NumberOfColorPlanes, EndianLittle);
+                dataStream.Read(InfoHeader.NumberOfBitsPerPixel, EndianLittle);
 
                 if(InfoHeaderType == BMPInfoHeaderType::OS22XBitMapHeader)
                 {
                     unsigned short paddingBytes = 0; // Padding.Ignored and should be zero
 
-                    dataStream.Read(InfoHeader.HorizontalandVerticalResolutions, Endian::Little);
-                    dataStream.Read(paddingBytes, Endian::Little);
-                    dataStream.Read(InfoHeader.DirectionOfBits, Endian::Little);
-                    dataStream.Read(InfoHeader.halftoningAlgorithm, Endian::Little);
+                    dataStream.Read(InfoHeader.HorizontalandVerticalResolutions, EndianLittle);
+                    dataStream.Read(paddingBytes, EndianLittle);
+                    dataStream.Read(InfoHeader.DirectionOfBits, EndianLittle);
+                    dataStream.Read(InfoHeader.halftoningAlgorithm, EndianLittle);
 
-                    dataStream.Read(InfoHeader.HalftoningParameterA, Endian::Little);
-                    dataStream.Read(InfoHeader.HalftoningParameterB, Endian::Little);
-                    dataStream.Read(InfoHeader.ColorEncoding, Endian::Little);
-                    dataStream.Read(InfoHeader.ApplicationDefinedByte, Endian::Little);
+                    dataStream.Read(InfoHeader.HalftoningParameterA, EndianLittle);
+                    dataStream.Read(InfoHeader.HalftoningParameterB, EndianLittle);
+                    dataStream.Read(InfoHeader.ColorEncoding, EndianLittle);
+                    dataStream.Read(InfoHeader.ApplicationDefinedByte, EndianLittle);
                 }
 
                 break;
@@ -155,19 +155,22 @@ BF::FileActionResult BF::BMP::Load(const unsigned char* fileData, const size_t f
 
     //---[ Pixel Data ]--------------------------------------------------------
     const size_t dataRowSize = InfoHeader.Width * (InfoHeader.NumberOfBitsPerPixel / 8);
-    const size_t fullRowSize = Math::Floor((InfoHeader.NumberOfBitsPerPixel * InfoHeader.Width + 31) / 32.0f) * 4;
-    const size_t padding = Math::Absolute__((int)fullRowSize - (int)dataRowSize);
+    const size_t fullRowSize = MathFloor((InfoHeader.NumberOfBitsPerPixel * InfoHeader.Width + 31) / 32.0f) * 4;
+    const int paddingSUM = (int)fullRowSize - (int)dataRowSize;
+    const size_t padding = MathAbsolute(paddingSUM);
     size_t amountOfRows = PixelDataSize / fullRowSize;
     size_t pixelDataOffset = 0;
 
     while(amountOfRows-- > 0)
     {
+        unsigned char* data = PixelData + pixelDataOffset;
+
         assert(pixelDataOffset <= PixelDataSize);
 
-        dataStream.Read(PixelData + pixelDataOffset, dataRowSize);
+        dataStream.Read(data, dataRowSize);
 
         pixelDataOffset += dataRowSize;
-        dataStream.DataCursorPosition += padding; // Move data, row + padding(padding can be 0)
+        dataStream.DataCursor += padding; // Move data, row + padding(padding can be 0)
     }
 
     return FileActionResult::Successful;
@@ -193,23 +196,23 @@ BF::FileActionResult BF::BMP::Save(const wchar_t* filePath)
         unsigned int fileSize = InfoHeader.Width * InfoHeader.Height * 3 + 54u;
 
         file.Write("BM", 2u);
-        file.Write(fileSize, Endian::Little);
-        file.Write(0u, Endian::Little);
-        file.Write(54u, Endian::Little);
+        file.Write(fileSize, EndianLittle);
+        file.Write(0u, EndianLittle);
+        file.Write(54u, EndianLittle);
     }
 
     //------<Windows-Header>-----------
-    file.Write(InfoHeader.HeaderSize, Endian::Little);
-    file.Write(InfoHeader.Width, Endian::Little);
-    file.Write(InfoHeader.Height, Endian::Little);
-    file.Write(InfoHeader.NumberOfColorPlanes, Endian::Little);
-    file.Write(InfoHeader.NumberOfBitsPerPixel, Endian::Little);
-    file.Write(InfoHeader.CompressionMethod, Endian::Little);
-    file.Write(InfoHeader.ImageSize, Endian::Little);
-    file.Write(InfoHeader.HorizontalResolution, Endian::Little);
-    file.Write(InfoHeader.VerticalResolution, Endian::Little);
-    file.Write(InfoHeader.NumberOfColorsInTheColorPalette, Endian::Little);
-    file.Write(InfoHeader.NumberOfImportantColorsUsed, Endian::Little);
+    file.Write(InfoHeader.HeaderSize, EndianLittle);
+    file.Write(InfoHeader.Width, EndianLittle);
+    file.Write(InfoHeader.Height, EndianLittle);
+    file.Write(InfoHeader.NumberOfColorPlanes, EndianLittle);
+    file.Write(InfoHeader.NumberOfBitsPerPixel, EndianLittle);
+    file.Write(InfoHeader.CompressionMethod, EndianLittle);
+    file.Write(InfoHeader.ImageSize, EndianLittle);
+    file.Write(InfoHeader.HorizontalResolution, EndianLittle);
+    file.Write(InfoHeader.VerticalResolution, EndianLittle);
+    file.Write(InfoHeader.NumberOfColorsInTheColorPalette, EndianLittle);
+    file.Write(InfoHeader.NumberOfImportantColorsUsed, EndianLittle);
 
     file.Write(PixelData, PixelDataSize);
 
@@ -242,7 +245,7 @@ BF::FileActionResult BF::BMP::ConvertFrom(Image& image)
     InfoHeader.Height = image.Height;
     InfoHeader.ImageSize = PixelDataSize;
 
-    Memory::Copy(PixelData, image.PixelData, PixelDataSize);
+    MemoryCopy(PixelData, PixelDataSize, image.PixelData, image.PixelDataSize);
 
     return FileActionResult::Successful;
 }
@@ -262,7 +265,7 @@ BF::FileActionResult BF::BMP::ConvertTo(Image& image)
     image.PixelDataSize = PixelDataSize;
     image.PixelData = pixelData;
 
-    Memory::Copy(image.PixelData, PixelData, image.PixelDataSize);
+    MemoryCopy(PixelData, PixelDataSize, image.PixelData, image.PixelDataSize);
 
     //image.FlipHorizontal(); ??
 

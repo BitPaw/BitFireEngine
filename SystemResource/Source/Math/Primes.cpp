@@ -7,7 +7,7 @@
 
 unsigned int BF::Primes::firstPrimeInX(unsigned int input)
 {
-	int check_up_to = BF::Math::SquareRoot(input);
+	int check_up_to = MathSquareRoot(input);
 	#if Primesdebug
 	printf("Checking up to %d if the Number is Prime\n", check_up_to);
 	#endif
@@ -56,7 +56,7 @@ unsigned int BF::Primes::Eula_phi(unsigned int input)
 		{
 			break;
 		}
-		result *= BF::Math::Power(primes[i * 2], primes[i * 2 + 1] - 1) * (primes[i * 2] - 1);
+		result *= MathPower(primes[i * 2], primes[i * 2 + 1] - 1) * (primes[i * 2] - 1);
 	}
 	return result;
 }
