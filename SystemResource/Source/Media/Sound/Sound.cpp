@@ -1,16 +1,16 @@
 #include "Sound.h"
 
-#include "AAC/AAC.h"
 #include "M4A/M4A.h"
-#include "FLAC/FLAC.h"
-#include "MID/MID.h"
 #include "MP3/MP3.h"
 #include "OGG/OGG.h"
-#include "WAV/WAV.h"
-#include "WMA/WMA.h"
 
 #include <File/File.h>
 #include <Hardware/Memory/Memory.h>
+#include <File/Format/AAC/AAC.h>
+#include <File/Format/FLAC/FLAC.h>
+#include <File/Format/MID/MID.h>
+#include <File/Format/WAV/WAV.h>
+#include <File/Format/WMA/WMA.h>
 
 BF::Sound::Sound()
 {
@@ -57,15 +57,15 @@ BF::FileActionResult BF::Sound::Load(const wchar_t* filePath)
         case SoundFormat::AAC:
         {
             AAC aac;
-            aac.Load(filePath);
-            aac.ConvertTo(*this);
+           // aac.Load(filePath);
+           // aac.ConvertTo(*this);
             break;
         }
         case SoundFormat::FLAC:
         {
             FLAC flac;
-            flac.Load(filePath);
-            flac.ConvertTo(*this);
+           // flac.Load(filePath);
+            //flac.ConvertTo(*this);
             break;
         }
         case SoundFormat::M4A:
@@ -78,8 +78,8 @@ BF::FileActionResult BF::Sound::Load(const wchar_t* filePath)
         case SoundFormat::MID:
         {
             MID mid;
-            mid.Load(filePath);
-            mid.ConvertTo(*this);
+            //mid.Load(filePath);
+            //mid.ConvertTo(*this);
             break;
         }
         case SoundFormat::MP3:
@@ -99,15 +99,15 @@ BF::FileActionResult BF::Sound::Load(const wchar_t* filePath)
         case SoundFormat::WAV:
         {
             WAV wav;
-            wav.Load(filePath);
-            wav.ConvertTo(*this);
+            //wav.Load(filePath);
+            //wav.ConvertTo(*this);
             break;
         }
         case SoundFormat::WMA:
         {
             WMA wma;
-            wma.Load(filePath);
-            wma.ConvertTo(*this);
+            //wma.Load(filePath);
+            //wma.ConvertTo(*this);
             break;
         }
         case SoundFormat::Unkown:
@@ -132,14 +132,14 @@ BF::FileActionResult BF::Sound::Save(const wchar_t* filePath, SoundFormat soundF
         case SoundFormat::AAC:
         {
             AAC aac;
-            aac.ConvertFrom(*this);
+           // aac.ConvertFrom(*this);
             //aac.Save(FilePath);
             break;
         }     
         case SoundFormat::FLAC:
         {
             FLAC flac;
-            flac.ConvertFrom(*this);
+            //flac.ConvertFrom(*this);
            // flac.Save(FilePath);
             break;
         }
@@ -153,7 +153,7 @@ BF::FileActionResult BF::Sound::Save(const wchar_t* filePath, SoundFormat soundF
         case SoundFormat::MID:
         {
             MID mid;
-            mid.ConvertFrom(*this);
+            //mid.ConvertFrom(*this);
            // mid.Save(FilePath);
             break;
         }
@@ -174,14 +174,14 @@ BF::FileActionResult BF::Sound::Save(const wchar_t* filePath, SoundFormat soundF
         case SoundFormat::WAV:
         {
             WAV wav;
-            wav.ConvertFrom(*this);
+           // wav.ConvertFrom(*this);
            // wav.Save(FilePath);
             break;
         }
         case SoundFormat::WMA:
         {
             WMA wma;
-            wma.ConvertFrom(*this);
+           // wma.ConvertFrom(*this);
            // wma.Save(FilePath);
             break;
         }

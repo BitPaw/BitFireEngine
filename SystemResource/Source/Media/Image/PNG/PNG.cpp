@@ -13,6 +13,7 @@
 #include <Hardware/Memory/Memory.h>
 
 #include <string>
+#include <Algorithm/CRC32/CRC32.h>
 
 #define PNGHeaderSequenz { 0x89, 'P', 'N', 'G', '\r', '\n', 0x1A, '\n' }
 #define PNGDebugInfo false
@@ -512,7 +513,7 @@ BF::FileActionResult BF::PNG::Save(const wchar_t* filePath)
         file.Write(ImageHeader.FilterMethod);
         file.Write(interlaceMethod);
 
-        const unsigned int crc = CRC32::Generate(chunkStart, 13+4);
+        const unsigned int crc = CRC32Generate(chunkStart, 13+4);
 
         file.Write(crc, EndianBig);
     }

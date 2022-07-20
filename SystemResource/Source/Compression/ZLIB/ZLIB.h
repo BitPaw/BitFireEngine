@@ -14,7 +14,7 @@ namespace BF
 		size_t CompressedDataSize;
 		const unsigned char* CompressedData;
 
-		Adler32 AdlerChecksum;
+		unsigned int AdlerChecksum;
 
 		ZLIB();
 		//ZLIB();

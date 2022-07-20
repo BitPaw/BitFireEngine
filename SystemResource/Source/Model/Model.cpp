@@ -2,15 +2,15 @@
 
 #include "ModelType.h"
 
-#include "3DS/A3DS.h"
-#include "FBX/FBX.h"
 #include "OBJ/OBJ.h"
-#include "PLY/PLY.h"
-#include "STL/STL.h"
-#include "VRML/VRML.h"
 
 #include <File/File.h>
 #include <Text/Text.h>
+#include <File/Format/PLY/PLY.h>
+#include <File/Format/STL/STL.h>
+#include <File/Format/VRML/VRML.h>
+#include <File/Format/FBX/FBX.h>
+#include <File/Format/3DS/A3DS.h>
 
 BF::Model::Model()
 {
@@ -70,16 +70,16 @@ BF::FileActionResult BF::Model::Load(const wchar_t* filePath)
         case ModelType::A3DS:
         {
             A3DS a3ds;
-            a3ds.Load(filePath);
-            a3ds.ConvertTo(*this);
+            //a3ds.Load(filePath);
+            //a3ds.ConvertTo(*this);
             break;
         }
 
         case ModelType::FBX:
         {
             FBX fbx;
-            fbx.Load(filePath);
-            fbx.ConvertTo(*this);
+            //fbx.Load(filePath);
+           // fbx.ConvertTo(*this);
             break;
         }
 
@@ -94,24 +94,24 @@ BF::FileActionResult BF::Model::Load(const wchar_t* filePath)
         case ModelType::PLY:
         {
             PLY pyl;
-            pyl.Load(filePath);
-            pyl.ConvertTo(*this);
+           // pyl.Load(filePath);
+           // pyl.ConvertTo(*this);
             break;
         }
 
         case ModelType::STL:
         {
             STL stl;
-            stl.Load(filePath);
-            stl.ConvertTo(*this);
+           // stl.Load(filePath);
+            //stl.ConvertTo(*this);
             break;
         }
 
         case ModelType::WRL:
         {
             VRML vrml;
-            vrml.Load(filePath);
-            vrml.ConvertTo(*this);
+           // vrml.Load(filePath);
+           // vrml.ConvertTo(*this);
             break;
         }
 

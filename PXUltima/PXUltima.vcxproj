@@ -191,6 +191,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Algorithm\ADLER\Adler32.h" />
+    <ClInclude Include="Source\Algorithm\CRC32\CRC32.h" />
+    <ClInclude Include="Source\Algorithm\ISBN\ISBN.h" />
+    <ClInclude Include="Source\File\Format\3DS\A3DS.h" />
+    <ClInclude Include="Source\File\Format\AAC\AAC.h" />
+    <ClInclude Include="Source\File\Format\FBX\FBX.h" />
+    <ClInclude Include="Source\File\Format\FLAC\FLAC.h" />
+    <ClInclude Include="Source\File\Format\ID3\ID3.h" />
+    <ClInclude Include="Source\File\Format\MID\MID.h" />
+    <ClInclude Include="Source\File\Format\PLY\PLY.h" />
+    <ClInclude Include="Source\File\Format\RIFF\RIFF.h" />
+    <ClInclude Include="Source\File\Format\STL\STL.h" />
+    <ClInclude Include="Source\File\Format\VRML\VRML.h" />
+    <ClInclude Include="Source\File\Format\FMT\FMT.h" />
+    <ClInclude Include="Source\File\Format\WAV\WAV.h" />
+    <ClInclude Include="Source\File\Format\WMA\WMA.h" />
+    <ClInclude Include="Source\File\Format\XingInfo\XingInfo.h" />
     <ClInclude Include="Source\OS\Monitor.h" />
     <ClInclude Include="Source\Error\ActionResult.h" />
     <ClInclude Include="Source\Container\ClusterInt.h" />
@@ -214,6 +231,23 @@
     <ClInclude Include="Source\OS\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Algorithm\ADLER\Adler32.c" />
+    <ClCompile Include="Source\Algorithm\CRC32\CRC32.c" />
+    <ClCompile Include="Source\Algorithm\ISBN\ISBN.c" />
+    <ClCompile Include="Source\File\Format\3DS\A3DS.c" />
+    <ClCompile Include="Source\File\Format\AAC\AAC.c" />
+    <ClCompile Include="Source\File\Format\FBX\FBX.c" />
+    <ClCompile Include="Source\File\Format\FLAC\FLAC.c" />
+    <ClCompile Include="Source\File\Format\ID3\ID3.c" />
+    <ClCompile Include="Source\File\Format\MID\MID.c" />
+    <ClCompile Include="Source\File\Format\PLY\PLY.c" />
+    <ClCompile Include="Source\File\Format\RIFF\RIFF.c" />
+    <ClCompile Include="Source\File\Format\STL\STL.c" />
+    <ClCompile Include="Source\File\Format\VRML\VRML.c" />
+    <ClCompile Include="Source\File\Format\FMT\FMT.c" />
+    <ClCompile Include="Source\File\Format\WAV\WAV.c" />
+    <ClCompile Include="Source\File\Format\WMA\WMA.c" />
+    <ClCompile Include="Source\File\Format\XingInfo\XingInfo.c" />
     <ClCompile Include="Source\OS\Monitor.c" />
     <ClCompile Include="Source\Error\ActionResult.c" />
     <ClCompile Include="Source\File\Format\BMP\BMP.c" />

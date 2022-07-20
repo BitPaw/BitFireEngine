@@ -5,8 +5,6 @@
 
 #include <Math/Math.h>
 #include <Math/Geometry/Matrix.hpp>
-#include <Media/Sound/WAV/WAV.h>
-#include <Media/Sound/MID/MID.h>
 #include <Media/Image/PNG/PNG.h>
 #include <Media/Image/JPEG/JPEG.h>
 #include <Media/Font/TTF/TTF.h>

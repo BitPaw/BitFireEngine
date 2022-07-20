@@ -5,9 +5,10 @@
 
 #include <File/File.h>
 
-#include <Media/ID3/ID3.h>
+#include <File/Format/ID3/ID3.h>
+#include <File/Format/XingInfo/XingInfo.h>
+
 #include <Media/LAME/LAME.h>
-#include <Media/XingInfo/XingInfo.h>
 
 BF::FileActionResult BF::MP3::Load(const char* filePath)
 {
@@ -60,7 +61,9 @@ BF::FileActionResult BF::MP3::Load(const unsigned char* fileData, const size_t f
 	{
 		const Byte__* dataPosition = dataStream.CursorCurrentAdress();
 		const size_t dataSize = dataStream.ReadPossibleSize();
-		const size_t parsedBytes = id3.Parse(dataPosition, dataSize);
+		size_t parsedBytes = 0;
+
+		const ActionResult actionResult = ID3Parse(&id3, dataPosition, dataSize, &parsedBytes);
 
 		dataStream.CursorAdvance(parsedBytes);	
 	}
@@ -104,7 +107,9 @@ BF::FileActionResult BF::MP3::Load(const unsigned char* fileData, const size_t f
 		{
 			const Byte__* dataPosition = dataStream.CursorCurrentAdress();
 			const size_t dataSize = dataStream.ReadPossibleSize();
-			const size_t parsedBytes = xingInfo.Parse(dataPosition, dataSize);
+			size_t parsedBytes = 0;
+
+			const ActionResult actionResult = XingInfoParse(&xingInfo, dataPosition, dataSize, &parsedBytes);
 
 			dataStream.CursorAdvance(parsedBytes);
 
