@@ -1,5 +1,5 @@
-#if !defined(PXFNTInclude)
-#define PXFNTInclude
+#ifndef FNTInclude
+#define FNTInclude
 
 #define FontNameSize 30u
 #define CharSetNameSize 30u
@@ -105,7 +105,7 @@ extern "C"
 
 	extern unsigned char FNTLoad(FNT* fnt, const void* fileData, const size_t fileDataSize);
 
-	static FNTLineType PeekLineType(const void* line);
+	static FNTLineType PeekLineType(const void* line, const size_t fileDataSize);
 
 	extern void FNTPrtinf(const FNT* fnt);
 

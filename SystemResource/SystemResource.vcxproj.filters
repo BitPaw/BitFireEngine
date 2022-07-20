@@ -36,7 +36,7 @@
     <ClCompile Include="Source\Media\Font\Font.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Media\Image\BMP\BMP.cpp">
+    <ClCompile Include="Source\Media\Image\BMP\BMPP.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Media\Image\GIF\GIF.cpp">
@@ -244,15 +244,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Compression\DEFLATE\DeflateEncodingMethod.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\BMP\BMPInfoHeader.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\BMP\BMPType.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\BMP\BMPInfoHeaderType.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Media\Video\AVI\AVIHeader.cpp">
@@ -842,10 +833,7 @@
     <ClInclude Include="Source\Media\Font\FontFormat.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Media\Image\BMP\BMP.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\BMP\BMPType.h">
+    <ClInclude Include="Source\Media\Image\BMP\BMPP.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Media\Image\GIF\GIF.h">
@@ -1128,12 +1116,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Compression\DEFLATE\DeflateEncodingMethod.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\BMP\BMPInfoHeaderType.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\BMP\BMPInfoHeader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Media\Video\AVI\AVIHeader.h">
@@ -1697,12 +1679,6 @@
     <ClInclude Include="Source\Media\Sound\M4A\M4AChunkID.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Container\ClusterInt.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Container\ClusterShort.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Media\ID3\ID3v2xFrameTag.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -1710,9 +1686,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Math\Primes.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Container\ClusterLongLong.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Time\Time.h">

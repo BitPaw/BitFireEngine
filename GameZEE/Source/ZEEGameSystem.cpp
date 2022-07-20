@@ -129,8 +129,8 @@ void ZEE::ZEEGameSystem::OnStartUp()
     // GameSystem.Play(audioSource, sound);
 
 #endif // Sound Enable
-    GameSystem.MainCamera.Update(0);
-    GameSystem.MainCamera.Move(0, 0, -100);
+  //  GameSystem.MainCamera.Update(0);
+   // GameSystem.MainCamera.Move(0, 0, -100);
 
     //GameSystem.PrintContent(true);
 }
@@ -194,7 +194,7 @@ void ZEE::ZEEGameSystem::OnUpdateInput(BF::InputContainer& input)
     {
         camera.Velocity.Set(0.0f, 6.0f, .0f);
 
-        movement.Add(0, 1, 0);
+        //movement.Add(0, 1, 0);
     }
 
     camera.Move(movement);

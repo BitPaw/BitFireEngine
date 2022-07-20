@@ -1,5 +1,4 @@
 #ifndef ClusterLongLongDEFINED
-
 #define ClusterLongLongDEFINED
 
 #define MakeLongLong(a, b, c, d, e, f, g, h) MakeLongLongLE(a, b, c, d, e, f, g, h)
@@ -24,26 +23,35 @@
 ((unsigned long long)g << 48LL) | \
 ((unsigned long long)h << 56LL));
 
-struct ClusterLongLong
+#ifdef __cplusplus
+extern "C"
 {
-	union
+#endif
+
+	typedef struct ClusterLongLong_
 	{
-		struct
+		union
 		{
-			unsigned char A;
-			unsigned char B;
-			unsigned char C;
-			unsigned char D;
-			unsigned char E;
-			unsigned char F;
-			unsigned char G;
-			unsigned char H;
+			struct
+			{
+				unsigned char A;
+				unsigned char B;
+				unsigned char C;
+				unsigned char D;
+				unsigned char E;
+				unsigned char F;
+				unsigned char G;
+				unsigned char H;
+			};
+
+			unsigned char Data[8];
+
+			unsigned long long Value;
 		};
+	}ClusterLongLong;
 
-		unsigned char Data[8];
-
-		unsigned long long Value;
-	};
-};
+#ifdef __cplusplus
+}
+#endif
 
 #endif

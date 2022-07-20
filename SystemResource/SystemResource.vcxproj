@@ -426,9 +426,6 @@
     <ClCompile Include="Source\Compression\HUFFMAN\HuffmanSymbol.cpp" />
     <ClCompile Include="Source\Compression\DEFLATE\DeflateEncodingMethod.cpp" />
     <ClCompile Include="Source\Compression\DEFLATE\DeflateBlock.cpp" />
-    <ClCompile Include="Source\Media\Image\BMP\BMPInfoHeader.cpp" />
-    <ClCompile Include="Source\Media\Image\BMP\BMPInfoHeaderType.cpp" />
-    <ClCompile Include="Source\Media\Image\BMP\BMPType.cpp" />
     <ClCompile Include="Source\Media\Sound\MID\MIDITrack.cpp" />
     <ClCompile Include="Source\Media\Sound\MID\MIDICommandExtended.cpp" />
     <ClCompile Include="Source\Media\Sound\MID\MIDICommand.cpp" />
@@ -453,7 +450,7 @@
     <ClCompile Include="Source\Media\Font\Font.cpp" />
     <ClCompile Include="Source\Media\Font\OTF\OTF.cpp" />
     <ClCompile Include="Source\Media\Font\TTF\TTF.cpp" />
-    <ClCompile Include="Source\Media\Image\BMP\BMP.cpp" />
+    <ClCompile Include="Source\Media\Image\BMP\BMPP.cpp" />
     <ClCompile Include="Source\Media\Image\GIF\GIF.cpp" />
     <ClCompile Include="Source\Media\Image\Image.cpp" />
     <ClCompile Include="Source\Media\Image\JPEG\JPEG.cpp" />
@@ -573,12 +570,9 @@
     <ClInclude Include="Source\Network\Protocol\SBP\SBPDataPackageIam.h" />
     <ClInclude Include="Source\Network\Protocol\SBP\SBPDataPackage.h" />
     <ClInclude Include="Source\Container\ResponseCache.h" />
-    <ClInclude Include="Source\Container\ClusterLongLong.h" />
     <ClInclude Include="Source\Math\Primes.h" />
     <ClInclude Include="Source\Media\ID3\ID3Version.h" />
     <ClInclude Include="Source\Media\ID3\ID3v2xFrameTag.h" />
-    <ClInclude Include="Source\Container\ClusterInt.h" />
-    <ClInclude Include="Source\Container\ClusterShort.h" />
     <ClInclude Include="Source\Media\Sound\M4A\M4AChunkID.h" />
     <ClInclude Include="Source\Media\LAME\LAME.h" />
     <ClInclude Include="Source\Media\ID3\ID3.h" />
@@ -755,10 +749,7 @@
     <ClInclude Include="Source\Media\Font\FontFormat.h" />
     <ClInclude Include="Source\Media\Font\OTF\OTF.h" />
     <ClInclude Include="Source\Media\Font\TTF\TTF.h" />
-    <ClInclude Include="Source\Media\Image\BMP\BMP.h" />
-    <ClInclude Include="Source\Media\Image\BMP\BMPType.h" />
-    <ClInclude Include="Source\Media\Image\BMP\BMPInfoHeaderType.h" />
-    <ClInclude Include="Source\Media\Image\BMP\BMPInfoHeader.h" />
+    <ClInclude Include="Source\Media\Image\BMP\BMPP.h" />
     <ClInclude Include="Source\Media\Image\GIF\GIF.h" />
     <ClInclude Include="Source\Media\Image\ImageFileFormat.h" />
     <ClInclude Include="Source\Media\Image\ImageDataFormat.h" />

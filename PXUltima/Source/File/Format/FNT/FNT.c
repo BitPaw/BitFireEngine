@@ -41,7 +41,8 @@ unsigned char FNTLoad(FNT* fnt, const void* fileData, const size_t fileDataSize)
 	while(!ParsingStreamIsAtEnd(&parsingStream))
 	{
 		const unsigned char* currentPosition = ParsingStreamCursorPosition(&parsingStream);
-		const FNTLineType lineType = PeekLineType(currentPosition);
+		const size_t currentReadableBytes = ParsingStreamRemainingSize(&parsingStream);
+		const FNTLineType lineType = PeekLineType(currentPosition, currentReadableBytes);
 
 		switch(lineType)
 		{		
@@ -84,11 +85,6 @@ unsigned char FNTLoad(FNT* fnt, const void* fileData, const size_t fileDataSize)
 				TextToIntA(indexPosition[6], 5, &fnt->Info.StretchH);
 				TextToBoolA(indexPosition[7], 5, &fnt->Info.Smooth);
 				TextToBoolA(indexPosition[8], 5, &fnt->Info.Supersampling);
-
-				// TODO: Implement! Soemthing like "Find ',' ?"
-				//Text::ToInt(padding + sizeof(paddingText), bufferSize - sizeof(paddingText), Info.CharacterPadding);
-				//Text::ToInt(spacing + sizeof(spacingText), bufferSize - sizeof(spacingText), Info.SpacerOffset);
-				//Text::ToInt(outlineThickness + sizeof(outlineThicknessText), bufferSize - sizeof(outlineThicknessText), Info.OutlineThickness);
 
 				TextTerminateBeginFromFirstA(fnt->Info.Name, FontNameSize, '\"');
 				TextTerminateBeginFromFirstA(fnt->Info.CharSet, CharSetNameSize, '\"');
@@ -281,7 +277,7 @@ unsigned char FNTLoad(FNT* fnt, const void* fileData, const size_t fileDataSize)
 	return 0;
 }
 
-FNTLineType PeekLineType(const void* line)
+FNTLineType PeekLineType(const void* line, const size_t fileDataSize)
 {
 	const unsigned char* data = line;
 	const unsigned char isCommonLine = data[0] == 'c' && data[1] == 'o' && data[2] == 'm' && data[3] == 'm' && data[4] == 'o' && data[5] == 'n' && data[6] == ' ';

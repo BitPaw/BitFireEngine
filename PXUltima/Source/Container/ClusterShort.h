@@ -1,5 +1,4 @@
 #ifndef ClusterShortDEFINED
-
 #define ClusterShortDEFINED
 
 // Detect current endianess on this system and then use #if
@@ -8,20 +7,29 @@
 #define MakeShortBE(a, b) (((unsigned short)a << 8) | ((unsigned short)b))
 #define MakeShortLE(a, b) (((unsigned short)a) | ((unsigned short)b << 8))
 
-struct ClusterShort
+#ifdef __cplusplus
+extern "C"
 {
-	union
+#endif
+
+	typedef struct ClusterShort_
 	{
-		struct
+		union
 		{
-			unsigned char A;
-			unsigned char B;
+			struct
+			{
+				unsigned char A;
+				unsigned char B;
+			};
+
+			unsigned char Data[2];
+
+			unsigned short Value;
 		};
+	}ClusterShort;
 
-		unsigned char Data[2];
-
-		unsigned short Value;
-	};
-};
+#ifdef __cplusplus
+}
+#endif
 
 #endif

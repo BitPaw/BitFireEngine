@@ -1,27 +1,17 @@
 #pragma once
 
-#include "BMPType.h"
-#include "BMPInfoHeader.h"
-#include "BMPInfoHeaderType.h"
+#include <File/Format/BMP/BMP.h>
 
 #include "../IImageFormat.h"
 
 namespace BF
 {
 	// Image in BitMap-Format [.BMP]
-	struct BMP : public IImageFormat
+	struct BMPP : public IImageFormat, public BMP
 	{	
 		public:
-		BMPType Type;
-
-		BMPInfoHeaderType InfoHeaderType;
-		BMPInfoHeader InfoHeader;
-
-		size_t PixelDataSize;
-		unsigned char* PixelData;
-
-		BMP();
-		~BMP();
+		BMPP();
+		~BMPP();
 
 		FileActionResult Load(const char* filePath);
 		FileActionResult Load(const wchar_t* filePath);

@@ -33,7 +33,7 @@
 
 #endif
 
-
+#include <OS/Monitor.h>
 #include <Text/Text.h>
 
 Window* currentWindow = 0;
@@ -2058,6 +2058,18 @@ void WindowCreate(Window* window, const unsigned int width, const unsigned int h
 
     TextCopyAW(title, 256, window->Title, 256);
 
+    {
+        unsigned int screenWidth = 0;
+        unsigned int screenHeight = 0;
+
+        MonitorGetSize(&screenWidth, &screenHeight);  
+
+        window->X = screenWidth * 0.125f;
+        window->Y = screenHeight * 0.125f;
+        window->Width = screenWidth * 0.75f;
+        window->Height = screenHeight * 0.75f;
+    }
+
     if(async)
     {
         const ThreadID id = ThreadRun(WindowCreateThread, window);
@@ -2175,18 +2187,13 @@ void WindowCursorTexture()
 
 void WindowCursorCaptureMode(Window* window, const WindowCursorMode cursorMode)
 {
+    unsigned int horizontal = 0;
+    unsigned int vertical = 0;
+
 #if defined(OSUnix)
 #elif defined(OSWindows)
-    RECT desktop;
-    // Get a handle to the desktop window
-    const HWND hDesktop = GetDesktopWindow();
-    // Get the size of screen to the variable desktop
-    GetWindowRect(hDesktop, &desktop);
-    // The top left corner will have coordinates (0,0)
-    // and the bottom right corner will have coordinates
-    // (horizontal, vertical)
-    unsigned int horizontal = desktop.right;
-    unsigned int vertical = desktop.bottom;
+
+    MonitorGetSize(&horizontal, &vertical);
 
     switch(cursorMode)
     {

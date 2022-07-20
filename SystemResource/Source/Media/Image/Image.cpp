@@ -1,6 +1,6 @@
 #include "Image.h"
 
-#include "BMP/BMP.h"
+#include "BMP/BMPP.h"
 #include "PNG/PNG.h"
 #include "TGA/TGA.h"
 #include "TIFF/TIFF.h"
@@ -417,7 +417,7 @@ BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t
     {
         case ImageFileFormat::BitMap:
         {
-            BMP bitmap;
+            BMPP bitmap;
 
             {
                 const FileActionResult fileActionResult = bitmap.Load(fileData, fileDataSize);
@@ -539,7 +539,7 @@ BF::FileActionResult BF::Image::Save(const wchar_t* filePath, ImageFileFormat im
         }
         case BF::ImageFileFormat::BitMap:
         {
-            BMP bitmap;
+            BMPP bitmap;
             bitmap.ConvertFrom(*this);
             bitmap.Save(filePath);
             break;

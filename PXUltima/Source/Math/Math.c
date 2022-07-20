@@ -2,6 +2,36 @@
 
 #include <math.h>
 
+int MathMinimumI(const int a, const int b)
+{
+	return MathMinimum(a, b);
+}
+
+double MathMinimumD(const double a, const double b)
+{
+	return MathMinimum(a, b);
+}
+
+int MathFloorI(const int a)
+{
+	return MathFloor(a);
+}
+
+int MathFloorD(const double a)
+{
+	return MathFloor(a);
+}
+
+size_t MathAbsoluteI(const int a)
+{
+	return MathAbsolute(a);
+}
+
+double MathAbsoluteD(const double a)
+{
+	return MathAbsolute(a);
+}
+
 float MathFastInverseSqaureRoot(float number)
 {
 	const float threehalfs = 1.5f;

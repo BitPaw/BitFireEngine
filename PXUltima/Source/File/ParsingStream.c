@@ -259,6 +259,11 @@ size_t ParsingStreamReadD(ParsingStream* parsingStream, void* value, const size_
 	return copyedBytes;
 }
 
+size_t ParsingStreamRead(ParsingStream* parsingStream, const void* format, const size_t length, ...)
+{
+	return 0;
+}
+
 void ParsingStreamReadUntil(ParsingStream* parsingStream, void* value, const size_t length, const char character)
 {
 	const unsigned char* currentPosition = ParsingStreamCursorPosition(parsingStream);

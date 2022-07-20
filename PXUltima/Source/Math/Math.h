@@ -19,12 +19,23 @@
 //#define MathCeiling(a) 
 #define MathAbsolute(a) (a < 0 ? -a : a)
 
-
-
 #ifdef __cplusplus
 extern "C"
 {
 #endif
+	extern int MathMinimumI(const int a, const int b);
+	extern double MathMinimumD(const double a, const double b);
+
+	extern int MathFloorI(const int a);
+	extern int MathFloorD(const double a);
+
+	extern size_t MathAbsoluteI(const int a, const int b);
+	extern double MathAbsoluteD(const double a, const double b);
+
+#define MathMaximum(a, b) (a >= b ? a : b)
+#define MathFloor(a) ((int)(a))
+	//#define MathCeiling(a) 
+#define MathAbsolute(a) (a < 0 ? -a : a)
 
 	extern float MathFastInverseSqaureRoot(float number);
 	extern double MathPower(double base, double exponent);
