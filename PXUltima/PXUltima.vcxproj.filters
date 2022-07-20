@@ -129,6 +129,15 @@
     <ClInclude Include="Source\File\Format\WAV\WAV.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="Source\File\Format\WEBM\WebM.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\File\Format\MP4\MP4.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\File\Format\AVI\AVI.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Text\Text.c">
@@ -228,6 +237,15 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\File\Format\WAV\WAV.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\File\Format\WEBM\WebM.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\File\Format\MP4\MP4.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\File\Format\AVI\AVI.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

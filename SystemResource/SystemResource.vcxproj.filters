@@ -159,9 +159,6 @@
     <ClCompile Include="Source\Network\Server.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Media\Video\AVI\AVI.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Media\Video\Video.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -193,9 +190,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Compression\DEFLATE\DeflateEncodingMethod.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Video\AVI\AVIHeader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Encryption\Caesar.cpp">
@@ -232,9 +226,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Media\Image\JPEG\JPEGScanSelector.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Video\MP4\MP4.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Network\SocketActionResult.cpp">
@@ -627,9 +618,6 @@
     <ClCompile Include="Source\Network\Protocol\SBP\SBPServer.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Media\Video\WEBM\WebM.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Media\Image\ImageFileFormat.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -938,9 +926,6 @@
     <ClInclude Include="Source\Math\Geometry\AngleDegree.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Media\Video\AVI\AVI.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Media\Video\Video.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -989,9 +974,6 @@
     <ClInclude Include="Source\Compression\DEFLATE\DeflateEncodingMethod.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Media\Video\AVI\AVIHeader.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Encryption\Caesar.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -1035,9 +1017,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Media\Video\IVideoFormat.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Video\MP4\MP4.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Media\Sound\ISoundFormat.hpp">
@@ -1512,9 +1491,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Network\Protocol\SBP\SBPServer.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Video\WEBM\WebM.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Media\Sound\OGG\OGGPage.h">

@@ -1,12 +1,12 @@
 #include "AVI.h"
 
-#include <File/File.h>
-#include <Media/RIFF/RIFF.h>
+#include <File/Format/RIFF/RIFF.h>
 
-BF::FileActionResult BF::AVI::Load(const char* filePath)
+ActionResult AVIParse(AVI* avi, const void* data, const size_t dataSize, size_t* dataRead)
 {
+    /*
     File file;
-    
+
     {
         const FileActionResult loadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
 
@@ -20,7 +20,7 @@ BF::FileActionResult BF::AVI::Load(const char* filePath)
     {
         RIFF riff;
 
-       // riff.Parse(fileStream);
+        // riff.Parse(fileStream);
 
         if(!riff.Valid)
         {
@@ -29,13 +29,9 @@ BF::FileActionResult BF::AVI::Load(const char* filePath)
     }
 
     unsigned int size = 0;
-  
+
     file.Read(size, EndianBig);
+    */
 
-    return FileActionResult::Successful;
-}
-
-BF::FileActionResult BF::AVI::Save(const char* filePath)
-{
-    return FileActionResult();
+    return ResultInvalid;
 }

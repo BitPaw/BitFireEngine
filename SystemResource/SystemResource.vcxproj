@@ -407,7 +407,6 @@
     <ClCompile Include="Source\Media\Sound\AudioClip.cpp" />
     <ClCompile Include="Source\Media\Sound\AudioConfig.cpp" />
     <ClCompile Include="Source\Media\Sound\AudioSource.cpp" />
-    <ClCompile Include="Source\Media\Video\MP4\MP4.cpp" />
     <ClCompile Include="Source\Media\Image\JPEG\JPEGScanSelector.cpp" />
     <ClCompile Include="Source\Media\Image\JPEG\JPEGScanStart.cpp" />
     <ClCompile Include="Source\Media\Image\JPEG\JPEGHuffmanTable.cpp" />
@@ -417,7 +416,6 @@
     <ClCompile Include="Source\Media\Image\JPEG\JPEGMarker.cpp" />
     <ClCompile Include="Source\Media\Image\TGA\TGABitsPerPixel.cpp" />
     <ClCompile Include="Source\Media\Image\TGA\TGAImageDataType.cpp" />
-    <ClCompile Include="Source\Media\Video\AVI\AVIHeader.cpp" />
     <ClCompile Include="Source\Compression\HUFFMAN\HuffmanSymbol.cpp" />
     <ClCompile Include="Source\Compression\DEFLATE\DeflateEncodingMethod.cpp" />
     <ClCompile Include="Source\Compression\DEFLATE\DeflateBlock.cpp" />
@@ -425,7 +423,6 @@
     <ClCompile Include="Source\Media\Sound\MP3\MP3Header.cpp" />
     <ClCompile Include="Source\Media\Sound\MP3\MPEGGenre.cpp" />
     <ClCompile Include="Source\Media\Sound\M4A\M4A.cpp" />
-    <ClCompile Include="Source\Media\Video\AVI\AVI.cpp" />
     <ClCompile Include="Source\Async\AsyncLock.cpp" />
     <ClCompile Include="Source\Container\AsciiString.cpp" />
     <ClCompile Include="Source\Container\BitStreamHusk.cpp" />
@@ -525,7 +522,6 @@
     <ClCompile Include="Source\Graphic\Vulcan\Vulcan.cpp" />
     <ClCompile Include="Source\Media\Image\SVG\SVG.cpp" />
     <ClCompile Include="Source\Media\Image\WEBP\WEBP.cpp" />
-    <ClCompile Include="Source\Media\Video\WEBM\WebM.cpp" />
     <ClCompile Include="Source\Time\Time.cpp" />
     <ClCompile Include="Source\UI\TextBox.cpp" />
   </ItemGroup>
@@ -659,7 +655,6 @@
     <ClInclude Include="Source\Media\Sound\AudioSource.h" />
     <ClInclude Include="Source\Media\Sound\ISoundFormat.hpp" />
     <ClInclude Include="Source\Media\Sound\SoundPlayStyle.hpp" />
-    <ClInclude Include="Source\Media\Video\MP4\MP4.h" />
     <ClInclude Include="Source\IFileFormat.hpp" />
     <ClInclude Include="Source\Media\Image\JPEG\JPEGScanSelector.h" />
     <ClInclude Include="Source\Media\Image\JPEG\JPEGScanStart.h" />
@@ -669,7 +664,6 @@
     <ClInclude Include="Source\Media\Image\JPEG\JPEGFileInfo.h" />
     <ClInclude Include="Source\Media\Image\JPEG\JPEGMarker.h" />
     <ClInclude Include="Source\Media\Image\IImageFormat.h" />
-    <ClInclude Include="Source\Media\Video\AVI\AVIHeader.h" />
     <ClInclude Include="Source\Compression\HUFFMAN\HuffmanSymbol.h" />
     <ClInclude Include="Source\Compression\DEFLATE\DeflateEncodingMethod.h" />
     <ClInclude Include="Source\Compression\DEFLATE\DeflateBlock.h" />
@@ -682,7 +676,6 @@
     <ClInclude Include="Source\Media\Sound\MP3\MP3MPEGVersion.hpp" />
     <ClInclude Include="Source\Media\Sound\MP3\MPEGGenre.hpp" />
     <ClInclude Include="Source\Media\Sound\M4A\M4A.h" />
-    <ClInclude Include="Source\Media\Video\AVI\AVI.h" />
     <ClInclude Include="Source\Math\Geometry\AngleDegree.hpp" />
     <ClInclude Include="Source\Math\Geometry\AngleRadians.hpp" />
     <ClInclude Include="Source\Async\AsyncLock.h" />
@@ -821,7 +814,6 @@
     <ClInclude Include="Source\Graphic\Vulcan\Vulcan.h" />
     <ClInclude Include="Source\Media\Image\SVG\SVG.h" />
     <ClInclude Include="Source\Media\Image\WEBP\WEBP.h" />
-    <ClInclude Include="Source\Media\Video\WEBM\WebM.h" />
     <ClInclude Include="Source\Time\Time.h" />
     <ClInclude Include="Source\UI\TextBox.h" />
   </ItemGroup>

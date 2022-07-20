@@ -1,10 +1,17 @@
-#pragma once
+#ifndef AVIInclude
+#define AVIInclude
 
-namespace BF
+#include <stddef.h>
+
+#include <Error/ActionResult.h>
+
+#ifdef __cplusplus
+extern "C"
 {
-	struct AVIHeader
+#endif
+
+	typedef struct AVIHeader_
 	{
-		public:
 		unsigned int MicroSecPerFrame; // frame display rate (or 0)
 		unsigned int MaxBytesPerSec; // max. transfer rate
 		unsigned int PaddingGranularity; // pad to multiples of this
@@ -17,5 +24,21 @@ namespace BF
 		unsigned int Width;
 		unsigned int Height;
 		unsigned int Reserved[4];
-	};
+	}
+	AVIHeader;
+
+
+	typedef struct AVI_
+	{
+		AVIHeader Header;
+		unsigned int __dummy__;
+	}
+	AVI;
+
+	extern ActionResult AVIParse(AVI* avi, const void* data, const size_t dataSize, size_t* dataRead);
+
+#ifdef __cplusplus
 }
+#endif
+
+#endif
