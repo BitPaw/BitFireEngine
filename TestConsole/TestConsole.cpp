@@ -10,6 +10,7 @@
 //#include <Media/Sound/WAV/WAV.h>
 #include <File/Format/FNT/FNT.h>
 #include <File/File.h>
+#include <File/Format/MP3/MP3.h>
 //#include <Media/Font/Font.h>
 //#include <Media/Font/FNT/FNT.h>
 //#include <Media/Sound/OGG/OGG.h>
@@ -119,10 +120,19 @@ int main()
 #endif
 
 
-#if 0
+#if 1
     MP3 mp3;
 
-    mp3.Load("B:/Daten/Music/08-Bit/Dragon Ball Z Opening 8 bit.mp3");
+
+    File dggfgf;
+
+    const FileActionResult fileLoadingResult = dggfgf.MapToVirtualMemory("B:/Daten/Music/08-Bit/Dragon Ball Z Opening 8 bit.mp3", MemoryReadOnly);
+    const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+    size_t witnnen = 0;
+
+    MP3Parse(&mp3, dggfgf.Data, dggfgf.DataSize, &witnnen);
+
+    //mp3.Load();
     // mp3.Load("B:/Daten/Music/08-Bit/Black Sabbath - Iron man.mp3");
 
      //mp3.Load("A:/F/Giygas Beat.mp3");
@@ -162,8 +172,8 @@ int main()
 
     File file;
 
-    const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
-    const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+    const FileActionResult iiuiiii = file.MapToVirtualMemory(filePath, MemoryReadOnly);
+    const bool sucessfulddd = iiuiiii == FileActionResult::Successful;
 
     const unsigned char fileParsingResult = FNTLoad(&font, file.Data, file.DataSize);
 

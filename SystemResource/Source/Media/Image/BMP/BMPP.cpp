@@ -61,7 +61,8 @@ BF::FileActionResult BF::BMPP::Load(const wchar_t* filePath)
 
 BF::FileActionResult BF::BMPP::Load(const unsigned char* fileData, const size_t fileDataSize)
 {
-    ActionResult qctionResult = BMPParse(this, fileData, fileDataSize);
+    size_t bytes = 0;
+    ActionResult qctionResult = BMPParse(this, fileData, fileDataSize, &bytes);
 
     return FileActionResult::Successful;
 }

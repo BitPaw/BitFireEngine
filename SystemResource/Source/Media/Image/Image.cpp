@@ -3,10 +3,7 @@
 #include "BMP/BMPP.h"
 #include "PNG/PNG.h"
 #include "TGA/TGA.h"
-#include "TIFF/TIFF.h"
 #include "GIF/GIF.h"
-#include "JPEG/JPEG.h"
-#include "TIFF/TIFF.h"
 
 #include <File/File.h>
 #include <Math/Math.h>
@@ -17,6 +14,8 @@
 
 #include <Text/Text.h>
 #include <Hardware/Memory/Memory.h>
+#include <File/Format/JPEG/JPEG.h>
+#include <File/Format/TIFF/TIFF.h>
 
 BF::Vector4<unsigned char> BF::Image::GetPixel(unsigned int x, unsigned int y)
 {
@@ -437,6 +436,7 @@ BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t
         {
             GIF gif;
 
+            /*
             {
                 const FileActionResult fileActionResult = gif.Load(fileData, fileDataSize);
                 const bool sucessful = fileActionResult == FileActionResult::Successful;
@@ -447,7 +447,7 @@ BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t
 
                     return FileActionResult::Successful;
                 }
-            }
+            }*/
 
             break;
         }
@@ -455,6 +455,7 @@ BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t
         {
             JPEG jpeg;
 
+            /*
             {
                 const FileActionResult fileActionResult = jpeg.Load(fileData, fileDataSize);
                 const bool sucessful = fileActionResult == FileActionResult::Successful;
@@ -465,7 +466,7 @@ BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t
 
                     return FileActionResult::Successful;
                 }
-            }
+            }*/
 
             break;
         }
@@ -491,6 +492,7 @@ BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t
         {
             TGA tga;
       
+            /*
             {
                 const FileActionResult fileActionResult = tga.Load(fileData, fileDataSize);
                 const bool sucessful = fileActionResult == FileActionResult::Successful;
@@ -501,7 +503,7 @@ BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t
 
                     return FileActionResult::Successful;
                 }
-            }
+            }*/
 
             break;
         }
@@ -509,6 +511,7 @@ BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t
         {
             TIFF tiff;
           
+            /*
             {
                 const FileActionResult fileActionResult = tiff.Load(fileData, fileDataSize);
                 const bool sucessful = fileActionResult == FileActionResult::Successful;
@@ -519,7 +522,7 @@ BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t
 
                     return FileActionResult::Successful;
                 }
-            }
+            }*/
 
             break;
         }
@@ -561,15 +564,15 @@ BF::FileActionResult BF::Image::Save(const wchar_t* filePath, ImageFileFormat im
         case BF::ImageFileFormat::JPEG:
         {
             JPEG jpeg;
-            jpeg.ConvertFrom(*this);
-            jpeg.Save(filePath);
+            //jpeg.ConvertFrom(*this);
+            //jpeg.Save(filePath);
             break;
         }
         case BF::ImageFileFormat::TIFF:
         {
             TIFF tiff;
-            tiff.ConvertFrom(*this);
-            tiff.Save(filePath);
+            //tiff.ConvertFrom(*this);
+            //tiff.Save(filePath);
             break;
         }
         case BF::ImageFileFormat::GIF:

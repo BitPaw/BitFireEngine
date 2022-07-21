@@ -131,9 +131,13 @@ unsigned int ConvertFromBMPInfoHeaderType(const BMPInfoHeaderType infoHeaderType
     }
 }
 
-ActionResult BMPParse(BMP* bmp, const void* data, const size_t dataSize)
+ActionResult BMPParse(BMP* bmp, const void* data, const size_t dataSize, size_t* dataRead)
 {
     ParsingStream parsingStream;
+
+    BMPCreate(bmp);
+
+    *dataRead = 0;
 
     ParsingStreamConstruct(&parsingStream, data, dataSize);
 

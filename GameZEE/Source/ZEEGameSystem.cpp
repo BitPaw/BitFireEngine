@@ -6,7 +6,6 @@
 #include <Math/Math.h>
 #include <Math/Geometry/Matrix.hpp>
 #include <Media/Image/PNG/PNG.h>
-#include <Media/Image/JPEG/JPEG.h>
 #include <Media/Font/TTF/TTF.h>
 #include <Time/StopWatch.h>
 

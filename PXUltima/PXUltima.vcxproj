@@ -191,6 +191,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\File\Format\JPEG\JPEG.h" />
+    <ClInclude Include="Source\File\Format\LAME\LAME.h" />
     <ClInclude Include="Source\Algorithm\ADLER\Adler32.h" />
     <ClInclude Include="Source\Algorithm\CRC32\CRC32.h" />
     <ClInclude Include="Source\Algorithm\ISBN\ISBN.h" />
@@ -200,15 +202,22 @@
     <ClInclude Include="Source\File\Format\FBX\FBX.h" />
     <ClInclude Include="Source\File\Format\FLAC\FLAC.h" />
     <ClInclude Include="Source\File\Format\ID3\ID3.h" />
+    <ClInclude Include="Source\File\Format\M4A\M4A.h" />
     <ClInclude Include="Source\File\Format\MID\MID.h" />
+    <ClInclude Include="Source\File\Format\MP3\MP3.h" />
     <ClInclude Include="Source\File\Format\MP4\MP4.h" />
+    <ClInclude Include="Source\File\Format\OGG\OGG.h" />
     <ClInclude Include="Source\File\Format\PLY\PLY.h" />
+    <ClInclude Include="Source\File\Format\QOI\QOI.h" />
     <ClInclude Include="Source\File\Format\RIFF\RIFF.h" />
     <ClInclude Include="Source\File\Format\STL\STL.h" />
+    <ClInclude Include="Source\File\Format\SVG\SVG.h" />
+    <ClInclude Include="Source\File\Format\TIFF\TIFF.h" />
     <ClInclude Include="Source\File\Format\VRML\VRML.h" />
     <ClInclude Include="Source\File\Format\FMT\FMT.h" />
     <ClInclude Include="Source\File\Format\WAV\WAV.h" />
     <ClInclude Include="Source\File\Format\WEBM\WebM.h" />
+    <ClInclude Include="Source\File\Format\WEBP\WEBP.h" />
     <ClInclude Include="Source\File\Format\WMA\WMA.h" />
     <ClInclude Include="Source\File\Format\XingInfo\XingInfo.h" />
     <ClInclude Include="Source\OS\Monitor.h" />
@@ -228,12 +237,15 @@
     <ClInclude Include="Source\Math\Math.h" />
     <ClInclude Include="Source\Memory\Memory.h" />
     <ClInclude Include="Source\OS\OSVersion.h" />
+    <ClInclude Include="Source\Video\RefreshRateMode.h" />
     <ClInclude Include="Source\Text\Text.h" />
     <ClInclude Include="Source\OS\User.h" />
     <ClInclude Include="Source\Async\Thread.h" />
     <ClInclude Include="Source\OS\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\File\Format\JPEG\JPEG.c" />
+    <ClCompile Include="Source\File\Format\LAME\LAME.c" />
     <ClCompile Include="Source\Algorithm\ADLER\Adler32.c" />
     <ClCompile Include="Source\Algorithm\CRC32\CRC32.c" />
     <ClCompile Include="Source\Algorithm\ISBN\ISBN.c" />
@@ -243,15 +255,22 @@
     <ClCompile Include="Source\File\Format\FBX\FBX.c" />
     <ClCompile Include="Source\File\Format\FLAC\FLAC.c" />
     <ClCompile Include="Source\File\Format\ID3\ID3.c" />
+    <ClCompile Include="Source\File\Format\M4A\M4A.c" />
     <ClCompile Include="Source\File\Format\MID\MID.c" />
+    <ClCompile Include="Source\File\Format\MP3\MP3.c" />
     <ClCompile Include="Source\File\Format\MP4\MP4.c" />
+    <ClCompile Include="Source\File\Format\OGG\OGG.c" />
     <ClCompile Include="Source\File\Format\PLY\PLY.c" />
+    <ClCompile Include="Source\File\Format\QOI\QOI.c" />
     <ClCompile Include="Source\File\Format\RIFF\RIFF.c" />
     <ClCompile Include="Source\File\Format\STL\STL.c" />
+    <ClCompile Include="Source\File\Format\SVG\SVG.c" />
+    <ClCompile Include="Source\File\Format\TIFF\TIFF.c" />
     <ClCompile Include="Source\File\Format\VRML\VRML.c" />
     <ClCompile Include="Source\File\Format\FMT\FMT.c" />
     <ClCompile Include="Source\File\Format\WAV\WAV.c" />
     <ClCompile Include="Source\File\Format\WEBM\WebM.c" />
+    <ClCompile Include="Source\File\Format\WEBP\WEBP.c" />
     <ClCompile Include="Source\File\Format\WMA\WMA.c" />
     <ClCompile Include="Source\File\Format\XingInfo\XingInfo.c" />
     <ClCompile Include="Source\OS\Monitor.c" />

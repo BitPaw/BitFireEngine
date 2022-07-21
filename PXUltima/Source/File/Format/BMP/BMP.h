@@ -124,7 +124,7 @@ extern "C"
 	}BMP;
 
 	extern void BMPCreate(BMP* bmp);
-	extern ActionResult BMPParse(BMP* bmp, const void* data, const size_t dataSize);
+	extern ActionResult BMPParse(BMP* bmp, const void* data, const size_t dataSize, size_t* dataRead);
 	extern void BMPDelete(BMP* bmp);
 
 #ifdef __cplusplus

@@ -15,7 +15,7 @@ extern "C"
 	}
 	PLY;
 
-	extern ActionResult PLYParse(const void* data, const size_t dataSize);
+	extern ActionResult PLYParse(PLY* ply, const void* data, const size_t dataSize, size_t* dataRead);
 
 #ifdef __cplusplus
 }

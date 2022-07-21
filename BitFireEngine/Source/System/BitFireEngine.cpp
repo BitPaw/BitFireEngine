@@ -21,7 +21,7 @@ OpenGLID _matrixModelID;
 OpenGLID _matrixViewID;
 OpenGLID _matrixProjectionID;
 OpenGLID _materialTextureID;
-BF::RefreshRateMode RefreshRate;
+RefreshRateMode RefreshRate;
 
 BF::BitFireEngine* BF::BitFireEngine::_instance = nullptr;
 

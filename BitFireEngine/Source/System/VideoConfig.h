@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Media/Video/RefreshRateMode.h>
+#include <Video/RefreshRateMode.h>
 
 namespace BF
 {

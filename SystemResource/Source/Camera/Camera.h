@@ -5,7 +5,7 @@
 #include <Math/Geometry/Vector3.hpp>
 #include <Math/Geometry/Matrix4x4.hpp>
 #include <Math/Physic/PhysicsDynamic.hpp>
-#include <Media/Video/RefreshRateMode.h>
+#include <Video/RefreshRateMode.h>
 
 namespace BF
 {

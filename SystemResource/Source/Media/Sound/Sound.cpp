@@ -1,9 +1,5 @@
 #include "Sound.h"
 
-#include "M4A/M4A.h"
-#include "MP3/MP3.h"
-#include "OGG/OGG.h"
-
 #include <File/File.h>
 #include <Hardware/Memory/Memory.h>
 #include <File/Format/AAC/AAC.h>
@@ -11,6 +7,9 @@
 #include <File/Format/MID/MID.h>
 #include <File/Format/WAV/WAV.h>
 #include <File/Format/WMA/WMA.h>
+#include <File/Format/M4A/M4A.h>
+#include <File/Format/MP3/MP3.h>
+#include <File/Format/OGG/OGG.h>
 
 BF::Sound::Sound()
 {
@@ -71,8 +70,8 @@ BF::FileActionResult BF::Sound::Load(const wchar_t* filePath)
         case SoundFormat::M4A:
         {
             M4A m4a;
-            m4a.Load(filePath);
-            m4a.ConvertTo(*this);
+            //m4a.Load(filePath);
+            //m4a.ConvertTo(*this);
             break;
         }
         case SoundFormat::MID:
@@ -85,15 +84,15 @@ BF::FileActionResult BF::Sound::Load(const wchar_t* filePath)
         case SoundFormat::MP3:
         {
             MP3 mp3;
-            mp3.Load(filePath);
-            mp3.ConvertTo(*this);
+            //mp3.Load(filePath);
+            //mp3.ConvertTo(*this);
             break;
         }
         case SoundFormat::OGG:
         {
             OGG ogg;
-            ogg.Load(filePath);
-            ogg.ConvertTo(*this);
+           // ogg.Load(filePath);
+            //ogg.ConvertTo(*this);
             break;
         }
         case SoundFormat::WAV:
@@ -146,7 +145,7 @@ BF::FileActionResult BF::Sound::Save(const wchar_t* filePath, SoundFormat soundF
         case SoundFormat::M4A:
         {
             M4A m4a;
-            m4a.ConvertFrom(*this);
+            //m4a.ConvertFrom(*this);
             //m4a.Save(FilePath);
             break;
         }
@@ -160,14 +159,14 @@ BF::FileActionResult BF::Sound::Save(const wchar_t* filePath, SoundFormat soundF
         case SoundFormat::MP3:
         {
             MP3 mp3;
-            mp3.ConvertFrom(*this);
+           // mp3.ConvertFrom(*this);
             //mp3.Save(FilePath);
             break;
         }
         case SoundFormat::OGG:
         {
             OGG ogg;
-            ogg.ConvertFrom(*this);
+            //ogg.ConvertFrom(*this);
            // ogg.Save(FilePath);
             break;
         }
