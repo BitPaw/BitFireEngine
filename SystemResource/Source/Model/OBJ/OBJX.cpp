@@ -291,9 +291,9 @@ BF::FileActionResult BF::OBJX::ConvertTo(Model& model)
             unsigned int vertexPositionID = indexPosition[0] - 1;
             unsigned int texturePointID = indexPosition[1] - 1; // TODO: REMOVED -1 form all positions
             unsigned int normalVectorID = indexPosition[2] - 1;
-            float* vertexData = GlobalVertexPosition(vertexPositionID*3);
-            float* textureData = GlobalTextureCoordinate(texturePointID*3);
-            float* normalData = GlobalVertexNormalPosition(normalVectorID*3);
+            float* vertexData = GlobalVertexPosition(vertexPositionID);
+            float* textureData = GlobalTextureCoordinate(texturePointID);
+            float* normalData = GlobalVertexNormalPosition(normalVectorID);
             Vector4<float> color(1.0f, 1.0f, 1.0f, 1.0f);
             const bool vertexPositionIDValid = vertexData;
             const bool texturePointIDValid = textureData;
