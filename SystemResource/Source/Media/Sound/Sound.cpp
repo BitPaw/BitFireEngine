@@ -28,16 +28,16 @@ BF::Sound::~Sound()
 
 BF::SoundFormat BF::Sound::FileFormatPeek(const wchar_t* filePath)
 {
-    FilePath file(filePath);
+    //  FilePath file(filePath);
 
-    if (file.ExtensionEquals("aac")) return SoundFormat::AAC;
-    if (file.ExtensionEquals("flac")) return SoundFormat::FLAC;
-    if (file.ExtensionEquals("m4a")) return SoundFormat::M4A;
-    if (file.ExtensionEquals("mid")) return SoundFormat::MID;
-    if (file.ExtensionEquals("mp3")) return SoundFormat::MP3;
-    if (file.ExtensionEquals("ogg")) return SoundFormat::OGG;
-    if (file.ExtensionEquals("wav")) return SoundFormat::WAV;
-    if (file.ExtensionEquals("wma")) return SoundFormat::WMA;
+    // if (file.ExtensionEquals("aac")) return SoundFormat::AAC;
+    // if (file.ExtensionEquals("flac")) return SoundFormat::FLAC;
+    //if (file.ExtensionEquals("m4a")) return SoundFormat::M4A;
+    //if (file.ExtensionEquals("mid")) return SoundFormat::MID;
+    // if (file.ExtensionEquals("mp3")) return SoundFormat::MP3;
+    //if (file.ExtensionEquals("ogg")) return SoundFormat::OGG;
+    // if (file.ExtensionEquals("wav")) return SoundFormat::WAV;
+   // if (file.ExtensionEquals("wma")) return SoundFormat::WMA;
 
     return SoundFormat::Unkown;
 }

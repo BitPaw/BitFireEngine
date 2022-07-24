@@ -9,6 +9,7 @@
 #define UnicodeToASCII(wc) (wc <= 0xFF ? (char)wc : '?') 
 
 #define TextUnkownLength -1
+#define TextIndexNotFound -1
 
 #ifdef __cplusplus
 extern "C"

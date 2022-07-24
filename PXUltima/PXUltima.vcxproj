@@ -191,6 +191,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Video\Shader.h" />
+    <ClInclude Include="Source\File\File.h" />
+    <ClInclude Include="Source\File\Format\OBJ\OBJ.h" />
+    <ClInclude Include="Source\File\BitStream.h" />
+    <ClInclude Include="Source\File\Format\ADAM7\ADAM7.h" />
+    <ClInclude Include="Source\File\Format\DEFLATE\DeflateBlock.h" />
+    <ClInclude Include="Source\File\Format\HUFFMAN\HuffmanTree.h" />
     <ClInclude Include="Source\File\Format\JPEG\JPEG.h" />
     <ClInclude Include="Source\File\Format\LAME\LAME.h" />
     <ClInclude Include="Source\Algorithm\ADLER\Adler32.h" />
@@ -206,6 +213,7 @@
     <ClInclude Include="Source\File\Format\MID\MID.h" />
     <ClInclude Include="Source\File\Format\MP3\MP3.h" />
     <ClInclude Include="Source\File\Format\MP4\MP4.h" />
+    <ClInclude Include="Source\File\Format\MTL\MTL.h" />
     <ClInclude Include="Source\File\Format\OGG\OGG.h" />
     <ClInclude Include="Source\File\Format\PLY\PLY.h" />
     <ClInclude Include="Source\File\Format\QOI\QOI.h" />
@@ -220,6 +228,11 @@
     <ClInclude Include="Source\File\Format\WEBP\WEBP.h" />
     <ClInclude Include="Source\File\Format\WMA\WMA.h" />
     <ClInclude Include="Source\File\Format\XingInfo\XingInfo.h" />
+    <ClInclude Include="Source\File\Format\GIF\GIF.h" />
+    <ClInclude Include="Source\File\Format\PNG\PNG.h" />
+    <ClInclude Include="Source\File\Format\TGA\TGA.h" />
+    <ClInclude Include="Source\File\Format\ZLIB\ZLIB.h" />
+    <ClInclude Include="Source\OS\Bash.h" />
     <ClInclude Include="Source\OS\Monitor.h" />
     <ClInclude Include="Source\Error\ActionResult.h" />
     <ClInclude Include="Source\Container\ClusterInt.h" />
@@ -244,6 +257,13 @@
     <ClInclude Include="Source\OS\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Video\Shader.c" />
+    <ClCompile Include="Source\File\File.c" />
+    <ClCompile Include="Source\File\Format\OBJ\OBJ.c" />
+    <ClCompile Include="Source\File\BitStream.c" />
+    <ClCompile Include="Source\File\Format\ADAM7\ADAM7.c" />
+    <ClCompile Include="Source\File\Format\DEFLATE\DeflateBlock.c" />
+    <ClCompile Include="Source\File\Format\HUFFMAN\HuffmanTree.c" />
     <ClCompile Include="Source\File\Format\JPEG\JPEG.c" />
     <ClCompile Include="Source\File\Format\LAME\LAME.c" />
     <ClCompile Include="Source\Algorithm\ADLER\Adler32.c" />
@@ -259,6 +279,7 @@
     <ClCompile Include="Source\File\Format\MID\MID.c" />
     <ClCompile Include="Source\File\Format\MP3\MP3.c" />
     <ClCompile Include="Source\File\Format\MP4\MP4.c" />
+    <ClCompile Include="Source\File\Format\MTL\MTL.c" />
     <ClCompile Include="Source\File\Format\OGG\OGG.c" />
     <ClCompile Include="Source\File\Format\PLY\PLY.c" />
     <ClCompile Include="Source\File\Format\QOI\QOI.c" />
@@ -273,6 +294,11 @@
     <ClCompile Include="Source\File\Format\WEBP\WEBP.c" />
     <ClCompile Include="Source\File\Format\WMA\WMA.c" />
     <ClCompile Include="Source\File\Format\XingInfo\XingInfo.c" />
+    <ClCompile Include="Source\File\Format\GIF\GIF.c" />
+    <ClCompile Include="Source\File\Format\PNG\PNG.c" />
+    <ClCompile Include="Source\File\Format\TGA\TGA.c" />
+    <ClCompile Include="Source\File\Format\ZLIB\ZLIB.c" />
+    <ClCompile Include="Source\OS\Bash.c" />
     <ClCompile Include="Source\OS\Monitor.c" />
     <ClCompile Include="Source\Error\ActionResult.c" />
     <ClCompile Include="Source\File\Format\BMP\BMP.c" />

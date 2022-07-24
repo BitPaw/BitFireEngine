@@ -2,7 +2,7 @@
 
 BF::ResponseCache::ResponseCache()
 {
-    _cache.MapToVirtualMemory(4096u, MemoryReadAndWrite);
+    FileMapToVirtualMemory(&_cache, 4096u, MemoryReadAndWrite);
 }
 
 ResponseID BF::ResponseCache::Register()
@@ -36,8 +36,8 @@ BF::ResponseCacheResult BF::ResponseCache::Fill(const ResponseID responseID, con
     {
         const size_t currentPosition = _cache.DataCursor;
 
-         _cache.Write((unsigned long long)dataSize, EndianLittle);
-        _cache.Write(data, dataSize);
+         //_cache.Write((unsigned long long)dataSize, EndianLittle);
+        //_cache.Write(data, dataSize);
 
         _responseIDLookup.Update(responseID, currentPosition);
     }
@@ -75,9 +75,9 @@ BF::ResponseCacheResult BF::ResponseCache::Find(const ResponseID responseID, Res
 
         _cache.DataCursor = *adressEntry;
 
-        _cache.Read((unsigned long long&)responseCacheEntry.Length, EndianLittle);
+        //_cache.Read((unsigned long long&)responseCacheEntry.Length, EndianLittle);
 
-        responseCacheEntry.Data = _cache.CursorCurrentAdress();
+        //responseCacheEntry.Data = _cache.CursorCurrentAdress();
 
         _cache.DataCursor = cursorOldPosition;
     }

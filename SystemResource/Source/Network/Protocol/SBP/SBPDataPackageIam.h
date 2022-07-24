@@ -2,7 +2,7 @@
 
 #include "SBPDataPackage.h"
 
-#include <File/FilePath.h>
+#include <File/File.h>
 #include <Text/Text.h>
 
 #define SBPDataPackageIamID MakeInt('I', '\'', 'a', 'm')

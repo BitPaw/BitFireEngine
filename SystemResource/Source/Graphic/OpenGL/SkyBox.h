@@ -5,7 +5,7 @@
 #include "TextureCube.h"
 #include "Renderable.h"
 
-#include <Shader/ShaderProgram.h>
+#include <Video/Shader.h>
 
 namespace BF
 {

@@ -24,12 +24,6 @@
     <ClCompile Include="Source\Email\EML.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\File\File.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\OTF\OTF.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Media\Font\TTF\TTF.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -39,25 +33,10 @@
     <ClCompile Include="Source\Media\Image\BMP\BMPP.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Media\Image\GIF\GIF.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\PNG\PNG.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\TGA\TGA.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Media\Image\Image.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Model\OBJ\MTL\MTL.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Model\OBJ\OBJ.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Model\OBJ\OBJElement.cpp">
+    <ClCompile Include="Source\Model\OBJ\OBJX.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Model\LinkedMesh.cpp">
@@ -147,24 +126,6 @@
     <ClCompile Include="Source\Network\Server.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Compression\ZLIB\ZLIBCompressionLevel.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Compression\ZLIB\ZLIBCompressionMethod.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Compression\ZLIB\ZLIBHeader.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Compression\HUFFMAN\HuffmanSymbol.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Compression\DEFLATE\DeflateBlock.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Compression\DEFLATE\DeflateEncodingMethod.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Encryption\Caesar.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -172,12 +133,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Media\Image\ImageDataFormat.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\TGA\TGAImageDataType.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\TGA\TGABitsPerPixel.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Network\SocketActionResult.cpp">
@@ -192,40 +147,10 @@
     <ClCompile Include="Source\File\ByteStream.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\File\FileTemporary.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\File\IFIle.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\File\Bash.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\File\Program.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\ErrorCode.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Compression\HUFFMAN\HuffmanTree.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Compression\ADAM7\ADAM7.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\PNG\PNGColorCompressor.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\PNG\PNGColorTree.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Compression\HUFFMAN\HuffmanCodeType.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Compression\HUFFMAN\HuffmanNumberCode.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Compression\ZLIB\ZLIB.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFMaximumProfile.cpp">
@@ -357,27 +282,6 @@
     <ClCompile Include="Source\File\ProgramExecuteInfo.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGImageHeader.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGChunkType.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGInterlaceMethod.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGColorType.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGPalette.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGPrimaryChromatics.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGChunk.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Service\HTTP\HTTPError.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -385,30 +289,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Service\HTTP\HTTPServer.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGLastModificationTime.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGBackgroundColor.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGPaletteHistogram.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGSuggestedPalette.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGPhysicalPixelDimension.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\PNG\Chunk\PNGTransparency.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\GIF\GIFImageDescriptor.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\File\FileCachingMode.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Encryption\RSA\Euklid.cpp">
@@ -486,15 +366,6 @@
     <ClCompile Include="Source\Hardware\MainBoard\MainBoard.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Shader\Shader.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Shader\ShaderProgram.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Shader\GLSL\ShaderType.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Graphic\OpenGL\Texture.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -535,12 +406,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphic\OpenGL\Sprite.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\File\FileLocation.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\File\FilePath.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Encryption\RSA\Koerper.cpp">
@@ -618,6 +483,9 @@
     <ClCompile Include="Source\OS\Sound\AudioSystem.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Media\Image\PNGX.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp">
@@ -662,12 +530,6 @@
     <ClInclude Include="Source\Email\EML.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\File\File.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\OTF\OTF.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Media\Font\TTF\TTF.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -680,43 +542,7 @@
     <ClInclude Include="Source\Media\Image\BMP\BMPP.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Media\Image\GIF\GIF.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\PNG\PNG.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\TGA\TGA.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\TGA\TGABitsPerPixel.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\TGA\TGAColorType.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\TGA\TGAImageDataType.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Model\OBJ\MTL\IlluminationMode.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Model\OBJ\MTL\MTL.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Model\OBJ\MTL\MTLCommand.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Model\OBJ\MTL\MTLMaterial.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Model\OBJ\OBJ.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Model\OBJ\OBJElement.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Model\OBJ\OBJLineCommand.h">
+    <ClInclude Include="Source\Model\OBJ\OBJX.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Model\LinkedMesh.h">
@@ -851,24 +677,6 @@
     <ClInclude Include="Source\Math\Geometry\Matrix.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Compression\ZLIB\ZLIBCompressionLevel.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Compression\ZLIB\ZLIBCompressionMethod.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Compression\ZLIB\ZLIBHeader.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Compression\HUFFMAN\HuffmanSymbol.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Compression\DEFLATE\DeflateBlock.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Compression\DEFLATE\DeflateEncodingMethod.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Encryption\Caesar.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -914,18 +722,6 @@
     <ClInclude Include="Source\File\ByteStream.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\File\FileTemporary.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\File\IFIle.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\File\FileOpenMode.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\File\FilePersistence.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Container\QuadTree\QuadTree.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -933,9 +729,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Container\QuadTree\QuadTreeDirection.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\File\Bash.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\File\Program.h">
@@ -948,27 +741,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Media\Image\Image.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Compression\HUFFMAN\HuffmanTree.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Compression\HUFFMAN\HuffmanCodeType.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Compression\ADAM7\ADAM7.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\PNG\PNGColorCompressor.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\PNG\PNGColorTree.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Compression\HUFFMAN\HuffmanNumberCode.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Compression\ZLIB\ZLIB.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFMaximumProfile.h">
@@ -1112,27 +884,6 @@
     <ClInclude Include="Source\File\ProgramExecuteInfo.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGImageHeader.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGChunkType.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGInterlaceMethod.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGColorType.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGPalette.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGPrimaryChromatics.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGChunk.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Service\HTTP\HTTPServer.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -1140,30 +891,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Service\HTTP\HTTPRequestMethod.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGLastModificationTime.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGBackgroundColor.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGPaletteHistogram.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGSuggestedPalette.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGPhysicalPixelDimension.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\PNG\Chunk\PNGTransparency.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\GIF\GIFImageDescriptor.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\File\FileCachingMode.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Encryption\RSA\Euklid.h">
@@ -1259,15 +986,6 @@
     <ClInclude Include="Source\Graphic\OpenGL\RenderMode.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Shader\Shader.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Shader\ShaderProgram.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Shader\GLSL\ShaderType.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Graphic\OpenGL\Texture.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -1326,12 +1044,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphic\OpenGL\SkyBox.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\File\FileLocation.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\File\FilePath.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Encryption\RSA\Koerper.h">
@@ -1407,6 +1119,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\OS\Sound\AudioResult.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Media\Image\PNGX.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

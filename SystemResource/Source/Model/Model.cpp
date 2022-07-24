@@ -2,8 +2,6 @@
 
 #include "ModelType.h"
 
-#include "OBJ/OBJ.h"
-
 #include <File/File.h>
 #include <Text/Text.h>
 #include <File/Format/PLY/PLY.h>
@@ -11,6 +9,7 @@
 #include <File/Format/VRML/VRML.h>
 #include <File/Format/FBX/FBX.h>
 #include <File/Format/3DS/A3DS.h>
+#include <Model/OBJ/OBJX.h>
 
 BF::Model::Model()
 {
@@ -45,24 +44,25 @@ void BF::Model::PrintModelData()
 
 BF::ModelType BF::Model::FileFormatPeek(const wchar_t* fileExtension)
 {
-    FilePath file(fileExtension);
+    wchar_t extension[ExtensionMaxSize];
 
-    if (file.ExtensionEquals("3ds")) return ModelType::A3DS;
-    if (file.ExtensionEquals("obj")) return ModelType::OBJ;
-    if (file.ExtensionEquals("ply")) return ModelType::PLY;
-    if (file.ExtensionEquals("stl")) return ModelType::STL;
-    if (file.ExtensionEquals("wrl")) return ModelType::WRL;
+    FilePathExtensionGetW
+    (
+        fileExtension, PathMaxSize,
+        extension, ExtensionMaxSize
+    );
+
+    if (TextCompareIgnoreCaseWA(extension, ExtensionMaxSize, "3ds", 3u)) return ModelType::A3DS;
+    if (TextCompareIgnoreCaseWA(extension, ExtensionMaxSize, "obj", 3u)) return ModelType::OBJ;
+    if (TextCompareIgnoreCaseWA(extension, ExtensionMaxSize, "ply", 3u)) return ModelType::PLY;
+    if (TextCompareIgnoreCaseWA(extension, ExtensionMaxSize, "stl", 3u)) return ModelType::STL;
+    if (TextCompareIgnoreCaseWA(extension, ExtensionMaxSize, "wrl", 3u)) return ModelType::WRL;
 
     return ModelType::UnKown;
 }
 
 BF::FileActionResult BF::Model::Load(const wchar_t* filePath)
 {
-    if (!File::DoesFileExist(filePath))
-    {
-        return FileActionResult::FileNotFound;
-    }
-
     ModelType modelType = FileFormatPeek(filePath);
 
     switch (modelType)
@@ -85,7 +85,7 @@ BF::FileActionResult BF::Model::Load(const wchar_t* filePath)
 
         case ModelType::OBJ:
         {
-            OBJ obj;
+            OBJX obj;
             obj.Load(filePath);
             obj.ConvertTo(*this);
             break;

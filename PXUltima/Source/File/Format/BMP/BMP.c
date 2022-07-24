@@ -143,7 +143,7 @@ ActionResult BMPParse(BMP* bmp, const void* data, const size_t dataSize, size_t*
 
     //---[ Parsing Header ]----------------------------------------------------
     {
-        ClusterInt byteCluster;
+        ClusterShort byteCluster;
         unsigned int sizeOfFile = 0;
         unsigned int reservedBlock = 0;
         unsigned int dataOffset = 0;
@@ -257,6 +257,7 @@ ActionResult BMPParse(BMP* bmp, const void* data, const size_t dataSize, size_t*
         unsigned char* data = bmp->PixelData + pixelDataOffset;
 
         ParsingStreamReadD(&parsingStream, data, dataRowSize);
+        //ParsingStreamCursorAdvance(&parsingStream, dataRowSize);
         ParsingStreamCursorAdvance(&parsingStream, padding);
 
         pixelDataOffset += dataRowSize;

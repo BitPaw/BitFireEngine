@@ -1,9 +1,6 @@
 #include "Image.h"
 
 #include "BMP/BMPP.h"
-#include "PNG/PNG.h"
-#include "TGA/TGA.h"
-#include "GIF/GIF.h"
 
 #include <File/File.h>
 #include <Math/Math.h>
@@ -16,6 +13,10 @@
 #include <Hardware/Memory/Memory.h>
 #include <File/Format/JPEG/JPEG.h>
 #include <File/Format/TIFF/TIFF.h>
+#include <File/Format/PNG/PNG.h>
+#include <File/Format/TGA/TGA.h>
+#include <Media/Image/PNGX.h>
+#include <File/ByteStream.h>
 
 BF::Vector4<unsigned char> BF::Image::GetPixel(unsigned int x, unsigned int y)
 {
@@ -302,28 +303,30 @@ void BF::Image::FormatChange(ImageDataFormat imageFormat)
 
 BF::ImageFileFormat BF::Image::FileFormatPeek(const char* filePath)
 {
-    FilePath file(filePath);
+    // FilePath file(filePath);
 
-    if(file.ExtensionEquals("BMP"))  return ImageFileFormat::BitMap;
-    if(file.ExtensionEquals("GIF"))  return ImageFileFormat::GIF;
-    if(file.ExtensionEquals("JPEG"))  return ImageFileFormat::JPEG;
-    if(file.ExtensionEquals("PNG"))  return ImageFileFormat::PNG;
-    if(file.ExtensionEquals("TGA"))  return ImageFileFormat::TGA;
-    if(file.ExtensionEquals("TIFF"))  return ImageFileFormat::TIFF;
+    // if(file.ExtensionEquals("BMP"))  return ImageFileFormat::BitMap;
+    // if(file.ExtensionEquals("GIF"))  return ImageFileFormat::GIF;
+    //   if(file.ExtensionEquals("JPEG"))  return ImageFileFormat::JPEG;
+    //  if(file.ExtensionEquals("PNG"))  return ImageFileFormat::PNG;
+    // if(file.ExtensionEquals("TGA"))  return ImageFileFormat::TGA;
+    //  if(file.ExtensionEquals("TIFF"))  return ImageFileFormat::TIFF;
 
     return ImageFileFormat::Unkown;
 }
 
 BF::ImageFileFormat BF::Image::FileFormatPeek(const wchar_t* filePath)
 {
-    FilePath file(filePath);
+    wchar_t extension[ExtensionMaxSize];
 
-    if (file.ExtensionEquals("BMP"))  return ImageFileFormat::BitMap;
-    if (file.ExtensionEquals("GIF"))  return ImageFileFormat::GIF;
-    if (file.ExtensionEquals("JPEG"))  return ImageFileFormat::JPEG;
-    if (file.ExtensionEquals("PNG"))  return ImageFileFormat::PNG;
-    if (file.ExtensionEquals("TGA"))  return ImageFileFormat::TGA;
-    if (file.ExtensionEquals("TIFF"))  return ImageFileFormat::TIFF;
+    FilePathExtensionGetW(filePath, PathMaxSize, extension, ExtensionMaxSize);
+
+    if (TextCompareIgnoreCaseWA(extension, ExtensionMaxSize, "BMP", 3u))  return ImageFileFormat::BitMap;
+    if (TextCompareIgnoreCaseWA(extension, ExtensionMaxSize, "GIF", 3u))  return ImageFileFormat::GIF;
+    if (TextCompareIgnoreCaseWA(extension, ExtensionMaxSize, "JPEG", 4u))  return ImageFileFormat::JPEG;
+    if (TextCompareIgnoreCaseWA(extension, ExtensionMaxSize, "PNG", 3u))  return ImageFileFormat::PNG;
+    if (TextCompareIgnoreCaseWA(extension, ExtensionMaxSize, "TGA", 3u))  return ImageFileFormat::TGA;
+    if (TextCompareIgnoreCaseWA(extension, ExtensionMaxSize, "TIFF", 4u))  return ImageFileFormat::TIFF;
 
     return ImageFileFormat::Unkown;
 }
@@ -333,12 +336,12 @@ BF::FileActionResult BF::Image::Load(const char* filePath)
     File file;
 
     {
-        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
-        const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+        const ActionResult fileLoadingResult = FileMapToVirtualMemoryA(&file, filePath, MemoryReadOnly);
+        const bool sucessful = fileLoadingResult == ResultSuccessful;
 
         if(!sucessful)
         {
-            return fileLoadingResult;
+            return FileActionResult::Invalid;
         }
     }
 
@@ -373,13 +376,15 @@ BF::FileActionResult BF::Image::Load(const wchar_t* filePath)
 {
     File file;
 
+    FileConstruct(&file);
+
     {
-        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
-        const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+        const ActionResult fileLoadingResult = FileMapToVirtualMemoryW(&file, filePath, MemoryReadOnly);
+        const bool sucessful = fileLoadingResult == ResultSuccessful;
 
         if(!sucessful)
         {
-            return fileLoadingResult;
+            return FileActionResult::Invalid;
         }
     }
 
@@ -408,6 +413,8 @@ BF::FileActionResult BF::Image::Load(const wchar_t* filePath)
 
         return fileGuessResult;
     }
+
+    FileDestruct(&file);
 }
 
 BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t fileDataSize, const ImageFileFormat imageFileFormat)
@@ -434,7 +441,7 @@ BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t
         }
         case ImageFileFormat::GIF:
         {
-            GIF gif;
+            //GIF gif;
 
             /*
             {
@@ -472,18 +479,16 @@ BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t
         }
         case ImageFileFormat::PNG:
         {
-            PNG png;
+            PNGX png;
      
+            const FileActionResult fileActionResult = png.Load(fileData, fileDataSize);
+            const bool sucessful = fileActionResult == FileActionResult::Successful;
+
+            if(sucessful)
             {
-                const FileActionResult fileActionResult = png.Load(fileData, fileDataSize);
-                const bool sucessful = fileActionResult == FileActionResult::Successful;
+                png.ConvertTo(*this);
 
-                if(sucessful)
-                {
-                    png.ConvertTo(*this);
-
-                    return FileActionResult::Successful;
-                }
+                return FileActionResult::Successful;
             }
 
             break;
@@ -550,15 +555,15 @@ BF::FileActionResult BF::Image::Save(const wchar_t* filePath, ImageFileFormat im
         case BF::ImageFileFormat::PNG:
         {
             PNG png;
-            png.ConvertFrom(*this);
-            png.Save(filePath);
+            //png.ConvertFrom(*this);
+            //png.Save(filePath);
             break;
         }
         case BF::ImageFileFormat::TGA:
         {
             TGA tga;
-            tga.ConvertFrom(*this);
-            tga.Save(filePath);
+            //tga.ConvertFrom(*this);
+            //tga.Save(filePath);
             break;
         }
         case BF::ImageFileFormat::JPEG:
@@ -577,9 +582,9 @@ BF::FileActionResult BF::Image::Save(const wchar_t* filePath, ImageFileFormat im
         }
         case BF::ImageFileFormat::GIF:
         {
-            GIF gif;
-            gif.ConvertFrom(*this);
-            gif.Save(filePath);
+           // GIF gif;
+            //gif.ConvertFrom(*this);
+            //gif.Save(filePath);
             break;
         }
     }

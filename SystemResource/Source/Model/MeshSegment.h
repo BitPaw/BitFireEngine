@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-#include <Model/OBJ/OBJElement.h>
+#include <File/Format/OBJ/OBJ.h>
 
 #define MeshSegmentNameLength 64
 

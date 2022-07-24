@@ -8,18 +8,19 @@
 #include <Hardware/Memory/Memory.h>
 
 #include <cassert>
+#include <File/ByteStream.h>
 
 BF::FileActionResult BF::TTF::Load(const char* filePath)
 {
 	File file;
 
 	{
-		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
-		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+		const ActionResult fileLoadingResult = FileMapToVirtualMemoryA(&file, filePath, MemoryReadOnly);
+		const bool sucessful = fileLoadingResult == ResultSuccessful;
 
 		if(!sucessful)
 		{
-			return fileLoadingResult;
+			return FileActionResult::Invalid;
 		}
 	}
 
@@ -35,12 +36,12 @@ BF::FileActionResult BF::TTF::Load(const wchar_t* filePath)
 	File file;
 
 	{
-		const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
-		const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+		const ActionResult fileLoadingResult = FileMapToVirtualMemoryW(&file, filePath, MemoryReadOnly);
+		const bool sucessful = fileLoadingResult == ResultSuccessful;
 
 		if(!sucessful)
 		{
-			return fileLoadingResult;
+			return FileActionResult::Invalid;
 		}
 	}
 

@@ -2,7 +2,6 @@
 
 #include <File/Format/FNT/FNT.h>
 
-#include "OTF/OTF.h"
 #include "TTF/TTF.h"
 
 #include <File/File.h>
@@ -12,12 +11,12 @@ BF::FileActionResult BF::Font::Load(const char* filePath)
     File file;
 
     {
-        const FileActionResult fileLoadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
-        const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+        const ActionResult fileLoadingResult = FileMapToVirtualMemoryA(&file, filePath, MemoryReadOnly);
+        const bool sucessful = fileLoadingResult == ResultSuccessful;
 
         if(!sucessful)
         {
-            return fileLoadingResult;
+            return FileActionResult::Invalid;
         }
     }
 
@@ -75,25 +74,7 @@ BF::FileActionResult BF::Font::Load(const unsigned char* fileData, const size_t 
             }
 
             break;
-        }
-        case FontFormat::FormatOFT:
-        {
-            OTF otf;
-
-            {
-                const FileActionResult fileActionResult = otf.Load(fileData, fileDataSize);
-                const bool sucessful = fileActionResult == FileActionResult::Successful;
-
-                if(sucessful)
-                {
-                    otf.ConvertTo(*this);
-
-                    return FileActionResult::Successful;
-                }
-            }
-
-            break;
-        }
+        }        
         case FontFormat::FormatTTF:
         {
             TTF ttf;
@@ -137,13 +118,6 @@ BF::FileActionResult BF::Font::Save(const wchar_t* filePath, FontFormat fontForm
             //fnt.Save(filePath);
             break;
         }       
-        case BF::FontFormat::FormatOFT:
-        {
-            OTF otf;
-            otf.ConvertFrom(*this);
-            otf.Save(filePath);
-            break;
-        }
         case BF::FontFormat::FormatTTF:
         {
             TTF ttf;
@@ -158,22 +132,22 @@ BF::FileActionResult BF::Font::Save(const wchar_t* filePath, FontFormat fontForm
 
 BF::FontFormat BF::Font::FileFormatPeek(const char* filePath)
 {
-    FilePath file(filePath);
+    //FilePath file(filePath);
 
-    if(file.ExtensionEquals("FNT")) return FontFormat::FormatFNT;
-    if(file.ExtensionEquals("OTF")) return FontFormat::FormatOFT;
-    if(file.ExtensionEquals("TTF")) return FontFormat::FormatTTF;
+    //if(file.ExtensionEquals("FNT")) return FontFormat::FormatFNT;
+   // if(file.ExtensionEquals("OTF")) return FontFormat::FormatOFT;
+    //if(file.ExtensionEquals("TTF")) return FontFormat::FormatTTF;
 
     return FontFormat::Unkown;
 }
 
 BF::FontFormat BF::Font::FileFormatPeek(const wchar_t* filePath)
 {
-    FilePath file(filePath);
+    //FilePath file(filePath);
 
-    if (file.ExtensionEquals("FNT")) return FontFormat::FormatFNT;
-    if (file.ExtensionEquals("OTF")) return FontFormat::FormatOFT;
-    if (file.ExtensionEquals("TTF")) return FontFormat::FormatTTF;
+   // if (file.ExtensionEquals("FNT")) return FontFormat::FormatFNT;
+    //if (file.ExtensionEquals("OTF")) return FontFormat::FormatOFT;
+   // if (file.ExtensionEquals("TTF")) return FontFormat::FormatTTF;
 
     return FontFormat::Unkown;
 }

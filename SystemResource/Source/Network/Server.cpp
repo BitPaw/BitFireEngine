@@ -244,7 +244,7 @@ void BF::Server::RegisterClient(IOSocket* clientSocket)
     */
 }
 
-BF::SocketActionResult BF::Server::SendMessageToAll(const Byte__* data, const size_t dataSize)
+BF::SocketActionResult BF::Server::SendMessageToAll(const unsigned char* data, const size_t dataSize)
 {
     unsigned int failCounter = 0;
 
@@ -268,7 +268,7 @@ BF::SocketActionResult BF::Server::SendMessageToAll(const Byte__* data, const si
     return SocketActionResult::Successful;
 }
 
-BF::SocketActionResult BF::Server::SendMessageToClient(const ClientID clientID, const Byte__* data, const size_t dataSize)
+BF::SocketActionResult BF::Server::SendMessageToClient(const ClientID clientID, const unsigned char* data, const size_t dataSize)
 {
     Client* client = GetClientViaID(clientID);
 

@@ -11,6 +11,7 @@
 #include <File/Format/FNT/FNT.h>
 #include <File/File.h>
 #include <File/Format/MP3/MP3.h>
+#include <File/Format/PNG/PNG.h>
 //#include <Media/Font/Font.h>
 //#include <Media/Font/FNT/FNT.h>
 //#include <Media/Sound/OGG/OGG.h>
@@ -119,8 +120,20 @@ int main()
 
 #endif
 
-
 #if 1
+    PNG png;
+
+    File dggfgf;
+    const FileActionResult fileLoadingResult = dggfgf.MapToVirtualMemory("B:\\Daten\\Bilder\\tumblr_oou0htSqtG1shbbpso1_640.png", MemoryReadOnly);
+    const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+
+    size_t readBytes = 0;
+    PNGParse(&png, dggfgf.Data, dggfgf.DataSize, &readBytes);
+
+#endif
+
+
+#if 0
     MP3 mp3;
 
 

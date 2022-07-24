@@ -1,4 +1,4 @@
-#if !defined(EndianInclude)
+#ifndef EndianInclude
 #define EndianInclude
 
 #include <stddef.h>

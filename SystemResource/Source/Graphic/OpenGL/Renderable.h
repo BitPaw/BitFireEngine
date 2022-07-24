@@ -1,12 +1,12 @@
 #pragma once
 
-#include <Math/Geometry/Matrix4x4.hpp>
-#include <Shader/ShaderProgram.h>
 #include "RenderMode.h"
 #include "RenderableChunk.h"
 
+#include <Video/Shader.h>
+
+#include <Math/Geometry/Matrix4x4.hpp>
 #include <Container/List.hpp>
-#include <Shader/ShaderProgram.h>
 
 namespace BF
 {

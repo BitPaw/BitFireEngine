@@ -1,6 +1,6 @@
 #include "SBPQueue.h"
 #include <Hardware/Memory/Memory.h>
-
+/*
 BF::SBPQueue::SBPQueue()
 {
 	_dequeuedDataCursorPosition = 0;
@@ -80,4 +80,4 @@ bool BF::SBPQueue::Clear(const SBPData& sbpData)
 #endif
 
 	return true;
-}
+}*/

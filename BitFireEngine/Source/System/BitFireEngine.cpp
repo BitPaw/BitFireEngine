@@ -13,6 +13,7 @@
 #include <Graphic/OpenGL/ResourceType.hpp>
 #include <Hardware/Memory/Memory.h>
 #include <Async/Await.h>
+#include <File/ParsingStream.h>
 
 #include <stdlib.h>
 #include <signal.h>
@@ -1017,8 +1018,13 @@ void BF::BitFireEngine::Register(SkyBox& skyBox)
 
 bool BF::BitFireEngine::Register(ShaderProgram& shaderProgram, const wchar_t* vertexShaderFilePath, const wchar_t* fragmentShaderFilePath)
 {
-    Shader vertexShader(ShaderType::Vertex);
-    Shader fragmentShader(ShaderType::Fragment);
+    Shader vertexShader;
+    Shader fragmentShader;
+    File vertexShaderFile;
+    File fragmentFile;
+
+    FileConstruct(&vertexShaderFile);
+    FileConstruct(&fragmentFile);
 
     {
         const bool isAlreadyLoaded = shaderProgram.ID != -1;
@@ -1035,25 +1041,34 @@ bool BF::BitFireEngine::Register(ShaderProgram& shaderProgram, const wchar_t* ve
         }
     }
 
-    //-----
-    {
-        const FileActionResult vertexLoadResult = vertexShader.Load(vertexShaderFilePath);
-        const bool successful = vertexLoadResult == FileActionResult::Successful;
-
-        if(!successful)
-        {
-            return false;
-        }
-    }
 
     {
-        const FileActionResult fragmentLoadResult = fragmentShader.Load(fragmentShaderFilePath);
-        const bool sucessful = fragmentLoadResult == FileActionResult::Successful;
+        const ActionResult actionResult = FileMapToVirtualMemoryW(&vertexShaderFile, vertexShaderFilePath, MemoryReadOnly);
+        const unsigned char sucessful = ResultSuccessful == actionResult;
 
         if(!sucessful)
         {
             return false;
         }
+
+        vertexShader.Type = ShaderTypeVertex;
+        vertexShader.Content = (char*)vertexShaderFile.Data;
+        vertexShader.ContentSize = vertexShaderFile.DataSize;
+    }
+  
+
+    {
+        const ActionResult actionResult = FileMapToVirtualMemoryW(&fragmentFile, fragmentShaderFilePath, MemoryReadOnly);
+        const unsigned char sucessful = ResultSuccessful == actionResult;
+
+        if(!sucessful)
+        {
+            return false;
+        }
+
+        fragmentShader.Type = ShaderTypeFragment;
+        fragmentShader.Content = (char*)fragmentFile.Data;
+        fragmentShader.ContentSize = fragmentFile.DataSize;
     }
     //-----
 
@@ -1111,6 +1126,9 @@ bool BF::BitFireEngine::Register(ShaderProgram& shaderProgram, const wchar_t* ve
     {
         glDeleteProgram(shaderProgrammID);
     }
+
+    FileDestruct(&vertexShaderFile);
+    FileDestruct(&fragmentFile);
 
     return isValidShader;
 }
@@ -1371,6 +1389,8 @@ BF::FileActionResult BF::BitFireEngine::Load(Font& font, const wchar_t* filePath
 
 BF::FileActionResult BF::BitFireEngine::Load(AudioClip& audioClip, const wchar_t* filePath, bool loadAsynchronously)
 {
+    printf("[+][Resource] AudioClip <%ls> loading...\n", filePath);
+
     Sound* soundAdress = new Sound();
 
     if(!soundAdress)
@@ -1403,6 +1423,8 @@ BF::FileActionResult BF::BitFireEngine::Load(AudioClip& audioClip, const wchar_t
 
 BF::FileActionResult BF::BitFireEngine::Load(ShaderProgram& shaderProgram, const wchar_t* vertexShaderFilePath, const wchar_t* fragmentShaderFilePath)
 {
+    printf("[+][Resource] ShaderProgram V:<%ls> F:<%ls> loading...\n", vertexShaderFilePath, fragmentShaderFilePath);
+
     const bool firstShaderProgram = _shaderProgramList.Size() == 0;
     const bool isRegistered = shaderProgram.ID != -1;
 
@@ -1546,20 +1568,26 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
     printf("[+][Resource] Level <%ls> loading...\n", filePath);
 
     File file;
-    FileActionResult fileActionResult = file.ReadFromDisk(filePath, true);
-    char currentLineBuffer[256];
+    ParsingStream parsingStream;
 
-    if(fileActionResult != FileActionResult::Successful)
     {
-        return fileActionResult;
+        const ActionResult mappingResult = FileMapToVirtualMemoryW(&file, filePath, MemoryReadOnly);
+        const unsigned char sucessful = mappingResult == ResultSuccessful;
+
+        if(!sucessful)
+        {
+            return FileActionResult::Invalid;
+        }
     }
 
-    // Step I - Count objects
-    while(file.ReadNextLineInto(currentLineBuffer))
-    {
-        char character = currentLineBuffer[0];
+    ParsingStreamConstruct(&parsingStream, file.Data, file.DataSize);
 
-        switch(character)
+    // Step I - Count objects
+    do
+    {
+        unsigned char* character = ParsingStreamCursorPosition(&parsingStream);
+
+        switch(character[0])
         {
             case _modelToken:
                 modelCounter++;
@@ -1592,6 +1620,7 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
                 break;
         }
     }
+    while(ParsingStreamSkipLine(&parsingStream));
 
     // Step II - Reserve space
     level.ModelList.ReSize(modelCounter);
@@ -1607,77 +1636,51 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
     fontCounter = 0;
     shaderCounter = 0;
     dialogCounter = 0;
-
-    file.CursorToBeginning();
+        
+    ParsingStreamCursorToBeginning(&parsingStream);
 
     // Step II - Parse and Load
-    while(file.ReadNextLineInto(currentLineBuffer))
+    do
     {
-        char character = currentLineBuffer[0];
-        char dummyBuffer[30];
-        char filePathA[PathMaxSize]{0};
+        const char* currentLineTypeData = (char*)ParsingStreamCursorPosition(&parsingStream);
+        char character = currentLineTypeData[0];
+        char filePathA[PathMaxSize]{ 0 };
+
+        ParsingStreamSkipBlock(&parsingStream);
+
+        const char* currentLine = (char*)ParsingStreamCursorPosition(&parsingStream);
+        const size_t currentLineSize = ParsingStreamRemainingSize(&parsingStream);
 
         switch(character)
         {
             case _modelToken:
             {
-                char positionText[30];
-                char rotationText[30];
-                char scaleText[30];
                 Vector3<float> position;
                 Vector3<float> rotation;
                 Vector3<float> scale;
 
-                sscanf
+                TextParseA
                 (
-                    currentLineBuffer,
-                    "%s %s %s %s %s",
-                    dummyBuffer,
+                    currentLine,
+                    currentLineSize,
+                    "sf§f§ff§f§ff§f§f",
                     filePathA,
-                    positionText,
-                    rotationText,
-                    scaleText
+                    &position.X,
+                    &position.Y,
+                    &position.Z,
+                    &rotation.X,
+                    &rotation.Y,
+                    &rotation.Z,
+                    &scale.X,
+                    &scale.Y,
+                    &scale.Z
                 );
-
-                // Get raw Data-------------------------
-
-                // Replace 0|0|0 -> 0 0 0
-                for(size_t i = 0; positionText[i] != '\0'; i++)
-                {
-                    if(positionText[i] == '|')
-                    {
-                        positionText[i] = ' ';
-                    }
-                }
-
-                for(size_t i = 0; rotationText[i] != '\0'; i++)
-                {
-                    if(rotationText[i] == '|')
-                    {
-                        rotationText[i] = ' ';
-                    }
-                }
-
-                for(size_t i = 0; scaleText[i] != '\0'; i++)
-                {
-                    if(scaleText[i] == '|')
-                    {
-                        scaleText[i] = ' ';
-                    }
-                }
-
-                sscanf(positionText, "%f %f %f", &position.X, &position.Y, &position.Z);
-                sscanf(rotationText, "%f %f %f", &rotation.X, &rotation.Y, &rotation.Z);
-                sscanf(scaleText, "%f %f %f", &scale.X, &scale.Y, &scale.Z);
-                //------------------------------------------------
 
                 // Load Model----------------
                 Model* loadedModel = new Model();
 
-
                 wchar_t filePathW[PathMaxSize];
                 TextCopyAW(filePathA, PathMaxSize, filePathW, PathMaxSize);
-
 
                 const FileActionResult result = Load(*loadedModel, filePathW, false);
                 const bool successful = result == FileActionResult::Successful;
@@ -1696,8 +1699,8 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
                     rotation.X = MathDegreeToRadians(rotation.X);
                     rotation.Y = MathDegreeToRadians(rotation.Y);
                     rotation.Z = MathDegreeToRadians(rotation.Z);
-              
-                    Renderable* renderable = new Renderable();                
+
+                    Renderable* renderable = new Renderable();
 
                     Register(*renderable, *loadedModel);
 
@@ -1727,7 +1730,7 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
                                 SegmentMaterialRange& materialRange = renderSegment.MaterialRange[i];
 
                                 const size_t materialID = info.MaterialIndex;
-                                const bool hasMaterial = materialID != -1;
+                                const bool hasMaterial = (int)info.MaterialIndex != -1;
 
                                 if(hasMaterial)
                                 {
@@ -1739,16 +1742,16 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
                                     const bool sucessful = loadResult == FileActionResult::Successful;
 
                                     if(sucessful)
-                                    {      
+                                    {
                                         materialRange.TextureID = texture->ID;
                                     }
-                                }                               
-                            }                       
+                                }
+                            }
                         }
                     }
 
                     _renderList.Add(renderable);
-                }              
+                }
 
                 //-----------------------
                 break;
@@ -1760,7 +1763,13 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
                 char filePathA[PathMaxSize];
                 wchar_t filePathW[PathMaxSize];
 
-                sscanf(currentLineBuffer, "%s %s", dummyBuffer, filePathA);
+                TextParseA
+                (
+                    currentLine,
+                    currentLineSize,
+                    "s",
+                    filePathA
+                );
 
                 TextCopyAW(filePathA, PathMaxSize, filePathW, PathMaxSize);
 
@@ -1778,7 +1787,13 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
             }
             case _musicToken:
             {
-                sscanf(currentLineBuffer, "%s %s", dummyBuffer, filePathA);
+                TextParseA
+                (
+                    currentLine,
+                    currentLineSize,
+                    "s",
+                    filePathA
+                );  
 
                 wchar_t filePathW[PathMaxSize];
                 TextCopyAW(filePathA, PathMaxSize, filePathW, PathMaxSize);
@@ -1792,7 +1807,13 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
             }
             case _fontToken:
             {
-                sscanf(currentLineBuffer, "%s %s", dummyBuffer, filePathA);
+                TextParseA
+                (
+                    currentLine,
+                    currentLineSize,
+                    "s",
+                    filePathA
+                );
 
                 wchar_t filePathW[PathMaxSize];
                 TextCopyAW(filePathA, PathMaxSize, filePathW, PathMaxSize);
@@ -1827,10 +1848,13 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
                 break;
         }
     }
+    while(ParsingStreamSkipLine(&parsingStream));
 }
 
 BF::FileActionResult BF::BitFireEngine::Load(Sprite& sprite, const wchar_t* filePath)
 {
+    printf("[+][Resource] Sprite <%ls> loading...\n", filePath);
+
     Renderable& renderable = sprite;
     Texture* texture = sprite.UsedTexture = new Texture;
 
@@ -1885,6 +1909,8 @@ BF::FileActionResult BF::BitFireEngine::Load
     const wchar_t* textureFront
 )
 {
+    printf("[+][Resource] SkyBox loading...\n");
+
     ShaderProgram& shaderProgram = skyBox.Shader;
 
     Load(shaderProgram, shaderVertex, shaderFragment);
@@ -2139,8 +2165,8 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
 #else
                
 
-                    //glDrawArrays(GL_POINTS, offset, drawAmount);
-                    //glDrawArrays(GL_LINES, offset, drawAmount);
+                    //glDrawArrays(GL_POINTS, chunkSizeConsumed, chunkSizeElement);
+                    //glDrawArrays(GL_LINES, chunkSizeConsumed, chunkSizeElement);
                     glDrawArrays(renderModeID, chunkSizeConsumed, chunkSizeElement);
 #endif // 0
 
@@ -2484,7 +2510,7 @@ const unsigned short BF::BitFireEngine::ToRenderMode(const RenderMode renderMode
     }
 }
 
-const BF::ShaderType BF::BitFireEngine::ToShaderType(const OpenGLID token)
+const ShaderType BF::BitFireEngine::ToShaderType(const OpenGLID token)
 {
     return ShaderType();
 }
@@ -2493,25 +2519,25 @@ const OpenGLID BF::BitFireEngine::ToShaderType(ShaderType shaderType)
 {
     switch(shaderType)
     {
-        case ShaderType::Vertex:
+        case ShaderTypeVertex:
             return GL_VERTEX_SHADER;
 
-        case   ShaderType::TessellationControl:
+        case   ShaderTypeTessellationControl:
             return -1; // ???
 
-        case   ShaderType::TessellationEvaluation:
+        case   ShaderTypeTessellationEvaluation:
             return -1; // ???
 
-        case   ShaderType::Geometry:
+        case   ShaderTypeGeometry:
             return GL_GEOMETRY_SHADER;
 
-        case   ShaderType::Fragment:
+        case   ShaderTypeFragment:
             return GL_FRAGMENT_SHADER;
 
-        case  ShaderType::Compute:
+        case  ShaderTypeCompute:
             return GL_COMPUTE_SHADER;
 
-        case ShaderType::Unkown:
+        case ShaderTypeUnkown:
         default:
             return -1;
     }

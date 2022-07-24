@@ -11,6 +11,7 @@ namespace BF
 {
 	class SBPQueue
 	{
+		/*
 		private:
 		File _file;
 		size_t _dequeuedDataCursorPosition;
@@ -24,7 +25,7 @@ namespace BF
 		unsigned char Enqueue(const SBPData& SBPData);
 		bool Dequeue(SBPData& SBPData);
 
-		bool Clear(const SBPData& sbpData);
+		bool Clear(const SBPData& sbpData);*/
 
 		
 	};

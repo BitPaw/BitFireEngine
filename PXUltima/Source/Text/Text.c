@@ -1,4 +1,5 @@
-#include <Text/Text.h>
+#include "Text.h"
+
 #include <Memory/Memory.h>
 #include <Math/Math.h>
 
@@ -372,20 +373,12 @@ char TextCompareA(const char* a, const size_t aSize, const char* b, const size_t
 
 char TextCompareAW(const char* a, const size_t aSize, const wchar_t* b, const size_t bSize)
 {
-	// check size, if not same size, it cannot be equal
-	{
-		const unsigned char isSameSize = aSize == bSize;
-
-		if(!isSameSize)
-		{
-			return 0;
-		}
-	}
+	const size_t textSize = MathMinimum(aSize, bSize);
 
 	size_t index = 0;
 	size_t samecounter = 0;
 
-	for(; (index < aSize) && (a[index] != '\0') && (b[index] != '\0'); ++index)
+	for(; (index < textSize) && (a[index] != '\0') && (b[index] != '\0'); ++index)
 		samecounter += a[index] == b[index];
 
 	return (index == samecounter);
@@ -393,20 +386,12 @@ char TextCompareAW(const char* a, const size_t aSize, const wchar_t* b, const si
 
 char TextCompareW(const wchar_t* a, const size_t aSize, const wchar_t* b, const size_t bSize)
 {
-	// check size, if not same size, it cannot be equal
-	{
-		const unsigned char isSameSize = aSize == bSize;
-
-		if(!isSameSize)
-		{
-			return 0;
-		}
-	}
+	const size_t textSize = MathMinimum(aSize, bSize);
 
 	size_t index = 0;
 	size_t samecounter = 0;
 
-	for(; (index < aSize) && (a[index] != '\0') && (b[index] != '\0'); ++index)
+	for(; (index < textSize) && (a[index] != '\0') && (b[index] != '\0'); ++index)
 		samecounter += a[index] == b[index];
 
 	return (index == samecounter);
@@ -414,20 +399,12 @@ char TextCompareW(const wchar_t* a, const size_t aSize, const wchar_t* b, const 
 
 char TextCompareWA(const wchar_t* a, const size_t aSize, const char* b, const size_t bSize)
 {
-	// check size, if not same size, it cannot be equal
-	{
-		const unsigned char isSameSize = aSize == bSize;
-
-		if(!isSameSize)
-		{
-			return 0;
-		}
-	}
+	const size_t textSize = MathMinimum(aSize, bSize);
 
 	size_t index = 0;
 	size_t samecounter = 0;
 
-	for(; (index < aSize) && (a[index] != '\0') && (b[index] != '\0'); ++index)
+	for(; (index < textSize) && (a[index] != '\0') && (b[index] != '\0'); ++index)
 		samecounter += a[index] == b[index];
 
 	return (index == samecounter);
@@ -435,21 +412,13 @@ char TextCompareWA(const wchar_t* a, const size_t aSize, const char* b, const si
 
 char TextCompareIgnoreCaseA(const char* a, const size_t aSize, const char* b, const size_t bSize)
 {
-	// check size, if not same size, it cannot be equal
-	{
-		const unsigned char isSameSize = aSize == bSize;
-
-		if(!isSameSize)
-		{
-			return 0;
-		}
-	}
+	const size_t textSize = MathMinimum(aSize, bSize);
 
 	size_t index = 0;
 	size_t samecounter = 0;
 	unsigned char wasLastLetterSame = 1;
 
-	for(; (index < aSize) && (a[index] != '\0') && (b[index] != '\0') && wasLastLetterSame; ++index)
+	for(; (index < textSize) && (a[index] != '\0') && (b[index] != '\0') && wasLastLetterSame; ++index)
 	{
 		wasLastLetterSame = CompareLetterCaseIgnore(a[index], b[index]);
 		samecounter += wasLastLetterSame;
@@ -460,21 +429,13 @@ char TextCompareIgnoreCaseA(const char* a, const size_t aSize, const char* b, co
 
 char TextCompareIgnoreCaseW(const wchar_t* a, const size_t aSize, const wchar_t* b, const size_t bSize)
 {
-	// check size, if not same size, it cannot be equal
-	{
-		const unsigned char isSameSize = aSize == bSize;
-
-		if(!isSameSize)
-		{
-			return 0;
-		}
-	}
+	const size_t textSize = MathMinimum(aSize, bSize);
 
 	size_t index = 0;
 	size_t samecounter = 0;
 	unsigned char wasLastLetterSame = 1;
 
-	for(; (index < aSize) && (a[index] != '\0') && (b[index] != '\0') && wasLastLetterSame; ++index)
+	for(; (index < textSize) && (a[index] != '\0') && (b[index] != '\0') && wasLastLetterSame; ++index)
 	{
 		wasLastLetterSame = CompareLetterCaseIgnore(a[index], b[index]);
 		samecounter += wasLastLetterSame;
@@ -485,21 +446,13 @@ char TextCompareIgnoreCaseW(const wchar_t* a, const size_t aSize, const wchar_t*
 
 char TextCompareIgnoreCaseAW(const char* a, const size_t aSize, const wchar_t* b, const size_t bSize)
 {
-	// check size, if not same size, it cannot be equal
-	{
-		const unsigned char isSameSize = aSize == bSize;
-
-		if(!isSameSize)
-		{
-			return 0;
-		}
-	}
+	const size_t textSize = MathMinimum(aSize, bSize);
 
 	size_t index = 0;
 	size_t samecounter = 0;
 	unsigned char wasLastLetterSame = 1;
 
-	for(; (index < aSize) && (a[index] != '\0') && (b[index] != '\0') && wasLastLetterSame; ++index)
+	for(; (index < textSize) && (a[index] != '\0') && (b[index] != '\0') && wasLastLetterSame; ++index)
 	{
 		wasLastLetterSame = CompareLetterCaseIgnore((wchar_t)a[index], b[index]);
 		samecounter += wasLastLetterSame;
@@ -510,16 +463,6 @@ char TextCompareIgnoreCaseAW(const char* a, const size_t aSize, const wchar_t* b
 
 char TextCompareIgnoreCaseWA(const wchar_t* a, const size_t aSize, const char* b, const size_t bSize)
 {
-	// check size, if not same size, it cannot be equal
-	{
-		const unsigned char isSameSize = aSize == bSize;
-
-		if(!isSameSize)
-		{
-			return 0;
-		}
-	}
-
 	size_t index = 0;
 	size_t samecounter = 0;
 	unsigned char wasLastLetterSame = 1;
@@ -571,7 +514,9 @@ size_t TextFindLastA(const char* string, const size_t dataSize, const char chara
 		found = character == string[i];
 	}
 
-	return i;
+	++i;
+	
+	return found ? i+1 : TextIndexNotFound;
 }
 
 size_t TextFindLastW(const wchar_t* string, const size_t dataSize, const wchar_t character)
@@ -584,9 +529,7 @@ size_t TextFindLastW(const wchar_t* string, const size_t dataSize, const wchar_t
 		found = character == string[i];
 	}
 
-	i++;
-
-	return i;
+	return found ? i+1 : TextIndexNotFound;
 }
 
 void TextTerminateBeginFromFirstA(char* string, const size_t dataSize, const char character)
@@ -642,8 +585,10 @@ void TextParseA(const char* buffer, const size_t bufferSize, const char* syntax,
 				char* destination = va_arg(args, char*);
 				const char* source = buffer + offsetData;
 
-				MemoryCopy(source, offsetLength, destination, -1);
-				destination[offsetLength] = '\0';
+				const size_t readBytes = TextCopyA(source, offsetLength, destination, -1);
+
+				offsetData += readBytes;
+
 				break;
 			}
 			case 'i':

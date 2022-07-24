@@ -37,13 +37,18 @@
 
 void MemorySet(void* __restrict bufferA, const size_t bufferASize, const unsigned char value)
 {
-#if MemoryAssertEnable
-	assert(bufferA);
-#endif 
+//#if MemoryAssertEnable
+//	assert(bufferA);
+//#endif 
 
 #if MemoryDebug
 	printf("[#][Memory] 0x%p (%10zi B) Set to %2x\n", bufferA, length, value);
 #endif
+
+	if(!bufferA)
+	{
+		return;
+	}
 
 #if MemoryUseSystemFunction
 	memset(bufferA, value, bufferASize);
@@ -110,6 +115,11 @@ size_t MemoryCopy(const void* __restrict inputBuffer, const size_t inputBufferSi
 
 void* MemoryAllocate(const size_t size)
 {
+	if(!size)
+	{
+		return 0;
+	}
+
 	const void* adress = malloc(size);
 
 #if MemorySanitise

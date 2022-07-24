@@ -252,7 +252,7 @@ BF::SocketActionResult BF::IOSocket::Send(const void* inputBuffer, const size_t 
     {
         if(EventCallBackSocket)
         {
-            IOSocketMessage socketMessage(AdressInfo.SocketID, (Byte__*)inputBuffer, inputBufferSize);
+            IOSocketMessage socketMessage(AdressInfo.SocketID, (unsigned char*)inputBuffer, inputBufferSize);
 
             EventCallBackSocket->OnMessageSend(socketMessage);
         }
@@ -345,7 +345,7 @@ BF::SocketActionResult BF::IOSocket::Receive(void* outputBuffer, const size_t ou
 
                 if(EventCallBackSocket)
                 {
-                    IOSocketMessage socketMessage(AdressInfo.SocketID, (Byte__*)data, byteRead);
+                    IOSocketMessage socketMessage(AdressInfo.SocketID, (unsigned char*)data, byteRead);
 
                     EventCallBackSocket->OnMessageReceive(socketMessage);
                 }

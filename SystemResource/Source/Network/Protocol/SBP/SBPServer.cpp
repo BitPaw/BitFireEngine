@@ -22,6 +22,7 @@ void BF::SBPServer::Stop()
 void BF::SBPServer::SendFile(const ClientID clientID, const char* text)
 {
 	File file;
+	/*
 
 	// Check if file exists
 	{
@@ -50,7 +51,7 @@ void BF::SBPServer::SendFile(const ClientID clientID, const char* text)
 
 		const size_t bufferSizeMax = 2048;
 		size_t bufferSize = 0;
-		Byte__ buffer[bufferSizeMax];
+		Byte__ buffer[bufferSizeMax];*/
 
 		//SBPData::GenerateMessage(data, buffer, bufferSize, bufferSizeMax);
 
@@ -58,7 +59,7 @@ void BF::SBPServer::SendFile(const ClientID clientID, const char* text)
 
 
 		//_server.SendMessageToClient(clientID, buffer, bufferSize);
-	}
+	//}
 
 	// Create "i want to send" package
 

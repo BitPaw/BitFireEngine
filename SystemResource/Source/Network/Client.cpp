@@ -75,7 +75,7 @@ ThreadFunctionReturnType BF::Client::CommunicationFunctionAsync(void* data)
     {
         const size_t bufferSizeMax = 2048;
         size_t bufferSize = 0;
-        Byte__ buffer[bufferSizeMax]{0};
+        unsigned char buffer[bufferSizeMax]{0};
 
         const SocketActionResult receiveingResult = client.Receive(buffer, bufferSizeMax, bufferSize);
         const bool sucessful = receiveingResult == SocketActionResult::Successful;

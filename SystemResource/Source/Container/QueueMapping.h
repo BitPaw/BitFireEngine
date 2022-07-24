@@ -9,6 +9,7 @@ namespace BF
 {
 	struct QueueMapping : private File
 	{
+		/*
 		private:
 		size_t _offsetBytesUsed;
 		size_t _elementConter;
@@ -19,6 +20,6 @@ namespace BF
 		void Allocate(const size_t sizeInBytes);
 
 		bool Enqueue(const void* source, const size_t sizeInBytes);
-		bool Dequeue(void* target, size_t sizeInBytes);
+		bool Dequeue(void* target, size_t sizeInBytes);*/
 	};
 }

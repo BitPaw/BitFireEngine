@@ -15,7 +15,7 @@ namespace BF
 
 		SBPQueue _inputQueue;
 
-		Dictionary<ResponseID, Byte__*> _responseLookup;
+		Dictionary<ResponseID, unsigned char*> _responseLookup;
 
 
 		virtual void OnSocketCreating(const IPAdressInfo& adressInfo, bool& use);
@@ -45,7 +45,7 @@ namespace BF
 		(
 			const ClientID clientID,
 			const ResponseID responseID,
-			const Byte__* buffer, 
+			const unsigned char* buffer, 
 			const size_t& bufferSize
 		);
 

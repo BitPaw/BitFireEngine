@@ -5,6 +5,8 @@
 
 #include <Error/ActionResult.h>
 
+#define XingInfoTOCBufferSize 100u
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -17,8 +19,6 @@ extern "C"
 		XingInfoVersionXing
 	}
 	XingInfoVersion;
-
-#define XingInfoTOCBufferSize 100u
 
 	typedef struct XingInfo_
 	{

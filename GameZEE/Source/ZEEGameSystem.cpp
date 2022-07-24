@@ -5,12 +5,10 @@
 
 #include <Math/Math.h>
 #include <Math/Geometry/Matrix.hpp>
-#include <Media/Image/PNG/PNG.h>
-#include <Media/Font/TTF/TTF.h>
 #include <Time/StopWatch.h>
 
 #include <UI/UIText.h>
-#include <Shader/ShaderProgram.h>
+#include <Video/Shader.h>
 #include <Graphic/OpenGL/SkyBox.h>
 #include <Physic/GravityCube.h>
 #include <Model/Model.h>
@@ -26,8 +24,8 @@ BF::Level _level;
 BF::SkyBox skybox;
 BF::Renderable _cubeModel;
 
-BF::ShaderProgram _worldShader;
-BF::ShaderProgram _hudShaderID;
+ShaderProgram _worldShader;
+ShaderProgram _hudShaderID;
 
 BF::AudioSource _audioSource;
 BF::GravityCube _worldGravity;
@@ -46,6 +44,9 @@ ZEE::ZEEGameSystem::ZEEGameSystem()
 
 void ZEE::ZEEGameSystem::OnStartUp()
 {       
+    _worldShader.ID = -1;
+    _hudShaderID.ID = -1;
+
     GameSystem.Load(_worldShader, L"Shader/WS.vert", L"Shader/WS.frag");
     GameSystem.Load(_hudShaderID, L"Shader/HUD.vert", L"Shader/HUD.frag");
 

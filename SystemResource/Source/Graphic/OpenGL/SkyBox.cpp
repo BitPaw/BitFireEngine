@@ -4,5 +4,7 @@
 
 BF::SkyBox::SkyBox()
 {
+	Shader.ID = -1;
+
 	Cube cube;	
 }

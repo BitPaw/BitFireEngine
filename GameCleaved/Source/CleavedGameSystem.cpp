@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <File/FileTemporary.h>
+#include <Video/Shader.h>
 #include <Model/Model.h>
 #include <Math/Math.h>
 #include <Math/Geometry/Rectangle.hpp>
@@ -16,7 +16,6 @@
 #include <UI/UIText.h>
 #include <Entity/Sign.h>
 #include <Physic/GravityCube.h>
-#include <Shader/ShaderProgram.h>
 #include <File/Format/FNT/FNT.h>
 
 using namespace BF;
@@ -28,8 +27,8 @@ BF::Font font;
 BF::Texture testTextue;
 
 BF::SkyBox skybox;
-BF::ShaderProgram worldShader;
-BF::ShaderProgram hudShaderID;
+ShaderProgram worldShader;
+ShaderProgram hudShaderID;
 
 BF::GravityCube _gravityField;
 
@@ -48,7 +47,7 @@ bool moveCamera = false;
 
 BF::Renderable _cubeRenderable;
 BF::Model _cubeModel;
-BF::ShaderProgram _simplex;
+ShaderProgram _simplex;
 
 Cleaved::CleavedGameSystem::CleavedGameSystem()
 {
@@ -57,6 +56,10 @@ Cleaved::CleavedGameSystem::CleavedGameSystem()
 
 void Cleaved::CleavedGameSystem::OnStartUp()
 {
+    _simplex.ID = -1;
+    worldShader.ID = -1;
+    hudShaderID.ID = -1;
+
     _camera = &GameSystem.MainCamera;
 
     GameSystem.Load(worldShader, L"Shader/WS.vert", L"Shader/WS.frag");

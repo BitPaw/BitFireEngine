@@ -1,7 +1,7 @@
 #include "QueueMapping.h"
 
 #include <Hardware/Memory/Memory.h>
-
+/*
 BF::QueueMapping::QueueMapping()
 {
 	_offsetBytesUsed = 0;
@@ -42,4 +42,4 @@ bool BF::QueueMapping::Dequeue(void* target, size_t sizeInBytes)
 	--_elementConter;
 
 	return true;
-}
+}*/

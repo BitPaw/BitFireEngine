@@ -5,7 +5,7 @@
 
 namespace BF
 {
-	class BitStreamHusk
+	class BitStreamHusk 
 	{
 		private:
 		void Allign();

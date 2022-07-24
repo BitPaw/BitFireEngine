@@ -9,7 +9,8 @@
 
 #include <Graphic/OpenGL/Texture.h>
 
-#include <Shader/Shader.h>
+#include <Video/Shader.h>
+
 #include "../Dialog/Dialog.h"
 
 

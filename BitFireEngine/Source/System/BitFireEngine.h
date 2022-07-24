@@ -19,7 +19,7 @@
 #include <Container/LinkedList.hpp>
 #include <Media/Font/Font.h>
 #include <Math/Geometry/Matrix4x4.hpp>
-#include <Shader/GLSL/ShaderType.h>
+#include <Video/Shader.h>
 #include <Model/Model.h>
 #include <Media/Sound/AudioClip.h>
 #include <Media/Sound/AudioSource.h>
