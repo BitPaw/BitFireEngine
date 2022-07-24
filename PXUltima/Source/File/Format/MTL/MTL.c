@@ -68,6 +68,8 @@ ActionResult MTLParse(MTL* mtl, const void* data, const size_t dataSize, size_t*
 		mtl->MaterialListSize = materialCounter;
 		mtl->MaterialList = MemoryAllocate(sizeof(MTLMaterial) * materialCounter);
 
+		MemorySet(mtl->MaterialList, sizeof(MTLMaterial) * materialCounter, 0);
+
 		ParsingStreamCursorToBeginning(&parsingStream);
 	}
 

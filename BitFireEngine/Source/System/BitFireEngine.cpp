@@ -1352,9 +1352,9 @@ BF::FileActionResult BF::BitFireEngine::Load(Texture& texture, const wchar_t* fi
         if(isSucessful)
         {
             texture.Type = ImageType::Texture2D;
-            texture.Filter = ImageFilter::NoFilter;
-            texture.LayoutNear = ImageLayout::Nearest;
-            texture.LayoutFar = ImageLayout::Nearest;
+            texture.Filter = ImageFilter::Trilinear;
+            texture.LayoutNear = ImageLayout::Linear;
+            texture.LayoutFar = ImageLayout::Linear;
             texture.WrapHeight = ImageWrap::Repeat;
             texture.WrapWidth = ImageWrap::Repeat;
 
@@ -1773,13 +1773,11 @@ BF::FileActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePa
 
                 TextCopyAW(filePathA, PathMaxSize, filePathW, PathMaxSize);
 
-                const FileActionResult fileActionResult = Load(*texture, filePathW, true);
+                const FileActionResult fileActionResult = Load(*texture, filePathW, false);
                 const bool sucessful = fileActionResult == FileActionResult::Successful;
 
                 if(sucessful)
                 {
-                    Register(*texture);
-
                     level.TextureList[imageCounter++] = texture;
                 }
 
@@ -2130,8 +2128,8 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
                 const RenderableSegment& segment = chunk.SegmentList[segmentIndex];
                 ImageType textureType = segment.TextureType;
                 const OpenGLID indexBufferID = segment.ID;
-                const size_t chunkSizeFull = segment.Size;
-                int chunkSizeConsumed = 0;
+                //const size_t chunkSizeFull = segment.Size;
+                size_t chunkSizeConsumed = 0;
 
                 for(size_t i = 0; i < segment.MaterialRangeSize ; i++)
                 {
@@ -2347,7 +2345,7 @@ void BF::BitFireEngine::PrintContent(bool detailed)
 
                 printf("| Mesh ID:%3i (%3zi/%3zi) |\n", renderableChunk.ID, c + 1, chunkListSize);
 
-                printf("| ID                       | Size  | ShaderID | TextureID |\n");
+                printf("| ID                       | ShaderID  | TextureID | Size |\n");
 
                 for(size_t i = 0; i < segmentListSize; i++)
                 {

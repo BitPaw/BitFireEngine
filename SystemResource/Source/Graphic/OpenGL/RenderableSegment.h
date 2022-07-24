@@ -11,7 +11,7 @@ namespace BF
 		unsigned int ShaderID;
 		unsigned int TextureID;
 		size_t Size;
-
+		
 		SegmentMaterialRange()
 		{
 			ShaderID = -1;

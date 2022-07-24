@@ -368,6 +368,12 @@ char TextCompareA(const char* a, const size_t aSize, const char* b, const size_t
 	for(; (index < textSize) && (a[index] != '\0') && (b[index] != '\0'); ++index)
 		samecounter += a[index] == b[index];
 
+	if(index < textSize) // Still in range but encountered an \0 in a or b 
+	{
+		samecounter += a[index] == b[index]; // One of them is \0, check this too
+		++index; // keep for comparsion
+	}
+
 	return (index == samecounter);
 }
 

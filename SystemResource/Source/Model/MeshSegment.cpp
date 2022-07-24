@@ -8,7 +8,7 @@ BF::MeshSegment::MeshSegment()
 	IndexDataListSize = 0;
 	IndexDataList = nullptr;
 
-	 MaterialInfo = nullptr;
+	MaterialInfo = nullptr;
 	MaterialInfoSize = 0;
 }
 

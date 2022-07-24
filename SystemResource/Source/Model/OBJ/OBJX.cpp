@@ -236,24 +236,24 @@ BF::FileActionResult BF::OBJX::ConvertTo(Model& model)
     mesh.SegmentListSize = ElementListSize;
     mesh.SegmentList = new MeshSegment[ElementListSize];
 
-    for (size_t i = 0; i < ElementListSize; i++)
+    for(size_t i = 0; i < ElementListSize; i++)
     {
         OBJElement& element = ElementList[i];
         MeshSegment& meshSegment = mesh.SegmentList[i];
         const size_t faceElementListSize = element.FaceElementListSize;
         const size_t verexDataSize = faceElementListSize * (3 + 3 + 4 + 2);
 
-        TextCopyAW(element.Name, OBJElementNameLength, meshSegment.Name, MeshSegmentNameLength);          
+        TextCopyAW(element.Name, OBJElementNameLength, meshSegment.Name, MeshSegmentNameLength);
 
         mesh.VertexDataListSize = verexDataSize;
-        mesh.VertexDataList = Memory::Allocate<float>(verexDataSize);
-       
+        mesh.VertexDataList = (float*)MemoryAllocate(sizeof(float) * verexDataSize);
+
 
         // mesh.Structure.RenderType = VertexStructureSize == 4 ? RenderMode::Square : RenderMode::Triangle;
         //mesh.VertexDataStructureListSize
 
         meshSegment.IndexDataListSize = faceElementListSize;
-        meshSegment.IndexDataList = Memory::Allocate<unsigned int>(faceElementListSize);
+        meshSegment.IndexDataList = (unsigned int*)MemoryAllocate(sizeof(unsigned int) * faceElementListSize);
 
         //meshSegment. = malloc .Allocate(faceElementListSize * (3 + 3 + 4 + 2), faceElementListSize);
         //mesh.RenderInfo.MaterialID = element.MaterialListIndex;
@@ -273,24 +273,25 @@ BF::FileActionResult BF::OBJX::ConvertTo(Model& model)
                 OBJElementMaterialInfo& infoB = meshSegment.MaterialInfo[i];
 
                 infoB.MaterialIndex = infoA.MaterialIndex;
-                infoB.Size = infoA.Size;
+                infoB.Size = infoA.Size/3;
             }
         }
         else
         {
             meshSegment.MaterialInfoSize = 1;
             meshSegment.MaterialInfo = new OBJElementMaterialInfo[1];
-            meshSegment.MaterialInfo->Size = element.FaceElementListSize;
+            meshSegment.MaterialInfo->Size = element.FaceElementListSize/3;
             meshSegment.MaterialInfo->MaterialIndex = -1;
         }
-      
+
+        float fallback[3] = { 0,0,0 };
 
         for (size_t i = 0; i < faceElementListSize; i += 3)
         {
             const unsigned int* indexPosition = &element.FaceElementList[i];
-            unsigned int vertexPositionID = indexPosition[0] - 1;
-            unsigned int texturePointID = indexPosition[1] - 1; // TODO: REMOVED -1 form all positions
-            unsigned int normalVectorID = indexPosition[2] - 1;
+            unsigned int vertexPositionID = (indexPosition[0] - 1u) * 3u;
+            unsigned int texturePointID= (indexPosition[1] - 1u) * 2u; // TODO: REMOVED -1 form all positions
+            unsigned int normalVectorID = (indexPosition[2] - 1u) *3u;
             float* vertexData = GlobalVertexPosition(vertexPositionID);
             float* textureData = GlobalTextureCoordinate(texturePointID);
             float* normalData = GlobalVertexNormalPosition(normalVectorID);
@@ -309,15 +310,17 @@ BF::FileActionResult BF::OBJX::ConvertTo(Model& model)
 
             if (!texturePointIDValid)
             {
-
-                ++texturePointID;
-                textureData = GlobalTextureCoordinate(texturePointID);
+                textureData = fallback;
+                //++texturePointID;
+               // textureData = GlobalTextureCoordinate(texturePointID);
             }
 
             if (!normalVectorIDValid)
             {
-                ++normalVectorID;
-                normalData = GlobalVertexNormalPosition(normalVectorID);
+               // ++normalVectorID;
+               // normalData = GlobalVertexNormalPosition(normalVectorID);
+
+                normalData = fallback;
             }
 
 

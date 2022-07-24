@@ -143,7 +143,7 @@ ActionResult OBJParse(OBJ* obj, const void* data, const size_t dataSize, size_t*
         obj->MaterialFileListSize = materialCounter;
         obj->MaterialFileList = MemoryAllocate(sizeof(MTL) * materialCounter);
 
-        MemorySet(obj->MaterialFileList, sizeof(sizeof(MTL)* materialCounter), 0);
+        MemorySet(obj->MaterialFileList, sizeof(MTL)* materialCounter, 0);
 
         for(size_t i = 0; i < segmentAmount; i++)
         {
@@ -156,7 +156,7 @@ ActionResult OBJParse(OBJ* obj, const void* data, const size_t dataSize, size_t*
             segment->VertexPositionListSize = currentSegmentData->Position * 3u;
             segment->VertexPositionList = MemoryAllocate(sizeof(float) * segment->VertexPositionListSize);
 
-            segment->TextureCoordinateListSize = currentSegmentData->Texture * 3u;
+            segment->TextureCoordinateListSize = currentSegmentData->Texture * 2u;
             segment->TextureCoordinateList = MemoryAllocate(sizeof(float) * segment->TextureCoordinateListSize);
 
             segment->VertexNormalPositionListSize = currentSegmentData->Normal * 3u;
@@ -265,15 +265,24 @@ ActionResult OBJParse(OBJ* obj, const void* data, const size_t dataSize, size_t*
                            // }
                         }   
                         size_t readBytes = 0;
-                        const ActionResult actionResult = MTLParse(&materialFilePathFullW, file.Data, file.DataSize, &readBytes);
+                        const ActionResult actionResult = MTLParse(material, file.Data, file.DataSize, &readBytes);
                         const unsigned char sucessful = actionResult == ResultSuccessful;
 
-                        if(!sucessful)
+#if 1 //OBJDebug
+
+                        if(sucessful)
                         {
-#if OBJDebug
-                            printf("[Warning] Material (.mtl) file is missing at path <%ls>\n", materialFilePathFullW);
-#endif
+                            printf("[+][MTL] Material (.mtl) file loaded <%ls>\n", materialFilePathFullW);
+
+                           
+
                         }
+                        else
+                        {
+                            printf("[Warning] Material (.mtl) file is missing at path <%ls>\n", materialFilePathFullW);
+                        }
+
+#endif
 
                         FileUnmapFromVirtualMemory(&file);
                     }                    
@@ -300,10 +309,8 @@ ActionResult OBJParse(OBJ* obj, const void* data, const size_t dataSize, size_t*
 
                         for(size_t j = 0; j < materialListSize; ++j)
                         {
-                            const MTLMaterial* material = &mtl->MaterialList[j];
-                            const size_t matertalALength = TextLengthA(material->Name, MTLNameSize);
-                            const size_t matertalBLength = TextLengthA(usedMaterialName, MTLNameSize);
-                            const unsigned char isSameName = TextCompareA(material->Name, matertalALength, usedMaterialName, matertalBLength);
+                            const MTLMaterial* material = &mtl->MaterialList[j];   
+                            const unsigned char isSameName = TextCompareA(material->Name, MTLNameSize, usedMaterialName, MTLNameSize);
 
                             if(isSameName)
                             {
@@ -401,7 +408,7 @@ ActionResult OBJParse(OBJ* obj, const void* data, const size_t dataSize, size_t*
 
                     TextParseA
                     (
-                        (char*)dataPoint,
+                        dataPoint,
                         currentLineLength,
                         "ff",
                         &data[0], // x
