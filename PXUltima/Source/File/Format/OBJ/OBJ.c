@@ -261,7 +261,7 @@ ActionResult OBJParse(OBJ* obj, const void* data, const size_t dataSize, size_t*
 
                            // if(!sucessful)
                            // {
-                           //     return FileActionResult::Invalid;
+                           //     return ResultInvalid;
                            // }
                         }   
                         size_t readBytes = 0;

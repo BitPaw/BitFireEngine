@@ -14,16 +14,16 @@
 
 namespace BF
 {
-	struct ByteStream : public ParsingStream
+	struct ParsingStreamX : public ParsingStream
 	{
 		public:
 		//---------------------------------------------------------------------
-		ByteStream();
-		ByteStream(void* data, const size_t dataSize);
+		ParsingStreamX();
+		ParsingStreamX(void* data, const size_t dataSize);
 
 		// WARNING! If this constructor is used, guarantee that it will only be "read".
 		// A write operation will be illegal to do, a crash may accur. 
-		ByteStream(const void* data, const size_t dataSize);
+		ParsingStreamX(const void* data, const size_t dataSize);
 
 		size_t ReadPossibleSize();
 		bool IsAtEnd();

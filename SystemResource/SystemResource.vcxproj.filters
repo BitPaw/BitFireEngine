@@ -21,9 +21,6 @@
     <ClCompile Include="Source\Container\BitStreamHusk.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Email\EML.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Media\Font\TTF\TTF.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -111,9 +108,6 @@
     <ClCompile Include="Source\Async\AsyncLock.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Time\StopWatch.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Network\Client.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -129,9 +123,6 @@
     <ClCompile Include="Source\Encryption\Caesar.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Encryption\ICypher.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Media\Image\ImageDataFormat.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -144,10 +135,7 @@
     <ClCompile Include="Source\Model\Model.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\File\ByteStream.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\File\Program.cpp">
+    <ClCompile Include="Source\File\ParsingStreamX.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\ErrorCode.cpp">
@@ -234,9 +222,6 @@
     <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFVersionType.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\File\OpenFileDialog.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Media\Font\TTF\Chunks\KERN\TTFKerning.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -279,9 +264,6 @@
     <ClCompile Include="Source\Network\ServerListeningThreadInfo.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\File\ProgramExecuteInfo.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Service\HTTP\HTTPError.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -306,22 +288,13 @@
     <ClCompile Include="Source\DataBase\DataBase.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Controller\ControllerData.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Controller\ControllerSystem.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Window\WindowP.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Window\CursorIcon.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Hardware\Memory\Memory.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Hardware\Memory\MemoryUsage.cpp">
+    <ClCompile Include="Source\Memory\MemoryX.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\ClipBoard\ClipBoard.cpp">
@@ -432,9 +405,6 @@
     <ClCompile Include="Source\Math\Primes.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Time\Time.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Container\ResponseCache.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -486,6 +456,9 @@
     <ClCompile Include="Source\Media\Image\PNGX.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Time\StopWatch.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Container\BinaryTree\BinaryTree.hpp">
@@ -525,9 +498,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Container\Table.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Email\EML.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Media\Font\TTF\TTF.h">
@@ -653,9 +623,6 @@
     <ClInclude Include="Source\Async\AsyncLock.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Time\StopWatch.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Network\Client.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -680,9 +647,6 @@
     <ClInclude Include="Source\Encryption\Caesar.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Encryption\ICypher.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Media\Image\ImageDataFormat.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -690,9 +654,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Media\Image\IImageFormat.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\File\FileActionResult.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\IFileFormat.hpp">
@@ -719,7 +680,7 @@
     <ClInclude Include="Source\Model\Model.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\File\ByteStream.h">
+    <ClInclude Include="Source\File\ParsingStreamX.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Container\QuadTree\QuadTree.hpp">
@@ -731,13 +692,7 @@
     <ClInclude Include="Source\Container\QuadTree\QuadTreeDirection.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\File\Program.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ErrorCode.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\File\ProgramExecuteResultListener.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Media\Image\Image.h">
@@ -830,9 +785,6 @@
     <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFVersionType.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\File\OpenFileDialog.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Media\Font\TTF\Chunks\KERN\TTFKerning.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -881,9 +833,6 @@
     <ClInclude Include="Source\Network\ServerListeningThreadInfo.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\File\ProgramExecuteInfo.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Service\HTTP\HTTPServer.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -920,22 +869,13 @@
     <ClInclude Include="Source\DataBase\DataBase.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Controller\ControllerSystem.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Controller\ControllerData.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Window\WindowP.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Window\CursorIcon.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Hardware\Memory\Memory.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Hardware\Memory\MemoryUsage.h">
+    <ClInclude Include="Source\Memory\MemoryX.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\ClipBoard\ClipBoard.h">
@@ -1067,9 +1007,6 @@
     <ClInclude Include="Source\Math\Primes.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Time\Time.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Container\ResponseCache.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -1122,6 +1059,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Media\Image\PNGX.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Time\StopWatch.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

@@ -179,7 +179,7 @@
 	<cwchar>
 	<cassert>
 	"IFile.h"
-	"FileActionResult.hpp"
+	"ActionResult.hpp"
 	"FileCachingMode.h"
 	"FileLocation.h"
 	"FilePath.h"
@@ -199,12 +199,12 @@
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/IFile.h
 	<cstdio>
 	"FileOpenMode.hpp"
-	"FileActionResult.hpp"
+	"ActionResult.hpp"
 	"FileCachingMode.h"
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/FileOpenMode.hpp
 
-1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/FileActionResult.hpp
+1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/ActionResult.hpp
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/FileCachingMode.h
 
@@ -247,7 +247,7 @@
 	<ErrorCode.h>
 	<File/File.h>
 	<File/FileCachingMode.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 	<cstddef>
 	<cstdlib>
 	<cstdio>
@@ -277,20 +277,20 @@
 1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Font/Font.h
 	"FontFormat.h"
 	<Resource.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 	<Media/Image/Image.h>
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Font/FontFormat.h
 
 1656358018 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Resource.h
-	"File/FileActionResult.hpp"
+	"File/ActionResult.hpp"
 	<cstddef>
 
 1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/Image.h
 	"ImageDataFormat.h"
 	"ImageFileFormat.h"
 	<Resource.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 	<Math/Geometry/Vector4.hpp>
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/ImageDataFormat.h
@@ -324,7 +324,7 @@
 	<IFileFormat.hpp>
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/IFileFormat.hpp
-	"File/FileActionResult.hpp"
+	"File/ActionResult.hpp"
 
 1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Sound/OGG/OGG.h
 	"../ISoundFormat.hpp"
@@ -336,7 +336,7 @@
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Sound/Sound.h
 	"SoundFormat.h"
 	<Resource.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Sound/SoundFormat.h
 

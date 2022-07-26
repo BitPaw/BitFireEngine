@@ -4,13 +4,14 @@
 #include "Chunks/TTFOffsetTable.h"
 #include "Chunks/OS2/Panose/TTFPanose.h"
 
-#include <File/File.h>
-#include <Hardware/Memory/Memory.h>
 
 #include <cassert>
-#include <File/ByteStream.h>
 
-BF::FileActionResult BF::TTF::Load(const char* filePath)
+#include <File/File.h>
+#include <Memory/MemoryX.h>
+#include <File/ParsingStreamX.h>
+
+ActionResult BF::TTF::Load(const char* filePath)
 {
 	File file;
 
@@ -20,18 +21,18 @@ BF::FileActionResult BF::TTF::Load(const char* filePath)
 
 		if(!sucessful)
 		{
-			return FileActionResult::Invalid;
+			return ResultInvalid;
 		}
 	}
 
 	{
-		const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+		const ActionResult fileParsingResult = Load(file.Data, file.DataSize);
 
 		return fileParsingResult;
 	}
 }
 
-BF::FileActionResult BF::TTF::Load(const wchar_t* filePath)
+ActionResult BF::TTF::Load(const wchar_t* filePath)
 {
 	File file;
 
@@ -41,20 +42,20 @@ BF::FileActionResult BF::TTF::Load(const wchar_t* filePath)
 
 		if(!sucessful)
 		{
-			return FileActionResult::Invalid;
+			return ResultInvalid;
 		}
 	}
 
 	{
-		const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+		const ActionResult fileParsingResult = Load(file.Data, file.DataSize);
 
 		return fileParsingResult;
 	}	
 }
 
-BF::FileActionResult BF::TTF::Load(const unsigned char* fileData, const size_t fileDataSize)
+ActionResult BF::TTF::Load(const unsigned char* fileData, const size_t fileDataSize)
 {
-	ByteStream dataStream(fileData, fileDataSize);
+	ParsingStreamX dataStream(fileData, fileDataSize);
 
 	TTFOffsetTable offsetTable;
 
@@ -68,7 +69,7 @@ BF::FileActionResult BF::TTF::Load(const unsigned char* fileData, const size_t f
 	for(size_t i = 0; i < offsetTable.NumberOfTables; i++)
 	{
 		TTFTableEntry tableEntry;
-		ByteStream chunkData;
+		ParsingStreamX chunkData;
 
 		dataStream.Read(tableEntry.TypeRaw, 4u);
 		dataStream.Read(tableEntry.CheckSum, EndianBig);
@@ -431,7 +432,7 @@ BF::FileActionResult BF::TTF::Load(const unsigned char* fileData, const size_t f
 					chunkData.Read(signatureRecord.SignatureBlockOffset, EndianBig);
 
 					{
-						ByteStream byteSteam(startPointer + signatureRecord.SignatureBlockOffset, signatureRecord.Length);
+						ParsingStreamX byteSteam(startPointer + signatureRecord.SignatureBlockOffset, signatureRecord.Length);
 						TTFDigitalSignatureBlock& signatureBlock = DigitalSignature.SignatureBlockList[i];
 
 						chunkData.Read(signatureBlock.Reserved1, EndianBig);
@@ -457,20 +458,20 @@ BF::FileActionResult BF::TTF::Load(const unsigned char* fileData, const size_t f
 		}
 	}
 
-	return FileActionResult::Successful;
+	return ResultSuccessful;
 }
 
-BF::FileActionResult BF::TTF::TTF::Save(const wchar_t* filePath)
+ActionResult BF::TTF::TTF::Save(const wchar_t* filePath)
 {
-    return FileActionResult::Successful;
+    return ResultSuccessful;
 }
 
-BF::FileActionResult BF::TTF::TTF::ConvertTo(Font& font)
+ActionResult BF::TTF::TTF::ConvertTo(Font& font)
 {
-    return FileActionResult::Successful;
+    return ResultSuccessful;
 }
 
-BF::FileActionResult BF::TTF::TTF::ConvertFrom(Font& font)
+ActionResult BF::TTF::TTF::ConvertFrom(Font& font)
 {
-    return FileActionResult::Successful;
+    return ResultSuccessful;
 }

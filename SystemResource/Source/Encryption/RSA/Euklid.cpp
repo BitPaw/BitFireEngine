@@ -1,6 +1,6 @@
 #include "Euklid.h"
 #include <Math/Math.h>
-#include <Hardware/Memory/Memory.h>
+#include <Memory/MemoryX.h>
 #include "Euklid_element.h"
 
 #if Eukliddebug

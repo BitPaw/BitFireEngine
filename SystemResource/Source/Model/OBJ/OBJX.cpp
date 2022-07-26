@@ -3,7 +3,7 @@
 #include <File/File.h>
 #include <Text/Text.h>
 
-#include <Hardware/Memory/Memory.h>
+#include <Memory/MemoryX.h>
 
 #include <cassert>
 #include <cstring>
@@ -141,18 +141,18 @@ bool BF::OBJX::ShouldCreateNewMesh(OBJLineType objLineCommand, bool isCurrentlyI
     }
 }
 
-BF::FileActionResult BF::OBJX::Load(const char* filePath)
+ActionResult BF::OBJX::Load(const char* filePath)
 {
     wchar_t filePathW[PathMaxSize];
 
     TextCopyAW(filePath, PathMaxSize, filePathW, PathMaxSize);
 
-    const FileActionResult fileParsingResult = Load(filePathW);
+    const ActionResult fileParsingResult = Load(filePathW);
 
     return fileParsingResult;
 }
 
-BF::FileActionResult BF::OBJX::Load(const wchar_t* filePath)
+ActionResult BF::OBJX::Load(const wchar_t* filePath)
 {
     File file;
 
@@ -164,12 +164,12 @@ BF::FileActionResult BF::OBJX::Load(const wchar_t* filePath)
 
         if(!sucessful)
         {
-            return FileActionResult::Invalid;
+            return ResultInvalid;
         }
     }
 
     {
-        const FileActionResult fileParsingResult = Load(file.Data, file.DataSize, filePath);
+        const ActionResult fileParsingResult = Load(file.Data, file.DataSize, filePath);
 
         return fileParsingResult;
     }
@@ -177,21 +177,21 @@ BF::FileActionResult BF::OBJX::Load(const wchar_t* filePath)
     FileDestruct(&file);
 }
 
-BF::FileActionResult BF::OBJX::Load(const unsigned char* data, const size_t dataSize, const wchar_t* fileName)
+ActionResult BF::OBJX::Load(const unsigned char* data, const size_t dataSize, const wchar_t* fileName)
 {
     size_t bytesRead = 0;
 
     OBJParse(this, data, dataSize, &bytesRead, fileName);
 
-    return FileActionResult::Successful;
+    return ResultSuccessful;
 }
 
-BF::FileActionResult BF::OBJX::Save(const wchar_t* filePath)
+ActionResult BF::OBJX::Save(const wchar_t* filePath)
 {
-    return FileActionResult::Successful;
+    return ResultSuccessful;
 }
 
-BF::FileActionResult BF::OBJX::ConvertTo(Model& model)
+ActionResult BF::OBJX::ConvertTo(Model& model)
 {
     bool usedNormals = false;     
  
@@ -357,12 +357,12 @@ BF::FileActionResult BF::OBJX::ConvertTo(Model& model)
         }
     } 
 
-    return FileActionResult::Successful;
+    return ResultSuccessful;
 }
 
-BF::FileActionResult BF::OBJX::ConvertFrom(Model& model)
+ActionResult BF::OBJX::ConvertFrom(Model& model)
 {
-    return FileActionResult::Successful;
+    return ResultSuccessful;
 }
 
 void BF::OBJX::Clear()

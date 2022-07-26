@@ -14,9 +14,9 @@ bool BF::Level::IsLevelFile(const wchar_t* filePath)
 	return file.ExtensionEquals("lev");
 }
 
-BF::FileActionResult BF::Level::Load()
+ActionResult BF::Level::Load()
 {
-	return FileActionResult::Successful;
+	return ResultSuccessful;
 }
 
 size_t BF::Level::FullSizeInMemory()

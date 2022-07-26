@@ -5,7 +5,7 @@
 #include <File/File.h>
 #include <Math/Math.h>
 
-#include <Hardware/Memory/Memory.h>
+#include <Memory/MemoryX.h>
 
 BF::BMPP::BMPP()
 {
@@ -17,7 +17,7 @@ BF::BMPP::~BMPP()
     BMPDelete(this);
 }
 
-BF::FileActionResult BF::BMPP::Load(const char* filePath)
+ActionResult BF::BMPP::Load(const char* filePath)
 {
     File file;
 
@@ -27,18 +27,18 @@ BF::FileActionResult BF::BMPP::Load(const char* filePath)
 
         if(!sucessful)
         {
-            return FileActionResult::Invalid;
+            return ResultInvalid;
         }
     }
 
     {
-        const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+        const ActionResult fileParsingResult = Load(file.Data, file.DataSize);
 
         return fileParsingResult;
     }
 }
 
-BF::FileActionResult BF::BMPP::Load(const wchar_t* filePath)
+ActionResult BF::BMPP::Load(const wchar_t* filePath)
 {
     File file;
 
@@ -48,34 +48,34 @@ BF::FileActionResult BF::BMPP::Load(const wchar_t* filePath)
 
         if(!sucessful)
         {
-            return FileActionResult::Invalid;
+            return ResultInvalid;
         }
     }
 
     {
-        const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+        const ActionResult fileParsingResult = Load(file.Data, file.DataSize);
 
         return fileParsingResult;
     }
 }
 
-BF::FileActionResult BF::BMPP::Load(const unsigned char* fileData, const size_t fileDataSize)
+ActionResult BF::BMPP::Load(const unsigned char* fileData, const size_t fileDataSize)
 {
     size_t bytes = 0;
     ActionResult qctionResult = BMPParse(this, fileData, fileDataSize, &bytes);
 
-    return FileActionResult::Successful;
+    return ResultSuccessful;
 }
 
-BF::FileActionResult BF::BMPP::Save(const wchar_t* filePath)
+ActionResult BF::BMPP::Save(const wchar_t* filePath)
 {
     /*
     File file;
 
     // Open file
     {
-        const FileActionResult openResult = file.Open(filePath, FileOpenMode::Write);
-        const bool sucessful = openResult == FileActionResult::Successful;
+        const ActionResult openResult = file.Open(filePath, FileOpenMode::Write);
+        const bool sucessful = openResult == ResultSuccessful;
 
         if(!sucessful)
         {
@@ -110,8 +110,8 @@ BF::FileActionResult BF::BMPP::Save(const wchar_t* filePath)
 
     // Close file
     {
-        const FileActionResult closeResult = file.Close();
-        const bool sucessful = closeResult == FileActionResult::Successful;
+        const ActionResult closeResult = file.Close();
+        const bool sucessful = closeResult == ResultSuccessful;
 
         if(!sucessful)
         {
@@ -119,16 +119,16 @@ BF::FileActionResult BF::BMPP::Save(const wchar_t* filePath)
         }
     }*/
 
-    return FileActionResult::Successful;
+    return ResultSuccessful;
 }
 
-BF::FileActionResult BF::BMPP::ConvertFrom(Image& image)
+ActionResult BF::BMPP::ConvertFrom(Image& image)
 {
    PixelData = Memory::Allocate<unsigned char>(image.PixelDataSize);
 
     if (!PixelData)
     {
-        return FileActionResult::OutOfMemory;
+        return ResultOutOfMemory;
     }
 
     PixelDataSize = image.PixelDataSize;
@@ -139,16 +139,16 @@ BF::FileActionResult BF::BMPP::ConvertFrom(Image& image)
 
     MemoryCopy(PixelData, PixelDataSize, image.PixelData, image.PixelDataSize);
 
-    return FileActionResult::Successful;
+    return ResultSuccessful;
 }
 
-BF::FileActionResult BF::BMPP::ConvertTo(Image& image)
+ActionResult BF::BMPP::ConvertTo(Image& image)
 {
     unsigned char* pixelData = Memory::Allocate<unsigned char>(PixelDataSize);
 
     if(!pixelData)
     {
-        return FileActionResult::OutOfMemory;
+        return ResultOutOfMemory;
     }
 
     image.Format = ImageDataFormat::BGR;
@@ -163,17 +163,17 @@ BF::FileActionResult BF::BMPP::ConvertTo(Image& image)
 
     //image.RemoveColor(0,0,0);
 
-    return FileActionResult::Successful;
+    return ResultSuccessful;
 }
 
-BF::FileActionResult BF::BMPP::ConvertTo(Image& image, BMP& alphaMap)
+ActionResult BF::BMPP::ConvertTo(Image& image, BMP& alphaMap)
 {
     size_t pixelDataSize = (PixelDataSize / 3) * 4;
     unsigned char* pixelData = Memory::Allocate<unsigned char>(pixelDataSize);
 
     if(!pixelData)
     {
-        return FileActionResult::OutOfMemory;
+        return ResultOutOfMemory;
     }
 
     image.Format = ImageDataFormat::BGRA;
@@ -201,5 +201,5 @@ BF::FileActionResult BF::BMPP::ConvertTo(Image& image, BMP& alphaMap)
 
     image.FlipHorizontal();
 
-    return FileActionResult::Successful;
+    return ResultSuccessful;
 }

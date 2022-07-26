@@ -14,9 +14,9 @@ namespace TestSystemResource
         TEST_METHOD(TestLoadTTF)
         {
             TTF ttf;
-            const FileActionResult fileActionResult = ttf.Load(L"A:/_WorkSpace/BOOKOSI.TTF");
+            const ActionResult fileActionResult = ttf.Load(L"A:/_WorkSpace/BOOKOSI.TTF");
 
-            Assert::IsTrue(fileActionResult == FileActionResult::Successful);
+            Assert::IsTrue(fileActionResult == ResultSuccessful);
         }
     };
 }

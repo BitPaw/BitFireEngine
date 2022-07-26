@@ -7,7 +7,7 @@ namespace BF
 {
 	struct IModelFormat : public IFileFormat
 	{
-		virtual FileActionResult ConvertTo(Model& model) = 0;
-		virtual FileActionResult ConvertFrom(Model& model) = 0;
+		virtual ActionResult ConvertTo(Model& model) = 0;
+		virtual ActionResult ConvertFrom(Model& model) = 0;
 	};
 }

@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <cstddef>
 
-#include <Hardware/Memory/Memory.h>
+#include <Memory/MemoryX.h>
 
 namespace BF
 {

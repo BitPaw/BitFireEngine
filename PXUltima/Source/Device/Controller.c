@@ -1,4 +1,4 @@
-#include "ControllerSystem.h"
+#include "Controller.h"
 
 #include <OS/OSVersion.h>
 
@@ -7,11 +7,12 @@
 #elif defined(OSWindows)
 #include <Windows.h>
 #include <joystickapi.h>
+#include "Controller.h"
 
 #pragma comment( lib, "winmm.lib" )
 #endif
 
-void BF::ControllerSystem::ControllerScanDevices(NewControllerDetectedCallback callback)
+unsigned char ControllerScanDevices(NewControllerDetectedCallback callback)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -20,10 +21,10 @@ const size_t amountOfJoySticksSupported = joyGetNumDevs();
 	for (size_t i = 0; i < amountOfJoySticksSupported; i++)
 	{
 		const ControllerID joyID = i;
-		JOYCAPSW pjc{ 0 };
+		JOYCAPSW pjc;
 		const unsigned int size = sizeof(JOYCAPSW);
 		const MMRESULT devResult = joyGetDevCapsW(joyID, &pjc, size);
-		const bool succesful = devResult == JOYERR_NOERROR;
+		const unsigned char succesful = devResult == JOYERR_NOERROR;
 
 		if (succesful)
 		{
@@ -80,34 +81,34 @@ const size_t amountOfJoySticksSupported = joyGetNumDevs();
 #endif
 }
 
-bool BF::ControllerSystem::ControllerDataGet(const ControllerID controllerID, ControllerData& controller)
+unsigned char ControllerDataGet(Controller* controller)
 {
 #if defined(OSUnix)
     return false;
 
 #elif defined(OSWindows)
 #if (WINVER >= 0x0400) // newer than Windows NT 4.0
-	JOYINFOEX joystickInfo{ 0 }; // must set the 'dwSize' and 'dwFlags' or joyGetPosEx will fail.
+	JOYINFOEX joystickInfo; // must set the 'dwSize' and 'dwFlags' or joyGetPosEx will fail.
 
 	joystickInfo.dwSize = sizeof(JOYINFOEX);
 	joystickInfo.dwFlags = JOY_RETURNALL;
 
 	// For devices that have four to six axes of movement a point-of-view control,
 	// or more than four buttons, use the joyGetPosEx function. 'joyGetPos()'
-	const MMRESULT positionInfoResult = joyGetPosEx(controllerID, &joystickInfo);
-	const bool successful = positionInfoResult == 0;
+	const MMRESULT positionInfoResult = joyGetPosEx(controller->ID, &joystickInfo);
+	const unsigned char successful = positionInfoResult == 0;
 
 	if (successful)
 	{
-		controller.Axis[0] = joystickInfo.dwXpos;
-		controller.Axis[1] = joystickInfo.dwYpos;
-		controller.Axis[2] = joystickInfo.dwZpos;
-		controller.Axis[3] = joystickInfo.dwRpos;
-		controller.Axis[4] = joystickInfo.dwUpos;
-		controller.Axis[5] = joystickInfo.dwVpos;
-		controller.ButtonPressedBitList = joystickInfo.dwButtons;
-		controller.ButtonAmountPressed = joystickInfo.dwButtonNumber;
-		controller.ControlPad = joystickInfo.dwPOV;
+		controller->Axis[ControllerAxisX] = joystickInfo.dwXpos;
+		controller->Axis[ControllerAxisY] = joystickInfo.dwYpos;
+		controller->Axis[ControllerAxisZ] = joystickInfo.dwZpos;
+		controller->Axis[ControllerAxisR] = joystickInfo.dwRpos;
+		controller->Axis[ControllerAxisU] = joystickInfo.dwUpos;
+		controller->Axis[ControllerAxisV] = joystickInfo.dwVpos;
+		controller->ButtonPressedBitList = joystickInfo.dwButtons;
+		controller->ButtonAmountPressed = joystickInfo.dwButtonNumber;
+		controller->ControlPad = joystickInfo.dwPOV;
 	}
 
 	return successful;
@@ -119,9 +120,9 @@ bool BF::ControllerSystem::ControllerDataGet(const ControllerID controllerID, Co
 
 	if (successful)
 	{
-		controller.Axis[0] = joystickInfo.wXpos;
-		controller.Axis[1] = joystickInfo.wYpos;
-		controller.Axis[2] = joystickInfo.wZpos;
+		controller.Axis[ControllerAxisX] = joystickInfo.wXpos;
+		controller.Axis[ControllerAxisY] = joystickInfo.wYpos;
+		controller.Axis[ControllerAxisZ] = joystickInfo.wZpos;
 		controller.ButtonPressedBitList = joystickInfo.wButtons;
 	}
 
@@ -130,30 +131,30 @@ bool BF::ControllerSystem::ControllerDataGet(const ControllerID controllerID, Co
 #endif
 }
 
-bool BF::ControllerSystem::ControllerAttachToWindow(const ControllerID controllerID, const WindowID windowID)
+unsigned char ControllerAttachToWindow(const ControllerID controllerID, const WindowID windowID)
 {
 #if defined(OSUnix)
     return false;
 
 #elif defined(OSWindows)
 	UINT uPeriod = 1;
-	BOOL fChanged = true;
+	BOOL fChanged = 1u;
 
 	const MMRESULT captureResult = joySetCapture(windowID, controllerID, uPeriod, fChanged);
-	const bool successful = captureResult == JOYERR_NOERROR;
+	const unsigned char successful = captureResult == JOYERR_NOERROR;
 
 	return successful;
 #endif
 }
 
-bool BF::ControllerSystem::ControllerDetachToWindow(const ControllerID controllerID)
+unsigned char ControllerDetachToWindow(const ControllerID controllerID)
 {
 #if defined(OSUnix)
     return false;
 
 #elif defined(OSWindows)
-const MMRESULT releaseResult = joyReleaseCapture(controllerID);
-	const bool successful = releaseResult == JOYERR_NOERROR;
+	const MMRESULT releaseResult = joyReleaseCapture(controllerID);
+	const unsigned char successful = releaseResult == JOYERR_NOERROR;
 
 	return successful;
 #endif

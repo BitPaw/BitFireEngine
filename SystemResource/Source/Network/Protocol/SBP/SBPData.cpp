@@ -1,8 +1,8 @@
 #include "SBPData.h"
 
-#include <File/ByteStream.h>
+#include <File/ParsingStreamX.h>
 #include <OS/User.h>
-#include <Hardware/Memory/Memory.h>
+#include <Memory/MemoryX.h>
 
 BF::SBPData::SBPData()
 {
@@ -174,7 +174,7 @@ void BF::SBPData::Print()
 
 size_t BF::SBPData::PackageParse(SBPData& data, const void* inputBuffer, const size_t& inputBufferSize)
 {
-	ByteStream dataStream(inputBuffer, inputBufferSize);
+	ParsingStreamX dataStream(inputBuffer, inputBufferSize);
 
 	size_t bufferSize = 0;
 
@@ -210,7 +210,7 @@ size_t BF::SBPData::PackageParse(SBPData& data, const void* inputBuffer, const s
 
 size_t BF::SBPData::PackageSerialize(const SBPData& data, void* outputBuffer, const size_t outputBufferSize)
 {
-	ByteStream stream(outputBuffer, outputBufferSize);
+	ParsingStreamX stream(outputBuffer, outputBufferSize);
 
 	stream.Write("°°", 2u);
 	stream.Write(data.CommandID.Data, 4u);

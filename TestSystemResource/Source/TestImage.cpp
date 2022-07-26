@@ -15,31 +15,31 @@ namespace TestSystemResource
         {
             Image image;
 
-            const FileActionResult fileActionResult = image.Load(L"C:/Users/BitPaw/Videos/TEST_PNG.png");
+            const ActionResult fileActionResult = image.Load(L"C:/Users/BitPaw/Videos/TEST_PNG.png");
 
-            Assert::IsTrue(fileActionResult == FileActionResult::Successful, L"Image PNG loading failed");
+            Assert::IsTrue(fileActionResult == ResultSuccessful, L"Image PNG loading failed");
         }
 
         TEST_METHOD(TestLoadPNG)
         {
             Image image;
 
-            const FileActionResult fileActionResult = image.Load(L"C:/Users/BitPaw/Videos/TEST_PNG.png");
+            const ActionResult fileActionResult = image.Load(L"C:/Users/BitPaw/Videos/TEST_PNG.png");
 
-            Assert::IsTrue(fileActionResult == FileActionResult::Successful, L"Image PNG loading failed");
+            Assert::IsTrue(fileActionResult == ResultSuccessful, L"Image PNG loading failed");
         }
 
         TEST_METHOD(TestLoadPNGSaveBMP)
         {
             Image image;
 
-            const FileActionResult fileLoadResult = image.Load(L"C:/Users/BitPaw/Videos/TEST_PNG.png");
+            const ActionResult fileLoadResult = image.Load(L"C:/Users/BitPaw/Videos/TEST_PNG.png");
 
-            Assert::IsTrue(fileLoadResult == FileActionResult::Successful, L"Image PNG loading failed");
+            Assert::IsTrue(fileLoadResult == ResultSuccessful, L"Image PNG loading failed");
 
-            const FileActionResult fileSaveResult = image.Save(L"C:/Users/BitPaw/Videos/__Wurst.bmp", ImageFileFormat::BitMap);
+            const ActionResult fileSaveResult = image.Save(L"C:/Users/BitPaw/Videos/__Wurst.bmp", ImageFileFormat::BitMap);
 
-            Assert::IsTrue(fileSaveResult == FileActionResult::Successful, L"Image PNG loading failed");
+            Assert::IsTrue(fileSaveResult == ResultSuccessful, L"Image PNG loading failed");
         }
     };
 }

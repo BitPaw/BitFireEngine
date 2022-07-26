@@ -4,7 +4,7 @@
 #include "ImageFileFormat.h"
 
 #include <Resource.h>
-#include <File/FileActionResult.hpp>
+#include <Error/ActionResult.h>
 #include <Math/Geometry/Vector4.hpp>
 
 namespace BF
@@ -49,11 +49,11 @@ namespace BF
 		static ImageFileFormat FileFormatPeek(const char* filePath);
 		static ImageFileFormat FileFormatPeek(const wchar_t* filePath);
 
-		FileActionResult Load(const char* filePath);
-		FileActionResult Load(const wchar_t* filePath);
-		FileActionResult Load(const unsigned char* fileData, const size_t fileDataSize, const ImageFileFormat imageFileFormat);
+		ActionResult Load(const char* filePath);
+		ActionResult Load(const wchar_t* filePath);
+		ActionResult Load(const unsigned char* fileData, const size_t fileDataSize, const ImageFileFormat imageFileFormat);
 
-		FileActionResult Save(const wchar_t* filePath, ImageFileFormat imageFileFormat);
+		ActionResult Save(const wchar_t* filePath, ImageFileFormat imageFileFormat);
 
 		virtual size_t FullSizeInMemory() override;
 	};

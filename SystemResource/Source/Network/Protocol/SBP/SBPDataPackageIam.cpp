@@ -3,7 +3,7 @@
 #include <OS/User.h>
 
 #include <Memory/Memory.h>
-#include <File/ByteStream.h>
+#include <File/ParsingStreamX.h>
 
 BF::SBPDataPackageIam::SBPDataPackageIam()
 {
@@ -23,20 +23,20 @@ void BF::SBPDataPackageIam::Fill()
 
 size_t BF::SBPDataPackageIam::Parse(const void* inputData, const size_t inputDataSize)
 {
-	ByteStream byteStream(inputData, inputDataSize);
+	ParsingStreamX parsingStream(inputData, inputDataSize);
 
 	// Add name
 	{
 		unsigned char formatType = 0;
 		unsigned short size = 0;
 
-		byteStream.Read(formatType);
-		byteStream.Read(size, EndianLittle);
+		parsingStream.Read(formatType);
+		parsingStream.Read(size, EndianLittle);
 
 		NameSize = size;
 		Format = (TextFormat)formatType;
 
-		const Byte__* nameStart = byteStream.CursorCurrentAdress();
+		const Byte__* nameStart = parsingStream.CursorCurrentAdress();
 
 		switch(Format)
 		{
@@ -53,22 +53,22 @@ size_t BF::SBPDataPackageIam::Parse(const void* inputData, const size_t inputDat
 		}	
 	}
 
-	return byteStream.DataCursor;
+	return parsingStream.DataCursor;
 }
 
 size_t BF::SBPDataPackageIam::Serialize(void* outputData, const size_t outputDataSize) const
 {
-	ByteStream byteStream(outputData, outputDataSize);
+	ParsingStreamX parsingStream(outputData, outputDataSize);
 
 	// Add name
 	{	
 		const unsigned char formatType = (TextFormat)Format;
 		unsigned short size = NameSize;
 
-		byteStream.Write(formatType);
-		byteStream.Write(size, EndianLittle);
-		byteStream.Write(NameW, size);
+		parsingStream.Write(formatType);
+		parsingStream.Write(size, EndianLittle);
+		parsingStream.Write(NameW, size);
 	}
 
-	return byteStream.DataCursor;
+	return parsingStream.DataCursor;
 }

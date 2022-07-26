@@ -1,6 +1,6 @@
 #include "SBPDataPackageResponse.h"
 
-#include <File/ByteStream.h>
+#include <File/ParsingStreamX.h>
 
 #define SBPDataPackageResponseTypeOKID 0x01 
 #define SBPDataPackageResponseTypeNoPermissionID 0x02 
@@ -14,12 +14,12 @@ BF::SBPDataPackageResponse::SBPDataPackageResponse()
 
 size_t BF::SBPDataPackageResponse::Parse(const void* inputData, const size_t inputDataSize)
 {
-	ByteStream byteStream(inputData, inputDataSize);
+	ParsingStreamX parsingStream(inputData, inputDataSize);
 
 	{
 		unsigned char typeID = 0;
 
-		byteStream.Read(typeID);
+		parsingStream.Read(typeID);
 
 		switch(typeID)
 		{
@@ -41,12 +41,12 @@ size_t BF::SBPDataPackageResponse::Parse(const void* inputData, const size_t inp
 		}
 	}
 
-	return byteStream.DataCursor;
+	return parsingStream.DataCursor;
 }
 
 size_t BF::SBPDataPackageResponse::Serialize(void* outputData, const size_t outputDataSize) const
 {
-	ByteStream byteStream(outputData, outputDataSize);
+	ParsingStreamX parsingStream(outputData, outputDataSize);
 
 	unsigned char typeID = 0;
 
@@ -69,7 +69,7 @@ size_t BF::SBPDataPackageResponse::Serialize(void* outputData, const size_t outp
 			break;
 	}
 
-	byteStream.Write(typeID);
+	parsingStream.Write(typeID);
 
-	return byteStream.DataCursor;
+	return parsingStream.DataCursor;
 }

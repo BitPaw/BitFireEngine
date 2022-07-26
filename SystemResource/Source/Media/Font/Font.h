@@ -3,7 +3,7 @@
 #include "FontFormat.h"
 
 #include <Resource.h>
-#include <File/FileActionResult.hpp>
+#include <Error/ActionResult.h>
 #include <Media/Image/Image.h>
 
 namespace BF
@@ -27,11 +27,11 @@ namespace BF
 		static FontFormat FileFormatPeek(const char* filePath);
 		static FontFormat FileFormatPeek(const wchar_t* filePath);
 
-		FileActionResult Load(const char* filePath);
-		FileActionResult Load(const wchar_t* filePath);
-		FileActionResult Load(const unsigned char* fileData, const size_t fileDataSize, const FontFormat fontFormat);
+		ActionResult Load(const char* filePath);
+		ActionResult Load(const wchar_t* filePath);
+		ActionResult Load(const unsigned char* fileData, const size_t fileDataSize, const FontFormat fontFormat);
 
-		FileActionResult Save(const wchar_t* filePath, FontFormat fontFormat);
+		ActionResult Save(const wchar_t* filePath, FontFormat fontFormat);
 		//---------------------------------------------------------------------
 	};
 }

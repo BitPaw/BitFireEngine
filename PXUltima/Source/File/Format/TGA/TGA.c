@@ -189,7 +189,7 @@ ActionResult TGAParse(TGA* tga, const void* data, const size_t dataSize, size_t*
 
 
 /*
-BF::FileActionResult BF::TGA::Save(const wchar_t* filePath)
+ActionResult BF::TGA::Save(const wchar_t* filePath)
 {
 	const char footer[18] = TGAFileIdentifier;
 	unsigned int fileLength = 500;
@@ -200,10 +200,10 @@ BF::FileActionResult BF::TGA::Save(const wchar_t* filePath)
 
 	file.WriteToDisk(filePath);
 
-	return FileActionResult::Successful;
+	return ResultSuccessful;
 }
 
-BF::FileActionResult BF::TGA::ConvertTo(Image& image)
+ActionResult BF::TGA::ConvertTo(Image& image)
 {
 	ImageDataFormat imageFormat = ImageDataFormat::Invalid;
 	size_t pixelDataLengh = 0;
@@ -245,7 +245,7 @@ BF::FileActionResult BF::TGA::ConvertTo(Image& image)
 		}
 		case TGABitsPerPixel::Invalid:
 		{
-			return FileActionResult::FormatNotSupported;
+			return ResultFormatNotSupported;
 		}
 	}
 
@@ -254,7 +254,7 @@ BF::FileActionResult BF::TGA::ConvertTo(Image& image)
 
 	if (!newImageData)
 	{
-		return FileActionResult::OutOfMemory;
+		return ResultOutOfMemory;
 	}
 
 	image.Format = imageFormat;

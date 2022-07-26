@@ -3,7 +3,7 @@
 #include <cstddef>
 
 #include "ResourceInfo.h"
-#include "File/FileActionResult.hpp"
+#include "File/ActionResult.hpp"
 
 #define StringAscii char*
 #define StringUnicode wchar_t*
@@ -52,6 +52,6 @@ namespace BF
 			return sizeof(Resource);
 		}		
 
-		virtual FileActionResult Load() = 0;
+		virtual ActionResult Load() = 0;
 	};
 }

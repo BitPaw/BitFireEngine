@@ -25,7 +25,7 @@ namespace BF
 		static ModelType FileFormatPeek(const wchar_t* filePath);
 
 		size_t FullSizeInMemory();
-		FileActionResult Load(const wchar_t* filePath);
+		ActionResult Load(const wchar_t* filePath);
 
 		void ConvertFrom(float* vertexList, size_t vertexListSize, unsigned int* indexList, size_t indexListSize, float textureScaleX = 1, float textureScaleY = 1, bool rawPositions = false);
 	};

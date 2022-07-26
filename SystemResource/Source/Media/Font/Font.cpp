@@ -6,7 +6,7 @@
 
 #include <File/File.h>
 
-BF::FileActionResult BF::Font::Load(const char* filePath)
+ActionResult BF::Font::Load(const char* filePath)
 {
     File file;
 
@@ -16,21 +16,21 @@ BF::FileActionResult BF::Font::Load(const char* filePath)
 
         if(!sucessful)
         {
-            return FileActionResult::Invalid;
+            return ResultInvalid;
         }
     }
 
     {
         const FontFormat hint = FileFormatPeek(filePath);
-        const FileActionResult fileParsingResult = Load(file.Data, file.DataSize, hint);
-        const bool success = fileParsingResult == FileActionResult::Successful;
+        const ActionResult fileParsingResult = Load(file.Data, file.DataSize, hint);
+        const bool success = fileParsingResult == ResultSuccessful;
 
         if(success)
         {
-            return FileActionResult::Successful;
+            return ResultSuccessful;
         }
 
-        FileActionResult fileGuessResult = FileActionResult::Invalid;
+        ActionResult fileGuessResult = ResultInvalid;
         unsigned int fileFormatID = 1;
 
         do
@@ -41,18 +41,18 @@ BF::FileActionResult BF::Font::Load(const char* filePath)
 
             fileFormatID++;
         }
-        while(fileGuessResult == FileActionResult::InvalidHeaderSignature);
+        while(fileGuessResult == ResultInvalidHeaderSignature);
 
         return fileGuessResult;
     }
 }
 
-BF::FileActionResult BF::Font::Load(const wchar_t* filePath)
+ActionResult BF::Font::Load(const wchar_t* filePath)
 {
-    return FileActionResult::Successful;
+    return ResultSuccessful;
 }
 
-BF::FileActionResult BF::Font::Load(const unsigned char* fileData, const size_t fileDataSize, const FontFormat fontFormat)
+ActionResult BF::Font::Load(const unsigned char* fileData, const size_t fileDataSize, const FontFormat fontFormat)
 {
     switch(fontFormat)
     {
@@ -69,7 +69,7 @@ BF::FileActionResult BF::Font::Load(const unsigned char* fileData, const size_t 
                 {
                     //fnt->ConvertTo(*this);
 
-                    return FileActionResult::Successful;
+                    return ResultSuccessful;
                 }
             }
 
@@ -80,14 +80,14 @@ BF::FileActionResult BF::Font::Load(const unsigned char* fileData, const size_t 
             TTF ttf;
 
             {
-                const FileActionResult fileActionResult = ttf.Load(fileData, fileDataSize);
-                const bool sucessful = fileActionResult == FileActionResult::Successful;
+                const ActionResult fileActionResult = ttf.Load(fileData, fileDataSize);
+                const bool sucessful = fileActionResult == ResultSuccessful;
 
                 if(sucessful)
                 {
                     ttf.ConvertTo(*this);
 
-                    return FileActionResult::Successful;
+                    return ResultSuccessful;
                 }
             }
             break;
@@ -95,21 +95,21 @@ BF::FileActionResult BF::Font::Load(const unsigned char* fileData, const size_t 
         case FontFormat::Unkown:
         default:
         {
-            return FileActionResult::FormatNotSupported;
+            return ResultFormatNotSupported;
         }
     }
 
-    return FileActionResult::Successful;
+    return ResultSuccessful;
 }
 
-BF::FileActionResult BF::Font::Save(const wchar_t* filePath, FontFormat fontFormat)
+ActionResult BF::Font::Save(const wchar_t* filePath, FontFormat fontFormat)
 {
     switch (fontFormat)
     {
         default:
         case BF::FontFormat::Unkown:
         {
-            return FileActionResult::FormatNotSupported;
+            return ResultFormatNotSupported;
         }
         case BF::FontFormat::FormatFNT:
         {
@@ -127,7 +127,7 @@ BF::FileActionResult BF::Font::Save(const wchar_t* filePath, FontFormat fontForm
         }
     }
 
-    return FileActionResult::Successful;
+    return ResultSuccessful;
 }
 
 BF::FontFormat BF::Font::FileFormatPeek(const char* filePath)

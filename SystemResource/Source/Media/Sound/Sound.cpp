@@ -1,7 +1,6 @@
 #include "Sound.h"
 
 #include <File/File.h>
-#include <Hardware/Memory/Memory.h>
 #include <File/Format/AAC/AAC.h>
 #include <File/Format/FLAC/FLAC.h>
 #include <File/Format/MID/MID.h>
@@ -47,7 +46,7 @@ size_t BF::Sound::FullSizeInMemory()
     return sizeof(*this);
 }
 
-BF::FileActionResult BF::Sound::Load(const wchar_t* filePath)
+ActionResult BF::Sound::Load(const wchar_t* filePath)
 {   
     SoundFormat soundFormat = FileFormatPeek(filePath);
 
@@ -112,14 +111,14 @@ BF::FileActionResult BF::Sound::Load(const wchar_t* filePath)
         case SoundFormat::Unkown:
         default:
         {
-            return FileActionResult::FormatNotSupported;
+            return ResultFormatNotSupported;
         }
     }
 
-    return FileActionResult::Successful;
+    return ResultSuccessful;
 }
 
-BF::FileActionResult BF::Sound::Save(const wchar_t* filePath, SoundFormat soundFormat)
+ActionResult BF::Sound::Save(const wchar_t* filePath, SoundFormat soundFormat)
 {
     switch (soundFormat)
     {
@@ -186,5 +185,5 @@ BF::FileActionResult BF::Sound::Save(const wchar_t* filePath, SoundFormat soundF
         }
     }
 
-    return FileActionResult::Successful;
+    return ResultSuccessful;
 }

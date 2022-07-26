@@ -50,9 +50,9 @@ namespace TestSystemResource
                 fs2.Write("a\n", 3u);
             }
 
-            const FileActionResult resuilt =  fs2.WriteToDisk(filePath);
+            const ActionResult resuilt =  fs2.WriteToDisk(filePath);
 
-            Assert::IsTrue(resuilt == FileActionResult::Successful);
+            Assert::IsTrue(resuilt == ResultSuccessful);
 
             const ErrorCode errorCode = File::Remove(filePath);
 

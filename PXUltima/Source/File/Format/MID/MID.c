@@ -104,8 +104,8 @@ ActionResult MIDSerialize(MID* mid, void* data, const size_t dataSize, size_t* d
 	File file;
 
 	{
-		const FileActionResult fileOpenResult = file.Open(filePath, FileOpenMode::Write);
-		const bool sucessful = fileOpenResult == FileActionResult::Successful;
+		const ActionResult fileOpenResult = file.Open(filePath, FileOpenMode::Write);
+		const bool sucessful = fileOpenResult == ResultSuccessful;
 
 		if(!sucessful)
 		{
@@ -133,8 +133,8 @@ ActionResult MIDSerialize(MID* mid, void* data, const size_t dataSize, size_t* d
 	}
 
 	{
-		const FileActionResult fileCloseResult = file.Close();
-		const bool sucessful = fileCloseResult == FileActionResult::Successful;
+		const ActionResult fileCloseResult = file.Close();
+		const bool sucessful = fileCloseResult == ResultSuccessful;
 
 		if(!sucessful)
 		{
@@ -142,7 +142,7 @@ ActionResult MIDSerialize(MID* mid, void* data, const size_t dataSize, size_t* d
 		}
 	}
 
-	return FileActionResult::Successful;*/
+	return ResultSuccessful;*/
 
 	return ResultSuccessful;
 }

@@ -1,4 +1,4 @@
-#if !defined(LibraryInclude)
+#ifndef LibraryInclude
 #define LibraryInclude
 
 #include <OS/OSVersion.h>

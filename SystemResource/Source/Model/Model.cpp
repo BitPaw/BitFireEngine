@@ -61,7 +61,7 @@ BF::ModelType BF::Model::FileFormatPeek(const wchar_t* fileExtension)
     return ModelType::UnKown;
 }
 
-BF::FileActionResult BF::Model::Load(const wchar_t* filePath)
+ActionResult BF::Model::Load(const wchar_t* filePath)
 {
     ModelType modelType = FileFormatPeek(filePath);
 
@@ -117,10 +117,10 @@ BF::FileActionResult BF::Model::Load(const wchar_t* filePath)
 
         case ModelType::UnKown:
         default:
-            return FileActionResult::FormatNotSupported;
+            return ResultFormatNotSupported;
     }
 
-    return FileActionResult::Successful;
+    return ResultSuccessful;
 }
 
 void BF::Model::ConvertFrom(float* vertexList, size_t vertexListSize, unsigned int* indexList, size_t indexListSize, float textureScaleX, float textureScaleY, bool rawPositions)

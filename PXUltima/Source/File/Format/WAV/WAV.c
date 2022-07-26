@@ -88,7 +88,7 @@ ActionResult WAVParse(WAV* wav, const void* data, const size_t dataSize, size_t*
 
 /*
 
-BF::FileActionResult BF::WAV::Save(const wchar_t* filePath)
+ActionResult BF::WAV::Save(const wchar_t* filePath)
 {
 	// Note: The sample data must end on an even byte boundary. Whatever that means.
 	File fileStream;
@@ -117,10 +117,10 @@ BF::FileActionResult BF::WAV::Save(const wchar_t* filePath)
 
 	fileStream.WriteToDisk(filePath);
 
-	return FileActionResult::Successful;
+	return ResultSuccessful;
 }
 
-BF::FileActionResult BF::WAV::ConvertTo(Sound& sound)
+ActionResult BF::WAV::ConvertTo(Sound& sound)
 {
 	sound.NumerOfChannels = Format.NumerOfChannels;
 	sound.SampleRate = Format.SampleRate;
@@ -130,7 +130,7 @@ BF::FileActionResult BF::WAV::ConvertTo(Sound& sound)
 
 	MemoryCopy(SoundData, SoundDataSize, sound.Data, sound.DataSize);
 
-	return FileActionResult::Successful;
+	return ResultSuccessful;
 }
 
 */

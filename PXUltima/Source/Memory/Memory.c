@@ -35,6 +35,33 @@
 #include <assert.h>
 #endif 
 
+unsigned char MemoryScan(MemoryUsage* memoryUsage)
+{
+#if defined(OSUnix)
+#elif defined(WindowsAtleastXP)
+	// MEMORYSTATUS won't work on >4GB Systems
+
+	MEMORYSTATUSEX memoryStatus;
+	memoryStatus.dwLength = sizeof(MEMORYSTATUSEX);
+
+	const unsigned char result = GlobalMemoryStatusEx(&memoryStatus);
+
+	if(result)
+	{
+		memoryUsage->PercentInUse = memoryStatus.dwMemoryLoad;
+		memoryUsage->PhysicalTotal = memoryStatus.ullTotalPhys;
+		memoryUsage->PhysicalAvailable = memoryStatus.ullAvailPhys;
+		memoryUsage->PageFileTotal = memoryStatus.ullTotalPageFile;
+		memoryUsage->PageFileAvailable = memoryStatus.ullAvailPageFile;
+		memoryUsage->VirtualTotal = memoryStatus.ullTotalVirtual;
+		memoryUsage->VirtualAvailable = memoryStatus.ullAvailVirtual;
+		memoryUsage->ExtendedVirtualAvailable = memoryStatus.ullAvailExtendedVirtual;
+	}
+
+	return result;
+#endif
+}
+
 void MemorySet(void* __restrict bufferA, const size_t bufferASize, const unsigned char value)
 {
 //#if MemoryAssertEnable

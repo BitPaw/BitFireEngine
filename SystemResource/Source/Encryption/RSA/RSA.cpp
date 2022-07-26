@@ -4,7 +4,7 @@
 
 #include <Text/Text.h>
 
-#include <Hardware/Memory/Memory.h>
+#include <Memory/MemoryX.h>
 #include <Math/Primes.h>
 #include <Math/Math.h>
 

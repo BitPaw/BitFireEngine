@@ -1,5 +1,4 @@
-
-#if !defined(UserInclude)
+#ifndef UserInclude
 #define UserInclude
 
 #include <stddef.h>

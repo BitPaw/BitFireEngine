@@ -191,6 +191,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Device\Controller.h" />
+    <ClInclude Include="Source\File\Format\EML\EML.h" />
+    <ClInclude Include="Source\OS\OpenFileDialog.h" />
+    <ClInclude Include="Source\OS\Program.h" />
+    <ClInclude Include="Source\Time\Time.h" />
     <ClInclude Include="Source\Video\Shader.h" />
     <ClInclude Include="Source\File\File.h" />
     <ClInclude Include="Source\File\Format\OBJ\OBJ.h" />
@@ -257,6 +262,11 @@
     <ClInclude Include="Source\OS\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Device\Controller.c" />
+    <ClCompile Include="Source\File\Format\EML\EML.c" />
+    <ClCompile Include="Source\OS\OpenFileDialog.c" />
+    <ClCompile Include="Source\OS\Program.c" />
+    <ClCompile Include="Source\Time\Time.c" />
     <ClCompile Include="Source\Video\Shader.c" />
     <ClCompile Include="Source\File\File.c" />
     <ClCompile Include="Source\File\Format\OBJ\OBJ.c" />

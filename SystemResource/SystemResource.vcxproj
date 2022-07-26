@@ -308,6 +308,7 @@
     <ClCompile Include="Source\OS\Sound\AudioDeviceOutput.cpp" />
     <ClCompile Include="Source\OS\Sound\AudioResult.cpp" />
     <ClCompile Include="Source\OS\Sound\AudioSystem.cpp" />
+    <ClCompile Include="Source\Time\StopWatch.cpp" />
     <ClCompile Include="Source\UI\Label.cpp" />
     <ClCompile Include="Source\UI\Button.cpp" />
     <ClCompile Include="Source\Network\Protocol\SBP\SBPDataPackageText.cpp" />
@@ -347,10 +348,7 @@
     <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\ClipBoard\ClipBoardFormat.cpp" />
     <ClCompile Include="Source\ClipBoard\ClipBoard.cpp" />
-    <ClCompile Include="Source\Hardware\Memory\MemoryUsage.cpp" />
-    <ClCompile Include="Source\Hardware\Memory\Memory.cpp" />
-    <ClCompile Include="Source\Controller\ControllerData.cpp" />
-    <ClCompile Include="Source\Controller\ControllerSystem.cpp" />
+    <ClCompile Include="Source\Memory\MemoryX.cpp" />
     <ClCompile Include="Source\DataBase\DataBase.cpp" />
     <ClCompile Include="Source\Resource.cpp" />
     <ClCompile Include="Source\Encryption\RSA\Euklid.cpp" />
@@ -358,18 +356,15 @@
     <ClCompile Include="Source\Encryption\RSA\RSA.cpp" />
     <ClCompile Include="Source\Service\HTTP\HTTPError.cpp" />
     <ClCompile Include="Source\Service\HTTP\HTTPRequestMethod.cpp" />
-    <ClCompile Include="Source\File\ProgramExecuteInfo.cpp" />
     <ClCompile Include="Source\Network\ServerListeningThreadInfo.cpp" />
     <ClCompile Include="Source\Network\IPAdressInfo.cpp" />
     <ClCompile Include="Source\Network\SocketType.cpp" />
     <ClCompile Include="Source\Network\IPAdressFamily.cpp" />
     <ClCompile Include="Source\Network\ProtocolMode.cpp" />
     <ClCompile Include="Source\Network\IOSocketMessage.cpp" />
-    <ClCompile Include="Source\File\OpenFileDialog.cpp" />
     <ClCompile Include="Source\Media\Font\TTF\Chunks\CMAP\EncodingID.cpp" />
     <ClCompile Include="Source\ErrorCode.cpp" />
-    <ClCompile Include="Source\File\Program.cpp" />
-    <ClCompile Include="Source\File\ByteStream.cpp" />
+    <ClCompile Include="Source\File\ParsingStreamX.cpp" />
     <ClCompile Include="Source\Model\MeshSegment.cpp" />
     <ClCompile Include="Source\Model\Model.cpp" />
     <ClCompile Include="Source\Network\SocketActionResult.cpp" />
@@ -379,13 +374,11 @@
     <ClCompile Include="Source\Async\AsyncLock.cpp" />
     <ClCompile Include="Source\Container\AsciiString.cpp" />
     <ClCompile Include="Source\Container\BitStreamHusk.cpp" />
-    <ClCompile Include="Source\Email\EML.cpp" />
     <ClCompile Include="Source\Media\Font\Font.cpp" />
     <ClCompile Include="Source\Media\Font\TTF\TTF.cpp" />
     <ClCompile Include="Source\Media\Image\BMP\BMPP.cpp" />
     <ClCompile Include="Source\Media\Image\Image.cpp" />
     <ClCompile Include="Source\Encryption\Caesar.cpp" />
-    <ClCompile Include="Source\Encryption\ICypher.cpp" />
     <ClCompile Include="Source\Math\Geometry\Form\Cone.cpp" />
     <ClCompile Include="Source\Math\Geometry\Form\Cube.cpp" />
     <ClCompile Include="Source\Math\Geometry\Form\Cuboid.cpp" />
@@ -414,7 +407,6 @@
     <ClCompile Include="Source\Network\Server.cpp" />
     <ClCompile Include="Source\Media\Image\ImageDataFormat.cpp" />
     <ClCompile Include="Source\Media\Sound\Sound.cpp" />
-    <ClCompile Include="Source\Time\StopWatch.cpp" />
     <ClCompile Include="Source\Types\UUID.cpp" />
     <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFOffsetTable.cpp" />
     <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFVersion.cpp" />
@@ -456,7 +448,6 @@
     <ClCompile Include="Source\DataBase\SQLType.cpp" />
     <ClCompile Include="Source\DataBase\SQLResult.cpp" />
     <ClCompile Include="Source\Graphic\Vulcan\Vulcan.cpp" />
-    <ClCompile Include="Source\Time\Time.cpp" />
     <ClCompile Include="Source\UI\TextBox.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -466,6 +457,7 @@
     <ClInclude Include="Source\OS\Sound\AudioDeviceOutput.h" />
     <ClInclude Include="Source\OS\Sound\AudioResult.h" />
     <ClInclude Include="Source\OS\Sound\AudioSystem.h" />
+    <ClInclude Include="Source\Time\StopWatch.h" />
     <ClInclude Include="Source\UI\Label.h" />
     <ClInclude Include="Source\UI\Button.h" />
     <ClInclude Include="Source\Network\Protocol\SBP\SBPDataPackageText.h" />
@@ -512,10 +504,7 @@
     <ClInclude Include="Source\Camera\CameraPerspective.hpp" />
     <ClInclude Include="Source\ClipBoard\ClipBoardFormat.h" />
     <ClInclude Include="Source\ClipBoard\ClipBoard.h" />
-    <ClInclude Include="Source\Hardware\Memory\MemoryUsage.h" />
-    <ClInclude Include="Source\Hardware\Memory\Memory.h" />
-    <ClInclude Include="Source\Controller\ControllerData.h" />
-    <ClInclude Include="Source\Controller\ControllerSystem.h" />
+    <ClInclude Include="Source\Memory\MemoryX.h" />
     <ClInclude Include="Source\DataBase\DataBase.h" />
     <ClInclude Include="Source\Math\Physic\PhysicsDynamic.hpp" />
     <ClInclude Include="Source\Math\Physic\PhysicsStatic.hpp" />
@@ -527,7 +516,6 @@
     <ClInclude Include="Source\Encryption\RSA\RSAKeys.h" />
     <ClInclude Include="Source\Service\HTTP\HTTPError.h" />
     <ClInclude Include="Source\Service\HTTP\HTTPRequestMethod.h" />
-    <ClInclude Include="Source\File\ProgramExecuteInfo.h" />
     <ClInclude Include="Source\Network\ServerListeningThreadInfo.h" />
     <ClInclude Include="Source\Network\IClientListener.hpp" />
     <ClInclude Include="Source\Network\IPAdressInfo.h" />
@@ -535,16 +523,13 @@
     <ClInclude Include="Source\Network\IPAdressFamily.h" />
     <ClInclude Include="Source\Network\ProtocolMode.h" />
     <ClInclude Include="Source\Network\IOSocketMessage.h" />
-    <ClInclude Include="Source\File\OpenFileDialog.h" />
     <ClInclude Include="Source\Container\Dictionary.hpp" />
     <ClInclude Include="Source\Media\Font\TTF\Chunks\CMAP\EncodingID.h" />
     <ClInclude Include="Source\ErrorCode.h" />
-    <ClInclude Include="Source\File\Program.h" />
     <ClInclude Include="Source\Container\QuadTree\QuadTreeDirection.hpp" />
     <ClInclude Include="Source\Container\QuadTree\QuadTreeChunk.hpp" />
-    <ClInclude Include="Source\File\ByteStream.h" />
+    <ClInclude Include="Source\File\ParsingStreamX.h" />
     <ClInclude Include="Source\Container\QuadTree\QuadTree.hpp" />
-    <ClInclude Include="Source\File\ProgramExecuteResultListener.hpp" />
     <ClInclude Include="Source\Media\Image\Image.h" />
     <ClInclude Include="Source\Model\MeshSegment.h" />
     <ClInclude Include="Source\Media\Font\IFontFormat.hpp" />
@@ -578,8 +563,6 @@
     <ClInclude Include="Source\Container\Queue.hpp" />
     <ClInclude Include="Source\Container\RingBuffer.hpp" />
     <ClInclude Include="Source\Container\Table.hpp" />
-    <ClInclude Include="Source\Email\EML.h" />
-    <ClInclude Include="Source\File\FileActionResult.hpp" />
     <ClInclude Include="Source\Media\Font\Font.h" />
     <ClInclude Include="Source\Media\Font\FontFormat.h" />
     <ClInclude Include="Source\Media\Font\TTF\TTF.h" />
@@ -589,7 +572,6 @@
     <ClInclude Include="Source\Math\Complex.h" />
     <ClInclude Include="Source\Math\Diagrams\BoxPlot.hpp" />
     <ClInclude Include="Source\Encryption\Caesar.h" />
-    <ClInclude Include="Source\Encryption\ICypher.h" />
     <ClInclude Include="Source\Math\Geometry\Form\Cone.h" />
     <ClInclude Include="Source\Math\Geometry\Form\Cube.h" />
     <ClInclude Include="Source\Math\Geometry\Form\Cuboid.h" />
@@ -627,7 +609,6 @@
     <ClInclude Include="Source\Network\Server.h" />
     <ClInclude Include="Source\Media\Sound\Sound.h" />
     <ClInclude Include="Source\Media\Sound\SoundFormat.h" />
-    <ClInclude Include="Source\Time\StopWatch.h" />
     <ClInclude Include="Source\Types\UUID.h" />
     <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFOffsetTable.h" />
     <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFVersion.h" />
@@ -669,7 +650,6 @@
     <ClInclude Include="Source\DataBase\SQLType.h" />
     <ClInclude Include="Source\DataBase\SQLResult.h" />
     <ClInclude Include="Source\Graphic\Vulcan\Vulcan.h" />
-    <ClInclude Include="Source\Time\Time.h" />
     <ClInclude Include="Source\UI\TextBox.h" />
   </ItemGroup>
   <ItemGroup>

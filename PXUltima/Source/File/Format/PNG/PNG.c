@@ -1371,8 +1371,8 @@ ActionResult PNGSerialize(PNG* png, void* data, const size_t dataSize, size_t* d
 
     // Open file
     {
-        const FileActionResult openResult = file.Open(filePath, FileOpenMode::Write);
-        const bool sucessful = openResult == FileActionResult::Successful;
+        const ActionResult openResult = file.Open(filePath, FileOpenMode::Write);
+        const bool sucessful = openResult == ResultSuccessful;
 
         if(!sucessful)
         {
@@ -1439,8 +1439,8 @@ ActionResult PNGSerialize(PNG* png, void* data, const size_t dataSize, size_t* d
 
     // Close file
     {
-        const FileActionResult closeResult = file.Close();
-        const bool sucessful = closeResult == FileActionResult::Successful;
+        const ActionResult closeResult = file.Close();
+        const bool sucessful = closeResult == ResultSuccessful;
 
         if(!sucessful)
         {
@@ -1448,7 +1448,7 @@ ActionResult PNGSerialize(PNG* png, void* data, const size_t dataSize, size_t* d
         }
     }
 
-    return FileActionResult::Successful;
+    return ResultSuccessful;
     */
 
     return ResultInvalid;

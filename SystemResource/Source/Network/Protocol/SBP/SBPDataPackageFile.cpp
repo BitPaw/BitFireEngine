@@ -1,7 +1,7 @@
 #include "SBPDataPackageFile.h"
 
 #include <Text/Text.h>
-#include <File/ByteStream.h>
+#include <File/ParsingStreamX.h>
 #include <Hardware/Memory/Memory.h>
 
 #define SBPDataPackageFileModeIDCreate 0x01
@@ -43,7 +43,7 @@ void BF::SBPDataPackageFile::Fill(const SBPDataPackageFileMode mode, const char*
 
 size_t BF::SBPDataPackageFile::Parse(const void* inputData, const size_t inputDataSize)
 {
-	ByteStream byteStream(inputData, inputDataSize);
+	ParsingStreamX byteStream(inputData, inputDataSize);
 
 	{
 		unsigned char modeID = 0;
@@ -118,7 +118,7 @@ size_t BF::SBPDataPackageFile::Parse(const void* inputData, const size_t inputDa
 
 size_t BF::SBPDataPackageFile::Serialize(void* outputData, const size_t outputDataSize) const
 {
-	ByteStream byteStream(outputData, outputDataSize);
+	ParsingStreamX byteStream(outputData, outputDataSize);
 
 	{
 		unsigned char modeID = 0;

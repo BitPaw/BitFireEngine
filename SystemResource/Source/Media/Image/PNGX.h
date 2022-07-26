@@ -1,7 +1,7 @@
 #pragma once
 
 #include <File/Format/PNG/PNG.h>
-#include <File/FileActionResult.hpp>
+#include <Error/ActionResult.h>
 #include <Media/Image/Image.h>
 
 namespace BF
@@ -12,13 +12,13 @@ namespace BF
 		PNGX();
 		~PNGX();
 
-		FileActionResult Load(const char* filePath);
-		FileActionResult Load(const wchar_t* filePath);
-		FileActionResult Load(const unsigned char* fileData, const size_t fileDataSize);
+		ActionResult Load(const char* filePath);
+		ActionResult Load(const wchar_t* filePath);
+		ActionResult Load(const unsigned char* fileData, const size_t fileDataSize);
 
-		FileActionResult Save(const wchar_t* filePath);
+		ActionResult Save(const wchar_t* filePath);
 
-		FileActionResult ConvertFrom(Image& image);
-		FileActionResult ConvertTo(Image& image);
+		ActionResult ConvertFrom(Image& image);
+		ActionResult ConvertTo(Image& image);
 	};
 }

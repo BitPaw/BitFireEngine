@@ -52,10 +52,10 @@ namespace TestSystemResource
 
 				Program program;
 
-			FileActionResult fileActionResult = program.Execute("DummyProgram.exe", 0, 0);		
+			ActionResult fileActionResult = program.Execute("DummyProgram.exe", 0, 0);		
 
 
-            Assert::IsTrue(fileActionResult == FileActionResult::Successful);
+            Assert::IsTrue(fileActionResult == ResultSuccessful);
         }
     };
 }

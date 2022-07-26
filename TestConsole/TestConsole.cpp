@@ -124,8 +124,8 @@ int main()
     PNG png;
 
     File dggfgf;
-    const FileActionResult fileLoadingResult = dggfgf.MapToVirtualMemory("B:\\Daten\\Bilder\\tumblr_oou0htSqtG1shbbpso1_640.png", MemoryReadOnly);
-    const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+    const ActionResult fileLoadingResult = dggfgf.MapToVirtualMemory("B:\\Daten\\Bilder\\tumblr_oou0htSqtG1shbbpso1_640.png", MemoryReadOnly);
+    const bool sucessful = fileLoadingResult == ResultSuccessful;
 
     size_t readBytes = 0;
     PNGParse(&png, dggfgf.Data, dggfgf.DataSize, &readBytes);
@@ -139,8 +139,8 @@ int main()
 
     File dggfgf;
 
-    const FileActionResult fileLoadingResult = dggfgf.MapToVirtualMemory("B:/Daten/Music/08-Bit/Dragon Ball Z Opening 8 bit.mp3", MemoryReadOnly);
-    const bool sucessful = fileLoadingResult == FileActionResult::Successful;
+    const ActionResult fileLoadingResult = dggfgf.MapToVirtualMemory("B:/Daten/Music/08-Bit/Dragon Ball Z Opening 8 bit.mp3", MemoryReadOnly);
+    const bool sucessful = fileLoadingResult == ResultSuccessful;
     size_t witnnen = 0;
 
     MP3Parse(&mp3, dggfgf.Data, dggfgf.DataSize, &witnnen);
@@ -185,8 +185,8 @@ int main()
 
     File file;
 
-    const FileActionResult iiuiiii = file.MapToVirtualMemory(filePath, MemoryReadOnly);
-    const bool sucessfulddd = iiuiiii == FileActionResult::Successful;
+    const ActionResult iiuiiii = file.MapToVirtualMemory(filePath, MemoryReadOnly);
+    const bool sucessfulddd = iiuiiii == ResultSuccessful;
 
     const unsigned char fileParsingResult = FNTLoad(&font, file.Data, file.DataSize);
 
@@ -205,7 +205,7 @@ int main()
 
     WAV wave;
 
-    FileActionResult fileActionResult = wave.Load("A:/CatFeet.wav");
+    ActionResult fileActionResult = wave.Load("A:/CatFeet.wav");
 
 
     AudioSystem audioSystem;

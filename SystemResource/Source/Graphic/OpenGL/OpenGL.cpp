@@ -5,7 +5,7 @@
 #include <cassert>
 
 #include <GL/glew.h>
-#include <Hardware/Memory/Memory.h>
+#include <Memory/MemoryX.h>
 
 void BF::OpenGL::Initialize()
 {

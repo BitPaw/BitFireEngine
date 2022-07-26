@@ -7,7 +7,7 @@ namespace BF
 {
 	struct ISoundFormat : public IFileFormat
 	{
-		virtual FileActionResult ConvertTo(Sound& sound) = 0;
-		virtual FileActionResult ConvertFrom(Sound& sound) = 0;
+		virtual ActionResult ConvertTo(Sound& sound) = 0;
+		virtual ActionResult ConvertFrom(Sound& sound) = 0;
 	};
 }

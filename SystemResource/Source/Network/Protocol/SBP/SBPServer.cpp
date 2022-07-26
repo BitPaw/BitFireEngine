@@ -2,7 +2,7 @@
 
 #include <cstdio>
 
-#include <File/ByteStream.h>
+#include <File/ParsingStreamX.h>
 #include <Text/Text.h>
 
 #include "SBPDataPackageResponse.h"
@@ -26,8 +26,8 @@ void BF::SBPServer::SendFile(const ClientID clientID, const char* text)
 
 	// Check if file exists
 	{
-		const FileActionResult fileActionResult = file.MapToVirtualMemory(text, MemoryReadOnly);
-		const bool sucessful = fileActionResult == FileActionResult::Successful;
+		const ActionResult fileActionResult = file.MapToVirtualMemory(text, MemoryReadOnly);
+		const bool sucessful = fileActionResult == ResultSuccessful;
 
 		if(!sucessful)
 		{

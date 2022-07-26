@@ -4,7 +4,7 @@
 #include <Media/Image/Image.h>
 #include <Media/Font/Font.h>
 #include <Media/Sound/Sound.h>
-#include <File/FileActionResult.hpp>
+#include <Error/ActionResult.h>
 #include <Camera/Camera.h>
 
 #include <Graphic/OpenGL/Texture.h>
@@ -30,7 +30,7 @@ namespace BF
 
 		static bool IsLevelFile(const wchar_t* filePath);
 
-		FileActionResult Load(const wchar_t* filePath);
+		ActionResult Load(const wchar_t* filePath);
 
 		size_t FullSizeInMemory();
 	};

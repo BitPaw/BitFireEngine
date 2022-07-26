@@ -1,13 +1,13 @@
 #pragma once
 
-#include "File/FileActionResult.hpp"
+#include <Error/ActionResult.h>
 
 namespace BF
 {
 	struct IFileFormat
 	{
-		virtual FileActionResult Load(const wchar_t* filePath) = 0;
-		virtual FileActionResult Save(const wchar_t* filePath) = 0;
+		virtual ActionResult Load(const wchar_t* filePath) = 0;
+		virtual ActionResult Save(const wchar_t* filePath) = 0;
 		//virtual ~IFileFormat() = 0;
 	};
 }

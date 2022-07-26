@@ -35,7 +35,7 @@
 	"ImageDataFormat.h"
 	"ImageFileFormat.h"
 	<Resource.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 	<Math/Geometry/Vector4.hpp>
 
 1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Media/Image/ImageDataFormat.h
@@ -43,10 +43,10 @@
 1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Media/Image/ImageFileFormat.h
 
 1652033227 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Resource.h
-	"File/FileActionResult.hpp"
+	"File/ActionResult.hpp"
 	<cstddef>
 
-1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/File/FileActionResult.hpp
+1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/File/ActionResult.hpp
 
 1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Math/Geometry/Vector4.hpp
 
@@ -135,7 +135,7 @@
 	<Media/Image/Image.h>
 	<Media/Font/Font.h>
 	<Media/Sound/Sound.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 	<Camera/Camera.h>
 	<Shader/Shader.h>
 	"../Dialog/Dialog.h"
@@ -181,7 +181,7 @@
 1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Media/Font/Font.h
 	"FontFormat.h"
 	<Resource.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 	<Media/Image/Image.h>
 
 1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Media/Font/FontFormat.h
@@ -189,7 +189,7 @@
 1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Media/Sound/Sound.h
 	"SoundFormat.h"
 	<Resource.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 
 1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Media/Sound/SoundFormat.h
 
@@ -214,7 +214,7 @@
 
 1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Shader/Shader.h
 	<Resource.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 	<cstdlib>
 	<Shader/GLSL/ShaderType.h>
 
@@ -365,7 +365,7 @@
 	<IFileFormat.hpp>
 
 1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/IFileFormat.hpp
-	"File/FileActionResult.hpp"
+	"File/ActionResult.hpp"
 
 1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/Math/Interpolate.h
 
@@ -494,7 +494,7 @@
 	"FilePath.h"
 	<ErrorCode.h>
 	<OS/OSDefine.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 	<sys/stat.h>
 	<unistd.h>
 	<dirent.h>
@@ -505,7 +505,7 @@
 1652044102 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/File/IFile.h
 	<cstdio>
 	"FileOpenMode.hpp"
-	"FileActionResult.hpp"
+	"ActionResult.hpp"
 	"FileCachingMode.h"
 
 1652022896 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/File/FileOpenMode.hpp
@@ -548,7 +548,7 @@
 1652032697 /home/bitpaw/Desktop/Engine/BitFireEngine/SystemResource/Source/File/FileStream.h
 	"IFile.h"
 	"File.h"
-	"FileActionResult.hpp"
+	"ActionResult.hpp"
 	"FilePersistence.hpp"
 	"FileLocation.h"
 	"ByteStream.h"
@@ -581,7 +581,7 @@
 	"ImageDataFormat.h"
 	"ImageFileFormat.h"
 	<Resource.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 	<Math/Geometry/Vector4.hpp>
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/ImageDataFormat.h
@@ -589,10 +589,10 @@
 1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Image/ImageFileFormat.h
 
 1656358018 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Resource.h
-	"File/FileActionResult.hpp"
+	"File/ActionResult.hpp"
 	<cstddef>
 
-1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/FileActionResult.hpp
+1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/ActionResult.hpp
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Math/Geometry/Vector4.hpp
 
@@ -707,7 +707,7 @@
 	<Media/Image/Image.h>
 	<Media/Font/Font.h>
 	<Media/Sound/Sound.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 	<Camera/Camera.h>
 	<Graphic/OpenGL/Texture.h>
 	<Shader/Shader.h>
@@ -750,7 +750,7 @@
 1655657225 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Font/Font.h
 	"FontFormat.h"
 	<Resource.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 	<Media/Image/Image.h>
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Font/FontFormat.h
@@ -758,7 +758,7 @@
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Sound/Sound.h
 	"SoundFormat.h"
 	<Resource.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Media/Sound/SoundFormat.h
 
@@ -783,7 +783,7 @@
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Shader/Shader.h
 	<Resource.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 	<cstdlib>
 	<Shader/GLSL/ShaderType.h>
 
@@ -990,7 +990,7 @@
 	<cwchar>
 	<cassert>
 	"IFile.h"
-	"FileActionResult.hpp"
+	"ActionResult.hpp"
 	"FileCachingMode.h"
 	"FileLocation.h"
 	"FilePath.h"
@@ -1010,7 +1010,7 @@
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/IFile.h
 	<cstdio>
 	"FileOpenMode.hpp"
-	"FileActionResult.hpp"
+	"ActionResult.hpp"
 	"FileCachingMode.h"
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/FileOpenMode.hpp
@@ -1045,7 +1045,7 @@
 	<IFileFormat.hpp>
 
 1652303052 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/IFileFormat.hpp
-	"File/FileActionResult.hpp"
+	"File/ActionResult.hpp"
 
 1656358018 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/Text/Text.h
 	<cwchar>
@@ -1062,7 +1062,7 @@
 1652573229 /home/bitpaw/Desktop/BitFireEngine/SystemResource/Source/File/FileStream.h
 	"IFile.h"
 	"File.h"
-	"FileActionResult.hpp"
+	"ActionResult.hpp"
 	"FilePersistence.hpp"
 	"FileLocation.h"
 	"ByteStream.h"
@@ -1149,7 +1149,7 @@
 	<ErrorCode.h>
 	<File/File.h>
 	<File/FileCachingMode.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 	<cstddef>
 	<cstdlib>
 	<cstdio>
@@ -1173,7 +1173,7 @@
 	"ImageDataFormat.h"
 	"ImageFileFormat.h"
 	<Resource.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 	<Math/Geometry/Vector4.hpp>
 
 1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/ImageDataFormat.h
@@ -1181,10 +1181,10 @@
 1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Image/ImageFileFormat.h
 
 1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Resource.h
-	"File/FileActionResult.hpp"
+	"File/ActionResult.hpp"
 	<cstddef>
 
-1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/FileActionResult.hpp
+1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/ActionResult.hpp
 
 1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Math/Geometry/Vector4.hpp
 
@@ -1298,7 +1298,7 @@
 	<Media/Image/Image.h>
 	<Media/Font/Font.h>
 	<Media/Sound/Sound.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 	<Camera/Camera.h>
 	<Graphic/OpenGL/Texture.h>
 	<Shader/Shader.h>
@@ -1345,7 +1345,7 @@
 1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/Font.h
 	"FontFormat.h"
 	<Resource.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 	<Media/Image/Image.h>
 
 1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Font/FontFormat.h
@@ -1353,7 +1353,7 @@
 1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/Sound.h
 	"SoundFormat.h"
 	<Resource.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 
 1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Media/Sound/SoundFormat.h
 
@@ -1378,7 +1378,7 @@
 
 1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Shader/Shader.h
 	<Resource.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 	<cstdlib>
 	<Shader/GLSL/ShaderType.h>
 
@@ -1565,7 +1565,7 @@
 	<cwchar>
 	<cassert>
 	"IFile.h"
-	"FileActionResult.hpp"
+	"ActionResult.hpp"
 	"FileCachingMode.h"
 	"FileLocation.h"
 	"FilePath.h"
@@ -1584,7 +1584,7 @@
 1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/IFile.h
 	<cstdio>
 	"FileOpenMode.hpp"
-	"FileActionResult.hpp"
+	"ActionResult.hpp"
 	"FileCachingMode.h"
 
 1643113130 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/File/FileOpenMode.hpp
@@ -1632,7 +1632,7 @@
 	<IFileFormat.hpp>
 
 1652538508 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/IFileFormat.hpp
-	"File/FileActionResult.hpp"
+	"File/ActionResult.hpp"
 
 1652542754 /home/bitpaw/Desktop/BGEII/BitFireEngine/SystemResource/Source/Text/Text.h
 	<cwchar>
@@ -1655,7 +1655,7 @@
 	<ErrorCode.h>
 	<File/File.h>
 	<File/FileCachingMode.h>
-	<File/FileActionResult.hpp>
+	<File/ActionResult.hpp>
 	<cstddef>
 	<cstdlib>
 	<cstdio>

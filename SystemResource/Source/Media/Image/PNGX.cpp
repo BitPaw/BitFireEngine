@@ -12,7 +12,7 @@ BF::PNGX::~PNGX()
     PNGDestruct(this);
 }
 
-BF::FileActionResult BF::PNGX::Load(const char* filePath)
+ActionResult BF::PNGX::Load(const char* filePath)
 {
     File file;
 
@@ -22,18 +22,18 @@ BF::FileActionResult BF::PNGX::Load(const char* filePath)
 
         if(!sucessful)
         {
-            return FileActionResult::Invalid;
+            return fileLoadingResult;
         }
     }
 
     {
-        const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+        const ActionResult fileParsingResult = Load(file.Data, file.DataSize);
 
         return fileParsingResult;
     }
 }
 
-BF::FileActionResult BF::PNGX::Load(const wchar_t* filePath)
+ActionResult BF::PNGX::Load(const wchar_t* filePath)
 {
     File file;
 
@@ -43,37 +43,37 @@ BF::FileActionResult BF::PNGX::Load(const wchar_t* filePath)
 
         if(!sucessful)
         {
-            return FileActionResult::Invalid;
+            return fileLoadingResult;
         }
     }
 
     {
-        const FileActionResult fileParsingResult = Load(file.Data, file.DataSize);
+        const ActionResult fileParsingResult = Load(file.Data, file.DataSize);
 
         return fileParsingResult;
     }
 }
 
-BF::FileActionResult BF::PNGX::Load(const unsigned char* fileData, const size_t fileDataSize)
+ActionResult BF::PNGX::Load(const unsigned char* fileData, const size_t fileDataSize)
 {
     size_t readBytes = 0;
 
     ActionResult actionResult = PNGParse(this, fileData, fileDataSize, &readBytes);
 
-    return FileActionResult::Successful;
+    return actionResult;
 }
 
-BF::FileActionResult BF::PNGX::Save(const wchar_t* filePath)
+ActionResult BF::PNGX::Save(const wchar_t* filePath)
 {
-    return FileActionResult();
+    return ActionResult();
 }
 
-BF::FileActionResult BF::PNGX::ConvertFrom(Image& image)
+ActionResult BF::PNGX::ConvertFrom(Image& image)
 {
-    return FileActionResult();
+    return ActionResult();
 }
 
-BF::FileActionResult BF::PNGX::ConvertTo(Image& image)
+ActionResult BF::PNGX::ConvertTo(Image& image)
 {
     switch(ImageHeader.ColorType)
     {
@@ -101,5 +101,5 @@ BF::FileActionResult BF::PNGX::ConvertTo(Image& image)
 
     MemoryCopy(PixelData, PixelDataSize, image.PixelData, image.PixelDataSize);
 
-    return FileActionResult::Successful;
+    return ResultSuccessful;
 }

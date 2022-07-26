@@ -36,12 +36,12 @@ namespace BF
 		TTFVerticalDeviceMetrics VerticalDeviceMetrics;
 		//---------------------------------------------------------------------
 
-		FileActionResult Load(const char* filePath);
-		FileActionResult Load(const wchar_t* filePath);
-		FileActionResult Load(const unsigned char* fileData, const size_t fileDataSize);
+		ActionResult Load(const char* filePath);
+		ActionResult Load(const wchar_t* filePath);
+		ActionResult Load(const unsigned char* fileData, const size_t fileDataSize);
 
-		FileActionResult Save(const wchar_t* filePath);
-		FileActionResult ConvertTo(Font& font);
-		FileActionResult ConvertFrom(Font& font);
+		ActionResult Save(const wchar_t* filePath);
+		ActionResult ConvertTo(Font& font);
+		ActionResult ConvertFrom(Font& font);
 	};
 }

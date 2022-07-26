@@ -159,30 +159,30 @@ namespace BF
 
         static ThreadFunctionReturnType LoadResourceAsync(void* resourceAdress);
 
-        FileActionResult Load(Resource* resource, const wchar_t* filePath, const bool loadAsynchronously = true);
-        FileActionResult Load(Level& level, const wchar_t* filePath, const bool loadAsynchronously = true);
+        ActionResult Load(Resource* resource, const wchar_t* filePath, const bool loadAsynchronously = true);
+        ActionResult Load(Level& level, const wchar_t* filePath, const bool loadAsynchronously = true);
 
 
-        FileActionResult Load(Font& font, const wchar_t* filePath, bool loadAsynchronously = true);
-        FileActionResult Load(ShaderProgram& shaderProgram, const wchar_t* vertexShaderFilePath, const wchar_t* fragmentShaderFilePath);
+        ActionResult Load(Font& font, const wchar_t* filePath, bool loadAsynchronously = true);
+        ActionResult Load(ShaderProgram& shaderProgram, const wchar_t* vertexShaderFilePath, const wchar_t* fragmentShaderFilePath);
 
         // Model
-        FileActionResult Load(Model& model, const wchar_t* filePath, const bool loadAsynchronously = true);
-        FileActionResult Load(Renderable& renderable, const wchar_t* filePath, bool loadAsynchronously = true);
-        FileActionResult Load(Renderable& renderable, const float* vertexData, const size_t vertexDataSize, const unsigned int* indexList, const size_t indexListSize);
+        ActionResult Load(Model& model, const wchar_t* filePath, const bool loadAsynchronously = true);
+        ActionResult Load(Renderable& renderable, const wchar_t* filePath, bool loadAsynchronously = true);
+        ActionResult Load(Renderable& renderable, const float* vertexData, const size_t vertexDataSize, const unsigned int* indexList, const size_t indexListSize);
 
         // Texture
-        FileActionResult Load(Image& image, const wchar_t* filePath, bool loadAsynchronously = true);
-        FileActionResult Load(Texture& texture, const wchar_t* filePath, bool loadAsynchronously = true);
-        FileActionResult Load(Sprite& sprite, const wchar_t* filePath);
+        ActionResult Load(Image& image, const wchar_t* filePath, bool loadAsynchronously = true);
+        ActionResult Load(Texture& texture, const wchar_t* filePath, bool loadAsynchronously = true);
+        ActionResult Load(Sprite& sprite, const wchar_t* filePath);
 
         // Audio
-        FileActionResult Load(Sound& sound, const wchar_t* filePath, const bool loadAsynchronously = true);
-        FileActionResult Load(AudioClip& audioClip, const wchar_t* filePath, bool loadAsynchronously = true);
+        ActionResult Load(Sound& sound, const wchar_t* filePath, const bool loadAsynchronously = true);
+        ActionResult Load(AudioClip& audioClip, const wchar_t* filePath, bool loadAsynchronously = true);
 
 
-        FileActionResult Load(Collider* collider);
-        FileActionResult Load
+        ActionResult Load(Collider* collider);
+        ActionResult Load
         (
             SkyBox& skyBox,
             const wchar_t* shaderVertex,

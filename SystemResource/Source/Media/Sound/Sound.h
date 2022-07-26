@@ -3,7 +3,7 @@
 #include "SoundFormat.h"
 
 #include <Resource.h>
-#include <File/FileActionResult.hpp>
+#include <Error/ActionResult.h>
 
 namespace BF
 {
@@ -23,7 +23,7 @@ namespace BF
 		static SoundFormat FileFormatPeek(const wchar_t* filePath);
 
 		size_t FullSizeInMemory();
-		FileActionResult Load(const wchar_t* filePath);
-		FileActionResult Save(const wchar_t* filePath, SoundFormat soundFormat);
+		ActionResult Load(const wchar_t* filePath);
+		ActionResult Save(const wchar_t* filePath, SoundFormat soundFormat);
 	};
 }

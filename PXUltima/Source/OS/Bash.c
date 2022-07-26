@@ -4,11 +4,11 @@ ActionResult BashExecuteA(const char* programPath, const unsigned char syncronou
 {
 	/*
 	Pipe pipe;
-	FileActionResult result = pipe.Open(programPath, FileOpenMode::Read);
+	ActionResult result = pipe.Open(programPath, FileOpenMode::Read);
 	size_t dataLength = 0;
 	unsigned char* data = 0;
 
-	if(result != FileActionResult::Successful)
+	if(result != ResultSuccessful)
 	{
 		return result;
 	}

@@ -1,6 +1,7 @@
 #include "Restklassen.h"
-#include<Math/Math.h>
-#include<Hardware/Memory/Memory.h>
+
+#include <Math/Math.h>
+#include <Memory/MemoryX.h>
 
 #if Restklassendebug
 #include <stdio.h>

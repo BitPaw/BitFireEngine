@@ -46,6 +46,22 @@ extern "C"
 	}
 	MemoryCachingMode;
 
+	typedef struct MemoryUsage_
+	{
+		size_t PercentInUse;
+		size_t PhysicalTotal;
+		size_t PhysicalAvailable;
+		size_t VirtualTotal;
+		size_t VirtualAvailable;
+		size_t PageFileTotal;
+		size_t PageFileAvailable;
+		size_t ExtendedVirtualAvailable;
+	}
+	MemoryUsage;
+
+
+	extern unsigned char MemoryScan(MemoryUsage* memoryUsage);
+
 
 	extern void MemorySet(void* __restrict bufferA, const size_t bufferASize, const unsigned char value);
 	

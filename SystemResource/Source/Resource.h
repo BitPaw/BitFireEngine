@@ -1,7 +1,6 @@
 #pragma once
 
-#include "File/FileActionResult.hpp"
-
+#include <Error/ActionResult.h>
 #include <cstddef>
 
 namespace BF
@@ -10,13 +9,13 @@ namespace BF
 	{
 		public:
 		virtual size_t FullSizeInMemory() = 0;
-		//virtual FileActionResult Load(const char* filePath) = 0;
-		virtual FileActionResult Load(const wchar_t* filePath) = 0;
+		//virtual ActionResult Load(const char* filePath) = 0;
+		virtual ActionResult Load(const wchar_t* filePath) = 0;
 
 		//virtual ~Resource() = 0;
 
-		//FileActionResult Load(const char* filePath);
-		//tatic FileActionResult Load(const wchar_t* filePath);
+		//ActionResult Load(const char* filePath);
+		//tatic ActionResult Load(const wchar_t* filePath);
 
 	};
 }

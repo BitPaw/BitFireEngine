@@ -10,13 +10,12 @@
 #include <cwchar>
 
 #include <Text/Text.h>
-#include <Hardware/Memory/Memory.h>
+#include <Memory/MemoryX.h>
 #include <File/Format/JPEG/JPEG.h>
 #include <File/Format/TIFF/TIFF.h>
 #include <File/Format/PNG/PNG.h>
 #include <File/Format/TGA/TGA.h>
 #include <Media/Image/PNGX.h>
-#include <File/ByteStream.h>
 
 BF::Vector4<unsigned char> BF::Image::GetPixel(unsigned int x, unsigned int y)
 {
@@ -104,9 +103,9 @@ void BF::Image::FlipHorizontal()
         {
             size_t indexA = x + (y * rowSize);
             size_t indexB = xB + (y * rowSize);
-            Byte__ tempByte[4] = {0,0,0,0};
-            Byte__* pixelA = PixelData + indexA;
-            Byte__* pixelB = PixelData + indexB;
+            unsigned char tempByte[4] = {0,0,0,0};
+            unsigned char* pixelA = PixelData + indexA;
+            unsigned char* pixelB = PixelData + indexB;
 
             memcpy(tempByte, pixelA, bbp);
             memcpy(pixelA, pixelB, bbp);
@@ -189,7 +188,7 @@ void BF::Image::Resize(const size_t width, const size_t height)
     }
 
     PixelDataSize = width * height * pixelSize;
-    PixelData = Memory::Reallocate<Byte__>(PixelData, PixelDataSize);
+    PixelData = Memory::Reallocate<unsigned char>(PixelData, PixelDataSize);
 }
 
 void BF::Image::FillRandome()
@@ -331,7 +330,7 @@ BF::ImageFileFormat BF::Image::FileFormatPeek(const wchar_t* filePath)
     return ImageFileFormat::Unkown;
 }
 
-BF::FileActionResult BF::Image::Load(const char* filePath)
+ActionResult BF::Image::Load(const char* filePath)
 {
     File file;
 
@@ -341,21 +340,21 @@ BF::FileActionResult BF::Image::Load(const char* filePath)
 
         if(!sucessful)
         {
-            return FileActionResult::Invalid;
+            return ResultInvalid;
         }
     }
 
     {
         const ImageFileFormat hint = FileFormatPeek(filePath);
-        const FileActionResult fileParsingResult = Load(file.Data, file.DataSize, hint);
-        const bool success = fileParsingResult == FileActionResult::Successful;
+        const ActionResult fileParsingResult = Load(file.Data, file.DataSize, hint);
+        const bool success = fileParsingResult == ResultSuccessful;
 
         if(success)
         {
-            return FileActionResult::Successful;
+            return ResultSuccessful;
         }
 
-        FileActionResult fileGuessResult = FileActionResult::Invalid;
+        ActionResult fileGuessResult = ResultInvalid;
         unsigned int fileFormatID = 1;
 
         do
@@ -366,13 +365,13 @@ BF::FileActionResult BF::Image::Load(const char* filePath)
 
             fileFormatID++;
         }
-        while(fileGuessResult == FileActionResult::InvalidHeaderSignature);
+        while(fileGuessResult == ResultInvalidHeaderSignature);
 
         return fileGuessResult;
     }
 }
 
-BF::FileActionResult BF::Image::Load(const wchar_t* filePath)
+ActionResult BF::Image::Load(const wchar_t* filePath)
 {
     File file;
 
@@ -384,21 +383,21 @@ BF::FileActionResult BF::Image::Load(const wchar_t* filePath)
 
         if(!sucessful)
         {
-            return FileActionResult::Invalid;
+            return ResultInvalid;
         }
     }
 
     {
         const ImageFileFormat hint = FileFormatPeek(filePath);
-        const FileActionResult fileParsingResult = Load(file.Data, file.DataSize, hint);
-        const bool success = fileParsingResult == FileActionResult::Successful;
+        const ActionResult fileParsingResult = Load(file.Data, file.DataSize, hint);
+        const bool success = fileParsingResult == ResultSuccessful;
 
         if(success)
         {
-            return FileActionResult::Successful;
+            return ResultSuccessful;
         }
 
-        FileActionResult fileGuessResult = FileActionResult::Invalid;
+        ActionResult fileGuessResult = ResultInvalid;
         unsigned int fileFormatID = 1;
 
         do
@@ -409,7 +408,7 @@ BF::FileActionResult BF::Image::Load(const wchar_t* filePath)
 
             fileFormatID++;
         }
-        while(fileGuessResult == FileActionResult::InvalidHeaderSignature);
+        while(fileGuessResult == ResultInvalidHeaderSignature);
 
         return fileGuessResult;
     }
@@ -417,7 +416,7 @@ BF::FileActionResult BF::Image::Load(const wchar_t* filePath)
     FileDestruct(&file);
 }
 
-BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t fileDataSize, const ImageFileFormat imageFileFormat)
+ActionResult BF::Image::Load(const unsigned char* fileData, const size_t fileDataSize, const ImageFileFormat imageFileFormat)
 {
     switch(imageFileFormat)
     {
@@ -426,14 +425,14 @@ BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t
             BMPP bitmap;
 
             {
-                const FileActionResult fileActionResult = bitmap.Load(fileData, fileDataSize);
-                const bool sucessful = fileActionResult == FileActionResult::Successful;
+                const ActionResult fileActionResult = bitmap.Load(fileData, fileDataSize);
+                const bool sucessful = fileActionResult == ResultSuccessful;
 
                 if(sucessful)
                 {
                     bitmap.ConvertTo(*this);
 
-                    return FileActionResult::Successful;
+                    return ResultSuccessful;
                 }
             }        
         
@@ -445,14 +444,14 @@ BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t
 
             /*
             {
-                const FileActionResult fileActionResult = gif.Load(fileData, fileDataSize);
-                const bool sucessful = fileActionResult == FileActionResult::Successful;
+                const ActionResult fileActionResult = gif.Load(fileData, fileDataSize);
+                const bool sucessful = fileActionResult == ResultSuccessful;
 
                 if(sucessful)
                 {
                     gif.ConvertTo(*this);
 
-                    return FileActionResult::Successful;
+                    return ResultSuccessful;
                 }
             }*/
 
@@ -464,14 +463,14 @@ BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t
 
             /*
             {
-                const FileActionResult fileActionResult = jpeg.Load(fileData, fileDataSize);
-                const bool sucessful = fileActionResult == FileActionResult::Successful;
+                const ActionResult fileActionResult = jpeg.Load(fileData, fileDataSize);
+                const bool sucessful = fileActionResult == ResultSuccessful;
 
                 if(sucessful)
                 {
                     jpeg.ConvertTo(*this);
 
-                    return FileActionResult::Successful;
+                    return ResultSuccessful;
                 }
             }*/
 
@@ -481,14 +480,14 @@ BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t
         {
             PNGX png;
      
-            const FileActionResult fileActionResult = png.Load(fileData, fileDataSize);
-            const bool sucessful = fileActionResult == FileActionResult::Successful;
+            const ActionResult fileActionResult = png.Load(fileData, fileDataSize);
+            const bool sucessful = fileActionResult == ResultSuccessful;
 
             if(sucessful)
             {
                 png.ConvertTo(*this);
 
-                return FileActionResult::Successful;
+                return ResultSuccessful;
             }
 
             break;
@@ -499,14 +498,14 @@ BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t
       
             /*
             {
-                const FileActionResult fileActionResult = tga.Load(fileData, fileDataSize);
-                const bool sucessful = fileActionResult == FileActionResult::Successful;
+                const ActionResult fileActionResult = tga.Load(fileData, fileDataSize);
+                const bool sucessful = fileActionResult == ResultSuccessful;
 
                 if(sucessful)
                 {
                     tga.ConvertTo(*this);
 
-                    return FileActionResult::Successful;
+                    return ResultSuccessful;
                 }
             }*/
 
@@ -518,14 +517,14 @@ BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t
           
             /*
             {
-                const FileActionResult fileActionResult = tiff.Load(fileData, fileDataSize);
-                const bool sucessful = fileActionResult == FileActionResult::Successful;
+                const ActionResult fileActionResult = tiff.Load(fileData, fileDataSize);
+                const bool sucessful = fileActionResult == ResultSuccessful;
 
                 if(sucessful)
                 {
                     tiff.ConvertTo(*this);
 
-                    return FileActionResult::Successful;
+                    return ResultSuccessful;
                 }
             }*/
 
@@ -533,17 +532,17 @@ BF::FileActionResult BF::Image::Load(const unsigned char* fileData, const size_t
         }
     }
 
-    return FileActionResult::FormatNotSupported;
+    return ResultFormatNotSupported;
 }
 
-BF::FileActionResult BF::Image::Save(const wchar_t* filePath, ImageFileFormat imageFileFormat)
+ActionResult BF::Image::Save(const wchar_t* filePath, ImageFileFormat imageFileFormat)
 {
     switch (imageFileFormat)
     {
         default:
         case BF::ImageFileFormat::Unkown:
         {
-            return FileActionResult::FormatNotSupported;
+            return ResultFormatNotSupported;
         }
         case BF::ImageFileFormat::BitMap:
         {
@@ -589,10 +588,10 @@ BF::FileActionResult BF::Image::Save(const wchar_t* filePath, ImageFileFormat im
         }
     }
 
-    return FileActionResult::Successful;
+    return ResultSuccessful;
 }
 
 size_t BF::Image::FullSizeInMemory()
 {
-    return sizeof(Image) + (PixelDataSize * sizeof(Byte__));
+    return sizeof(Image) + (PixelDataSize * sizeof(unsigned char));
 }

@@ -8,9 +8,9 @@ ActionResult AVIParse(AVI* avi, const void* data, const size_t dataSize, size_t*
     File file;
 
     {
-        const FileActionResult loadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
+        const ActionResult loadingResult = file.MapToVirtualMemory(filePath, MemoryReadOnly);
 
-        if(loadingResult != FileActionResult::Successful)
+        if(loadingResult != ResultSuccessful)
         {
             return loadingResult;
         }
@@ -24,7 +24,7 @@ ActionResult AVIParse(AVI* avi, const void* data, const size_t dataSize, size_t*
 
         if(!riff.Valid)
         {
-            return FileActionResult::FormatNotAsExpected;
+            return ResultFormatNotAsExpected;
         }
     }
 

@@ -5,7 +5,7 @@
 #include "SBPDataPackageResponse.h"
 #include "SBPDataPackageFile.h"
 
-#include <Hardware/Memory/Memory.h>
+#include <Memory/Memory.h>
 #include <Text/Text.h>
 #include <OS/User.h>
 #include <Time/Time.h>
@@ -67,13 +67,13 @@ BF::SBPResult BF::SBPClient::SendAndWaitResponse
 			}
 		}
 
-		Time::Now(timestampStart);
+		TimeNow(&timestampStart);
 
 		while(true) // Wait aslong as response is there
 		{
-			Time::Now(timestampCurrent);
+			TimeNow(&timestampCurrent);
 
-			const size_t millisecondsDelta = Time::MillisecondsDelta(timestampStart, timestampCurrent);
+			const size_t millisecondsDelta = TimeMillisecondsDelta(&timestampStart, &timestampCurrent);
 
 			// Check if timeout
 			{			
@@ -268,8 +268,8 @@ void BF::SBPClient::SendFile(const char* filePath)
 		File file;	
 
 		{
-			const FileActionResult fileActionResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
-			const bool isLoaded = fileActionResult == FileActionResult::Successful;
+			const ActionResult fileActionResult = file.MapToVirtualMemory(filePath, MemoryProtectionMode::ReadOnly);
+			const bool isLoaded = fileActionResult == ResultSuccessful;
 
 			if(!isLoaded)
 			{
