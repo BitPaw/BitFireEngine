@@ -75,29 +75,31 @@ ActionResult BF::PNGX::ConvertFrom(Image& image)
 
 ActionResult BF::PNGX::ConvertTo(Image& image)
 {
+    ImageDataFormat format;
+
     switch(ImageHeader.ColorType)
     {
         case PNGColorGrayscale:
-            image.Format = ImageDataFormat::AlphaMask;
+            format = ImageDataFormatAlphaMask;
             break;
 
         case PNGColorTruecolor:
-            image.Format = ImageDataFormat::RGB;
+            format = ImageDataFormatRGB;
             break;
 
         case PNGColorInvalid:
         case PNGColorIndexedColor:
         case PNGColorGrayscaleWithAlphaChannel:
-            image.Format = ImageDataFormat::Invalid;
+            format = ImageDataFormatInvalid;
             break;
 
         case PNGColorTruecolorWithAlphaChannel:
-            image.Format = ImageDataFormat::RGBA;
+            format = ImageDataFormatRGBA;
             break;
     }
 
 
-    image.Resize(ImageHeader.Width, ImageHeader.Height);
+    ImageResize(&image, format, ImageHeader.Width, ImageHeader.Height);
 
     MemoryCopy(PixelData, PixelDataSize, image.PixelData, image.PixelDataSize);
 

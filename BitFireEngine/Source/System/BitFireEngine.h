@@ -12,12 +12,14 @@
 
 
 // Resource System
+#include <File/Font.h>
+#include <File/Image.h>
+
 #include <Time/StopWatch.h>
 #include <Async/Thread.h>
 #include <Async/AsyncLock.h>
 #include <Camera/Camera.h>
 #include <Container/LinkedList.hpp>
-#include <Media/Font/Font.h>
 #include <Math/Geometry/Matrix4x4.hpp>
 #include <Video/Shader.h>
 #include <Model/Model.h>

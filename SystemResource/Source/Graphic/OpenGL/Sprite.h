@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Media/Image/Image.h>
+#include <File/Image.h>
 
 #include "Texture.h"
 #include "Renderable.h"

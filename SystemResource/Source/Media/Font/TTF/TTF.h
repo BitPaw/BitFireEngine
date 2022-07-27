@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Error/ActionResult.h>
+
 #include "Chunks/TTFHeader.h"
 #include "Chunks/TTFHorizontalHeader.h"
 #include "Chunks/TTFMaximumProfile.h"
@@ -9,14 +11,14 @@
 #include "Chunks/OS2/TTFCompatibility.h"
 #include "Chunks/DSIG/TTFDigitalSignature.h"
 
-#include "../IFontFormat.hpp"
 #include "Chunks/TTFPostScript.h"
 #include "Chunks/KERN/TTFKerning.h"
 #include "Chunks/CMAP/TTFCharacterMapping.h"
+#include <File/Font.h>
 
 namespace BF
 {
-	struct TTF : public IFontFormat
+	struct TTF
 	{
 		public:
 		//---------------------------------------------------------------------

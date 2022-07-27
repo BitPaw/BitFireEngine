@@ -4,7 +4,7 @@
 
 #include "RenderMode.h"
 
-#include <Media/Image/Image.h>
+#include <File/Image.h>
 #include <Model/Model.h>
 
 #include "Texture.h"

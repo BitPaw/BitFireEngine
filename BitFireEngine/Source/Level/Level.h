@@ -1,8 +1,9 @@
 #pragma once
 
+#include <File/Image.h>
+#include <File/Font.h>
+
 #include <Model/Model.h>
-#include <Media/Image/Image.h>
-#include <Media/Font/Font.h>
 #include <Media/Sound/Sound.h>
 #include <Error/ActionResult.h>
 #include <Camera/Camera.h>

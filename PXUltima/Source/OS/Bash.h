@@ -1,5 +1,5 @@
-#ifndef MonitorInclude
-#define MonitorInclude
+#ifndef BashInclude
+#define BashInclude
 
 #include <stddef.h>
 

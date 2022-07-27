@@ -7,6 +7,8 @@
 
 #include <stddef.h>
 
+#include <Error/ActionResult.h>
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -31,13 +33,12 @@ extern "C"
 
 	typedef enum FNTChanalMode_
 	{
-		InvalidMode,
-
-		GlyphData,		// 0 if the channel holds the glyph data
-		Outline, 		// 1 if it holds the outline		
-		GlyphAndOutline,// 2 if it holds the glyphand the outline		
-		SetToZero,		// 3 if its set to zero		
-		SetToOne		// 4 if its set to one.
+		FNTChanalInvalid,
+		FNTChanalGlyphData,		// 0 if the channel holds the glyph data
+		FNTChanalOutline, 		// 1 if it holds the outline		
+		FNTChanalGlyphAndOutline,// 2 if it holds the glyphand the outline		
+		FNTChanalSetToZero,		// 3 if its set to zero		
+		FNTChanalSetToOne		// 4 if its set to one.
 	}
 	FNTChanalMode;
 
@@ -103,7 +104,7 @@ extern "C"
 
 	extern FNTCharacter* FNTGetCharacter(FNT* fnt, const char character);
 
-	extern unsigned char FNTLoad(FNT* fnt, const void* fileData, const size_t fileDataSize);
+	extern ActionResult FNTParse(FNT* fnt, const void* fileData, const size_t fileDataSize);
 
 	static FNTLineType PeekLineType(const void* line, const size_t fileDataSize);
 

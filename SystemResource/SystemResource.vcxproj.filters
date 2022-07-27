@@ -24,13 +24,13 @@
     <ClCompile Include="Source\Media\Font\TTF\TTF.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Media\Font\Font.cpp">
+    <ClCompile Include="Source\Media\Font\FontX.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Media\Image\BMP\BMPP.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Media\Image\Image.cpp">
+    <ClCompile Include="Source\Media\Image\ImageX.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Model\OBJ\OBJX.cpp">
@@ -121,9 +121,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Encryption\Caesar.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Image\ImageDataFormat.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Network\SocketActionResult.cpp">
@@ -399,9 +396,6 @@
     <ClCompile Include="Source\Network\Protocol\SBP\SBPServer.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Media\Image\ImageFileFormat.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Math\Primes.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -503,10 +497,7 @@
     <ClInclude Include="Source\Media\Font\TTF\TTF.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Media\Font\Font.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\FontFormat.h">
+    <ClInclude Include="Source\Media\Font\FontX.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Media\Image\BMP\BMPP.h">
@@ -647,15 +638,6 @@
     <ClInclude Include="Source\Encryption\Caesar.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Media\Image\ImageDataFormat.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\ImageFileFormat.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Image\IImageFormat.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\IFileFormat.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -663,9 +645,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Model\IModelFormat.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\IFontFormat.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Network\SocketActionResult.h">
@@ -695,7 +674,7 @@
     <ClInclude Include="Source\ErrorCode.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Media\Image\Image.h">
+    <ClInclude Include="Source\Media\Image\ImageX.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFMaximumProfile.h">

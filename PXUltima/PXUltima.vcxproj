@@ -191,6 +191,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\File\Image.h" />
+    <ClInclude Include="Source\File\Font.h" />
     <ClInclude Include="Source\Device\Controller.h" />
     <ClInclude Include="Source\File\Format\EML\EML.h" />
     <ClInclude Include="Source\OS\OpenFileDialog.h" />
@@ -260,8 +262,12 @@
     <ClInclude Include="Source\OS\User.h" />
     <ClInclude Include="Source\Async\Thread.h" />
     <ClInclude Include="Source\OS\Window.h" />
+    <ClInclude Include="Source\OS\OSUI.h" />
+    <ClInclude Include="Source\UI\UI.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\File\Image.c" />
+    <ClCompile Include="Source\File\Font.c" />
     <ClCompile Include="Source\Device\Controller.c" />
     <ClCompile Include="Source\File\Format\EML\EML.c" />
     <ClCompile Include="Source\OS\OpenFileDialog.c" />
@@ -325,6 +331,8 @@
     <ClCompile Include="Source\OS\User.c" />
     <ClCompile Include="Source\Async\Thread.c" />
     <ClCompile Include="Source\OS\Window.c" />
+    <ClCompile Include="Source\OS\OSUI.c" />
+    <ClCompile Include="Source\UI\UI.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

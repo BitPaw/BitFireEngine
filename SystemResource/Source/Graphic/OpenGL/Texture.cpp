@@ -9,6 +9,8 @@ BF::Texture::Texture()
     LayoutFar = ImageLayout::Invalid;
     WrapHeight = ImageWrap::Invalid;
     WrapWidth = ImageWrap::Invalid;
+
+    ImageConstruct(&DataImage);
 }
 
 void BF::Texture::TextureWrap(ImageWrap wrap)

@@ -2,7 +2,7 @@
 
 #include <File/Format/PNG/PNG.h>
 #include <Error/ActionResult.h>
-#include <Media/Image/Image.h>
+#include <File/Image.h>
 
 namespace BF
 {

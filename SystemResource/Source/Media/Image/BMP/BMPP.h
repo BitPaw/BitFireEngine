@@ -1,13 +1,12 @@
 #pragma once
 
 #include <File/Format/BMP/BMP.h>
-
-#include "../IImageFormat.h"
+#include <File/Image.h>
 
 namespace BF
 {
 	// Image in BitMap-Format [.BMP]
-	struct BMPP : public IImageFormat, public BMP
+	struct BMPP : public BMP
 	{	
 		public:
 		BMPP();

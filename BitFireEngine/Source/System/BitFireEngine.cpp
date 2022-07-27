@@ -583,7 +583,7 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
 
         //_mainWindow.TakeScreenShot(image);
 
-        image.Save(L"ScreenShot.bmp", ImageFileFormat::BitMap);
+      //  ImageSave(L"ScreenShot.bmp", ImageFileFormatBitMap);
     }
 
     if(keyboard.E.IsShortPressed())
@@ -1346,7 +1346,7 @@ ActionResult BF::BitFireEngine::Load(Texture& texture, const wchar_t* filePath, 
     }
     else
     {
-        const ActionResult imageLoadResult = image.Load(filePath);
+        const ActionResult imageLoadResult = ImageLoadW(&image, filePath);
         const bool isSucessful = imageLoadResult == ResultSuccessful;
 
         if(isSucessful)
@@ -1451,9 +1451,9 @@ ActionResult BF::BitFireEngine::Load(Resource* resource, const wchar_t* filePath
 
     {
         bool isModel = Model::FileFormatPeek(filePath) != ModelType::UnKown;
-        bool isImage = Image::FileFormatPeek(filePath) != ImageFileFormat::Unkown;
+        bool isImage = ImageGuessFormat(filePath) != ImageFileFormatUnkown;
         bool isSound = Sound::FileFormatPeek(filePath) != SoundFormat::Unkown;
-        bool isFont = Font::FileFormatPeek(filePath) != FontFormat::Unkown;
+        bool isFont = FontGuessFormat(filePath) != FontFileFormatUnkown;
         bool isShader = false;
         bool isDialog = false;
         bool isLevel = Level::IsLevelFile(filePath);
@@ -1486,7 +1486,7 @@ ActionResult BF::BitFireEngine::Load(Resource* resource, const wchar_t* filePath
 
             Load(*font, filePath, loadAsynchronously);
 
-            resource = font;
+            resource = (Resource*)font;
 
             break;
         }
@@ -1497,7 +1497,7 @@ ActionResult BF::BitFireEngine::Load(Resource* resource, const wchar_t* filePath
 
             Load(*image, filePath, loadAsynchronously);
 
-            resource = image;
+            resource = (Resource*)image;
 
             break;
         }
@@ -1915,12 +1915,12 @@ ActionResult BF::BitFireEngine::Load
 
     Image* imageList = skyBox.Texture.ImageList;
 
-    const ActionResult textureRightResult = imageList[0].Load(textureRight);
-    const ActionResult textureLeftResult = imageList[1].Load(textureLeft);
-    const ActionResult textureTopResult = imageList[2].Load(textureTop);
-    const ActionResult textureBottomResult = imageList[3].Load(textureBottom);
-    const ActionResult textureBackResult = imageList[4].Load(textureBack);
-    const ActionResult textureFrontResult = imageList[5].Load(textureFront);
+    const ActionResult textureRightResult = ImageLoadW(&imageList[0], textureRight);
+    const ActionResult textureLeftResult = ImageLoadW(&imageList[1], textureLeft);
+    const ActionResult textureTopResult = ImageLoadW(&imageList[2], textureTop);
+    const ActionResult textureBottomResult = ImageLoadW(&imageList[3], textureBottom);
+    const ActionResult textureBackResult = ImageLoadW(&imageList[4], textureBack);
+    const ActionResult textureFrontResult = ImageLoadW(&imageList[5],textureFront);
     
     Register(skyBox);
 
@@ -2541,7 +2541,7 @@ const OpenGLID BF::BitFireEngine::ToShaderType(ShaderType shaderType)
     }
 }
 
-const BF::ImageDataFormat BF::BitFireEngine::ToImageFormat(const OpenGLID token)
+const ImageDataFormat BF::BitFireEngine::ToImageFormat(const OpenGLID token)
 {
     return ImageDataFormat();
 }
@@ -2550,19 +2550,19 @@ const OpenGLID BF::BitFireEngine::ToImageFormat(ImageDataFormat imageFormat)
 {
     switch(imageFormat)
     {
-        case ImageDataFormat::BGR:
+        case ImageDataFormatBGR:
             return GL_BGR;
 
-        case ImageDataFormat::BGRA:
+        case ImageDataFormatBGRA:
             return GL_BGRA;
 
-        case ImageDataFormat::RGB:
+        case ImageDataFormatRGB:
             return GL_RGB;
 
-        case ImageDataFormat::RGBA:
+        case ImageDataFormatRGBA:
             return GL_RGBA;
 
-        case ImageDataFormat::AlphaMask:
+        case ImageDataFormatAlphaMask:
         default:
             return -1;
     }

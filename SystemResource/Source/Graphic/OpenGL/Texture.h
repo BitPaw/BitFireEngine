@@ -1,11 +1,11 @@
 #pragma once
 
-#include <Media/Image/Image.h>
-
 #include "ImageType.h"
 #include "ImageFilter.h"
 #include "ImageLayout.h"
 #include "ImageWrap.h"
+
+#include <File/Image.h>
 
 namespace BF
 {

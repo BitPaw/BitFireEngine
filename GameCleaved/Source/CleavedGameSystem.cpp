@@ -23,7 +23,7 @@ using namespace BF;
 float _deltaTime = 0;
 
 FNT fnt;
-BF::Font font;
+Font font;
 BF::Texture testTextue;
 
 BF::SkyBox skybox;

@@ -12,6 +12,9 @@
 #include <File/File.h>
 #include <File/Format/MP3/MP3.h>
 #include <File/Format/PNG/PNG.h>
+#include <OS/Window.h>
+#include <OS/OSUI.h>
+#include <CommCtrl.h>
 //#include <Media/Font/Font.h>
 //#include <Media/Font/FNT/FNT.h>
 //#include <Media/Sound/OGG/OGG.h>
@@ -21,9 +24,73 @@
 using namespace BF;
 
 
+void OnWindowCreated(void* windowAdress)
+{
+    Window* window = (Window*)windowAdress;
+
+    OSButton button;
+    OSListBox listBox;
+    OSComboBox comboBox;
+    OSRichEdit richEdit;
+    OSScrollBar scrollBar;
+
+    ButtonConstruct(window->ID, &button, 20, 35*1 +55, 100, 35, L"OK");
+    ListBoxConstruct(window->ID, &listBox, 20, 35*4 + 55, 100, 35, L"OK");
+    ComboBoxConstruct(window->ID, &comboBox, 20, 35*8 + 55, 100, 35, L"OK");
+    RichEditConstruct(window->ID, &richEdit, 20, 35 * 16 + 55, 100, 35, L"OK");
+    ScrollBarConstruct(window->ID, &scrollBar, 20, 35 * 32 + 55, 100, 35, L"OK");
+
+
+    INITCOMMONCONTROLSEX icex;
+
+    icex.dwSize = sizeof(icex);
+    icex.dwICC = ICC_DATE_CLASSES;
+
+    unsigned char x = InitCommonControlsEx(&icex);
+
+    printf("Hello\n");
+
+}
+
 
 int main()
 {
+
+
+    Window window;
+
+
+    WindowConstruct(&window);
+
+    window.WindowCreatedCallBack = OnWindowCreated;
+
+    WindowCreate(&window, 600, 400, "I BIMS", true);
+    
+    while(!window.IsRunning)
+    {
+        printf(".");
+    }
+
+    while(true)
+    {
+        //printf(".");
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #if 0
     const unsigned int size = 5;
     SBPData sbpData[size];
@@ -124,7 +191,7 @@ int main()
     PNG png;
 
     File dggfgf;
-    const ActionResult fileLoadingResult = dggfgf.MapToVirtualMemory("B:\\Daten\\Bilder\\tumblr_oou0htSqtG1shbbpso1_640.png", MemoryReadOnly);
+    const ActionResult fileLoadingResult = FileMapToVirtualMemoryA(&dggfgf, "B:\\Daten\\Bilder\\tumblr_oou0htSqtG1shbbpso1_640.png", MemoryReadOnly);
     const bool sucessful = fileLoadingResult == ResultSuccessful;
 
     size_t readBytes = 0;
@@ -185,7 +252,7 @@ int main()
 
     File file;
 
-    const ActionResult iiuiiii = file.MapToVirtualMemory(filePath, MemoryReadOnly);
+    const ActionResult iiuiiii = FileMapToVirtualMemoryA(&dggfgf, filePath, MemoryReadOnly);
     const bool sucessfulddd = iiuiiii == ResultSuccessful;
 
     const unsigned char fileParsingResult = FNTLoad(&font, file.Data, file.DataSize);

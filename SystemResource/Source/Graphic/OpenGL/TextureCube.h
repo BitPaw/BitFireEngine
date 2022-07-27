@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Media/Image/Image.h>
+#include <File/Image.h>
 
 #define TextureCubeImageListSize 6
 

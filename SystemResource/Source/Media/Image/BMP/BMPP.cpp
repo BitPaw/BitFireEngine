@@ -9,12 +9,12 @@
 
 BF::BMPP::BMPP()
 {
-    BMPCreate(this);
+    BMPConstruct(this);
 }
 
 BF::BMPP::~BMPP()
 {
-    BMPDelete(this);
+    BMPDestruct(this);
 }
 
 ActionResult BF::BMPP::Load(const char* filePath)
@@ -151,7 +151,7 @@ ActionResult BF::BMPP::ConvertTo(Image& image)
         return ResultOutOfMemory;
     }
 
-    image.Format = ImageDataFormat::BGR;
+    image.Format = ImageDataFormatBGR;
     image.Height = InfoHeader.Height;
     image.Width = InfoHeader.Width;
     image.PixelDataSize = PixelDataSize;
@@ -176,7 +176,7 @@ ActionResult BF::BMPP::ConvertTo(Image& image, BMP& alphaMap)
         return ResultOutOfMemory;
     }
 
-    image.Format = ImageDataFormat::BGRA;
+    image.Format = ImageDataFormatBGRA;
     image.Height = InfoHeader.Height;
     image.Width = InfoHeader.Width;
     image.PixelDataSize = pixelDataSize;
@@ -199,7 +199,7 @@ ActionResult BF::BMPP::ConvertTo(Image& image, BMP& alphaMap)
         pixelData[i++] = isTansparanetColor ? 0x00 : 0xFF;
     }
 
-    image.FlipHorizontal();
+    ImageFlipHorizontal(&image);
 
     return ResultSuccessful;
 }

@@ -135,7 +135,7 @@ ActionResult BMPParse(BMP* bmp, const void* data, const size_t dataSize, size_t*
 {
     ParsingStream parsingStream;
 
-    BMPCreate(bmp);
+    BMPConstruct(bmp);
 
     *dataRead = 0;
 
@@ -266,12 +266,12 @@ ActionResult BMPParse(BMP* bmp, const void* data, const size_t dataSize, size_t*
     return ResultSuccessful;
 }
 
-void BMPCreate(BMP* bmp)
+void BMPConstruct(BMP* bmp)
 {
     MemorySet(bmp, sizeof(BMP), 0);
 }
 
-void BMPDelete(BMP* bmp)
+void BMPDestruct(BMP* bmp)
 {
     MemoryRelease(bmp->PixelData, bmp->PixelDataSize);
 

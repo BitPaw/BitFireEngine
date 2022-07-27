@@ -4,7 +4,7 @@
 
 BF::WindowP::WindowP()
 {
-	MemorySet(&_window, sizeof(Window), 0);
+	WindowConstruct(&_window);
 }
 
 BF::WindowP::~WindowP()
@@ -19,7 +19,7 @@ void BF::WindowP::Create(const unsigned int width, const unsigned int height, co
 
 void BF::WindowP::Destroy()
 {
-	WindowDestroy(&_window);
+	WindowDestruct(&_window);
 }
 
 void BF::WindowP::IconCorner()

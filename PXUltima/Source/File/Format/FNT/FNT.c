@@ -30,7 +30,7 @@ FNTCharacter* FNTGetCharacter(FNT* fnt, const char character)
 	return 0;
 }
 
-unsigned char FNTLoad(FNT* fnt, const void* fileData, const size_t fileDataSize)
+ActionResult FNTParse(FNT* fnt, const void* fileData, const size_t fileDataSize)
 {
 	ParsingStream parsingStream;
 	FNTPage* currentPage = 0;
@@ -313,6 +313,8 @@ FNTLineType PeekLineType(const void* line, const size_t fileDataSize)
 		default:
 			return FNTLineUnkown;
 	}
+
+	return ResultSuccessful;
 }
 
 void FNTPrtinf(const FNT* fnt)

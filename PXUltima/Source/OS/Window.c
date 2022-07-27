@@ -4,6 +4,7 @@
 #include <GL/gl.h>
 
 #include <Event/Event.h>
+#include <Memory/Memory.h>
 
 #if defined(OSUnix)
 
@@ -1626,7 +1627,7 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
     Window* window = (Window*)windowAdress;
 
     window->IsRunning = 0;
-    window->CursorModeCurrent = WindowCursorLockAndHide;
+    window->CursorModeCurrent = WindowCursorShow;
 
 #if defined(OSUnix)
     XInitThreads();
@@ -1773,15 +1774,12 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
 
 
 #elif defined(OSWindows)
-    DWORD windowStyle = WS_EX_APPWINDOW;
+   
     DWORD dwStyle = WS_VISIBLE | WS_OVERLAPPEDWINDOW;
     HWND hWndParent = 0;
-    HMENU hMenu = 0;
     HINSTANCE hInstance = GetModuleHandle(NULL);
-    void* lpParam = 0;
     const wchar_t* lpClassName = L"BFE::Window::AsyncThread";
-
-    const HCURSOR cursorID = LoadCursor(hInstance, IDC_WAIT);
+    const HCURSOR cursorID = LoadCursor(hInstance, IDC_ARROW);
     window->CursorID = cursorID;
 
     WNDCLASS wndclass;
@@ -1793,15 +1791,20 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
     wndclass.cbClsExtra = 0; // The number of extra bytes to allocate following the window-class structure.
     wndclass.cbWndExtra = 0;
     wndclass.hInstance = hInstance;
-    wndclass.hIcon = LoadIcon(NULL, IDI_HAND);
+    wndclass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
     wndclass.hCursor = window->CursorID;
-    wndclass.hbrBackground = (HBRUSH)GetStockObject(COLOR_BACKGROUND);
+    wndclass.hbrBackground = (HBRUSH)(COLOR_BTNFACE + 1); //(HBRUSH)GetStockObject(COLOR_BACKGROUND);
     wndclass.lpszMenuName = 0;
     wndclass.lpszClassName = lpClassName;
 
     const WORD classID = RegisterClassW(&wndclass);
 
     lpClassName = (wchar_t*)classID;
+
+
+    DWORD windowStyle = WS_EX_APPWINDOW | WS_EX_DLGMODALFRAME | WS_EX_CONTEXTHELP;
+    HMENU hMenu = 0;
+    void* lpParam = 0;
 
     WindowID windowID = CreateWindowExW
     (
@@ -1877,6 +1880,7 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
     }
 
     window->OpenGLConext = wglCreateContext(window->HandleDeviceContext);
+
 #endif
 
     // Create context
@@ -1935,7 +1939,11 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
 
     InvokeEvent(window->WindowCreatedCallBack, window);
 
-    WindowFrameBufferContextRelease(window);
+   WindowFrameBufferContextRelease(window);
+
+    //ShowWindow(window->ID, SW_SHOW);
+    //UpdateWindow(window->ID);
+
 
     window->IsRunning = 1;
 
@@ -2026,8 +2034,6 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
 #elif defined(OSWindows)
         MSG message;
 
-        MemorySet(&message, sizeof(MSG), 0);
-
         const unsigned char peekResult = PeekMessageW(&message, 0, 0, 0, PM_NOREMOVE);
 
         if(peekResult)
@@ -2051,6 +2057,11 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
     return ThreadFunctionReturnValue;
 }
 
+extern void WindowConstruct(Window* window)
+{
+    MemorySet(window, sizeof(Window), 0);
+}
+
 void WindowCreate(Window* window, const unsigned int width, const unsigned int height, const char* title, unsigned char async)
 {
     window->Width = width;
@@ -2072,9 +2083,7 @@ void WindowCreate(Window* window, const unsigned int width, const unsigned int h
 
     if(async)
     {
-        const ThreadID id = ThreadRun(WindowCreateThread, window);
-
-        window->MessageThreadID = id;
+        window->MessageThreadID = ThreadRun(WindowCreateThread, window);
 
         while(window->ID == 0)
         {
@@ -2087,7 +2096,7 @@ void WindowCreate(Window* window, const unsigned int width, const unsigned int h
     }
 }
 
-void WindowDestroy(Window* window)
+void WindowDestruct(Window* window)
 {
 #if defined(OSUnix)
     glXMakeCurrent(DisplayCurrent, None, NULL);

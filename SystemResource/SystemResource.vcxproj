@@ -319,7 +319,6 @@
     <ClCompile Include="Source\Network\Protocol\SBP\SBPDataPackage.cpp" />
     <ClCompile Include="Source\Container\ResponseCache.cpp" />
     <ClCompile Include="Source\Math\Primes.cpp" />
-    <ClCompile Include="Source\Media\Image\ImageFileFormat.cpp" />
     <ClCompile Include="Source\Network\Protocol\SBP\SBPClient.cpp" />
     <ClCompile Include="Source\Network\Protocol\SBP\SBPServer.cpp" />
     <ClCompile Include="Source\Network\Protocol\SBP\SBPQueue.cpp" />
@@ -374,10 +373,10 @@
     <ClCompile Include="Source\Async\AsyncLock.cpp" />
     <ClCompile Include="Source\Container\AsciiString.cpp" />
     <ClCompile Include="Source\Container\BitStreamHusk.cpp" />
-    <ClCompile Include="Source\Media\Font\Font.cpp" />
+    <ClCompile Include="Source\Media\Font\FontX.cpp" />
     <ClCompile Include="Source\Media\Font\TTF\TTF.cpp" />
     <ClCompile Include="Source\Media\Image\BMP\BMPP.cpp" />
-    <ClCompile Include="Source\Media\Image\Image.cpp" />
+    <ClCompile Include="Source\Media\Image\ImageX.cpp" />
     <ClCompile Include="Source\Encryption\Caesar.cpp" />
     <ClCompile Include="Source\Math\Geometry\Form\Cone.cpp" />
     <ClCompile Include="Source\Math\Geometry\Form\Cube.cpp" />
@@ -405,7 +404,6 @@
     <ClCompile Include="Source\Network\IOSocket.cpp" />
     <ClCompile Include="Source\Network\IPVersion.cpp" />
     <ClCompile Include="Source\Network\Server.cpp" />
-    <ClCompile Include="Source\Media\Image\ImageDataFormat.cpp" />
     <ClCompile Include="Source\Media\Sound\Sound.cpp" />
     <ClCompile Include="Source\Types\UUID.cpp" />
     <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFOffsetTable.cpp" />
@@ -530,9 +528,8 @@
     <ClInclude Include="Source\Container\QuadTree\QuadTreeChunk.hpp" />
     <ClInclude Include="Source\File\ParsingStreamX.h" />
     <ClInclude Include="Source\Container\QuadTree\QuadTree.hpp" />
-    <ClInclude Include="Source\Media\Image\Image.h" />
+    <ClInclude Include="Source\Media\Image\ImageX.h" />
     <ClInclude Include="Source\Model\MeshSegment.h" />
-    <ClInclude Include="Source\Media\Font\IFontFormat.hpp" />
     <ClInclude Include="Source\Model\IModelFormat.hpp" />
     <ClInclude Include="Source\Model\Model.h" />
     <ClInclude Include="Source\Network\IServerListener.h" />
@@ -544,7 +541,6 @@
     <ClInclude Include="Source\Media\Sound\ISoundFormat.hpp" />
     <ClInclude Include="Source\Media\Sound\SoundPlayStyle.hpp" />
     <ClInclude Include="Source\IFileFormat.hpp" />
-    <ClInclude Include="Source\Media\Image\IImageFormat.h" />
     <ClInclude Include="Source\Math\Geometry\Matrix.hpp" />
     <ClInclude Include="Source\Math\Geometry\AngleDegree.hpp" />
     <ClInclude Include="Source\Math\Geometry\AngleRadians.hpp" />
@@ -563,12 +559,9 @@
     <ClInclude Include="Source\Container\Queue.hpp" />
     <ClInclude Include="Source\Container\RingBuffer.hpp" />
     <ClInclude Include="Source\Container\Table.hpp" />
-    <ClInclude Include="Source\Media\Font\Font.h" />
-    <ClInclude Include="Source\Media\Font\FontFormat.h" />
+    <ClInclude Include="Source\Media\Font\FontX.h" />
     <ClInclude Include="Source\Media\Font\TTF\TTF.h" />
     <ClInclude Include="Source\Media\Image\BMP\BMPP.h" />
-    <ClInclude Include="Source\Media\Image\ImageFileFormat.h" />
-    <ClInclude Include="Source\Media\Image\ImageDataFormat.h" />
     <ClInclude Include="Source\Math\Complex.h" />
     <ClInclude Include="Source\Math\Diagrams\BoxPlot.hpp" />
     <ClInclude Include="Source\Encryption\Caesar.h" />

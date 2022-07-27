@@ -172,8 +172,9 @@ extern "C"
 
 	static ThreadFunctionReturnType WindowCreateThread(void* windowAdress);
 
+	extern void WindowConstruct(Window* window);
 	extern void WindowCreate(Window* window, const unsigned int width, const unsigned int height, const char* title, unsigned char async);
-	extern void WindowDestroy(Window* window);
+	extern void WindowDestruct(Window* window);
 
 	extern void WindowIconCorner();
 	extern void WindowIconTaskBar();
