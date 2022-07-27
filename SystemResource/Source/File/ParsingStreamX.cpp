@@ -123,7 +123,7 @@ void BF::ParsingStreamX::Read(unsigned int& value, const Endian endian)
 
 void BF::ParsingStreamX::Read(unsigned long long& value, const Endian endian)
 {
-	ParsingStreamReadULL(this, &value, endian);
+	ParsingStreamReadLLU(this, &value, endian);
 }
 
 void BF::ParsingStreamX::Read(void* value, const size_t length)

@@ -230,10 +230,10 @@ size_t ParsingStreamReadIU(ParsingStream* parsingStream, unsigned int* value, co
 
 size_t ParsingStreamReadLL(ParsingStream* parsingStream, long long* value, const Endian endian)
 {
-	return ParsingStreamReadCU(parsingStream, (unsigned long long*)value, endian);
+	return ParsingStreamReadLLU(parsingStream, (unsigned long long*)value, endian);
 }
 
-size_t ParsingStreamReadULL(ParsingStream* parsingStream, unsigned long long* value, const Endian endian)
+size_t ParsingStreamReadLLU(ParsingStream* parsingStream, unsigned long long* value, const Endian endian)
 {
 	const size_t dataSize = sizeof(unsigned long long);
 	const unsigned char* data = ParsingStreamCursorPosition(parsingStream);

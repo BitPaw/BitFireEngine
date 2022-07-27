@@ -195,6 +195,7 @@
     <ClInclude Include="Source\File\Font.h" />
     <ClInclude Include="Source\Device\Controller.h" />
     <ClInclude Include="Source\File\Format\EML\EML.h" />
+    <ClInclude Include="Source\File\Format\TTF\TTF.h" />
     <ClInclude Include="Source\OS\OpenFileDialog.h" />
     <ClInclude Include="Source\OS\Program.h" />
     <ClInclude Include="Source\Time\Time.h" />
@@ -270,6 +271,7 @@
     <ClCompile Include="Source\File\Font.c" />
     <ClCompile Include="Source\Device\Controller.c" />
     <ClCompile Include="Source\File\Format\EML\EML.c" />
+    <ClCompile Include="Source\File\Format\TTF\TTF.c" />
     <ClCompile Include="Source\OS\OpenFileDialog.c" />
     <ClCompile Include="Source\OS\Program.c" />
     <ClCompile Include="Source\Time\Time.c" />

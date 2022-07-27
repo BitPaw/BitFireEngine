@@ -21,9 +21,6 @@
     <ClCompile Include="Source\Container\BitStreamHusk.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\TTF.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Media\Font\FontX.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -136,111 +133,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\ErrorCode.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFMaximumProfile.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFHeader.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFHorizontalHeader.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFOffsetTable.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFVersion.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFLinearThreshold.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFVerticalDeviceMetrics.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\CMAP\EncodingID.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\CMAP\PlatformID.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\CMAP\EncodingRecord.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\DSIG\TTFDigitalSignature.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\DSIG\TTFDigitalSignatureBlock.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\DSIG\TTFDigitalSignatureRecord.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\TTFCompatibility.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFArmStyle.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFContrast.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFFamilyType.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFHeightX.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFLetterform.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFMidline.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFPanose.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFProportion.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFSerifStyle.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFStrokeVariatoon.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFWeight.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFPostScript.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\TTFVersionType.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\KERN\TTFKerning.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\KERN\TTFKerningSubtable.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\KERN\TTFSubtableFormat0.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\KERN\TTFSubtableFormat2.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\KERN\TTFKerningPair.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\Chunks\CMAP\TTFCharacterMapping.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\TTFTableEntryType.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Media\Font\TTF\TTFTableEntry.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Network\IOSocketMessage.cpp">
@@ -494,9 +386,6 @@
     <ClInclude Include="Source\Container\Table.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\TTF.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Media\Font\FontX.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -677,115 +566,10 @@
     <ClInclude Include="Source\Media\Image\ImageX.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFMaximumProfile.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFHeader.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFHorizontalHeader.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFOffsetTable.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFVersion.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFLinearThreshold.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFVerticalDeviceMetrics.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\CMAP\EncodingID.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\CMAP\PlatformID.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\CMAP\EncodingRecord.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\DSIG\TTFDigitalSignature.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\DSIG\TTFDigitalSignatureBlock.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\DSIG\TTFDigitalSignatureRecord.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\TTFCompatibility.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFArmStyle.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFContrast.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFFamilyType.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFHeightX.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFLetterform.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFMidline.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFPanose.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFProportion.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFSerifStyle.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFStrokeVariatoon.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\OS2\Panose\TTFWeight.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Container\DictionaryStatic.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Container\Dictionary.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFPostScript.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\TTFVersionType.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\KERN\TTFKerning.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\KERN\TTFKerningSubtable.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\KERN\TTFSubtableFormat2.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\KERN\TTFSubtableFormat0.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\KERN\TTFKerningPair.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\Chunks\CMAP\TTFCharacterMapping.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\TTFTableEntryType.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Media\Font\TTF\TTFTableEntry.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Network\IOSocketMessage.h">

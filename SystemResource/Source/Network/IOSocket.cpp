@@ -16,7 +16,7 @@
 #endif
 
 #include <ErrorCode.h>
-#include <Hardware/Memory/Memory.h>
+#include <Memory/Memory.h>
 
 bool BF::IOSocket::IsCurrentlyUsed()
 {

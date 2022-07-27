@@ -1,7 +1,5 @@
 #include "FontX.h"
 
-#include "TTF/TTF.h"
-
 ActionResult BF::FontX::Load(const char* filePath)
 {
     return FontLoadA(this, filePath);

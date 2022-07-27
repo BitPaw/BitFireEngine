@@ -5,7 +5,7 @@
 #include <cassert>
 
 #include <Async/Thread.h>
-#include <Hardware/Memory/Memory.h>
+#include <Memory/MemoryX.h>
 
 #include "SocketActionResult.h"
 #include "ServerListeningThreadInfo.h"

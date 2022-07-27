@@ -104,7 +104,7 @@ extern "C"
 
 	extern FNTCharacter* FNTGetCharacter(FNT* fnt, const char character);
 
-	extern ActionResult FNTParse(FNT* fnt, const void* fileData, const size_t fileDataSize);
+	extern ActionResult FNTParse(FNT* fnt, const void* fileData, const size_t fileDataSize, size_t* readBytes);
 
 	static FNTLineType PeekLineType(const void* line, const size_t fileDataSize);
 

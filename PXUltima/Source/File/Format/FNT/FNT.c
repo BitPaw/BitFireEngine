@@ -30,13 +30,14 @@ FNTCharacter* FNTGetCharacter(FNT* fnt, const char character)
 	return 0;
 }
 
-ActionResult FNTParse(FNT* fnt, const void* fileData, const size_t fileDataSize)
+ActionResult FNTParse(FNT* fnt, const void* fileData, const size_t fileDataSize, size_t* readBytes)
 {
 	ParsingStream parsingStream;
 	FNTPage* currentPage = 0;
 	size_t characterIndex = 0;
 
 	ParsingStreamConstruct(&parsingStream, fileData, fileDataSize);
+	*readBytes = 0;
 
 	while(!ParsingStreamIsAtEnd(&parsingStream))
 	{
@@ -274,7 +275,9 @@ ActionResult FNTParse(FNT* fnt, const void* fileData, const size_t fileDataSize)
 		ParsingStreamSkipLine(&parsingStream);
 	}
 
-	return 0;
+	*readBytes = parsingStream.DataCursor;
+
+	return ResultSuccessful;
 }
 
 FNTLineType PeekLineType(const void* line, const size_t fileDataSize)

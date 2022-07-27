@@ -234,6 +234,9 @@
     <ClInclude Include="Source\File\Image.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="Source\File\Format\TTF\TTF.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Text\Text.c">
@@ -435,6 +438,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\File\Image.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\File\Format\TTF\TTF.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

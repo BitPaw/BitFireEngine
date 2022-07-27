@@ -2,7 +2,7 @@
 
 #include <Text/Text.h>
 #include <File/ParsingStreamX.h>
-#include <Hardware/Memory/Memory.h>
+#include <Memory/Memory.h>
 
 #define SBPDataPackageFileModeIDCreate 0x01
 #define SBPDataPackageFileModeIDDelete 0x02

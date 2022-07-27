@@ -6,11 +6,18 @@ extern "C"
 {
 #endif
 
+	typedef enum UIState
+	{
+		UIStateInvalid,
+		UIStateActive,
+		UIStateHot,
+		UIStateIDLE
+	}UIState;
+
 	typedef enum UIScalingType_
 	{
 		UIScalingInvalid,
 		UIScalingRelativeToParent
-
 	}
 	UIScalingType;
 	
@@ -37,16 +44,37 @@ extern "C"
 	}
 	UIPadding;
 
-	typedef struct UILayout
+	typedef struct UILayout_
 	{
 		UIMargin Margin;
 		UIPadding Padding;
-	};
 
-	typedef struct UIText
+		void* Parent;
+		void* Child;
+	}UILayout;
+
+	typedef struct UIText_
 	{
 		unsigned char _SUMMY__;
-	};
+	}
+	UIText;
+
+
+	typedef struct UIContainerRoot_
+	{
+		unsigned char _SUMMY__;
+	}
+	UIContainerRoot;
+
+	typedef struct UIElement_
+	{
+		UILayout Layout; 
+
+	}
+	UIElement;
+
+
+	extern void UIContainerElementAdd(UIContainerRoot* uiContainerRoot);
 
 #ifdef __cplusplus
 }

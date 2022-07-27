@@ -111,6 +111,20 @@ void ZEE::ZEEGameSystem::OnStartUp()
     //GameSystem.Resource.Add(*text);
     
 
+
+
+    //-----<UI>----------------------------------------------------------------
+#if 1
+
+
+
+
+#endif
+    //-------------------------------------------------------------------------
+
+
+
+
 #if EnableMusic // Sound Enable
 //BF::MID midi;
 //midi.Load("Sound/CaveStory.mid");

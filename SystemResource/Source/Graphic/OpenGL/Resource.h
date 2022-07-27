@@ -3,7 +3,7 @@
 #include <cstddef>
 
 #include "ResourceInfo.h"
-#include "File/ActionResult.hpp"
+#include <Error/ActionResult.h>
 
 #define StringAscii char*
 #define StringUnicode wchar_t*

@@ -255,7 +255,8 @@ int main()
     const ActionResult iiuiiii = FileMapToVirtualMemoryA(&dggfgf, filePath, MemoryReadOnly);
     const bool sucessfulddd = iiuiiii == ResultSuccessful;
 
-    const unsigned char fileParsingResult = FNTLoad(&font, file.Data, file.DataSize);
+    size_t parsedBytes = 0;
+    const ActionResult fileParsingResult = FNTParse(&font, file.Data, file.DataSize, &parsedBytes);
 
     float loadningTime = sw.Reset();
 

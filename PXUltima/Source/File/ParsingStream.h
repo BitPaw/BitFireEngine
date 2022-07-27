@@ -55,7 +55,7 @@ extern "C"
 	extern size_t ParsingStreamReadI(ParsingStream* parsingStream, int* value, const  Endian endian);
 	extern size_t ParsingStreamReadIU(ParsingStream* parsingStream, unsigned int* value, const Endian endian);
 	extern size_t ParsingStreamReadLL(ParsingStream* parsingStream, long long* value, const Endian endian);
-	extern size_t ParsingStreamReadULL(ParsingStream* parsingStream, unsigned long long* value, const  Endian endian);
+	extern size_t ParsingStreamReadLLU(ParsingStream* parsingStream, unsigned long long* value, const  Endian endian);
 	extern size_t ParsingStreamReadD(ParsingStream* parsingStream, void* value, const size_t length);
 	extern size_t ParsingStreamRead(ParsingStream* parsingStream, const void* format, const size_t length, ...);
 

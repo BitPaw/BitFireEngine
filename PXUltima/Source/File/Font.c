@@ -5,6 +5,7 @@
 #include <File/File.h>
 
 #include <File/Format/FNT/FNT.h>
+#include <File/Format/TTF/TTF.h>
 
 void FontConstruct(Font* font)
 {
@@ -97,7 +98,8 @@ ActionResult FontLoadD(Font* font, const FontFileFormat guessedFormat, const voi
             FontConstruct(&fnt);
 
             {
-                const ActionResult fileActionResult = FNTParse(&fnt, data, dataSize);
+                size_t readBytes = 0;
+                const ActionResult fileActionResult = FNTParse(&fnt, data, dataSize, &readBytes);
                 const unsigned char sucessful = ResultSuccessful == fileActionResult;
 
                 if(!sucessful)
@@ -113,21 +115,26 @@ ActionResult FontLoadD(Font* font, const FontFileFormat guessedFormat, const voi
             break;
         }
         case FontFileFormatTTF:
-        {
-            /*
+        {            
             TTF ttf;
 
+            TTFConstruct(&ttf);
+
             {
-                const ActionResult fileActionResult = ttf.Load(fileData, fileDataSize);
-                const bool sucessful = fileActionResult == ResultSuccessful;
+                size_t readBytes = 0;
+                const ActionResult fileActionResult = TTFParse(&ttf, data, dataSize, &readBytes);
+                const unsigned char sucessful = fileActionResult == ResultSuccessful;
 
                 if(sucessful)
                 {
-                    ttf.ConvertTo(*this);
+                   // ttf.ConvertTo(*this);
 
                     return ResultSuccessful;
                 }
-            }*/
+            }
+
+            TTFDestruct(&ttf);
+
             break;
         }
         case FontFileFormatUnkown:
