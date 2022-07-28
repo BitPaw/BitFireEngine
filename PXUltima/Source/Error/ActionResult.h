@@ -38,8 +38,58 @@ extern "C"
 		ResultInvalidVersion,
 
 		ResultFormatNotSupported,
-		ResultFormatNotAsExpected
+		ResultFormatNotAsExpected,
 
+
+
+
+
+
+
+
+		// Socket
+		SocketOuputBufferTooSmal,
+		SocketInavlidAdressFamily,
+		SocketCreationFailure,
+		SocketOptionFailure,
+		SocketBindingFailure,
+		SocketListeningFailure,
+		SocketSendFailure,
+		SocketRecieveFailure,
+		SocketRecieveConnectionClosed,
+		SocketFlagsInvalid,
+		NameServerReturnedTemporaryFailureIndication,
+		NameServerReturnedPermanentFailureIndication,
+		SocketTypeNotSupported,
+		RequestedAddressFamilyNotSupported,
+		OutOfMemory,
+		HostExistsButHasNoData,
+		HostHasNoNetworkAddresses,
+		IPOrPortNotKnown,
+		SocketIsNotConnected,
+
+		RequestedServiceNotAvailableForSocket,
+
+		// Client
+		SocketConnectionFailure,
+
+
+		// Server
+		NoClientWithThisID,
+		NoSendEmptyData,
+
+		//---[ Windows Only (WindowsSocketAgent) ]-------
+		SubSystemNotReady,
+		VersionNotSupported,
+		BlockedByOtherOperation,
+		LimitReached,
+		InvalidParameter,
+		SubSystemNotInitialised,
+		SubSystemNetworkFailed,
+		SocketIsBlocking,
+
+		WindowsSocketSystemNotInitialized,
+		//----------------------------------------
 	}
 	ActionResult;
 

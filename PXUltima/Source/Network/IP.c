@@ -1,17 +1,87 @@
-#include "IPVersion.h"
+#include "IP.h"
 
-/*
-  Check if the given IPv4 is Valid
+IPVersion AnalyseIPVersion(const char* ip)
+{
+    IPVersion ipVersion = IPVersionInvalid;
 
-  Returns the following:
-  0 - Valid IPv4
-  1 - Nullpointer as Parameter
-  2 - Invalid Character (only 0-9 or .)
-  3 - Octet too large (>255)
-  4 - Too long (>15)
-  5 - Too many Octets (more that 4)
-*/
-char BF::IsValidIPv4(const char* ipAdress)
+    char containsDot = 0;
+    char containsDoubleDot = 0;
+    char containsHexadezimal = 0;
+    char textChars = 0;
+    char containsNumbers = 0;
+
+    for (int index = 0; ip[index] != '\0'; index++)
+    {
+        char character = ip[index];
+        char isNumber = character >= '0' && character <= '9';
+        char isBetweenAToF = (character >= 'a' && character <= 'f') || (character >= 'A' && character <= 'F');
+        char isDot = character == '.';
+        char isDoubleDot = character == ':';
+        char isTextChars = !isNumber && !isBetweenAToF && !isDot && !isDoubleDot;
+
+        if (isTextChars)
+            textChars++;
+
+        if (isNumber)
+            containsNumbers++;
+
+        if (isBetweenAToF)
+            containsHexadezimal++;
+
+        if (isDot)
+            containsDot++;
+
+        if (isDoubleDot)
+            containsDoubleDot++;
+    }
+
+    if (containsNumbers && containsDot && !containsDoubleDot && !containsHexadezimal && !textChars)
+    {
+        return IPVersion4;
+    }
+
+    if (containsNumbers && containsDoubleDot && containsHexadezimal && !textChars && !containsDot)
+    {
+        return IPVersion6;
+    }
+
+    if (!containsDoubleDot)
+    {
+        return IPVersionUnknownDomain;
+    }
+
+
+    return IPVersionInvalid;
+}
+
+unsigned char IsValidIP(const char* ipAdress)
+{
+    IPVersion ipVersion = AnalyseIPVersion(ipAdress);
+
+    switch (ipVersion)
+    {
+    case IPVersion4:
+    {
+        return IsValidIPv4(ipAdress) == 0;
+    }
+    case IPVersionUnknownDomain:
+    {
+        return 1;
+    }
+    case IPVersion6:
+    {
+        return IsValidIPv6(ipAdress) == 0;
+    }
+
+    default:
+    case IPVersionInvalid:
+    {
+        return 0;
+    }
+    }
+}
+
+unsigned char IsValidIPv4(const char* ipAdress)
 {
     const unsigned char resultIPv4OK = 0;
     const unsigned char resultIPv4NullPointer = 1;
@@ -83,12 +153,11 @@ char BF::IsValidIPv4(const char* ipAdress)
     return resultIPv4OK;
 }
 
-// todo : Comple this function.
-char BF::IsValidIPv6(const char* ipAdress)
+unsigned char IsValidIPv6(const char* ipAdress)
 {
     const char validIPv6Adress = 0;
     const char invalidAmountOfSeperators = 1;
-    
+
     const char seperator = ':';
     const int expectedAmountOfSeperators = 7;
     unsigned char seperatorCounter = 0;
@@ -97,7 +166,7 @@ char BF::IsValidIPv6(const char* ipAdress)
     unsigned int minLength = 2;
 
 
-    for ( ; ipAdress[lengh] != '\0' && lengh <= maxLength; lengh++)
+    for (; ipAdress[lengh] != '\0' && lengh <= maxLength; lengh++)
     {
         char character = ipAdress[lengh];
         char isSeperator = character == seperator;
@@ -112,85 +181,4 @@ char BF::IsValidIPv6(const char* ipAdress)
     }
 
     return validIPv6Adress;
-}
-
-BF::IPVersion BF::AnalyseIPVersion(const char* ip)
-{
-    IPVersion ipVersion = IPVersion::IPVersionInvalid;
-
-    char containsDot = 0;
-    char containsDoubleDot = 0;
-    char containsHexadezimal = 0;
-    char textChars = 0;
-    char containsNumbers = 0;
-
-    for (int index = 0; ip[index] != '\0'; index++)
-    {
-        char character = ip[index];
-        char isNumber = character >= '0' && character <= '9';
-        char isBetweenAToF = (character >= 'a' && character <= 'f') || (character >= 'A' && character <= 'F');     
-        char isDot = character == '.';
-        char isDoubleDot = character == ':';
-        char isTextChars = !isNumber && !isBetweenAToF && !isDot && !isDoubleDot;
-
-        if (isTextChars)
-            textChars++;
-
-        if (isNumber)  
-            containsNumbers++;   
-
-        if (isBetweenAToF) 
-            containsHexadezimal++;
-
-        if (isDot) 
-            containsDot++;
-
-        if (isDoubleDot)
-            containsDoubleDot++;
-    }
-
-    if (containsNumbers && containsDot && !containsDoubleDot && !containsHexadezimal && !textChars)
-    {
-        return IPVersion::IPVersion4;
-    }
-
-    if (containsNumbers && containsDoubleDot && containsHexadezimal && !textChars && !containsDot)
-    {
-        return IPVersion::IPVersion6;
-    }
-
-    if (!containsDoubleDot)
-    {
-        return IPVersion::IPVersionUnknownDomain;
-    }
-
-
-    return IPVersion::IPVersionInvalid;
-}
-
-char BF::IsValidIP(const char* ipAdress)
-{
-    IPVersion ipVersion = AnalyseIPVersion(ipAdress);
-
-    switch (ipVersion)
-    {  
-        case IPVersion::IPVersion4:
-        {
-            return IsValidIPv4(ipAdress) == 0;
-        }
-        case IPVersion::IPVersionUnknownDomain:
-        {
-            return 1;
-        }
-        case IPVersion::IPVersion6:
-        {
-            return IsValidIPv6(ipAdress) == 0;
-        }
-
-        default:
-        case IPVersion::IPVersionInvalid:
-        {
-            return 0;
-        }
-    }
 }

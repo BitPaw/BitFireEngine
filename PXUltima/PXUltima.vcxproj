@@ -191,11 +191,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Network\Client.h" />
+    <ClInclude Include="Source\Network\IP.h" />
+    <ClInclude Include="Source\Network\CSocket.h" />
     <ClInclude Include="Source\File\Image.h" />
     <ClInclude Include="Source\File\Font.h" />
     <ClInclude Include="Source\Device\Controller.h" />
     <ClInclude Include="Source\File\Format\EML\EML.h" />
     <ClInclude Include="Source\File\Format\TTF\TTF.h" />
+    <ClInclude Include="Source\Network\Server.h" />
     <ClInclude Include="Source\OS\OpenFileDialog.h" />
     <ClInclude Include="Source\OS\Program.h" />
     <ClInclude Include="Source\Time\Time.h" />
@@ -267,6 +271,10 @@
     <ClInclude Include="Source\UI\UI.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Network\IP.c" />
+    <ClCompile Include="Source\Network\Server.c" />
+    <ClCompile Include="Source\Network\Client.c" />
+    <ClCompile Include="Source\Network\CSocket.c" />
     <ClCompile Include="Source\File\Image.c" />
     <ClCompile Include="Source\File\Font.c" />
     <ClCompile Include="Source\Device\Controller.c" />

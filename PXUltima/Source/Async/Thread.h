@@ -33,6 +33,7 @@ extern "C"
 	extern ThreadID ThreadRun(const ThreadFunction threadFunction, const void* parameter);
 
 	extern size_t ThreadCurrentID();
+	extern ThreadID ThreadCurrentGet();
 
 	extern void ThreadWaitForFinish(const ThreadID threadID);	
 

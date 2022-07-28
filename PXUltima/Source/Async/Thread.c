@@ -29,6 +29,15 @@ size_t ThreadCurrentID()
 	return threadID;
 }
 
+ThreadID ThreadCurrentGet()
+{
+#if defined(OSUnix)
+	return 0;
+#elif defined(OSWindows)
+	return GetCurrentThread();
+#endif
+}
+
 void ThreadWaitForFinish(const ThreadID threadID)
 {
 #ifdef OSUnix
