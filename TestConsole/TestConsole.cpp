@@ -33,20 +33,79 @@ void OnWindowCreated(void* windowAdress)
     OSComboBox comboBox;
     OSRichEdit richEdit;
     OSScrollBar scrollBar;
+    OSUIText text;
+    OSUICheckBox checkBox;
+    OSUITrackbar trackbar;
+    OSUITabControl odUITabControl;
+    OSUIListBox osListBox;
 
-    ButtonConstruct(window->ID, &button, 20, 35*1 +55, 100, 35, L"OK");
-    ListBoxConstruct(window->ID, &listBox, 20, 35*4 + 55, 100, 35, L"OK");
-    ComboBoxConstruct(window->ID, &comboBox, 20, 35*8 + 55, 100, 35, L"OK");
-    RichEditConstruct(window->ID, &richEdit, 20, 35 * 16 + 55, 100, 35, L"OK");
-    ScrollBarConstruct(window->ID, &scrollBar, 20, 35 * 32 + 55, 100, 35, L"OK");
+    OSUIStatusbar statusbar;
+    OSUIUpDown osUIUpDown;
+    OSUIProgressbar osUIProgressbar;
+    OSUIHotKey osUIHotKey;
+
+    OSUICalender calender;
+    OSUIToolTip uiToolTip;
+    OSUIAnimate osUIAnimate;
+    OSUIDateTimePicker osUIDateTimePicker;
+
+    OSUIGroupBox osUIGroupBox;
+    OSUIGroupRadioButton osUIRadioButtonA;
+    OSUIGroupRadioButton osUIRadioButtonB;
+    OSUIGroupRadioButton osUIRadioButtonC;
+    OSUIRadioButton osUIRadioButtonSingle;
 
 
-    INITCOMMONCONTROLSEX icex;
+    OSUIPageScroller osUIPageScroller;
+    OSUIFontSelector osUIFontSelector;
+    OSUIHeader osUIHeader;
+    OSUILink osUILink;
+    OSUITreeView osUITreeView;
 
-    icex.dwSize = sizeof(icex);
-    icex.dwICC = ICC_DATE_CLASSES;
 
-    unsigned char x = InitCommonControlsEx(&icex);
+    int xoffset = 20;
+
+    int w = 150;
+    int h = 35;
+    int v = 50;
+    int b = 200;
+
+    ButtonConstruct(window->ID, &button, xoffset + b * 0,         v*1, w, h, L"Button Text");
+    ListBoxConstruct(window->ID, &listBox, xoffset + b * 0 ,         v*2, w, h, L"ListBox");
+    ComboBoxConstruct(window->ID, &comboBox, xoffset + b * 0,         v*3, w, h, L"ComboBox");
+    RichEditConstruct(window->ID, &richEdit, xoffset + b * 0, v * 4, w, h, L"Richtext");
+    OSUIListBoxCreate(window->ID, &osListBox, xoffset + b * 0,         v*5 , w, h, L"OSUITabControl");
+    OSUITabControlCreate(window->ID, &odUITabControl, xoffset + b * 0,   v*6, w, h, L"OSListBox");
+    ScrollBarConstruct(window->ID, &scrollBar, xoffset + b * 0, v * 7, w, h, L"Scrollbar");
+    OSUITextConstruct(window->ID, &text, xoffset + b * 0 , v * 8, w, h, L"Some Text");
+    OSCheckBoxConstruct(window->ID, &checkBox, xoffset + b * 0 , v * 9, w, h, L"CheckBox");
+    OSUITrackbarCreate(window->ID, &trackbar, xoffset + b * 0 , v * 10, w, h, L"Trackbar");
+    OSUIStatusbarCreate(window->ID, &statusbar, xoffset + b * 0, v * 11, w, h, L"Statusbar");
+    OSUIUpDownCreate(window->ID, &osUIUpDown, xoffset + b * 0, v * 12, w, h, L"Some Text");
+    OSUIProgressbarCreate(window->ID, &osUIProgressbar, xoffset + b * 0, v * 13, w, h, L"Progressbar");
+    OSUIHotKeyCreate(window->ID, &osUIHotKey, xoffset + b * 0, v * 14, w, h, L"HotKey");
+
+
+    OSUIPageScrollerCreate(window->ID, &osUIPageScroller, xoffset + b * 1, v * 1, w, h, L"OSUIPageScrollerCreate");
+    OSUIFontSelectorCreate(window->ID, &osUIFontSelector, xoffset + b * 1, v * 2, w, h, L"OSUIFontSelectorCreate");
+    OSUIHeaderCreate(window->ID, &osUIHeader, xoffset + b * 1, v * 3, w, h, L"OSUIHeaderCreate");
+    OSUILinkCreate(window->ID, &osUILink, xoffset + b * 1, v * 4, w, h, L"OSUILinkCreate");
+
+    OSUIGroupBoxCreate(window->ID, &osUIGroupBox, xoffset + b * 1, v * 5, 200, h * 5, L"GroupBox");
+    OSUIGroupRadioButtonCreate(window->ID, &osUIRadioButtonA, xoffset + b * 1, v * 6, 200, h, L"RadioButton_A");
+    OSUIGroupRadioButtonCreate(window->ID, &osUIRadioButtonB, xoffset + b * 1, v * 7, 200, h, L"RadioButton_B");
+    OSUIGroupRadioButtonCreate(window->ID, &osUIRadioButtonC, xoffset + b * 1, v * 8, 200, h, L"RadioButton_C");
+
+    OSUIRadioButtonCreate(window->ID, &osUIRadioButtonSingle, xoffset + b * 1, v * 9, 200, h, L"RadioButton_Single");
+
+
+    OSUIDateTimePickerCreate(window->ID, &osUIDateTimePicker, xoffset + b * 2, v * 1, w, h, L"DateTimePicker");
+    OSUIToolTipCreate(window->ID, &uiToolTip, xoffset + b * 2, v * 2, 180, h, L"ToolTip");
+    OSUIAnimateCreate(window->ID, &osUIAnimate, xoffset + b * 2, v * 3, 180, h, L"Animate");
+    OSUICalenderCreate(window->ID, &calender, xoffset + b * 2, v * 4, 180, 180, L"CalenderC");
+    OSUITreeViewCreate(window->ID, &osUITreeView, xoffset + b * 2, v * 8, 180, 180, L"TreeView");
+
+
 
     printf("Hello\n");
 
@@ -68,7 +127,7 @@ int main()
     
     while(!window.IsRunning)
     {
-        printf(".");
+        //printf(".");
     }
 
     while(true)

@@ -1832,7 +1832,7 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
         }
 
         window->ID = windowID;
-    }
+    }    
 
     // Create OpenGL Context
     {
@@ -1939,11 +1939,10 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
 
     InvokeEvent(window->WindowCreatedCallBack, window);
 
-   WindowFrameBufferContextRelease(window);
+    WindowFrameBufferContextRelease(window);
 
     //ShowWindow(window->ID, SW_SHOW);
     //UpdateWindow(window->ID);
-
 
     window->IsRunning = 1;
 
