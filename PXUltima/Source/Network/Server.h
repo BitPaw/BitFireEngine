@@ -11,7 +11,6 @@ extern "C"
 {
 #endif
 
-
 	typedef struct Client_ Client;
 
 	typedef void (*ClientConnectedEvent)(const CSocket* serverSocket, const CSocket* clientSocket);
@@ -35,7 +34,7 @@ extern "C"
 	extern void ServerConstruct(Server* server);
 	extern void ServerDestruct(Server* server);
 
-	extern ActionResult ServerStart(Server* server, const unsigned short port);
+	extern ActionResult ServerStart(Server* server, const unsigned short port, const ProtocolMode protocolMode);
 	extern ActionResult ServerStop(Server* server);
 	extern ActionResult ServerKickClient(Server* server, const CSocketID socketID);
 	extern CSocket* ServerGetClientViaID(Server* server, const CSocketID socketID);
@@ -51,10 +50,7 @@ extern "C"
 	//extern ActionResult ServerBroadcastMessageToClients(Server* server, char* message, size_t messageLength);
 	//extern ActionResult ServerBroadcastFileToClients(Server* server, const char* filePath);
 
-	static ThreadFunctionReturnType ServerClientListeningThread(void* server);
-
-
-
+	static ThreadResult ServerClientListeningThread(void* server);
 
 #ifdef __cplusplus
 }

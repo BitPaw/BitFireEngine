@@ -191,6 +191,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\File\Format\UUID\UUID.h" />
     <ClInclude Include="Source\Network\Client.h" />
     <ClInclude Include="Source\Network\IP.h" />
     <ClInclude Include="Source\Network\CSocket.h" />
@@ -203,6 +204,7 @@
     <ClInclude Include="Source\OS\OpenFileDialog.h" />
     <ClInclude Include="Source\OS\Program.h" />
     <ClInclude Include="Source\Time\Time.h" />
+    <ClInclude Include="Source\Video\DirectX\DirectX.h" />
     <ClInclude Include="Source\Video\Shader.h" />
     <ClInclude Include="Source\File\File.h" />
     <ClInclude Include="Source\File\Format\OBJ\OBJ.h" />
@@ -266,11 +268,13 @@
     <ClInclude Include="Source\Text\Text.h" />
     <ClInclude Include="Source\OS\User.h" />
     <ClInclude Include="Source\Async\Thread.h" />
-    <ClInclude Include="Source\OS\Window.h" />
+    <ClInclude Include="Source\OS\CWindow.h" />
     <ClInclude Include="Source\OS\OSUI.h" />
     <ClInclude Include="Source\UI\UI.h" />
+    <ClInclude Include="Source\Video\Vulcan\Vulcan.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\File\Format\UUID\UUID.c" />
     <ClCompile Include="Source\Network\IP.c" />
     <ClCompile Include="Source\Network\Server.c" />
     <ClCompile Include="Source\Network\Client.c" />
@@ -283,6 +287,7 @@
     <ClCompile Include="Source\OS\OpenFileDialog.c" />
     <ClCompile Include="Source\OS\Program.c" />
     <ClCompile Include="Source\Time\Time.c" />
+    <ClCompile Include="Source\Video\DirectX\DirectX.c" />
     <ClCompile Include="Source\Video\Shader.c" />
     <ClCompile Include="Source\File\File.c" />
     <ClCompile Include="Source\File\Format\OBJ\OBJ.c" />
@@ -340,9 +345,10 @@
     <ClCompile Include="Source\Text\Text.c" />
     <ClCompile Include="Source\OS\User.c" />
     <ClCompile Include="Source\Async\Thread.c" />
-    <ClCompile Include="Source\OS\Window.c" />
+    <ClCompile Include="Source\OS\CWindow.c" />
     <ClCompile Include="Source\OS\OSUI.c" />
     <ClCompile Include="Source\UI\UI.c" />
+    <ClCompile Include="Source\Video\Vulcan\Vulcan.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -21,9 +21,15 @@
 using namespace BF;
 
 float _deltaTime = 0;
+BF::Renderable _rectangleMesh;
+
+
+
 
 FNT fnt;
-Font font;
+Font _font;
+
+
 BF::Texture testTextue;
 
 BF::SkyBox skybox;
@@ -45,9 +51,17 @@ BF::UIDialogBox _dialogBox;
 
 bool moveCamera = false;
 
-BF::Renderable _cubeRenderable;
+
 BF::Model _cubeModel;
 ShaderProgram _simplex;
+
+// UI
+BF::Sprite _menuFrame;
+BF::Sprite _menuButtonA;
+BF::UIText _buttonTextA;
+BF::Sprite _menuButtonB;
+BF::Sprite _menuButtonC;
+
 
 Cleaved::CleavedGameSystem::CleavedGameSystem()
 {
@@ -56,11 +70,14 @@ Cleaved::CleavedGameSystem::CleavedGameSystem()
 
 void Cleaved::CleavedGameSystem::OnStartUp()
 {
+    //---<Setup>
     _simplex.ID = -1;
     worldShader.ID = -1;
     hudShaderID.ID = -1;
 
     _camera = &GameSystem.MainCamera;
+
+    //---<Load>
 
     GameSystem.Load(worldShader, L"Shader/WS.vert", L"Shader/WS.frag");
     GameSystem.Load(hudShaderID, L"Shader/HUD.vert", L"Shader/HUD.frag");
@@ -83,69 +100,97 @@ void Cleaved::CleavedGameSystem::OnStartUp()
     GameSystem.Load(testTextue, L"Texture/SkyBox.bmp", false);
 
 
+
+
+
    // BF::Cube cube;
 
     //GameSystem.Resource.Add(_cubeRenderable, cube.VertexList, cube.VertexListSize, cube.IndexList, cube.IndexListSize);
 
     // Test-Cube
     {
-        const float vtx[12] =
-        {
-            0,0,0,
-            0,1,0,
-            1,1,0,
-            1,0,0
-        };
+        GameSystem.MakeRectangle(_rectangleMesh);
 
-        const unsigned int itx[4] =
-        {
-            0,1,2,3
-        };
-
-        GameSystem.Load(_cubeRenderable, vtx, 12, itx, 4);
-        _cubeRenderable.Mode = RenderMode::Square;
-        _cubeRenderable.ShaderUse(_simplex);
-        _cubeRenderable.TextureUse(testTextue.ID);
+        _rectangleMesh.ShaderUse(_simplex);
+        _rectangleMesh.TextureUse(testTextue.ID);
         //_cubeRenderable.ChunkList[0].SegmentList[0].TextureType = ImageType::Texture2D;
     }
-
+    
     _backGround.Scale(12);
     _backGround.MoveTo(13.5, -0.2, -5);
     _backGround.ShaderUse(_simplex);
-    _backGround.MeshShare(_cubeRenderable);
+    _backGround.MeshShare(_rectangleMesh);
     GameSystem.Load(_backGround, L"Texture/BackGround.png");
 
     _lamp.MoveTo(120, 12, 0.3);
     _lamp.ShaderUse(_simplex);
-    _lamp.MeshShare(_cubeRenderable);
+    _lamp.MeshShare(_rectangleMesh);
     GameSystem.Load(_lamp, L"Texture/LampA.png");
 
     _sign.MoveTo(110, 12, 0.1);
     _sign.ShaderUse(_simplex);
-    _sign.MeshShare(_cubeRenderable);
+    _sign.MeshShare(_rectangleMesh);
     GameSystem.Load(_sign, L"Texture/Sign.png");
     //_sign.Type = ColliderType::EffectBox;
 
     _floor.MoveTo(10, -7, 0);
     _floor.Scale(200, 20, 1);
     _floor.ShaderUse(_simplex);
-    _floor.MeshShare(_cubeRenderable);
+    _floor.MeshShare(_rectangleMesh);
     GameSystem.Load(_floor, L"Texture/MissingTexture.bmp");
     _floor.UsedTexture->TextureWrap(ImageWrap::Repeat);
 
     _playerCharacterNyte.Scale(0.5);
     _playerCharacterNyte.MoveTo(100, 12, 0.3);
     _playerCharacterNyte.ShaderUse(_simplex);
-    _playerCharacterNyte.MeshShare(_cubeRenderable);
+    _playerCharacterNyte.MeshShare(_rectangleMesh);
     GameSystem.Load(_playerCharacterNyte, L"Texture/Nyte.png");
 
     _playerCharacterLuna.Scale(0.5);
     _playerCharacterLuna.MoveTo(123, 12, 0.1);
     _playerCharacterLuna.ShaderUse(_simplex);
-    _playerCharacterLuna.MeshShare(_cubeRenderable);
+    _playerCharacterLuna.MeshShare(_rectangleMesh);
     GameSystem.Load(_playerCharacterLuna, L"Texture/Theia.png");
 
    // _playerCharacterLuna.EnablePhysics = true;
+
+
+
+
+
+
+
+
+    _menuButtonA.MeshShare(_rectangleMesh);
+    _menuButtonA.ShaderUse(hudShaderID);
+    _menuButtonA.ScaleSet(0.2f, 0.1f, 1);
+    _menuButtonA.MoveTo(-0.9, -0.6, -0.1);
+    GameSystem.Load(_menuButtonA, L"Texture/Button.png"); //DialogBoxBorder
+
+   // _buttonTextA.SetText();
+
+
+
+    _menuButtonB.MeshShare(_rectangleMesh);
+    _menuButtonB.ShaderUse(hudShaderID);
+    _menuButtonB.ScaleSet(0.2f, 0.1f, 1);
+    _menuButtonB.MoveTo(-0.9, -0.7, -0.1);
+    GameSystem.Load(_menuButtonB, L"Texture/Button.png"); //DialogBoxBorder
+
+    _menuButtonC.MeshShare(_rectangleMesh);
+    _menuButtonC.ShaderUse(hudShaderID);
+    _menuButtonC.ScaleSet(0.2f, 0.1f, 1);
+    _menuButtonC.MoveTo(-0.9, -0.8, -0.1);
+    GameSystem.Load(_menuButtonC, L"Texture/Button.png"); //DialogBoxBorder
+
+
+
+       // Make Rectangle
+    _menuFrame.MeshShare(_rectangleMesh);
+    _menuFrame.ShaderUse(hudShaderID);
+    _menuFrame.ScaleSet(0.25, 0.25f, 1);
+    _menuFrame.MoveTo(-1, -1, 0);
+    GameSystem.Load(_menuFrame, L"Texture/SkyBox_Bottom.png"); //DialogBoxBorder
 
 
 
@@ -279,9 +324,14 @@ void Cleaved::CleavedGameSystem::OnUpdateInput(BF::InputContainer& input)
 
     //_playerCharacterLuna.MatrixModel.Move(movement);
 
-    camera.Move(movement);
+    if(GameSystem._mainWindow.Interactable())
+    {
+        camera.Move(movement);
 
-    camera.Rotate(mouse.InputAxis[0], mouse.InputAxis[1]);
+        camera.Rotate(mouse.InputAxis[0], mouse.InputAxis[1]);
+    }
+
+    //printf("[#][OnMouseMove] X:%5.2f Y:%5.2f\n", mouse.Position[0], mouse.Position[1]);
 
     camera.Update(_deltaTime);
     keyboard.IncrementButtonTick();

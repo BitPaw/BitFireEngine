@@ -18,7 +18,7 @@ namespace BF
 		ResponseCache _responseCache;
 		Client _client;
 
-		static ThreadFunctionReturnType ReciveDataThread(void* sbpClient);
+		static ThreadResult ReciveDataThread(void* sbpClient);
 
 		public:
 		wchar_t Name[256];

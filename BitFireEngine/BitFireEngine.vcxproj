@@ -83,9 +83,6 @@
     <ClInclude Include="Source\Collision\SystemPhysics.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BitFireEngineIDE\BitFireEngineIDE.vcxproj">
-      <Project>{4d3b3ec5-81f4-48a0-bcd2-b462d7229a92}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\PXUltima\PXUltima.vcxproj">
       <Project>{7d027ed8-ed69-414c-a832-40cd80be72d7}</Project>
     </ProjectReference>

@@ -209,11 +209,11 @@ void BF::BitFireEngine::Start()
     //SYSTEM_INFO systemInfo; // Windows SystemInfo
     //GetSystemInfo(&systemInfo);
 
-    _mainWindow._window.MouseClickCallBack = OnMouseButton;
-    _mainWindow._window.MouseMoveCallBack = OnMouseMove;
-    _mainWindow._window.KeyBoardKeyCallBack = OnKeyBoardKey;
-    _mainWindow._window.WindowCreatedCallBack = OnWindowCreated;
-    _mainWindow._window.WindowSizeChangedCallBack = OnWindowSizeChanged;
+    _mainWindow.MouseClickCallBack = OnMouseButton;
+    _mainWindow.MouseMoveCallBack = OnMouseMove;
+    _mainWindow.KeyBoardKeyCallBack = OnKeyBoardKey;
+    _mainWindow.WindowCreatedCallBack = OnWindowCreated;
+    _mainWindow.WindowSizeChangedCallBack = OnWindowSizeChanged;
 
     // Set signal
     {
@@ -275,7 +275,7 @@ void BF::BitFireEngine::Start()
         * /
     }*/
 
-    while(!_mainWindow._window.IsRunning);
+    while(!_mainWindow.IsRunning);
 
     //AwaitChange(!_mainWindow.IsRunning);
 
@@ -338,10 +338,10 @@ void BF::BitFireEngine::Update()
 
    _mainWindow.FrameBufferSwap();
 
-   if(_mainWindow._window.HasSizeChanged)
+   if(_mainWindow.HasSizeChanged)
    {
-       const unsigned int width = _mainWindow._window.Width;
-       const unsigned int height = _mainWindow._window.Height;
+       const unsigned int width = _mainWindow.Width;
+       const unsigned int height = _mainWindow.Height;
 
        printf("[Window] Size chnaged %i x %i\n", width, height);
 
@@ -349,7 +349,7 @@ void BF::BitFireEngine::Update()
 
        glViewport(0, 0, width, height);
 
-       _mainWindow._window.HasSizeChanged = false;
+       _mainWindow.HasSizeChanged = false;
    }
 
     UpdateInput(_inputContainer);
@@ -384,18 +384,17 @@ void BF::BitFireEngine::OnMouseButton(const MouseButton mouseButton, const Butto
     //printf("[#][OnMouseButton]\n");
 }
 
-void BF::BitFireEngine::OnMouseMove(const double positionX, const double positionY, const double deltaX, const double deltaY)
+void BF::BitFireEngine::OnMouseMove(const int positionX, const int positionY, const int deltaX, const int deltaY)
 {
     BitFireEngine* engine = BitFireEngine::Instance();
     Mouse& mouse = engine->_inputContainer.MouseInput;
-    Camera& camera = engine->MainCamera;
 
 #if UseRawMouseData
     mouse.InputAxis[0] = -deltaX;
     mouse.InputAxis[1] = -deltaY;
 
-    mouse.Position[0] -= deltaX;
-    mouse.Position[1] -= deltaY;
+    mouse.Position[0] = positionX;
+    mouse.Position[1] = positionY;
 #else
     // Calculate relative input
     mouse.InputAxis[0] = mouse.Position[0] - deltaX;
@@ -406,7 +405,9 @@ void BF::BitFireEngine::OnMouseMove(const double positionX, const double positio
     mouse.Position[1] = y;
 #endif
 
-    //printf("[#][OnMouseMove] X:%5i Y:%5i\n", mouse.InputAxis[0], mouse.InputAxis[1]);
+ 
+  // printf("[#][OnMouseMove] X:%5i Y:%5i\n", mouse.Position[0], mouse.Position[1]);
+  // printf("[#]------------- X:%5i Y:%5i\n", mouse.InputAxis[0], mouse.InputAxis[1]);
 }
 
 void BF::BitFireEngine::OnKeyBoardKey(const KeyBoardKeyInfo keyBoardKeyInfo)
@@ -500,7 +501,7 @@ void BF::BitFireEngine::OnKeyBoardKey(const KeyBoardKeyInfo keyBoardKeyInfo)
 
 void BF::BitFireEngine::OnWindowCreated(void* windowAdress)
 {
-    Window& window = *(Window*)windowAdress;
+    CWindow& window = *(CWindow*)windowAdress;
 
     printf
     (
@@ -560,16 +561,16 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
 
     if(keyboard.R.IsShortPressed())
     {
-        switch(_mainWindow._window.CursorModeCurrent)
+        switch(_mainWindow.CursorModeCurrent)
         {
-            case WindowCursorShow:
+            case CWindowCursorShow:
             {
-                _mainWindow.CursorCaptureMode(WindowCursorLockAndHide);
+                _mainWindow.CursorCaptureMode(CWindowCursorLockAndHide);
                 break;
             }
-            case WindowCursorLockAndHide:
+            case CWindowCursorLockAndHide:
             {
-                _mainWindow.CursorCaptureMode(WindowCursorShow);
+                _mainWindow.CursorCaptureMode(CWindowCursorShow);
                 break;
             }
         }
@@ -615,50 +616,54 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
         movement.Add(0, 1, 0);
     }
 
+ 
 
-
-    double mouseX = 0;
-    double mouseY = 0;
-
-    // Add joystik
+    if(_mainWindow.Interactable())
     {
-        Controller controllerData;
-        controllerData.ID = 0;
-        bool successful = ControllerDataGet(&controllerData);
-
-        if(successful)
+        // Add joystik
         {
-            const int max = 32767;
-            int viewXi = (int)controllerData.Axis[0] - max;
-            int viewYi = (int)controllerData.Axis[1] - max;
-            int posXi = (int)controllerData.Axis[2] - max;
-            int posYi = (int)controllerData.Axis[3] - max;
+            Controller controllerData;
+            controllerData.ID = 0;
+            bool successful = ControllerDataGet(&controllerData);
 
-            if(posXi != 0 || posYi != 0)
+            double mouseX = 0;
+            double mouseY = 0;
+
+            if(successful)
             {
-                double xf = -posXi / 32768.0;
-                double yf = -posYi / 32768.0;
+                const int max = 32767;
+                int viewXi = (int)controllerData.Axis[0] - max;
+                int viewYi = (int)controllerData.Axis[1] - max;
+                int posXi = (int)controllerData.Axis[2] - max;
+                int posYi = (int)controllerData.Axis[3] - max;
 
-                mouseX += xf;
-                mouseY += yf;
+                if(posXi != 0 || posYi != 0)
+                {
+                    double xf = -posXi / 32768.0;
+                    double yf = -posYi / 32768.0;
+
+                    mouseX += xf;
+                    mouseY += yf;
+                }
+
+                if(viewXi != 0 || viewYi != 0)
+                {
+                    double xf = viewXi / 32768.0;
+                    double yf = -viewYi / 32768.0;
+
+                    movement.Add(xf, 0, yf);
+                }
             }
 
-            if(viewXi != 0 || viewYi != 0)
-            {
-                double xf = viewXi / 32768.0;
-                double yf = -viewYi / 32768.0;
+            mouseX += mouse.InputAxis[0];
+            mouseY += mouse.InputAxis[1];
 
-                movement.Add(xf, 0, yf);
-            }
+            camera.Rotate(mouseX, mouseY);
         }
+
+        camera.Move(movement);
     }
 
-    camera.Move(movement);
-
-    mouseX += mouse.InputAxis[0];
-    mouseY += mouse.InputAxis[1];
-
-    camera.Rotate(mouseX, mouseY);
     camera.Update(_deltaTime);
 #endif
 
@@ -1264,7 +1269,27 @@ void BF::BitFireEngine::UnRegister(AudioClip& audioClip)
     //  alDeleteBuffers(1, &audioClip.ID);
 }
 
-ThreadFunctionReturnType BF::BitFireEngine::LoadResourceAsync(void* resourceAdress)
+void BF::BitFireEngine::MakeRectangle(Renderable& renderable)
+{
+    const float vtx[12] =
+    {
+        0,0,0,
+        0,1,0,
+        1,1,0,
+        1,0,0
+    };
+
+    const unsigned int itx[4] =
+    {
+        0,1,2,3
+    };
+
+    Load(renderable, vtx, 12, itx, 4);
+
+    renderable.Mode = RenderMode::Square;
+}
+
+ThreadResult BF::BitFireEngine::LoadResourceAsync(void* resourceAdress)
 {
     /*
     ResourceAsyncLoadInfo* resourceAsyncLoadInfo = (ResourceAsyncLoadInfo*)resourceAdress;

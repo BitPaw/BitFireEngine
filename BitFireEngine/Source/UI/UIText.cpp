@@ -22,9 +22,9 @@ void BF::UIText::Setup(const wchar_t* text, Font* font, float x, float y)
 	//strcpy(mesh.Name, "<Text-Mesh>");
 	//strcpy(mesh.FilePath, "<Internal>");
 
-	SetFont(*font);
-	SetText(text);
-	SetTextPosition(x, y);
+	FontSet(*font);
+	TextSet(text);
+	TextPositionSet(x, y);
 }
 
 BF::UIText::UIText()
@@ -32,12 +32,12 @@ BF::UIText::UIText()
 	Setup(L"-----------------------", nullptr, 0, 0);
 }
 
-void BF::UIText::SetFont(Font& font)
+void BF::UIText::FontSet(Font& font)
 {
 	_font = &font;
 }
 
-void BF::UIText::SetTextPosition(float x, float y)
+void BF::UIText::TextPositionSet(float x, float y)
 {
 	float offset = 1;
 
@@ -47,7 +47,7 @@ void BF::UIText::SetTextPosition(float x, float y)
 	//MatrixModel.MoveTo(x- Width, y- Height, 0);
 }
 
-void BF::UIText::SetText(const char* text)
+void BF::UIText::TextSet(const char* text)
 {
 	if (!text)
 	{
@@ -57,7 +57,7 @@ void BF::UIText::SetText(const char* text)
 	TextSizeCurrent = TextCopyAW(text, TextSizeMax, TextContent, TextSizeMax);
 }
 
-void BF::UIText::SetText(const wchar_t* text)
+void BF::UIText::TextSet(const wchar_t* text)
 {
 	if (!text)
 	{
@@ -67,7 +67,7 @@ void BF::UIText::SetText(const wchar_t* text)
 	TextSizeCurrent = TextCopyW(text, TextSizeMax, TextContent, TextSizeMax);
 }
 
-void BF::UIText::UpdateText()
+void BF::UIText::TextUpdate()
 {
 	FNT& bitmapFont = *((FNT*)(_font->BitMapFont));
 

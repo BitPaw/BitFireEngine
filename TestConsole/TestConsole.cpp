@@ -12,7 +12,7 @@
 #include <File/File.h>
 #include <File/Format/MP3/MP3.h>
 #include <File/Format/PNG/PNG.h>
-#include <OS/Window.h>
+#include <OS/CWindow.h>
 #include <OS/OSUI.h>
 #include <CommCtrl.h>
 //#include <Media/Font/Font.h>
@@ -26,7 +26,7 @@ using namespace BF;
 
 void OnWindowCreated(void* windowAdress)
 {
-    Window* window = (Window*)windowAdress;
+    CWindow* window = (CWindow*)windowAdress;
 
     OSButton button;
     OSListBox listBox;
@@ -116,14 +116,14 @@ int main()
 {
 
 
-    Window window;
+    CWindow window;
 
 
-    WindowConstruct(&window);
+    CWindowConstruct(&window);
 
     window.WindowCreatedCallBack = OnWindowCreated;
 
-    WindowCreate(&window, 600, 400, "I BIMS", true);
+    CWindowCreate(&window, 600, 400, "I BIMS", true);
     
     while(!window.IsRunning)
     {

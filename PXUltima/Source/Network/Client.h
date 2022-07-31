@@ -33,7 +33,7 @@ extern "C"
 
 	extern ActionResult ClientConnectToServer(Client* client, const char* ip, unsigned short port, const void* threadObject, const ThreadFunction threadFunction);
 
-	extern ThreadFunctionReturnType CommunicationFunctionAsync(void* ioSocket);
+	extern ThreadResult CommunicationFunctionAsync(void* ioSocket);
 
 #ifdef __cplusplus
 }

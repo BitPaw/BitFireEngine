@@ -62,7 +62,7 @@ ActionResult ClientConnectToServer(Client* client, const char* ip, unsigned shor
 
 #define ClientBufferSize 2048u
 
-ThreadFunctionReturnType CommunicationFunctionAsync(void* cSocketAdress)
+ThreadResult CommunicationFunctionAsync(void* cSocketAdress)
 {
     CSocket* cSocket = (CSocket*)cSocketAdress;
 

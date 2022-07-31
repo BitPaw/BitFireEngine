@@ -6,14 +6,14 @@
 #ifdef OSUnix
 #include <pthread.h>
 #include <unistd.h>
-#define ThreadFunctionReturnType void*
-#define ThreadFunctionReturnValue nullptr
+#define ThreadResult void*
+#define ThreadSucessful nullptr
 #define ThreadID pthread_t
 #define ThreadIDUnused 0
 #elif defined(OSWindows)
 #include <windows.h>
-#define ThreadFunctionReturnType unsigned long
-#define ThreadFunctionReturnValue 0
+#define ThreadResult unsigned long
+#define ThreadSucessful 0
 #define ThreadID HANDLE
 #define ThreadIDUnused nullptr
 #if defined(OSWindowsXP)
@@ -21,14 +21,12 @@ typedef struct IUnknown IUnknown;
 #endif
 #endif
 
-
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-	typedef ThreadFunctionReturnType(*ThreadFunction)(void* data);
-
+	typedef ThreadResult(*ThreadFunction)(void* data);
 
 	extern ThreadID ThreadRun(const ThreadFunction threadFunction, const void* parameter);
 

@@ -177,3 +177,94 @@ void BF::Camera::Update(float deltaTime)
 
 	ViewChange(Perspective);
 }
+
+BF::Vector3<float> BF::Camera::PositionScreenGet()
+{
+	return Vector3<float>(0,0,0);
+
+	/*
+	auto x = LookAtPosition
+
+	_camera.ThirdDimension = true
+
+		val lookAtMatrix = _camera.getLookAtMatrix()
+		//val viewMatrix = _camera.getCalculateViewMatrix()
+		val projectioNmatrix = _camera.getCalculateProjectionMatrix()
+
+
+		// heavily influenced by: http://antongerdelan.net/opengl/raycasting.html
+		// viewport coordinate system
+		// normalized device coordinates
+		val x = 2f * mousePositionCurrent.x / window.windowWidth - 1f
+		val y = 1f - 2f * mousePositionCurrent.y / window.windowHeight
+		val z = 1f
+		val rayNormalizedDeviceCoordinates = Vector3f(x.toFloat(), y.toFloat(), z)
+
+		// 4D homogeneous clip coordinates
+
+		// 4D homogeneous clip coordinates
+		val rayClip = Vector4f(rayNormalizedDeviceCoordinates.x, rayNormalizedDeviceCoordinates.y, -1f, 1f)
+
+
+		// 4D eye (camera) coordinates
+		var rayEye = Vector4f()
+
+		rayClip.mul(projectioNmatrix.invert())
+
+		rayEye = Vector4f(rayEye.x, rayEye.y, -1f, 0f)
+
+		// 4D world coordinates
+		val rayWorldCoordinatesMatrix = rayEye.mul(lookAtMatrix.invert())
+		var rayWorldCoordinates = Vector3f(rayWorldCoordinatesMatrix.x, rayWorldCoordinatesMatrix.y, rayWorldCoordinatesMatrix.z)
+
+		rayWorldCoordinates.normalize()
+
+
+
+
+
+
+
+		val xString = "%4.1f".format(rayWorldCoordinates.x)
+		val yString = "%4.1f".format(rayWorldCoordinates.y)
+		val zString = "%4.1f".format(rayWorldCoordinates.z)
+		_lookAtTextPosition.TextSet("LookAt : <$xString|$yString|$zString>")
+
+		val positionCamera = Vector3f(_camera.getPosition())
+		val wtwfwtf = Vector3f(positionCamera)
+
+		for(i in 0..6)
+		{
+			wtwfwtf.add(rayWorldCoordinates)
+		}
+
+	_cube.setPosition(wtwfwtf)
+
+		var hasHit = false
+
+
+		for(element in _fieldList)
+		{
+			val objectPosition = Vector3f(element.HitBoxAncerPoint)
+				val currentCheckPosition = Vector3f(positionCamera)
+				val range = 10
+
+				for(i in 0 until range)
+				{
+					currentCheckPosition.add(rayWorldCoordinates)
+
+						hasHit = BoxCollider(currentCheckPosition, objectPosition, 0.5f)
+
+						if(hasHit)
+						{
+							break
+						}
+				}
+
+			if(hasHit)
+			{
+				OnPillarSelect(element)
+					break
+			}
+		}*/
+}

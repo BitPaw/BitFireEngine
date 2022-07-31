@@ -1,9 +1,9 @@
-#ifndef WindowInclude
-#define WindowInclude
+#ifndef CWindowInclude
+#define CWindowInclude
 
 #include <stddef.h>
 
-#include <Async/Thread.h>
+#include <OS/OSVersion.h>
 
 #if defined(OSUnix)
 
@@ -12,19 +12,21 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glx.h>
-#define WindowID XID // XID is Window
+#define CWindowID XID // XID is CWindow
 #define OpenGLConextID GLXContext
 
 #elif defined(OSWindows)
 #include <Windows.h>
-#define WindowID HWND
+#define CWindowID HWND
 #define OpenGLConextID HGLRC
-
 #endif
+
 #include <Device/KeyBoardKey.h>
+#include <Async/Thread.h>
 
 #define UseRawMouseData 1
-#define WindowTitleSizeMax 256
+#define CWindowTitleSizeMax 256
+#define CWindowSizeDefault -1
 
 #ifdef __cplusplus
 extern "C"
@@ -32,23 +34,15 @@ extern "C"
 #endif
 
 	// The mode in which the mouse pointer will be.
-	typedef enum WindowCursorMode_
-	{
-		// Show the cursor but dont register any Input.
-		WindowCursorIgnore,
-
-		// Show the cursor and register Input as normal.
-		WindowCursorShow,
-
-		// Hide Cursor. You can still use it as normal. Not locked.
-		WindowCursorInvisible,
-
-		WindowCursorLock,
-
-		WindowCursorLockAndHide
+	typedef enum CWindowCursorMode_
+	{	
+		CWindowCursorIgnore, 	// Show the cursor but dont register any Input.	
+		CWindowCursorShow, 	// Show the cursor and register Input as normal.	
+		CWindowCursorInvisible, 	// Hide Cursor. You can still use it as normal. Not locked.
+		CWindowCursorLock,
+		CWindowCursorLockAndHide
 	}
-	WindowCursorMode;
-
+	CWindowCursorMode;
 
 	typedef enum ButtonState_
 	{
@@ -78,7 +72,6 @@ extern "C"
 	}
 	MouseScrollDirection;
 
-
 	typedef struct KeyBoardKeyInfo_
 	{
 		KeyBoardKey Key;
@@ -96,7 +89,7 @@ extern "C"
 	typedef void (*MouseScrollEvent)(const MouseScrollDirection mouseScrollDirection);
 	typedef void (*MouseClickEvent)(const MouseButton mouseButton, const ButtonState buttonState);
 	typedef void (*MouseClickDoubleEvent)(const MouseButton mouseButton);
-	typedef void (*MouseMoveEvent)(const double positionX, const double positionY, const double deltaX, const double deltaY);
+	typedef void (*MouseMoveEvent)(const int positionX, const int positionY, const int deltaX, const int deltaY);
 	typedef void (*MouseEnterEvent)();
 	typedef void (*MouseLeaveEvent)();
 
@@ -106,38 +99,38 @@ extern "C"
 	typedef void (*FocusEnterEvent)();
 	typedef void (*FocusLeaveEvent)();
 
-	typedef void (*WindowCreatedEvent)(void* window);
+	typedef void (*WindowCreatedEvent)(void* CWindow);
 	typedef void (*WindowSizeChangedEvent)(const size_t width, const size_t height);
 	typedef void (*WindowClosingEvent)(unsigned char* allowClosing);
 	typedef void (*WindowClosedEvent)();
 
-	// 	static Dictionary<WindowID, Window*> _windowLookup;
+	// 	static Dictionary<CWindowID, CWindow*> _windowLookup;
 
-	typedef struct Window_
+	typedef struct CWindow_
 	{
 		volatile unsigned char IsRunning;
-		WindowID ID;
+		CWindowID ID;
 		OpenGLConextID OpenGLConext;
 
 		// Live data
 		unsigned char HasSizeChanged;
-		WindowCursorMode CursorModeCurrent;
+		CWindowCursorMode CursorModeCurrent;
 
-		double MousePositionX;
-		double MousePositionY;
-		double MouseDeltaX;
-		double MouseDeltaY;
+		int MousePositionX;
+		int MousePositionY;
+		int MouseDeltaX;
+		int MouseDeltaY;
 
 		unsigned int X;
 		unsigned int Y;
 		unsigned int Width;
 		unsigned int Height;
 
-		wchar_t Title[WindowTitleSizeMax];
+		wchar_t Title[CWindowTitleSizeMax];
 
 #if defined(OSUnix)
 		Display* DisplayCurrent;
-		WindowID WindowRoot;
+		CWindowIDCWindowRoot;
 #elif defined(OSWindows)
 		HCURSOR CursorID;
 		HDC HandleDeviceContext;
@@ -162,44 +155,45 @@ extern "C"
 		WindowClosingEvent WindowClosingCallBack;
 		WindowClosedEvent WindowClosedCallBack;
 	}
-	Window;
+	CWindow;
 
 #if defined(OSUnix)
-	static void WindowEventHandler(BF::Window& window, const XEvent& event);
+	static void CWindowEventHandler(CWindow& cWindow, const XEvent& event);
 #elif defined(OSWindows)
-	static LRESULT CALLBACK WindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM lParam);
+	static LRESULT CALLBACK CWindowEventHandler(HWND cWindowsID, UINT eventID, WPARAM wParam, LPARAM lParam);
 #endif
 
-	static ThreadFunctionReturnType WindowCreateThread(void* windowAdress);
+	static ThreadResult CWindowCreateThread(void*CWindowAdress);
 
-	extern void WindowConstruct(Window* window);
-	extern void WindowCreate(Window* window, const unsigned int width, const unsigned int height, const char* title, unsigned char async);
-	extern void WindowDestruct(Window* window);
+	extern void CWindowConstruct(CWindow* CWindow);
+	extern void CWindowCreate(CWindow* CWindow, const unsigned int width, const unsigned int height, const char* title, unsigned char async);
+	extern void CWindowDestruct(CWindow* CWindow);
 
-	extern void WindowIconCorner();
-	extern void WindowIconTaskBar();
+	extern void CWindowIconCorner();
+	extern void CWindowIconTaskBar();
 
-	extern void WindowLookupAdd(const Window* window);
-	extern Window* WindowLookupFind(const WindowID windowID);
-	extern void WindowLookupRemove(const Window* window);
+	extern void CWindowLookupAdd(const CWindow* CWindow);
+	extern CWindow* CWindowLookupFind(const CWindowID CWindowID);
+	extern void CWindowLookupRemove(const CWindow* CWindow);
 
-	extern void WindowSize(Window* window, unsigned int* x, unsigned int* y, unsigned int* width, unsigned int* height);
-	extern void WindowSizeChange(Window* window, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height);
-	extern void WindowPosition(Window* window, unsigned int* x, unsigned int* y);
-	extern void WindowPositionChange(Window* window, const unsigned int x, const unsigned int y);
-	extern void WindowPositonCenterScreen(Window* window);
-	extern void WindowCursor(Window* window);
-	//void WindowCursor(const CursorIcon cursorIcon);
-	extern void WindowCursorTexture();
-	extern void WindowCursorCaptureMode(Window* window, const WindowCursorMode cursorMode);
-	//void WindowScreenShotTake(Image image);
-	extern int WindowFrameBufferInitialize(Window* window);
-	extern unsigned char WindowFrameBufferSwap(Window* window);
-	extern unsigned char WindowFrameBufferContextRegister(Window* window);
-	extern unsigned char WindowFrameBufferContextRelease(Window* window);
-	extern unsigned char WindowInteractable(Window* window);
+	extern void CWindowSize(CWindow* CWindow, unsigned int* x, unsigned int* y, unsigned int* width, unsigned int* height);
+	extern void CWindowSizeChange(CWindow* CWindow, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height);
+	extern void CWindowPosition(CWindow* CWindow, unsigned int* x, unsigned int* y);
+	extern void CWindowPositionChange(CWindow* CWindow, const unsigned int x, const unsigned int y);
+	extern void CWindowPositonCenterScreen(CWindow* CWindow);
+	extern void CWindowCursor(CWindow* CWindow);
+	//voidCWindowCursor(const CursorIcon cursorIcon);
+	extern void CWindowCursorTexture();
+	extern void CWindowCursorCaptureMode(CWindow* CWindow, const CWindowCursorMode cursorMode);
+	//voidCWindowScreenShotTake(Image image);
+	extern int CWindowFrameBufferInitialize(CWindow* CWindow);
+	extern unsigned char CWindowFrameBufferSwap(CWindow* CWindow);
+	extern unsigned char CWindowFrameBufferContextRegister(CWindow* CWindow);
+	extern unsigned char CWindowFrameBufferContextRelease(CWindow* CWindow);
+	extern unsigned char CWindowInteractable(CWindow* CWindow);
 
-
+	extern unsigned char CWindowCursorPositionInWindowGet(CWindow* window, int* x, int* y);
+	extern unsigned char CWindowCursorPositionInDestopGet(CWindow* window, int* x, int* y);
 #ifdef __cplusplus
 }
 #endif

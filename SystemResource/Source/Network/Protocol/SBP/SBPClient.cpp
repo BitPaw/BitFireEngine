@@ -350,7 +350,7 @@ void BF::SBPClient::OnConnectionTerminated(const IPAdressInfo& adressInfo)
 #endif
 }
 
-ThreadFunctionReturnType BF::SBPClient::ReciveDataThread(void* sbpClientAdress)
+ThreadResult BF::SBPClient::ReciveDataThread(void* sbpClientAdress)
 {
 	SBPClient& client = *(SBPClient*)sbpClientAdress;
 

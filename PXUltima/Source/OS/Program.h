@@ -40,7 +40,7 @@ extern "C"
 	}
 	Program;
 
-	extern ThreadFunctionReturnType  ProgramExecuteThreadFunction(void* data);
+	extern ThreadResult  ProgramExecuteThreadFunction(void* data);
 
 	// Execute function Asyncroinusly in another Thread.
 	extern ActionResult ProgramExecuteAS(Program* program, const char* programPath, const char* parameterString, ProgramExecutedEvent* callback);

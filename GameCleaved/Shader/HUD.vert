@@ -1,23 +1,20 @@
 #version 300 es
 
 layout(location = 0) in vec3 position;
-layout(location = 1) in vec3 normal;
-layout(location = 2) in vec4 color;
-layout(location = 3) in vec2 texturePosition;
 
-out vec3 vertexPosition;
-out vec3 vertexNormal;
-out vec4 vertexColor;
-out vec2 vertexTexturePosition;
+out vec2 TexturePosition;
+out vec3 TextureScaling;
 
 uniform mat4 MatrixModel;
+uniform mat4 MatrixView;
 
 void main() 
-{
-    gl_Position = MatrixModel * vec4(position,1);
-	
-    vertexColor = color;
-    vertexNormal = normal;
-    vertexPosition = position;
-    vertexTexturePosition = texturePosition;
+ {
+    vec4 position4x = vec4(position, 1.0f);
+    vec4 matrixModelViewProjection = MatrixModel * position4x;
+
+    TexturePosition = position.xy;
+    TextureScaling = vec3(MatrixModel[0][0],MatrixModel[1][1],MatrixModel[2][2]);
+
+    gl_Position = matrixModelViewProjection;
 }

@@ -12,7 +12,8 @@ namespace BF
 	class UIText : public UIElement
 	{
 		private:
-		List<Rectangle<float>> _textBlockList;
+		float* _textBlockMeshList;
+		size_t _textBlockMeshListSize;
 
 		Font* _font;
 
@@ -26,12 +27,13 @@ namespace BF
 
 		void Setup(const wchar_t* text, Font* font, float x, float y);
 
-		void SetFont(Font& font);
-		void SetTextPosition(float x, float y);
-		void SetText(const char* text);
-		void SetText(const wchar_t* text);
-		
-		void UpdateText(); 
+		void FontSet(Font& font);
+
+		void TextPositionSet(float x, float y);
+		void TextSet(const char* text);
+		void TextSet(const wchar_t* text);		
+		void TextUpdate(); 
+
 		void PrintObjectData();		
 	};
 }

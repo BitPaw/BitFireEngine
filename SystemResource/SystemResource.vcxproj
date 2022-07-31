@@ -309,8 +309,6 @@
     <ClCompile Include="Source\OS\Sound\AudioResult.cpp" />
     <ClCompile Include="Source\OS\Sound\AudioSystem.cpp" />
     <ClCompile Include="Source\Time\StopWatch.cpp" />
-    <ClCompile Include="Source\UI\Label.cpp" />
-    <ClCompile Include="Source\UI\Button.cpp" />
     <ClCompile Include="Source\Container\ResponseCache.cpp" />
     <ClCompile Include="Source\Math\Primes.cpp" />
     <ClCompile Include="Source\Container\QueueMapping.cpp" />
@@ -328,9 +326,7 @@
     <ClCompile Include="Source\Graphic\OpenGL\TextureCube.cpp" />
     <ClCompile Include="Source\Hardware\MainBoard\MainBoard.cpp" />
     <ClCompile Include="Source\OS\Windows\Registry.cpp" />
-    <ClCompile Include="Source\Graphic\DirectX\DirectX.cpp" />
     <ClCompile Include="Source\Graphic\OpenGL\OpenGL.cpp" />
-    <ClCompile Include="Source\Graphic\Graphic.cpp" />
     <ClCompile Include="Source\Encryption\SHA\SHA1.cpp" />
     <ClCompile Include="Source\Encryption\MD5\MD5.cpp" />
     <ClCompile Include="Source\Hardware\Processor\Processor.cpp" />
@@ -380,13 +376,10 @@
     <ClCompile Include="Source\Model\OBJ\OBJX.cpp" />
     <ClCompile Include="Source\Model\Vertex.cpp" />
     <ClCompile Include="Source\Media\Sound\Sound.cpp" />
-    <ClCompile Include="Source\Types\UUID.cpp" />
     <ClCompile Include="Source\Window\CursorIcon.cpp" />
-    <ClCompile Include="Source\Window\WindowP.cpp" />
+    <ClCompile Include="Source\Window\Window.cpp" />
     <ClCompile Include="Source\DataBase\SQLType.cpp" />
     <ClCompile Include="Source\DataBase\SQLResult.cpp" />
-    <ClCompile Include="Source\Graphic\Vulcan\Vulcan.cpp" />
-    <ClCompile Include="Source\UI\TextBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Media\Image\PNGX.h" />
@@ -396,8 +389,6 @@
     <ClInclude Include="Source\OS\Sound\AudioResult.h" />
     <ClInclude Include="Source\OS\Sound\AudioSystem.h" />
     <ClInclude Include="Source\Time\StopWatch.h" />
-    <ClInclude Include="Source\UI\Label.h" />
-    <ClInclude Include="Source\UI\Button.h" />
     <ClInclude Include="Source\Container\ResponseCache.h" />
     <ClInclude Include="Source\Math\Primes.h" />
     <ClInclude Include="Source\Container\QueueMapping.h" />
@@ -421,9 +412,7 @@
     <ClInclude Include="Source\Graphic\OpenGL\TextureCube.h" />
     <ClInclude Include="Source\Hardware\MainBoard\MainBoard.h" />
     <ClInclude Include="Source\OS\Windows\Registry.h" />
-    <ClInclude Include="Source\Graphic\DirectX\DirectX.h" />
     <ClInclude Include="Source\Graphic\OpenGL\OpenGL.h" />
-    <ClInclude Include="Source\Graphic\Graphic.h" />
     <ClInclude Include="Source\Encryption\SHA\SHA1.h" />
     <ClInclude Include="Source\Encryption\MD5\MD5.h" />
     <ClInclude Include="Source\Hardware\Processor\Processor.h" />
@@ -513,13 +502,10 @@
     <ClInclude Include="Source\Model\Vertex.h" />
     <ClInclude Include="Source\Media\Sound\Sound.h" />
     <ClInclude Include="Source\Media\Sound\SoundFormat.h" />
-    <ClInclude Include="Source\Types\UUID.h" />
     <ClInclude Include="Source\Window\CursorIcon.h" />
-    <ClInclude Include="Source\Window\WindowP.h" />
+    <ClInclude Include="Source\Window\Window.h" />
     <ClInclude Include="Source\DataBase\SQLType.h" />
     <ClInclude Include="Source\DataBase\SQLResult.h" />
-    <ClInclude Include="Source\Graphic\Vulcan\Vulcan.h" />
-    <ClInclude Include="Source\UI\TextBox.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PXUltima\PXUltima.vcxproj">

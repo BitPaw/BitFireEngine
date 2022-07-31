@@ -1,4 +1,4 @@
-#include "Window.h"
+#include "CWindow.h"
 
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -36,8 +36,9 @@
 
 #include <OS/Monitor.h>
 #include <Text/Text.h>
+#include <Async/Await.h>
 
-Window* currentWindow = 0;
+CWindow* currentWindow = 0;
 
 #if defined(OSWindows)
 
@@ -580,8 +581,8 @@ WindowEventType ToWindowEventType(const unsigned int windowEventID)
 
 
 #if defined(OSUnix)
-void WindowEventHandler(BF::Window& window, const XEvent& event)
-void BF::Window::OnWindowEvent(BF::Window& window, const XEvent& event)
+void WindowEventHandler(BF::CWindow& window, const XEvent& event)
+void BF::CWindow::OnWindowEvent(BF::CWindow& window, const XEvent& event)
 {
     switch(event.type)
     {
@@ -691,7 +692,7 @@ void BF::Window::OnWindowEvent(BF::Window& window, const XEvent& event)
             /*
               XWindowAttributes gwa;
 
-                        XGetWindowAttributes(window.Dis, windowID, &gwa);
+                        XGetWindowAttributes(window.Dis, CWindowID, &gwa);
                         glViewport(0, 0, gwa.width, gwa.height);
 
 
@@ -919,10 +920,10 @@ void BF::Window::OnWindowEvent(BF::Window& window, const XEvent& event)
     }
 }
 #elif defined(OSWindows)
-LRESULT WindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM lParam)
+LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM lParam)
 {
     const WindowEventType windowEventType = ToWindowEventType(eventID);
-    Window* window = WindowLookupFind(windowsID);
+    CWindow* window = CWindowLookupFind(windowsID);
 
     if(!window)
     {
@@ -1025,7 +1026,7 @@ LRESULT WindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM l
             const HWND windowsHandle = (HWND)wParam;
             const WORD hitTestResult = LOWORD(lParam);
             const WORD sourceMessage = HIWORD(lParam);
-            const unsigned char showCursor = !(window->CursorModeCurrent == WindowCursorInvisible || window->CursorModeCurrent == WindowCursorLockAndHide);
+            const unsigned char showCursor = !(window->CursorModeCurrent == CWindowCursorInvisible || window->CursorModeCurrent == CWindowCursorLockAndHide);
 
             if(showCursor)
             {
@@ -1194,7 +1195,9 @@ LRESULT WindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM l
                         {
                             const LONG mouseX = rawInput.data.mouse.lLastX;
                             const LONG mouseY = rawInput.data.mouse.lLastY;
-                            const unsigned char interactable = WindowInteractable(window);
+                            const unsigned char interactable = 1u;// CWindowInteractable(window);
+                            
+                            CWindowCursorPositionGet(window, &window->MousePositionX, &window->MousePositionY);
 
                             if(interactable)
                             {
@@ -1617,17 +1620,17 @@ LRESULT WindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM l
 }
 #endif
 
-ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
+ThreadResult CWindowCreateThread(void* windowAdress)
 {
     if(!windowAdress)
     {
-        return ThreadFunctionReturnValue;
+        return ThreadSucessful;
     }
 
-    Window* window = (Window*)windowAdress;
+    CWindow* window = (CWindow*)windowAdress;
 
     window->IsRunning = 0;
-    window->CursorModeCurrent = WindowCursorShow;
+    window->CursorModeCurrent = CWindowCursorShow;
 
 #if defined(OSUnix)
     XInitThreads();
@@ -1702,7 +1705,7 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
 
     int borderWidth = 0;
 
-    XID windowID = XCreateWindow
+    XID CWindowID = XCreateWindow
     (
         display,
         windowRoot,
@@ -1717,14 +1720,14 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
         CWColormap | CWEventMask,
         &setWindowAttributes
     );
-    window.ID = windowID;
+    window.ID = CWindowID;
 
     char windowTitle[256];
 
     Text::Copy(windowTitle, 256, window.Title, 256);
 
-    XMapWindow(display, windowID);
-    XStoreName(display, windowID, windowTitle);
+    XMapWindow(display, CWindowID);
+    XStoreName(display, CWindowID, windowTitle);
 
     GLXContext glContext = glXCreateContext(display, visualInfo, NULL, GL_TRUE);
 
@@ -1787,7 +1790,7 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
     MemorySet(&wndclass, sizeof(WNDCLASS), 0);
 
     wndclass.style = CS_OWNDC; //  CS_HREDRAW | CS_VREDRAW;
-    wndclass.lpfnWndProc = WindowEventHandler;
+    wndclass.lpfnWndProc = CWindowEventHandler;
     wndclass.cbClsExtra = 0; // The number of extra bytes to allocate following the window-class structure.
     wndclass.cbWndExtra = 0;
     wndclass.hInstance = hInstance;
@@ -1806,7 +1809,7 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
     HMENU hMenu = 0;
     void* lpParam = 0;
 
-    WindowID windowID = CreateWindowExW
+    CWindowID CWindowID = CreateWindowExW
     (
         windowStyle,
         lpClassName,
@@ -1823,7 +1826,7 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
     );
 
     {
-        if(!windowID)
+        if(!CWindowID)
         {
             DWORD error = GetLastError();
             wchar_t errorBuffer[1024];
@@ -1831,12 +1834,12 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
             MessageBox(NULL, errorBuffer, L"Error", MB_ICONHAND);
         }
 
-        window->ID = windowID;
+        window->ID = CWindowID;
     }    
 
     // Create OpenGL Context
     {
-        const HDC windowHandleToDeviceContext = GetDC(windowID);
+        const HDC windowHandleToDeviceContext = GetDC(CWindowID);
         const PIXELFORMATDESCRIPTOR pfd =
         {
             sizeof(PIXELFORMATDESCRIPTOR),
@@ -1870,7 +1873,7 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
         rid.usUsagePage = HID_USAGE_PAGE_GENERIC;
         rid.usUsage = HID_USAGE_GENERIC_MOUSE;
         rid.dwFlags = RIDEV_INPUTSINK;
-        rid.hwndTarget = windowID;
+        rid.hwndTarget = CWindowID;
 
         const unsigned char result = RegisterRawInputDevices(&rid, 1, sizeof(RAWINPUTDEVICE));
 
@@ -1884,7 +1887,7 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
 #endif
 
     // Create context
-    WindowFrameBufferContextRegister(window);
+    CWindowFrameBufferContextRegister(window);
 
     {
         const unsigned int result = glewInit(); // Initialise OpenGL enviroment
@@ -1895,19 +1898,19 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
                 break;
 
             case GLEW_ERROR_NO_GL_VERSION:
-                return (ThreadFunctionReturnType)1u;
+                return (ThreadResult)1u;
 
             case GLEW_ERROR_GL_VERSION_10_ONLY:
-                return (ThreadFunctionReturnType)2u;
+                return (ThreadResult)2u;
 
             case GLEW_ERROR_GLX_VERSION_11_ONLY:
-                return (ThreadFunctionReturnType)3u;
+                return (ThreadResult)3u;
 
             case GLEW_ERROR_NO_GLX_DISPLAY:
-                return (ThreadFunctionReturnType)4u;
+                return (ThreadResult)4u;
 
             default:
-                return (ThreadFunctionReturnType)5u;
+                return (ThreadResult)5u;
         }
     }
 
@@ -1935,11 +1938,11 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
     glClearColor(0.2, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    WindowLookupAdd(window);
+    CWindowLookupAdd(window);
 
     InvokeEvent(window->WindowCreatedCallBack, window);
 
-    WindowFrameBufferContextRelease(window);
+    CWindowFrameBufferContextRelease(window);
 
     //ShowWindow(window->ID, SW_SHOW);
     //UpdateWindow(window->ID);
@@ -1969,7 +1972,7 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
         // XEventClass eventList[8]={0,0,0,0,0,0,0,0};
        //  int listSize = xDeviceInfo.num_classes;
 
-       //  int resultE = XSelectExtensionEvent(display, windowID, eventList, listSize);
+       //  int resultE = XSelectExtensionEvent(display, CWindowID, eventList, listSize);
 
         // printf("");
     }
@@ -2053,21 +2056,22 @@ ThreadFunctionReturnType WindowCreateThread(void* windowAdress)
 #endif
     }
 
-    return ThreadFunctionReturnValue;
+    return ThreadSucessful;
 }
 
-extern void WindowConstruct(Window* window)
+extern void CWindowConstruct(CWindow* window)
 {
-    MemorySet(window, sizeof(Window), 0);
+    MemorySet(window, sizeof(CWindow), 0);
 }
 
-void WindowCreate(Window* window, const unsigned int width, const unsigned int height, const char* title, unsigned char async)
+void CWindowCreate(CWindow* window, const unsigned int width, const unsigned int height, const char* title, unsigned char async)
 {
     window->Width = width;
     window->Height = height;
 
     TextCopyAW(title, 256, window->Title, 256);
 
+// if width or height == WindowSizeDefault, then what?
     {
         unsigned int screenWidth = 0;
         unsigned int screenHeight = 0;
@@ -2082,20 +2086,15 @@ void WindowCreate(Window* window, const unsigned int width, const unsigned int h
 
     if(async)
     {
-        window->MessageThreadID = ThreadRun(WindowCreateThread, window);
-
-        while(window->ID == 0)
-        {
-
-        }
-}
+        window->MessageThreadID = ThreadRun(CWindowCreateThread, window);
+    }
     else
     {
-        WindowCreateThread(window);
+        CWindowCreateThread(window);
     }
 }
 
-void WindowDestruct(Window* window)
+void CWindowDestruct(CWindow* window)
 {
 #if defined(OSUnix)
     glXMakeCurrent(DisplayCurrent, None, NULL);
@@ -2109,30 +2108,30 @@ void WindowDestruct(Window* window)
     window->ID = 0;
 }
 
-void WindowIconCorner()
+void CWindowIconCorner()
 {
 }
 
-void WindowIconTaskBar()
+void CWindowIconTaskBar()
 {
 }
 
-void WindowLookupAdd(const Window* window)
+void CWindowLookupAdd(const CWindow* window)
 {
     currentWindow = window;
 }
 
-Window* WindowLookupFind(const WindowID windowID)
+CWindow* CWindowLookupFind(const CWindowID cWindowID)
 {
     return currentWindow;
 }
 
-void WindowLookupRemove(const Window* window)
+void CWindowLookupRemove(const CWindow* window)
 {
     currentWindow = 0;
 }
 
-void WindowSize(Window* window, unsigned int* x, unsigned int* y, unsigned int* width, unsigned int* height)
+void CWindowSize(CWindow* window, unsigned int* x, unsigned int* y, unsigned int* width, unsigned int* height)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -2150,7 +2149,7 @@ void WindowSize(Window* window, unsigned int* x, unsigned int* y, unsigned int* 
 #endif
 }
 
-void WindowSizeChange(Window* window, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height)
+void CWindowSizeChange(CWindow* window, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -2173,27 +2172,27 @@ void WindowSizeChange(Window* window, const unsigned int x, const unsigned int y
 #endif
 }
 
-void WindowPosition(Window* window, unsigned int* x, unsigned int* y)
+void CWindowPosition(CWindow* window, unsigned int* x, unsigned int* y)
 {
 }
 
-void WindowPositionChange(Window* window, const unsigned int x, const unsigned int y)
+void CWindowPositionChange(CWindow* window, const unsigned int x, const unsigned int y)
 {
 }
 
-void WindowPositonCenterScreen(Window* window)
+void CWindowPositonCenterScreen(CWindow* window)
 {
 }
 
-void WindowCursor(Window* window)
+void CWindowCursor(CWindow* window)
 {
 }
 
-void WindowCursorTexture()
+void CWindowCursorTexture()
 {
 }
 
-void WindowCursorCaptureMode(Window* window, const WindowCursorMode cursorMode)
+void CWindowCursorCaptureMode(CWindow* window, const CWindowCursorMode cursorMode)
 {
     unsigned int horizontal = 0;
     unsigned int vertical = 0;
@@ -2205,7 +2204,7 @@ void WindowCursorCaptureMode(Window* window, const WindowCursorMode cursorMode)
 
     switch(cursorMode)
     {
-        case WindowCursorShow:
+        case CWindowCursorShow:
         {
             printf("[Cursor] Show\n");
 
@@ -2216,7 +2215,7 @@ void WindowCursorCaptureMode(Window* window, const WindowCursorMode cursorMode)
 
             break;
         }
-        case WindowCursorLock:
+        case CWindowCursorLock:
         {
             printf("[Cursor] Lock\n");
 
@@ -2231,7 +2230,7 @@ void WindowCursorCaptureMode(Window* window, const WindowCursorMode cursorMode)
 
             break;
         }
-        case WindowCursorLockAndHide:
+        case CWindowCursorLockAndHide:
         {
             printf("[Cursor] Lock and hide\n");
 
@@ -2275,12 +2274,12 @@ void WindowCursorCaptureMode(Window* window, const WindowCursorMode cursorMode)
 #endif
 }
 
-int WindowFrameBufferInitialize(Window* window)
+int CWindowFrameBufferInitialize(CWindow* window)
 {
 	return 0;
 }
 
-unsigned char WindowFrameBufferSwap(Window* window)
+unsigned char CWindowFrameBufferSwap(CWindow* window)
 {
     glFlush();  // Flush drawing command buffer to make drawing happen as soon as possible.
 
@@ -2295,7 +2294,7 @@ unsigned char WindowFrameBufferSwap(Window* window)
     return successful;
 }
 
-unsigned char WindowFrameBufferContextRegister(Window* window)
+unsigned char CWindowFrameBufferContextRegister(CWindow* window)
 {
     const size_t threadID = ThreadCurrentID();
 
@@ -2313,7 +2312,7 @@ unsigned char WindowFrameBufferContextRegister(Window* window)
     return successful;
 }
 
-unsigned char WindowFrameBufferContextRelease(Window* window)
+unsigned char CWindowFrameBufferContextRelease(CWindow* window)
 {
     //const size_t threadID = ThreadCurrentID();
 
@@ -2329,17 +2328,94 @@ unsigned char WindowFrameBufferContextRelease(Window* window)
     return successful;
 }
 
-unsigned char WindowInteractable(Window* window)
+unsigned char CWindowInteractable(CWindow* window)
 {
     switch(window->CursorModeCurrent)
     {
-        case WindowCursorIgnore:
-        case WindowCursorShow:
+        case CWindowCursorIgnore:
+        case CWindowCursorShow:
             return 0;
 
-        case WindowCursorInvisible:
-        case WindowCursorLock:
-        case WindowCursorLockAndHide:
+        case CWindowCursorInvisible:
+        case CWindowCursorLock:
+        case CWindowCursorLockAndHide:
             return 1;
     }
+}
+
+unsigned char CWindowCursorPositionInWindowGet(CWindow* window, int* x, int* y)
+{
+    int xPos = 0;
+    int yPos = 0;
+    const unsigned char sucessfulA = GetPhysicalCursorPos(&xPos, &yPos);
+
+#if defined(OSUnix)
+
+#elif defined(OSWindows)
+    POINT point;
+    point.x = xPos;
+    point.y = yPos;
+
+    const unsigned char sucessful = ScreenToClient(window->ID, &point);  // are now relative to hwnd's client area
+
+    if(sucessful)
+    {
+        *x = point.x;
+        *y = point.y;
+    }
+    else
+    {
+        *x = 0;
+        *y = 0;
+    }
+#endif
+}
+
+unsigned char CWindowCursorPositionInDestopGet(CWindow* window, int* x, int* y)
+{
+#if defined(OSUnix)
+
+#elif defined(OSWindows)
+    POINT point;
+    point.x = 0;
+    point.y = 0;
+
+    const unsigned char sucessful = GetPhysicalCursorPos(&point);
+
+    if(sucessful)
+    {
+        *x = point.x;
+        *y = point.y;
+    }
+    else
+    {
+        *x = 0;
+        *y = 0;
+    }
+#endif
+}
+
+void CWindowCursorPositionGet(CWindow* window, int* x, int* y)
+{
+#if defined(OSUnix)
+
+#elif defined(OSWindows)
+    POINT point;
+    point.x = 0;
+    point.y = 0;
+
+    const unsigned char sucessfulA = GetPhysicalCursorPos(&point);
+    const unsigned char sucessfulB = ScreenToClient(window->ID, &point);  // are now relative to hwnd's client area
+
+    if(sucessfulB)
+    {
+        *x = point.x;
+        *y = point.y;
+    }
+    else
+    {
+        *x = 0;
+        *y = 0;
+    }
+#endif
 }

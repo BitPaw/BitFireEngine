@@ -1,6 +1,6 @@
 #include "OSUI.h"
 
-#define WindowsEnableModernColorSceme 0
+#define WindowsEnableModernColorSceme 1
 
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -55,14 +55,36 @@ void OSUIElementEnable()
     INITCOMMONCONTROLSEX icex;
 
     icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
-    icex.dwICC = ICC_LISTVIEW_CLASSES;
+    icex.dwICC =
+        ICC_LISTVIEW_CLASSES | // listview, header
+        ICC_TREEVIEW_CLASSES | // treeview, tooltips
+        ICC_BAR_CLASSES | // toolbar, statusbar, trackbar, tooltips
+        ICC_TAB_CLASSES | // tab, tooltips
+        ICC_UPDOWN_CLASS | // updown
+        ICC_PROGRESS_CLASS | // progress
+        ICC_HOTKEY_CLASS | // hotkey
+        ICC_ANIMATE_CLASS | // animate
+        ICC_WIN95_CLASSES |
+        ICC_DATE_CLASSES | // month picker, date picker, time picker, updown
+        ICC_USEREX_CLASSES | // comboex
+        ICC_COOL_CLASSES | // rebar (coolbar) control
+        ICC_INTERNET_CLASSES |
+        ICC_PAGESCROLLER_CLASS |   // page scroller
+
+#if (NTDDI_VERSION >= NTDDI_WINXP)
+        ICC_STANDARD_CLASSES |
+        ICC_LINK_CLASS |
+#endif
+        ICC_NATIVEFNTCTL_CLASS;   // native font control
+
+
 
     InitCommonControlsEx(&icex);
 #endif
 }
 
 
-void UIElementConstruct(const WindowID window, UIElementID* ID, UILayout* Layout, const wchar_t* className, const wchar_t* name)
+void UIElementConstruct(const CWindowID window, UIElementID* ID, UILayout* Layout, const wchar_t* className, const wchar_t* name)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -103,7 +125,7 @@ void UIElementConstruct(const WindowID window, UIElementID* ID, UILayout* Layout
 
 }
 
-void ButtonConstruct(const WindowID window, OSButton* button, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void ButtonConstruct(const CWindowID window, OSButton* button, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
     MemorySet(button, sizeof(OSButton), 0);
 
@@ -119,7 +141,7 @@ void ButtonConstruct(const WindowID window, OSButton* button, const unsigned int
 #endif
 }
 
-void ComboBoxConstruct(const WindowID window, OSComboBox* comboBox, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void ComboBoxConstruct(const CWindowID window, OSComboBox* comboBox, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
     MemorySet(comboBox, sizeof(OSComboBox), 0);
 
@@ -138,7 +160,7 @@ void ComboBoxConstruct(const WindowID window, OSComboBox* comboBox, const unsign
 #endif
 }
 
-void ListBoxConstruct(const WindowID window, OSListBox* listBox, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void ListBoxConstruct(const CWindowID window, OSListBox* listBox, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
     MemorySet(listBox, sizeof(OSListBox), 0);
 
@@ -155,7 +177,7 @@ void ListBoxConstruct(const WindowID window, OSListBox* listBox, const unsigned 
 #endif
 }
 
-void TextEditConstruct(const WindowID window, OSTextEdit* textEdit, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void TextEditConstruct(const CWindowID window, OSTextEdit* textEdit, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
     MemorySet(textEdit, sizeof(OSTextEdit), 0);
 
@@ -177,7 +199,7 @@ void TextEditContentGet(OSTextEdit* textEdit, const wchar_t* buffer, const size_
     OSUIElementTextGet(textEdit->ID, buffer, bufferSize, bufferWritten);
 }
 
-void RichEditConstruct(const WindowID window, OSRichEdit* richEdit, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void RichEditConstruct(const CWindowID window, OSRichEdit* richEdit, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
     MemorySet(richEdit, sizeof(OSRichEdit), 0);
 
@@ -194,7 +216,7 @@ void RichEditConstruct(const WindowID window, OSRichEdit* richEdit, const unsign
 #endif
 }
 
-void ScrollBarConstruct(const WindowID window, OSScrollBar* scrollBar, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void ScrollBarConstruct(const CWindowID window, OSScrollBar* scrollBar, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
     MemorySet(scrollBar, sizeof(OSScrollBar), 0);
 
@@ -211,7 +233,7 @@ void ScrollBarConstruct(const WindowID window, OSScrollBar* scrollBar, const uns
 #endif
 }
 
-void OSUITextConstruct(const WindowID window, OSUIText* uiText, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUITextConstruct(const CWindowID window, OSUIText* uiText, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
     MemorySet(uiText, sizeof(OSUIText), 0);
 
@@ -229,7 +251,7 @@ void OSUITextConstruct(const WindowID window, OSUIText* uiText, const unsigned i
 
 }
 
-void OSCheckBoxConstruct(const WindowID window, OSUICheckBox* uiCheckBox, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSCheckBoxConstruct(const CWindowID window, OSUICheckBox* uiCheckBox, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
     MemorySet(uiCheckBox, sizeof(OSUICheckBox), 0);
 
@@ -248,7 +270,7 @@ void OSCheckBoxConstruct(const WindowID window, OSUICheckBox* uiCheckBox, const 
 #endif
 }
 
-void OSUITrackbarCreate(const WindowID window, OSUITrackbar* osUITrackbar, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUITrackbarCreate(const CWindowID window, OSUITrackbar* osUITrackbar, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -262,7 +284,7 @@ void OSUITrackbarCreate(const WindowID window, OSUITrackbar* osUITrackbar, const
 #endif
 }
 
-void OSUIStatusbarCreate(const WindowID window, OSUIStatusbar* osUIStatusbar, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUIStatusbarCreate(const CWindowID window, OSUIStatusbar* osUIStatusbar, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -276,7 +298,7 @@ void OSUIStatusbarCreate(const WindowID window, OSUIStatusbar* osUIStatusbar, co
 #endif
 }
 
-void OSUIUpDownCreate(const WindowID window, OSUIUpDown* osUIUpDown, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUIUpDownCreate(const CWindowID window, OSUIUpDown* osUIUpDown, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -290,7 +312,7 @@ void OSUIUpDownCreate(const WindowID window, OSUIUpDown* osUIUpDown, const unsig
 #endif
 }
 
-void OSUIProgressbarCreate(const WindowID window, OSUIProgressbar* osUIProgressbar, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUIProgressbarCreate(const CWindowID window, OSUIProgressbar* osUIProgressbar, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -304,7 +326,7 @@ void OSUIProgressbarCreate(const WindowID window, OSUIProgressbar* osUIProgressb
 #endif
 }
 
-void OSUIHotKeyCreate(const WindowID window, OSUIHotKey* osUIHotKey, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUIHotKeyCreate(const CWindowID window, OSUIHotKey* osUIHotKey, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -318,7 +340,7 @@ void OSUIHotKeyCreate(const WindowID window, OSUIHotKey* osUIHotKey, const unsig
 #endif
 }
 
-void OSUICalenderCreate(const WindowID window, OSUICalender* osUICalender, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUICalenderCreate(const CWindowID window, OSUICalender* osUICalender, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -332,7 +354,7 @@ void OSUICalenderCreate(const WindowID window, OSUICalender* osUICalender, const
 #endif
 }
 
-void OSUIToolTipCreate(const WindowID window, OSUIToolTip* osUIToolTip, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUIToolTipCreate(const CWindowID window, OSUIToolTip* osUIToolTip, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -346,7 +368,7 @@ void OSUIToolTipCreate(const WindowID window, OSUIToolTip* osUIToolTip, const un
 #endif
 }
 
-void OSUIAnimateCreate(const WindowID window, OSUIAnimate* osUIAnimate, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUIAnimateCreate(const CWindowID window, OSUIAnimate* osUIAnimate, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -360,7 +382,7 @@ void OSUIAnimateCreate(const WindowID window, OSUIAnimate* osUIAnimate, const un
 #endif
 }
 
-void OSUIDateTimePickerCreate(const WindowID window, OSUIDateTimePicker* osUIDateTimePicker, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUIDateTimePickerCreate(const CWindowID window, OSUIDateTimePicker* osUIDateTimePicker, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -374,7 +396,7 @@ void OSUIDateTimePickerCreate(const WindowID window, OSUIDateTimePicker* osUIDat
 #endif
 }
 
-void OSUIGroupBoxCreate(const WindowID window, OSUIGroupBox* osUIGroupBox, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUIGroupBoxCreate(const CWindowID window, OSUIGroupBox* osUIGroupBox, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -388,7 +410,7 @@ void OSUIGroupBoxCreate(const WindowID window, OSUIGroupBox* osUIGroupBox, const
 #endif
 }
 
-void OSUIRadioButtonCreate(const WindowID window, OSUIRadioButton* osUIRadioButton, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUIRadioButtonCreate(const CWindowID window, OSUIRadioButton* osUIRadioButton, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -402,7 +424,7 @@ void OSUIRadioButtonCreate(const WindowID window, OSUIRadioButton* osUIRadioButt
 #endif
 }
 
-void OSUIGroupRadioButtonCreate(const WindowID window, OSUIGroupRadioButton* osUIGroupRadioButton, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUIGroupRadioButtonCreate(const CWindowID window, OSUIGroupRadioButton* osUIGroupRadioButton, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -416,7 +438,7 @@ void OSUIGroupRadioButtonCreate(const WindowID window, OSUIGroupRadioButton* osU
 #endif
 }
 
-void OSUIListBoxCreate(const WindowID window, OSUIListBox* osUIListBox, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUIListBoxCreate(const CWindowID window, OSUIListBox* osUIListBox, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -430,7 +452,7 @@ void OSUIListBoxCreate(const WindowID window, OSUIListBox* osUIListBox, const un
 #endif
 }
 
-void OSUITreeViewCreate(const WindowID window, OSUITreeView* OSUITreeView, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUITreeViewCreate(const CWindowID window, OSUITreeView* OSUITreeView, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -444,7 +466,7 @@ void OSUITreeViewCreate(const WindowID window, OSUITreeView* OSUITreeView, const
 #endif
 }
 
-void OSUIIPInputCreate(const WindowID window, OSUIIPInput* osUIIPInput, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUIIPInputCreate(const CWindowID window, OSUIIPInput* osUIIPInput, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -458,7 +480,7 @@ void OSUIIPInputCreate(const WindowID window, OSUIIPInput* osUIIPInput, const un
 #endif    
 }
 
-void OSUITabControlCreate(const WindowID window, OSUITabControl* osUITabControl, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUITabControlCreate(const CWindowID window, OSUITabControl* osUITabControl, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -472,7 +494,7 @@ void OSUITabControlCreate(const WindowID window, OSUITabControl* osUITabControl,
 #endif
 }
 
-void OSUIPageScrollerCreate(const WindowID window, OSUIPageScroller* osUIPageScroller, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUIPageScrollerCreate(const CWindowID window, OSUIPageScroller* osUIPageScroller, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -486,7 +508,7 @@ void OSUIPageScrollerCreate(const WindowID window, OSUIPageScroller* osUIPageScr
 #endif
 }
 
-void OSUIFontSelectorCreate(const WindowID window, OSUIFontSelector* osUIFontSelector, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUIFontSelectorCreate(const CWindowID window, OSUIFontSelector* osUIFontSelector, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -500,7 +522,7 @@ void OSUIFontSelectorCreate(const WindowID window, OSUIFontSelector* osUIFontSel
 #endif
 }
 
-void OSUIHeaderCreate(const WindowID window, OSUIHeader* osUIHeader, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUIHeaderCreate(const CWindowID window, OSUIHeader* osUIHeader, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
@@ -514,7 +536,7 @@ void OSUIHeaderCreate(const WindowID window, OSUIHeader* osUIHeader, const unsig
 #endif
 }
 
-void OSUILinkCreate(const WindowID window, OSUILink* osUILink, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
+void OSUILinkCreate(const CWindowID window, OSUILink* osUILink, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, const wchar_t* buttonText)
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)

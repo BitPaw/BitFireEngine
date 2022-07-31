@@ -17,7 +17,7 @@ void ServerDestruct(Server* server)
 
 }
 
-ActionResult ServerStart(Server* server, const unsigned short port)
+ActionResult ServerStart(Server* server, const unsigned short port, const ProtocolMode protocolMode)
 {
     size_t adressInfoListSize = 0;
 
@@ -32,7 +32,7 @@ ActionResult ServerStart(Server* server, const unsigned short port)
             port,
             IPAdressFamilyUnspecified,
             CSocketTypeStream,
-            ProtocolModeTCP
+            protocolMode
         );
         const unsigned char adressSetupSucessful = ResultSuccessful == adressResult;
 
@@ -178,7 +178,7 @@ ActionResult ServerSendMessageToClient(Server* server, const CSocketID clientID,
     return actionResult;
 }
 
-ThreadFunctionReturnType ServerClientListeningThread(void* serverAdress)
+ThreadResult ServerClientListeningThread(void* serverAdress)
 {
     Server* server = serverAdress;
     CSocket* serverSocket = 0;
@@ -201,7 +201,7 @@ ThreadFunctionReturnType ServerClientListeningThread(void* serverAdress)
 
     if(!serverSocket)
     {
-        return 0;
+        return ThreadSucessful;
     }
   
     while(CSocketIsCurrentlyUsed(serverSocket))
@@ -232,5 +232,5 @@ ThreadFunctionReturnType ServerClientListeningThread(void* serverAdress)
         ServerRegisterClient(serverSocket , &clientSocket);
     }
 
-    return 0;
+    return ThreadSucessful;
 }

@@ -54,6 +54,15 @@ extern "C"
 	}
 	Text;
 
+	extern size_t TextFromIntA(const int number,  char* string, const size_t dataSize);
+	extern size_t TextFromIntW(const int number,  wchar_t* string, const size_t dataSize);
+	extern size_t TextFromBoolA(const unsigned char number,  char* string, const size_t dataSize);
+	extern size_t TextFromBoolW(const unsigned char number,  wchar_t* string, const size_t dataSize);
+	extern size_t TextFromFloatA(const float number,  char* string, const size_t dataSize);
+	extern size_t TextFromFloatW(const float number,  wchar_t* string, const size_t dataSize);
+	extern size_t TextFromDoubleA(const double number,  char* string, const size_t dataSize);
+	extern size_t TextFromDoubleW(const double number,  wchar_t* string, const size_t dataSize);
+
 	extern size_t TextToIntA(const char* string, const size_t dataSize, int* number);
 	extern size_t TextToIntW(const wchar_t* string, const size_t dataSize, int* number);
 	extern size_t TextToBoolA(const char* string, const size_t dataSize, unsigned char* number);

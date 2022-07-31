@@ -1,8 +1,14 @@
 #include "CSocket.h"
 
 #include <Memory/Memory.h>
+#include <Text/Text.h>
 #include <Event/Event.h>
+#include <stdio.h>
 
+
+#if defined(OSWindows)
+#pragma comment( lib, "Ws2_32.lib" )
+#endif
 
 #define ProtocolInvalid (unsigned int)-1
 #define ProtocolHOPOPTS 0
@@ -705,14 +711,15 @@ ActionResult CSocketSetupAdress
 
     if(port != -1)
     {
-        sprintf(portNumberString, "%i", port);
+        TextFromIntA(port, portNumberString, 30u);
+
         portNumberStringAdress = portNumberString;
     }
 
     adressHints.ai_flags = AI_PASSIVE;    // For wildcard IP address (AI_NUMERICHOST | AI_PASSIVE;)
-    adressHints.ai_family = ConvertIPAdressFamily(ipMode);
-    adressHints.ai_socktype = ConvertSocketType(socketType); // Datagram socket
-    adressHints.ai_protocol = ConvertProtocolMode(protocolMode);
+    adressHints.ai_family = ConvertFromIPAdressFamily(ipMode);
+    adressHints.ai_socktype = ConvertFromSocketType(socketType); // Datagram socket
+    adressHints.ai_protocol = ConvertFromProtocolMode(protocolMode);
     adressHints.ai_addrlen = 0;
     adressHints.ai_canonname = 0;
     adressHints.ai_addr = 0;
@@ -799,9 +806,9 @@ ActionResult CSocketSetupAdress
             }
         }
 
-        csocket->Protocol = ConvertProtocolMode(adressInfo->ai_protocol);
-        csocket->Family = ConvertIPAdressFamily(adressInfo->ai_family);
-        csocket->Type = ConvertSocketType(adressInfo->ai_socktype);
+        csocket->Protocol = protocolMode;
+        csocket->Family = ipMode;
+        csocket->Type = socketType;
 
         csocket->IPSize = adressInfo->ai_addrlen;
         MemoryCopy(adressInfo->ai_addr, adressInfo->ai_addrlen, csocket->IP, IPv6LengthMax);
@@ -979,7 +986,7 @@ ActionResult CSocketReceive(CSocket* cSocket, const void* outputBuffer, const si
 
     // Check if socket is active and ready to send
     {
-        const unsigned char isReady = IsCurrentlyUsed();
+        const unsigned char isReady = CSocketIsCurrentlyUsed(cSocket);
 
         if(!isReady)
         {

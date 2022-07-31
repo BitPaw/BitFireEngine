@@ -1,32 +1,27 @@
 #version 300 es
 
-precision mediump float;
+precision highp float;
+precision mediump int;
 
-layout(location = 0) out vec4 fragcolor;
+out mediump vec4 fragcolor;
 
-in vec3 vertexPosition;
-in vec3 vertexNormal;
-in vec4 vertexColor;
-in vec2 vertexTexturePosition;
+in mediump vec2 TexturePosition;
+in mediump vec3 TextureScaling;
 
-uniform sampler2D objtexture;
+uniform sampler2D SpriteTexture;
 
 void main()
 {
-    // Vector from fragment to camera (camera always at 0,0,0)
-    vec3 view = normalize(-vertexPosition);
-    vec3 light = normalize(vec3(1.0f, 1.0f, 1.0f));
-    vec3 normal = normalize(vertexNormal);
-    vec3 color = vec3(vertexColor);
-    vec3 reflection = reflect(-light, normal);
-   
-    vec3 ambient = color * 0.2;
-    vec3 diffuse = max(dot(normal, light), 0.0) * color;
-    vec3 specular = pow(max(dot(reflection, view), 0.0), 4.0) * color;
+	float x = (TexturePosition.x);// * TextureScaling.x;
+	float y = (1.0f-TexturePosition.y);// * TextureScaling.y;
+	vec2 textureIndexPosition = vec2(x,y);
+	vec4 textureData = texture(SpriteTexture, textureIndexPosition);// + vec4(vec3(TexturePosition, 0.0f), 1.0f);
+	bool isTransparent = textureData.a == 0.0f;
+	
+	if(isTransparent)
+	{
+		discard;
+	}
 
-    vec4 calcolr = vec4(ambient + diffuse + specular, 1.0f);
-
-   fragcolor = texture(objtexture, vertexTexturePosition);
-
- // fragcolor = vec4( vertexNormal, 1);
+	fragcolor = textureData;
 }

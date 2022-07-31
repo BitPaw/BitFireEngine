@@ -238,7 +238,7 @@ extern "C"
 
 	extern ActionResult CSocketConnect(CSocket* cSocket);
 
-	extern ActionResult  CSocketSetupAdress
+	extern ActionResult CSocketSetupAdress
 	(
 		CSocket* cSocketList,
 		const size_t cSocketListSizeMax,

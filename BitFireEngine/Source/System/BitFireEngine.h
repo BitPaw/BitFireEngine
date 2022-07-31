@@ -34,7 +34,7 @@
 
 //#include "../Resource/Sprite.h"
 
-#include <Window/WindowP.h>
+#include <Window/Window.h>
 
 #include "../Level/Level.h"
 #include "../Physic/Collider.h"
@@ -49,7 +49,7 @@ namespace BF
 		private:
 		//---[Elements}---------------------------------
 		StopWatch _stopWatch;
-        WindowP _mainWindow;
+        
 		float _deltaTime;
         static BitFireEngine* _instance;
 
@@ -90,7 +90,7 @@ namespace BF
         static void GLAPIENTRY ErrorMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 
         static void OnMouseButton(const MouseButton mouseButton, const ButtonState buttonState);
-        static void OnMouseMove(const double positionX, const double positionY, const double deltaX, const double deltaY);
+        static void OnMouseMove(const int positionX, const int positionY, const int deltaX, const int deltaY);
         static void OnKeyBoardKey(const KeyBoardKeyInfo keyBoardKeyInfo);
         static void OnWindowCreated(void* window);
         static void OnWindowSizeChanged(const size_t width, const size_t height);
@@ -104,6 +104,8 @@ namespace BF
         //---------------------------------------------------------------------
 
 		public:
+        Window _mainWindow;
+
 		bool IsRunning;
         Camera MainCamera;
         Font* DefaultFont;
@@ -158,8 +160,10 @@ namespace BF
         void UnRegister(AudioClip& audioClip);
 
 
+        void MakeRectangle(Renderable& renderable);
 
-        static ThreadFunctionReturnType LoadResourceAsync(void* resourceAdress);
+
+        static ThreadResult LoadResourceAsync(void* resourceAdress);
 
         ActionResult Load(Resource* resource, const wchar_t* filePath, const bool loadAsynchronously = true);
         ActionResult Load(Level& level, const wchar_t* filePath, const bool loadAsynchronously = true);

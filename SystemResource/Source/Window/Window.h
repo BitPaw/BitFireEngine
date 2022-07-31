@@ -1,19 +1,14 @@
 #pragma once
 
-#include <OS/Window.h>
+#include <OS/CWindow.h>
 
 namespace BF
 {
-	class WindowP
-	{
-		private:
-		
-
+	class Window : public CWindow
+	{		
 		public:
-		Window _window;
-		
-		WindowP();
-		~WindowP();
+		Window();
+		~Window();
 
 		void Create(const unsigned int width, const unsigned int height, const char* title, bool async = true);
 		void Destroy();
@@ -42,7 +37,7 @@ namespace BF
 		void Cursor();
 		//void Cursor(const WindowCursorIcon cursorIcon);
 		void CursorTexture();
-		void CursorCaptureMode(const WindowCursorMode cursorMode);
+		void CursorCaptureMode(const CWindowCursorMode cursorMode);
 
 		//void ScreenShotTake(Image image);
 

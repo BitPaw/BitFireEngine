@@ -1,8 +1,5 @@
 #include "Program.h"
 
-#include <Text/Text.h>
-#include <Memory/Memory.h>
-
 #include <stdio.h>
 
 #if defined(OSUnix)
@@ -14,7 +11,10 @@
 #define ExecuteProgram _spawnv
 #endif
 
-ThreadFunctionReturnType ProgramExecuteThreadFunction(void* data)
+#include <Text/Text.h>
+#include <Memory/Memory.h>
+
+ThreadResult ProgramExecuteThreadFunction(void* data)
 {
     Program* program = (Program*)data;
 
@@ -45,7 +45,7 @@ ThreadFunctionReturnType ProgramExecuteThreadFunction(void* data)
 
     // Free?
 
-    return 0;
+    return ThreadSucessful;
 }
 
 ActionResult ProgramExecuteAS(Program* program, const char* programPath, const char* parameterString, ProgramExecutedEvent* callback)

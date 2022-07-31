@@ -19,7 +19,6 @@ extern "C"
 	}
 	FontFileFormat;
 
-
 	typedef struct Font_
 	{
 		unsigned short CharacterSize;

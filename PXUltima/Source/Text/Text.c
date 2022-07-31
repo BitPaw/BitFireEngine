@@ -4,6 +4,7 @@
 #include <Math/Math.h>
 
 #include <stdarg.h> 
+#include <stdio.h>
 
 #define PXTextAssertEnable 1
 
@@ -691,4 +692,60 @@ void TextParseFindAllA(const char* string, const size_t stringSize, const Parsin
 
 		finished = foundTargets == parsingTokenListSize;
 	}
+}
+
+size_t TextFromIntA(const int number, char* string, const size_t dataSize)
+{
+	int bytesWritten = sprintf_s(string, dataSize, "%i", &number);
+
+	return bytesWritten;
+}
+
+size_t TextFromIntW(const int number, wchar_t* string, const size_t dataSize)
+{
+	int bytesWritten = sprintf_s(string, dataSize, "%i", &number);
+
+	return bytesWritten;
+}
+
+size_t TextFromBoolA(const unsigned char number, char* string, const size_t dataSize)
+{
+	string[0] = number ? '1' : '0';
+
+	return 1u;
+}
+
+size_t TextFromBoolW(const unsigned char number, wchar_t* string, const size_t dataSize)
+{
+	string[0] = number ? '1' : '0';
+
+	return 1u;
+}
+
+size_t TextFromFloatA(const float number, char* string, const size_t dataSize)
+{
+	int bytesWritten = sprintf_s(string, dataSize, "%f", &number);
+
+	return bytesWritten;
+}
+
+size_t TextFromFloatW(const float number, wchar_t* string, const size_t dataSize)
+{
+	int bytesWritten = sprintf_s(string, dataSize, "%f", &number);
+
+	return bytesWritten;
+}
+
+size_t TextFromDoubleA(const double number, char* string, const size_t dataSize)
+{
+	int bytesWritten = sprintf_s(string, dataSize, "%li", &number);
+
+	return bytesWritten;
+}
+
+size_t TextFromDoubleW(const double number, wchar_t* string, const size_t dataSize)
+{
+	int bytesWritten = sprintf_s(string, dataSize, "%li", &number);
+
+	return bytesWritten;
 }

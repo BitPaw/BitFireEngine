@@ -12,8 +12,8 @@ BF::ErrorCode BF::ClipBoard::Open()
 {
 #if defined(OSUnix)
 #elif defined(OSWindows)
-	HWND windowID = NULL;
-	bool success = OpenClipboard(windowID);
+	HWND CWindowID = NULL;
+	bool success = OpenClipboard(CWindowID);
 
 	if (!success)
 	{

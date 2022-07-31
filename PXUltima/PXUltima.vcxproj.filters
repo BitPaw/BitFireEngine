@@ -51,7 +51,7 @@
     <ClInclude Include="Source\Async\Thread.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\OS\Window.h">
+    <ClInclude Include="Source\OS\CWindow.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Device\KeyBoardKey.h">
@@ -249,6 +249,15 @@
     <ClInclude Include="Source\Network\Server.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="Source\File\Format\UUID\UUID.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Video\Vulcan\Vulcan.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Video\DirectX\DirectX.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Text\Text.c">
@@ -281,7 +290,7 @@
     <ClCompile Include="Source\Async\Thread.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\OS\Window.c">
+    <ClCompile Include="Source\OS\CWindow.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Device\KeyBoardKey.c">
@@ -465,6 +474,15 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Network\IP.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\File\Format\UUID\UUID.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Video\Vulcan\Vulcan.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Video\DirectX\DirectX.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

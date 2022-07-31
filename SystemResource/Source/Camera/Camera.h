@@ -49,5 +49,7 @@ namespace BF
 		void ViewChangePerspective(const float fieldOfView, const float aspectRatio, const float near, const float far);
 
 		void Follow(float deltaTime);
+
+		Vector3<float> PositionScreenGet();
 	};
 }
