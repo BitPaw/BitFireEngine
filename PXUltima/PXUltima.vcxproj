@@ -191,6 +191,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Device\KeyBoard.h" />
+    <ClInclude Include="Source\Device\InputButton.h" />
+    <ClInclude Include="Source\Device\Mouse.h" />
     <ClInclude Include="Source\File\Format\UUID\UUID.h" />
     <ClInclude Include="Source\Network\Client.h" />
     <ClInclude Include="Source\Network\IP.h" />
@@ -254,7 +257,7 @@
     <ClInclude Include="Source\Container\ClusterShort.h" />
     <ClInclude Include="Source\File\Format\BMP\BMP.h" />
     <ClInclude Include="Source\Event\Event.h" />
-    <ClInclude Include="Source\Device\KeyBoardKey.h" />
+    <ClInclude Include="Source\Device\VirtualKey.h" />
     <ClInclude Include="Source\Async\Lock.h" />
     <ClInclude Include="Source\Async\Await.h" />
     <ClInclude Include="Source\File\Endian.h" />
@@ -274,6 +277,9 @@
     <ClInclude Include="Source\Video\Vulcan\Vulcan.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Device\KeyBoard.c" />
+    <ClCompile Include="Source\Device\InputButton.c" />
+    <ClCompile Include="Source\Device\Mouse.c" />
     <ClCompile Include="Source\File\Format\UUID\UUID.c" />
     <ClCompile Include="Source\Network\IP.c" />
     <ClCompile Include="Source\Network\Server.c" />
@@ -334,7 +340,7 @@
     <ClCompile Include="Source\Error\ActionResult.c" />
     <ClCompile Include="Source\File\Format\BMP\BMP.c" />
     <ClCompile Include="Source\Event\Event.c" />
-    <ClCompile Include="Source\Device\KeyBoardKey.c" />
+    <ClCompile Include="Source\Device\VirtualKey.c" />
     <ClCompile Include="Source\Async\Lock.c" />
     <ClCompile Include="Source\File\Endian.c" />
     <ClCompile Include="Source\File\ParsingStream.c" />

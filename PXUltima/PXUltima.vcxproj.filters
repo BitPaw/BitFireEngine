@@ -54,7 +54,7 @@
     <ClInclude Include="Source\OS\CWindow.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Device\KeyBoardKey.h">
+    <ClInclude Include="Source\Device\VirtualKey.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Event\Event.h">
@@ -258,6 +258,15 @@
     <ClInclude Include="Source\Video\DirectX\DirectX.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Device\Mouse.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Device\InputButton.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Device\KeyBoard.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Text\Text.c">
@@ -293,7 +302,7 @@
     <ClCompile Include="Source\OS\CWindow.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Device\KeyBoardKey.c">
+    <ClCompile Include="Source\Device\VirtualKey.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Event\Event.c">
@@ -483,6 +492,15 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Video\DirectX\DirectX.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Device\Mouse.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Device\InputButton.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Device\KeyBoard.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

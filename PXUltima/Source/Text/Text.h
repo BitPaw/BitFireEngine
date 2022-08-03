@@ -62,6 +62,7 @@ extern "C"
 	extern size_t TextFromFloatW(const float number,  wchar_t* string, const size_t dataSize);
 	extern size_t TextFromDoubleA(const double number,  char* string, const size_t dataSize);
 	extern size_t TextFromDoubleW(const double number,  wchar_t* string, const size_t dataSize);
+	extern size_t TextFromBinaryDataA(const void* data, const size_t dataSize, char* string, const size_t stringSize);
 
 	extern size_t TextToIntA(const char* string, const size_t dataSize, int* number);
 	extern size_t TextToIntW(const wchar_t* string, const size_t dataSize, int* number);

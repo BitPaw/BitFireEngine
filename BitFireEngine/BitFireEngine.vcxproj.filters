@@ -45,16 +45,7 @@
     <ClCompile Include="Source\Entity\Sign.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\System\Device\KeyBoard\KeyBoard.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Device\Mouse\Mouse.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Device\InputButton.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Device\InputContainer.cpp">
+    <ClCompile Include="Source\System\Device\KeyBoard\KeyBoardCache.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\System\VideoConfig.cpp">
@@ -87,6 +78,12 @@
     <ClCompile Include="Source\Level\Level.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Source\System\InputContainer.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Device\Mouse\MouseCache.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Player\Player.h">
@@ -110,15 +107,6 @@
     <ClInclude Include="Source\System\BitFireEngine.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\System\IBitFireEngineListener.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\IBitFireEngineRenderListener.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\IBitFireEngineSoundListener.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Entity\Entity.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -128,16 +116,7 @@
     <ClInclude Include="Source\Entity\Sign.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\System\Device\KeyBoard\KeyBoard.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Device\Mouse\Mouse.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Device\InputButton.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Device\InputContainer.h">
+    <ClInclude Include="Source\System\Device\KeyBoard\KeyBoardCache.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\System\VideoConfig.h">
@@ -171,6 +150,12 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Level\Level.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\InputContainer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Device\Mouse\MouseCache.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

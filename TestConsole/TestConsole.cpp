@@ -24,10 +24,8 @@
 using namespace BF;
 
 
-void OnWindowCreated(void* windowAdress)
+void OnWindowCreated(const void* const receiver, const CWindow* window)
 {
-    CWindow* window = (CWindow*)windowAdress;
-
     OSButton button;
     OSListBox listBox;
     OSComboBox comboBox;
@@ -111,6 +109,10 @@ void OnWindowCreated(void* windowAdress)
 
 }
 
+void OnKeyBoardKey(const void* const receiver, const CWindow* sender, const KeyBoardKeyInfo keyBoardKeyInfo)
+{
+   // printf("[#]\n");
+}
 
 int main()
 {
@@ -122,6 +124,7 @@ int main()
     CWindowConstruct(&window);
 
     window.WindowCreatedCallBack = OnWindowCreated;
+    window.KeyBoardKeyCallBack = OnKeyBoardKey;
 
     CWindowCreate(&window, 600, 400, "I BIMS", true);
     
@@ -132,6 +135,10 @@ int main()
 
     while(true)
     {
+        //printf("\033[0;0H\n");
+
+       // MouseInputPrint(&window.MouseCurrentInput);
+
         //printf(".");
     }
 

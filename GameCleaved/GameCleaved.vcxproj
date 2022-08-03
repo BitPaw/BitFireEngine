@@ -27,8 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\CleavedGameSystem.cpp" />
-    <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="Source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BitFireEngine\BitFireEngine.vcxproj">
@@ -56,7 +55,7 @@
     <None Include="Shader\WS.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\CleavedGameSystem.h" />
+    <ClInclude Include="Source\main.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

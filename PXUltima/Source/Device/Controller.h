@@ -33,7 +33,7 @@ extern "C"
 
 	extern unsigned char ControllerScanDevices(NewControllerDetectedCallback callback);
 	extern unsigned char ControllerDataGet(Controller* controller);
-	extern unsigned char ControllerAttachToWindow(const ControllerID controllerID, const CWindowID CWindowID);
+	extern unsigned char ControllerAttachToWindow(const ControllerID controllerID, const CWindowID cWindowID);
 	extern unsigned char ControllerDetachToWindow(const ControllerID controllerID);
 
 #ifdef __cplusplus

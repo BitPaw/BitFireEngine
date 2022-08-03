@@ -1,7 +1,5 @@
 #pragma once
 
-#include "IBitFireEngineListener.hpp"
-
 // OpenAL - Sound
 //#include <AL/al.h>
 //#include <AL/alc.h>
@@ -41,9 +39,18 @@
 #include <Graphic/OpenGL/Renderable.h>
 #include <Graphic/OpenGL/SkyBox.h>
 #include <Graphic/OpenGL/Sprite.h>
+#include "InputContainer.h"
 
 namespace BF
 {
+    class BitFireEngine;
+
+    typedef void (*UpdateUIEvent)(const BitFireEngine* bitFireEngine);
+    typedef void (*StartUpEvent)(BitFireEngine* const bitFireEngine);
+    typedef void (*ShutDownEvent)(const BitFireEngine* bitFireEngine);
+    typedef void (*UpdateGameLogicEvent)(const BitFireEngine* bitFireEngine, const float deltaTime);
+    typedef void (*UpdateInputEvent)(BitFireEngine* const bitFireEngine, BF::InputContainer& input);
+
 	class BitFireEngine// : protected IWindowListener
 	{
 		private:
@@ -51,7 +58,6 @@ namespace BF
 		StopWatch _stopWatch;
         
 		float _deltaTime;
-        static BitFireEngine* _instance;
 
         InputContainer _inputContainer;
 
@@ -87,14 +93,17 @@ namespace BF
         AsyncLock _modelAdd;
         //-------------------------
 
+
+
+
         static void GLAPIENTRY ErrorMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 
-        static void OnMouseButton(const MouseButton mouseButton, const ButtonState buttonState);
-        static void OnMouseMove(const int positionX, const int positionY, const int deltaX, const int deltaY);
-        static void OnKeyBoardKey(const KeyBoardKeyInfo keyBoardKeyInfo);
-        static void OnWindowCreated(void* window);
-        static void OnWindowSizeChanged(const size_t width, const size_t height);
-        static void OnWindowsMouseCaptureChanged();
+        static void OnMouseButton(const void* const receiver, const CWindow* sender, const MouseButton mouseButton, const ButtonState buttonState);
+        static void OnMouseMove(const void* const receiver, const CWindow* sender, const Mouse* mouse);
+        static void OnKeyBoardKey(const void* const receiver, const CWindow* sender, const KeyBoardKeyInfo keyBoardKeyInfo);
+        static void OnWindowCreated(const void* const receiver, const CWindow* sender);
+        static void OnWindowSizeChanged(const void* const receiver, const CWindow* sender, const size_t width, const size_t height);
+        static void OnWindowsMouseCaptureChanged(const void* const receiver, const CWindow* sender);
 
 
         static void __CRTDECL OnSystemSignal(int signalID);
@@ -110,25 +119,19 @@ namespace BF
         Camera MainCamera;
         Font* DefaultFont;
         SkyBox* DefaultSkyBox;
-		IBitFireEngineListener* _callbackListener;
+
+        UpdateUIEvent UpdateUICallBack;
+        StartUpEvent StartUpCallBack;
+        ShutDownEvent ShutDownCallBack;
+        UpdateGameLogicEvent UpdateGameLogicCallBack;
+        UpdateInputEvent UpdateInputCallBack;
+
 
 		BitFireEngine();
 
-        static BitFireEngine* Instance() { return _instance; }
-
-		void SetCallBack(IBitFireEngineListener* callbackListener);
-
-		void Start();
+        void Start();
 		void Update();
 		void Stop();
-
-
-
-
-
-
-
-
 
        // ShaderProgram ShaderHitBox;
 

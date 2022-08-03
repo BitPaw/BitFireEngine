@@ -15,10 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Main.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\CleavedGameSystem.cpp">
+    <ClCompile Include="Source\main.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -37,7 +34,7 @@
     <None Include="Shader\Simplex.frag" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\CleavedGameSystem.h">
+    <ClInclude Include="Source\main.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

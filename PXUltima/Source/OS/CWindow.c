@@ -37,6 +37,7 @@
 #include <OS/Monitor.h>
 #include <Text/Text.h>
 #include <Async/Await.h>
+#include <stdio.h>
 
 CWindow* currentWindow = 0;
 
@@ -954,7 +955,7 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
 
             window->HasSizeChanged = 1u;
 
-            InvokeEvent(window->WindowSizeChangedCallBack, width, height);
+            InvokeEvent(window->WindowSizeChangedCallBack, window->EventReceiver, window, width, height);
 
             break;
         }
@@ -980,13 +981,13 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
         {
             unsigned char closeWindow = 0;
 
-            InvokeEvent(window->WindowClosingCallBack, &closeWindow);
+            InvokeEvent(window->WindowClosingCallBack, window->EventReceiver, window, &closeWindow);
 
             if(closeWindow)
             {
                 const LRESULT result = DefWindowProc(windowsID, WM_CLOSE, wParam, lParam);
 
-                InvokeEvent(window->WindowClosedCallBack);
+                InvokeEvent(window->WindowClosedCallBack, window->EventReceiver, window);
 
                 return result;
             }
@@ -1042,15 +1043,15 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
         case WindowEventMouseActivate:
             break;
         case WindowEventChildActivate:
-            break;
+            break; 
         case WindowEventQueueSync:
             break;
         case WindowEventSizeChange:
         {
             //wParam is unused
             const MINMAXINFO* minmaxInfo = (MINMAXINFO*)lParam;
-            const auto width = minmaxInfo->ptMaxSize.x;
-            const auto height = minmaxInfo->ptMaxSize.y;
+            const LONG width = minmaxInfo->ptMaxSize.x;
+            const LONG height = minmaxInfo->ptMaxSize.y;
 
             // Not useable for resize event. Its not what it seems
 
@@ -1193,16 +1194,14 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
 #if UseRawMouseData
                         if(rawInput.header.dwType == RIM_TYPEMOUSE)
                         {
-                            const LONG mouseX = rawInput.data.mouse.lLastX;
-                            const LONG mouseY = rawInput.data.mouse.lLastY;
-                            const unsigned char interactable = 1u;// CWindowInteractable(window);
-                            
-                            CWindowCursorPositionGet(window, &window->MousePositionX, &window->MousePositionY);
-
-                            if(interactable)
-                            {
-                                InvokeEvent(window->MouseMoveCallBack, window->MousePositionX, window->MousePositionY, mouseX, mouseY);
-                            }
+                            int positionX = 0;
+                            int positionY = 0;
+                            int deltaX = rawInput.data.mouse.lLastX;
+                            int deltaY = rawInput.data.mouse.lLastY;
+                          
+                            CWindowCursorPositionInWindowGet(window, &positionX, &positionY);
+                      
+                            TriggerOnMouseMoveEvent(window, positionX, positionY, deltaX, deltaY);
 
                             // Wheel data needs to be pointer casted to interpret an unsigned short as a short, with no conversion
                             // otherwise it'll overflow when going negative.
@@ -1234,7 +1233,7 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
         case WindowEventKEYDOWN:
         case WindowEventKEYUP:
         {
-            ButtonState mode;
+            ButtonState mode = ButtonInvalid;
 
             switch(eventID)
             {
@@ -1248,15 +1247,17 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
                     mode = ButtonDown;
                     break;
                 }
-                default:
-                    break;
             }
 
             const size_t character = wParam;
             const size_t characterInfo = lParam;
+            const VirtualKey virtualKey = ConvertToVirtualKey(character);
+
+            KeyBoardKeyPressedSet(&window->KeyBoardCurrentInput, virtualKey, mode == ButtonRelease);
 
             KeyBoardKeyInfo buttonInfo;
-            buttonInfo.Key = ConvertKeyBoardKey(character);
+            buttonInfo.KeyID = character;
+            buttonInfo.Key = virtualKey;
             buttonInfo.Mode = mode;
             buttonInfo.Repeat = (characterInfo & 0b00000000000000001111111111111111); // Die Wiederholungsanzahl für die aktuelle Meldung.Der Wert gibt an, wie oft die Tastatureingabe automatisch angezeigt wird, wenn der Benutzer den Schlüssel hält.Die Wiederholungsanzahl ist immer 1 für eine WM _ KEYUP - Nachricht.
             buttonInfo.ScanCode = (characterInfo & 0b00000000111111110000000000000000) >> 16; // Der Scancode.Der Wert hängt vom OEM ab.
@@ -1266,7 +1267,8 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
             buttonInfo.PreState = (characterInfo & 0b01000000000000000000000000000000) >> 30; // Der vorherige Schlüsselzustand.Der Wert ist immer 1 für eine WM _ KEYUP - Nachricht.
             buttonInfo.GapState = (characterInfo & 0b10000000000000000000000000000000) >> 31; // Der Übergangszustand.Der Wert ist immer 1 für eine WM _ KEYUP - Nachricht.
 
-            InvokeEvent(window->KeyBoardKeyCallBack, buttonInfo);
+
+            TriggerOnKeyBoardKeyEvent(window, buttonInfo);
 
             break;
         }
@@ -1353,52 +1355,115 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
             break;
         case WindowEventGETHMENU:
             break;
-        case WindowEventMOUSEFIRST:
-            break;
-        case WindowEventMOUSEMOVE:
-            break;
+        //case WindowEventMOUSEFIRST:
+        //    break;
+        //case WindowEventMOUSEMOVE:
+        //    break;
         case WindowEventLBUTTONDOWN:
-            InvokeEvent(window->MouseClickCallBack, MouseButtonLeft, ButtonDown);
+            TriggerOnMouseClickEvent(window, MouseButtonLeft, ButtonDown);
             break;
 
         case WindowEventLBUTTONUP:
-            InvokeEvent(window->MouseClickCallBack, MouseButtonLeft, ButtonRelease);
+            TriggerOnMouseClickEvent(window, MouseButtonLeft, ButtonRelease);
             break;
 
         case WindowEventLBUTTONDBLCLK:
-            InvokeEvent(window->MouseClickDoubleCallBack, MouseButtonLeft);
+            TriggerOnMouseClickDoubleEvent(window, MouseButtonLeft);
             break;
 
         case WindowEventRBUTTONDOWN:
-            InvokeEvent(window->MouseClickCallBack, MouseButtonRight, ButtonDown);
+            TriggerOnMouseClickEvent(window, MouseButtonRight, ButtonDown);
             break;
 
         case WindowEventRBUTTONUP:
-            InvokeEvent(window->MouseClickCallBack, MouseButtonRight, ButtonRelease);
+            TriggerOnMouseClickEvent(window, MouseButtonRight, ButtonRelease);
             break;
 
         case WindowEventRBUTTONDBLCLK:
-            InvokeEvent(window->MouseClickDoubleCallBack, MouseButtonRight);
+            TriggerOnMouseClickDoubleEvent(window, MouseButtonRight);
             break;
 
         case WindowEventMBUTTONDOWN:
-            InvokeEvent(window->MouseClickCallBack, MouseButtonMiddle, ButtonDown);
+            TriggerOnMouseClickEvent(window, MouseButtonMiddle, ButtonDown);
             break;
 
         case WindowEventMBUTTONUP:
-            InvokeEvent(window->MouseClickCallBack, MouseButtonMiddle, ButtonRelease);
+            TriggerOnMouseClickEvent(window, MouseButtonMiddle, ButtonRelease);
             break;
 
         case WindowEventMBUTTONDBLCLK:
-            InvokeEvent(window->MouseClickDoubleCallBack, MouseButtonMiddle);
+            TriggerOnMouseClickDoubleEvent(window, MouseButtonMiddle);
             break;
 
         case WindowEventMOUSEWHEEL:
             break;
-        case WindowEventXBUTTONDOWN:
-            break;
+
         case WindowEventXBUTTONUP:
+        case WindowEventXBUTTONDOWN:
+        {    
+            MouseButton mouseButton = ButtonInvalid;
+            ButtonState buttonState = MouseButtonInvalid;
+
+            const WORD releaseID = HIWORD(wParam);
+            // const WORD xxxxx = LOWORD(wParam);        
+            // const WORD fwKeys = GET_KEYSTATE_WPARAM(wParam);
+            // const WORD fwButton = GET_XBUTTON_WPARAM(wParam);
+            // const int xPos = GET_X_LPARAM(lParam);
+            // const int yPos = GET_Y_LPARAM(lParam);  
+            
+            {   
+                switch(windowEventType)
+                {
+
+                    case WindowEventXBUTTONUP:  
+                    {
+                        buttonState = ButtonRelease;                     
+                        break;
+                    }                 
+
+                    case WindowEventXBUTTONDOWN:
+                    {       
+                        buttonState = ButtonDown;
+                        break;
+                    }
+                }       
+
+
+                switch(releaseID)
+                {
+                    case XBUTTON1:
+                        mouseButton = MouseButtonSpecialA;
+                        break;
+
+                    case XBUTTON2:
+                        mouseButton = MouseButtonSpecialB;
+                        break;
+                }
+
+                /*
+                        switch(fwKeys)
+                        {
+                            case MK_XBUTTON1:
+                                mouseButton = MouseButtonSpecialA;
+                                break;
+
+                            case MK_XBUTTON2:
+                                mouseButton = MouseButtonSpecialB;
+                                break;
+
+                            default:
+                                mouseButton = MouseButtonInvalid;
+                                break;
+                        }
+                */
+
+
+                TriggerOnMouseClickEvent(window, mouseButton, buttonState);
+            }       
+
             break;
+        }
+
         case WindowEventXBUTTONDBLCLK:
             break;
         case WindowEventMOUSEHWHEEL:
@@ -1534,15 +1599,31 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
         case WindowEventGETDPISCALEDSIZE:
             break;
         case WindowEventCUT:
+        {
+            printf("[#][Event] CUT\n");
             break;
+        }
+          
         case WindowEventCOPY:
+        {
+            printf("[#][Event] Copy\n");
             break;
+        }
         case WindowEventPASTE:
+        {
+            printf("[#][Event] Paste\n");
             break;
+        }
         case WindowEventCLEAR:
+        {
+            printf("[#][Event] Clear\n");
             break;
+        }
         case WindowEventUNDO:
+        {
+            printf("[#][Event] Undo\n");
             break;
+        }
         case WindowEventRENDERFORMAT:
             break;
         case WindowEventRENDERALLFORMATS:
@@ -1940,7 +2021,7 @@ ThreadResult CWindowCreateThread(void* windowAdress)
 
     CWindowLookupAdd(window);
 
-    InvokeEvent(window->WindowCreatedCallBack, window);
+    InvokeEvent(window->WindowCreatedCallBack, window->EventReceiver, window);
 
     CWindowFrameBufferContextRelease(window);
 
@@ -2347,7 +2428,7 @@ unsigned char CWindowCursorPositionInWindowGet(CWindow* window, int* x, int* y)
 {
     int xPos = 0;
     int yPos = 0;
-    const unsigned char sucessfulA = GetPhysicalCursorPos(&xPos, &yPos);
+    const unsigned char sucessfulA = CWindowCursorPositionInDestopGet(window, &xPos, &yPos);
 
 #if defined(OSUnix)
 
@@ -2368,6 +2449,8 @@ unsigned char CWindowCursorPositionInWindowGet(CWindow* window, int* x, int* y)
         *x = 0;
         *y = 0;
     }
+
+    return sucessful;
 #endif
 }
 
@@ -2392,30 +2475,115 @@ unsigned char CWindowCursorPositionInDestopGet(CWindow* window, int* x, int* y)
         *x = 0;
         *y = 0;
     }
+
+    return sucessful;
 #endif
 }
 
-void CWindowCursorPositionGet(CWindow* window, int* x, int* y)
+void TriggerOnMouseScrollEvent(const CWindow* window, const Mouse* mouse)
 {
-#if defined(OSUnix)
+}
 
-#elif defined(OSWindows)
-    POINT point;
-    point.x = 0;
-    point.y = 0;
+void TriggerOnMouseClickEvent(const CWindow* window, const MouseButton mouseButton, const ButtonState buttonState)
+{
+    Mouse* mouse = &window->MouseCurrentInput;
 
-    const unsigned char sucessfulA = GetPhysicalCursorPos(&point);
-    const unsigned char sucessfulB = ScreenToClient(window->ID, &point);  // are now relative to hwnd's client area
+    const char* buttonStateText = 0;
+    const char* mouseButtonText = 0;
 
-    if(sucessfulB)
+    switch(buttonState)
     {
-        *x = point.x;
-        *y = point.y;
+        case ButtonInvalid:
+            buttonStateText = "Invalid";
+            break;
+
+        case ButtonDown:
+            buttonStateText = "Down";
+            break;
+
+        case ButtonHold:
+            buttonStateText = "Hold";
+            break;
+
+        case ButtonRelease:
+            buttonStateText = "Release";
+            break;
     }
-    else
+
+    switch(mouseButton)
     {
-        *x = 0;
-        *y = 0;
+        case MouseButtonInvalid:
+            mouseButtonText = "Invalid";
+            break;
+
+        case MouseButtonLeft:
+            mouseButtonText = "Left";
+            break;
+
+        case MouseButtonMiddle:
+            mouseButtonText = "Middle";
+            break;
+
+        case MouseButtonRight:
+            mouseButtonText = "Right";
+            break;
+
+        case MouseButtonSpecialA:
+            mouseButtonText = "Special A";
+            break;
+
+        case MouseButtonSpecialB:
+            mouseButtonText = "Special B";
+            break;
+
+        case MouseButtonSpecialC:
+            mouseButtonText = "Special C";
+            break;
+
+        case MouseButtonSpecialD:
+            mouseButtonText = "Special D";
+            break;
+
+        case MouseButtonSpecialE:
+            mouseButtonText = "Special E";
+            break;
     }
-#endif
+
+
+
+    printf("[#][Event][Mouse] Button:%-10s State:%-10s\n", mouseButtonText, buttonStateText);
+
+    InvokeEvent(window->MouseClickCallBack, window->EventReceiver, window, mouseButton, buttonState);
+}
+
+void TriggerOnMouseClickDoubleEvent(const CWindow* window, const MouseButton mouseButton)
+{
+    InvokeEvent(window->MouseClickDoubleCallBack, window->EventReceiver, window, mouseButton);
+}
+
+void TriggerOnMouseMoveEvent(const CWindow* window, const int positionX, const int positionY, const int deltaX, const int deltaY)
+{
+    Mouse* mouse = &window->MouseCurrentInput;
+
+    mouse->Position[0] = positionX;
+    mouse->Position[1] = positionY;
+    mouse->InputAxis[0] = deltaX;
+    mouse->InputAxis[1] = deltaY;
+
+    InvokeEvent(window->MouseMoveCallBack, window->EventReceiver, window, mouse);
+}
+
+void TriggerOnMouseEnterEvent(const CWindow* window, const Mouse* mouse)
+{
+}
+
+void TriggerOnMouseLeaveEvent(const CWindow* window, const Mouse* mouse)
+{
+}
+
+void TriggerOnKeyBoardKeyEvent(const CWindow* window, const KeyBoardKeyInfo keyBoardKeyInfo)
+{
+    printf("[#][Event][Key] ID:%-3i Name:%-3i State:%i\n", keyBoardKeyInfo.KeyID, keyBoardKeyInfo.Key, keyBoardKeyInfo.Mode);
+
+    InvokeEvent(window->KeyBoardKeyCallBack, window->EventReceiver, window, keyBoardKeyInfo);
 }

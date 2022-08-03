@@ -1,6 +1,6 @@
 #include "BitFireEngine.h"
 
-#include "Device/InputContainer.h"
+#include "InputContainer.h"
 #include "../UI/UIText.h"
 
 #include <File/File.h>
@@ -16,14 +16,13 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <Device/Controller.h>
+#include <Event/Event.h>
 
 OpenGLID _matrixModelID;
 OpenGLID _matrixViewID;
 OpenGLID _matrixProjectionID;
 OpenGLID _materialTextureID;
 RefreshRateMode RefreshRate;
-
-BF::BitFireEngine* BF::BitFireEngine::_instance = nullptr;
 
 void CameraDataGet(const unsigned int shaderID)
 {
@@ -53,22 +52,21 @@ void CameraDataUpdate(BF::Camera& camera)
 
 BF::BitFireEngine::BitFireEngine()
 {
-    _callbackListener = nullptr;
     IsRunning = false;
     _deltaTime = 0;
-
-    _instance = this;
 
     _lastUsedShaderProgram = -1;
     _defaultShaderID = -1;
     _defaultTextureID = -1;
     DefaultSkyBox = nullptr;
     DefaultFont = nullptr;
-}
 
-void BF::BitFireEngine::SetCallBack(IBitFireEngineListener* callbackListener)
-{
-    _callbackListener = callbackListener;
+
+    UpdateUICallBack = nullptr;
+    StartUpCallBack = nullptr;
+    ShutDownCallBack = nullptr;
+    UpdateGameLogicCallBack = nullptr;
+    UpdateInputCallBack = nullptr;
 }
 
 void BF::BitFireEngine::ErrorMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
@@ -281,7 +279,8 @@ void BF::BitFireEngine::Start()
 
     _mainWindow.FrameBufferContextRegister();
 
-    _callbackListener->OnStartUp();
+    InvokeEvent(this->StartUpCallBack, this);
+
 
     double time = stopwatch.Stop();
 
@@ -353,15 +352,18 @@ void BF::BitFireEngine::Update()
    }
 
     UpdateInput(_inputContainer);
-    _callbackListener->OnUpdateInput(_inputContainer);
+
+    InvokeEvent(this->UpdateInputCallBack, this, _inputContainer);
     //---------------------------------------------------------------------
 }
 
-void BF::BitFireEngine::OnMouseButton(const MouseButton mouseButton, const ButtonState buttonState)
+void BF::BitFireEngine::OnMouseButton(const void* const receiver, const CWindow* sender, const MouseButton mouseButton, const ButtonState buttonState)
 {
-    BitFireEngine* engine = BitFireEngine::Instance();
+    BitFireEngine& engine = *(BitFireEngine*)receiver;
+   
+    /*
     Mouse& mouse = engine->_inputContainer.MouseInput;
-
+   
     switch(mouseButton)
     {
         case MouseButtonLeft:
@@ -379,22 +381,22 @@ void BF::BitFireEngine::OnMouseButton(const MouseButton mouseButton, const Butto
             mouse.RightButton.IncrementIfAlreadyPressed();
             break;
         }
-    }
+    }*/
 
     //printf("[#][OnMouseButton]\n");
 }
 
-void BF::BitFireEngine::OnMouseMove(const int positionX, const int positionY, const int deltaX, const int deltaY)
+void BF::BitFireEngine::OnMouseMove(const void* const receiver, const CWindow* sender, const Mouse* mouse)
 {
-    BitFireEngine* engine = BitFireEngine::Instance();
-    Mouse& mouse = engine->_inputContainer.MouseInput;
+    BitFireEngine& engine = *(BitFireEngine*)receiver;
+    //Mouse& mouse = engine->_inputContainer.MouseInput;
 
 #if UseRawMouseData
-    mouse.InputAxis[0] = -deltaX;
-    mouse.InputAxis[1] = -deltaY;
+    //mouse.InputAxis[0] = -deltaX;
+    //mouse.InputAxis[1] = -deltaY;
 
-    mouse.Position[0] = positionX;
-    mouse.Position[1] = positionY;
+    //mouse.Position[0] = positionX;
+    //mouse.Position[1] = positionY;
 #else
     // Calculate relative input
     mouse.InputAxis[0] = mouse.Position[0] - deltaX;
@@ -410,13 +412,13 @@ void BF::BitFireEngine::OnMouseMove(const int positionX, const int positionY, co
   // printf("[#]------------- X:%5i Y:%5i\n", mouse.InputAxis[0], mouse.InputAxis[1]);
 }
 
-void BF::BitFireEngine::OnKeyBoardKey(const KeyBoardKeyInfo keyBoardKeyInfo)
+void BF::BitFireEngine::OnKeyBoardKey(const void* const receiver, const CWindow* sender, const KeyBoardKeyInfo keyBoardKeyInfo)
 {
-    BitFireEngine* engine = BitFireEngine::Instance();
+    BitFireEngine* engine = (BitFireEngine*)receiver;
     InputContainer& input = engine->_inputContainer;
-    KeyBoard& keyBoard = input.KeyBoardInput;
+    //KeyBoard& keyBoard = input.KeyBoardInput;
 
-    InputButton* inputButton = nullptr;
+    /*InputButton* inputButton = nullptr;
 
 
     switch(keyBoardKeyInfo.Key)
@@ -496,12 +498,12 @@ void BF::BitFireEngine::OnKeyBoardKey(const KeyBoardKeyInfo keyBoardKeyInfo)
             inputButton->Reset();
             break;
         }
-    }
+    }*/
 }
 
-void BF::BitFireEngine::OnWindowCreated(void* windowAdress)
+void BF::BitFireEngine::OnWindowCreated(const void* const receiver, const CWindow* sender)
 {
-    CWindow& window = *(CWindow*)windowAdress;
+    const CWindow& window = *sender;
 
     printf
     (
@@ -527,9 +529,9 @@ void BF::BitFireEngine::OnWindowCreated(void* windowAdress)
 #endif
 }
 
-void BF::BitFireEngine::OnWindowSizeChanged(const size_t width, const size_t height)
+void BF::BitFireEngine::OnWindowSizeChanged(const void* const receiver, const CWindow* sender, const size_t width, const size_t height)
 {
-    BitFireEngine* engine = BitFireEngine::Instance();
+    BitFireEngine* engine = (BitFireEngine*)receiver;
     Camera& camera = engine->MainCamera;
 
     printf("[Camera] Is now %li x %li\n", width, height);
@@ -546,6 +548,7 @@ void BF::BitFireEngine::OnSystemSignal(int signalID)
 
 void BF::BitFireEngine::UpdateInput(InputContainer& input)
 {
+    /*
     KeyBoard& keyboard = input.KeyBoardInput;
     Mouse& mouse = input.MouseInput;
     Camera& camera = MainCamera;
@@ -668,7 +671,7 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
 #endif
 
     keyboard.IncrementButtonTick();
-    mouse.ResetAxis();
+    mouse.ResetAxis();*/
 }
 
 void BF::BitFireEngine::Stop()

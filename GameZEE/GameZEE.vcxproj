@@ -27,11 +27,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\ZEEGameSystem.h" />
+    <ClInclude Include="Source\main.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Main.cpp" />
-    <ClCompile Include="Source\ZEEGameSystem.cpp" />
+    <ClCompile Include="Source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BitFireEngine\BitFireEngine.vcxproj">

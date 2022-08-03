@@ -21,8 +21,10 @@
 #define OpenGLConextID HGLRC
 #endif
 
-#include <Device/KeyBoardKey.h>
+#include <Device/VirtualKey.h>
 #include <Async/Thread.h>
+#include <Device/Mouse.h>
+#include <Device/KeyBoard.h>
 
 #define UseRawMouseData 1
 #define CWindowTitleSizeMax 256
@@ -58,7 +60,12 @@ extern "C"
 		MouseButtonInvalid,
 		MouseButtonLeft,
 		MouseButtonMiddle,
-		MouseButtonRight
+		MouseButtonRight,
+		MouseButtonSpecialA,
+		MouseButtonSpecialB,
+		MouseButtonSpecialC,
+		MouseButtonSpecialD,
+		MouseButtonSpecialE,
 	}
 	MouseButton;
 
@@ -74,7 +81,8 @@ extern "C"
 
 	typedef struct KeyBoardKeyInfo_
 	{
-		KeyBoardKey Key;
+		unsigned char KeyID;
+		VirtualKey Key;
 		ButtonState Mode;
 		unsigned short Repeat; // Die Wiederholungsanzahl für die aktuelle Meldung.Der Wert gibt an, wie oft die Tastatureingabe automatisch angezeigt wird, wenn der Benutzer den Schlüssel hält.Die Wiederholungsanzahl ist immer 1 für eine WM _ KEYUP - Nachricht.
 		unsigned short ScanCode;// Der Scancode.Der Wert hängt vom OEM ab.
@@ -85,24 +93,26 @@ extern "C"
 	}
 	KeyBoardKeyInfo;
 
+	typedef struct CWindow_ CWindow;
+
 	// Mouse
-	typedef void (*MouseScrollEvent)(const MouseScrollDirection mouseScrollDirection);
-	typedef void (*MouseClickEvent)(const MouseButton mouseButton, const ButtonState buttonState);
-	typedef void (*MouseClickDoubleEvent)(const MouseButton mouseButton);
-	typedef void (*MouseMoveEvent)(const int positionX, const int positionY, const int deltaX, const int deltaY);
-	typedef void (*MouseEnterEvent)();
-	typedef void (*MouseLeaveEvent)();
+	typedef void (*MouseScrollEvent)(const void* const receiver, const CWindow* sender, const MouseScrollDirection mouseScrollDirection);
+	typedef void (*MouseClickEvent)(const void* const receiver, const CWindow* sender, const MouseButton mouseButton, const ButtonState buttonState);
+	typedef void (*MouseClickDoubleEvent)(const void* const receiver, const CWindow* sender, const MouseButton mouseButton);
+	typedef void (*MouseMoveEvent)(const void* const receiver, const CWindow* sender, const Mouse* mouse);
+	typedef void (*MouseEnterEvent)(const void* const receiver, const CWindow* sender);
+	typedef void (*MouseLeaveEvent)(const void* const receiver, const CWindow* sender);
 
 	// Keyboard
-	typedef void (*KeyBoardKeyEvent)(const KeyBoardKeyInfo keyBoardKeyInfo);
+	typedef void (*KeyBoardKeyEvent)(const void* const receiver, const CWindow* sender, const KeyBoardKeyInfo keyBoardKeyInfo);
 
-	typedef void (*FocusEnterEvent)();
-	typedef void (*FocusLeaveEvent)();
+	typedef void (*FocusEnterEvent)(const void* const receiver, const CWindow* sender);
+	typedef void (*FocusLeaveEvent)(const void* const receiver, const CWindow* sender);
 
-	typedef void (*WindowCreatedEvent)(void* CWindow);
-	typedef void (*WindowSizeChangedEvent)(const size_t width, const size_t height);
-	typedef void (*WindowClosingEvent)(unsigned char* allowClosing);
-	typedef void (*WindowClosedEvent)();
+	typedef void (*WindowCreatedEvent)(const void* const receiver, const CWindow* sender);
+	typedef void (*WindowSizeChangedEvent)(const void* const receiver, const CWindow* sender, const size_t width, const size_t height);
+	typedef void (*WindowClosingEvent)(const void* const receiver, const CWindow* sender, unsigned char* allowClosing);
+	typedef void (*WindowClosedEvent)(const void* const receiver, const CWindow* sender);
 
 	// 	static Dictionary<CWindowID, CWindow*> _windowLookup;
 
@@ -116,10 +126,8 @@ extern "C"
 		unsigned char HasSizeChanged;
 		CWindowCursorMode CursorModeCurrent;
 
-		int MousePositionX;
-		int MousePositionY;
-		int MouseDeltaX;
-		int MouseDeltaY;
+		KeyBoard KeyBoardCurrentInput;
+		Mouse MouseCurrentInput;
 
 		unsigned int X;
 		unsigned int Y;
@@ -138,6 +146,8 @@ extern "C"
 
 		// Interneal
 		ThreadID MessageThreadID;
+
+		void* EventReceiver;
 
 		MouseScrollEvent MouseScrollCallBack;
 		MouseClickEvent MouseClickCallBack;
@@ -173,7 +183,7 @@ extern "C"
 	extern void CWindowIconTaskBar();
 
 	extern void CWindowLookupAdd(const CWindow* CWindow);
-	extern CWindow* CWindowLookupFind(const CWindowID CWindowID);
+	extern CWindow* CWindowLookupFind(const CWindowID cWindowID);
 	extern void CWindowLookupRemove(const CWindow* CWindow);
 
 	extern void CWindowSize(CWindow* CWindow, unsigned int* x, unsigned int* y, unsigned int* width, unsigned int* height);
@@ -194,6 +204,32 @@ extern "C"
 
 	extern unsigned char CWindowCursorPositionInWindowGet(CWindow* window, int* x, int* y);
 	extern unsigned char CWindowCursorPositionInDestopGet(CWindow* window, int* x, int* y);
+
+
+
+	// Event functions
+	extern void TriggerOnMouseScrollEvent(const CWindow* window, const Mouse* mouse);
+	extern void TriggerOnMouseClickEvent(const CWindow* window, const MouseButton mouseButton, const ButtonState buttonState);
+	extern void TriggerOnMouseClickDoubleEvent(const CWindow* window, const MouseButton mouseButton);
+	extern void TriggerOnMouseMoveEvent(const CWindow* window, const int positionX, const int positionY, const int deltaX, const int deltaY);
+	extern void TriggerOnMouseEnterEvent(const CWindow* window, const Mouse* mouse);
+	extern void TriggerOnMouseLeaveEvent(const CWindow* window, const Mouse* mouse);
+
+
+	extern void TriggerOnKeyBoardKeyEvent(const CWindow* window, const KeyBoardKeyInfo keyBoardKeyInfo);
+
+	// Keyboard
+	//typedef void (*KeyBoardKeyEvent)(const KeyBoardKeyInfo keyBoardKeyInfo);
+
+	//typedef void (*FocusEnterEvent)();
+	//typedef void (*FocusLeaveEvent)();
+
+	//typedef void (*WindowCreatedEvent)(const CWindow* cWindow);
+	//typedef void (*WindowSizeChangedEvent)(const size_t width, const size_t height);
+	//typedef void (*WindowClosingEvent)(unsigned char* allowClosing);
+	//typedef void (*WindowClosedEvent)();
+
+
 #ifdef __cplusplus
 }
 #endif

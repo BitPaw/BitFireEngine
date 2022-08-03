@@ -749,3 +749,29 @@ size_t TextFromDoubleW(const double number, wchar_t* string, const size_t dataSi
 
 	return bytesWritten;
 }
+
+size_t TextFromBinaryDataA(const void* data, const size_t dataSize, char* string, const size_t stringSize)
+{
+	const size_t length = MathMinimum(dataSize, stringSize);
+	size_t outputIndex = 0;
+
+	MemorySet(string, stringSize, 0);
+
+	string[outputIndex++] = '0';
+	string[outputIndex++] = 'b';
+
+	for(size_t dataIndex = 0; dataIndex < length; ++dataIndex)
+	{
+		const unsigned char dataElement = ((unsigned char*)data)[dataIndex];
+
+		for(unsigned char bitIndex = 0; bitIndex < 8u; ++bitIndex)
+		{
+			const unsigned char bit = (dataElement & (1 << bitIndex)) >> bitIndex;
+			const unsigned char writeCharacter = bit ? '1' : '0';
+
+			string[outputIndex++] = writeCharacter;
+		}
+	}
+
+	return outputIndex;
+}
