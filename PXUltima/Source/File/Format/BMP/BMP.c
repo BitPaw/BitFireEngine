@@ -4,6 +4,7 @@
 #include <Container/ClusterInt.h>
 #include <File/ParsingStream.h>
 #include <Memory/Memory.h>
+#include <Math/Math.h>
 
 #define BMPHeaderIDWindows                  MakeShort('B', 'M')
 #define BMPHeaderIDOS2StructBitmapArray     MakeShort('B', 'A')
@@ -136,10 +137,9 @@ ActionResult BMPParse(BMP* bmp, const void* data, const size_t dataSize, size_t*
     ParsingStream parsingStream;
 
     BMPConstruct(bmp);
+    ParsingStreamConstruct(&parsingStream, data, dataSize);
 
     *dataRead = 0;
-
-    ParsingStreamConstruct(&parsingStream, data, dataSize);
 
     //---[ Parsing Header ]----------------------------------------------------
     {
@@ -264,6 +264,18 @@ ActionResult BMPParse(BMP* bmp, const void* data, const size_t dataSize, size_t*
     }
 
     return ResultSuccessful;
+}
+
+ActionResult BMPSerialize(const BMP* const bmp, void* data, const size_t dataSize, size_t* dataWritten)
+{
+    ParsingStream parsingStream;  
+
+    ParsingStreamConstruct(&parsingStream, data, dataSize);
+    *dataWritten = 0;
+
+
+
+	return ResultSuccessful;
 }
 
 void BMPConstruct(BMP* bmp)

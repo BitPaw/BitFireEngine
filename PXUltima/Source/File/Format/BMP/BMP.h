@@ -12,68 +12,30 @@ extern "C"
 
     typedef enum BMPType_
     {
-        BMPInvalid,
-
-        // [BM] Windows 3.1x, 95, NT, ... etc.
-        BMPWindows,
-
-        // [BA] OS/2 struct bitmap array
-        BMPOS2StructBitmapArray,
-
-        // [CI] OS/2 struct color icon
-        BMPOS2StructColorIcon,
-
-        // [CP] OS/2 const color pointer
-        BMPOS2ConstColorPointer,
-
-        // [IC] OS/2 struct icon
-        BMPOS2StructIcon,
-
-        // [PT] OS/2 pointer
-        BMPOS2Pointer
+        BMPInvalid,    
+        BMPWindows,					// [BM] Windows 3.1x, 95, NT, ... etc.
+        BMPOS2StructBitmapArray,	// [BA] OS/2 struct bitmap array        
+        BMPOS2StructColorIcon,		// [CI] OS/2 struct color icon       
+        BMPOS2ConstColorPointer,	// [CP] OS/2 const color pointer       
+        BMPOS2StructIcon,			// [IC] OS/2 struct icon       
+        BMPOS2Pointer				// [PT] OS/2 pointer
     }
 	BMPType;
-
-    extern BMPType ConvertToBMPType(const unsigned short bmpTypeID);
-    extern unsigned short ConvertFromBMPType(const BMPType headerType);
-
-
-
 
 	// DIB header (bitmap information header) - Type / Version
 	typedef enum BMPInfoHeaderType_
 	{
 		UnkownOrInvalid,
-
-		// [12-Bytes] Windows 2.0 or later
-		BitMapCoreHeader,
-
-		// [12-Bytes] OS/2 1.x
-		OS21XBitMapHeader,
-
-		// [16-Bytes] This variant of the previous header contains only the first 16 bytes and the remaining bytes are assumed to be zero values.
-		OS22XBitMapHeader,
-
-		// [40-Bytes] Windows NT, 3.1x or later
-		BitMapInfoHeader,
-
-		// [52-Bytes] Undocumented 
-		BitMapV2InfoHeader,
-
-		// [56-Bytes] Not officially documented, but this documentation was posted on Adobe's forums,
-		BitMapV3InfoHeader,
-
-		// [108-Bytes] Windows NT 4.0, 95 or later 
-		BitMapV4Header,
-
-		// [124-Bytes] Windows NT 5.0, 98 or later 
-		BitMapV5Header
-	}BMPInfoHeaderType;
-
-	extern BMPInfoHeaderType ConvertToBMPInfoHeaderType(const unsigned int infoHeaderType);
-	extern unsigned int ConvertFromBMPInfoHeaderType(const BMPInfoHeaderType infoHeaderType);
-
-
+		BitMapCoreHeader, 	// [12-Bytes] Windows 2.0 or later		
+		OS21XBitMapHeader,  // [12-Bytes] OS/2 1.x		
+		OS22XBitMapHeader,  // [16-Bytes] This variant of the previous header contains only the first 16 bytes and the remaining bytes are assumed to be zero values.	
+		BitMapInfoHeader, 	// [40-Bytes] Windows NT, 3.1x or later		
+		BitMapV2InfoHeader, // [52-Bytes] Undocumented 
+		BitMapV3InfoHeader, // [56-Bytes] Not officially documented, but this documentation was posted on Adobe's forums,	
+		BitMapV4Header, 	// [108-Bytes] Windows NT 4.0, 95 or later 
+		BitMapV5Header 		// [124-Bytes] Windows NT 5.0, 98 or later 
+	}
+	BMPInfoHeaderType;
 
 	typedef struct BMPInfoHeader_
 	{
@@ -109,9 +71,7 @@ extern "C"
 		//------------------------------
 	}
 	BMPInfoHeader;
-
-
-
+	   
 	typedef struct BMP_
 	{
 		BMPType Type;
@@ -121,12 +81,20 @@ extern "C"
 
 		size_t PixelDataSize;
 		unsigned char* PixelData;
-	}BMP;
+	}
+	BMP;
+
+	static BMPType ConvertToBMPType(const unsigned short bmpTypeID);
+	static unsigned short ConvertFromBMPType(const BMPType headerType);
+
+	static BMPInfoHeaderType ConvertToBMPInfoHeaderType(const unsigned int infoHeaderType);
+	static unsigned int ConvertFromBMPInfoHeaderType(const BMPInfoHeaderType infoHeaderType);
 
 	extern void BMPConstruct(BMP* bmp);
 	extern void BMPDestruct(BMP* bmp);
 
 	extern ActionResult BMPParse(BMP* bmp, const void* data, const size_t dataSize, size_t* dataRead);
+	extern ActionResult BMPSerialize(const BMP* const bmp, void* data, const size_t dataSize, size_t* dataWritten);
 
 #ifdef __cplusplus
 }

@@ -15,6 +15,7 @@
 #include <File/Format/ADAM7/ADAM7.h>
 #include <File/Format/DEFLATE/DeflateBlock.h>
 #include <File/BitStream.h>
+#include <Algorithm/CRC32/CRC32.h>
 
 //#include <Algorithm/CRC32/CRC32.h>
 
@@ -1366,49 +1367,41 @@ ActionResult PNGParse(PNG* png, const void* data, const size_t dataSize, size_t*
 
 ActionResult PNGSerialize(PNG* png, void* data, const size_t dataSize, size_t* dataWritten)
 {
-    /*
-     File file;
+    ParsingStream parsingStream;
 
-    // Open file
-    {
-        const ActionResult openResult = file.Open(filePath, FileOpenMode::Write);
-        const bool sucessful = openResult == ResultSuccessful;
+    ParsingStreamConstruct(&parsingStream, data, dataSize);
 
-        if(!sucessful)
-        {
-            return openResult;
-        }
-    }
+    *dataWritten = 0;
 
     //---<Signature>---
     {
-        const Byte__ pngFileHeader[8] = PNGHeaderSequenz;
+        const unsigned char pngFileHeader[8] = PNGHeaderSequenz;
         const size_t pngFileHeaderSize = sizeof(pngFileHeader);
 
-        file.Write(pngFileHeader, pngFileHeaderSize);
+        ParsingStreamWriteD(&parsingStream, pngFileHeader, pngFileHeaderSize);
     }
 
     //---<IHDR> (Image Header)---
     {
-        const unsigned char colorType = ConvertColorType(ImageHeader.ColorType);
-        const unsigned char interlaceMethod = ConvertPNGInterlaceMethod(ImageHeader.InterlaceMethod);     
-        const unsigned char* chunkStart = file.Data + file.DataCursor;
+        const unsigned char colorType = ConvertFromPNGColorType(png->ImageHeader.ColorType);
+        const unsigned char interlaceMethod = ConvertFromPNGInterlaceMethod(png->ImageHeader.InterlaceMethod);
+        const unsigned char* chunkStart = ParsingStreamCursorPosition(&parsingStream);
 
-        file.Write(13u, EndianBig);
-        file.Write("IHDR", 4u);
+        ParsingStreamWriteIU(&parsingStream, 13u, EndianBig);
+        ParsingStreamWriteD(&parsingStream, "IHDR", 4u);
 
-        file.Write(ImageHeader.Width, EndianBig);
-        file.Write(ImageHeader.Height, EndianBig);
+        ParsingStreamWriteIU(&parsingStream, png->ImageHeader.Width, EndianBig);
+        ParsingStreamWriteIU(&parsingStream, png->ImageHeader.Height, EndianBig);
 
-        file.Write(ImageHeader.BitDepth);
-        file.Write(colorType);
-        file.Write(ImageHeader.CompressionMethod);
-        file.Write(ImageHeader.FilterMethod);
-        file.Write(interlaceMethod);
+        ParsingStreamWriteCU(&parsingStream, png->ImageHeader.BitDepth);
+        ParsingStreamWriteCU(&parsingStream, colorType);
+        ParsingStreamWriteCU(&parsingStream, png->ImageHeader.CompressionMethod);
+        ParsingStreamWriteCU(&parsingStream, png->ImageHeader.FilterMethod);
+        ParsingStreamWriteCU(&parsingStream, interlaceMethod);
 
-        const unsigned int crc = CRC32Generate(chunkStart, 13+4);
+        const unsigned int crc = CRC32Generate(chunkStart, 13 + 4);
 
-        file.Write(crc, EndianBig);
+        ParsingStreamWriteIU(&parsingStream, crc, EndianBig);
     }
 
     // iCCP
@@ -1432,24 +1425,12 @@ ActionResult PNGSerialize(PNG* png, void* data, const size_t dataSize, size_t* d
 
     //---<>---
     {   
-        file.Write(0u, EndianBig);
-        file.Write("IEND", 4u);
-        file.Write(2923585666u, EndianBig);
+        ParsingStreamWriteIU(&parsingStream, 0u, EndianBig);
+        ParsingStreamWriteD(&parsingStream, "IEND", 4u);
+        ParsingStreamWriteIU(&parsingStream, 2923585666u, EndianBig);
     }
 
-    // Close file
-    {
-        const ActionResult closeResult = file.Close();
-        const bool sucessful = closeResult == ResultSuccessful;
-
-        if(!sucessful)
-        {
-            return closeResult;
-        }
-    }
+    *dataWritten = parsingStream.DataCursor;
 
     return ResultSuccessful;
-    */
-
-    return ResultInvalid;
 }

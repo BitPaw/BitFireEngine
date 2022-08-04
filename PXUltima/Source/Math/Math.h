@@ -29,8 +29,8 @@ extern "C"
 	extern int MathFloorI(const int a);
 	extern int MathFloorD(const double a);
 
-	extern size_t MathAbsoluteI(const int a, const int b);
-	extern double MathAbsoluteD(const double a, const double b);
+	extern size_t MathAbsoluteI(const int value);
+	extern double MathAbsoluteD(const double value);
 
 #define MathMaximum(a, b) (a >= b ? a : b)
 #define MathFloor(a) ((int)(a))

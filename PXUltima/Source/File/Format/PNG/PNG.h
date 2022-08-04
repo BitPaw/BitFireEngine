@@ -175,14 +175,6 @@ extern "C"
 	}
 	PNGChunk;
 
-
-
-
-
-
-
-
-
 	typedef struct PNGImageHeader_
 	{
 		unsigned int Width;
@@ -250,13 +242,6 @@ extern "C"
 		//---------------------------------------------------------------------------
 	}
 	PNG;
-
-
-
-
-
-
-
 
 	typedef enum LodePNGColorType
 	{

@@ -89,8 +89,8 @@ ActionResult ImageLoadW(Image* image, const wchar_t* filePath)
     }
 
     {
-        const ImageFileFormat hint = ImageGuessFormat(filePath);
-        const ActionResult fileParsingResult = ImageLoadD(image, hint, file.Data, file.DataSize);
+        const ImageFileFormat imageFormatHint = ImageGuessFormat(filePath);
+        const ActionResult fileParsingResult = ImageLoadD(image, file.Data, file.DataSize, imageFormatHint);
         const unsigned char success = fileParsingResult == ResultSuccessful;
 
         if(success)
@@ -105,7 +105,7 @@ ActionResult ImageLoadW(Image* image, const wchar_t* filePath)
         {
             const ImageFileFormat imageFileFormat = fileGuessResult + fileFormatID;
 
-            fileGuessResult = ImageLoadD(image, imageFileFormat, file.Data, file.DataSize);
+            fileGuessResult = ImageLoadD(image, file.Data, file.DataSize, imageFileFormat);
 
             fileFormatID++;
         }
@@ -117,7 +117,7 @@ ActionResult ImageLoadW(Image* image, const wchar_t* filePath)
     FileDestruct(&file);
 }
 
-ActionResult ImageLoadD(Image* image, const ImageFileFormat guessedFormat, const void* data, const size_t dataSize)
+ActionResult ImageLoadD(Image* image, const void* data, const size_t dataSize, const ImageFileFormat guessedFormat)
 {
     ImageConstruct(image);
 
@@ -287,6 +287,68 @@ ActionResult ImageLoadD(Image* image, const ImageFileFormat guessedFormat, const
     }
 
     return ResultFormatNotSupported;
+}
+
+ActionResult ImageSaveA(Image* image, const char* filePath, const ImageFileFormat fileFormat, const ImageDataFormat dataFormat)
+{
+    wchar_t filePathW[PathMaxSize];
+
+    TextCopyAW(filePath, PathMaxSize, filePathW, PathMaxSize);
+
+    ActionResult actionResult = ImageSaveW(image, filePathW, fileFormat, dataFormat);
+
+    return actionResult;
+}
+
+ActionResult ImageSaveW(Image* image, const wchar_t* filePath, const ImageFileFormat fileFormat, const ImageDataFormat dataFormat)
+{
+    switch(fileFormat)
+    {    
+        case ImageFileFormatBitMap:
+        {
+            BMP bmp;
+
+            BMPConstruct(&bmp);
+
+
+
+            break;
+        }
+        case ImageFileFormatPNG:
+        {
+            PNG png;
+
+            PNGConstruct(&png);
+
+
+
+            break;
+        }
+        case ImageFileFormatTGA:
+        case ImageFileFormatJPEG:
+        {
+            BMP bmp;
+
+            BMPConstruct(&bmp);
+
+
+
+            break;
+        }
+        case ImageFileFormatTIFF:
+        case ImageFileFormatGIF:
+
+        case ImageFileFormatUnkown:
+        default:
+            return ResultFormatNotSupported;
+    }
+
+    return ResultInvalid;
+}
+
+ActionResult ImageSaveD(Image* image, void* data, const size_t dataSize, const ImageFileFormat fileFormat, const ImageDataFormat dataFormat)
+{
+    return ResultInvalid;
 }
 
 void ImageResize(Image* image, const ImageDataFormat format, const size_t width, const size_t height)

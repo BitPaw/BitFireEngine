@@ -15,6 +15,7 @@
 #include <OS/CWindow.h>
 #include <OS/OSUI.h>
 #include <CommCtrl.h>
+#include <File/Image.h>
 //#include <Media/Font/Font.h>
 //#include <Media/Font/FNT/FNT.h>
 //#include <Media/Sound/OGG/OGG.h>
@@ -116,6 +117,30 @@ void OnKeyBoardKey(const void* const receiver, const CWindow* sender, const KeyB
 
 int main()
 {
+
+    Image image;
+    const size_t width = 512u;
+    const size_t height = 512u;
+
+    ImageResize(&image, ImageDataFormatRGBA, width, height);
+
+    for(size_t y = 0; y < height; y++)
+    {
+        for(size_t x = 0; x < width; x++)
+        {
+            image.PixelData[4 * width * y + 4 * x + 0] = 255 * !(x & y);
+            image.PixelData[4 * width * y + 4 * x + 1] = x ^ y;
+            image.PixelData[4 * width * y + 4 * x + 2] = x | y;
+            image.PixelData[4 * width * y + 4 * x + 3] = 255;
+        }
+    }
+
+    ImageSaveA(&image, "D:/_Data/Image.png", ImageFileFormatPNG, ImageDataFormatRGBA);
+
+
+    return 0;
+
+
 
 
     CWindow window;

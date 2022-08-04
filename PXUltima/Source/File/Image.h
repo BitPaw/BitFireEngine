@@ -53,7 +53,18 @@ extern "C"
 
 	extern ActionResult ImageLoadA(Image* image, const char* filePath);
 	extern ActionResult ImageLoadW(Image* image, const wchar_t* filePath);
-	extern ActionResult ImageLoadD(Image* image, const ImageFileFormat guessedFormat, const void* data, const size_t dataSize);
+	extern ActionResult ImageLoadD(Image* image, const void* data, const size_t dataSize, const ImageFileFormat guessedFormat);
+
+	extern ActionResult ImageSaveA(Image* image, const char* filePath, const ImageFileFormat fileFormat, const ImageDataFormat dataFormat);
+	extern ActionResult ImageSaveW(Image* image, const wchar_t* filePath, const ImageFileFormat fileFormat, const ImageDataFormat dataFormat);
+	extern ActionResult ImageSaveD
+	(
+		Image* image, 
+		void* data, 
+		const size_t dataSize, 
+		const ImageFileFormat fileFormat,
+		const ImageDataFormat dataFormat
+	);
 
 	extern size_t ImageBytePerPixel(const ImageDataFormat imageDataFormat);
 
