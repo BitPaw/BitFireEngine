@@ -19,7 +19,6 @@ extern "C"
 	typedef enum MemoryProtectionMode_
 	{
 		MemoryInvalid,
-
 		MemoryNoReadWrite,
 		MemoryReadOnly,
 		MemoryWriteOnly,

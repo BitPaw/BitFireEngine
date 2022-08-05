@@ -5,6 +5,7 @@
 #include <File/ParsingStream.h>
 #include <Memory/Memory.h>
 #include <Math/Math.h>
+#include <File/Image.h>
 
 #define BMPHeaderIDWindows                  MakeShort('B', 'M')
 #define BMPHeaderIDOS2StructBitmapArray     MakeShort('B', 'A')
@@ -245,22 +246,17 @@ ActionResult BMPParse(BMP* bmp, const void* data, const size_t dataSize, size_t*
     }
 
     //---[ Pixel Data ]--------------------------------------------------------
-    const size_t dataRowSize = bmp->InfoHeader.Width * (bmp->InfoHeader.NumberOfBitsPerPixel / 8);
-    const size_t fullRowSize = MathFloorD((bmp->InfoHeader.NumberOfBitsPerPixel * bmp->InfoHeader.Width + 31) / 32.0f) * 4;
-    const int paddingSUM = (int)fullRowSize - (int)dataRowSize;
-    const size_t padding = MathAbsoluteI(paddingSUM);
-    size_t amountOfRows = bmp->PixelDataSize / fullRowSize;
+    BMPImageDataLayout imageDataLayout;
     size_t pixelDataOffset = 0;
 
-    while(amountOfRows--)
+    BMPImageDataLayoutCalculate(&imageDataLayout, bmp->InfoHeader.Width, bmp->InfoHeader.Height, bmp->InfoHeader.NumberOfBitsPerPixel);
+
+    while(imageDataLayout.RowAmount--)
     {      
         unsigned char* data = bmp->PixelData + pixelDataOffset;
 
-        ParsingStreamReadD(&parsingStream, data, dataRowSize);
-        //ParsingStreamCursorAdvance(&parsingStream, dataRowSize);
-        ParsingStreamCursorAdvance(&parsingStream, padding);
-
-        pixelDataOffset += dataRowSize;
+        pixelDataOffset += ParsingStreamReadD(&parsingStream, data, imageDataLayout.RowImageDataSize);
+        ParsingStreamCursorAdvance(&parsingStream, imageDataLayout.RowPaddingSize);
     }
 
     return ResultSuccessful;
@@ -278,6 +274,93 @@ ActionResult BMPSerialize(const BMP* const bmp, void* data, const size_t dataSiz
 	return ResultSuccessful;
 }
 
+ActionResult BMPSerializeFromImage(const Image* const image, void* data, const size_t dataSize, size_t* dataWritten)
+{
+    ParsingStream parsingStream;
+    BMPInfoHeader bmpInfoHeader;
+
+    ParsingStreamConstruct(&parsingStream, data, dataSize);
+    *dataWritten = 0;
+
+    //---<Header>-----
+    {
+        ClusterShort byteCluster;
+        unsigned int sizeOfFile = dataSize;
+        unsigned int reservedBlock = 0;
+        unsigned int dataOffset = 54u;
+
+        byteCluster.Value = ConvertFromBMPType(BMPWindows);
+
+        ParsingStreamWriteD(&parsingStream, byteCluster.Data, 2u);
+        ParsingStreamWriteIU(&parsingStream, sizeOfFile, EndianLittle);
+        ParsingStreamWriteIU(&parsingStream, reservedBlock, EndianLittle);
+        ParsingStreamWriteIU(&parsingStream, dataOffset, EndianLittle);
+    }
+    //----------------
+
+    //---<DIP>
+    {
+        const BMPInfoHeaderType bmpInfoHeaderType = BitMapInfoHeader; 
+        
+        //---<Shared>---
+        bmpInfoHeader.HeaderSize = ConvertFromBMPInfoHeaderType(bmpInfoHeaderType);
+        bmpInfoHeader.NumberOfBitsPerPixel = ImageBytePerPixel(image->Format)*8;
+        bmpInfoHeader.NumberOfColorPlanes = 1;
+        bmpInfoHeader.Width = image->Width;
+        bmpInfoHeader.Height = image->Height;
+        //------------
+
+        //---<BitMapInfoHeader ONLY>-------------------------------------------	
+        bmpInfoHeader.CompressionMethod = 0; // [4-Bytes] compression method being used.See the next table for a list of possible values	
+        bmpInfoHeader.ImageSize = 0; 	// [4-Bytes] image size.This is the size of the raw bitmap data; a dummy 0 can be given for BI_RGB bitmaps.
+        bmpInfoHeader.HorizontalResolution = 1;	
+        bmpInfoHeader.VerticalResolution = 1;
+        bmpInfoHeader.NumberOfColorsInTheColorPalette = 0;
+        bmpInfoHeader.NumberOfImportantColorsUsed = 0;
+        //---------------------------------------------------------------------
+
+        ParsingStreamWriteIU(&parsingStream, bmpInfoHeader.HeaderSize, EndianLittle);
+
+        switch (bmpInfoHeaderType)
+        {
+        case BitMapInfoHeader:
+        {
+            ParsingStreamWriteI(&parsingStream, bmpInfoHeader.Width, EndianLittle);
+            ParsingStreamWriteI(&parsingStream, bmpInfoHeader.Height, EndianLittle);
+            ParsingStreamWriteSU(&parsingStream, bmpInfoHeader.NumberOfColorPlanes, EndianLittle);
+            ParsingStreamWriteSU(&parsingStream, bmpInfoHeader.NumberOfBitsPerPixel, EndianLittle);
+            ParsingStreamWriteIU(&parsingStream, bmpInfoHeader.CompressionMethod, EndianLittle);
+            ParsingStreamWriteIU(&parsingStream, bmpInfoHeader.ImageSize, EndianLittle);
+            ParsingStreamWriteI(&parsingStream, bmpInfoHeader.HorizontalResolution, EndianLittle);
+            ParsingStreamWriteI(&parsingStream, bmpInfoHeader.VerticalResolution, EndianLittle);
+            ParsingStreamWriteIU(&parsingStream, bmpInfoHeader.NumberOfColorsInTheColorPalette, EndianLittle);
+            ParsingStreamWriteIU(&parsingStream, bmpInfoHeader.NumberOfImportantColorsUsed, EndianLittle);
+            break;
+        }
+        }
+    }
+    //------------
+    
+    {
+        BMPImageDataLayout imageDataLayout;
+        size_t pixelDataOffset = 0;
+
+        BMPImageDataLayoutCalculate(&imageDataLayout, bmpInfoHeader.Width, bmpInfoHeader.Height, bmpInfoHeader.NumberOfBitsPerPixel);  
+
+        while (imageDataLayout.RowAmount--)
+        {
+            unsigned char* dataInsertPoint = (unsigned char*)image->PixelData + pixelDataOffset;
+
+            pixelDataOffset += ParsingStreamWriteD(&parsingStream, dataInsertPoint, imageDataLayout.RowImageDataSize);
+            ParsingStreamWriteFill(&parsingStream, 0, imageDataLayout.RowPaddingSize);
+        }
+    }
+
+    *dataWritten = parsingStream.DataCursor;
+
+    return ResultSuccessful;
+}
+
 void BMPConstruct(BMP* bmp)
 {
     MemorySet(bmp, sizeof(BMP), 0);
@@ -289,4 +372,24 @@ void BMPDestruct(BMP* bmp)
 
     bmp->PixelData = 0;
     bmp->PixelDataSize = 0;
+}
+
+size_t BMPImageDataLayoutCalculate(BMPImageDataLayout* bmpImageDataLayout, const size_t width, const size_t height, const size_t bbp)
+{
+    bmpImageDataLayout->RowImageDataSize = width * (bbp / 8u);
+    bmpImageDataLayout->ImageSize = bmpImageDataLayout->RowImageDataSize * height;
+    bmpImageDataLayout->RowFullSize = MathFloorD((width * bbp + 31u) / 32.0f) * 4u;
+    const int paddingSUM = (int)bmpImageDataLayout->RowFullSize - (int)bmpImageDataLayout->RowImageDataSize;
+    bmpImageDataLayout->RowPaddingSize = MathAbsoluteI(paddingSUM);
+    bmpImageDataLayout->RowAmount = bmpImageDataLayout->ImageSize / bmpImageDataLayout->RowFullSize;
+}
+
+size_t BMPFilePredictSize(const size_t width, const size_t height, const size_t bbp)
+{
+    const size_t sizeBMPHeader = 14u;
+    const size_t sizeBMPDIP = 40u;
+    const size_t imageDataSize = (MathFloorD((width * bbp + 31u) / 32.0f) * 4u) * height;
+    const size_t fullSize = sizeBMPHeader + sizeBMPDIP + imageDataSize;
+
+    return fullSize;
 }

@@ -48,7 +48,7 @@ ActionResult FontLoadW(Font* font, const wchar_t* filePath)
     FileConstruct(&file);
 
     {
-        const ActionResult fileLoadingResult = FileMapToVirtualMemoryW(&file, filePath, MemoryReadOnly);
+        const ActionResult fileLoadingResult = FileMapToVirtualMemoryW(&file, filePath, 0, MemoryReadOnly);
         const unsigned char sucessful = fileLoadingResult == ResultSuccessful;
 
         if(!sucessful)

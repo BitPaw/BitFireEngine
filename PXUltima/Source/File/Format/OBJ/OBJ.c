@@ -256,7 +256,7 @@ ActionResult OBJParse(OBJ* obj, const void* data, const size_t dataSize, size_t*
                         FileConstruct(&file);
 
                         {
-                            const ActionResult fileLoadingResult = FileMapToVirtualMemoryW(&file, materialFilePathFullW, MemoryReadOnly);
+                            const ActionResult fileLoadingResult = FileMapToVirtualMemoryW(&file, materialFilePathFullW, 0, MemoryReadOnly);
                             const unsigned char sucessful = fileLoadingResult == ResultSuccessful;
 
                            // if(!sucessful)

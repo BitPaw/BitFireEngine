@@ -92,14 +92,6 @@ extern "C"
 	}
 	FileCachingMode;
 
-
-	typedef enum FileOpenMode_
-	{
-		FileOpenModeRead,
-		FileOpenModeWrite
-	}
-	FileOpenMode;
-
 	/*
 	typedef struct FilePath_
 	{
@@ -143,8 +135,8 @@ extern "C"
 
 
 	//---<Open>------------------------------------------------------------
-	extern ActionResult FileOpenA(File* file, const char* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode);
-	extern ActionResult FileOpenW(File* file, const wchar_t* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode);
+	extern ActionResult FileOpenA(File* file, const char* filePath, const MemoryProtectionMode fileOpenMode, FileCachingMode fileCachingMode);
+	extern ActionResult FileOpenW(File* file, const wchar_t* filePath, const MemoryProtectionMode fileOpenMode, FileCachingMode fileCachingMode);
 	//---------------------------------------------------------------------
 
 	//---<Close>-----------------------------------------------------------
@@ -152,8 +144,8 @@ extern "C"
 	//---------------------------------------------------------------------
 
 	//---<Mapping>---------------------------------------------------------
-	extern ActionResult FileMapToVirtualMemoryA(File* file, const char* filePath, const MemoryProtectionMode protectionMode);
-	extern ActionResult FileMapToVirtualMemoryW(File* file, const wchar_t* filePath, const MemoryProtectionMode protectionMode);
+	extern ActionResult FileMapToVirtualMemoryA(File* file, const char* filePath, const size_t fileSize, const MemoryProtectionMode protectionMode);
+	extern ActionResult FileMapToVirtualMemoryW(File* file, const wchar_t* filePath, const size_t fileSize, const MemoryProtectionMode protectionMode);
 	extern ActionResult FileMapToVirtualMemory(File* file, const size_t size, const MemoryProtectionMode protectionMode);
 	extern ActionResult FileUnmapFromVirtualMemory(File* file);
 	//---------------------------------------------------------------------

@@ -80,6 +80,7 @@ extern "C"
 	extern size_t ParsingStreamWriteLL(ParsingStream* parsingStream, const long long value, const Endian endian);
 	extern size_t ParsingStreamWriteLU(ParsingStream* parsingStream, const unsigned long long value, const Endian endian);
 	extern size_t ParsingStreamWriteD(ParsingStream* parsingStream, const void* value, const size_t length);
+	extern size_t ParsingStreamWriteFill(ParsingStream* parsingStream, const unsigned char value, const size_t length);
 	extern size_t ParsingStreamWrite(ParsingStream* parsingStream, const char* format, ...);
 
 #endif

@@ -79,7 +79,7 @@ ActionResult ImageLoadW(Image* image, const wchar_t* filePath)
     FileConstruct(&file);
 
     {
-        const ActionResult fileLoadingResult = FileMapToVirtualMemoryW(&file, filePath, MemoryReadOnly);
+        const ActionResult fileLoadingResult = FileMapToVirtualMemoryW(&file, filePath, 0, MemoryReadOnly);
         const unsigned char sucessful = fileLoadingResult == ResultSuccessful;
 
         if(!sucessful)
@@ -306,11 +306,16 @@ ActionResult ImageSaveW(Image* image, const wchar_t* filePath, const ImageFileFo
     {    
         case ImageFileFormatBitMap:
         {
-            BMP bmp;
+            const size_t fileSize = BMPFilePredictSize(image->Width, image->Height, ImageBytePerPixel(dataFormat)*8u);
+            File file;
+            size_t writtenBytes = 0;
 
-            BMPConstruct(&bmp);
+            FileConstruct(&file);
+            FileMapToVirtualMemoryW(&file, filePath, fileSize, MemoryWriteOnly);
 
+            BMPSerializeFromImage(image, file.Data, file.DataSize, &writtenBytes);
 
+            FileDestruct(&file);
 
             break;
         }

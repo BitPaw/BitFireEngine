@@ -13,7 +13,8 @@
 #define FileWriteMode "wb"
 #define FileWriteModeW L"wb"
 
-
+#define FileReadWriteMode "rwb"
+#define FileReadWriteModeW L"rwb"
 
 #define FileCachingModeDefault 0 //POSIX_FADV_NORMAL
 
@@ -281,7 +282,7 @@ void FileDestruct(File* file)
 	}
 }
 
-ActionResult FileOpenA(File* file, const char* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode)
+ActionResult FileOpenA(File* file, const char* filePath, const MemoryProtectionMode fileOpenMode, FileCachingMode fileCachingMode)
 {
 #if defined(OSUnix)
 	const char* readMode = nullptr;
@@ -316,7 +317,7 @@ ActionResult FileOpenA(File* file, const char* filePath, FileOpenMode fileOpenMo
 #endif
 }
 
-ActionResult FileOpenW(File* file, const wchar_t* filePath, FileOpenMode fileOpenMode, FileCachingMode fileCachingMode)
+ActionResult FileOpenW(File* file, const wchar_t* filePath, const MemoryProtectionMode fileOpenMode, FileCachingMode fileCachingMode)
 {
 
 #if defined(OSUnix)
@@ -335,7 +336,7 @@ ActionResult FileOpenW(File* file, const wchar_t* filePath, FileOpenMode fileOpe
 	return ResultSuccessful;
 #elif defined(OSWindows)
 	DWORD dwDesiredAccess = 0;
-	DWORD dwShareMode = FILE_SHARE_READ;
+	DWORD dwShareMode = 0;
 	//SECURITY_ATTRIBUTES securityAttributes = 0;
 	DWORD dwCreationDisposition = 0;
 	DWORD dwFlagsAndAttributes = FILE_ATTRIBUTE_NORMAL;
@@ -343,16 +344,25 @@ ActionResult FileOpenW(File* file, const wchar_t* filePath, FileOpenMode fileOpe
 
 	switch(fileOpenMode)
 	{
-		case FileOpenModeRead:
+		case MemoryReadOnly:
 		{
+			dwShareMode = FILE_SHARE_READ;
 			dwCreationDisposition = OPEN_EXISTING;
 			dwDesiredAccess = GENERIC_READ;
 			break;
 		}
-		case  FileOpenModeWrite:
+		case MemoryWriteOnly:
 		{
+			dwShareMode = FILE_SHARE_WRITE;
 			dwCreationDisposition = CREATE_ALWAYS;
-			dwDesiredAccess = GENERIC_WRITE;
+			dwDesiredAccess = GENERIC_READ | GENERIC_WRITE;
+			break;
+		}
+		case MemoryReadAndWrite:
+		{
+			dwShareMode = FILE_SHARE_WRITE | FILE_SHARE_READ;
+			dwCreationDisposition = CREATE_ALWAYS;
+			dwDesiredAccess = GENERIC_READ | GENERIC_WRITE;
 			break;
 		}
 	}
@@ -377,10 +387,10 @@ ActionResult FileOpenW(File* file, const wchar_t* filePath, FileOpenMode fileOpe
 		{
 			switch(fileOpenMode)
 			{
-				case FileOpenModeRead:
+				case MemoryReadOnly:
 					return ResultFileNotFound;
 
-				case FileOpenModeWrite:
+				case MemoryWriteOnly:
 					return ResultFileCreateFailure;
 			}
 			/*
@@ -404,15 +414,21 @@ ActionResult FileOpenW(File* file, const wchar_t* filePath, FileOpenMode fileOpe
 
 		switch(fileOpenMode)
 		{
-			case FileOpenModeRead:
+			case MemoryReadOnly:
 			{
 				osHandleMode = _O_RDONLY;
 				fdOpenMode = FileReadMode;
 				break;
 			}
-			case  FileOpenModeWrite:
+			case  MemoryWriteOnly:
 			{
-				osHandleMode = _O_WRONLY;
+				osHandleMode = _O_RDWR;//_O_WRONLY;
+				fdOpenMode = FileWriteMode;
+				break;
+			}
+			case  MemoryReadAndWrite:
+			{
+				osHandleMode = _O_RDWR;
 				fdOpenMode = FileWriteMode;
 				break;
 			}
@@ -482,7 +498,7 @@ ActionResult FileClose(File* file)
 #endif
 }
 
-ActionResult FileMapToVirtualMemoryA(File* file, const char* filePath, const MemoryProtectionMode protectionMode)
+ActionResult FileMapToVirtualMemoryA(File* file, const char* filePath, const size_t fileSize, const MemoryProtectionMode protectionMode)
 {
 
 #if defined(OSUnix)
@@ -581,13 +597,13 @@ ActionResult FileMapToVirtualMemoryA(File* file, const char* filePath, const Mem
 
 	TextCopyAW(filePath, PathMaxSize, filePathW, PathMaxSize);
 
-	const ActionResult fileActionResult = FileMapToVirtualMemoryW(file, filePathW, protectionMode);
+	const ActionResult fileActionResult = FileMapToVirtualMemoryW(file, filePathW, fileSize, protectionMode);
 
 	return fileActionResult;
 #endif
 }
 
-ActionResult FileMapToVirtualMemoryW(File* file, const wchar_t* filePath, const MemoryProtectionMode protectionMode)
+ActionResult FileMapToVirtualMemoryW(File* file, const wchar_t* filePath, const size_t fileSize, const MemoryProtectionMode protectionMode)
 {
 #if defined(OSUnix)
 	char filePathA[PathMaxSize];
@@ -600,7 +616,7 @@ ActionResult FileMapToVirtualMemoryW(File* file, const wchar_t* filePath, const 
 
 	// Open file
 	{
-		const ActionResult openResult = FileOpenW(file, filePath, FileOpenModeRead, FileCachingSequential);
+		const ActionResult openResult = FileOpenW(file, filePath, protectionMode, FileCachingSequential);
 		const unsigned char openSuccess = openResult == ResultSuccessful;
 
 		if(!openSuccess)
@@ -609,13 +625,7 @@ ActionResult FileMapToVirtualMemoryW(File* file, const wchar_t* filePath, const 
 		}
 	}
 
-	{
-		LARGE_INTEGER largeInt;
 
-		const unsigned char sizeResult = GetFileSizeEx(file->FileHandle, &largeInt);
-
-		file->DataSize = largeInt.QuadPart;
-	}
 
 	// Create mapping
 	{
@@ -623,7 +633,43 @@ ActionResult FileMapToVirtualMemoryW(File* file, const wchar_t* filePath, const 
 		DWORD				flProtect = 0;
 		DWORD				dwMaximumSizeHigh = 0;
 		DWORD				dwMaximumSizeLow = 0; // Problem if file is 0 Length
-		wchar_t* name = 0;
+		wchar_t* name = filePath;
+
+
+
+		switch (protectionMode)
+		{
+		case MemoryReadOnly:
+		{
+			LARGE_INTEGER largeInt;
+
+			const unsigned char sizeResult = GetFileSizeEx(file->FileHandle, &largeInt);
+
+			dwMaximumSizeHigh = 0;
+			dwMaximumSizeLow = 0;
+
+			file->DataSize = largeInt.QuadPart;
+			break;
+		}
+		case MemoryWriteOnly:
+		{
+			dwMaximumSizeHigh = 0;
+			dwMaximumSizeLow = fileSize;
+
+			file->DataSize = fileSize;
+
+			break;
+		}
+		case MemoryReadAndWrite:
+		{
+			break;
+		}
+
+		default:
+			break;
+		}
+
+
 
 		switch(protectionMode)
 		{
@@ -636,7 +682,7 @@ ActionResult FileMapToVirtualMemoryW(File* file, const wchar_t* filePath, const 
 				break;
 
 			case MemoryWriteOnly:
-				flProtect = PAGE_WRITECOPY;
+				flProtect = PAGE_READWRITE; // PAGE_WRITECOPY
 				break;
 
 			case MemoryReadAndWrite:
@@ -657,6 +703,8 @@ ActionResult FileMapToVirtualMemoryW(File* file, const wchar_t* filePath, const 
 
 		if(!successful)
 		{
+			DWORD x = GetLastError();
+
 			return ResultFileMemoryMappingFailed;
 		}
 
@@ -752,6 +800,10 @@ ActionResult FileUnmapFromVirtualMemory(File* file)
 	return ResultSuccessful;
 
 #elif defined(OSWindows)
+
+	const BOOL flushSuccessful = FlushViewOfFile(file->Data, file->DataSize);
+
+	
 	{
 		const unsigned char unmappingSucessful = UnmapViewOfFile(file->Data);
 

@@ -10,6 +10,8 @@ extern "C"
 {
 #endif
 
+	typedef struct Image_ Image;
+
     typedef enum BMPType_
     {
         BMPInvalid,    
@@ -84,6 +86,16 @@ extern "C"
 	}
 	BMP;
 
+	typedef struct BMPImageDataLayout_
+	{
+		size_t ImageSize;
+		size_t RowImageDataSize;
+		size_t RowPaddingSize;
+		size_t RowFullSize;
+		size_t RowAmount;
+	}
+	BMPImageDataLayout;
+
 	static BMPType ConvertToBMPType(const unsigned short bmpTypeID);
 	static unsigned short ConvertFromBMPType(const BMPType headerType);
 
@@ -93,8 +105,17 @@ extern "C"
 	extern void BMPConstruct(BMP* bmp);
 	extern void BMPDestruct(BMP* bmp);
 
-	extern ActionResult BMPParse(BMP* bmp, const void* data, const size_t dataSize, size_t* dataRead);
+	extern size_t BMPImageDataLayoutCalculate(BMPImageDataLayout* bmpImageDataLayout, const size_t width, const size_t height, const size_t bbp);
+	extern size_t BMPFilePredictSize(const size_t width, const size_t height, const size_t bbp);
+
+
+	// void* -> BMP
+	extern ActionResult BMPParse(BMP* bmp, const void* data, const size_t dataSize, size_t* dataRead); 
+	
+	// BMP* -> void*
 	extern ActionResult BMPSerialize(const BMP* const bmp, void* data, const size_t dataSize, size_t* dataWritten);
+
+	extern ActionResult BMPSerializeFromImage(const Image* const image, void* data, const size_t dataSize, size_t* dataWritten);
 
 #ifdef __cplusplus
 }

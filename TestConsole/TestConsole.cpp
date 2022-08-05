@@ -117,25 +117,38 @@ void OnKeyBoardKey(const void* const receiver, const CWindow* sender, const KeyB
 
 int main()
 {
+    Image bmpTest;
+
+    ImageLoadA(&bmpTest, "D:/_Data/Test.bmp");
+
+    ImageSaveA(&bmpTest, "D:/_Data/Image_S.bmp", ImageFileFormatBitMap, ImageDataFormatRGB);
+
+
 
     Image image;
-    const size_t width = 512u;
-    const size_t height = 512u;
+    const size_t width = 512u * 4;
+    const size_t height = 512u*4;
 
-    ImageResize(&image, ImageDataFormatRGBA, width, height);
+    ImageConstruct(&image);
+
+    ImageResize(&image, ImageDataFormatRGB, width, height);
+
+    int dimension = 3;
 
     for(size_t y = 0; y < height; y++)
     {
         for(size_t x = 0; x < width; x++)
         {
-            image.PixelData[4 * width * y + 4 * x + 0] = 255 * !(x & y);
-            image.PixelData[4 * width * y + 4 * x + 1] = x ^ y;
-            image.PixelData[4 * width * y + 4 * x + 2] = x | y;
-            image.PixelData[4 * width * y + 4 * x + 3] = 255;
+            image.PixelData[dimension * width * y + dimension * x + 2] = x | y;
+            image.PixelData[dimension * width * y + dimension * x + 1] = x ^ y;
+            image.PixelData[dimension * width * y + dimension * x + 0] = 0xFF * !(x & y);
+
+           
+           // image.PixelData[4 * width * y + 4 * x + 3] = 255;
         }
     }
 
-    ImageSaveA(&image, "D:/_Data/Image.png", ImageFileFormatPNG, ImageDataFormatRGBA);
+    ImageSaveA(&image, "D:/_Data/Image.bmp", ImageFileFormatBitMap, ImageDataFormatRGB);
 
 
     return 0;
@@ -282,7 +295,7 @@ int main()
     PNG png;
 
     File dggfgf;
-    const ActionResult fileLoadingResult = FileMapToVirtualMemoryA(&dggfgf, "B:\\Daten\\Bilder\\tumblr_oou0htSqtG1shbbpso1_640.png", MemoryReadOnly);
+    const ActionResult fileLoadingResult = FileMapToVirtualMemoryA(&dggfgf, "B:\\Daten\\Bilder\\tumblr_oou0htSqtG1shbbpso1_640.png", 0, MemoryReadOnly);
     const bool sucessful = fileLoadingResult == ResultSuccessful;
 
     size_t readBytes = 0;
@@ -343,7 +356,7 @@ int main()
 
     File file;
 
-    const ActionResult iiuiiii = FileMapToVirtualMemoryA(&dggfgf, filePath, MemoryReadOnly);
+    const ActionResult iiuiiii = FileMapToVirtualMemoryA(&dggfgf, filePath, 0, MemoryReadOnly);
     const bool sucessfulddd = iiuiiii == ResultSuccessful;
 
     size_t parsedBytes = 0;

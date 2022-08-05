@@ -17,7 +17,7 @@ ActionResult BF::PNGX::Load(const char* filePath)
     File file;
 
     {
-        const ActionResult fileLoadingResult = FileMapToVirtualMemoryA(&file, filePath, MemoryReadOnly);
+        const ActionResult fileLoadingResult = FileMapToVirtualMemoryA(&file, filePath, 0, MemoryReadOnly);
         const bool sucessful = fileLoadingResult == ResultSuccessful;
 
         if(!sucessful)
@@ -38,7 +38,7 @@ ActionResult BF::PNGX::Load(const wchar_t* filePath)
     File file;
 
     {
-        const ActionResult fileLoadingResult = FileMapToVirtualMemoryW(&file, filePath, MemoryReadOnly);
+        const ActionResult fileLoadingResult = FileMapToVirtualMemoryW(&file, filePath, 0, MemoryReadOnly);
         const bool sucessful = fileLoadingResult == ResultSuccessful;
 
         if(!sucessful)

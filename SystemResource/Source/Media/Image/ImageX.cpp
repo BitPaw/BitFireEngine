@@ -98,5 +98,5 @@ ActionResult BF::ImageX::Load(const wchar_t* filePath)
 
 ActionResult BF::ImageX::Load(const unsigned char* fileData, const size_t fileDataSize, const ImageFileFormat imageFileFormat)
 {
-    return ImageLoadD(this, imageFileFormat, fileData, fileDataSize);
+    return ImageLoadD(this, fileData, fileDataSize, imageFileFormat);
 }

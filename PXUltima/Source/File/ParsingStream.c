@@ -382,6 +382,22 @@ size_t ParsingStreamWriteD(ParsingStream* parsingStream, const void* value, cons
 	return copyedBytes;
 }
 
+size_t ParsingStreamWriteFill(ParsingStream* parsingStream, const unsigned char value, const size_t length)
+{
+	const size_t writableSize = ParsingStreamRemainingSize(parsingStream);
+	unsigned char* beforePosition = ParsingStreamCursorPosition(parsingStream);
+	const size_t write = MathMinimumI(writableSize, length);
+
+	for (size_t i = 0; i < write; ++i)
+	{
+		beforePosition[i] = value;
+	}
+
+	ParsingStreamCursorAdvance(parsingStream, write);
+
+	return write;
+}
+
 size_t ParsingStreamWrite(ParsingStream* parsingStream, const char* format, ...)
 {
 	const unsigned char* currentPosition = ParsingStreamCursorPosition(parsingStream);
