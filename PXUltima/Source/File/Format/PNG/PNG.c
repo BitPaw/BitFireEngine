@@ -16,6 +16,7 @@
 #include <File/Format/DEFLATE/DeflateBlock.h>
 #include <File/BitStream.h>
 #include <Algorithm/CRC32/CRC32.h>
+#include <File/Image.h>
 
 //#include <Algorithm/CRC32/CRC32.h>
 
@@ -910,6 +911,11 @@ size_t BitsPerPixel(PNG* png)
     return png->ImageHeader.BitDepth * numberOfColorChannels;
 }
 
+size_t PNGFilePredictSize(const size_t width, const size_t height, const size_t bbp)
+{
+    return 0;
+}
+
 ActionResult PNGParse(PNG* png, const void* data, const size_t dataSize, size_t* dataRead)
 {
     ParsingStream parsingStream;
@@ -1433,4 +1439,9 @@ ActionResult PNGSerialize(PNG* png, void* data, const size_t dataSize, size_t* d
     *dataWritten = parsingStream.DataCursor;
 
     return ResultSuccessful;
+}
+
+ActionResult PNGSerializeFromImage(const Image* const image, void* data, const size_t dataSize, size_t* dataWritten)
+{
+    return ResultInvalid;
 }

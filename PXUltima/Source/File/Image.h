@@ -46,6 +46,9 @@ extern "C"
 	}
 	Image;
 
+	typedef ActionResult(*ParseToImage)(Image* const image, void* data, const size_t dataSize, size_t* dataWritten);
+	typedef ActionResult(*SerializeFromImage)(const Image* const image, void* data, const size_t dataSize, size_t* dataWritten);
+
 	extern void ImageConstruct(Image* image);
 	extern void ImageDestruct(Image* image);
 
@@ -67,6 +70,7 @@ extern "C"
 	);
 
 	extern size_t ImageBytePerPixel(const ImageDataFormat imageDataFormat);
+	extern size_t ImageBitsPerPixel(const ImageDataFormat imageDataFormat);
 
 	extern void ImageResize(Image* image, const ImageDataFormat format, const size_t width, const size_t height);
 	extern void ImageFlipHorizontal(Image* image);

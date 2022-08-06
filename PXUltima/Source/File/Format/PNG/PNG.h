@@ -4,6 +4,7 @@
 #include <stddef.h>
 
 #include <Error/ActionResult.h>
+#include <File/Image.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -391,8 +392,11 @@ enough memory.*/
 	extern size_t NumberOfColorChannels(const PNGColorType pngColorType);
 	extern size_t BitsPerPixel(PNG* png);
 
+	extern size_t PNGFilePredictSize(const size_t width, const size_t height, const size_t bbp);
+
 	extern ActionResult PNGParse(PNG* png, const void* data, const size_t dataSize, size_t* dataRead);
 	extern ActionResult PNGSerialize(PNG* png, void* data, const size_t dataSize, size_t* dataWritten);
+	extern ActionResult PNGSerializeFromImage(const Image* const image, void* data, const size_t dataSize, size_t* dataWritten);
 
 #ifdef __cplusplus
 }

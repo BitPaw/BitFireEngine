@@ -67,6 +67,11 @@ unsigned short ConvertFromJPEGMarker(JPEGMarker jpegMarker)
     }
 }
 
+size_t JPEGFilePredictSize(const size_t width, const size_t height, const size_t bbp)
+{
+    return 0;
+}
+
 ActionResult JPEGParse(JPEG* jpeg, const void* data, const size_t dataSize, size_t* dataRead)
 {
     ParsingStream parsingStream;
@@ -81,7 +86,7 @@ ActionResult JPEGParse(JPEG* jpeg, const void* data, const size_t dataSize, size
 
         ParsingStreamReadD(&parsingStream, startBlock, 2u);
 
-        const JPEGMarker marker = ConvertJPEGMarker(startBlock);
+        const JPEGMarker marker = ConvertToJPEGMarker(startBlock);
         const unsigned char validStart = marker == JPEGMarkerStartOfImage;
 
         if(!validStart)
@@ -96,7 +101,7 @@ ActionResult JPEGParse(JPEG* jpeg, const void* data, const size_t dataSize, size
 
         ParsingStreamReadD(&parsingStream, markerData, 2u);
 
-        const JPEGMarker marker = ConvertJPEGMarker(markerData);
+        const JPEGMarker marker = ConvertToJPEGMarker(markerData);
 
         switch(marker)
         {
@@ -230,5 +235,10 @@ ActionResult JPEGParse(JPEG* jpeg, const void* data, const size_t dataSize, size
         }
     }
 
+    return ResultInvalid;
+}
+
+ActionResult JPEGSerializeFromImage(const Image* const image, void* data, const size_t dataSize, size_t* dataWritten)
+{
     return ResultInvalid;
 }

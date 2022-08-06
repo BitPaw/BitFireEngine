@@ -6,6 +6,127 @@
 #define TGAFileIdentifier "TRUEVISION-XFILE."
 #define TGAFileIdentifierSize 18u
 
+TGABitsPerPixel ConvertToPixelDepth(const unsigned char pixelDepth)
+{
+	switch(pixelDepth)
+	{
+		case 1u:
+			return TGABitsPerPixelX1;
+
+		case 8u:
+			return TGABitsPerPixelX8;
+
+		case 15u:
+			return TGABitsPerPixelX15;
+
+		case 16u:
+			return TGABitsPerPixelX16;
+
+		case 24u:
+			return TGABitsPerPixelX24;
+
+		case 32u:
+			return TGABitsPerPixelX32;
+
+		default:
+			return TGABitsPerPixelInvalid;
+	}
+}
+
+unsigned char ConvertFromPixelDepth(const TGABitsPerPixel bitsPerPixel)
+{
+	switch(bitsPerPixel)
+	{
+		default:
+		case TGABitsPerPixelInvalid:
+			return -1;
+
+		case TGABitsPerPixelX1:
+			return 1u;
+
+		case TGABitsPerPixelX8:
+			return 8u;
+
+		case TGABitsPerPixelX15:
+			return 15u;
+
+		case TGABitsPerPixelX16:
+			return 16u;
+
+		case TGABitsPerPixelX24:
+			return 24u;
+
+		case TGABitsPerPixelX32:
+			return 32u;
+	}
+}
+
+TGAImageDataType ConvertToImageDataType(const unsigned char id)
+{
+	switch(id)
+	{
+		case 0u:
+			return TGAImageDataNoImageDataIsPresent;
+
+		case 1u:
+			return TGAImageDataUncompressedColorMapped;
+
+		case 2u:
+			return TGAImageDataUncompressedTrueColor;
+
+		case 3u:
+			return TGAImageDataUncompressedBlackAndWhite;
+
+		case 9u:
+			return TGAImageDataRunLengthEncodedColorMapped;
+
+		case 10u:
+			return TGAImageDataRunLengthEncodedTrueColor;
+
+		case 11u:
+			return TGAImageDataRunLengthEncodedBlackAndWhite;
+
+		default:
+			return TGAImageDataInvalid;
+	}
+}
+
+unsigned char ConvertFromImageDataType(const TGAImageDataType imageDataType)
+{
+	switch(imageDataType)
+	{
+		default:
+		case TGAImageDataInvalid:
+			return -1;
+
+		case TGAImageDataNoImageDataIsPresent:
+			return 0;
+
+		case TGAImageDataUncompressedColorMapped:
+			return 1u;
+
+		case TGAImageDataUncompressedTrueColor:
+			return 2u;
+
+		case TGAImageDataUncompressedBlackAndWhite:
+			return 3u;
+
+		case TGAImageDataRunLengthEncodedColorMapped:
+			return 9u;
+
+		case TGAImageDataRunLengthEncodedTrueColor:
+			return 10u;
+
+		case TGAImageDataRunLengthEncodedBlackAndWhite:
+			return 11u;
+	}
+}
+
+size_t TGAFilePredictSize(const size_t width, const size_t height, const size_t bbp)
+{
+	return 0;
+}
+
 ActionResult TGAParse(TGA* tga, const void* data, const size_t dataSize, size_t* dataRead)
 {
 	ParsingStream parsingStream;
@@ -46,8 +167,8 @@ ActionResult TGAParse(TGA* tga, const void* data, const size_t dataSize, size_t*
 
 		tga->ImageInformationSize = imageIDLengh;
 
-		tga->ImageDataType = ConvertImageDataType(imageTypeValue);
-		tga->PixelDepth = ConvertPixelDepth(pixelDepth);
+		tga->ImageDataType = ConvertToImageDataType(imageTypeValue);
+		tga->PixelDepth = ConvertToPixelDepth(pixelDepth);
 
 		tga->ImageDataSize = tga->Width * tga->Height * (pixelDepth / 8u);
 		tga->ImageData = MemoryAllocate(sizeof(unsigned char) * tga->ImageDataSize);
@@ -186,10 +307,15 @@ ActionResult TGAParse(TGA* tga, const void* data, const size_t dataSize, size_t*
 	return ResultSuccessful;
 }
 
+ActionResult TGASerializeFromImage(const Image* const image, void* data, const size_t dataSize, size_t* dataWritten)
+{
+	return ResultInvalid;
+}
+
 
 
 /*
-ActionResult BF::TGA::Save(const wchar_t* filePath)
+ActionResult TGA::Save(const wchar_t* filePath)
 {
 	const char footer[18] = TGAFileIdentifier;
 	unsigned int fileLength = 500;
@@ -203,7 +329,7 @@ ActionResult BF::TGA::Save(const wchar_t* filePath)
 	return ResultSuccessful;
 }
 
-ActionResult BF::TGA::ConvertTo(Image& image)
+ActionResult TGA::ConvertTo(Image& image)
 {
 	ImageDataFormat imageFormat = ImageDataFormat::Invalid;
 	size_t pixelDataLengh = 0;
@@ -264,143 +390,4 @@ ActionResult BF::TGA::ConvertTo(Image& image)
 	image.PixelDataSize = pixelDataLengh;
 
 	MemoryCopy(ImageData, pixelDataLengh, newImageData, pixelDataLengh);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#include "TGABitsPerPixel.h"
-
-BF::TGABitsPerPixel BF::ConvertPixelDepth(unsigned char pixelDepth)
-{
-	switch (pixelDepth)
-	{
-		case 1u:
-			return TGABitsPerPixel::X1;
-
-		case 8u:
-			return TGABitsPerPixel::X8;
-
-		case 15u:
-			return TGABitsPerPixel::X15;
-
-		case 16u:
-			return TGABitsPerPixel::X16;
-
-		case 24u:
-			return TGABitsPerPixel::X24;
-
-		case 32u:
-			return TGABitsPerPixel::X32;
-
-		default:
-			return TGABitsPerPixel::Invalid;
-	}
-}
-
-unsigned char BF::ConvertPixelDepth(TGABitsPerPixel bitsPerPixel)
-{
-	switch (bitsPerPixel)
-	{
-		default:
-		case BF::TGABitsPerPixel::Invalid:
-			return -1;
-
-		case BF::TGABitsPerPixel::X1:
-			return 1u;
-
-		case BF::TGABitsPerPixel::X8:
-			return 8u;
-
-		case BF::TGABitsPerPixel::X15:
-			return 15u;
-
-		case BF::TGABitsPerPixel::X16:
-			return 16u;
-
-		case BF::TGABitsPerPixel::X24:
-			return 24u;
-
-		case BF::TGABitsPerPixel::X32:
-			return 32u;
-	}
-}
-
-#include "TGAImageDataType.h"
-
-BF::TGAImageDataType BF::ConvertImageDataType(unsigned char id)
-{
-	switch(id)
-	{
-		case 0u:
-			return TGAImageDataType::NoImageDataIsPresent;
-
-		case 1u:
-			return TGAImageDataType::UncompressedColorMapped;
-
-		case 2u:
-			return TGAImageDataType::UncompressedTrueColor;
-
-		case 3u:
-			return TGAImageDataType::UncompressedBlackAndWhite;
-
-		case 9u:
-			return TGAImageDataType::RunLengthEncodedColorMapped;
-
-		case 10u:
-			return TGAImageDataType::RunLengthEncodedTrueColor;
-
-		case 11u:
-			return TGAImageDataType::RunLengthEncodedBlackAndWhite;
-
-		default:
-			return TGAImageDataType::UnkownImageDataType;
-	}
-}
-
-unsigned char BF::ConvertImageDataType(TGAImageDataType imageDataType)
-{
-	switch(imageDataType)
-	{
-		default:
-		case BF::TGAImageDataType::UnkownImageDataType:
-			return -1;
-
-		case BF::TGAImageDataType::NoImageDataIsPresent:
-			return 0;
-
-		case BF::TGAImageDataType::UncompressedColorMapped:
-			return 1u;
-
-		case BF::TGAImageDataType::UncompressedTrueColor:
-			return 2u;
-
-		case BF::TGAImageDataType::UncompressedBlackAndWhite:
-			return 3u;
-
-		case BF::TGAImageDataType::RunLengthEncodedColorMapped:
-			return 9u;
-
-		case BF::TGAImageDataType::RunLengthEncodedTrueColor:
-			return 10u;
-
-		case BF::TGAImageDataType::RunLengthEncodedBlackAndWhite:
-			return 11u;
-	}
-}
-
-*/
+}*/

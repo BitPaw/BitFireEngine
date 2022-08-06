@@ -33,6 +33,11 @@ size_t ImageBytePerPixel(const ImageDataFormat imageDataFormat)
     }
 }
 
+size_t ImageBitsPerPixel(const ImageDataFormat imageDataFormat)
+{
+    return ImageBytePerPixel(imageDataFormat) * 8u;
+}
+
 void ImageConstruct(Image* image)
 {
     MemorySet(image, sizeof(Image), 0);
@@ -302,51 +307,81 @@ ActionResult ImageSaveA(Image* image, const char* filePath, const ImageFileForma
 
 ActionResult ImageSaveW(Image* image, const wchar_t* filePath, const ImageFileFormat fileFormat, const ImageDataFormat dataFormat)
 {
+    size_t fileSize = 0;
+    size_t writtenBytes = 0;
+    File file;  
+
+    SerializeFromImage serializeFromImageFunction = 0;
+
+    FileConstruct(&file);
+
     switch(fileFormat)
     {    
         case ImageFileFormatBitMap:
         {
-            const size_t fileSize = BMPFilePredictSize(image->Width, image->Height, ImageBytePerPixel(dataFormat)*8u);
-            File file;
-            size_t writtenBytes = 0;
-
-            FileConstruct(&file);
-            FileMapToVirtualMemoryW(&file, filePath, fileSize, MemoryWriteOnly);
-
-            BMPSerializeFromImage(image, file.Data, file.DataSize, &writtenBytes);
-
-            FileDestruct(&file);
-
+            fileSize = BMPFilePredictSize(image->Width, image->Height, ImageBitsPerPixel(dataFormat));
+            serializeFromImageFunction = BMPSerializeFromImage;
             break;
         }
         case ImageFileFormatPNG:
         {
-            PNG png;
-
-            PNGConstruct(&png);
-
-
-
+            fileSize = PNGFilePredictSize(image->Width, image->Height, ImageBitsPerPixel(dataFormat));
+            serializeFromImageFunction = PNGSerializeFromImage;
             break;
         }
         case ImageFileFormatTGA:
+        {
+            fileSize = TGAFilePredictSize(image->Width, image->Height, ImageBitsPerPixel(dataFormat));
+            serializeFromImageFunction = TGASerializeFromImage;
+            break;
+        }
         case ImageFileFormatJPEG:
         {
-            BMP bmp;
-
-            BMPConstruct(&bmp);
-
-
-
+            fileSize = JPEGFilePredictSize(image->Width, image->Height, ImageBitsPerPixel(dataFormat));
+            serializeFromImageFunction = JPEGSerializeFromImage;
             break;
         }
         case ImageFileFormatTIFF:
+        {
+            fileSize = TIFFFilePredictSize(image->Width, image->Height, ImageBitsPerPixel(dataFormat));
+            serializeFromImageFunction = TIFFSerializeFromImage;
+            break;
+        }
         case ImageFileFormatGIF:
-
+        {
+            fileSize = GIFFilePredictSize(image->Width, image->Height, ImageBitsPerPixel(dataFormat));
+            serializeFromImageFunction = GIFSerializeFromImage;
+            break;
+        }
         case ImageFileFormatUnkown:
         default:
             return ResultFormatNotSupported;
     }
+
+
+    {
+        const ActionResult mappingResult = FileMapToVirtualMemoryW(&file, filePath, fileSize, MemoryWriteOnly);
+        const unsigned char sucessful = ResultSuccessful == mappingResult;
+
+        if(!sucessful)
+        {
+            FileDestruct(&file);
+            return mappingResult;
+        }
+    }
+
+    {
+        const ActionResult serializeResult = serializeFromImageFunction(image, file.Data, file.DataSize, &writtenBytes);
+        const unsigned char sucessful = ResultSuccessful == serializeResult;
+
+        if(!sucessful)
+        {
+            FileDestruct(&file);
+            return serializeResult;
+        }
+    }
+
+    FileDestruct(&file);
 
     return ResultInvalid;
 }

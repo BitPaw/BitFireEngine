@@ -126,8 +126,8 @@ int main()
 
 
     Image image;
-    const size_t width = 512u * 4;
-    const size_t height = 512u*4;
+    const size_t width = 512u *1;
+    const size_t height = 512u*1;
 
     ImageConstruct(&image);
 

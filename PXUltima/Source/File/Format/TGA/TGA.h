@@ -9,6 +9,7 @@
 extern "C"
 {
 #endif
+#include <File/Image.h>
 
 	typedef enum TGAColorType_
 	{
@@ -21,28 +22,26 @@ extern "C"
 
 	typedef enum TGABitsPerPixel_
 	{
-		Invalid,
-
-		X1,
-		X8,
-		X15,
-		X16,
-		X24,
-		X32
+		TGABitsPerPixelInvalid,
+		TGABitsPerPixelX1,
+		TGABitsPerPixelX8,
+		TGABitsPerPixelX15,
+		TGABitsPerPixelX16,
+		TGABitsPerPixelX24,
+		TGABitsPerPixelX32
 	}
 	TGABitsPerPixel;
 
 	typedef enum TGAImageDataType_
 	{
-		UnkownImageDataType,
-
-		NoImageDataIsPresent, // 0
-		UncompressedColorMapped, // 1
-		UncompressedTrueColor, // 2
-		UncompressedBlackAndWhite, // 3 (grayscale) image
-		RunLengthEncodedColorMapped,  // 9
-		RunLengthEncodedTrueColor, // 10
-		RunLengthEncodedBlackAndWhite // 11 (grayscale) image 
+		TGAImageDataInvalid,
+		TGAImageDataNoImageDataIsPresent, // 0
+		TGAImageDataUncompressedColorMapped, // 1
+		TGAImageDataUncompressedTrueColor, // 2
+		TGAImageDataUncompressedBlackAndWhite, // 3 (grayscale) image
+		TGAImageDataRunLengthEncodedColorMapped,  // 9
+		TGAImageDataRunLengthEncodedTrueColor, // 10
+		TGAImageDataRunLengthEncodedBlackAndWhite // 11 (grayscale) image 
 	}
 	TGAImageDataType;
 
@@ -103,7 +102,18 @@ extern "C"
 	}
 	TGA;
 
+	static TGABitsPerPixel ConvertToPixelDepth(const unsigned char pixelDepth);
+	static unsigned char ConvertFromPixelDepth(const TGABitsPerPixel bitsPerPixel);
+
+	static TGAImageDataType ConvertToImageDataType(const unsigned char id);
+	static unsigned char ConvertFromImageDataType(const TGAImageDataType imageDataType);
+
+
+	extern size_t TGAFilePredictSize(const size_t width, const size_t height, const size_t bbp);
+
 	extern ActionResult TGAParse(TGA* tga, const void* data, const size_t dataSize, size_t* dataRead);
+
+	extern ActionResult TGASerializeFromImage(const Image* const image, void* data, const size_t dataSize, size_t* dataWritten);
 
 #ifdef __cplusplus
 }

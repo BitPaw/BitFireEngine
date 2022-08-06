@@ -4,6 +4,7 @@
 #include <stddef.h>
 
 #include <Error/ActionResult.h>
+#include <File/Image.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -40,7 +41,11 @@ extern "C"
 	}
 	GIF;
 
+	extern size_t GIFFilePredictSize(const size_t width, const size_t height, const size_t bbp);
+
 	extern ActionResult GIFLoad(GIF* gif, const void* data, const size_t dataSize, size_t* dataRead);
+
+	extern ActionResult GIFSerializeFromImage(const Image* const image, void* data, const size_t dataSize, size_t* dataWritten);
 
 #ifdef __cplusplus
 }

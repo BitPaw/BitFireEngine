@@ -4,6 +4,7 @@
 #include <stddef.h>
 
 #include <Error/ActionResult.h>
+#include <File/Image.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -102,7 +103,11 @@ extern "C"
 	static JPEGMarker ConvertToJPEGMarker(const unsigned short jpegMarker);
 	static unsigned short ConvertFromJPEGMarker(JPEGMarker jpegMarker);
 
+	extern size_t JPEGFilePredictSize(const size_t width, const size_t height, const size_t bbp);
+
 	extern ActionResult JPEGParse(JPEG* jpeg, const void* data, const size_t dataSize, size_t* dataRead);
+
+	extern ActionResult JPEGSerializeFromImage(const Image* const image, void* data, const size_t dataSize, size_t* dataWritten);
 
 #ifdef __cplusplus
 }

@@ -6,6 +6,11 @@
 #define GIFFormatA {'I','I'}
 #define GIFFormatB {'M','M'}
 
+size_t TIFFFilePredictSize(const size_t width, const size_t height, const size_t bbp)
+{
+    return 0;
+}
+
 ActionResult TIFFParse(TIFF* tiff, const void* data, const size_t dataSize, size_t* dataRead)
 {
     ParsingStream parsingStream;
@@ -36,4 +41,9 @@ ActionResult TIFFParse(TIFF* tiff, const void* data, const size_t dataSize, size
     *dataRead = parsingStream.DataCursor;
 
     return ResultSuccessful;
+}
+
+ActionResult TIFFSerializeFromImage(const Image* const image, void* data, const size_t dataSize, size_t* dataWritten)
+{
+    return ResultInvalid;
 }
