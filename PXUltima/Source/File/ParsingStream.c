@@ -329,7 +329,7 @@ size_t ParsingStreamWriteSU(ParsingStream* parsingStream, const unsigned short v
 	const size_t dataSize = sizeof(unsigned short);
 	unsigned short dataValue = value;
 
-	EndianSwap(value, dataSize, EndianCurrentSystem, endian);
+	EndianSwap(&dataValue, dataSize, EndianCurrentSystem, endian);
 
 	ParsingStreamWriteD(parsingStream, &dataValue, dataSize);
 
@@ -346,7 +346,7 @@ size_t ParsingStreamWriteIU(ParsingStream* parsingStream, const unsigned int val
 	const size_t dataSize = sizeof(unsigned int);
 	unsigned int dataValue = value;
 
-	EndianSwap(value, dataSize, EndianCurrentSystem, endian);
+	EndianSwap(&dataValue, dataSize, EndianCurrentSystem, endian);
 
 	ParsingStreamWriteD(parsingStream, &dataValue, dataSize);
 

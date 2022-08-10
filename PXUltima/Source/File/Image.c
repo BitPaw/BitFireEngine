@@ -58,6 +58,7 @@ ImageFileFormat ImageGuessFormat(const wchar_t* filePath)
 
     if(TextCompareIgnoreCaseWA(extension, ExtensionMaxSize, "BMP", 3u))  return ImageFileFormatBitMap;
     if(TextCompareIgnoreCaseWA(extension, ExtensionMaxSize, "GIF", 3u))  return ImageFileFormatGIF;
+    if(TextCompareIgnoreCaseWA(extension, ExtensionMaxSize, "JPG", 4u))  return ImageFileFormatJPEG;
     if(TextCompareIgnoreCaseWA(extension, ExtensionMaxSize, "JPEG", 4u))  return ImageFileFormatJPEG;
     if(TextCompareIgnoreCaseWA(extension, ExtensionMaxSize, "PNG", 3u))  return ImageFileFormatPNG;
     if(TextCompareIgnoreCaseWA(extension, ExtensionMaxSize, "TGA", 3u))  return ImageFileFormatTGA;
@@ -124,6 +125,8 @@ ActionResult ImageLoadW(Image* image, const wchar_t* filePath)
 
 ActionResult ImageLoadD(Image* image, const void* data, const size_t dataSize, const ImageFileFormat guessedFormat)
 {
+    size_t bytesRead = 0;
+
     ImageConstruct(image);
 
     switch(guessedFormat)
@@ -187,20 +190,13 @@ ActionResult ImageLoadD(Image* image, const void* data, const size_t dataSize, c
         }
         case ImageFileFormatJPEG:
         {
-            JPEG jpeg;
+            const ActionResult fileActionResult = JPEGParseToImage(image, data, dataSize, &bytesRead);
+            const unsigned char sucessful = ResultSuccessful != fileActionResult;
 
-            /*
+            if(sucessful)
             {
-                const ActionResult fileActionResult = jpeg.Load(fileData, fileDataSize);
-                const bool sucessful = fileActionResult == ResultSuccessful;
-
-                if(sucessful)
-                {
-                    jpeg.ConvertTo(*this);
-
-                    return ResultSuccessful;
-                }
-            }*/
+                return fileActionResult;
+            }
 
             break;
         }
@@ -371,7 +367,7 @@ ActionResult ImageSaveW(Image* image, const wchar_t* filePath, const ImageFileFo
     }
 
     {
-        const ActionResult serializeResult = serializeFromImageFunction(image, file.Data, file.DataSize, &writtenBytes);
+        const ActionResult serializeResult = serializeFromImageFunction(image, file.Data, file.DataSize, &file.DataCursor);
         const unsigned char sucessful = ResultSuccessful == serializeResult;
 
         if(!sucessful)

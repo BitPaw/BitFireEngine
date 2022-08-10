@@ -34,7 +34,8 @@ extern "C"
 	{
 		unsigned int PixelsPerUnit[2];
 		unsigned char UnitSpecifier;
-	}PNGPhysicalPixelDimension;
+	}
+	PNGPhysicalPixelDimension;
 
 	typedef struct PNGPrimaryChromatics_
 	{
@@ -46,15 +47,16 @@ extern "C"
 		unsigned int GreenY;
 		unsigned int BlueX;
 		unsigned int BlueY;
-	}PNGPrimaryChromatics;
-
+	}
+	PNGPrimaryChromatics;
 
 	typedef struct PNGPalette_
 	{
 		unsigned char Red;
 		unsigned char Green;
 		unsigned char Blue;
-	}PNGPalette;
+	}
+	PNGPalette;
 
 	typedef struct PNGBackgroundColor_
 	{
@@ -84,10 +86,6 @@ extern "C"
 	}
 	PNGPaletteHistogram;
 
-
-
-
-
 	// Chunk Specifications
 	typedef enum PNGChunkType_
 	{
@@ -107,8 +105,7 @@ extern "C"
 		//--------------------------------------------------------------------------
 		// Transparency information
 		//--------------------------------------------------------------------------
-
-	
+			
 		PNGChunkTransparency, 	// [tRNS] Transparency
 
 		//--------------------------------------------------------------------------
@@ -147,10 +144,6 @@ extern "C"
 		PNGChunkCustom
 	}
 	PNGChunkType;
-
-
-
-
 
 	typedef	struct PNGChunk_
 	{

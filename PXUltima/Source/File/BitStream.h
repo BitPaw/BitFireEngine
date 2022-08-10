@@ -31,6 +31,7 @@ extern "C"
 	extern void BitStreamAllign(BitStream* bitStream);
 
 	extern size_t BitStreamRead(BitStream* bitStream, const size_t amountOfBits);
+	extern size_t BitStreamReadFullByte(BitStream* bitStream);
 	extern size_t BitStreamPeek(BitStream* bitStream, const size_t amountOfBits);
 
 #endif

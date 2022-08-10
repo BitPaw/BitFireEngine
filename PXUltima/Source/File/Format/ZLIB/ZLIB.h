@@ -68,8 +68,8 @@ extern "C"
 	static ZLIBCompressionMethod ConvertToCompressionMethod(const unsigned char compressionMethod);
 	static unsigned char ConvertFromCompressionMethod(const ZLIBCompressionMethod compressionMethod);
 
-	extern ActionResult ZLIBParse(ZLIB* zlib, const void* data, const size_t dataSize, size_t* dataRead);
-	extern ActionResult ZLIBSerialize(ZLIB* zlib, void* data, const size_t dataSize, size_t* dataWritten);
+	extern ActionResult ZLIBDecompress(const void* const inputData, const size_t inputDataSize, void* const outputData, size_t* const outputDataSize);
+	extern ActionResult ZLIBCompress(const void* const inputData, const size_t inputDataSize, void* const outputData, size_t* const outputDataSize);
 
 
 	extern size_t ZLIBCalculateExpectedSize(size_t width, size_t height, size_t bpp, PNGInterlaceMethod interlaceMethod);

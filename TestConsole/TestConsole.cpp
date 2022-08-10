@@ -115,47 +115,51 @@ void OnKeyBoardKey(const void* const receiver, const CWindow* sender, const KeyB
    // printf("[#]\n");
 }
 
-int main()
+void TestLoadImage()
 {
-    Image bmpTest;
 
-    ImageLoadA(&bmpTest, "D:/_Data/Test.bmp");
+}
 
-    ImageSaveA(&bmpTest, "D:/_Data/Image_S.bmp", ImageFileFormatBitMap, ImageDataFormatRGB);
-
-
-
+void TestSaveImage()
+{
     Image image;
-    const size_t width = 512u *1;
-    const size_t height = 512u*1;
 
     ImageConstruct(&image);
 
-    ImageResize(&image, ImageDataFormatRGB, width, height);
-
-    int dimension = 3;
-
-    for(size_t y = 0; y < height; y++)
+    // Write image data
     {
-        for(size_t x = 0; x < width; x++)
-        {
-            image.PixelData[dimension * width * y + dimension * x + 2] = x | y;
-            image.PixelData[dimension * width * y + dimension * x + 1] = x ^ y;
-            image.PixelData[dimension * width * y + dimension * x + 0] = 0xFF * !(x & y);
+        const size_t width = 512u * 1;
+        const size_t height = 512u * 1;
 
-           
-           // image.PixelData[4 * width * y + 4 * x + 3] = 255;
+        ImageResize(&image, ImageDataFormatRGB, width, height);
+
+        int dimension = 3;
+
+        for(size_t y = 0; y < height; y++)
+        {
+            for(size_t x = 0; x < width; x++)
+            {
+                const unsigned char red = x | y;
+                const unsigned char green = x ^ y;
+                const unsigned char blue = 0xFF * !(x & y);
+
+                image.PixelData[dimension * width * y + dimension * x + 2] = blue;
+                image.PixelData[dimension * width * y + dimension * x + 1] = green;
+                image.PixelData[dimension * width * y + dimension * x + 0] = red;
+
+
+                // image.PixelData[4 * width * y + 4 * x + 3] = 255;
+            }
         }
     }
 
-    ImageSaveA(&image, "D:/_Data/Image.bmp", ImageFileFormatBitMap, ImageDataFormatRGB);
+    ImageSaveA(&image, "D:/_Data/ImageBMP.bmp", ImageFileFormatBitMap, ImageDataFormatRGB);
+    ImageSaveA(&image, "D:/_Data/ImagePNG.png", ImageFileFormatPNG, ImageDataFormatRGB);
+    ImageSaveA(&image, "D:/_Data/ImageJPG.jpg", ImageFileFormatJPEG, ImageDataFormatRGB);
+}
 
-
-    return 0;
-
-
-
-
+void TestCreateWindow()
+{
     CWindow window;
 
 
@@ -165,7 +169,7 @@ int main()
     window.KeyBoardKeyCallBack = OnKeyBoardKey;
 
     CWindowCreate(&window, 600, 400, "I BIMS", true);
-    
+
     while(!window.IsRunning)
     {
         //printf(".");
@@ -180,6 +184,27 @@ int main()
         //printf(".");
     }
 
+}
+
+int main()
+{
+
+    // ImageLoadA(&jpg, "D:/_Data/__TEST__IMAGE__/TEST.jpg");
+
+     //Image bmpTest;
+     //ImageLoadA(&bmpTest, "D:/_Data/Test.bmp");
+     //ImageSaveA(&bmpTest, "D:/_Data/Image_S.bmp", ImageFileFormatBitMap, ImageDataFormatRGB);
+
+
+    TestSaveImage();
+
+
+
+    return 0;
+
+
+
+ 
 
 
 

@@ -38,6 +38,7 @@ extern "C"
 		ResultInvalidVersion,
 
 		ResultFormatNotSupported,
+		ResultFormatInvalid,
 		ResultFormatNotAsExpected,
 
 

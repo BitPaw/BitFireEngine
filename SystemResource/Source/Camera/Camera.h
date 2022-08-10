@@ -30,8 +30,8 @@ namespace BF
 		CameraPerspective Perspective;
 
 		float FieldOfView;
-		unsigned int Height;
-		unsigned int Width;
+		size_t Height;
+		size_t Width;
 		float Near;
 		float Far;	
 
@@ -42,7 +42,7 @@ namespace BF
 		void Move(Vector3<float> movement);
 		void Update(float deltaTime);
 		float AspectRatioGet();
-		void AspectRatioSet(float width, float height);
+		void AspectRatioSet(const size_t width, const size_t height);
 
 		void ViewChange(const CameraPerspective cameraPerspective);
 		void ViewChangeOrthographic(const float width, const float height, const float nearPlane, const float farPlane);

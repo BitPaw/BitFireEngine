@@ -120,7 +120,7 @@ extern "C"
 #if defined(OSWindows)
 		FILE* FileHandleCStyle; // Used for writing only, usage of fprintf()
 #endif
-
+		MemoryProtectionMode MemoryMode;
 	}
 	File;
 

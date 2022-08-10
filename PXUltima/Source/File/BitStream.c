@@ -69,6 +69,11 @@ size_t BitStreamRead(BitStream* bitStream, const size_t amountOfBits)
 	return result;
 }
 
+size_t BitStreamReadFullByte(BitStream* bitStream)
+{
+	return BitStreamRead(bitStream, 8u);
+}
+
 size_t BitStreamPeek(BitStream* bitStream, const size_t amountOfBits)
 {
 	unsigned int bitMask = ((1u << amountOfBits) - 1u) << bitStream->BitOffset; // 0000111111

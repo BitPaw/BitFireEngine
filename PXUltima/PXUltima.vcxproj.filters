@@ -267,6 +267,9 @@
     <ClInclude Include="Source\Device\KeyBoard.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="Source\File\Color.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Text\Text.c">
@@ -501,6 +504,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Device\KeyBoard.c">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\File\Color.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

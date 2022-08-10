@@ -7,7 +7,7 @@ float BF::Camera::AspectRatioGet()
 	return (float)Width / (float)Height;
 }
 
-void BF::Camera::AspectRatioSet(float width, float height)
+void BF::Camera::AspectRatioSet(const size_t width, const size_t height)
 {
 	Width = width;
 	Height = height;

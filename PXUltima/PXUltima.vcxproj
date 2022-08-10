@@ -191,6 +191,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\File\Color.h" />
     <ClInclude Include="Source\Device\KeyBoard.h" />
     <ClInclude Include="Source\Device\InputButton.h" />
     <ClInclude Include="Source\Device\Mouse.h" />
@@ -277,6 +278,7 @@
     <ClInclude Include="Source\Video\Vulcan\Vulcan.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\File\Color.c" />
     <ClCompile Include="Source\Device\KeyBoard.c" />
     <ClCompile Include="Source\Device\InputButton.c" />
     <ClCompile Include="Source\Device\Mouse.c" />

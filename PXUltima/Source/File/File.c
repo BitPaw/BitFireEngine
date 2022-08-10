@@ -635,8 +635,6 @@ ActionResult FileMapToVirtualMemoryW(File* file, const wchar_t* filePath, const 
 		DWORD				dwMaximumSizeLow = 0; // Problem if file is 0 Length
 		wchar_t* name = filePath;
 
-
-
 		switch (protectionMode)
 		{
 		case MemoryReadOnly:
@@ -669,7 +667,7 @@ ActionResult FileMapToVirtualMemoryW(File* file, const wchar_t* filePath, const 
 			break;
 		}
 
-
+		file->MemoryMode = protectionMode;
 
 		switch(protectionMode)
 		{
@@ -749,6 +747,7 @@ ActionResult FileMapToVirtualMemoryW(File* file, const wchar_t* filePath, const 
 
 		MemoryVirtualPrefetch(fileMapped, file->DataSize);
 	}
+
 #endif
 
 #if MemoryDebug
@@ -779,6 +778,25 @@ ActionResult FileMapToVirtualMemory(File* file, const size_t size, const MemoryP
 
 ActionResult FileUnmapFromVirtualMemory(File* file)
 {
+	// Write pending data
+	unsigned char isWriteMapped = 0;
+
+	switch(file->MemoryMode)
+	{
+		default:
+		case MemoryInvalid:
+		case MemoryNoReadWrite:
+		case MemoryReadOnly:
+			isWriteMapped = 0;
+			break;
+
+		case MemoryWriteOnly:
+		case MemoryReadAndWrite:
+			isWriteMapped = 1;
+			break;
+	}
+
+
 #if MemoryDebug
 	printf("[#][Memory] 0x%p (%10zi B) MMAP-Release\n", Data, DataSize);
 #endif
@@ -801,8 +819,15 @@ ActionResult FileUnmapFromVirtualMemory(File* file)
 
 #elif defined(OSWindows)
 
-	const BOOL flushSuccessful = FlushViewOfFile(file->Data, file->DataSize);
+	// Write pending data
+	{
+		if(isWriteMapped)
+		{
+			const BOOL flushSuccessful = FlushViewOfFile(file->Data, file->DataCursor);
 
+			printf("");
+		}		
+	}
 	
 	{
 		const unsigned char unmappingSucessful = UnmapViewOfFile(file->Data);
@@ -828,9 +853,36 @@ ActionResult FileUnmapFromVirtualMemory(File* file)
 		file->IDMapping = 0;
 	}
 
-	const ActionResult closeFile = FileClose(file);
+	// Close
+	{
 
-	return closeFile;
+		if(isWriteMapped)
+		{
+			//fseek();
+
+			LARGE_INTEGER largeInteger;
+
+			largeInteger.QuadPart = file->DataCursor;
+
+			const BOOL setSuccessful = SetFilePointerEx(file->FileHandle, largeInteger, 0, FILE_BEGIN);
+
+			const BOOL endSuccessful = SetEndOfFile(file->FileHandle);
+
+			printf("");
+		}
+
+		const ActionResult closeFile = FileClose(file);
+		const unsigned char sucessful = ResultSuccessful == closeFile;
+
+		if(!sucessful)
+		{
+
+		}
+
+		file->FileHandle = 0;
+	}
+
+	return ResultSuccessful;
 #endif
 }
 

@@ -1051,7 +1051,7 @@ bool BF::BitFireEngine::Register(ShaderProgram& shaderProgram, const wchar_t* ve
 
 
     {
-        const ActionResult actionResult = FileMapToVirtualMemoryW(&vertexShaderFile, vertexShaderFilePath, MemoryReadOnly);
+        const ActionResult actionResult = FileMapToVirtualMemoryW(&vertexShaderFile, vertexShaderFilePath, 0, MemoryReadOnly);
         const unsigned char sucessful = ResultSuccessful == actionResult;
 
         if(!sucessful)
@@ -1066,7 +1066,7 @@ bool BF::BitFireEngine::Register(ShaderProgram& shaderProgram, const wchar_t* ve
   
 
     {
-        const ActionResult actionResult = FileMapToVirtualMemoryW(&fragmentFile, fragmentShaderFilePath, MemoryReadOnly);
+        const ActionResult actionResult = FileMapToVirtualMemoryW(&fragmentFile, fragmentShaderFilePath, 0, MemoryReadOnly);
         const unsigned char sucessful = ResultSuccessful == actionResult;
 
         if(!sucessful)
@@ -1599,7 +1599,7 @@ ActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePath, cons
     ParsingStream parsingStream;
 
     {
-        const ActionResult mappingResult = FileMapToVirtualMemoryW(&file, filePath, MemoryReadOnly);
+        const ActionResult mappingResult = FileMapToVirtualMemoryW(&file, filePath, 0, MemoryReadOnly);
         const unsigned char sucessful = mappingResult == ResultSuccessful;
 
         if(!sucessful)
