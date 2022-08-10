@@ -1425,7 +1425,7 @@ ActionResult PNGSerializeFromImage(const Image* const image, void* data, const s
     }
 
     //---<IHDR> (Image Header)--- 21 Bytes
-    {
+        {
         unsigned char colorType = 0;
         const unsigned char interlaceMethod = ConvertFromPNGInterlaceMethod(PNGInterlaceADAM7);
         const unsigned char* chunkStart = ParsingStreamCursorPosition(&parsingStream);

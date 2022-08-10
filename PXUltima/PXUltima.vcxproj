@@ -276,6 +276,7 @@
     <ClInclude Include="Source\OS\OSUI.h" />
     <ClInclude Include="Source\UI\UI.h" />
     <ClInclude Include="Source\Video\Vulcan\Vulcan.h" />
+    <ClInclude Include="Source\File\Format\STEP\STEP.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\File\Color.c" />
@@ -357,6 +358,7 @@
     <ClCompile Include="Source\OS\OSUI.c" />
     <ClCompile Include="Source\UI\UI.c" />
     <ClCompile Include="Source\Video\Vulcan\Vulcan.c" />
+    <ClCompile Include="Source\File\Format\STEP\STEP.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

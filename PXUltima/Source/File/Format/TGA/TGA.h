@@ -4,12 +4,12 @@
 #include <stddef.h>
 
 #include <Error/ActionResult.h>
+#include <File/Image.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-#include <File/Image.h>
 
 	typedef enum TGAColorType_
 	{
