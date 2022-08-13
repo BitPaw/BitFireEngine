@@ -114,9 +114,6 @@
     <ClCompile Include="Source\File\ParsingStreamX.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ErrorCode.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Encryption\RSA\Euklid.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -444,9 +441,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Container\QuadTree\QuadTreeDirection.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ErrorCode.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Media\Image\ImageX.h">

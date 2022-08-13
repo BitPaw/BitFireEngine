@@ -32,6 +32,21 @@ double MathAbsoluteD(const double a)
 	return MathAbsolute(a);
 }
 
+char MathLimitC(const char value, const char minimum, const char maximum)
+{
+	return MathLimit(value, minimum, maximum);
+}
+
+unsigned char MathLimitCU(const unsigned char value, const unsigned char minimum, const unsigned char maximum)
+{
+	return MathLimit(value, minimum, maximum);
+}
+
+int MathLimitI(const int value, const int minimum, const int maximum)
+{
+	return MathLimit(value, minimum, maximum);
+}
+
 float MathFastInverseSqaureRoot(float number)
 {
 	const float threehalfs = 1.5f;

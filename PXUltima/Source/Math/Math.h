@@ -19,6 +19,9 @@
 //#define MathCeiling(a) 
 #define MathAbsolute(a) (a < 0 ? -a : a)
 
+// Limit v between minimum and maximum
+#define MathLimit(v, min, max)  (min*(v <= min) + max*(v >= max) + v *((v > min) && (v < max)));
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -32,10 +35,10 @@ extern "C"
 	extern size_t MathAbsoluteI(const int value);
 	extern double MathAbsoluteD(const double value);
 
-#define MathMaximum(a, b) (a >= b ? a : b)
-#define MathFloor(a) ((int)(a))
-	//#define MathCeiling(a) 
-#define MathAbsolute(a) (a < 0 ? -a : a)
+
+	extern char MathLimitC(const char value, const char minimum, const char maximum);
+	extern unsigned char MathLimitCU(const unsigned char  value, const unsigned char  minimum, const unsigned char maximum);
+	extern int MathLimitI(const int value, const int minimum, const int maximum);
 
 	extern float MathFastInverseSqaureRoot(float number);
 	extern double MathPower(double base, double exponent);

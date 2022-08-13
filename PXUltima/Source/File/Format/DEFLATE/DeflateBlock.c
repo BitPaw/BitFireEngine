@@ -26,10 +26,10 @@ DeflateEncodingMethod ConvertToDeflateEncodingMethod(const unsigned char deflate
 
 void DeflateBlockParse(DeflateBlock* deflateBlock, BitStream* bitStream)
 { 
-    deflateBlock->IsLastBlock = BitStreamRead(bitStream, 1);
+    deflateBlock->IsLastBlock = BitStreamRead(bitStream, 1u);
 
     {
-        const unsigned char encodingMethodValue = BitStreamRead(bitStream, 2);
+        const unsigned char encodingMethodValue = BitStreamRead(bitStream, 2u);
 
         deflateBlock->EncodingMethod = ConvertToDeflateEncodingMethod(encodingMethodValue);
     }   
@@ -119,9 +119,9 @@ int DeflateBlockInflate(DeflateBlock* deflateBlock, BitStream* bitStream, void* 
                         // printf("[Symbol] <%2x>(%3i) Length.\n", resultLengthCode, resultLengthCode);
 
 
-                        unsigned int distance = 0;
-                        unsigned int numextrabits_l = 0;
-                        unsigned int numextrabits_d = 0; /*extra bits for length and distance*/
+                        size_t distance = 0;
+                        size_t numextrabits_l = 0;
+                        size_t numextrabits_d = 0; /*extra bits for length and distance*/
                         size_t start, backward, length;
 
                         /*the base lengths represented by codes 257-285*/

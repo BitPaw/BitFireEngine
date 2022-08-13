@@ -312,7 +312,7 @@ tree of the dynamic huffman tree lengths is generated*/
 			}
 			else if (code == 17) /*repeat "0" 3-10 times*/
 			{
-				unsigned replength = 3; /*read in the bits that indicate repeat length*/
+				size_t replength = 3; /*read in the bits that indicate repeat length*/
 				replength += BitStreamRead(bitStream, 3u);
 
 				/*repeat this value in the next lengths*/

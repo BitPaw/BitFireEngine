@@ -35,6 +35,11 @@ extern "C"
 	extern void ConvertColorRGBToYCbCr(const ColorRGB* const colorRGB, ColorYCbCr* const ColorYCbCr);
 	extern void ConvertColorYCbCrToRGB(const ColorYCbCr* const colorYCbCr, ColorRGB* const colorRGB);
 
+	extern float ConvertColorRGBToY(const float red, const float green, const float blue);
+	extern float ConvertColorRGBToCb(const float red, const float green, const float blue);
+	extern float ConvertColorRGBToCr(const float red, const float green, const float blue);
+
+
 #ifdef __cplusplus
 }
 #endif

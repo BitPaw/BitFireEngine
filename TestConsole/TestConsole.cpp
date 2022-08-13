@@ -156,6 +156,8 @@ void TestSaveImage()
     ImageSaveA(&image, "D:/_Data/ImageBMP.bmp", ImageFileFormatBitMap, ImageDataFormatRGB);
     ImageSaveA(&image, "D:/_Data/ImagePNG.png", ImageFileFormatPNG, ImageDataFormatRGB);
     ImageSaveA(&image, "D:/_Data/ImageJPG.jpg", ImageFileFormatJPEG, ImageDataFormatRGB);
+
+    ImageDestruct(&image);
 }
 
 void TestCreateWindow()

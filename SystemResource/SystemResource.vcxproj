@@ -339,7 +339,6 @@
     <ClCompile Include="Source\Encryption\RSA\Euklid.cpp" />
     <ClCompile Include="Source\Encryption\RSA\Restklassen.cpp" />
     <ClCompile Include="Source\Encryption\RSA\RSA.cpp" />
-    <ClCompile Include="Source\ErrorCode.cpp" />
     <ClCompile Include="Source\File\ParsingStreamX.cpp" />
     <ClCompile Include="Source\Model\MeshSegment.cpp" />
     <ClCompile Include="Source\Model\Model.cpp" />
@@ -431,7 +430,6 @@
     <ClInclude Include="Source\Encryption\RSA\RSA.h" />
     <ClInclude Include="Source\Encryption\RSA\RSAKeys.h" />
     <ClInclude Include="Source\Container\Dictionary.hpp" />
-    <ClInclude Include="Source\ErrorCode.h" />
     <ClInclude Include="Source\Container\QuadTree\QuadTreeDirection.hpp" />
     <ClInclude Include="Source\Container\QuadTree\QuadTreeChunk.hpp" />
     <ClInclude Include="Source\File\ParsingStreamX.h" />
