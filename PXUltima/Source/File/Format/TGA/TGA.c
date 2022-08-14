@@ -154,14 +154,14 @@ ActionResult TGAParse(TGA* tga, const void* data, const size_t dataSize, size_t*
 		ParsingStreamReadCU(&parsingStream, &tga->ColorPaletteType);
 		ParsingStreamReadCU(&parsingStream, &imageTypeValue);
 
-		ParsingStreamReadCU(&parsingStream, &colorPaletteChunkEntryIndex, EndianLittle);
-		ParsingStreamReadCU(&parsingStream, &colorPaletteChunkSize, EndianLittle);
+		ParsingStreamReadSU(&parsingStream, &colorPaletteChunkEntryIndex, EndianLittle);
+		ParsingStreamReadSU(&parsingStream, &colorPaletteChunkSize, EndianLittle);
 		ParsingStreamReadCU(&parsingStream, &colorPaletteEntrySizeInBits);
 
-		ParsingStreamReadCU(&parsingStream, &tga->OriginX, EndianLittle);
-		ParsingStreamReadCU(&parsingStream, &tga->OriginY, EndianLittle);
-		ParsingStreamReadCU(&parsingStream, &tga->Width, EndianLittle);
-		ParsingStreamReadCU(&parsingStream, &tga->Height, EndianLittle);
+		ParsingStreamReadSU(&parsingStream, &tga->OriginX, EndianLittle);
+		ParsingStreamReadSU(&parsingStream, &tga->OriginY, EndianLittle);
+		ParsingStreamReadSU(&parsingStream, &tga->Width, EndianLittle);
+		ParsingStreamReadSU(&parsingStream, &tga->Height, EndianLittle);
 		ParsingStreamReadCU(&parsingStream, &pixelDepth);
 		ParsingStreamReadCU(&parsingStream, &tga->ImageDescriptor);
 

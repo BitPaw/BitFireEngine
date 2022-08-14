@@ -2,7 +2,7 @@
 
 BF::AsyncLock::AsyncLock()
 {
-	_lockID = LockNotSet;
+	_lockID = LockIDNotSet;
 }
 
 BF::AsyncLock::~AsyncLock()

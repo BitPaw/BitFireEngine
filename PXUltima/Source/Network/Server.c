@@ -100,7 +100,7 @@ ActionResult ServerStart(Server* server, const unsigned short port, const Protoc
         }
 
         InvokeEvent(cSocket->ConnectionListeningCallback, cSocket);
-        
+
         cSocket->CommunicationThread = ThreadRun(ServerClientListeningThread, cSocket);
     }
 
@@ -203,12 +203,12 @@ ThreadResult ServerClientListeningThread(void* serverAdress)
     {
         return ThreadSucessful;
     }
-  
+
     while(CSocketIsCurrentlyUsed(serverSocket))
     {
         CSocket clientSocket;
 
-        CSocketConstruct(&clientSocket, sizeof(CSocket), 0);
+        CSocketConstruct(&clientSocket);
 
         // Set Events
 

@@ -27,9 +27,8 @@
 #define AdressInfoType ADDRINFOA
 #define AdressInfoDelete FreeAddrInfoA
 #endif
-#include <Async\Thread.h>
 
-
+#include <Async/Thread.h>
 
 #define CSocketID size_t
 #define SocketDebug 1
@@ -87,13 +86,13 @@ extern "C"
 	{
 		CSocketTypeInvalid,
 		CSocketTypeStream,// stream socket */
-		CSocketTypeDatagram, // datagram socket */ 
-		CSocketTypeRaw, // raw-protocol interface */ 
-		CSocketTypeRDM, // reliably-delivered message */ 
+		CSocketTypeDatagram, // datagram socket */
+		CSocketTypeRaw, // raw-protocol interface */
+		CSocketTypeRDM, // reliably-delivered message */
 		CSocketTypeSeqPacket // sequenced packet stream */
 	}
 	CSocketType;
-	
+
 	typedef enum ProtocolMode_
 	{
 		ProtocolModeInvalid,

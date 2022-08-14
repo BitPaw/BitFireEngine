@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <wchar.h>
 #include <assert.h>
-#include <direct.h>
+#include <dirent.h>
 
 #include <OS/OSVersion.h>
 #include <Memory/Memory.h>
@@ -78,17 +78,17 @@ extern "C"
 		FileCachingDefault,
 
 		FileCachingRandom,  // Access data in a random order.
-		FileCachingSequential, // Data sequentially from lower offsets to higher offsets.      
+		FileCachingSequential, // Data sequentially from lower offsets to higher offsets.
 		FileCachingTemporary, // File will not be saves to drive.
 		FileCachingUseOnce, // Access the specified data once and then not reuse it again.
 
-		// Windows only       
+		// Windows only
 		FileCachingWriteThrough,
-		FileCachingNoBuffering, // No OS Caching, direct to Harddrive if supprted     
+		FileCachingNoBuffering, // No OS Caching, direct to Harddrive if supprted
 
-		// UNIX only       
-		FileCachingNeedLater, // Data is not needed right now. "For later"[near future].        
-		FileCachingDontNeedNow // Data will not be cached. "I dont need it yet"  
+		// UNIX only
+		FileCachingNeedLater, // Data is not needed right now. "For later"[near future].
+		FileCachingDontNeedNow // Data will not be cached. "I dont need it yet"
 	}
 	FileCachingMode;
 
@@ -154,7 +154,7 @@ extern "C"
 	/*extern ActionResult ReadFromDisk(File* file, unsigned char** outPutBuffer, size_t* outPutBufferSize, const unsigned char addTerminatorByte);
 	extern ActionResult ReadFromDisk(File* file, const char* filePath, const unsigned char addNullTerminator, const FilePersistence filePersistence);
 	extern 	ActionResult ReadFromDisk(File* file, const wchar_t* filePath, const unsigned char addNullTerminator, const FilePersistence filePersistence);
-	
+
 	extern ActionResult ReadFromDisk(FILE* file, unsigned char** targetBuffer, size_t* bufferSize, const unsigned char addNullTerminator);
 	extern ActionResult ReadFromDisk
 	(

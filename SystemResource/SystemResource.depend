@@ -6297,3 +6297,205 @@
 	<OS/OSDefine.h>
 	<Windows.h>
 
+1660430822 source:/home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Camera/Camera.cpp
+	"Camera.h"
+	<stdio.h>
+	<cmath>
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Camera/Camera.h
+	"CameraPerspective.hpp"
+	<Math/Geometry/Vector3.hpp>
+	<Math/Geometry/Matrix4x4.hpp>
+	<Math/Physic/PhysicsDynamic.hpp>
+	<Video/RefreshRateMode.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Camera/CameraPerspective.hpp
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Math/Geometry/Vector3.hpp
+	<Math/Math.h>
+	<cstdio>
+
+1660432202 /home/bitpaw/Desktop/BFE/Engine/PXUltima/Source/Math/Math.h
+	<stddef.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Math/Geometry/Matrix4x4.hpp
+	"Vector3.hpp"
+	"Vector4.hpp"
+	"AngleRadians.hpp"
+	<cstring>
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Math/Geometry/Vector4.hpp
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Math/Geometry/AngleRadians.hpp
+	"AngleDegree.hpp"
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Math/Geometry/AngleDegree.hpp
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Math/Physic/PhysicsDynamic.hpp
+	"PhysicsStatic.hpp"
+	"../Geometry/Vector3.hpp"
+	<cassert>
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Math/Physic/PhysicsStatic.hpp
+	"../Geometry/Matrix4x4.hpp"
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/PXUltima/Source/Video/RefreshRateMode.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/ClipBoard/ClipBoardFormat.cpp
+	"ClipBoardFormat.h"
+	<OS/OSVersion.h>
+	<Windows.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/ClipBoard/ClipBoardFormat.h
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/PXUltima/Source/OS/OSVersion.h
+	<stdint.h>
+	<SdkDdkVer.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Container/AsciiString.cpp
+	"AsciiString.h"
+	<cassert>
+	<cstdarg>
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Container/AsciiString.h
+	<cstddef>
+	<cstring>
+	<string>
+	"List.hpp"
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Container/List.hpp
+	<stdlib.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Container/BitStreamHusk.cpp
+	"BitStreamHusk.h"
+	<stdio.h>
+	<cassert>
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Container/BitStreamHusk.h
+	<cstddef>
+	<File/Endian.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/PXUltima/Source/File/Endian.h
+	<stddef.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Container/QueueMapping.cpp
+	"QueueMapping.h"
+	<Memory/Memory.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Container/QueueMapping.h
+	<stddef.h>
+	<File/File.h>
+
+1660431764 /home/bitpaw/Desktop/BFE/Engine/PXUltima/Source/File/File.h
+	<stddef.h>
+	<stdlib.h>
+	<stdio.h>
+	<wchar.h>
+	<assert.h>
+	<dirent.h>
+	<OS/OSVersion.h>
+	<Memory/Memory.h>
+	<Error/ActionResult.h>
+	<File/Endian.h>
+	<sys/stat.h>
+	<sys/mman.h>
+	<unistd.h>
+	<libgen.h>
+	<windows.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/PXUltima/Source/Memory/Memory.h
+	<stddef.h>
+	<OS/OSVersion.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/PXUltima/Source/Error/ActionResult.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Container/ResponseCache.cpp
+	"ResponseCache.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Container/ResponseCache.h
+	<Container/Dictionary.hpp>
+	<File/File.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Container/Dictionary.hpp
+	<cstdlib>
+	<cstddef>
+	<Memory/MemoryX.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Memory/MemoryX.h
+	<Memory/Memory.h>
+
+1660435759 source:/home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Async/AsyncLock.cpp
+	"AsyncLock.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Async/AsyncLock.h
+	<Async/Lock.h>
+
+1660431867 /home/bitpaw/Desktop/BFE/Engine/PXUltima/Source/Async/Lock.h
+	<OS/OSVersion.h>
+	<semaphore.h>
+	<windows.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/DataBase/DataBase.cpp
+	"DataBase.h"
+	<stdio.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/DataBase/DataBase.h
+	<OS/OSVersion.h>
+	"SQLType.h"
+	"SQLResult.h"
+	<cstddef>
+	<Windows.h>
+	<sqlext.h>
+	<sqltypes.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/DataBase/SQLType.h
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/DataBase/SQLResult.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/DataBase/SQLResult.cpp
+	"SQLResult.h"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/DataBase/SQLType.cpp
+	"SQLType.h"
+	<OS/OSVersion.h>
+	<Windows.h>
+	<sql.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Encryption/Caesar.cpp
+	"Caesar.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Encryption/Caesar.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Encryption/MD5/MD5.cpp
+	"MD5.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Encryption/MD5/MD5.h
+	<cstddef>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Encryption/RSA/Euklid.cpp
+	"Euklid.h"
+	<Math/Math.h>
+	<Memory/MemoryX.h>
+	"Euklid_element.h"
+	<iostream>
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Encryption/RSA/Euklid.h
+	"Euklid_element.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Encryption/RSA/Euklid_element.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Encryption/RSA/Koerper.cpp
+	"Koerper.h"
+	<iostream>
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Encryption/RSA/Koerper.h
+	"Restklassen.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Encryption/RSA/Restklassen.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/Engine/SystemResource/Source/Encryption/RSA/Restklassen.cpp
+	"Restklassen.h"
+	<Math/Math.h>
+	<Memory/MemoryX.h>
+	<stdio.h>
+

@@ -10,7 +10,7 @@ int LockCreate(LockID* asyncLockID)
 
 	//HandleID = 0;
 
-	createResult = sem_init(&HandleID, sharedPointer, value);
+	createResult = sem_init(asyncLockID, sharedPointer, value);
 #elif defined(OSWindows)
 	LPSECURITY_ATTRIBUTES lpSemaphoreAttributes = 0;
 	LONG lInitialCount = 1;
@@ -34,7 +34,7 @@ int LockDelete(LockID* asyncLockID)
 	closingResult = CloseHandle(asyncLockID);
 #endif
 
-	*asyncLockID = LockNotSet;
+	*asyncLockID = LockIDNotSet;
 
 	return closingResult;
 }

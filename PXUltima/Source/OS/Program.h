@@ -3,6 +3,7 @@
 
 #include <OS/OSVersion.h>
 
+#include <stddef.h>
 #include <Error/ActionResult.h>
 #include <Async/Thread.h>
 
@@ -32,7 +33,7 @@ extern "C"
 		ProgramExecutedEvent ProgramExecutedCallBack;
 
 		size_t ParameterListSize;
-		char** ParameterList;	
+		char** ParameterList;
 
 		ThreadID WorkingThread;
 		size_t ReturnValue;

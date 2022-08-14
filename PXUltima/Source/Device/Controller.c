@@ -84,7 +84,7 @@ const size_t amountOfJoySticksSupported = joyGetNumDevs();
 unsigned char ControllerDataGet(Controller* controller)
 {
 #if defined(OSUnix)
-    return false;
+    return 0u;
 
 #elif defined(OSWindows)
 #if (WINVER >= 0x0400) // newer than Windows NT 4.0
@@ -134,7 +134,7 @@ unsigned char ControllerDataGet(Controller* controller)
 unsigned char ControllerAttachToWindow(const ControllerID controllerID, const CWindowID cWindowID)
 {
 #if defined(OSUnix)
-    return false;
+    return 0u;
 
 #elif defined(OSWindows)
 	UINT uPeriod = 1;
@@ -150,7 +150,7 @@ unsigned char ControllerAttachToWindow(const ControllerID controllerID, const CW
 unsigned char ControllerDetachToWindow(const ControllerID controllerID)
 {
 #if defined(OSUnix)
-    return false;
+    return 0u;
 
 #elif defined(OSWindows)
 	const MMRESULT releaseResult = joyReleaseCapture(controllerID);

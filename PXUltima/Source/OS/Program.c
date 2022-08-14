@@ -21,22 +21,22 @@ ThreadResult ProgramExecuteThreadFunction(void* data)
 #if defined(OSUnix)
     char** envirument = 0;
     int creationResult = posix_spawn(&program->Handle, program->FilePath, NULL, NULL, program->ParameterList, envirument);
-    bool creationSucessful = creationResult == 0;
+    const unsigned char creationSucessful = creationResult == 0;
 
 
     if(creationSucessful)
     {
-        program->Handle = waitpid(pID, &program->ReturnValue, 0);
-        unsigned char deploySuessful = program->Handle != -1;
+        program->Handle = waitpid(program->Handle, &program->ReturnValue, 0);
+        const unsigned char deploySuessful = program->Handle != -1;
 
-        program->ExecutionSuccessfull = deploySuessful && programReturnresult == 0;
+        program->ExecutionSuccessfull = deploySuessful;// && programReturnresult == 0;
     }
 
-    
+
 #elif defined(OSWindows)
     program->ReturnValue = ExecuteProgram(_P_WAIT, program->FilePath, (const char* const*)program->ParameterList);
     program->ExecutionSuccessfull = program->ReturnValue == 0;
-#endif   
+#endif
 
     if(program->ProgramExecutedCallBack)
     {
@@ -167,9 +167,9 @@ void ProgramAttach(Program* program)
     BOOL bInheritHandle = 0;
     DWORD dwProcessID = 0;
     HANDLE handleID = OpenProcess(dwDesiredAccess, bInheritHandle, dwProcessID);
-    
+
     program->Handle = handleID;
-#endif  
+#endif
 }
 
 void ProgramDetach(Program* program)

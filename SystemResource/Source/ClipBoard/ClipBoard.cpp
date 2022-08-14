@@ -8,9 +8,11 @@
 #include <WinUser.h>
 #endif
 
-BF::ErrorCode BF::ClipBoard::Open()
+ActionResult BF::ClipBoard::Open()
 {
 #if defined(OSUnix)
+  return ResultInvalid;
+
 #elif defined(OSWindows)
 	HWND CWindowID = NULL;
 	bool success = OpenClipboard(CWindowID);
@@ -20,7 +22,7 @@ BF::ErrorCode BF::ClipBoard::Open()
 		return GetCurrentError();
 	}
 
-	return ErrorCode::Successful;
+	return ResultSuccessful;
 #endif
 }
 
@@ -32,9 +34,11 @@ bool BF::ClipBoard::Close()
 #endif
 }
 
-BF::ErrorCode BF::ClipBoard::Set(const ClipBoardFormat format, const void* data)
+ActionResult BF::ClipBoard::Set(const ClipBoardFormat format, const void* data)
 {
 #if defined(OSUnix)
+    return ResultInvalid;
+
 #elif defined(OSWindows)
 	// Alloc something with GlobalAlloc()
 	// Maybe copy data?
@@ -49,13 +53,15 @@ BF::ErrorCode BF::ClipBoard::Set(const ClipBoardFormat format, const void* data)
 		return GetCurrentError();
 	}
 
-	return ErrorCode::Successful;
-#endif	
+	return ResultSuccessful;
+#endif
 }
 
 bool BF::ClipBoard::Clear()
 {
 #if defined(OSUnix)
+  return ResultInvalid;
+
 #elif defined(OSWindows)
 	return EmptyClipboard();
 #endif

@@ -37,9 +37,9 @@ extern "C"
 
 	// The mode in which the mouse pointer will be.
 	typedef enum CWindowCursorMode_
-	{	
-		CWindowCursorIgnore, 	// Show the cursor but dont register any Input.	
-		CWindowCursorShow, 	// Show the cursor and register Input as normal.	
+	{
+		CWindowCursorIgnore, 	// Show the cursor but dont register any Input.
+		CWindowCursorShow, 	// Show the cursor and register Input as normal.
 		CWindowCursorInvisible, 	// Hide Cursor. You can still use it as normal. Not locked.
 		CWindowCursorLock,
 		CWindowCursorLockAndHide
@@ -48,10 +48,10 @@ extern "C"
 
 	typedef enum ButtonState_
 	{
-		ButtonInvalid,
-		ButtonDown,
-		ButtonHold,
-		ButtonRelease
+		ButtonStateInvalid,
+		ButtonStateDown,
+		ButtonStateHold,
+		ButtonStateRelease
 	}
 	ButtonState;
 
@@ -138,7 +138,7 @@ extern "C"
 
 #if defined(OSUnix)
 		Display* DisplayCurrent;
-		CWindowIDCWindowRoot;
+		CWindowID WindowRoot;
 #elif defined(OSWindows)
 		HCURSOR CursorID;
 		HDC HandleDeviceContext;
@@ -168,7 +168,7 @@ extern "C"
 	CWindow;
 
 #if defined(OSUnix)
-	static void CWindowEventHandler(CWindow& cWindow, const XEvent& event);
+	static void CWindowEventHandler(CWindow* const cWindow, const XEvent* const event);
 #elif defined(OSWindows)
 	static LRESULT CALLBACK CWindowEventHandler(HWND cWindowsID, UINT eventID, WPARAM wParam, LPARAM lParam);
 #endif

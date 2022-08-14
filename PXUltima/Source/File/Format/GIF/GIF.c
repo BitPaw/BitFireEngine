@@ -81,10 +81,10 @@ ActionResult GIFLoad(GIF* gif, const void* data, const size_t dataSize, size_t* 
             unsigned char packedFields = 0;
 
             ParsingStreamReadCU(&parsingStream, &imageDescriptor.Separator);
-            ParsingStreamReadCU(&parsingStream, &imageDescriptor.LeftPosition, EndianLittle);
-            ParsingStreamReadCU(&parsingStream, &imageDescriptor.TopPosition, EndianLittle);
-            ParsingStreamReadCU(&parsingStream, &imageDescriptor.Width, EndianLittle);
-            ParsingStreamReadCU(&parsingStream, &imageDescriptor.Height, EndianLittle);
+            ParsingStreamReadSU(&parsingStream, &imageDescriptor.LeftPosition, EndianLittle);
+            ParsingStreamReadSU(&parsingStream, &imageDescriptor.TopPosition, EndianLittle);
+            ParsingStreamReadSU(&parsingStream, &imageDescriptor.Width, EndianLittle);
+            ParsingStreamReadSU(&parsingStream, &imageDescriptor.Height, EndianLittle);
             ParsingStreamReadCU(&parsingStream, &packedFields);
 
             imageDescriptor.LocalColorTableSize = (packedFields & 0b00000111);
@@ -100,7 +100,7 @@ ActionResult GIFLoad(GIF* gif, const void* data, const size_t dataSize, size_t* 
                 //-------------------------------------------------------------
             }
 
-            //-----------------------------------------------------------------       
+            //-----------------------------------------------------------------
         }
     }
 

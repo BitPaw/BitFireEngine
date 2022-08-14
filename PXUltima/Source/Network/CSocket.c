@@ -53,81 +53,81 @@
 
 
 #define IPAF_UNSPEC 0 // Unspecified
-#define IPAF_LOCAL 1 // Local to host (pipes and file-domain). 
-#define IPAF_UNIX IPAF_LOCAL // POSIX name for IPAF_LOCAL. 
-#define IPAF_FILE IPAF_LOCAL // Another non-standard name for IPAF_LOCAL. 
-#define IPAF_INET 2 // IP protocol family. 
-#define IPAF_AX25 3 // Amateur Radio AX.25. 
+#define IPAF_LOCAL 1 // Local to host (pipes and file-domain).
+#define IPAF_UNIX IPAF_LOCAL // POSIX name for IPAF_LOCAL.
+#define IPAF_FILE IPAF_LOCAL // Another non-standard name for IPAF_LOCAL.
+#define IPAF_INET 2 // IP protocol family.
+#define IPAF_AX25 3 // Amateur Radio AX.25.
 #define IPAF_IMPLINK 3 // arpanet imp addresses
-#define IPAF_IPX 4 // Novell Internet Protocol. 
+#define IPAF_IPX 4 // Novell Internet Protocol.
 #define IPAF_PUP 4 // pup protocols: e.g. BSP
-#define IPAF_APPLETALK 5 // Appletalk DDP. 
+#define IPAF_APPLETALK 5 // Appletalk DDP.
 #define IPAF_CHAOS 5 // mit CHAOS protocols
-#define IPAF_NETROM 6 // Amateur radio NetROM. 
+#define IPAF_NETROM 6 // Amateur radio NetROM.
 #define IPAF_NS 6 // XEROX NS protocols
 #define IPAF_IPX IPAF_NS // IPX protocols: IPX, SPX, etc.
-#define IPAF_BRIDGE 7 // Multiprotocol bridge. 
+#define IPAF_BRIDGE 7 // Multiprotocol bridge.
 #define IPAF_ISO 7 // ISO protocols
 #define IPAF_OSI IPAF_ISO // OSI is ISO
-#define IPAF_ATMPVC 8 // ATM PVCs. 
+#define IPAF_ATMPVC 8 // ATM PVCs.
 #define IPAF_ECMA 8 // european computer manufacturers
-#define IPAF_X25 9 // Reserved for X.25 project. 
+#define IPAF_X25 9 // Reserved for X.25 project.
 #define IPAF_DATAKIT 9 // datakit protocols
-#define IPAF_INET6 10 // IP version 6. 
+#define IPAF_INET6 10 // IP version 6.
 #define IPAF_CCITT 10 // CCITT protocols, X.25 etc
-#define IPAF_ROSE 11 // Amateur Radio X.25 PLP. 
+#define IPAF_ROSE 11 // Amateur Radio X.25 PLP.
 #define IPAF_SNA 11 // IBM SNA
-#define IPAF_DECnet 12 // Reserved for DECnet project. 
+#define IPAF_DECnet 12 // Reserved for DECnet project.
 #define IPAF_DECnet 12 // DECnet
-#define IPAF_NETBEUI 13 // Reserved for 802.2LLC project. 
+#define IPAF_NETBEUI 13 // Reserved for 802.2LLC project.
 #define IPAF_DLI 13 // Direct data link interface
-#define IPAF_SECURITY 14 // Security callback pseudo AF. 
+#define IPAF_SECURITY 14 // Security callback pseudo AF.
 #define IPAF_LAT 14 // LAT
-#define IPAF_KEY 15 // IPAF_KEY key management API. 
+#define IPAF_KEY 15 // IPAF_KEY key management API.
 #define IPAF_HYLINK 15 // NSC Hyperchannel
 #define IPAF_NETLINK 16
 #define IPAF_APPLETALK 16 // AppleTalk
-#define IPAF_ROUTE IPAF_NETLINK // Alias to emulate 4.4BSD. 
-#define IPAF_PACKET 17 // Packet family. 
+#define IPAF_ROUTE IPAF_NETLINK // Alias to emulate 4.4BSD.
+#define IPAF_PACKET 17 // Packet family.
 #define IPAF_NETBIOS 17 // NetBios-style addresses
-#define IPAF_ASH 18 // Ash. 
+#define IPAF_ASH 18 // Ash.
 #define IPAF_VOICEVIEW 18 // VoiceView
-#define IPAF_ECONET 19 // Acorn Econet. 
+#define IPAF_ECONET 19 // Acorn Econet.
 #define IPAF_FIREFOX 19 // Protocols from Firefox
-#define IPAF_ATMSVC 20 // ATM SVCs. 
+#define IPAF_ATMSVC 20 // ATM SVCs.
 #define IPAF_UNKNOWN1 20 // Somebody is using this!
-#define IPAF_RDS 21 // RDS sockets. 
+#define IPAF_RDS 21 // RDS sockets.
 #define IPAF_BAN 21 // Banyan
-#define IPAF_SNA 22 // Linux SNA Project 
+#define IPAF_SNA 22 // Linux SNA Project
 #define IPAF_ATM 22 // Native ATM Services
-#define IPAF_IRDA 23 // IRDA sockets. 
+#define IPAF_IRDA 23 // IRDA sockets.
 #define IPAF_INET6 23 // Internetwork Version 6
-#define IPAF_PPPOX 24 // PPPoX sockets. 
+#define IPAF_PPPOX 24 // PPPoX sockets.
 #define IPAF_CLUSTER 24 // Microsoft Wolfpack
-#define IPAF_WANPIPE 25 // Wanpipe API sockets. 
+#define IPAF_WANPIPE 25 // Wanpipe API sockets.
 #define IPAF_12844 25 // IEEE 1284.4 WG AF
-#define IPAF_LLC 26 // Linux LLC. 
+#define IPAF_LLC 26 // Linux LLC.
 #define IPAF_IRDA 26 // IrDA
-#define IPAF_IB 27 // Native InfiniBand address. 
-#define IPAF_MPLS 28 // MPLS. 
+#define IPAF_IB 27 // Native InfiniBand address.
+#define IPAF_MPLS 28 // MPLS.
 #define IPAF_NETDES 28 // Network Designers OSI & gateway
-#define IPAF_CAN 29 // Controller Area Network. 
-#define IPAF_TIPC 30 // TIPC sockets. 
-#define IPAF_BLUETOOTH 31 // Bluetooth sockets. 
-#define IPAF_IUCV 32 // IUCV sockets. 
-#define IPAF_RXRPC 33 // RxRPC sockets. 
-#define IPAF_ISDN 34 // mISDN sockets. 
-#define IPAF_PHONET 35 // Phonet sockets. 
-#define IPAF_IEEE802154 36 // IEEE 802.15.4 sockets. 
-#define IPAF_CAIF 37 // CAIF sockets. 
-#define IPAF_ALG 38 // Algorithm sockets. 
-#define IPAF_NFC 39 // NFC sockets. 
-#define IPAF_VSOCK 40 // vSockets. 
-#define IPAF_KCM 41 // Kernel Connection Multiplexor. 
-#define IPAF_QIPCRTR 42 // Qualcomm IPC Router. 
-#define IPAF_SMC 43 // SMC sockets. 
-#define IPAF_XDP 44 // XDP sockets. 
-#define IPAF_MAX 45 // For now.. 
+#define IPAF_CAN 29 // Controller Area Network.
+#define IPAF_TIPC 30 // TIPC sockets.
+#define IPAF_BLUETOOTH 31 // Bluetooth sockets.
+#define IPAF_IUCV 32 // IUCV sockets.
+#define IPAF_RXRPC 33 // RxRPC sockets.
+#define IPAF_ISDN 34 // mISDN sockets.
+#define IPAF_PHONET 35 // Phonet sockets.
+#define IPAF_IEEE802154 36 // IEEE 802.15.4 sockets.
+#define IPAF_CAIF 37 // CAIF sockets.
+#define IPAF_ALG 38 // Algorithm sockets.
+#define IPAF_NFC 39 // NFC sockets.
+#define IPAF_VSOCK 40 // vSockets.
+#define IPAF_KCM 41 // Kernel Connection Multiplexor.
+#define IPAF_QIPCRTR 42 // Qualcomm IPC Router.
+#define IPAF_SMC 43 // SMC sockets.
+#define IPAF_XDP 44 // XDP sockets.
+#define IPAF_MAX 45 // For now..
 
 #define IPAF_TCNPROCESS   29
 #define IPAF_TCNMESSAGE   30
@@ -154,7 +154,7 @@
 
 
 #ifdef OSUnix
-#include <sys/types.h> 
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <netinet/in.h>
@@ -171,7 +171,7 @@
 #define AdressInfoType ADDRINFOA
 #endif
 
-#define SOCK_Invalid 0xFF 
+#define SOCK_Invalid 0xFF
 
 
 ProtocolMode ConvertToProtocolMode(const unsigned int protocolMode)
@@ -644,7 +644,7 @@ ActionResult CSocketCreate
             return permissionGranted;
         }
     }
-#endif 
+#endif
 
     {
         const size_t socketIDResult = socket(ipAdressFamilyID, socketTypeID, protocolModeID);
@@ -707,7 +707,7 @@ ActionResult CSocketSetupAdress
             return wsaResult;
         }
     }
-#endif 
+#endif
 
     if(port != -1)
     {
@@ -732,9 +732,10 @@ ActionResult CSocketSetupAdress
         case 0:
             break; // OK - Sucess
 
+#if defined(OSWIndows)
         case EAI_ADDRFAMILY:
             return HostHasNoNetworkAddresses;
-
+#endif
         case EAI_AGAIN:
             return NameServerReturnedTemporaryFailureIndication;
 
@@ -843,7 +844,7 @@ void CSocketClose(CSocket* cSocket)
     closesocket(cSocket->ID);
 #elif defined(OSUnix)
     close(cSocket->ID);
-#endif   
+#endif
 
     InvokeEvent(cSocket->ConnectionTerminatedCallback, cSocket);
 
@@ -915,7 +916,7 @@ ActionResult CSocketAccept(CSocket* server, CSocket* client)
         (socklen_t*)&client->IPSize
 #elif defined(OSWindows)
         (int*)&client->IPSize
-#endif        
+#endif
     );
 
     const unsigned char sucessful = client->ID != -1;
@@ -954,7 +955,7 @@ ActionResult CSocketSend(CSocket* cSocket, const void* inputBuffer, const size_t
 
 #if SocketDebug
     printf("[#][Socket][Send] You >>> <%zi> %li Bytes\n", cSocket->ID, inputBufferSize);
-#endif  
+#endif
 
     // Send data
     {
@@ -965,7 +966,7 @@ ActionResult CSocketSend(CSocket* cSocket, const void* inputBuffer, const size_t
             write(cSocket->ID, data, inputBufferSize);
 #elif defined(OSWindows)
             send(cSocket->ID, data, inputBufferSize, 0);
-#endif 
+#endif
         const unsigned char sucessfulSend = writtenBytes != -1;
 
         if(!sucessfulSend)

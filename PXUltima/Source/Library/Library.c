@@ -114,7 +114,7 @@ unsigned char LibraryGetSymbol(LibraryHandle* handle, LibraryFunction* libraryFu
 #if defined(OSUnix)
 	const LibraryFunction functionPointer = (LibraryFunction*)dlsym(handle, symbolName);
 	const char* errorString = dlerror();
-	const bool successful = errorString;
+	const unsigned char successful = errorString;
 #elif defined(OSWindows)
 	const LibraryFunction functionPointer = GetProcAddress(handle, symbolName);
 	const unsigned char successful = functionPointer;

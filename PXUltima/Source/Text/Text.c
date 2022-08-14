@@ -3,7 +3,7 @@
 #include <Memory/Memory.h>
 #include <Math/Math.h>
 
-#include <stdarg.h> 
+#include <stdarg.h>
 #include <stdio.h>
 
 #define PXTextAssertEnable 1
@@ -236,7 +236,7 @@ size_t TextLengthA(const char* string, const size_t stringSize)
 	return index;
 }
 
-size_t TextLengthW(const wchar_t* string)
+size_t TextLengthW(const wchar_t* string, const size_t stringSize)
 {
 	size_t index = 0;
 
@@ -267,7 +267,7 @@ size_t TextCopyA(const char* source, const size_t sourceLength, char* destinatio
 #if PXTextAssertEnable
 	assert(destination);
 	assert(source);
-#endif	
+#endif
 
 	for(; (i < minLength) && (source[i] != '\0'); ++i)
 	{
@@ -287,7 +287,7 @@ size_t TextCopyAW(const char* source, const size_t sourceLength, wchar_t* destin
 #if PXTextAssertEnable
 	assert(destination);
 	assert(source);
-#endif	
+#endif
 
 	for(; (i < minLength) && (source[i] != '\0'); ++i)
 	{
@@ -307,7 +307,7 @@ size_t TextCopyWA(const wchar_t* source, const size_t sourceLength, char* destin
 #if PXTextAssertEnable
 	assert(destination);
 	assert(source);
-#endif	
+#endif
 
 	for(; (i < minLength) && (source[i] != '\0'); ++i)
 	{
@@ -327,7 +327,7 @@ size_t TextCopyW(const wchar_t* source, const size_t sourceLength, wchar_t* dest
 #if PXTextAssertEnable
 	assert(destination);
 	assert(source);
-#endif	
+#endif
 
 	for(; (i < minLength) && (source[i] != '\0'); ++i)
 	{
@@ -369,7 +369,7 @@ char TextCompareA(const char* a, const size_t aSize, const char* b, const size_t
 	for(; (index < textSize) && (a[index] != '\0') && (b[index] != '\0'); ++index)
 		samecounter += a[index] == b[index];
 
-	if(index < textSize) // Still in range but encountered an \0 in a or b 
+	if(index < textSize) // Still in range but encountered an \0 in a or b
 	{
 		samecounter += a[index] == b[index]; // One of them is \0, check this too
 		++index; // keep for comparsion
@@ -522,7 +522,7 @@ size_t TextFindLastA(const char* string, const size_t dataSize, const char chara
 	}
 
 	++i;
-	
+
 	return found ? i+1 : TextIndexNotFound;
 }
 
@@ -684,7 +684,7 @@ void TextParseFindAllA(const char* string, const size_t stringSize, const Parsin
 
 				(*parsingToken->Value) = valueString;
 
-				for(; (string[i] != '\0') && string[i] != ' '; i++); // Skip data	
+				for(; (string[i] != '\0') && string[i] != ' '; i++); // Skip data
 
 				++foundTargets;
 			}

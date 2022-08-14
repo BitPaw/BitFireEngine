@@ -5,8 +5,8 @@
 
 #if defined(OSUnix)
 #include <semaphore.h>
-#define LockID sem_t
-#define LockNotSet 0
+#define LockID sem_t*
+#define LockIDNotSet 0
 #elif defined(OSWindows)
 #include <windows.h>
 //#include <process.h>

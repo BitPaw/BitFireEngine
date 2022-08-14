@@ -7,7 +7,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #define ThreadResult void*
-#define ThreadSucessful nullptr
+#define ThreadSucessful 0 // Adress
 #define ThreadID pthread_t
 #define ThreadIDUnused 0
 #elif defined(OSWindows)
@@ -33,7 +33,7 @@ extern "C"
 	extern size_t ThreadCurrentID();
 	extern ThreadID ThreadCurrentGet();
 
-	extern void ThreadWaitForFinish(const ThreadID threadID);	
+	extern void ThreadWaitForFinish(const ThreadID threadID);
 
 #ifdef __cplusplus
 }

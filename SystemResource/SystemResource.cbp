@@ -17,6 +17,7 @@
 					<Add option="-g" />
 					<Add directory="Source" />
 					<Add directory="../__Dependencies__/include" />
+					<Add directory="../PXUltima/Source" />
 				</Compiler>
 				<Linker>
 					<Add option="-static" />
@@ -142,6 +143,7 @@
 		<Unit filename="Source/ErrorCode.cpp" />
 		<Unit filename="Source/ErrorCode.h" />
 		<Unit filename="Source/Event/Event.hpp" />
+		<Unit filename="Source/File/ActionResult.hpp" />
 		<Unit filename="Source/File/Bash.cpp" />
 		<Unit filename="Source/File/Bash.h" />
 		<Unit filename="Source/File/ByteStream.cpp" />
@@ -149,7 +151,6 @@
 		<Unit filename="Source/File/Endian.h" />
 		<Unit filename="Source/File/File.cpp" />
 		<Unit filename="Source/File/File.h" />
-		<Unit filename="Source/File/ActionResult.hpp" />
 		<Unit filename="Source/File/FileCachingMode.cpp" />
 		<Unit filename="Source/File/FileCachingMode.h" />
 		<Unit filename="Source/File/FileLocation.cpp" />

@@ -1,6 +1,8 @@
 #ifndef MathInclude
 #define MathInclude
 
+#include <stddef.h>
+
 #define MathConstantPI 3.1415926535897932384626433832 	// Pi, Archimedes' constant or Ludolph's number
 #define MathConstantE 2.71828182845904523536028747135266249
 #define MathConstantP 1.32471795724474602596090885447809734
@@ -16,7 +18,7 @@
 #define MathMinimum(a, b) (a <= b ? a : b)
 #define MathMaximum(a, b) (a >= b ? a : b)
 #define MathFloor(a) ((int)(a))
-//#define MathCeiling(a) 
+//#define MathCeiling(a)
 #define MathAbsolute(a) (a < 0 ? -a : a)
 
 // Limit v between minimum and maximum

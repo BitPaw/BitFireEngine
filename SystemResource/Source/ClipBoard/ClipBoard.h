@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../ErrorCode.h"
+#include <Error/ActionResult.h>
+
 #include "ClipBoardFormat.h"
 
 namespace BF
@@ -10,12 +11,12 @@ namespace BF
 		public:
 		// Open clipboard, close it imedidly after using!
 		// Fails if another window has the clipboard open.
-		ErrorCode Open();
+		ActionResult Open();
 
 		// Use this right after using!
 		bool Close();
 
-		ErrorCode Set(const ClipBoardFormat format, const void* data);
+		ActionResult Set(const ClipBoardFormat format, const void* data);
 
 		bool Clear();
 	};

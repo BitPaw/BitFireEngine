@@ -23,8 +23,6 @@
 
 #endif
 
-#include "Math.h"
-
 #define MemoryAssertEnable 1
 #define MemoryDebug 0
 #define MemoryUseSystemFunction 0
@@ -33,7 +31,7 @@
 
 #if MemoryAssertEnable
 #include <assert.h>
-#endif 
+#endif
 
 unsigned char MemoryScan(MemoryUsage* memoryUsage)
 {
@@ -66,7 +64,7 @@ void MemorySet(void* __restrict bufferA, const size_t bufferASize, const unsigne
 {
 //#if MemoryAssertEnable
 //	assert(bufferA);
-//#endif 
+//#endif
 
 #if MemoryDebug
 	printf("[#][Memory] 0x%p (%10zi B) Set to %2x\n", bufferA, length, value);
@@ -92,7 +90,7 @@ unsigned char MemoryCompare(const void* __restrict bufferA, const size_t bufferA
 #if MemoryAssertEnable
 	assert(bufferA);
 	assert(bufferB);
-#endif 
+#endif
 
 #if MemoryDebug
 	printf("[#][Memory] 0x%p (%10zi B) Compare to 0x%p\n", a, length, b);
@@ -120,7 +118,7 @@ size_t MemoryCopy(const void* __restrict inputBuffer, const size_t inputBufferSi
 #if MemoryAssertEnable
 	assert(inputBuffer);
 	assert(outputBuffer);
-#endif 
+#endif
 
 #if MemoryDebug
 	printf("[#][Memory] 0x%p (%10zi B) Copy to 0x%p\n", bufferA, bufferSize, bufferB);
@@ -135,7 +133,7 @@ size_t MemoryCopy(const void* __restrict inputBuffer, const size_t inputBufferSi
 		unsigned char* outputByte = ((unsigned char*)outputBuffer) + index;
 
 		*outputByte = *inputByte;
-	}	
+	}
 
 	return bufferSize;
 }
@@ -215,11 +213,11 @@ void* MemoryVirtualAllocate(const size_t size, const MemoryProtectionMode memory
 
 	// Check if mmap was sucessful
 	{
-		const bool sucessful = addressAllocated != MAP_FAILED;
+		const unsigned char sucessful = addressAllocated != MAP_FAILED;
 
 		if(!sucessful)
 		{
-			return nullptr;
+			return 0;
 		}
 	}
 
@@ -288,7 +286,7 @@ void MemoryVirtualPrefetch(const void* adress, const size_t size)
 void MemoryVirtualRelease(const void* adress, const size_t size)
 {
 #if defined(OSUnix)
-	const bool result = true;
+	const unsigned char result = 1u;
 
 #elif defined(OSWindows)
 	DWORD freeType = MEM_RELEASE;
@@ -309,10 +307,10 @@ MemoryProtectionModeType ConvertFromMemoryProtectionMode(const MemoryProtectionM
 		case MemoryReadOnly:
 			return ProtectionIDRead;
 
-		case MemoryWriteOnly: 
+		case MemoryWriteOnly:
 			return ProtectionIDWrite;
 
-		case MemoryReadAndWrite: 
+		case MemoryReadAndWrite:
 			return ProtectionIDReadWrite;
 
 		default:

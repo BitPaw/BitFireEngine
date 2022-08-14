@@ -6,7 +6,7 @@
 #define MakeLetterCaseLower(character) (character | 0b00100000)
 #define MakeLetterCaseUpper(character) (character & 0b11011111)
 #define CompareLetterCaseIgnore(a, b) (MakeLetterCaseLower(a) == b) || (MakeLetterCaseUpper(a) == b)
-#define UnicodeToASCII(wc) (wc <= 0xFF ? (char)wc : '?') 
+#define UnicodeToASCII(wc) (wc <= 0xFF ? (char)wc : '?')
 
 #define TextUnkownLength -1
 #define TextIndexNotFound -1
@@ -77,7 +77,7 @@ extern "C"
 	extern size_t TextClearW(wchar_t* string, const size_t stringSize);
 
 	extern size_t TextLengthA(const char* string, const size_t stringSize);
-	extern size_t TextLengthW(const wchar_t* string);
+	extern size_t TextLengthW(const wchar_t* string, const size_t stringSize);
 
 	extern size_t TextLengthUntilA(const char* string, const size_t stringSize, const char character);
 	extern size_t TextLengthUntilW(const wchar_t* string, const size_t stringSize, const wchar_t character);

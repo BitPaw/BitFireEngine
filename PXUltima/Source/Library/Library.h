@@ -3,6 +3,8 @@
 
 #include <OS/OSVersion.h>
 
+#include <stddef.h>
+
 #if defined(OSUnix)
 #include <sys/types.h>
 #include <dlfcn.h>

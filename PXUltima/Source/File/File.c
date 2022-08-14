@@ -65,7 +65,7 @@
 #define OSWorkingDirectoryChangeW _wchdir
 
 
-// From WinBase.h   
+// From WinBase.h
 #define FileCachingModeWriteThrough      0x80000000 // FILE_FLAG_WRITE_THROUGH
 #define FileCachingModeOverLapped        0x40000000
 #define FileCachingModeNoBuffering       0x20000000 // FILE_FLAG_NO_BUFFERING
@@ -96,22 +96,22 @@ void FilePathSplittA(const char* fullPath, size_t fullPathMaxSize, char* drive, 
 	char directoryNameCache[PathMaxSize];
 	char baseNameCache[FileNameMaxSize];
 
-	Text::Copy(fullPath, FileNameMaxSize, directoryNameCache, FileNameMaxSize);
-	Text::Copy(fullPath, FileNameMaxSize, baseNameCache, FileNameMaxSize);
+	TextCopyA(fullPath, FileNameMaxSize, directoryNameCache, FileNameMaxSize);
+	TextCopyA(fullPath, FileNameMaxSize, baseNameCache, FileNameMaxSize);
 
 	char* dirNameResult = dirname(directoryNameCache);
 	char* baseNameResult = basename(baseNameCache);
 
-	size_t directoryLength = Text::Copy(dirNameResult, DirectoryMaxSize, directory, DirectoryMaxSize);
-	size_t fileNameLength = Text::Copy(baseNameResult, FileNameMaxSize, fileName, FileNameMaxSize);
+	size_t directoryLength = TextCopyA(dirNameResult, DirectoryMaxSize, directory, DirectoryMaxSize);
+	size_t fileNameLength = TextCopyA(baseNameResult, FileNameMaxSize, fileName, FileNameMaxSize);
 
 	for(size_t i = fileNameLength - 1; i > 0; --i)
 	{
-		bool isDot = fileName[i] == '.';
+		const unsigned char isDot = fileName[i] == '.';
 
 		if(isDot)
 		{
-			Text::Copy(fileName + i + 1, ExtensionMaxSize - i, extension, extensionMaxSize);
+			TextCopyA(fileName + i + 1, ExtensionMaxSize - i, extension, extensionMaxSize);
 			break;
 		}
 	}
@@ -150,7 +150,7 @@ void FilePathSplittW(const wchar_t* fullPath, size_t fullPathMaxSize, wchar_t* d
 	char fileNameA[FileNameMaxSize];
 	char extensionA[ExtensionMaxSize];
 
-	Text::Copy(fullPath, PathMaxSize, fullPathA, PathMaxSize);
+	TextCopyWA(fullPath, PathMaxSize, fullPathA, PathMaxSize);
 
 	Splitt
 	(
@@ -161,10 +161,10 @@ void FilePathSplittW(const wchar_t* fullPath, size_t fullPathMaxSize, wchar_t* d
 		extensionA
 	);
 
-	Text::Copy(driveA, DriveMaxSize, drive, DriveMaxSize);
-	Text::Copy(directoryA, DirectoryMaxSize, directory, DirectoryMaxSize);
-	Text::Copy(fileNameA, FileNameMaxSize, fileName, FileNameMaxSize);
-	Text::Copy(extensionA, ExtensionMaxSize, extension, ExtensionMaxSize);
+	TextCopyAW(driveA, DriveMaxSize, drive, DriveMaxSize);
+	TextCopyAW(directoryA, DirectoryMaxSize, directory, DirectoryMaxSize);
+	TextCopyAW(fileNameA, FileNameMaxSize, fileName, FileNameMaxSize);
+	TextCopyAW(extensionA, ExtensionMaxSize, extension, ExtensionMaxSize);
 #elif defined(OSWindows)
 	wchar_t extensionCache[FileNameMaxSize];
 
@@ -285,28 +285,28 @@ void FileDestruct(File* file)
 ActionResult FileOpenA(File* file, const char* filePath, const MemoryProtectionMode fileOpenMode, FileCachingMode fileCachingMode)
 {
 #if defined(OSUnix)
-	const char* readMode = nullptr;
+	const char* readMode = 0u;
 
 	switch(fileOpenMode)
 	{
-		case FileOpenMode::Read:
+		case MemoryReadOnly:
 			readMode = FileReadMode;
 			break;
 
-		case FileOpenMode::Write:
+		case MemoryWriteOnly:
 			readMode = FileWriteMode;
 			break;
 	}
 
-	assert(readMode != nullptr);
+	assert(readMode != 0);
 
 	// Use this somewhere here
 	// int posix_fadvise(int fd, off_t offset, off_t len, int advice);
 	// int posix_fadvise64(int fd, off_t offset, off_t len, int advice);
 
-	FileHandle = fopen(filePath, readMode);
+	file->FileHandle = fopen(filePath, readMode);
 
-	return FileHandle ? ResultSuccessful : ResultFileOpenFailure;
+	return file->FileHandle ? ResultSuccessful : ResultFileOpenFailure;
 
 #elif defined(OSWindows)
 	wchar_t filePathW[PathMaxSize];
@@ -323,10 +323,10 @@ ActionResult FileOpenW(File* file, const wchar_t* filePath, const MemoryProtecti
 #if defined(OSUnix)
 	char filePathA[PathMaxSize];
 
-	Text::Copy(filePath, PathMaxSize, filePathA, PathMaxSize);
+	TextCopyWA(filePath, PathMaxSize, filePathA, PathMaxSize);
 
 	const ActionResult openResult = Open(filePathA, fileOpenMode);
-	const bool successful = openResult == ResultSuccessful;
+	const unsigned char successful = openResult == ResultSuccessful;
 
 	if(!successful)
 	{
@@ -466,7 +466,7 @@ ActionResult FileOpenW(File* file, const wchar_t* filePath, const MemoryProtecti
 ActionResult FileClose(File* file)
 {
 #if defined(OSUnix)
-	int closeResult = fclose(FileHandle);
+	const int closeResult = fclose(file->FileHandle);
 
 	switch(closeResult)
 	{
@@ -506,7 +506,7 @@ ActionResult FileMapToVirtualMemoryA(File* file, const char* filePath, const siz
 	int accessType = PROT_READ;
 	int flags = MAP_PRIVATE | MAP_POPULATE;
 	int fileDescriptor = 0;
-	off64_t length = 0;
+	off_t length = 0;
 
 	// Open file
 	{
@@ -514,45 +514,45 @@ ActionResult FileMapToVirtualMemoryA(File* file, const char* filePath, const siz
 
 		switch(protectionMode)
 		{
-			case MemoryProtectionMode::NoReadWrite:
+			case MemoryNoReadWrite:
 				openFlag = 0;
 				break;
 
-			case MemoryProtectionMode::ReadOnly:
+			case MemoryReadOnly:
 				openFlag = O_RDONLY;
 				break;
 
-			case MemoryProtectionMode::WriteOnly:
+			case MemoryWriteOnly:
 				openFlag = O_WRONLY;
 				break;
 
-			case MemoryProtectionMode::ReadAndWrite:
+			case MemoryReadAndWrite:
 				openFlag = O_RDWR;
 				break;
 		}
 
 		const int fileDescriptor = open64(filePath, openFlag);
-		const bool sucessfulOpen = fileDescriptor;
+		const unsigned char sucessfulOpen = fileDescriptor;
 
 		if(!sucessfulOpen)
 		{
 			return ResultFileOpenFailure;
 		}
 
-		IDMapping = fileDescriptor;
+		file->IDMapping = fileDescriptor;
 	}
 
 	// Get file length
 	{
-		const size_t fileLength = lseek64(IDMapping, 0, SEEK_END);
-		const bool sucessful = fileLength > 0;
+		const size_t fileLength = lseek64(file->IDMapping, 0, SEEK_END);
+		const unsigned char sucessful = fileLength > 0;
 
 		if(!sucessful)
 		{
 			return ResultFileReadFailure;
 		}
 
-		DataSize = fileLength;
+		file->DataSize = fileLength;
 	}
 
 	// Map data
@@ -563,28 +563,28 @@ ActionResult FileMapToVirtualMemoryA(File* file, const char* filePath, const siz
 
 		const void* mappedData = mmap
 		(
-			nullptr, // addressPrefered
-			DataSize,
+			0, // addressPrefered
+			file->DataSize,
 			protectionModeID,
 			flags,
-			IDMapping, // fileDescriptor
+			file->IDMapping, // fileDescriptor
 			offset
 		);
-		const bool successfulMapping = mappedData;
+		const unsigned char successfulMapping = mappedData;
 
 		if(!successfulMapping)
 		{
 			return ResultFileMemoryMappingFailed;
 		}
 
-		Data = (Byte__*)mappedData;
+		file->Data = (unsigned char*)mappedData;
 	}
 
-	_fileLocation = FileLocation::MappedFromDisk;
+	file->_fileLocation = FileLocationMappedFromDisk;
 
-	close(IDMapping);
+	close(file->IDMapping);
 
-	IDMapping = 0;
+	file->IDMapping = 0;
 
 #if MemoryDebug
 	printf("[#][Memory] 0x%p (%10zi B) MMAP %ls\n", Data, DataSize, filePath);
@@ -608,7 +608,7 @@ ActionResult FileMapToVirtualMemoryW(File* file, const wchar_t* filePath, const 
 #if defined(OSUnix)
 	char filePathA[PathMaxSize];
 
-	Text::Copy(filePath, PathMaxSize, filePathA, PathMaxSize);
+	TextCopyWA(filePath, PathMaxSize, filePathA, PathMaxSize);
 
 	return MapToVirtualMemory(filePathA, protectionMode);
 
@@ -802,18 +802,18 @@ ActionResult FileUnmapFromVirtualMemory(File* file)
 #endif
 
 #if defined(OSUnix)
-	const int result = munmap(Data, DataSize);
-	const bool sucessful = result != -1;
+	const int result = munmap(file->Data, file->DataSize);
+	const unsigned char sucessful = result != -1;
 
 	if(!sucessful)
 	{
-		const ErrorCode errorCode = GetCurrentError(); // Not quite well
+		const ActionResult errorCode = GetCurrentError(); // Not quite well
 
 		return ResultFileMemoryMappingFailed;
 	}
 
-	Data = 0;
-	DataSize = 0;
+	file->Data = 0;
+	file->DataSize = 0;
 
 	return ResultSuccessful;
 
@@ -826,9 +826,9 @@ ActionResult FileUnmapFromVirtualMemory(File* file)
 			const BOOL flushSuccessful = FlushViewOfFile(file->Data, file->DataCursor);
 
 			printf("");
-		}		
+		}
 	}
-	
+
 	{
 		const unsigned char unmappingSucessful = UnmapViewOfFile(file->Data);
 
@@ -942,10 +942,10 @@ ActionResult FileCopyA(const char* sourceFilePath, const char* destinationFilePa
 #if defined (OSUnix)
 	FILE* fileSource = fopen(sourceFilePath, FileReadMode);
 	FILE* fileDestination = fopen(destinationFilePath, FileWriteMode);
-	bool fileOpenSuccesful = fileSource && fileDestination;
+	const unsigned char fileOpenSuccesful = fileSource && fileDestination;
 
 	const size_t swapBufferSize = 2048;
-	Byte__ swapBuffer[swapBufferSize];
+	unsigned char swapBuffer[swapBufferSize];
 
 	if(!fileOpenSuccesful)
 	{
@@ -983,8 +983,8 @@ ActionResult FileCopyW(const wchar_t* sourceFilePath, const wchar_t* destination
 	char sourceFilePathA[PathMaxSize];
 	char destinationFilePathA[PathMaxSize];
 
-	Text::Copy(sourceFilePath, PathMaxSize, sourceFilePathA, PathMaxSize);
-	Text::Copy(destinationFilePath, PathMaxSize, destinationFilePathA, PathMaxSize);
+	TextCopyWA(sourceFilePath, PathMaxSize, sourceFilePathA, PathMaxSize);
+	TextCopyWA(destinationFilePath, PathMaxSize, destinationFilePathA, PathMaxSize);
 
 	return FileCopy(sourceFilePathA, destinationFilePathA);
 #elif defined(OSWindows)
@@ -1161,7 +1161,7 @@ ActionResult FileMapToVirtualMemoryW(const wchar_t* filePath, const MemoryProtec
 
 ActionResult FileMapToVirtualMemory(const size_t size, const MemoryProtectionMode protectionMode)
 {
-	
+
 }
 
 ActionResult FileUnmapFromVirtualMemory()

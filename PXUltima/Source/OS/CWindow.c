@@ -85,7 +85,7 @@ typedef enum WindowEventType_
     WindowEventDialogControlNext,
     WindowEventSPOOLERSTATUS,
     WindowEventItemDraw,
-    WindowEventItemMeasure,    
+    WindowEventItemMeasure,
     WindowEventItemDelete,
     WindowEventVKEYTOITEM,
     WindowEventCHARTOITEM,
@@ -582,26 +582,25 @@ WindowEventType ToWindowEventType(const unsigned int windowEventID)
 
 
 #if defined(OSUnix)
-void WindowEventHandler(BF::CWindow& window, const XEvent& event)
-void BF::CWindow::OnWindowEvent(BF::CWindow& window, const XEvent& event)
+void CWindowEventHandler(CWindow* const cWindow, const XEvent* const event)
 {
-    switch(event.type)
+    switch(event->type)
     {
         case KeyPress:
         case KeyRelease:
         {
-            const XKeyEvent& keyEvent = event.xkey;
-            const unsigned int keyCode = keyEvent.keycode;
-            const bool release = event.type == KeyRelease;
-            const KeySym keySym = XKeycodeToKeysym(window.DisplayCurrent, keyCode, 0);
+            const XKeyEvent* keyEvent = &event->xkey;
+            const unsigned int keyCode = keyEvent->keycode;
+            const unsigned char release = event->type == KeyRelease;
+            const KeySym keySym = XKeycodeToKeysym(cWindow->DisplayCurrent, keyCode, 0);
             const char* keyName = XKeysymToString(keySym);
 
-            KeyBoardKey keyBoardKey = BF::ConvertKeyBoardKey(keySym);
+            VirtualKey keyBoardKey = ConvertToVirtualKey(keySym);
 
             KeyBoardKeyInfo keyBoardKeyInfo;
 
             keyBoardKeyInfo.Key = keyBoardKey;
-            keyBoardKeyInfo.Mode = release ? ButtonState::Release : ButtonState::Down;
+            keyBoardKeyInfo.Mode = release ? ButtonStateRelease : ButtonStateDown;
             keyBoardKeyInfo.Repeat = 0;
             keyBoardKeyInfo.ScanCode = keySym;
             keyBoardKeyInfo.SpecialKey = 0;
@@ -609,7 +608,7 @@ void BF::CWindow::OnWindowEvent(BF::CWindow& window, const XEvent& event)
             keyBoardKeyInfo.PreState = 0;
             keyBoardKeyInfo.GapState = 0;
 
-            InvokeEvent(window.KeyBoardKeyCallBack, keyBoardKeyInfo);
+            InvokeEvent(cWindow->KeyBoardKeyCallBack, cWindow->EventReceiver, cWindow, keyBoardKeyInfo);
 
             if(release)
             {
@@ -625,31 +624,31 @@ void BF::CWindow::OnWindowEvent(BF::CWindow& window, const XEvent& event)
         case ButtonRelease:
         case ButtonPress:
         {
-            const XButtonEvent& buttonEvent = event.xbutton;
-            const unsigned int buttonID = buttonEvent.button;
-            const ButtonState buttonState = event.type == ButtonPress ? ButtonState::Down : ButtonState::Release;
-            MouseButton mouseButton = MouseButton::Invalid;
+            const XButtonEvent* buttonEvent = &event->xbutton;
+            const unsigned int buttonID = buttonEvent->button;
+            const ButtonState buttonState = event->type == ButtonPress ? ButtonStateDown : ButtonStateRelease;
+            MouseButton mouseButton = MouseButtonInvalid;
 
             switch(buttonID)
             {
                 case MouseButtonLeft:
-                    InvokeEvent(window.MouseClickCallBack, MouseButton::Left, buttonState);
+                    InvokeEvent(cWindow->MouseClickCallBack, cWindow->EventReceiver, cWindow, MouseButtonLeft, buttonState);
                     break;
 
                 case MouseButtonMiddle:
-                    InvokeEvent(window.MouseClickCallBack, MouseButton::Middle, buttonState);
+                    InvokeEvent(cWindow->MouseClickCallBack, cWindow->EventReceiver, cWindow, MouseButtonMiddle, buttonState);
                     break;
 
                 case MouseButtonRight:
-                    InvokeEvent(window.MouseClickCallBack, MouseButton::Right, buttonState);
+                    InvokeEvent(cWindow->MouseClickCallBack, cWindow->EventReceiver, cWindow, MouseButtonRight, buttonState);
                     break;
 
                 case MouseScrollUp:
-                    InvokeEvent(window.MouseScrollCallBack, MouseScrollDirection::Up);
+                    InvokeEvent(cWindow->MouseScrollCallBack, cWindow->EventReceiver, cWindow, MouseScrollDirectionUp);
                     break;
 
                 case MouseScrollDown:
-                    InvokeEvent(window.MouseScrollCallBack, MouseScrollDirection::Down);
+                    InvokeEvent(cWindow->MouseScrollCallBack, cWindow->EventReceiver, cWindow, MouseScrollDirectionDown);
                     break;
 
             }
@@ -662,22 +661,22 @@ void BF::CWindow::OnWindowEvent(BF::CWindow& window, const XEvent& event)
         }
         case EnterNotify:
         {
-            InvokeEvent(window.MouseEnterCallBack);
+            InvokeEvent(cWindow->MouseEnterCallBack, cWindow->EventReceiver, cWindow);
             break;
         }
         case LeaveNotify:
         {
-            InvokeEvent(window.MouseLeaveCallBack);
+            InvokeEvent(cWindow->MouseLeaveCallBack, cWindow->EventReceiver, cWindow);
             break;
         }
         case FocusIn:
         {
-            InvokeEvent(window.FocusEnterCallBack);
+            InvokeEvent(cWindow->FocusEnterCallBack, cWindow->EventReceiver, cWindow);
             break;
         }
         case FocusOut:
         {
-            InvokeEvent(window.FocusLeaveCallBack);
+            InvokeEvent(cWindow->FocusLeaveCallBack, cWindow->EventReceiver, cWindow);
             break;
         }
         case KeymapNotify:
@@ -787,13 +786,13 @@ void BF::CWindow::OnWindowEvent(BF::CWindow& window, const XEvent& event)
         }
         case ResizeRequest:
         {
-            const XResizeRequestEvent resizeRequestEvent = event.xresizerequest;
+            const XResizeRequestEvent resizeRequestEvent = event->xresizerequest;
             const int width = resizeRequestEvent.width;
             const int height = resizeRequestEvent.height;
 
             // glViewport(0,0, width, height);
 
-            InvokeEvent(window.WindowSizeChangedCallBack, width, height);
+            InvokeEvent(cWindow->WindowSizeChangedCallBack, cWindow->EventReceiver, cWindow, width, height);
 
             break;
         }
@@ -853,10 +852,10 @@ void BF::CWindow::OnWindowEvent(BF::CWindow& window, const XEvent& event)
         }
         case GenericEvent:
         {
-            XGenericEventCookie cookie = event.xcookie; // Make Copy
+            XGenericEventCookie cookie = event->xcookie; // Make Copy
 
-            const int result = XGetEventData(window.DisplayCurrent, &cookie);
-            const bool sucessful = result != 0 && cookie.data;
+            const int result = XGetEventData(cWindow->DisplayCurrent, &cookie);
+            const unsigned char sucessful = result != 0 && cookie.data;
 
             if(sucessful)
             {
@@ -868,9 +867,10 @@ void BF::CWindow::OnWindowEvent(BF::CWindow& window, const XEvent& event)
 
                         if(re->valuators.mask_len)
                         {
+                            Mouse* mouse = &cWindow->MouseCurrentInput;
                             const double* values = re->raw_values;
-                            const bool isX = XIMaskIsSet(re->valuators.mask, 0);
-                            const bool isY = XIMaskIsSet(re->valuators.mask, 1);
+                            const unsigned char isX = XIMaskIsSet(re->valuators.mask, 0);
+                            const unsigned char isY = XIMaskIsSet(re->valuators.mask, 1);
                             double xpos = 0;
                             double ypos = 0;
 
@@ -886,15 +886,15 @@ void BF::CWindow::OnWindowEvent(BF::CWindow& window, const XEvent& event)
                             }
 
 
-                            window.MouseDeltaX = window.MousePositionX - xpos;
-                            window.MouseDeltaY = window.MousePositionY - ypos;
+                            mouse->InputAxis[0] = mouse->Position[0] - xpos;
+                            mouse->InputAxis[1] = mouse->Position[1] - ypos;
 
-                            window.MousePositionX = xpos;
-                            window.MousePositionY = ypos;
+                            mouse->Position[0] = xpos;
+                            mouse->Position[1] = ypos;
 
                             printf("[Event] RawMotion %5.4lf %5.4lf\n", xpos, ypos);
 
-                            InvokeEvent(window.MouseMoveCallBack, window.MousePositionX, window.MousePositionY, xpos, ypos);
+                            InvokeEvent(cWindow->MouseMoveCallBack, cWindow->EventReceiver, cWindow, mouse);
 
                             //printf("[Event] RawMotion %5.4lf %5.4lf\n", window.MouseDeltaX, window.MouseDeltaY);
 
@@ -908,7 +908,7 @@ void BF::CWindow::OnWindowEvent(BF::CWindow& window, const XEvent& event)
                 printf("[Event] GenericEvent %i\n", cookie.evtype);
             }
 
-            XFreeEventData(window.DisplayCurrent, &cookie);
+            XFreeEventData(cWindow->DisplayCurrent, &cookie);
 
             break;
         }
@@ -1043,7 +1043,7 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
         case WindowEventMouseActivate:
             break;
         case WindowEventChildActivate:
-            break; 
+            break;
         case WindowEventQueueSync:
             break;
         case WindowEventSizeChange:
@@ -1198,9 +1198,9 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
                             int positionY = 0;
                             int deltaX = rawInput.data.mouse.lLastX;
                             int deltaY = rawInput.data.mouse.lLastY;
-                          
+
                             CWindowCursorPositionInWindowGet(window, &positionX, &positionY);
-                      
+
                             TriggerOnMouseMoveEvent(window, positionX, positionY, deltaX, deltaY);
 
                             // Wheel data needs to be pointer casted to interpret an unsigned short as a short, with no conversion
@@ -1400,33 +1400,33 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
 
         case WindowEventXBUTTONUP:
         case WindowEventXBUTTONDOWN:
-        {    
+        {
             MouseButton mouseButton = ButtonInvalid;
             ButtonState buttonState = MouseButtonInvalid;
 
             const WORD releaseID = HIWORD(wParam);
-            // const WORD xxxxx = LOWORD(wParam);        
+            // const WORD xxxxx = LOWORD(wParam);
             // const WORD fwKeys = GET_KEYSTATE_WPARAM(wParam);
             // const WORD fwButton = GET_XBUTTON_WPARAM(wParam);
             // const int xPos = GET_X_LPARAM(lParam);
-            // const int yPos = GET_Y_LPARAM(lParam);  
-            
-            {   
+            // const int yPos = GET_Y_LPARAM(lParam);
+
+            {
                 switch(windowEventType)
                 {
 
-                    case WindowEventXBUTTONUP:  
+                    case WindowEventXBUTTONUP:
                     {
-                        buttonState = ButtonRelease;                     
+                        buttonState = ButtonRelease;
                         break;
-                    }                 
+                    }
 
                     case WindowEventXBUTTONDOWN:
-                    {       
+                    {
                         buttonState = ButtonDown;
                         break;
                     }
-                }       
+                }
 
 
                 switch(releaseID)
@@ -1459,7 +1459,7 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
 
 
                 TriggerOnMouseClickEvent(window, mouseButton, buttonState);
-            }       
+            }
 
             break;
         }
@@ -1478,7 +1478,7 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
             break;
         case WindowEventNEXTMENU:
             break;
-        case WindowEventSIZING:
+        case WindowEventSIZING:	static void CWindowEventHandler(CWindow* cWindow const, const XEvent* const event);
             break;
         case WindowEventCAPTURECHANGED:
             break;
@@ -1603,7 +1603,7 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
             printf("[#][Event] CUT\n");
             break;
         }
-          
+
         case WindowEventCOPY:
         {
             printf("[#][Event] Copy\n");
@@ -1646,7 +1646,7 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
             break;
         case WindowEventQUERYNEWPALETTE:
             break;
-        case WindowEventPALETTEISCHANGING:
+        case WindowEventPALETTEISCHANGIN	static void CWindowEventHandler(CWindow* cWindow const, const XEvent* const event);G:
             break;
         case WindowEventPALETTECHANGED:
             break;
@@ -1716,17 +1716,17 @@ ThreadResult CWindowCreateThread(void* windowAdress)
 #if defined(OSUnix)
     XInitThreads();
 
-    Display* display = XOpenDisplay(nullptr);   // Create Window
+    Display* display = XOpenDisplay(0);   // Create Window
 
     {
-        const bool successful = display != nullptr;
+        const unsigned char successful = display != 0;
 
         if(!successful)
         {
-            return ThreadFunctionReturnValue; // printf("\n\tcannot connect to X server\n\n");
+            return ThreadSucessful; // printf("\n\tcannot connect to X server\n\n");
         }
 
-        window.DisplayCurrent = display;
+        window->DisplayCurrent = display;
     }
 
     // Make windows root
@@ -1737,11 +1737,11 @@ ThreadResult CWindowCreateThread(void* windowAdress)
     XVisualInfo* visualInfo = glXChooseVisual(display, 0, attributeList);
 
     {
-        const bool successful = visualInfo != nullptr;
+        const unsigned char successful = visualInfo != 0;
 
         if(!successful)
         {
-            return ThreadFunctionReturnValue; // no appropriate visual found
+            return ThreadSucessful; // no appropriate visual found
         }
     }
 
@@ -1790,10 +1790,10 @@ ThreadResult CWindowCreateThread(void* windowAdress)
     (
         display,
         windowRoot,
-        window.X,
-        window.Y,
-        window.Width,
-        window.Height,
+        window->X,
+        window->Y,
+        window->Width,
+        window->Height,
         borderWidth,
         visualInfo->depth,
         InputOutput,
@@ -1801,18 +1801,18 @@ ThreadResult CWindowCreateThread(void* windowAdress)
         CWColormap | CWEventMask,
         &setWindowAttributes
     );
-    window.ID = CWindowID;
+    window->ID = CWindowID;
 
     char windowTitle[256];
 
-    Text::Copy(windowTitle, 256, window.Title, 256);
+    TextCopyA(windowTitle, 256, window->Title, 256);
 
     XMapWindow(display, CWindowID);
     XStoreName(display, CWindowID, windowTitle);
 
     GLXContext glContext = glXCreateContext(display, visualInfo, NULL, GL_TRUE);
 
-    window.OpenGLConext = glContext;
+    window->OpenGLConext = glContext;
 
 #if 0 // Grab means literally Drag%Drop grab. This is not mouse motion
     //bool   ret    = false;
@@ -1838,12 +1838,13 @@ ThreadResult CWindowCreateThread(void* windowAdress)
 
     const int root = DefaultRootWindow(display);
 
-    XIEventMask eventmask{ 0 };
+    XIEventMask eventmask;
     const size_t maskLength = (XI_LASTEVENT + 7) / 8;
-    unsigned char mask[maskLength]{ 0 };
+    unsigned char mask[maskLength];
 
+    MemorySet(mask, sizeof(mask), 0);
+    MemorySet(&eventmask, sizeof(XIEventMask), 0);
 
-    memset(mask, 0, maskLength);
     XISetMask(mask, XI_RawMotion);
     //XISetMask(mask, XI_RawButtonPress);
     //XISetMask(mask, XI_RawKeyPress);
@@ -1858,7 +1859,7 @@ ThreadResult CWindowCreateThread(void* windowAdress)
 
 
 #elif defined(OSWindows)
-   
+
     DWORD dwStyle = WS_VISIBLE | WS_OVERLAPPEDWINDOW;
     HWND hWndParent = 0;
     HINSTANCE hInstance = GetModuleHandle(NULL);
@@ -1916,7 +1917,7 @@ ThreadResult CWindowCreateThread(void* windowAdress)
         }
 
         window->ID = CWindowID;
-    }    
+    }
 
     // Create OpenGL Context
     {
@@ -2091,11 +2092,11 @@ ThreadResult CWindowCreateThread(void* windowAdress)
 
 
 
-        XLockDisplay(window.DisplayCurrent);
+        XLockDisplay(window->DisplayCurrent);
 
         XNextEvent(display, &windowEvent);
 
-        XUnlockDisplay(window.DisplayCurrent);
+        XUnlockDisplay(window->DisplayCurrent);
 
         OnWindowEvent(window, windowEvent);
 
@@ -2157,7 +2158,7 @@ void CWindowCreate(CWindow* window, const unsigned int width, const unsigned int
         unsigned int screenWidth = 0;
         unsigned int screenHeight = 0;
 
-        MonitorGetSize(&screenWidth, &screenHeight);  
+        MonitorGetSize(&screenWidth, &screenHeight);
 
         window->X = screenWidth * 0.125f;
         window->Y = screenHeight * 0.125f;
@@ -2178,10 +2179,10 @@ void CWindowCreate(CWindow* window, const unsigned int width, const unsigned int
 void CWindowDestruct(CWindow* window)
 {
 #if defined(OSUnix)
-    glXMakeCurrent(DisplayCurrent, None, NULL);
+    glXMakeCurrent(window->DisplayCurrent, None, NULL);
     //    glXDestroyContext(DisplayCurrent, OpenGLConextID);
-    XDestroyWindow(DisplayCurrent, ID);
-    XCloseDisplay(DisplayCurrent);
+    XDestroyWindow(window->DisplayCurrent, window->ID);
+    XCloseDisplay(window->DisplayCurrent);
 #elif defined(OSWindows)
     CloseWindow(window->ID);
 #endif
@@ -2366,7 +2367,7 @@ unsigned char CWindowFrameBufferSwap(CWindow* window)
 
     const unsigned char successful =
 #if defined(OSUnix)
-    true; // No feedback?
+    1u; // No feedback?
     glXSwapBuffers(window->DisplayCurrent, window->ID);
 #elif defined(OSWindows)
     SwapBuffers(window->HandleDeviceContext);
@@ -2401,7 +2402,7 @@ unsigned char CWindowFrameBufferContextRelease(CWindow* window)
 
     const unsigned char successful =
 #if defined(OSUnix)
-    glXMakeCurrent(0, ID, OpenGLConext);
+    glXMakeCurrent(0, window->ID, window->OpenGLConext);
 #elif defined(OSWindows)
     wglMakeCurrent(0, 0);
 #endif
@@ -2493,19 +2494,19 @@ void TriggerOnMouseClickEvent(const CWindow* window, const MouseButton mouseButt
 
     switch(buttonState)
     {
-        case ButtonInvalid:
+        case ButtonStateInvalid:
             buttonStateText = "Invalid";
             break;
 
-        case ButtonDown:
+        case ButtonStateDown:
             buttonStateText = "Down";
             break;
 
-        case ButtonHold:
+        case ButtonStateHold:
             buttonStateText = "Hold";
             break;
 
-        case ButtonRelease:
+        case ButtonStateRelease:
             buttonStateText = "Release";
             break;
     }

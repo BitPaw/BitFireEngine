@@ -27,7 +27,7 @@ ActionResult LAMEParse(LAME* lame, const void* data, const size_t dataSize, size
 		char minorVersionText[2];
 		char releaseVersionText = 0;
 
-		ParsingStreamReadC(&parsingStream, &majorVersionText, 1); // 1 character
+		ParsingStreamReadC(&parsingStream, &majorVersionText); // 1 character
 		const char isDot = ParsingStreamReadAndCompare(&parsingStream, '.', sizeof(unsigned char));
 		ParsingStreamReadD(&parsingStream, minorVersionText, 2u); // 2 character
 		ParsingStreamReadC(&parsingStream, releaseVersionText); // letter
