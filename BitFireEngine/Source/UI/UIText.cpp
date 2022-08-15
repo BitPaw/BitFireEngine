@@ -4,7 +4,7 @@
 #include <Math/Interpolate.h>
 #include <Text/Text.h>
 
-void BF::UIText::Setup(const wchar_t* text, Font* font, float x, float y)
+void BF::UIText::Setup(const wchar_t* text, CFont* font, float x, float y)
 {
 	AncerPosition.Set(x, y);
 	Width = 0;
@@ -32,7 +32,7 @@ BF::UIText::UIText()
 	Setup(L"-----------------------", nullptr, 0, 0);
 }
 
-void BF::UIText::FontSet(Font& font)
+void BF::UIText::FontSet(CFont& font)
 {
 	_font = &font;
 }
@@ -73,7 +73,7 @@ void BF::UIText::TextUpdate()
 
 #if 0 // Print font data
 	bitmapFont.PrintData();
-#endif 
+#endif
 	/*
 
 	bool hasTextChanged = true;// Text::Compare(TextContent);
@@ -144,9 +144,9 @@ void BF::UIText::TextUpdate()
 		Vector2<float> xPos;
 		Vector2<float> charSize;
 		Vector2<float> interpulatedTexturePointXY;
-		Vector2<float> interpulatedTexturePoinWidthHeight;		
+		Vector2<float> interpulatedTexturePoinWidthHeight;
 		Rectangle objectPosition;
-		Rectangle texturePosition;			
+		Rectangle texturePosition;
 
 		if (fntCharacter)
 		{
@@ -201,7 +201,7 @@ void BF::UIText::TextUpdate()
 			xPos.Set(0, 0);
 			charSize.Set(50, 75);
 			interpulatedTexturePointXY.Set(0, 0);
-			interpulatedTexturePoinWidthHeight.Set(1, 1);			
+			interpulatedTexturePoinWidthHeight.Set(1, 1);
 		}
 
 		lastPosition += charSize.X + (float)characterSpacingOffset;// +(fntCharacter->XAdvance);
@@ -219,14 +219,14 @@ void BF::UIText::TextUpdate()
 			Height = charSize.Y;
 		}
 		//-------------------------------------
-	
+
 		/*
 		if (true)
 		{
 			continue;
 		}* /
 
-		// Flip Y Axis because the fileformat is like this			
+		// Flip Y Axis because the fileformat is like this
 		{
 			Vector2<float> positionUnswapped = texturePosition.Position;
 			Vector2<float> sizeUnswapped = texturePosition.Size;
@@ -241,7 +241,7 @@ void BF::UIText::TextUpdate()
 		{
 			const Vector3<float> normal(0, 0, -1);
 			const Vector4<float> color(1, 1, 1, 1);
-		
+
 			size_t textureIndex = 0;
 			float* vertexData = mesh.Structure.VertexData;
 			const float z = 0;
@@ -299,8 +299,8 @@ void BF::UIText::TextUpdate()
 			vertexData[vertexIndex++] = color.Z;
 			vertexData[vertexIndex++] = color.W;
 			vertexData[vertexIndex++] = texturePosition.Position.X;
-			vertexData[vertexIndex++] = texturePosition.Size.Y; // texturePosition.PointA);		
-		}		
+			vertexData[vertexIndex++] = texturePosition.Size.Y; // texturePosition.PointA);
+		}
 	}*/
 }
 

@@ -1703,12 +1703,12 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
 
 ThreadResult CWindowCreateThread(void* windowAdress)
 {
+    CWindow* const window = (CWindow*)windowAdress;
+
     if(!windowAdress)
     {
         return ThreadSucessful;
     }
-
-    CWindow* window = (CWindow*)windowAdress;
 
     window->IsRunning = 0;
     window->CursorModeCurrent = CWindowCursorShow;
@@ -1716,9 +1716,9 @@ ThreadResult CWindowCreateThread(void* windowAdress)
 #if defined(OSUnix)
     XInitThreads();
 
-    Display* display = XOpenDisplay(0);   // Create Window
-
+    // Create display
     {
+        const Display* const display = XOpenDisplay(0);   // Create Window
         const unsigned char successful = display != 0;
 
         if(!successful)
@@ -1729,12 +1729,18 @@ ThreadResult CWindowCreateThread(void* windowAdress)
         window->DisplayCurrent = display;
     }
 
-    // Make windows root
-    XID windowRoot = DefaultRootWindow(display);
+    // Get root window
+    {
+        const XID windowRoot = DefaultRootWindow(window->DisplayCurrent); // Make windows root
+        const unsigned char successful = windowRoot != 0;
 
-    int attributeList[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
+        window->WindowRoot = successful ? windowRoot : 0;
+    }
 
-    XVisualInfo* visualInfo = glXChooseVisual(display, 0, attributeList);
+
+    const int attributeList[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
+
+    const XVisualInfo* const visualInfo = glXChooseVisual(window->DisplayCurrent, 0, attributeList);
 
     {
         const unsigned char successful = visualInfo != 0;
@@ -1745,12 +1751,14 @@ ThreadResult CWindowCreateThread(void* windowAdress)
         }
     }
 
-
-
-
-
     // Create colormapping
-    Colormap colormap = XCreateColormap(display, windowRoot, visualInfo->visual, AllocNone);
+    Colormap colormap = XCreateColormap
+    (
+        window->DisplayCurrent,
+        window->WindowRoot,
+        visualInfo->visual,
+        AllocNone
+    );
 
     XSetWindowAttributes setWindowAttributes;
     //setWindowAttributes.cursor = ;
@@ -1784,35 +1792,54 @@ ThreadResult CWindowCreateThread(void* windowAdress)
         // XI_RawMotion |
         0;
 
-    int borderWidth = 0;
 
-    XID CWindowID = XCreateWindow
-    (
-        display,
-        windowRoot,
-        window->X,
-        window->Y,
-        window->Width,
-        window->Height,
-        borderWidth,
-        visualInfo->depth,
-        InputOutput,
-        visualInfo->visual,
-        CWColormap | CWEventMask,
-        &setWindowAttributes
-    );
-    window->ID = CWindowID;
 
-    char windowTitle[256];
+    // Create window
+    {
+        int borderWidth = 0;
 
-    TextCopyA(windowTitle, 256, window->Title, 256);
+        CWindow cccc = *window;
 
-    XMapWindow(display, CWindowID);
-    XStoreName(display, CWindowID, windowTitle);
+        const XID cWindowID = XCreateWindow
+        (
+            window->DisplayCurrent,
+            window->WindowRoot,
+            window->X,
+            window->Y,
+            window->Width,
+            window->Height,
+            borderWidth,
+            visualInfo->depth,
+            InputOutput,
+            visualInfo->visual,
+            CWColormap | CWEventMask,
+            &setWindowAttributes
+        );
+        const unsigned char sucessful = cWindowID;
 
-    GLXContext glContext = glXCreateContext(display, visualInfo, NULL, GL_TRUE);
+        printf("[i][Window] Create <%i x %i> \n",window->Width,  window->Height );
 
-    window->OpenGLConext = glContext;
+        window->ID = sucessful ? cWindowID : 0;
+    }
+
+
+    // Set Title
+    {
+        char windowTitleA[256];
+
+        TextCopyWA(window->Title, 256, windowTitleA, 256);
+
+        XMapWindow(window->DisplayCurrent, window->ID);
+        XStoreName(window->DisplayCurrent, window->ID, windowTitleA);
+    }
+
+    // Create OpenGL contect
+    {
+        GLXContext glContext = glXCreateContext(window->DisplayCurrent, visualInfo, NULL, GL_TRUE);
+
+        window->OpenGLConext = glContext;
+    }
+
 
 #if 0 // Grab means literally Drag%Drop grab. This is not mouse motion
     //bool   ret    = false;
@@ -1835,9 +1862,6 @@ ThreadResult CWindowCreateThread(void* windowAdress)
 
 
     // Raw mouse movement
-
-    const int root = DefaultRootWindow(display);
-
     XIEventMask eventmask;
     const size_t maskLength = (XI_LASTEVENT + 7) / 8;
     unsigned char mask[maskLength];
@@ -1854,8 +1878,8 @@ ThreadResult CWindowCreateThread(void* windowAdress)
     eventmask.mask = mask;
 
 
-    XISelectEvents(display, root, &eventmask, 1);
-    XFlush(display);
+    XISelectEvents(window->DisplayCurrent, window->WindowRoot, &eventmask, 1u);
+    XFlush(window->DisplayCurrent);
 
 
 #elif defined(OSWindows)
@@ -2094,11 +2118,11 @@ ThreadResult CWindowCreateThread(void* windowAdress)
 
         XLockDisplay(window->DisplayCurrent);
 
-        XNextEvent(display, &windowEvent);
+        XNextEvent(window->DisplayCurrent, &windowEvent);
 
         XUnlockDisplay(window->DisplayCurrent);
 
-        OnWindowEvent(window, windowEvent);
+        CWindowEventHandler(window, &windowEvent);
 
 #if 0
         glClearColor(1.0, 1.0, 1.0, 1.0);

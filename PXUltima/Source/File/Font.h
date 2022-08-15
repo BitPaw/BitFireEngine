@@ -19,7 +19,7 @@ extern "C"
 	}
 	FontFileFormat;
 
-	typedef struct Font_
+	typedef struct CFont_
 	{
 		unsigned short CharacterSize;
 		unsigned short SizeBetweenCharacters;
@@ -29,18 +29,18 @@ extern "C"
 		Image* Texture;
 		void* BitMapFont;
 	}
-	Font;
+	CFont;
 
 	//---[ Public-Functions ]----------------------------------------------
 
-	extern void FontConstruct(Font* font);
-	extern void FontDestruct(Font* font);
+	extern void FontConstruct(CFont* font);
+	extern void FontDestruct(CFont* font);
 
 	extern FontFileFormat FontGuessFormat(const wchar_t* filePath);
 
-	extern ActionResult FontLoadA(Font* font, const char* filePath);
-	extern ActionResult FontLoadW(Font* font, const wchar_t* filePath);
-	extern ActionResult FontLoadD(Font* font, const FontFileFormat guessedFormat, const void* data, const size_t dataSize);
+	extern ActionResult FontLoadA(CFont* font, const char* filePath);
+	extern ActionResult FontLoadW(CFont* font, const wchar_t* filePath);
+	extern ActionResult FontLoadD(CFont* font, const FontFileFormat guessedFormat, const void* data, const size_t dataSize);
 
 
 #ifdef __cplusplus

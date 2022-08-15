@@ -1,5 +1,6 @@
 #include "Text.h"
 
+#include <OS/OSVersion.h>
 #include <Memory/Memory.h>
 #include <Math/Math.h>
 
@@ -10,6 +11,12 @@
 
 #if PXTextAssertEnable
 #include <assert.h>
+#endif
+
+#if defined(OSUnix)
+#define PrintSN snprintf
+#elif defined(OSWindows)
+#define PrintSN sprintf_s
 #endif
 
 size_t TextToIntA(const char* string, const size_t dataSize, int* number)
@@ -696,14 +703,14 @@ void TextParseFindAllA(const char* string, const size_t stringSize, const Parsin
 
 size_t TextFromIntA(const int number, char* string, const size_t dataSize)
 {
-	int bytesWritten = sprintf_s(string, dataSize, "%i", &number);
+	int bytesWritten = PrintSN(string, dataSize, "%i", &number);
 
 	return bytesWritten;
 }
 
 size_t TextFromIntW(const int number, wchar_t* string, const size_t dataSize)
 {
-	int bytesWritten = sprintf_s(string, dataSize, "%i", &number);
+	int bytesWritten = PrintSN(string, dataSize, "%i", &number);
 
 	return bytesWritten;
 }
@@ -724,29 +731,42 @@ size_t TextFromBoolW(const unsigned char number, wchar_t* string, const size_t d
 
 size_t TextFromFloatA(const float number, char* string, const size_t dataSize)
 {
+#if defined(OSUnix)
+	int bytesWritten = snprintf(string, dataSize, "%f", &number);
+#elif defined(OSWindows)
 	int bytesWritten = sprintf_s(string, dataSize, "%f", &number);
-
+#endif
 	return bytesWritten;
 }
 
 size_t TextFromFloatW(const float number, wchar_t* string, const size_t dataSize)
 {
+#if defined(OSUnix)
+	int bytesWritten = snprintf(string, dataSize, "%f", &number);
+#elif defined(OSWindows)
 	int bytesWritten = sprintf_s(string, dataSize, "%f", &number);
+#endif
 
 	return bytesWritten;
 }
 
 size_t TextFromDoubleA(const double number, char* string, const size_t dataSize)
 {
+#if defined(OSUnix)
+	int bytesWritten = snprintf(string, dataSize, "%li", &number);
+#elif defined(OSWindows)
 	int bytesWritten = sprintf_s(string, dataSize, "%li", &number);
-
+#endif
 	return bytesWritten;
 }
 
 size_t TextFromDoubleW(const double number, wchar_t* string, const size_t dataSize)
 {
+#if defined(OSUnix)
+    int bytesWritten = snprintf(string, dataSize, "%li", &number);
+#elif defined(OSWindows)
 	int bytesWritten = sprintf_s(string, dataSize, "%li", &number);
-
+#endif
 	return bytesWritten;
 }
 

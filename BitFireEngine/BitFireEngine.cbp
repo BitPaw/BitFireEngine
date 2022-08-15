@@ -15,6 +15,7 @@
 				<Compiler>
 					<Add option="-g" />
 					<Add directory="../SystemResource/Source" />
+					<Add directory="../PXUltima/Source" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -65,17 +66,12 @@
 		<Unit filename="Source/Player/Player.h" />
 		<Unit filename="Source/System/BitFireEngine.cpp" />
 		<Unit filename="Source/System/BitFireEngine.h" />
-		<Unit filename="Source/System/Device/InputButton.cpp" />
-		<Unit filename="Source/System/Device/InputButton.h" />
-		<Unit filename="Source/System/Device/InputContainer.cpp" />
-		<Unit filename="Source/System/Device/InputContainer.h" />
-		<Unit filename="Source/System/Device/KeyBoard/KeyBoard.cpp" />
-		<Unit filename="Source/System/Device/KeyBoard/KeyBoard.h" />
-		<Unit filename="Source/System/Device/Mouse/Mouse.cpp" />
-		<Unit filename="Source/System/Device/Mouse/Mouse.h" />
-		<Unit filename="Source/System/IBitFireEngineListener.hpp" />
-		<Unit filename="Source/System/IBitFireEngineRenderListener.hpp" />
-		<Unit filename="Source/System/IBitFireEngineSoundListener.hpp" />
+		<Unit filename="Source/System/Device/KeyBoard/KeyBoardCache.cpp" />
+		<Unit filename="Source/System/Device/KeyBoard/KeyBoardCache.h" />
+		<Unit filename="Source/System/Device/Mouse/MouseCache.cpp" />
+		<Unit filename="Source/System/Device/Mouse/MouseCache.h" />
+		<Unit filename="Source/System/InputContainer.cpp" />
+		<Unit filename="Source/System/InputContainer.h" />
 		<Unit filename="Source/System/VideoConfig.cpp" />
 		<Unit filename="Source/System/VideoConfig.h" />
 		<Unit filename="Source/UI/DialogBox/UIDialogBox.cpp" />

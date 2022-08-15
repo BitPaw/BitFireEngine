@@ -15,7 +15,7 @@ namespace BF
 		float* _textBlockMeshList;
 		size_t _textBlockMeshListSize;
 
-		Font* _font;
+		CFont* _font;
 
 		public:
 		Vector2<float> AncerPosition;
@@ -25,15 +25,15 @@ namespace BF
 
 		UIText();
 
-		void Setup(const wchar_t* text, Font* font, float x, float y);
+		void Setup(const wchar_t* text, CFont* font, float x, float y);
 
-		void FontSet(Font& font);
+		void FontSet(CFont& font);
 
 		void TextPositionSet(float x, float y);
 		void TextSet(const char* text);
-		void TextSet(const wchar_t* text);		
-		void TextUpdate(); 
+		void TextSet(const wchar_t* text);
+		void TextUpdate();
 
-		void PrintObjectData();		
+		void PrintObjectData();
 	};
 }

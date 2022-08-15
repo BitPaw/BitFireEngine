@@ -117,7 +117,9 @@ extern "C"
 
 		FileMappingID IDMapping; // Only used while mapping a file
 
-#if defined(OSWindows)
+#if defined(OSUnix)
+
+#elif defined(OSWindows)
 		FILE* FileHandleCStyle; // Used for writing only, usage of fprintf()
 #endif
 		MemoryProtectionMode MemoryMode;

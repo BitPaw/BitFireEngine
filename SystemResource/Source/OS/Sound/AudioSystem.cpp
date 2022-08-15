@@ -55,13 +55,13 @@ BF::AudioResult BF::AudioSystem::OutputOpen
 (
 	AudioDeviceOutput& audioDeviceOutput,
 	unsigned int deviceID,
-	unsigned short formatTag,       
-	unsigned short channels,         
-	unsigned int samplesPerSec,   
-	unsigned int avgBytesPerSec,   
-	unsigned short blockAlign,     
-	unsigned short bitsPerSample,    
-	unsigned short cbSize           
+	unsigned short formatTag,
+	unsigned short channels,
+	unsigned int samplesPerSec,
+	unsigned int avgBytesPerSec,
+	unsigned short blockAlign,
+	unsigned short bitsPerSample,
+	unsigned short cbSize
 )
 {
 #if defined(OSUnix)
@@ -175,6 +175,8 @@ BF::AudioResult BF::AudioSystem::OutputClose(AudioDeviceOutput& audioDeviceOutpu
 
 BF::AudioResult BF::AudioSystem::OutputVolumeGet(AudioDeviceOutput& audioDeviceOutput, unsigned short& volume)
 {
+#if defined(OSUnix)
+#elif defined(OSWindows)
 	DWORD volumeDW = 0;
 
 	const MMRESULT volumeResultID = waveOutGetVolume(audioDeviceOutput.Handle, &volumeDW);
@@ -188,16 +190,22 @@ BF::AudioResult BF::AudioSystem::OutputVolumeGet(AudioDeviceOutput& audioDeviceO
 	}
 
 	volume = volumeDW;
+#endif
 
 	return AudioResult::Sucessful;
 }
 
 BF::AudioResult BF::AudioSystem::OutputVolumeSet(AudioDeviceOutput& audioDeviceOutput, const unsigned int volume)
 {
+#if defined(OSUnix)
+    return AudioResult::Sucessful;
+
+#elif defined(OSWindows)
 	const MMRESULT volumeResultID = waveOutSetVolume(audioDeviceOutput.Handle, volume);
 	const AudioResult audioResult = ConvertMMResult(volumeResultID);
 
 	return audioResult;
+#endif
 }
 
 BF::AudioResult BF::AudioSystem::OutputVolumeSet(AudioDeviceOutput& audioDeviceOutput, const unsigned short volumeLeft, const unsigned short volumeRight)
@@ -215,18 +223,28 @@ BF::AudioResult BF::AudioSystem::OutputPause(AudioDeviceOutput& audioDeviceOutpu
 
 BF::AudioResult BF::AudioSystem::OutputPitchSet(AudioDeviceOutput& audioDeviceOutput, const unsigned int pitch)
 {
+#if defined(OSUnix)
+	return AudioResult::Sucessful;
+
+#elif defined(OSWindows)
 	const MMRESULT pitchResultID = waveOutSetPitch(audioDeviceOutput.Handle, pitch);
 	const AudioResult pitchResult = ConvertMMResult(pitchResultID);
 
 	return pitchResult;
+	#endif
 }
 
 BF::AudioResult BF::AudioSystem::OutputPlaybackRateSet(AudioDeviceOutput& audioDeviceOutput, const unsigned int pitch)
 {
+#if defined(OSUnix)
+	return AudioResult::Sucessful;
+
+#elif defined(OSWindows)
 	const MMRESULT playbackRateResultID = waveOutSetPlaybackRate(		audioDeviceOutput.Handle,		pitch	);
 	const AudioResult playbackRateResult = ConvertMMResult(playbackRateResultID);
 
 	return playbackRateResult;
+	#endif
 }
 
 BF::AudioResult BF::AudioSystem::DevicesFetchOutput(AudioDeviceCapabilities* audioDeviceCapabilitiesList, const size_t audioDeviceCapabilitiesListSizeMax, size_t& audioDeviceCapabilitiesListSize)
@@ -245,7 +263,7 @@ BF::AudioResult BF::AudioSystem::DevicesFetchOutput(AudioDeviceCapabilities* aud
 
 	for(size_t i = 0; i < numberOfPutpudevices; i++)
 	{
-		const UINT size = sizeof(WAVEOUTCAPSW);		
+		const UINT size = sizeof(WAVEOUTCAPSW);
 		WAVEOUTCAPSW wAVEOUTCAPSW{0};
 
 		const MMRESULT result = waveOutGetDevCapsW(i, &wAVEOUTCAPSW, size);
@@ -293,7 +311,7 @@ BF::AudioResult BF::AudioSystem::DevicesFetchInput(AudioDeviceCapabilities* audi
 	}
 
 	for(size_t i = 0; i < numberOfInputDevices; ++i)
-	{	
+	{
 		WAVEINCAPSW waveInputCapabilitiesW{ 0 };
 		const UINT waveInputCapabilitiesWSize = sizeof(waveInputCapabilitiesW);
 		const MMRESULT result = waveInGetDevCapsW(i, &waveInputCapabilitiesW, waveInputCapabilitiesWSize);
@@ -315,7 +333,7 @@ BF::AudioResult BF::AudioSystem::DevicesFetchInput(AudioDeviceCapabilities* audi
 
 		TextCopyW(waveInputCapabilitiesW.szPname, MAXPNAMELEN, audioDeviceCapabilities.ProductName, SoundDeviceProductName);
 
-		audioDeviceCapabilities.Channels = waveInputCapabilitiesW.wChannels;		
+		audioDeviceCapabilities.Channels = waveInputCapabilitiesW.wChannels;
 	}
 
 	audioDeviceCapabilitiesListSize = numberOfInputDevices;

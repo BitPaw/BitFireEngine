@@ -5,7 +5,7 @@
 
 namespace BF
 {
-	class FontX : public Font
+	class FontX : public CFont
 	{
 		public:
 		//---[ Public-Functions ]----------------------------------------------

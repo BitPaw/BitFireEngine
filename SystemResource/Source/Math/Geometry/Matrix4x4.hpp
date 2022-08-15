@@ -6,6 +6,7 @@
 #include "AngleRadians.hpp"
 
 #include <cstring>
+#include <Math/Math.h>
 
 #define XAxisX 0
 #define XAxisY 4
@@ -33,13 +34,13 @@
 #define ScaleW 15
 
 #define TransformX 12
-#define TransformY 13 
+#define TransformY 13
 #define TransformZ 14
 #define TransformW 15
 
 namespace BF
 {
-	template<class NumberType>	
+	template<class NumberType>
 	struct Matrix4x4
 	{
 		public:
@@ -181,7 +182,7 @@ namespace BF
 			resultO = i * D + j * H + k * L + l * P;
 			resultP = m * D + n * H + o * L + p * P;
 		}
-		
+
 		void ResetForthAxis()
 		{
 			// ---0
@@ -279,7 +280,7 @@ namespace BF
 			matrix.Multiply(matrixB);
 
 			return matrix;
-		}	
+		}
 
 		void operator=(const Matrix4x4<NumberType>& matrix)
 		{
@@ -333,11 +334,11 @@ namespace BF
 			Matrix4x4<NumberType> xRotation;
 			Matrix4x4<NumberType> yRotation;
 			Matrix4x4<NumberType> zRotation;
-	
+
 
 			//-----<X ROT>-----
 			{
-		
+
 				float cosResult = MathCosinus(x);
 				float sinResult = MathSinus(x);
 
@@ -345,31 +346,31 @@ namespace BF
 				xRotation.Data[6] = sinResult;
 				xRotation.Data[9] = -sinResult;
 				xRotation.Data[10] = cosResult;
-			
+
 			}
 
 			//-----<X ROT>-----
 			{
-			
+
 				float cosResult = MathCosinus(y);
 				float sinResult = MathSinus(y);
 
 				yRotation.Data[0] = cosResult;
 				yRotation.Data[2] = -sinResult;
 				yRotation.Data[8] = sinResult;
-				yRotation.Data[10] = cosResult;	
+				yRotation.Data[10] = cosResult;
 			}
 
 			//-----<X ROT>-----
 			{
-			
+
 				float cosResult = MathCosinus(z);
 				float sinResult = MathSinus(z);
 
 				zRotation.Data[0] = cosResult;
 				zRotation.Data[1] = -sinResult;
 				zRotation.Data[4] = sinResult;
-				zRotation.Data[5] = cosResult;	
+				zRotation.Data[5] = cosResult;
 			}
 
 			result = xRotation * yRotation * zRotation;
@@ -421,7 +422,7 @@ namespace BF
 		}
 
 		void LookAt(Vector3<NumberType> eye, Vector3<NumberType> center, Vector3<NumberType> up)
-		{		
+		{
 			Vector3<NumberType> centereye = center - eye;
 			Vector3<NumberType> f = Vector3<NumberType>::Normalize(centereye);
 			Vector3<NumberType> frontUpCross;
@@ -527,7 +528,7 @@ namespace BF
 			for (int i = 0; i < 16; i++)
 			{
 				Data[i] = result[i] * det;
-			}				
+			}
 
 			return true;
 		}
@@ -535,10 +536,10 @@ namespace BF
 		void Set(NumberType value)
 		{
 			memset(this->Data, value, 16 * sizeof(NumberType));
-		} 		
+		}
 
 		void Orthographic(NumberType left, NumberType right, NumberType bottom, NumberType top, NumberType zNear, NumberType zFar)
-		{		
+		{
 			Reset();
 
 			Data[ScaleX] = (2) / (NumberType)(right - left);
@@ -555,14 +556,14 @@ namespace BF
 			const NumberType fielfOfViewRadians = MathDegreeToRadians(fielfOfView);
 			const float tanHalfFovy = MathTangens(fielfOfViewRadians / 2.0f);
 
-			Reset();		
+			Reset();
 
 			Data[ScaleX] = (1) / (aspectRatio * tanHalfFovy);
 			Data[ScaleY] = (1) / (tanHalfFovy);
 			Data[ScaleZ] = -((NumberType)far + (NumberType)near) / difference;
 			Data[11] = -(1);
 			Data[TransformZ] = -((2) * (NumberType)far * (NumberType)near) / difference;
-			
+
 		}
 		Vector3<NumberType> ScaleXYZ()
 		{
@@ -618,7 +619,7 @@ namespace BF
 				Data[13],
 				Data[14],
 				Data[15]
-			);			
+			);
 		}
 
 		Vector4<NumberType> CurrentAxisX()

@@ -186,7 +186,7 @@ void BF::BitFireEngine::ErrorMessageCallback(GLenum source, GLenum type, GLuint 
 
 void BF::BitFireEngine::Start()
 {
-    BF::StopWatch stopwatch;  
+    BF::StopWatch stopwatch;
 
     printf
     (
@@ -360,10 +360,10 @@ void BF::BitFireEngine::Update()
 void BF::BitFireEngine::OnMouseButton(const void* const receiver, const CWindow* sender, const MouseButton mouseButton, const ButtonState buttonState)
 {
     BitFireEngine& engine = *(BitFireEngine*)receiver;
-   
+
     /*
     Mouse& mouse = engine->_inputContainer.MouseInput;
-   
+
     switch(mouseButton)
     {
         case MouseButtonLeft:
@@ -407,7 +407,7 @@ void BF::BitFireEngine::OnMouseMove(const void* const receiver, const CWindow* s
     mouse.Position[1] = y;
 #endif
 
- 
+
   // printf("[#][OnMouseMove] X:%5i Y:%5i\n", mouse.Position[0], mouse.Position[1]);
   // printf("[#]------------- X:%5i Y:%5i\n", mouse.InputAxis[0], mouse.InputAxis[1]);
 }
@@ -619,7 +619,7 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
         movement.Add(0, 1, 0);
     }
 
- 
+
 
     if(_mainWindow.Interactable())
     {
@@ -895,9 +895,9 @@ void BF::BitFireEngine::Register(Renderable& renderable, const Model& model)
             {
                 const MeshSegment& meshSegment = mesh.SegmentList[segmentIndex];
                 const OpenGLID indexBufferID = segmentIDList[segmentIndexCounter++];
-                RenderableSegment& segment = chunk.SegmentList[segmentIndex];            
+                RenderableSegment& segment = chunk.SegmentList[segmentIndex];
 
-                assert(indexBufferID != -1);               
+                assert(indexBufferID != -1);
 
                 segment.ID = indexBufferID;
                 segment.Size = meshSegment.IndexDataListSize;
@@ -913,7 +913,7 @@ void BF::BitFireEngine::Register(Renderable& renderable, const Model& model)
 
                     range.Size = info.Size;
                     range.TextureID = 3;
-                    
+
                 }
 
 #if 0
@@ -1063,7 +1063,7 @@ bool BF::BitFireEngine::Register(ShaderProgram& shaderProgram, const wchar_t* ve
         vertexShader.Content = (char*)vertexShaderFile.Data;
         vertexShader.ContentSize = vertexShaderFile.DataSize;
     }
-  
+
 
     {
         const ActionResult actionResult = FileMapToVirtualMemoryW(&fragmentFile, fragmentShaderFilePath, 0, MemoryReadOnly);
@@ -1119,7 +1119,7 @@ bool BF::BitFireEngine::Register(ShaderProgram& shaderProgram, const wchar_t* ve
     }
 
     // We used the Shaders above to compile, these elements are not used anymore.
-    for(size_t i = 0; i < shaderListSize; i++)
+    for(size_t i = 0; i < shaderListSize; ++i)
     {
         const OpenGLID shaderID = shaderIDList[i];
         const bool isLoaded = shaderID != -1;
@@ -1155,7 +1155,7 @@ void BF::BitFireEngine::Register(AudioSource& audioSource)
     */
 }
 
-void BF::BitFireEngine::Register(Font& font)
+void BF::BitFireEngine::Register(CFont& font)
 {
 
 }
@@ -1395,7 +1395,7 @@ ActionResult BF::BitFireEngine::Load(Texture& texture, const wchar_t* filePath, 
     return ResultSuccessful;
 }
 
-ActionResult BF::BitFireEngine::Load(Font& font, const wchar_t* filePath, bool loadAsynchronously)
+ActionResult BF::BitFireEngine::Load(CFont& font, const wchar_t* filePath, bool loadAsynchronously)
 {
     /*
     bool firstImage = _fontList.Size() == 0;
@@ -1510,7 +1510,7 @@ ActionResult BF::BitFireEngine::Load(Resource* resource, const wchar_t* filePath
 
         case ResourceType::Font:
         {
-            Font* font = new Font();
+            CFont* font = new CFont();
 
             Load(*font, filePath, loadAsynchronously);
 
@@ -1664,7 +1664,7 @@ ActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePath, cons
     fontCounter = 0;
     shaderCounter = 0;
     dialogCounter = 0;
-        
+
     ParsingStreamCursorToBeginning(&parsingStream);
 
     // Step II - Parse and Load
@@ -1819,7 +1819,7 @@ ActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePath, cons
                     currentLineSize,
                     "s",
                     filePathA
-                );  
+                );
 
                 wchar_t filePathW[PathMaxSize];
                 TextCopyAW(filePathA, PathMaxSize, filePathW, PathMaxSize);
@@ -1844,7 +1844,7 @@ ActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePath, cons
                 wchar_t filePathW[PathMaxSize];
                 TextCopyAW(filePathA, PathMaxSize, filePathW, PathMaxSize);
 
-                Font* font = new Font();
+                CFont* font = new CFont();
 
                 Load(*font, filePathW);
 
@@ -1949,7 +1949,7 @@ ActionResult BF::BitFireEngine::Load
     const ActionResult textureBottomResult = ImageLoadW(&imageList[3], textureBottom);
     const ActionResult textureBackResult = ImageLoadW(&imageList[4], textureBack);
     const ActionResult textureFrontResult = ImageLoadW(&imageList[5],textureFront);
-    
+
     Register(skyBox);
 
     DefaultSkyBox = &skyBox;
@@ -2189,7 +2189,7 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
                     glDrawElements(GL_LINES, drawAmount, GL_UNSIGNED_INT, 0);
                     glDrawElements(renderModeID, drawAmount, GL_UNSIGNED_INT, 0);
 #else
-               
+
 
                     //glDrawArrays(GL_POINTS, chunkSizeConsumed, chunkSizeElement);
                     //glDrawArrays(GL_LINES, chunkSizeConsumed, chunkSizeElement);
@@ -2199,7 +2199,7 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
                     chunkSizeConsumed += chunkSizeElement;
 
                    // Use(textureType, 0);
-                }              
+                }
 
                 //printf("[>] Render %i\n", indexBufferID);
             }
@@ -2385,7 +2385,7 @@ void BF::BitFireEngine::PrintContent(bool detailed)
                         segment.ID,
                         i + 1,
                         segmentListSize,
-                        segment.Size     
+                        segment.Size
                     );
 
                     for(size_t i = 0; i < segment.MaterialRangeSize; i++)
@@ -2394,7 +2394,7 @@ void BF::BitFireEngine::PrintContent(bool detailed)
 
                         printf
                         (
-                            "| >>> | %8i | %9i | %9i |\n",        
+                            "| >>> | %8i | %9i | %9i |\n",
                             segmentMaterialRange.ShaderID,
                             segmentMaterialRange.TextureID,
                             segmentMaterialRange.Size

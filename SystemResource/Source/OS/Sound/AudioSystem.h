@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stddef.h>
+
 #include "AudioResult.h"
 #include "AudioDeviceCapabilities.h"
 #include "AudioDeviceInput.h"
@@ -21,7 +23,7 @@ namespace BF
 			unsigned int avgBytesPerSec,    /* for buffer estimation */
 			unsigned short blockAlign,        /* block size of data */
 			unsigned short bitsPerSample,     /* number of bits per sample of mono data */
-			unsigned short cbSize             /* the count in bytes of the size of */		
+			unsigned short cbSize             /* the count in bytes of the size of */
 		);
 		AudioResult OutputPrepare(AudioDeviceOutput& audioDeviceOutput);
 		AudioResult OutputWrite

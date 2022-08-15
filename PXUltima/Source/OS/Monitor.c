@@ -84,6 +84,9 @@ void MonitorFetchAll(Monitor* monitorList, const size_t monitorListSizeMax, cons
 void MonitorGetSize(unsigned int* width, unsigned int* height)
 {
 #if defined(OSUnix)
+    *width = 1200;
+    *height = 800;
+
 #elif defined(OSWindows)
 	RECT desktop;
 
@@ -100,6 +103,6 @@ void MonitorGetSize(unsigned int* width, unsigned int* height)
 		// (horizontal, vertical)
 		*width = desktop.right;
 		*height = desktop.bottom;
-	}	
+	}
 #endif
 }

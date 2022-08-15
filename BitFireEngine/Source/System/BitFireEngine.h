@@ -56,7 +56,7 @@ namespace BF
 		private:
 		//---[Elements}---------------------------------
 		StopWatch _stopWatch;
-        
+
 		float _deltaTime;
 
         InputContainer _inputContainer;
@@ -105,8 +105,11 @@ namespace BF
         static void OnWindowSizeChanged(const void* const receiver, const CWindow* sender, const size_t width, const size_t height);
         static void OnWindowsMouseCaptureChanged(const void* const receiver, const CWindow* sender);
 
-
+#if defined(OSUnix)
+        static void OnSystemSignal(int signalID);
+#elif defined(OSWindows)
         static void __CRTDECL OnSystemSignal(int signalID);
+#endif
 
 		void UpdateInput(InputContainer& input);
 
@@ -148,7 +151,7 @@ namespace BF
         void Register(SkyBox& skyBox);
         bool Register(ShaderProgram& shaderProgram, const wchar_t* vertexShaderFilePath, const wchar_t* fragmentShaderFilePath);
         void Register(AudioSource& audioSource);
-        void Register(Font& font);
+        void Register(CFont& font);
         void Register(AudioClip& audioClip, const Sound& sound);
 
         void Use(Texture& texture);
@@ -172,7 +175,7 @@ namespace BF
         ActionResult Load(Level& level, const wchar_t* filePath, const bool loadAsynchronously = true);
 
 
-        ActionResult Load(Font& font, const wchar_t* filePath, bool loadAsynchronously = true);
+        ActionResult Load(CFont& font, const wchar_t* filePath, bool loadAsynchronously = true);
         ActionResult Load(ShaderProgram& shaderProgram, const wchar_t* vertexShaderFilePath, const wchar_t* fragmentShaderFilePath);
 
         // Model

@@ -3,6 +3,7 @@
 #include <OS/OSVersion.h>
 
 #if defined(OSUnix)
+#define AudioDeviceOutputHandle int
 #elif defined(OSWindows)
 #include <Windows.h>
 #include <mmeapi.h>

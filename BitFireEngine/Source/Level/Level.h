@@ -24,7 +24,7 @@ namespace BF
 		List<Model*> ModelList;
 		List<Texture*> TextureList;
 		List<Sound*> SoundList;
-		List<Font*> FontList;
+		List<CFont*> FontList;
 		List<Shader*> ShaderList;
 		List<Dialog*> DialogList;
 		List<Camera*> CameraList;

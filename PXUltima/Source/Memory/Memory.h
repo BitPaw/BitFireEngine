@@ -31,17 +31,17 @@ extern "C"
 		MemoryCachingDefault,
 
 		MemoryCachingRandom,  // Access data in a random order.
-		MemoryCachingSequential, // Data sequentially from lower offsets to higher offsets.      
+		MemoryCachingSequential, // Data sequentially from lower offsets to higher offsets.
 		MemoryCachingTemporary, // File will not be saves to drive.
 		MemoryCachingUseOnce, // Access the specified data once and then not reuse it again.
 
-		// Windows only       
+		// Windows only
 		MemoryCachingWriteThrough,
-		MemoryCachingNoBuffering, // No OS Caching, direct to Harddrive if supprted     
+		MemoryCachingNoBuffering, // No OS Caching, direct to Harddrive if supprted
 
-		// UNIX only       
-		MemoryCachingNeedLater, // Data is not needed right now. "For later"[near future].        
-		MemoryCachingDontNeedNow // Data will not be cached. "I dont need it yet"  
+		// UNIX only
+		MemoryCachingNeedLater, // Data is not needed right now. "For later"[near future].
+		MemoryCachingDontNeedNow // Data will not be cached. "I dont need it yet"
 	}
 	MemoryCachingMode;
 
@@ -63,7 +63,7 @@ extern "C"
 
 
 	extern void MemorySet(void* __restrict bufferA, const size_t bufferASize, const unsigned char value);
-	
+
 	// Returns 1 if correct, 0 if not.
 	// This function is not like memcmp that returns -1, 0, and 1!
 	extern unsigned char MemoryCompare(const void* __restrict bufferA, const size_t bufferASize, const void* __restrict bufferB, const size_t bufferBSize);
@@ -84,7 +84,7 @@ extern "C"
 	extern void MemoryVirtualRelease(const void* adress, const size_t size);
 
 
-	static MemoryProtectionModeType ConvertFromMemoryProtectionMode(const MemoryProtectionMode memoryProtectionMode);
+	extern MemoryProtectionModeType ConvertFromMemoryProtectionMode(const MemoryProtectionMode memoryProtectionMode);
 
 #ifdef __cplusplus
 }

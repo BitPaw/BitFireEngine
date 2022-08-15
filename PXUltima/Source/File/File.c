@@ -30,11 +30,11 @@
 #define OSFileRenameA rename
 #define OSFileRenameW(oldName, newName) rename((const char*)oldName, (const char*)newName)
 #define OSFileDirectoryCreateA(string) mkdir(string, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)
-#define OSFileDirectoryCreateW(string) FileDirectoryCreateA((const char*)string)
+#define OSFileDirectoryCreateW(string) OSFileDirectoryCreateA((const char*)string)
 #define OSWorkingDirectoryCurrentA getcwd
-#define OSWorkingDirectoryCurrentW(string, size) (wchar_t*)WorkingDirectoryCurrentA((char*)string, size)
+#define OSWorkingDirectoryCurrentW(string, size) (wchar_t*)OSWorkingDirectoryCurrentA((char*)string, size)
 #define OSWorkingDirectoryChangeA chdir
-#define OSWorkingDirectoryChangeW(string) WorkingDirectoryChangeA((const char*)string)
+#define OSWorkingDirectoryChangeW(string) OSWorkingDirectoryChangeA((const char*)string)
 
 #define PipeOpen popen
 #define PipeOpenW(wchar, mode) popen((char*)wchar, (const char*) mode) // TODO: instable
@@ -152,13 +152,13 @@ void FilePathSplittW(const wchar_t* fullPath, size_t fullPathMaxSize, wchar_t* d
 
 	TextCopyWA(fullPath, PathMaxSize, fullPathA, PathMaxSize);
 
-	Splitt
+	FilePathSplittA
 	(
-		fullPathA,
-		driveA,
-		directoryA,
-		fileNameA,
-		extensionA
+		fullPathA,PathMaxSize,
+		driveA,DriveMaxSize,
+		directoryA,DirectoryMaxSize,
+		fileNameA, FileNameMaxSize,
+		extensionA, ExtensionMaxSize
 	);
 
 	TextCopyAW(driveA, DriveMaxSize, drive, DriveMaxSize);
@@ -325,7 +325,7 @@ ActionResult FileOpenW(File* file, const wchar_t* filePath, const MemoryProtecti
 
 	TextCopyWA(filePath, PathMaxSize, filePathA, PathMaxSize);
 
-	const ActionResult openResult = Open(filePathA, fileOpenMode);
+	const ActionResult openResult = FileOpenA(file,filePathA, fileOpenMode, fileCachingMode);
 	const unsigned char successful = openResult == ResultSuccessful;
 
 	if(!successful)
@@ -502,7 +502,6 @@ ActionResult FileMapToVirtualMemoryA(File* file, const char* filePath, const siz
 {
 
 #if defined(OSUnix)
-	size_t fileLength = 0;
 	int accessType = PROT_READ;
 	int flags = MAP_PRIVATE | MAP_POPULATE;
 	int fileDescriptor = 0;
@@ -532,11 +531,13 @@ ActionResult FileMapToVirtualMemoryA(File* file, const char* filePath, const siz
 		}
 
 		const int fileDescriptor = open64(filePath, openFlag);
-		const unsigned char sucessfulOpen = fileDescriptor;
+		const unsigned char sucessfulOpen = fileDescriptor != -1;
 
 		if(!sucessfulOpen)
 		{
-			return ResultFileOpenFailure;
+            const ActionResult actionResult = GetCurrentError(); // ResultFileOpenFailure
+
+			return actionResult;
 		}
 
 		file->IDMapping = fileDescriptor;
@@ -557,7 +558,7 @@ ActionResult FileMapToVirtualMemoryA(File* file, const char* filePath, const siz
 
 	// Map data
 	{
-		const MemoryProtectionModeType protectionModeID = ConvertMemoryProtectionMode(protectionMode);
+		const MemoryProtectionModeType protectionModeID = ConvertFromMemoryProtectionMode(protectionMode);
 		const int flags = MAP_PRIVATE | MAP_POPULATE;
 		const off_t offset = 0;
 
@@ -570,7 +571,7 @@ ActionResult FileMapToVirtualMemoryA(File* file, const char* filePath, const siz
 			file->IDMapping, // fileDescriptor
 			offset
 		);
-		const unsigned char successfulMapping = mappedData;
+		const unsigned char successfulMapping = mappedData != 0;
 
 		if(!successfulMapping)
 		{
@@ -610,7 +611,7 @@ ActionResult FileMapToVirtualMemoryW(File* file, const wchar_t* filePath, const 
 
 	TextCopyWA(filePath, PathMaxSize, filePathA, PathMaxSize);
 
-	return MapToVirtualMemory(filePathA, protectionMode);
+	return FileMapToVirtualMemoryA(file, filePathA, fileSize, protectionMode);
 
 #elif defined(OSWindows)
 
@@ -986,7 +987,7 @@ ActionResult FileCopyW(const wchar_t* sourceFilePath, const wchar_t* destination
 	TextCopyWA(sourceFilePath, PathMaxSize, sourceFilePathA, PathMaxSize);
 	TextCopyWA(destinationFilePath, PathMaxSize, destinationFilePathA, PathMaxSize);
 
-	return FileCopy(sourceFilePathA, destinationFilePathA);
+	return FileCopyA(sourceFilePathA, destinationFilePathA);
 #elif defined(OSWindows)
 	const unsigned char succesfull = CopyFileW(sourceFilePath, destinationFilePath, 0);
 

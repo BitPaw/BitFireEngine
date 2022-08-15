@@ -6499,3 +6499,885 @@
 	<Memory/MemoryX.h>
 	<stdio.h>
 
+1660435759 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Async/AsyncLock.cpp
+	"AsyncLock.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Async/AsyncLock.h
+	<Async/Lock.h>
+
+1660431867 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Async/Lock.h
+	<OS/OSVersion.h>
+	<semaphore.h>
+	<windows.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/OS/OSVersion.h
+	<stdint.h>
+	<SdkDdkVer.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Camera/Camera.cpp
+	"Camera.h"
+	<stdio.h>
+	<cmath>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Camera/Camera.h
+	"CameraPerspective.hpp"
+	<Math/Geometry/Vector3.hpp>
+	<Math/Geometry/Matrix4x4.hpp>
+	<Math/Physic/PhysicsDynamic.hpp>
+	<Video/RefreshRateMode.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Camera/CameraPerspective.hpp
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Vector3.hpp
+	<Math/Math.h>
+	<cstdio>
+
+1660432202 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Math/Math.h
+	<stddef.h>
+
+1660487110 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Matrix4x4.hpp
+	"Vector3.hpp"
+	"Vector4.hpp"
+	"AngleRadians.hpp"
+	<cstring>
+	<Math/Math.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Vector4.hpp
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/AngleRadians.hpp
+	"AngleDegree.hpp"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/AngleDegree.hpp
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Physic/PhysicsDynamic.hpp
+	"PhysicsStatic.hpp"
+	"../Geometry/Vector3.hpp"
+	<cassert>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Physic/PhysicsStatic.hpp
+	"../Geometry/Matrix4x4.hpp"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Video/RefreshRateMode.h
+
+1660435855 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/ClipBoard/ClipBoard.cpp
+	"ClipBoard.h"
+	<OS/OSVersion.h>
+	<wtypes.h>
+	<WinUser.h>
+
+1660435855 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/ClipBoard/ClipBoard.h
+	<Error/ActionResult.h>
+	"ClipBoardFormat.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Error/ActionResult.h
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/ClipBoard/ClipBoardFormat.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/ClipBoard/ClipBoardFormat.cpp
+	"ClipBoardFormat.h"
+	<OS/OSVersion.h>
+	<Windows.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Container/AsciiString.cpp
+	"AsciiString.h"
+	<cassert>
+	<cstdarg>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Container/AsciiString.h
+	<cstddef>
+	<cstring>
+	<string>
+	"List.hpp"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Container/List.hpp
+	<stdlib.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Container/BitStreamHusk.cpp
+	"BitStreamHusk.h"
+	<stdio.h>
+	<cassert>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Container/BitStreamHusk.h
+	<cstddef>
+	<File/Endian.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Endian.h
+	<stddef.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Container/QueueMapping.cpp
+	"QueueMapping.h"
+	<Memory/Memory.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Container/QueueMapping.h
+	<stddef.h>
+	<File/File.h>
+
+1660519182 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/File.h
+	<stddef.h>
+	<stdlib.h>
+	<stdio.h>
+	<wchar.h>
+	<assert.h>
+	<dirent.h>
+	<OS/OSVersion.h>
+	<Memory/Memory.h>
+	<Error/ActionResult.h>
+	<File/Endian.h>
+	<sys/stat.h>
+	<sys/mman.h>
+	<unistd.h>
+	<libgen.h>
+	<windows.h>
+
+1660487451 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Memory/Memory.h
+	<stddef.h>
+	<OS/OSVersion.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Container/ResponseCache.cpp
+	"ResponseCache.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Container/ResponseCache.h
+	<Container/Dictionary.hpp>
+	<File/File.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Container/Dictionary.hpp
+	<cstdlib>
+	<cstddef>
+	<Memory/MemoryX.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Memory/MemoryX.h
+	<Memory/Memory.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/DataBase/DataBase.cpp
+	"DataBase.h"
+	<stdio.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/DataBase/DataBase.h
+	<OS/OSVersion.h>
+	"SQLType.h"
+	"SQLResult.h"
+	<cstddef>
+	<Windows.h>
+	<sqlext.h>
+	<sqltypes.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/DataBase/SQLType.h
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/DataBase/SQLResult.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/DataBase/SQLResult.cpp
+	"SQLResult.h"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/DataBase/SQLType.cpp
+	"SQLType.h"
+	<OS/OSVersion.h>
+	<Windows.h>
+	<sql.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Encryption/Caesar.cpp
+	"Caesar.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Encryption/Caesar.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Encryption/MD5/MD5.cpp
+	"MD5.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Encryption/MD5/MD5.h
+	<cstddef>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Encryption/RSA/Euklid.cpp
+	"Euklid.h"
+	<Math/Math.h>
+	<Memory/MemoryX.h>
+	"Euklid_element.h"
+	<iostream>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Encryption/RSA/Euklid.h
+	"Euklid_element.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Encryption/RSA/Euklid_element.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Encryption/RSA/Koerper.cpp
+	"Koerper.h"
+	<iostream>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Encryption/RSA/Koerper.h
+	"Restklassen.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Encryption/RSA/Restklassen.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Encryption/RSA/Restklassen.cpp
+	"Restklassen.h"
+	<Math/Math.h>
+	<Memory/MemoryX.h>
+	<stdio.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Encryption/RSA/RSA.cpp
+	"RSA.h"
+	"Euklid.h"
+	<Text/Text.h>
+	<Memory/MemoryX.h>
+	<Math/Primes.h>
+	<Math/Math.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Encryption/RSA/RSA.h
+	"RSAKeys.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Encryption/RSA/RSAKeys.h
+
+1660432802 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Text/Text.h
+	<stddef.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Primes.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Encryption/SHA/SHA1.cpp
+	"SHA1.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Encryption/SHA/SHA1.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/GameCleaved/main.cpp
+	<iostream>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/ImageType.cpp
+	"ImageType.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/ImageType.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/OpenGL.cpp
+	"OpenGL.h"
+	<cassert>
+	<GL/glew.h>
+	<Memory/MemoryX.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/OpenGL.h
+	"RenderMode.h"
+	<File/Image.h>
+	<Model/Model.h>
+	"Texture.h"
+	"TextureCube.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/RenderMode.h
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Image.h
+	<stddef.h>
+	<Error/ActionResult.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Model/Model.h
+	"Mesh.h"
+	"LinkedMesh.h"
+	"Material.h"
+	"../Resource.h"
+	"ModelType.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Model/Mesh.h
+	"MeshSegment.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Model/MeshSegment.h
+	<cstddef>
+	<File/Format/OBJ/OBJ.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/OBJ/OBJ.h
+	<stddef.h>
+	<Error/ActionResult.h>
+	<File/Format/MTL/MTL.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/MTL/MTL.h
+	<stddef.h>
+	<Error/ActionResult.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Model/LinkedMesh.h
+	"Vertex.h"
+	"MeshIndexData.h"
+	"../Container/List.hpp"
+	"../Math/Geometry/Vector2.hpp"
+	"../Math/Geometry/Vector3.hpp"
+	"../Math/Geometry/Vector4.hpp"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Model/Vertex.h
+	"../Math/Geometry/Vector3.hpp"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Model/MeshIndexData.h
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Vector2.hpp
+	<math.h>
+	<Math/Math.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Model/Material.h
+	<cstddef>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Resource.h
+	<Error/ActionResult.h>
+	<cstddef>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Model/ModelType.h
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/Texture.h
+	"ImageType.h"
+	"ImageFilter.h"
+	"ImageLayout.h"
+	"ImageWrap.h"
+	<File/Image.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/ImageFilter.h
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/ImageLayout.h
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/ImageWrap.h
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/TextureCube.h
+	<File/Image.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/__Dependencies__/include/GL/glew.h
+	<stddef.h>
+	<inttypes.h>
+	<stdint.h>
+	<inttypes.h>
+	<Availability.h>
+	<OpenGL/glu.h>
+	<GL/glu.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/Renderable.cpp
+	"Renderable.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/Renderable.h
+	"RenderMode.h"
+	"RenderableChunk.h"
+	<Video/Shader.h>
+	<Math/Geometry/Matrix4x4.hpp>
+	<Container/List.hpp>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/RenderableChunk.h
+	<cstddef>
+	"RenderableSegment.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/RenderableSegment.h
+	"ImageType.h"
+	<cstddef>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Video/Shader.h
+	<stddef.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/RenderableChunk.cpp
+	"RenderableChunk.h"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/RenderableSegment.cpp
+	"RenderableSegment.h"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/Resource.cpp
+	"Resource.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/Resource.h
+	<cstddef>
+	"ResourceInfo.h"
+	<Error/ActionResult.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/ResourceInfo.h
+	<cwchar>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/ResourceAsyncLoadInfo.cpp
+	"ResourceAsyncLoadInfo.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/ResourceAsyncLoadInfo.h
+	<Resource.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/ResourceInfo.cpp
+	"ResourceInfo.h"
+	<Text/Text.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/SkyBox.cpp
+	"SkyBox.h"
+	<Math/Geometry/Form/Cube.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/SkyBox.h
+	<File/Image.h>
+	"TextureCube.h"
+	"Renderable.h"
+	<Video/Shader.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Cube.h
+	"Form.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Form.h
+	"../Shape/Shape.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Shape.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/Sprite.cpp
+	"Sprite.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/Sprite.h
+	<File/Image.h>
+	"Texture.h"
+	"Renderable.h"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/Texture.cpp
+	"Texture.h"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Graphic/OpenGL/TextureCube.cpp
+	"TextureCube.h"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Hardware/MainBoard/MainBoard.cpp
+	"MainBoard.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Hardware/MainBoard/MainBoard.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Hardware/Processor/Processor.cpp
+	"Processor.h"
+	<OS/OSVersion.h>
+	<Text/Text.h>
+	<cpuid.h>
+	<intrin.h>
+	<iostream>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Hardware/Processor/Processor.h
+	<cstddef>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Cone.cpp
+	"Cone.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Cone.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Cube.cpp
+	"Cube.h"
+	<string.h>
+	<cmath>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Cuboid.cpp
+	"Cuboid.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Cuboid.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Cylinder.cpp
+	"Cylinder.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Cylinder.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Form.cpp
+	"Form.h"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Icosahedron.cpp
+	"Icosahedron.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Icosahedron.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Sphere.cpp
+	"Sphere.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Form/Sphere.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Form/SquarePyramid.cpp
+	"SquarePyramid.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Form/SquarePyramid.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Circle.cpp
+	"Circle.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Circle.h
+	"Shape.h"
+	<Math/Math.h>
+	"../Vector2.hpp"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Hexagon.cpp
+	"Hexagon.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Hexagon.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Pentagon.cpp
+	"Pentagon.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Pentagon.h
+	"Shape.h"
+	"../Vector2.hpp"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Shape.cpp
+	"Shape.h"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Square.cpp
+	"Square.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Square.h
+	"Shape.h"
+	"../Vector2.hpp"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Star.cpp
+	"Star.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Star.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Triangle.cpp
+	"Triangle.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Geometry/Shape/Triangle.h
+	"Shape.h"
+	"../Vector2.hpp"
+	"../Vector3.hpp"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Interpolate.cpp
+	"Interpolate.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Interpolate.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Math/Primes.cpp
+	<Math/Primes.h>
+	<Math/Math.h>
+	<stdio.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Media/Sound/AudioClip.cpp
+	"AudioClip.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Media/Sound/AudioClip.h
+	"SoundPlayStyle.hpp"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Media/Sound/SoundPlayStyle.hpp
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Media/Sound/AudioConfig.cpp
+	"AudioConfig.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Media/Sound/AudioConfig.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Media/Sound/AudioSource.cpp
+	"AudioSource.h"
+	<cassert>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Media/Sound/AudioSource.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Media/Sound/Sound.cpp
+	"Sound.h"
+	<File/File.h>
+	<File/Format/AAC/AAC.h>
+	<File/Format/FLAC/FLAC.h>
+	<File/Format/MID/MID.h>
+	<File/Format/WAV/WAV.h>
+	<File/Format/WMA/WMA.h>
+	<File/Format/M4A/M4A.h>
+	<File/Format/MP3/MP3.h>
+	<File/Format/OGG/OGG.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Media/Sound/Sound.h
+	"SoundFormat.h"
+	<Resource.h>
+	<Error/ActionResult.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Media/Sound/SoundFormat.h
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/AAC/AAC.h
+	<stddef.h>
+	<Error/ActionResult.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/FLAC/FLAC.h
+	<stddef.h>
+	<Error/ActionResult.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/MID/MID.h
+	<stddef.h>
+	<Error/ActionResult.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/WAV/WAV.h
+	<stddef.h>
+	<Error/ActionResult.h>
+	<File/Format/FMT/FMT.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/FMT/FMT.h
+	<stddef.h>
+	<Error/ActionResult.h>
+	<File/Endian.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/WMA/WMA.h
+	<stddef.h>
+	<Error/ActionResult.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/M4A/M4A.h
+	<stddef.h>
+	<Error/ActionResult.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/MP3/MP3.h
+	<stddef.h>
+	<Error/ActionResult.h>
+	<File/Format/ID3/ID3.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/ID3/ID3.h
+	<stddef.h>
+	<Error/ActionResult.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/OGG/OGG.h
+	<stddef.h>
+	<Error/ActionResult.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Model/LinkedMesh.cpp
+	"LinkedMesh.h"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Model/Material.cpp
+	"Material.h"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Model/Mesh.cpp
+	"Mesh.h"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Model/MeshIndexData.cpp
+	"MeshIndexData.h"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Model/MeshSegment.cpp
+	"MeshSegment.h"
+	<Memory/Memory.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Model/Model.cpp
+	"Model.h"
+	"ModelType.h"
+	<File/File.h>
+	<Text/Text.h>
+	<File/Format/PLY/PLY.h>
+	<File/Format/STL/STL.h>
+	<File/Format/VRML/VRML.h>
+	<File/Format/FBX/FBX.h>
+	<File/Format/3DS/A3DS.h>
+	<Model/OBJ/OBJX.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/PLY/PLY.h
+	<stddef.h>
+	<Error/ActionResult.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/STL/STL.h
+	<stddef.h>
+	<Error/ActionResult.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/VRML/VRML.h
+	<stddef.h>
+	<Error/ActionResult.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/FBX/FBX.h
+	<stddef.h>
+	<Error/ActionResult.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/3DS/A3DS.h
+	<stddef.h>
+	<Error/ActionResult.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Model/OBJ/OBJX.h
+	<File/Format/OBJ/OBJ.h>
+	<Math/Geometry/Vector2.hpp>
+	<Math/Geometry/Vector3.hpp>
+	<Error/ActionResult.h>
+	<Model/Model.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Model/Vertex.cpp
+	"Vertex.h"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/OS/Windows/Registry.cpp
+	"Registry.h"
+	<winerror.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/OS/Windows/Registry.h
+	<OS/OSVersion.h>
+	<Windows.h>
+	<winreg.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Resource.cpp
+	"Resource.h"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Service/HTTP/HTTPError.cpp
+	"HTTPError.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Service/HTTP/HTTPError.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Service/HTTP/HTTPRequestMethod.cpp
+	"HTTPRequestMethod.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Service/HTTP/HTTPRequestMethod.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Time/StopWatch.cpp
+	"StopWatch.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Time/StopWatch.h
+	<chrono>
+	<OS/OSVersion.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Window/CursorIcon.cpp
+	"CursorIcon.h"
+	<OS/OSVersion.h>
+	<winuser.rh>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Window/CursorIcon.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Window/Window.cpp
+	"Window.h"
+	<Memory/Memory.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Window/Window.h
+	<OS/CWindow.h>
+
+1660435515 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/OS/CWindow.h
+	<stddef.h>
+	<OS/OSVersion.h>
+	<X11/X.h>
+	<X11/Xlib.h>
+	<GL/glew.h>
+	<GL/gl.h>
+	<GL/glx.h>
+	<Windows.h>
+	<Device/VirtualKey.h>
+	<Async/Thread.h>
+	<Device/Mouse.h>
+	<Device/KeyBoard.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Device/VirtualKey.h
+
+1660432406 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Async/Thread.h
+	<OS/OSVersion.h>
+	<pthread.h>
+	<unistd.h>
+	<windows.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Device/Mouse.h
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Device/KeyBoard.h
+	"VirtualKey.h"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/File/ParsingStreamX.cpp
+	"ParsingStreamX.h"
+	<cstdarg>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/File/ParsingStreamX.h
+	<cstddef>
+	<File/ParsingStream.h>
+	<Container/ClusterShort.h>
+	<Container/ClusterInt.h>
+	<Container/ClusterLongLong.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/ParsingStream.h
+	<stddef.h>
+	"Endian.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Container/ClusterShort.h
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Container/ClusterInt.h
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Container/ClusterLongLong.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Media/Font/FontX.cpp
+	"FontX.h"
+
+1660485909 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Media/Font/FontX.h
+	<Error/ActionResult.h>
+	<File/Font.h>
+
+1660485883 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Font.h
+	<stddef.h>
+	<File/Image.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Media/Image/BMP/BMPP.cpp
+	"BMPP.h"
+	<cassert>
+	<File/File.h>
+	<Math/Math.h>
+	<Memory/MemoryX.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Media/Image/BMP/BMPP.h
+	<File/Format/BMP/BMP.h>
+	<File/Image.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/BMP/BMP.h
+	<stddef.h>
+	<Error/ActionResult.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Media/Image/ImageX.cpp
+	"ImageX.h"
+	"BMP/BMPP.h"
+	<File/File.h>
+	<Math/Math.h>
+	<cstdlib>
+	<cstdio>
+	<cwchar>
+	<Text/Text.h>
+	<Memory/MemoryX.h>
+	<File/Format/JPEG/JPEG.h>
+	<File/Format/TIFF/TIFF.h>
+	<File/Format/PNG/PNG.h>
+	<File/Format/TGA/TGA.h>
+	<Media/Image/PNGX.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Media/Image/ImageX.h
+	<File/Image.h>
+	<Math/Geometry/Vector4.hpp>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/JPEG/JPEG.h
+	<stddef.h>
+	<Error/ActionResult.h>
+	<File/Image.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/TIFF/TIFF.h
+	<stddef.h>
+	<Error/ActionResult.h>
+	<File/Image.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/PNG/PNG.h
+	<stddef.h>
+	<Error/ActionResult.h>
+	<File/Image.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/File/Format/TGA/TGA.h
+	<stddef.h>
+	<Error/ActionResult.h>
+	<File/Image.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Media/Image/PNGX.h
+	<File/Format/PNG/PNG.h>
+	<Error/ActionResult.h>
+	<File/Image.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Media/Image/PNGX.cpp
+	"PNGX.h"
+	<Memory/Memory.h>
+	<File/File.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Memory/MemoryX.cpp
+	"MemoryX.h"
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Model/OBJ/OBJX.cpp
+	"OBJX.h"
+	<File/File.h>
+	<Text/Text.h>
+	<Memory/MemoryX.h>
+	<cassert>
+	<cstring>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/OS/Sound/AudioDeviceCapabilities.cpp
+	"AudioDeviceCapabilities.h"
+	<stdio.h>
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/OS/Sound/AudioDeviceCapabilities.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/OS/Sound/AudioResult.cpp
+	"AudioResult.h"
+
+1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/OS/Sound/AudioResult.h
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/OS/Sound/AudioDeviceInput.cpp
+	"AudioDeviceInput.h"
+
+1660484885 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/OS/Sound/AudioDeviceInput.h
+	<OS/OSVersion.h>
+	<Windows.h>
+	<mmeapi.h>
+
+1660430822 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/OS/Sound/AudioDeviceOutput.cpp
+	"AudioDeviceOutput.h"
+
+1660484897 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/OS/Sound/AudioDeviceOutput.h
+	<OS/OSVersion.h>
+	<Windows.h>
+	<mmeapi.h>
+
+1660485041 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/OS/Sound/AudioSystem.cpp
+	"AudioSystem.h"
+	<OS/OSVersion.h>
+	<windows.h>
+	<mmeapi.h>
+	<Text/Text.h>
+
+1660484910 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/OS/Sound/AudioSystem.h
+	<stddef.h>
+	"AudioResult.h"
+	"AudioDeviceCapabilities.h"
+	"AudioDeviceInput.h"
+	"AudioDeviceOutput.h"
+

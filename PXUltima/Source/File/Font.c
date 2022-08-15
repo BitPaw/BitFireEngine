@@ -7,12 +7,12 @@
 #include <File/Format/FNT/FNT.h>
 #include <File/Format/TTF/TTF.h>
 
-void FontConstruct(Font* font)
+void FontConstruct(CFont* font)
 {
     MemorySet(font, sizeof(Image), 0);
 }
 
-void FontDestruct(Font* font)
+void FontDestruct(CFont* font)
 {
 
 }
@@ -30,7 +30,7 @@ FontFileFormat FontGuessFormat(const wchar_t* filePath)
     return FontFileFormatUnkown;
 }
 
-ActionResult FontLoadA(Font* font, const char* filePath)
+ActionResult FontLoadA(CFont* font, const char* filePath)
 {
     wchar_t filePathW[PathMaxSize];
 
@@ -41,7 +41,7 @@ ActionResult FontLoadA(Font* font, const char* filePath)
     return actionResult;
 }
 
-ActionResult FontLoadW(Font* font, const wchar_t* filePath)
+ActionResult FontLoadW(CFont* font, const wchar_t* filePath)
 {
     File file;
 
@@ -86,7 +86,7 @@ ActionResult FontLoadW(Font* font, const wchar_t* filePath)
     FileDestruct(&file);
 }
 
-ActionResult FontLoadD(Font* font, const FontFileFormat guessedFormat, const void* data, const size_t dataSize)
+ActionResult FontLoadD(CFont* font, const FontFileFormat guessedFormat, const void* data, const size_t dataSize)
 {
     switch(guessedFormat)
     {
@@ -115,7 +115,7 @@ ActionResult FontLoadD(Font* font, const FontFileFormat guessedFormat, const voi
             break;
         }
         case FontFileFormatTTF:
-        {            
+        {
             TTF ttf;
 
             TTFConstruct(&ttf);

@@ -15,6 +15,7 @@
 					<Add option="-g" />
 					<Add directory="../SystemResource/Source" />
 					<Add directory="../BitFireEngine/Source" />
+					<Add directory="../PXUltima/Source" />
 				</Compiler>
 				<Linker>
 					<Add library="../__Export__/X64B-Debug - Linux/BitFireEngine_DEBUG.lib" />
@@ -55,8 +56,7 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="Source/Main.cpp" />
-		<Unit filename="Source/ZEEGameSystem.cpp" />
-		<Unit filename="Source/ZEEGameSystem.h" />
+		<Unit filename="Source/main.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

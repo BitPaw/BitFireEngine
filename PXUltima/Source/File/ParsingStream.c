@@ -1,5 +1,6 @@
 #include "ParsingStream.h"
 
+#include <OS/OSVersion.h>
 #include <Memory/Memory.h>
 #include <Math/Math.h>
 #include <Text/Text.h>
@@ -11,6 +12,12 @@
 #define IsEndOfString(c) (c == '\0')
 #define IsEmptySpace(c) (c == ' ')
 #define IsEndOfLineCharacter(c) (c == '\r' || c == '\n')
+
+#if defined(OSUnix)
+#define PrintSVN vsnprintf
+#elif defined(OSWindows)
+#define PrintSVN vsprintf_s
+#endif
 
 void ParsingStreamConstruct(ParsingStream* parsingStream, void* data, const size_t dataSize)
 {
@@ -66,7 +73,7 @@ size_t ParsingStreamReadNextLineInto(ParsingStream* parsingStream, void* exportB
 	ParsingStreamSkipEndOfLineCharacters(parsingStream);
 
 	const size_t dataPositionBefore = parsingStream->DataCursor;
-	
+
 	while(!ParsingStreamIsAtEnd(parsingStream))
 	{
 		const unsigned char* data = ParsingStreamCursorPosition(parsingStream);
@@ -376,7 +383,7 @@ size_t ParsingStreamWriteD(ParsingStream* parsingStream, const void* value, cons
 	unsigned char* currentPosition = ParsingStreamCursorPosition(parsingStream);
 
 	const size_t copyedBytes = MemoryCopy(value, length, currentPosition, writableSize);
-	
+
 	ParsingStreamCursorAdvance(parsingStream, copyedBytes);
 
 	return copyedBytes;
@@ -406,7 +413,7 @@ size_t ParsingStreamWrite(ParsingStream* parsingStream, const char* format, ...)
 	va_start(args, format);
 
 	const size_t writableSize = ParsingStreamRemainingSize(parsingStream);
-	const int writtenBytes = vsprintf_s(currentPosition, writableSize, format, args);
+	const int writtenBytes = PrintSVN(currentPosition, writableSize, format, args);
 
 	va_end(args);
 
