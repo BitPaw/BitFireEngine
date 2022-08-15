@@ -173,11 +173,11 @@ extern "C"
 	static LRESULT CALLBACK CWindowEventHandler(HWND cWindowsID, UINT eventID, WPARAM wParam, LPARAM lParam);
 #endif
 
-	static ThreadResult CWindowCreateThread(void*CWindowAdress);
+	static ThreadResult CWindowCreateThread(void* const cWindowAdress);
 
-	extern void CWindowConstruct(CWindow* CWindow);
-	extern void CWindowCreate(CWindow* CWindow, const unsigned int width, const unsigned int height, const char* title, unsigned char async);
-	extern void CWindowDestruct(CWindow* CWindow);
+	extern void CWindowConstruct(CWindow* const cWindow);
+	extern void CWindowCreate(CWindow* const cWindow, const unsigned int width, const unsigned int height, const char* title, unsigned char async);
+	extern void CWindowDestruct(CWindow* const cWindow);
 
 	extern void CWindowIconCorner();
 	extern void CWindowIconTaskBar();

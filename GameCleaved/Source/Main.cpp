@@ -74,10 +74,6 @@ void OnStartUp(BitFireEngine* const bitFireEngine)
 
     bitFireEngine->Load(testTextue, L"Texture/SkyBox.bmp", false);
 
-
-
-
-
     // BF::Cube cube;
 
      //GameSystem.Resource.Add(_cubeRenderable, cube.VertexList, cube.VertexListSize, cube.IndexList, cube.IndexListSize);
@@ -229,12 +225,6 @@ void OnStartUp(BitFireEngine* const bitFireEngine)
     _dialogBox.Content.MeshList[0].RenderInfo.ShaderProgramID = hudShaderID.ID;*/
 
     //-------------------------------------------------------------------------
-
-
-
-
-
-
 
     bitFireEngine->PrintContent(true);
 

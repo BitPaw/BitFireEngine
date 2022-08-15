@@ -6499,14 +6499,15 @@
 	<Memory/MemoryX.h>
 	<stdio.h>
 
-1660435759 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Async/AsyncLock.cpp
+1660600909 source:/home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Async/AsyncLock.cpp
 	"AsyncLock.h"
 
 1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Async/AsyncLock.h
 	<Async/Lock.h>
 
-1660431867 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Async/Lock.h
+1660600879 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Async/Lock.h
 	<OS/OSVersion.h>
+	<Error/ActionResult.h>
 	<semaphore.h>
 	<windows.h>
 
@@ -7205,7 +7206,7 @@
 1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Window/Window.h
 	<OS/CWindow.h>
 
-1660435515 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/OS/CWindow.h
+1660596034 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/OS/CWindow.h
 	<stddef.h>
 	<OS/OSVersion.h>
 	<X11/X.h>

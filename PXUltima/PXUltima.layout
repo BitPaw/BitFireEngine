@@ -2,69 +2,9 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="Source/Library/Library.h" open="0" top="0" tabpos="15" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="Source/Text/Text.h" open="0" top="0" tabpos="26" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="93" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Source/Device/VirtualKey.h" open="0" top="0" tabpos="30" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2085" topLine="158" />
-		</Cursor>
-	</File>
-	<File name="Source/Event/Event.h" open="0" top="0" tabpos="31" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="0" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Source/File/Format/TGA/TGA.c" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2772" topLine="135" />
-		</Cursor>
-	</File>
-	<File name="Source/File/File.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3465" topLine="138" />
-		</Cursor>
-	</File>
-	<File name="Source/File/Format/LAME/LAME.c" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="591" topLine="9" />
-		</Cursor>
-	</File>
-	<File name="Source/Math/Math.h" open="0" top="0" tabpos="17" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2391" topLine="5" />
-		</Cursor>
-	</File>
-	<File name="Source/File/Format/TGA/TGA.h" open="0" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1059" topLine="30" />
-		</Cursor>
-	</File>
-	<File name="Source/File/Format/GIF/GIF.c" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2510" topLine="63" />
-		</Cursor>
-	</File>
-	<File name="Source/Async/Lock.h" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="41" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Source/File/Format/GIF/GIF.h" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="240" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Source/Library/Library.c" open="0" top="0" tabpos="16" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2537" topLine="99" />
-		</Cursor>
-	</File>
-	<File name="Source/Network/CSocket.c" open="0" top="0" tabpos="20" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="18719" topLine="724" />
+			<Cursor1 position="2751" topLine="53" />
 		</Cursor>
 	</File>
 	<File name="Source/Memory/Memory.c" open="0" top="0" tabpos="18" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -72,44 +12,34 @@
 			<Cursor1 position="6365" topLine="271" />
 		</Cursor>
 	</File>
+	<File name="Source/OS/CWindow.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="5868" topLine="162" />
+		</Cursor>
+	</File>
+	<File name="Source/File/Format/GIF/GIF.h" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="240" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Source/OS/CWindow.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="59163" topLine="1692" />
+		</Cursor>
+	</File>
 	<File name="Source/Device/Mouse.h" open="0" top="0" tabpos="32" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1053" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="Source/OS/CWindow.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="Source/Device/Controller.c" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="5619" topLine="162" />
-		</Cursor>
-	</File>
-	<File name="Source/Async/Thread.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="708" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Source/Text/Text.h" open="0" top="0" tabpos="26" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2751" topLine="53" />
-		</Cursor>
-	</File>
-	<File name="Source/OS/Program.h" open="0" top="0" tabpos="24" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="99" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Source/Text/Text.c" open="0" top="0" tabpos="25" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4706" topLine="242" />
+			<Cursor1 position="3374" topLine="123" />
 		</Cursor>
 	</File>
 	<File name="Source/Memory/Memory.h" open="0" top="0" tabpos="22" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="2321" topLine="61" />
-		</Cursor>
-	</File>
-	<File name="Source/Async/Thread.h" open="0" top="0" tabpos="21" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="85" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="Source/File/Font.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -123,9 +53,9 @@
 			<Collapse line="89" />
 		</Folding>
 	</File>
-	<File name="Source/File/Format/JPEG/JPEG.h" open="0" top="0" tabpos="14" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="Source/OS/Program.h" open="0" top="0" tabpos="24" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="4153" topLine="84" />
+			<Cursor1 position="99" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="Source/OS/Program.c" open="0" top="0" tabpos="27" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -133,34 +63,34 @@
 			<Cursor1 position="834" topLine="15" />
 		</Cursor>
 	</File>
-	<File name="Source/Device/Controller.c" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3374" topLine="123" />
-		</Cursor>
-	</File>
 	<File name="Source/File/File.c" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="14622" topLine="576" />
+			<Cursor1 position="14268" topLine="636" />
 		</Cursor>
 	</File>
-	<File name="Source/Network/CSocket.h" open="0" top="0" tabpos="19" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="Source/Text/Text.c" open="0" top="0" tabpos="25" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="644" topLine="18" />
+			<Cursor1 position="4706" topLine="242" />
 		</Cursor>
 	</File>
-	<File name="Source/OS/Monitor.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="Source/Network/CSocket.c" open="0" top="0" tabpos="20" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2021" topLine="0" />
+			<Cursor1 position="18719" topLine="724" />
 		</Cursor>
 	</File>
-	<File name="Source/Async/Lock.c" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="Source/Event/Event.h" open="0" top="0" tabpos="31" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="771" topLine="16" />
+			<Cursor1 position="0" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="Source/OS/CWindow.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="Source/Math/Math.h" open="0" top="0" tabpos="17" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="67211" topLine="1968" />
+			<Cursor1 position="2391" topLine="5" />
+		</Cursor>
+	</File>
+	<File name="Source/Async/Thread.h" open="0" top="0" tabpos="21" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="85" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="Source/File/ParsingStream.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -168,9 +98,24 @@
 			<Cursor1 position="53" topLine="327" />
 		</Cursor>
 	</File>
+	<File name="Source/File/Format/JPEG/JPEG.h" open="0" top="0" tabpos="14" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4153" topLine="84" />
+		</Cursor>
+	</File>
 	<File name="Source/File/Format/JPEG/JPEG.c" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="20164" topLine="318" />
+		</Cursor>
+	</File>
+	<File name="Source/Network/CSocket.h" open="0" top="0" tabpos="19" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="644" topLine="18" />
+		</Cursor>
+	</File>
+	<File name="Source/Async/Lock.h" open="1" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="99" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="Source/Network/Server.c" open="0" top="0" tabpos="23" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -178,9 +123,64 @@
 			<Cursor1 position="5420" topLine="190" />
 		</Cursor>
 	</File>
+	<File name="Source/Async/Lock.c" open="1" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1201" topLine="53" />
+		</Cursor>
+	</File>
+	<File name="Source/Async/Thread.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="708" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Source/Device/VirtualKey.h" open="0" top="0" tabpos="30" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2085" topLine="158" />
+		</Cursor>
+	</File>
+	<File name="Source/File/File.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3465" topLine="138" />
+		</Cursor>
+	</File>
+	<File name="Source/OS/Monitor.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2021" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Source/File/Format/LAME/LAME.c" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="591" topLine="9" />
+		</Cursor>
+	</File>
+	<File name="Source/File/Format/GIF/GIF.c" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2510" topLine="63" />
+		</Cursor>
+	</File>
+	<File name="Source/File/Format/TGA/TGA.h" open="0" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1059" topLine="30" />
+		</Cursor>
+	</File>
+	<File name="Source/File/Format/TGA/TGA.c" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2772" topLine="135" />
+		</Cursor>
+	</File>
 	<File name="Source/File/Font.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="709" topLine="16" />
+		</Cursor>
+	</File>
+	<File name="Source/Library/Library.h" open="0" top="0" tabpos="15" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="93" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Source/Library/Library.c" open="0" top="0" tabpos="16" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2537" topLine="99" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

@@ -1701,7 +1701,7 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
 }
 #endif
 
-ThreadResult CWindowCreateThread(void* windowAdress)
+ThreadResult CWindowCreateThread(void* const windowAdress)
 {
     CWindow* const window = (CWindow*)windowAdress;
 
@@ -2165,7 +2165,7 @@ ThreadResult CWindowCreateThread(void* windowAdress)
     return ThreadSucessful;
 }
 
-extern void CWindowConstruct(CWindow* window)
+extern void CWindowConstruct(CWindow* const window)
 {
     MemorySet(window, sizeof(CWindow), 0);
 }
@@ -2200,7 +2200,7 @@ void CWindowCreate(CWindow* window, const unsigned int width, const unsigned int
     }
 }
 
-void CWindowDestruct(CWindow* window)
+void CWindowDestruct(CWindow* const window)
 {
 #if defined(OSUnix)
     glXMakeCurrent(window->DisplayCurrent, None, NULL);

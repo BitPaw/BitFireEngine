@@ -817,11 +817,13 @@
 1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Algorithm/ISBN/ISBN.h
 	<stddef.h>
 
-1660431824 source:/home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Async/Lock.c
+1660600862 source:/home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Async/Lock.c
 	"Lock.h"
+	<Memory/Memory.h>
 
-1660431867 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Async/Lock.h
+1660600879 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Async/Lock.h
 	<OS/OSVersion.h>
+	<Error/ActionResult.h>
 	<semaphore.h>
 	<windows.h>
 
@@ -849,7 +851,7 @@
 	<OS/OSVersion.h>
 	<OS/CWindow.h>
 
-1660435515 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/OS/CWindow.h
+1660596034 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/OS/CWindow.h
 	<stddef.h>
 	<OS/OSVersion.h>
 	<X11/X.h>
@@ -1482,7 +1484,7 @@
 	<stddef.h>
 	<Error/ActionResult.h>
 
-1660515545 source:/home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/OS/CWindow.c
+1660596137 source:/home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/OS/CWindow.c
 	"CWindow.h"
 	<GL/glew.h>
 	<GL/gl.h>

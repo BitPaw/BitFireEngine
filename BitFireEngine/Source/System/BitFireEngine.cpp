@@ -281,7 +281,6 @@ void BF::BitFireEngine::Start()
 
     InvokeEvent(this->StartUpCallBack, this);
 
-
     double time = stopwatch.Stop();
 
     printf("[i][Info] Loading took %.2fs\n", time);

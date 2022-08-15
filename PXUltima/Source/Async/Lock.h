@@ -2,27 +2,28 @@
 #define LockInclude
 
 #include <OS/OSVersion.h>
+#include <Error/ActionResult.h>
 
 #if defined(OSUnix)
 #include <semaphore.h>
-#define LockID sem_t*
-#define LockIDNotSet 0
+#define LockID sem_t // is union, cannot be defined as "sem_t" only -> compile error
 #elif defined(OSWindows)
 #include <windows.h>
 //#include <process.h>
-#define LockID HANDLE
-#define LockNotSet 0
+#define LockID HANDLE // same as void*
 #endif
-
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-	extern int LockCreate(LockID* asyncLockID);
-	extern int LockDelete(LockID* asyncLockID);
-	extern int LockLock(LockID* asyncLockID);
-	extern int LockRelease(LockID* asyncLockID);
+    // Clear value of lock, sets internal data to 0.
+    extern void LockClear(LockID* const asyncLockID);
+
+	extern ActionResult LockCreate(LockID* const asyncLockID);
+	extern ActionResult LockDelete(LockID* const asyncLockID);
+	extern ActionResult LockLock(LockID* const asyncLockID);
+	extern ActionResult LockRelease(LockID* const asyncLockID);
 #ifdef __cplusplus
 }
 #endif

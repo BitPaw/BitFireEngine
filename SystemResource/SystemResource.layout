@@ -17,6 +17,11 @@
 			<Cursor1 position="6436" topLine="187" />
 		</Cursor>
 	</File>
+	<File name="Source/Async/AsyncLock.cpp" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="76" topLine="0" />
+		</Cursor>
+	</File>
 	<File name="Source/OS/Sound/AudioSystem.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="33" topLine="0" />
@@ -40,6 +45,11 @@
 	<File name="Source/Graphic/OpenGL/Sprite.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="13" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Source/Async/AsyncLock.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="237" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="Source/Math/Geometry/Matrix4x4.hpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
