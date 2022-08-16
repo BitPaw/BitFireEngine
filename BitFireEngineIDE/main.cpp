@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <Window/Window.h>
+//#include <System/BitFireEngine.h>
 #include "../BitFireEngine/Source/System/BitFireEngine.h"
 
 #if !defined(_DEBUG) && defined(OSWindows)
@@ -16,7 +17,7 @@ int main(int amountOFParameters, char** parameter)
 
     BF::Window window;
 
-    window.Create(WindowSizeDefault, WindowSizeDefault, "BFE-IDE", false);
+    window.Create(600, 400, "BFE-IDE", false);
 
     while(gameSystem.IsRunning)
     {

@@ -23,7 +23,7 @@ float _deltaTime = 0;
 BF::Renderable _rectangleMesh;
 
 FNT fnt;
-Font _font;
+CFont _font;
 
 BF::Texture testTextue;
 

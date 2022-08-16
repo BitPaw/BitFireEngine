@@ -1233,18 +1233,18 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
         case WindowEventKEYDOWN:
         case WindowEventKEYUP:
         {
-            ButtonState mode = ButtonInvalid;
+            ButtonState mode = ButtonStateInvalid;
 
             switch(eventID)
             {
                 case WM_KEYUP:
                 {
-                    mode = ButtonRelease;
+                    mode = ButtonStateRelease;
                     break;
                 }
                 case WM_KEYDOWN:
                 {
-                    mode = ButtonDown;
+                    mode = ButtonStateDown;
                     break;
                 }
             }
@@ -1253,7 +1253,7 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
             const size_t characterInfo = lParam;
             const VirtualKey virtualKey = ConvertToVirtualKey(character);
 
-            KeyBoardKeyPressedSet(&window->KeyBoardCurrentInput, virtualKey, mode == ButtonRelease);
+            KeyBoardKeyPressedSet(&window->KeyBoardCurrentInput, virtualKey, mode == ButtonStateRelease);
 
             KeyBoardKeyInfo buttonInfo;
             buttonInfo.KeyID = character;
@@ -1360,11 +1360,11 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
         //case WindowEventMOUSEMOVE:
         //    break;
         case WindowEventLBUTTONDOWN:
-            TriggerOnMouseClickEvent(window, MouseButtonLeft, ButtonDown);
+            TriggerOnMouseClickEvent(window, MouseButtonLeft, ButtonStateDown);
             break;
 
         case WindowEventLBUTTONUP:
-            TriggerOnMouseClickEvent(window, MouseButtonLeft, ButtonRelease);
+            TriggerOnMouseClickEvent(window, MouseButtonLeft, ButtonStateRelease);
             break;
 
         case WindowEventLBUTTONDBLCLK:
@@ -1372,11 +1372,11 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
             break;
 
         case WindowEventRBUTTONDOWN:
-            TriggerOnMouseClickEvent(window, MouseButtonRight, ButtonDown);
+            TriggerOnMouseClickEvent(window, MouseButtonRight, ButtonStateDown);
             break;
 
         case WindowEventRBUTTONUP:
-            TriggerOnMouseClickEvent(window, MouseButtonRight, ButtonRelease);
+            TriggerOnMouseClickEvent(window, MouseButtonRight, ButtonStateRelease);
             break;
 
         case WindowEventRBUTTONDBLCLK:
@@ -1384,11 +1384,11 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
             break;
 
         case WindowEventMBUTTONDOWN:
-            TriggerOnMouseClickEvent(window, MouseButtonMiddle, ButtonDown);
+            TriggerOnMouseClickEvent(window, MouseButtonMiddle, ButtonStateDown);
             break;
 
         case WindowEventMBUTTONUP:
-            TriggerOnMouseClickEvent(window, MouseButtonMiddle, ButtonRelease);
+            TriggerOnMouseClickEvent(window, MouseButtonMiddle, ButtonStateRelease);
             break;
 
         case WindowEventMBUTTONDBLCLK:
@@ -1401,7 +1401,7 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
         case WindowEventXBUTTONUP:
         case WindowEventXBUTTONDOWN:
         {
-            MouseButton mouseButton = ButtonInvalid;
+            MouseButton mouseButton = ButtonStateInvalid;
             ButtonState buttonState = MouseButtonInvalid;
 
             const WORD releaseID = HIWORD(wParam);
@@ -1417,13 +1417,13 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
 
                     case WindowEventXBUTTONUP:
                     {
-                        buttonState = ButtonRelease;
+                        buttonState = ButtonStateRelease;
                         break;
                     }
 
                     case WindowEventXBUTTONDOWN:
                     {
-                        buttonState = ButtonDown;
+                        buttonState = ButtonStateDown;
                         break;
                     }
                 }
@@ -1478,7 +1478,7 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
             break;
         case WindowEventNEXTMENU:
             break;
-        case WindowEventSIZING:	static void CWindowEventHandler(CWindow* cWindow const, const XEvent* const event);
+        case WindowEventSIZING:
             break;
         case WindowEventCAPTURECHANGED:
             break;
@@ -1646,7 +1646,7 @@ LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM 
             break;
         case WindowEventQUERYNEWPALETTE:
             break;
-        case WindowEventPALETTEISCHANGIN	static void CWindowEventHandler(CWindow* cWindow const, const XEvent* const event);G:
+        case WindowEventPALETTEISCHANGING:
             break;
         case WindowEventPALETTECHANGED:
             break;

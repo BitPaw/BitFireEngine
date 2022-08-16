@@ -26,8 +26,10 @@ ActionResult LockCreate(LockID* const asyncLockID)
 	LONG lMaximumCount = 1;
 	LPCWSTR lpName = L"BFE_ASYNC_LOCK";
 
-	asyncLockID = CreateSemaphore(lpSemaphoreAttributes, lInitialCount, lMaximumCount, lpName);
-	const unsigned char sucessful = *asyncLockID != 0;
+	const HANDLE handle = CreateSemaphoreW(lpSemaphoreAttributes, lInitialCount, lMaximumCount, lpName);
+	const unsigned char sucessful = handle != 0;
+
+	*asyncLockID = handle;
 #endif
 
 	if (!sucessful)

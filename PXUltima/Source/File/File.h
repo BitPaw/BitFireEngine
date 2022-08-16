@@ -6,17 +6,34 @@
 #include <stdio.h>
 #include <wchar.h>
 #include <assert.h>
-#include <dirent.h>
 
 #include <OS/OSVersion.h>
 #include <Memory/Memory.h>
 #include <Error/ActionResult.h>
 #include <File/Endian.h>
 
+#if defined(OSUnix)
+
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <unistd.h>
+#include <libgen.h>
+#include <dirent.h>
+
+#define FileHandleType FILE*
+#define FileMappingID int
+
+#elif defined(OSWindows)
+
+#include <windows.h>
+#include <direct.h>
+
+#define FileHandleType HANDLE
+#define FileMappingID HANDLE
+
+#endif
+
 #define FileLineBufferSize 2048
-
-
-
 
 #if defined(OSUnix)
 #define PathMaxSize 260
@@ -30,25 +47,6 @@
 #define DirectoryMaxSize 256//_MAX_DIR
 #define FileNameMaxSize 256 //_MAX_FNAME
 #define ExtensionMaxSize 256 //_MAX_EXT
-#endif
-
-#if defined(OSUnix)
-
-#include <sys/stat.h>
-#include <sys/mman.h>
-#include <unistd.h>
-#include <libgen.h>
-
-#define FileHandleType FILE*
-#define FileMappingID int
-
-#elif defined(OSWindows)
-
-#include <windows.h>
-
-#define FileHandleType HANDLE
-#define FileMappingID HANDLE
-
 #endif
 
 

@@ -70,7 +70,7 @@ namespace BF
         LinkedList<AudioClip*> _audioClipList;
 
         //LinkedList<Sound*> _soundList;
-        LinkedList<Font*> _fontList;
+        LinkedList<CFont*> _fontList;
         LinkedList<ShaderProgram*> _shaderProgramList;
         //LinkedList<Dialog*> _dialogList;
         //LinkedList<Level*> _levelList;
@@ -120,7 +120,7 @@ namespace BF
 
 		bool IsRunning;
         Camera MainCamera;
-        Font* DefaultFont;
+        CFont* DefaultFont;
         SkyBox* DefaultSkyBox;
 
         UpdateUIEvent UpdateUICallBack;
