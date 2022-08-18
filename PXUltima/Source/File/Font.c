@@ -7,9 +7,11 @@
 #include <File/Format/FNT/FNT.h>
 #include <File/Format/TTF/TTF.h>
 
+#include <File/Image.h>
+
 void FontConstruct(CFont* font)
 {
-    MemorySet(font, sizeof(Image), 0);
+    MemorySet(font, sizeof(CFont), 0);
 }
 
 void FontDestruct(CFont* font)
@@ -46,6 +48,7 @@ ActionResult FontLoadW(CFont* font, const wchar_t* filePath)
     File file;
 
     FileConstruct(&file);
+    FontConstruct(font);
 
     {
         const ActionResult fileLoadingResult = FileMapToVirtualMemoryW(&file, filePath, 0, MemoryReadOnly);
@@ -88,29 +91,22 @@ ActionResult FontLoadW(CFont* font, const wchar_t* filePath)
 
 ActionResult FontLoadD(CFont* font, const FontFileFormat guessedFormat, const void* data, const size_t dataSize)
 {
+    FontConstruct(font);
+
     switch(guessedFormat)
     {
         case FontFileFormatFNT:
         {
-            // TODO: this is pointer for no reason. I use it at another place -> No delete needed
-            FNT fnt;
-
-            FontConstruct(&fnt);
-
             {
                 size_t readBytes = 0;
-                const ActionResult fileActionResult = FNTParse(&fnt, data, dataSize, &readBytes);
+                const ActionResult fileActionResult = FNTParse(&font->BitMapFont, data, dataSize, &readBytes);
                 const unsigned char sucessful = ResultSuccessful == fileActionResult;
 
                 if(!sucessful)
                 {
-                    //fnt->ConvertTo(*this);
-
                     return fileActionResult;
                 }
             }
-
-            FontDestruct(&fnt);
 
             break;
         }

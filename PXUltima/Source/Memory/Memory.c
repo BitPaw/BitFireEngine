@@ -138,21 +138,37 @@ size_t MemoryCopy(const void* __restrict inputBuffer, const size_t inputBufferSi
 	return bufferSize;
 }
 
-void* MemoryAllocate(const size_t size)
+void* MemoryAllocate(const size_t requestedSizeInBytes)
 {
-	if(!size)
+	if(!requestedSizeInBytes)
 	{
 		return 0;
 	}
 
-	const void* adress = malloc(size);
+	const void* adress = malloc(requestedSizeInBytes);
 
 #if MemorySanitise
-	MemorySet(adress, size, '#');
+	MemorySet(adress, requestedSizeInBytes, '#');
 #endif
 
 #if MemoryDebug
-	printf("[#][Memory] 0x%p (%10zi B) Allocate\n", adress, requestedBytes);
+	printf("[#][Memory] 0x%p (%10zi B) Allocate\n", adress, requestedSizeInBytes);
+#endif
+
+	return adress;
+}
+
+void* MemoryAllocateClear(const size_t requestedSizeInBytes)
+{
+	if (!requestedSizeInBytes)
+	{
+		return 0;
+	}
+
+	const void* adress = calloc(1u, requestedSizeInBytes);
+
+#if MemoryDebug
+	printf("[#][Memory] 0x%p (%10zi B) Allocate Cleared\n", adress, requestedSizeInBytes);
 #endif
 
 	return adress;
@@ -166,6 +182,35 @@ void* MemoryReallocate(void* adress, const size_t size)
 	const unsigned char hasChanged = adress != adressReallocated;
 
 	if(hasChanged)
+	{
+		printf("[#][Memory] 0x%p (%10zi B) Reallocate to 0x%p\n", adress, requestedBytes, adressReallocated);
+	}
+	else
+	{
+		printf("[#][Memory] 0x%p (%10zi B) Reallocate (No Change)\n", adress, requestedBytes);
+	}
+#endif
+
+	return adressReallocated;
+}
+
+void* MemoryReallocateClear(const void* const adress, const size_t sizeBefore, const size_t sizeAfter)
+{
+	const void* adressReallocated = realloc(adress, sizeAfter);
+	const unsigned char sizeIncredes = sizeAfter > sizeBefore;
+
+	if (sizeIncredes)
+	{
+		const unsigned char* startAdress = (unsigned char*)adressReallocated + sizeBefore;
+		const size_t sizeDelta = sizeAfter - sizeBefore;
+
+		MemorySet(startAdress, sizeDelta, 0);
+	}
+
+#if MemoryDebug
+	const unsigned char hasChanged = adress != adressReallocated;
+
+	if (hasChanged)
 	{
 		printf("[#][Memory] 0x%p (%10zi B) Reallocate to 0x%p\n", adress, requestedBytes, adressReallocated);
 	}

@@ -102,7 +102,7 @@ extern "C"
 	}
 	FNT;
 
-	extern FNTCharacter* FNTGetCharacter(FNT* fnt, const char character);
+	extern FNTCharacter* FNTGetCharacter(FNT* fnt, const wchar_t character);
 
 	extern ActionResult FNTParse(FNT* fnt, const void* fileData, const size_t fileDataSize, size_t* readBytes);
 

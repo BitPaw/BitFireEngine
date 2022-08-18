@@ -10,6 +10,10 @@ extern "C"
 {
 #endif
 
+#ifndef CFont_
+	typedef struct CFont_ CFont; // Avoid inclusion loop
+#endif
+
 	typedef enum ImageFileFormat_
 	{
 		ImageFileFormatUnkown,
@@ -42,7 +46,7 @@ extern "C"
 		ImageDataFormat Format;
 
 		size_t PixelDataSize;
-		unsigned char* PixelData;
+		void* PixelData;
 	}
 	Image;
 
@@ -76,6 +80,48 @@ extern "C"
 	extern void ImageFlipHorizontal(Image* image);
 	extern void ImageFlipVertical(Image* image);
 	extern void ImageRemoveColor(Image* image, unsigned char red, unsigned char green, unsigned char blue);
+
+	extern void* ImageDataPoint(const Image* const image, const size_t x, const size_t y);
+
+	extern void ImageDrawRectangle
+	(
+		Image* const image,
+		const size_t x,
+		const size_t y,
+		const size_t width,
+		const size_t height,
+		const unsigned char red,
+		const unsigned char green,
+		const unsigned char blue,
+		const unsigned char alpha
+	);
+	extern void ImageDrawTextA
+	(
+		Image* const image,		
+		const size_t x,
+		const size_t y,
+		const size_t width,
+		const size_t height,
+		const CFont* const font,
+		const char* text
+	);
+	extern void ImageDrawTextW
+	(
+		Image* const image,
+		const size_t x,
+		const size_t y,
+		const size_t width,
+		const size_t height,
+		const CFont* const font,
+		const wchar_t* text
+	);
+	extern void ImageMerge
+	(
+		Image* const image,
+		const size_t x,
+		const size_t y,
+		Image* const imageInsert
+	);
 
 	//extern void ImageFillRandome();
 	//extern void ImageFormatChange(ImageDataFormat imageFormat);

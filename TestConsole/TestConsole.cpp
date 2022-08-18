@@ -16,6 +16,7 @@
 #include <OS/OSUI.h>
 #include <CommCtrl.h>
 #include <File/Image.h>
+#include <File/Font.h>
 //#include <Media/Font/Font.h>
 //#include <Media/Font/FNT/FNT.h>
 //#include <Media/Sound/OGG/OGG.h>
@@ -143,9 +144,9 @@ void TestSaveImage()
                 const unsigned char green = x ^ y;
                 const unsigned char blue = 0xFF * !(x & y);
 
-                image.PixelData[dimension * width * y + dimension * x + 2] = blue;
-                image.PixelData[dimension * width * y + dimension * x + 1] = green;
-                image.PixelData[dimension * width * y + dimension * x + 0] = red;
+                ((unsigned char*)image.PixelData)[dimension * width * y + dimension * x + 2] = blue;
+                ((unsigned char*)image.PixelData)[dimension * width * y + dimension * x + 1] = green;
+                ((unsigned char*)image.PixelData)[dimension * width * y + dimension * x + 0] = red;
 
 
                 // image.PixelData[4 * width * y + 4 * x + 3] = 255;
@@ -156,6 +157,43 @@ void TestSaveImage()
     ImageSaveA(&image, "D:/_Data/ImageBMP.bmp", ImageFileFormatBitMap, ImageDataFormatRGB);
     ImageSaveA(&image, "D:/_Data/ImagePNG.png", ImageFileFormatPNG, ImageDataFormatRGB);
     ImageSaveA(&image, "D:/_Data/ImageJPG.jpg", ImageFileFormatJPEG, ImageDataFormatRGB);
+
+    ImageDestruct(&image);
+}
+
+void ImageWriteText()
+{
+    Image image;
+    CFont font;
+
+  
+
+    ImageConstruct(&image);
+
+    ActionResult actionResult = FontLoadA(&font, "D:/_Data/A.fnt");
+
+    FNTPrtinf(&font.BitMapFont);
+
+    // Write image data
+    {
+        const size_t width = 512u * 1;
+        const size_t height = 512u * 1;
+
+        ImageResize(&image, ImageDataFormatRGB, width, height);
+
+     
+
+        ImageDrawRectangle(&image, 0,0, width, height, 0xFF, 0xFF, 0xFF, 0xFF);
+        ImageDrawRectangle(&image, 10, 10, 10, 10, 0xFF, 0x00, 0x00, 0x00);
+        ImageDrawRectangle(&image, 10, 30, 10, 10, 0x00, 0xFF, 0x00, 0x00);
+        ImageDrawRectangle(&image, 10, 50, 10, 10, 0x00, 0x00, 0xFF, 0x00);
+
+
+
+        ImageDrawTextA(&image, 30, 30, 100, 30, &font, "Hello World");
+    }
+
+    ImageSaveA(&image, "D:/_Data/TEST_TextWrite.bmp", ImageFileFormatBitMap, ImageDataFormatRGB);
 
     ImageDestruct(&image);
 }
@@ -198,7 +236,7 @@ int main()
      //ImageSaveA(&bmpTest, "D:/_Data/Image_S.bmp", ImageFileFormatBitMap, ImageDataFormatRGB);
 
 
-    TestSaveImage();
+    ImageWriteText();
 
 
 

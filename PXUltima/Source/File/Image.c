@@ -11,6 +11,9 @@
 #include <File/Format/TGA/TGA.h>
 #include <File/Format/TIFF/TIFF.h>
 
+#include <File/Font.h>
+#include <Math/Math.h>
+
 size_t ImageBytePerPixel(const ImageDataFormat imageDataFormat)
 {
     switch(imageDataFormat)
@@ -421,8 +424,8 @@ void ImageFlipHorizontal(Image* image)
             const size_t indexA = x + (y * rowSize);
             const size_t indexB = xB + (y * rowSize);
             unsigned char tempByte[4] = { 0,0,0,0 };
-            unsigned char* pixelA = image->PixelData + indexA;
-            unsigned char* pixelB = image->PixelData + indexB;
+            unsigned char* pixelA = (unsigned char*)image->PixelData + indexA;
+            unsigned char* pixelB = (unsigned char*)image->PixelData + indexB;
 
             MemoryCopy(pixelA, 4, tempByte, bbp);
             MemoryCopy(pixelB, 4, pixelA, bbp);
@@ -445,8 +448,8 @@ void ImageFlipVertical(Image* image)
 
     for(size_t scanlineIndex = 0; scanlineIndex < scanLinesToSwap; scanlineIndex++)
     {
-        unsigned char* bufferA = image->PixelData + (scanlineIndex * scanLineWidthSize);
-        unsigned char* bufferB = image->PixelData + ((image->Height - scanlineIndex) * scanLineWidthSize) - scanLineWidthSize;
+        unsigned char* bufferA = (unsigned char*)image->PixelData + (scanlineIndex * scanLineWidthSize);
+        unsigned char* bufferB = (unsigned char*)image->PixelData + ((image->Height - scanlineIndex) * scanLineWidthSize) - scanLineWidthSize;
 
         MemoryCopy(bufferB, scanLineWidthSize, copyBufferRow, scanLineWidthSize); // A -> Buffer 'Save A'
         MemoryCopy(bufferA, scanLineWidthSize, bufferB, scanLineWidthSize); // B -> A 'Move B to A(override)'
@@ -458,4 +461,102 @@ void ImageFlipVertical(Image* image)
 
 void ImageRemoveColor(Image* image, unsigned char red, unsigned char green, unsigned char blue)
 {
+}
+
+void* ImageDataPoint(const Image* const image, const size_t x, const size_t y)
+{
+    const size_t index = x * 3u + y * image->Width;
+
+    return (unsigned char*)image->PixelData + index;
+}
+
+void ImageDrawRectangle
+(
+    Image* const image, 
+    const size_t x,
+    const size_t y,
+    const size_t width, 
+    const size_t height, 
+    const unsigned char red, 
+    const unsigned char green, 
+    const unsigned char blue, 
+    const unsigned char alpha
+)
+{
+    //unsigned char* data = ImageDataPoint(image, x, y);
+
+    const size_t mimimumInBoundsX = MathMinimum(x + width, image->Width);
+    const size_t mimimumInBoundsY = MathMinimum(y + height, image->Height);
+    
+    for (size_t cy = y; cy < mimimumInBoundsY; ++cy)
+    {
+        for (size_t cx = x; cx < mimimumInBoundsX; ++cx)
+        {
+            const size_t index = cx *3u + cy * image->Width*3u;
+
+            ((unsigned char*)image->PixelData)[index+0] = red;
+            ((unsigned char*)image->PixelData)[index+1] = green;
+            ((unsigned char*)image->PixelData)[index+2] = blue;
+        }
+    }      
+}
+
+void ImageDrawTextA(Image* const image, const size_t x, const size_t y, const size_t width, const size_t height, const CFont* const font, const char* text)
+{
+    wchar_t textW[1024];
+
+    TextCopyAW(text, 1024, textW, 1024);
+
+    ImageDrawTextW(image, x, y, width, height, font, textW);
+}
+
+void ImageDrawTextW
+(
+    Image* const image,
+    const size_t x,
+    const size_t y,
+    const size_t width,
+    const size_t height,
+    const CFont* const font,
+    const wchar_t* text
+)
+{
+    float fontSize = 0.002;
+    size_t lastPositionX = x;
+
+
+    FNTPrtinf(&font->BitMapFont);
+
+    for (size_t i = 0; (i < 1024u) && (text[i] != '\0'); ++i)
+    {
+        const wchar_t character = text[i];
+        const FNTCharacter* fntCharacter = FNTGetCharacter(&font->BitMapFont, character);
+
+        if (!fntCharacter)
+        {
+            // Add red box?
+
+            continue;
+        }
+
+        float offsetX = fntCharacter->Offset[0];
+        float offsetY = fntCharacter->Offset[1];
+        float positionX = fntCharacter->Position[0];
+        float positionY = fntCharacter->Position[1];
+        float sizeX = fntCharacter->Size[0];
+        float sizeY = fntCharacter->Size[1];
+        
+
+        lastPositionX += fntCharacter->XAdvance;
+
+        ImageDrawRectangle(image, lastPositionX+ offsetX, y + offsetY, sizeX, sizeY, 0xFF, 0, 0xFF, 0);
+
+        lastPositionX += 15;
+    }
+}
+
+void ImageMerge(Image* const image, const size_t x, const size_t y, Image* const imageInsert)
+{
+
+
 }

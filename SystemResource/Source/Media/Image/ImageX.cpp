@@ -23,10 +23,10 @@ BF::Vector4<unsigned char> BF::ImageX::GetPixel(unsigned int x, unsigned int y)
 
     Vector4<unsigned char> pixel
     (
-        PixelData[pos++],
-        PixelData[pos++],
-        PixelData[pos++],
-        PixelData[pos++]
+        ((unsigned char*)PixelData)[pos++],
+        ((unsigned char*)PixelData)[pos++],
+        ((unsigned char*)PixelData)[pos++],
+        ((unsigned char*)PixelData)[pos++]
     );
 
     return pixel;
@@ -54,35 +54,14 @@ void BF::ImageX::FlipVertical()
 
 void BF::ImageX::Resize(const size_t width, const size_t height)
 {
-    unsigned int pixelSize;
-
-    Width = width;
-    Height = height;
-
-    switch (Format)
-    {
-        case ImageDataFormatAlphaMask:
-            pixelSize = 2;
-            break;
-
-        default:
-        case ImageDataFormatRGB:
-            pixelSize = 3;
-            break;
-        case ImageDataFormatRGBA:
-            pixelSize = 4;
-            break;
-    }
-
-    PixelDataSize = width * height * pixelSize;
-    PixelData = Memory::Reallocate<unsigned char>(PixelData, PixelDataSize);
+    ImageResize(this, ImageDataFormatRGB,width, height);
 }
 
 void BF::ImageX::FillRandome()
 {
     for (size_t i = 0; i < PixelDataSize; i++)
     {
-        PixelData[i] = MathRandomeNumber() % 255;
+        ((unsigned char*)PixelData)[i] = MathRandomeNumber() % 255;
     }
 }
 

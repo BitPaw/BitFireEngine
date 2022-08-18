@@ -6,24 +6,27 @@
 #include <Memory/Memory.h>
 #include <File/ParsingStream.h>
 
-FNTCharacter* FNTGetCharacter(FNT* fnt, const char character)
+FNTCharacter* FNTGetCharacter(FNT* fnt, const wchar_t character)
 {
 	if(fnt->FontPageListSize == 0)
 	{
 		return 0;
 	}
 
-	const FNTPage* page = &fnt->FontPageList[0];
-
-	for(size_t i = 0; i < page->CharacteListSize; i++)
+	for (size_t pageIndex = 0; pageIndex < fnt->FontPageListSize; ++pageIndex)
 	{
-		const FNTCharacter* bitMapFontCharacter = &page->CharacteList[i];
-		const unsigned char target = bitMapFontCharacter->ID;
-		const unsigned char isSameCharacter = target == character;
+		const FNTPage* page = &fnt->FontPageList[pageIndex];
 
-		if(isSameCharacter)
+		for (size_t i = 0; i < page->CharacteListSize; ++i)
 		{
-			return bitMapFontCharacter;
+			const FNTCharacter* bitMapFontCharacter = &page->CharacteList[i];
+			const unsigned char target = bitMapFontCharacter->ID;
+			const unsigned char isSameCharacter = target == character;
+
+			if (isSameCharacter)
+			{
+				return bitMapFontCharacter;
+			}
 		}
 	}
 
@@ -37,6 +40,7 @@ ActionResult FNTParse(FNT* fnt, const void* fileData, const size_t fileDataSize,
 	size_t characterIndex = 0;
 
 	ParsingStreamConstruct(&parsingStream, fileData, fileDataSize);
+	MemorySet(fnt, sizeof(FNT), 0);
 	*readBytes = 0;
 
 	while(!ParsingStreamIsAtEnd(&parsingStream))
@@ -130,7 +134,7 @@ ActionResult FNTParse(FNT* fnt, const void* fileData, const size_t fileDataSize,
 				{
 					const size_t size = fnt->CommonData.AmountOfPages;
 					const size_t sizeInBytes = sizeof(FNTPage) * size;
-					FNTPage* pageList = MemoryAllocate(sizeInBytes);
+					FNTPage* pageList = MemoryAllocateClear(sizeInBytes);					
 
 					fnt->FontPageListSize = size;
 					fnt->FontPageList = pageList;
@@ -202,7 +206,7 @@ ActionResult FNTParse(FNT* fnt, const void* fileData, const size_t fileDataSize,
 					const size_t sizeInBytes = sizeof(FNTCharacter) * size;
 
 					currentPage->CharacteListSize = size;
-					currentPage->CharacteList = MemoryAllocate(sizeInBytes);
+					currentPage->CharacteList = MemoryAllocateClear(sizeInBytes);
 				}				
 
 				characterIndex = 0;
@@ -215,9 +219,10 @@ ActionResult FNTParse(FNT* fnt, const void* fileData, const size_t fileDataSize,
 
 				if(acessCharacterOutofBounce)
 				{
-					++currentPage->CharacteListSize;
+					const size_t sizeCurrent = currentPage->CharacteListSize * sizeof(FNTPage);
+					const size_t sizeNew = currentPage->CharacteListSize * sizeof(FNTPage) + 1;
 
-					FNTCharacter* characteListR = MemoryReallocate(currentPage->CharacteList, currentPage->CharacteListSize);
+					FNTCharacter* characteListR = MemoryReallocateClear(currentPage->CharacteList, sizeCurrent, sizeNew);
 					const unsigned char adresschanged = characteListR != currentPage->CharacteList;
 
 					if(!characteListR)
@@ -225,6 +230,7 @@ ActionResult FNTParse(FNT* fnt, const void* fileData, const size_t fileDataSize,
 						// Error, out of memeory
 					}
 
+					currentPage->CharacteListSize++;
 					currentPage->CharacteList = characteListR;
 				}
 

@@ -73,7 +73,11 @@ extern "C"
 	//extern char MemoryAdvice(const void* adress, const size_t length, const FileCachingMode fileCachingMode);
 
 	extern void* MemoryAllocate(const size_t size);
+
+	// Allocate memory and clear is after. Its just a combination of malloc and memset
+	extern void* MemoryAllocateClear(const size_t size);
 	extern void* MemoryReallocate(void* adress, const size_t size);
+	extern void* MemoryReallocateClear(const void* const adress, const size_t sizeBefore, const size_t sizeAfter);
 	extern void MemoryRelease(const void* adress, const size_t size);
 
 	// Allocate memory in virtual memory space.

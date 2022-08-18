@@ -69,7 +69,7 @@ void BF::UIText::TextSet(const wchar_t* text)
 
 void BF::UIText::TextUpdate()
 {
-	FNT& bitmapFont = *((FNT*)(_font->BitMapFont));
+	//FNT& bitmapFont = *((FNT*)(_font->BitMapFont));
 
 #if 0 // Print font data
 	bitmapFont.PrintData();

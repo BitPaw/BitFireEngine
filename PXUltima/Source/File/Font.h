@@ -3,11 +3,16 @@
 
 #include <stddef.h>
 
-#include <File/Image.h>
+#include <Error/ActionResult.h>
+#include <File\Format\FNT\FNT.h>
 
 #ifdef __cplusplus
 extern "C"
 {
+#endif
+
+#ifndef Image_
+	typedef struct Image_ Image;
 #endif
 
 	typedef enum FontFileFormat_
@@ -24,10 +29,12 @@ extern "C"
 		unsigned short CharacterSize;
 		unsigned short SizeBetweenCharacters;
 		unsigned short SizeBetweenLines;
+
 		size_t AdditionalResourceListSize;
 		char** AdditionalResourceList;
+
 		Image* Texture;
-		void* BitMapFont;
+		FNT BitMapFont;
 	}
 	CFont;
 
@@ -48,6 +55,3 @@ extern "C"
 #endif
 
 #endif
-
-
-
