@@ -31,8 +31,8 @@ extern "C"
 	extern DeflateEncodingMethod ConvertToDeflateEncodingMethod(const unsigned char deflateEncodingMethod);
 	extern unsigned char ConvertFromDeflateEncodingMethod(const DeflateEncodingMethod deflateEncodingMethod);
 
-	extern int DEFLATEParse(const void* const inputBuffer, const size_t inputBufferSize, void* const outputBuffer, size_t* const outputBufferSize);
-	extern int DEFLATESerialize(const void* const inputBuffer, const size_t inputBufferSize, void* const outputBuffer, size_t* const outputBufferSize);
+	extern int DEFLATEParse(const void* const inputBuffer, const size_t inputBufferSize, void* const outputBuffer, const size_t outputBufferSize, size_t* const outputBufferSizeRead);
+	extern int DEFLATESerialize(const void* const inputBuffer, const size_t inputBufferSize, void* const outputBuffer, const size_t outputBufferSize, size_t* const outputBufferSizeWritten);
 
 #ifdef __cplusplus
 }

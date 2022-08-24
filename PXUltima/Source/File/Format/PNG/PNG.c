@@ -1864,13 +1864,13 @@ ActionResult PNGParseToImage(Image* const image, const void* const data, const s
 
 
     //---<Unpack compressed data>----------------------------------------------
-
+   {
     unsigned char* workingMemory = 0;
     size_t workingMemorySize = 0;
     const size_t bitsPerPixel = BitsPerPixel(&png);
 
     // ZLIB
-    {
+
         size_t writtenBytes = 0;
 
         const size_t expectedzlibCacheSize = ZLIBCalculateExpectedSize(png.ImageHeader.Width, png.ImageHeader.Height, bitsPerPixel, png.ImageHeader.InterlaceMethod);
@@ -1885,34 +1885,23 @@ ActionResult PNGParseToImage(Image* const image, const void* const data, const s
         {
             return actionResult;
         }
-    }
 
-    if(1)// png.ImageHeader.InterlaceMethod == PNGInterlaceADAM7)
-    {
-        // ADAM
+
         const size_t expectedadam7CacheSize = ADAM7CaluclateExpectedSize(png.ImageHeader.Width, png.ImageHeader.Height, bitsPerPixel);
 
         unsigned char* adam7Cache = MemoryAllocate(sizeof(unsigned char) * expectedadam7CacheSize);
 
         const unsigned int scanDecodeResult = ADAM7ScanlinesDecode(adam7Cache, workingMemory, png.ImageHeader.Width, png.ImageHeader.Height, bitsPerPixel, png.ImageHeader.InterlaceMethod);
-    
+
 
         // Color COmprerss
-        const unsigned int decompress = ImageDataDecompress(&png, adam7Cache, image->PixelData, png.ImageHeader.BitDepth, png.ImageHeader.ColorType); 
-  
-    
+        const unsigned int decompress = ImageDataDecompress(&png, adam7Cache, image->PixelData, png.ImageHeader.BitDepth, png.ImageHeader.ColorType);
+
+
         MemoryRelease(adam7Cache, expectedadam7CacheSize);
-    }
-    else
-    {
-        // Color COmprerss
-        unsigned int decompress = ImageDataDecompress(&png, workingMemory, image->PixelData, png.ImageHeader.BitDepth, png.ImageHeader.ColorType);
+        MemoryRelease(workingMemory, workingMemorySize);
 
-        decompress += 0;
-    }
-
-
-    MemoryRelease(workingMemory, workingMemorySize);
+    }   
  
     //-------------------------------------------------------------------------
 
@@ -2206,16 +2195,27 @@ ActionResult PNGSerializeFromImage(const Image* const image, void* data, const s
 
     // [IDAT] Image data	
     {
-        size_t written = 0;        
+        const size_t offsetSizeofChunk = parsingStream.DataCursor;
+
+        size_t written = 0; 
 
         ParsingStreamWriteIU(&parsingStream, 0u, EndianBig); // Length
-        ParsingStreamWriteD(&parsingStream, "IDAT", 4u);
- 
+        ParsingStreamWriteD(&parsingStream, "IDAT", 4u); 
 
         ZLIBCompress(image->PixelData, image->PixelDataSize, ParsingStreamCursorPosition(&parsingStream), ParsingStreamRemainingSize(&parsingStream), &written);
 
         parsingStream.DataCursor += written;
 
+        // update length 
+        {
+            const size_t oldPos = parsingStream.DataCursor; // save current position
+
+            parsingStream.DataCursor = offsetSizeofChunk; // jump to offset
+
+            ParsingStreamWriteIU(&parsingStream, written, EndianBig); // Length
+
+            parsingStream.DataCursor = oldPos; // Reset old position
+        }
 
         ParsingStreamWriteIU(&parsingStream, 0u, EndianBig); // CRC
     }

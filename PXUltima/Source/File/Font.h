@@ -47,7 +47,7 @@ extern "C"
 
 	extern ActionResult FontLoadA(CFont* const font, const char* filePath);
 	extern ActionResult FontLoadW(CFont* const font, const wchar_t* filePath);
-	extern ActionResult FontLoadD(CFont* const font, const FontFileFormat guessedFormat, const void* data, const size_t dataSize);
+	extern ActionResult FontLoadD(CFont* const font, const FontFileFormat guessedFormat, const void* data, const size_t dataSize, const wchar_t* const sourcePath);
 
 
 #ifdef __cplusplus

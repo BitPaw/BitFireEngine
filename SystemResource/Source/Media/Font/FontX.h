@@ -15,7 +15,7 @@ namespace BF
 		ActionResult Load(const wchar_t* filePath);
 		ActionResult Load(const unsigned char* fileData, const size_t fileDataSize, const FontFileFormat fontFormat);
 
-		ActionResult Save(const wchar_t* filePath, FontFileFormat fontFormat);
+		//ActionResult Save(const wchar_t* filePath, FontFileFormat fontFormat);
 		//---------------------------------------------------------------------
 	};
 }

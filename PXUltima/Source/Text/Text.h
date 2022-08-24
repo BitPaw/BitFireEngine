@@ -73,6 +73,8 @@ extern "C"
 	extern size_t TextToDoubleA(const char* string, const size_t dataSize, double* number);
 	extern size_t TextToDoubleW(const wchar_t* string, const size_t dataSize, double* number);
 
+	extern size_t TextAppendW(wchar_t* const dataString, const size_t dataStringSize, const wchar_t* const appaendString, const size_t appaendStringSize);
+
 	extern size_t TextClearA(char* string, const size_t stringSize);
 	extern size_t TextClearW(wchar_t* string, const size_t stringSize);
 

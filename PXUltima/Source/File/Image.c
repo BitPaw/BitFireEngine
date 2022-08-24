@@ -190,6 +190,9 @@ ActionResult ImageSaveA(Image* const image, const char* const filePath, const Im
 
 ActionResult ImageSaveW(Image* const image, const wchar_t* const filePath, const ImageFileFormat fileFormat, const ImageDataFormat dataFormat)
 {
+    wchar_t filePathW[PathMaxSize];
+    wchar_t* fileExtension = 0;
+
     size_t fileSize = 0;
     size_t writtenBytes = 0;
     File file;  
@@ -204,36 +207,42 @@ ActionResult ImageSaveW(Image* const image, const wchar_t* const filePath, const
         {
             fileSize = BMPFilePredictSize(image->Width, image->Height, ImageBitsPerPixel(dataFormat));
             serializeFromImageFunction = BMPSerializeFromImage;
+            fileExtension = L"bmp";
             break;
         }
         case ImageFileFormatPNG:
         {
             fileSize = PNGFilePredictSize(image->Width, image->Height, ImageBitsPerPixel(dataFormat));
             serializeFromImageFunction = PNGSerializeFromImage;
+            fileExtension = L"png";
             break;
         }
         case ImageFileFormatTGA:
         {
             fileSize = TGAFilePredictSize(image->Width, image->Height, ImageBitsPerPixel(dataFormat));
             serializeFromImageFunction = TGASerializeFromImage;
+            fileExtension = L"tga";
             break;
         }
         case ImageFileFormatJPEG:
         {
             fileSize = JPEGFilePredictSize(image->Width, image->Height, ImageBitsPerPixel(dataFormat));
             serializeFromImageFunction = JPEGSerializeFromImage;
+            fileExtension = L"jpg";
             break;
         }
         case ImageFileFormatTIFF:
         {
             fileSize = TIFFFilePredictSize(image->Width, image->Height, ImageBitsPerPixel(dataFormat));
             serializeFromImageFunction = TIFFSerializeFromImage;
+            fileExtension = L"tiff";
             break;
         }
         case ImageFileFormatGIF:
         {
             fileSize = GIFFilePredictSize(image->Width, image->Height, ImageBitsPerPixel(dataFormat));
             serializeFromImageFunction = GIFSerializeFromImage;
+            fileExtension = L"gif";
             break;
         }
         case ImageFileFormatUnkown:
@@ -242,8 +251,13 @@ ActionResult ImageSaveW(Image* const image, const wchar_t* const filePath, const
     }
 
 
+    // Chnage file extension
     {
-        const ActionResult mappingResult = FileMapToVirtualMemoryW(&file, filePath, fileSize, MemoryWriteOnly);
+        FilePathSwapExtensionW(filePath, filePathW, fileExtension);
+    }
+
+    {
+        const ActionResult mappingResult = FileMapToVirtualMemoryW(&file, filePathW, fileSize, MemoryWriteOnly);
         const unsigned char sucessful = ResultSuccessful == mappingResult;
 
         if(!sucessful)
@@ -266,7 +280,7 @@ ActionResult ImageSaveW(Image* const image, const wchar_t* const filePath, const
 
     FileDestruct(&file);
 
-    return ResultInvalid;
+    return ResultSuccessful;
 }
 
 ActionResult ImageSaveD(Image* const image, void* const data, const size_t dataSize, const ImageFileFormat fileFormat, const ImageDataFormat dataFormat)
@@ -328,7 +342,7 @@ void ImageFlipVertical(Image* image)
 {
     const size_t bbp = ImageBytePerPixel(image->Format);;
     const size_t scanLineWidthSize = image->Width * bbp;
-    const size_t scanLinesToSwap = image->Height / 2;
+    const size_t scanLinesToSwap = image->Height / 2u;
     unsigned char* copyBufferRow = MemoryAllocate(sizeof(unsigned char) * scanLineWidthSize);
 
     if(!copyBufferRow)

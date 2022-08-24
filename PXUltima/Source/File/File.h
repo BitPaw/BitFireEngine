@@ -197,6 +197,8 @@ extern "C"
 	extern ActionResult FileCopyW(const wchar_t* sourceFilePath, const wchar_t* destinationFilePath);
 
 	extern void FilePathSwapFile(const wchar_t* currnetPath, wchar_t* targetPath, const wchar_t* newFileName);
+	extern void FilePathSwapFileNameW(const wchar_t* const inputPath, wchar_t* const exportPath, const wchar_t* const fileName);
+	extern void FilePathSwapExtensionW(const wchar_t* const inputPath, wchar_t* const exportPath, const wchar_t* const fileExtension);
 	//---------------------------------------------------------------------
 
 	//---<Directory>-------------------------------------------------------

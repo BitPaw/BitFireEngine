@@ -10,7 +10,7 @@
 
 FNTCharacter* FNTGetCharacter(FNT* fnt, const wchar_t character)
 {
-	if(fnt->FontPageListSize == 0)
+	if(!fnt)
 	{
 		return 0;
 	}

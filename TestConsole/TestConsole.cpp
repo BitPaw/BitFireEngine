@@ -193,7 +193,7 @@ void ImageWriteText()
 
     ImageSaveA(&image, "D:/_Data/TEST_TextWrite.bmp", ImageFileFormatBitMap, ImageDataFormatRGB);
     ImageSaveA(&image, "D:/_Data/TEST_TextWrite.jpeg", ImageFileFormatJPEG, ImageDataFormatRGB);
-    ImageSaveA(&image, "D:/_Data/TEST_TextWrite.png", ImageFileFormatPNG, ImageDataFormatRGB);
+    ImageSaveA(&image, "D:/_Data/TEST_TextWrite.png", ImageFileFormatPNG, ImageDataFormatRGBA);
 
     ImageDestruct(&image);
 }

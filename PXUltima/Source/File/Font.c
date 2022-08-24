@@ -61,8 +61,24 @@ ActionResult FontLoadW(CFont* const font, const wchar_t* filePath)
     }
 
     {
+        wchar_t filePathDirectory[256];
+
+        size_t index = TextFindLastW(filePath, 256, '/');
+
+        if (index == -1)
+        {
+            index = 0;
+        }
+        else
+        {
+            index += 1;
+        }
+
+        TextCopyW(filePath, index, filePathDirectory, 256);
+
+
         const FontFileFormat hint = FontGuessFormat(filePath);
-        const ActionResult fileParsingResult = FontLoadD(font, hint, file.Data, file.DataSize);
+        const ActionResult fileParsingResult = FontLoadD(font, hint, file.Data, file.DataSize, filePathDirectory);
         const unsigned char success = fileParsingResult == ResultSuccessful;
 
         if(success)
@@ -77,7 +93,7 @@ ActionResult FontLoadW(CFont* const font, const wchar_t* filePath)
         {
             const ImageFileFormat imageFileFormat = fileGuessResult + fileFormatID;
 
-            fileGuessResult = FontLoadD(font, imageFileFormat, file.Data, file.DataSize);
+            fileGuessResult = FontLoadD(font, imageFileFormat, file.Data, file.DataSize, filePathDirectory);
 
             fileFormatID++;
         }
@@ -89,7 +105,7 @@ ActionResult FontLoadW(CFont* const font, const wchar_t* filePath)
     FileDestruct(&file);
 }
 
-ActionResult FontLoadD(CFont* const font, const FontFileFormat guessedFormat, const void* data, const size_t dataSize)
+ActionResult FontLoadD(CFont* const font, const FontFileFormat guessedFormat, const void* data, const size_t dataSize, const wchar_t* const sourcePath)
 {
     FontConstruct(font);
 
@@ -103,7 +119,7 @@ ActionResult FontLoadD(CFont* const font, const FontFileFormat guessedFormat, co
             {
 
                 size_t readBytes = 0;
-                const ActionResult fileActionResult = FNTParse(font->FontElement, data, dataSize, &readBytes, L"D:/_Data/");
+                const ActionResult fileActionResult = FNTParse(font->FontElement, data, dataSize, &readBytes, sourcePath);
                 const unsigned char sucessful = ResultSuccessful == fileActionResult;
 
                 if(!sucessful)

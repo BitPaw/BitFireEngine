@@ -165,7 +165,7 @@ ActionResult ZLIBDecompress(const void* const inputData, const size_t inputDataS
     {
         case ZLIBCompressionMethodDeflate:
         {
-            int deflateResult = DEFLATEParse(zlib.CompressedData, zlib.CompressedDataSize, outputData, outputDataSizeRead);
+            int deflateResult = DEFLATEParse(zlib.CompressedData, zlib.CompressedDataSize, outputData, outputDataSize, outputDataSizeRead);
 
             if(deflateResult)
             {
@@ -231,9 +231,11 @@ ActionResult ZLIBCompress(const void* const inputData, const size_t inputDataSiz
 
     // Wirte Data
     {
-        const unsigned int value = DEFLATESerialize(inputData, inputDataSize, (const unsigned char* const)outputData + 2u, outputDataSize - 4u);
+        size_t sizeWritten = 0;
 
+        const unsigned int value = DEFLATESerialize(inputData, inputDataSize, (const unsigned char* const)outputData + 2u, outputDataSize - 4u, &sizeWritten);
 
+        ParsingStreamCursorAdvance(&parsingSteam, sizeWritten);
     }
 
     // Write ADLER
@@ -242,6 +244,10 @@ ActionResult ZLIBCompress(const void* const inputData, const size_t inputDataSiz
 
         ParsingStreamWriteIU(&parsingSteam, adler, EndianBig);
     }
+
+    *outputDataSizeWritten = parsingSteam.DataCursor;
+
+    return ResultSuccessful;
 }
 
 size_t ZLIBCalculateExpectedSize(const size_t width, const size_t height, const size_t bpp, const PNGInterlaceMethod interlaceMethod)

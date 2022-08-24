@@ -921,7 +921,7 @@ void CWindowEventHandler(CWindow* const cWindow, const XEvent* const event)
     }
 }
 #elif defined(OSWindows)
-LRESULT CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK CWindowEventHandler(HWND windowsID, UINT eventID, WPARAM wParam, LPARAM lParam)
 {
     const WindowEventType windowEventType = ToWindowEventType(eventID);
     CWindow* window = CWindowLookupFind(windowsID);

@@ -220,6 +220,15 @@ size_t TextToDoubleW(const wchar_t* string, const size_t dataSize, double* numbe
 	return 0;
 }
 
+size_t TextAppendW(wchar_t* const dataString, const size_t dataStringSize, const wchar_t* const appaendString, const size_t appaendStringSize)
+{
+	const size_t length = TextLengthW(dataString, dataStringSize);
+	const size_t lengthAdded = TextCopyW(appaendString, appaendStringSize, &dataString[length], dataStringSize - length);
+	const size_t fullSize = length + lengthAdded;
+
+	return fullSize;
+}
+
 size_t TextClearA(char* string, const size_t stringSize)
 {
 	MemorySet(string, stringSize * sizeof(char), 0x00);

@@ -3,6 +3,7 @@
 #include <Memory/Memory.h>
 #include <File/Format/HUFFMAN/HuffmanTree.h>
 #include <File/BitStream.h>
+#include <File/ParsingStream.h>
 
 #define DeflateEncodingInvalidID -1
 #define DeflateEncodingLiteralRawID 0b00
@@ -50,7 +51,7 @@ unsigned char ConvertFromDeflateEncodingMethod(const DeflateEncodingMethod defla
     }
 }
 
-int DEFLATEParse(const void* const inputBuffer, const size_t inputBufferSize, void* const outputBuffer, size_t* const outputBufferSize)
+int DEFLATEParse(const void* const inputBuffer, const size_t inputBufferSize, void* const outputBuffer, const size_t outputBufferSize, size_t* const outputBufferSizeRead)
 { 
     BitStream bitStream;
     DeflateBlock deflateBlock;
@@ -87,9 +88,9 @@ int DEFLATEParse(const void* const inputBuffer, const size_t inputBufferSize, vo
 
                 //assert(validLength);
 
-                MemoryCopy(sourceAdress, BitStreamRemainingSize(&bitStream), (unsigned char*)outputBuffer + *outputBufferSize, length);
+                MemoryCopy(sourceAdress, BitStreamRemainingSize(&bitStream), (unsigned char*)outputBuffer + *outputBufferSizeRead, length);
 
-                *outputBufferSize += length;
+                *outputBufferSizeRead += length;
 
                 BitStreamCursorMoveInBytes(&bitStream, length);
 
@@ -141,7 +142,7 @@ int DEFLATEParse(const void* const inputBuffer, const size_t inputBufferSize, vo
                         case HuffmanCodeLiteral:
                         {
                             // printf("[Symbol] <%2x>(%3i) Literal.\n", resultLengthCode, resultLengthCode);
-                            ((unsigned char*)outputBuffer)[(*outputBufferSize)++] = resultLengthCode;
+                            ((unsigned char*)outputBuffer)[(*outputBufferSizeRead)++] = resultLengthCode;
                             break;
                         }
                         case HuffmanCodeLength:
@@ -214,11 +215,11 @@ int DEFLATEParse(const void* const inputBuffer, const size_t inputBufferSize, vo
                             }
 
                             /*part 5: fill in all the out[n] values based on the length and dist*/
-                            start = (*outputBufferSize);
+                            start = (*outputBufferSizeRead);
                             if(distance > start) return (52); /*too long backward distance*/
                             backward = start - distance;
 
-                            (*outputBufferSize) += length;
+                            (*outputBufferSizeRead) += length;
 
                             // if (!ucvector_resize(out, out->size + length)) ERROR_BREAK(83 /*alloc fail*/);
 
@@ -256,35 +257,63 @@ int DEFLATEParse(const void* const inputBuffer, const size_t inputBufferSize, vo
     }
     while(!deflateBlock.IsLastBlock);   
 
-    return bitStream.DataCursor;
+    //*outputBufferSizeRead = bitStream.DataCursor;
+
+    return 0;
 }
 
-int DEFLATESerialize(const void* const inputBuffer, const size_t inputBufferSize, void* const outputBuffer, size_t* const outputBufferSize)
+int DEFLATESerialize(const void* const inputBuffer, const size_t inputBufferSize, void* const outputBuffer, const size_t outputBufferSize, size_t* const outputBufferSizeWritten)
 {
-    BitStream bitStream;
+    const size_t numdeflateblocks = (inputBufferSize + 65534u) / 65535u;
+    size_t currentBlock = 0;
+
     DeflateBlock deflateBlock;
+    deflateBlock.IsLastBlock = 0;
+    deflateBlock.EncodingMethod = 0;
+    
+    ParsingStream inputSteam;
+    BitStream outputBitStream;
 
-    BitStreamConstruct(&bitStream, inputBuffer, inputBufferSize);
+    ParsingStreamConstruct(&inputSteam, inputBuffer, inputBufferSize);
+    BitStreamConstruct(&outputBitStream, outputBuffer, outputBufferSize);   
 
-    do
+    while(!deflateBlock.IsLastBlock)
     {   
-        deflateBlock.IsLastBlock = 1u;
-        deflateBlock.EncodingMethod = DeflateEncodingHuffmanDynamic;
-     
+        deflateBlock.IsLastBlock = (currentBlock == numdeflateblocks - 2);
+        deflateBlock.EncodingMethod = DeflateEncodingLiteralRaw;
 
         // Write block
         {
             unsigned char isLastBlock = deflateBlock.IsLastBlock;
             unsigned char encodingMethod = ConvertFromDeflateEncodingMethod(deflateBlock.EncodingMethod);          
 
-            BitStreamWrite(&bitStream, isLastBlock, 1u);
-            BitStreamWrite(&bitStream, encodingMethod, 2u);         
+            BitStreamWrite(&outputBitStream, isLastBlock, 1u);
+            BitStreamWrite(&outputBitStream, encodingMethod, 2u);         
         }       
+
+        ++currentBlock;
 
         switch(deflateBlock.EncodingMethod)
         {
             case DeflateEncodingLiteralRaw:
             {
+                ParsingStream parsingStream;
+
+                BitStreamSkipBitsToNextByte(&outputBitStream);               
+
+                ParsingStreamConstruct(&parsingStream, BitStreamCursorPosition(&outputBitStream), BitStreamRemainingSize(&outputBitStream));
+
+                const size_t remainingInputSize = ParsingStreamRemainingSize(&inputSteam);
+
+                const unsigned char isFullyConsumable = inputBufferSize - remainingInputSize < 65535u;
+                const unsigned short length = isFullyConsumable ? 65535u : inputBufferSize - remainingInputSize;
+                const unsigned short lengthInverse = 65535u - length;                
+
+                outputBitStream.DataCursor += ParsingStreamWriteSU(&parsingStream, length, EndianBig);
+                outputBitStream.DataCursor += ParsingStreamWriteSU(&parsingStream, lengthInverse, EndianBig);
+                                
+                outputBitStream.DataCursor += ParsingStreamReadD(&parsingStream, BitStreamCursorPosition(&outputBitStream), length);
+
                 break;
             }
             case DeflateEncodingHuffmanStatic:
@@ -301,7 +330,8 @@ int DEFLATESerialize(const void* const inputBuffer, const size_t inputBufferSize
                 return ResultFormatInvalid;
         }
     }
-    while(!deflateBlock.IsLastBlock);
 
-    return bitStream.DataCursor;
+    *outputBufferSizeWritten = outputBitStream.DataCursor;
+
+    return 0;
 }

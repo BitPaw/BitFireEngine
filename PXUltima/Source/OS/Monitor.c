@@ -4,7 +4,7 @@
 
 #if defined(OSUnix)
 #elif defined(OSWindows)
-BOOL MonitorListCallBack(HMONITOR monitorHandle, HDC hdcMonitor, LPRECT rectangle, LPARAM data)
+BOOL _stdcall MonitorListCallBack(HMONITOR monitorHandle, HDC hdcMonitor, LPRECT rectangle, LPARAM data)
 {
 	MONITORINFOEXW monitorInfo;
 

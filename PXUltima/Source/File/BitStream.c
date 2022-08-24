@@ -71,7 +71,29 @@ size_t BitStreamRead(BitStream* bitStream, const size_t amountOfBits)
 
 size_t BitStreamWrite(BitStream* const bitStream, const size_t bitData, const size_t amountOfBits)
 {
-	return 0;
+	unsigned char* currentPos = BitStreamCursorPosition(bitStream);
+
+	unsigned char* a = currentPos;
+	unsigned char* b = currentPos +1;
+	unsigned char* c = currentPos+2;
+	unsigned char* d = currentPos+3;
+
+	size_t moveCounter = 0;
+
+	for(size_t i = 1; i <= amountOfBits; i++)
+	{
+		unsigned char bit = bitData << i;
+
+		*currentPos += bit;
+		*currentPos << 1;
+
+		bitStream->BitOffset++;
+		moveCounter++;
+	}
+
+	BitStreamAllign(bitStream);
+
+	return moveCounter;
 }
 
 size_t BitStreamReadFullByte(BitStream* bitStream)
