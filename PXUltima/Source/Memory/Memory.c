@@ -225,6 +225,11 @@ void* MemoryReallocateClear(const void* const adress, const size_t sizeBefore, c
 
 void MemoryRelease(const void* adress, const size_t size)
 {
+	if(!adress || !size)
+	{
+		return;
+	}
+
 #if MemoryDebug
 	printf("[#][Memory] 0x%p (%10zi B) Free\n", adress, size);
 #endif

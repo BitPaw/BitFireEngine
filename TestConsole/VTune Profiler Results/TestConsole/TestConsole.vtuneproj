@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+ <rdmgr>
+  <timestamp type="u64_t">1661012461</timestamp>
+  <hostname>BitPaw</hostname>
+  <os>windows</os>
+  <product>Intel® VTune™ Profiler 2022.3.0</product>
+  <buildNumber type="s32_t">624050</buildNumber>
+  <logicalCPUCount type="s32_t">8</logicalCPUCount>
+  <physicalCoreCount type="s32_t">4</physicalCoreCount>
+  <processorPackageCount type="s32_t">1</processorPackageCount>
+  <CPUFrequency type="s64_t">4000000000</CPUFrequency>
+  <CPUFamily type="s32_t">6</CPUFamily>
+  <CPUModel type="s32_t">94</CPUModel>
+  <CPUStepping type="s32_t">3</CPUStepping>
+  <CPUBrandName>Intel(R) Core(TM) i7-6700K CPU @ 4.00GHz</CPUBrandName>
+  <isa>avx2</isa>
+ </rdmgr>
+ <vs_search_dirs>
+  <searchDirs>
+   <searchCategory>
+    <category type="u8_t">1</category>
+    <searchDirectory>
+     <name>D:\_Data\Git\BitFireEngine\x64\Debug</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>A:\Programme\Visual Studio\2019\VC\Tools\MSVC\14.29.30133\bin\HostX86\x64</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>A:\Programme\Visual Studio\2019\VC\Tools\MSVC\14.29.30133\bin\HostX86\x86</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x86</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>A:\Programme\Visual Studio\2019\Common7\tools</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>A:\Programme\Visual Studio\2019\Common7\ide</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Program Files (x86)\HTML Help Workshop</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>A:\Programme\Visual Studio\2019\MSBuild\Current\Bin</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\ProgramData\Oracle\Java\javapath</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Program Files\Eclipse Foundation\jdk-8.0.302.8-hotspot\bin</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\_Anwendungen\Vulcan SDK\1.2.135.0\Bin</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Program Files (x86)\Common Files\Oracle\Java\javapath</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Windows\system32</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Windows</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Windows\System32\Wbem</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Windows\System32\WindowsPowerShell\v1.0\</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Program Files\dotnet\</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Program Files\Microsoft SQL Server\130\Tools\Binn\</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\_Anwendungen\PuTTY\</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\_Anwendungen\CMake\bin</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\_Anwendungen\Git\cmd</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Program Files (x86)\dotnet\</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Users\BitPaw\AppData\Local\Microsoft\WindowsApps</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Users\BitPaw\AppData\Local\GitHubDesktop\bin</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\_Compiler\MinGW\bin</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\_Anwendungen\Java\9\JRE\bin</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>D:\_Data\Git\BitFireEngine</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+   </searchCategory>
+   <searchCategory>
+    <category type="u8_t">2</category>
+    <searchDirectory>
+     <name>D:\_Data\Git\BitFireEngine\x64\Debug</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>D:\_Data\Git\BitFireEngine</name>
+     <recursive type="bool">true</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>srv*C:\Users\BitPaw\AppData\Local\Temp\SymbolCache*;https://msdl.microsoft.com/download/symbols</name>
+     <recursive type="bool">true</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Users\BitPaw\AppData\Local\Temp\SymbolCache</name>
+     <recursive type="bool">true</recursive>
+     <priority type="bool">true</priority>
+    </searchDirectory>
+   </searchCategory>
+   <searchCategory>
+    <category type="u8_t">3</category>
+    <searchDirectory>
+     <name>D:\_Data\Git\BitFireEngine\TestConsole</name>
+     <recursive type="bool">true</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>A:\Programme\Visual Studio\2019\VC\Tools\MSVC\14.29.30133\atlmfc\src\mfc</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>A:\Programme\Visual Studio\2019\VC\Tools\MSVC\14.29.30133\atlmfc\src\mfcm</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>A:\Programme\Visual Studio\2019\VC\Tools\MSVC\14.29.30133\atlmfc\src\atl</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>A:\Programme\Visual Studio\2019\VC\Tools\MSVC\14.29.30133\crt\src</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Program Files (x86)\Windows Kits\10\Source\10.0.19041.0\ucrt</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>D:\_Data\Git\BitFireEngine\__Dependencies__/include/</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>D:\_Data\Git\BitFireEngine\PXUltima/Source</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>D:\_Data\Git\BitFireEngine\SystemResource/Source/</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>A:\Programme\Visual Studio\2019\VC\Tools\MSVC\14.29.30133\include</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>A:\Programme\Visual Studio\2019\VC\Tools\MSVC\14.29.30133\atlmfc\include</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>A:\Programme\Visual Studio\2019\VC\Auxiliary\VS\include</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\um</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\shared</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\winrt</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\cppwinrt</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+    <searchDirectory>
+     <name>C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\Include\um</name>
+     <recursive type="bool">false</recursive>
+     <priority type="bool">false</priority>
+    </searchDirectory>
+   </searchCategory>
+   <searchCategory>
+    <category type="u8_t">4</category>
+   </searchCategory>
+  </searchDirs>
+ </vs_search_dirs>
+</root>

@@ -112,6 +112,11 @@ ActionResult GIFLoad(GIF* gif, const void* data, const size_t dataSize, size_t* 
     return ResultSuccessful;
 }
 
+ActionResult GIFParseToImage(Image* const image, const void* const data, const size_t dataSize, size_t* dataRead)
+{
+    return ResultInvalid;
+}
+
 ActionResult GIFSerializeFromImage(const Image* const image, void* data, const size_t dataSize, size_t* dataWritten)
 {
     return ResultInvalid;

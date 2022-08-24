@@ -43,6 +43,11 @@ ActionResult TIFFParse(TIFF* tiff, const void* data, const size_t dataSize, size
     return ResultSuccessful;
 }
 
+ActionResult TIFFParseToImage(Image* const image, const void* const data, const size_t dataSize, size_t* dataRead)
+{
+    return ResultInvalid;
+}
+
 ActionResult TIFFSerializeFromImage(const Image* const image, void* data, const size_t dataSize, size_t* dataWritten)
 {
     return ResultInvalid;

@@ -166,34 +166,34 @@ void ImageWriteText()
     Image image;
     CFont font;
 
-  
+    Image imageAA;
+    //ActionResult dfsdsfdsf = ImageLoadA(&imageAA, "D:/_Data/A.png");
 
     ImageConstruct(&image);
 
-    ActionResult actionResult = FontLoadA(&font, "D:/_Data/A.fnt");
 
-    FNTPrtinf(&font.BitMapFont);
+
+    ActionResult actionResult = FontLoadA(&font, "D:/_Data/A.fnt");
+    ActionResult loadResult = ImageLoadA(&image, "D:/_Data/ImageInput.bmp");
 
     // Write image data
     {
         const size_t width = 512u * 1;
         const size_t height = 512u * 1;
 
-        ImageResize(&image, ImageDataFormatRGB, width, height);
+        ImageResize(&image, ImageDataFormatRGB, width, height);     
 
-     
-
-        ImageDrawRectangle(&image, 0,0, width, height, 0xFF, 0xFF, 0xFF, 0xFF);
+        //ImageDrawRectangle(&image, 0,0, width, height, 0xFF, 0xFF, 0xFF, 0xFF);
         ImageDrawRectangle(&image, 10, 10, 10, 10, 0xFF, 0x00, 0x00, 0x00);
         ImageDrawRectangle(&image, 10, 30, 10, 10, 0x00, 0xFF, 0x00, 0x00);
         ImageDrawRectangle(&image, 10, 50, 10, 10, 0x00, 0x00, 0xFF, 0x00);
 
-
-
-        ImageDrawTextA(&image, 30, 30, 100, 30, &font, "Hello World");
+        ImageDrawTextA(&image, 10, 70, 100, 30, &font, "Hello World");
     }
 
     ImageSaveA(&image, "D:/_Data/TEST_TextWrite.bmp", ImageFileFormatBitMap, ImageDataFormatRGB);
+    ImageSaveA(&image, "D:/_Data/TEST_TextWrite.jpeg", ImageFileFormatJPEG, ImageDataFormatRGB);
+    ImageSaveA(&image, "D:/_Data/TEST_TextWrite.png", ImageFileFormatPNG, ImageDataFormatRGB);
 
     ImageDestruct(&image);
 }
@@ -425,7 +425,7 @@ int main()
     const bool sucessfulddd = iiuiiii == ResultSuccessful;
 
     size_t parsedBytes = 0;
-    const ActionResult fileParsingResult = FNTParse(&font, file.Data, file.DataSize, &parsedBytes);
+    const ActionResult fileParsingResult = ResultSuccessful;// FNTParse(&font, file.Data, file.DataSize, &parsedBytes);
 
     float loadningTime = sw.Reset();
 

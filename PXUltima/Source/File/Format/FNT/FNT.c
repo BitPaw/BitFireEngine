@@ -5,6 +5,8 @@
 #include <Text/Text.h>
 #include <Memory/Memory.h>
 #include <File/ParsingStream.h>
+#include <File/File.h>
+#include <File/Image.h>
 
 FNTCharacter* FNTGetCharacter(FNT* fnt, const wchar_t character)
 {
@@ -33,7 +35,7 @@ FNTCharacter* FNTGetCharacter(FNT* fnt, const wchar_t character)
 	return 0;
 }
 
-ActionResult FNTParse(FNT* fnt, const void* fileData, const size_t fileDataSize, size_t* readBytes)
+ActionResult FNTParse(FNT* fnt, const void* fileData, const size_t fileDataSize, size_t* readBytes, const wchar_t* filePath)
 {
 	ParsingStream parsingStream;
 	FNTPage* currentPage = 0;
@@ -166,15 +168,35 @@ ActionResult FNTParse(FNT* fnt, const void* fileData, const size_t fileDataSize,
 				);
 
 				TextToIntA(indexPosition[0], 5, &currentPage->PageID);
-				TextCopyA
-				(
-					indexPosition[1] + 1,
-					ParsingStreamRemainingSize(&parsingStream),
-					currentPage->PageFileName,
-					FNTPageFileNameSize - 1
-				);
 
-				TextTerminateBeginFromFirstA(currentPage->PageFileName, FNTPageFileNameSize, '\"');
+
+				// Loadin Image
+				{
+					char fullPath[PathMaxSize];
+					char pageFileName[FNTPageFileNameSize];					
+
+					const size_t length = TextCopyWA(filePath, PathMaxSize, fullPath, FNTPageFileNameSize);
+
+					TextCopyA
+					(
+						indexPosition[1] + 1,
+						ParsingStreamRemainingSize(&parsingStream),
+						pageFileName,
+						FNTPageFileNameSize - 1
+					);
+
+					TextTerminateBeginFromFirstA(pageFileName, FNTPageFileNameSize, '\"');
+
+					TextCopyA
+					(
+						pageFileName,
+						FNTPageFileNameSize,
+						fullPath + length,
+						FNTPageFileNameSize
+					);
+
+					const ActionResult actionResult = ImageLoadA(&currentPage->FontTextureMap, fullPath);
+				}				
 
 				break;
 			}
@@ -354,7 +376,7 @@ void FNTPrtinf(const FNT* fnt)
 		//printf(" |          |       |       |       |       |       |       |       |\n");
 		printf("\n");
 		printf(" +----------+-------+-------+-------+-------+-------+-------+-------|\n");
-		printf(" | Page <%zu/%zu> %s\n", pageIndex + 1, fnt->FontPageListSize, page->PageFileName);
+		printf(" | Page <%zu/%zu> \n", pageIndex + 1, fnt->FontPageListSize);
 		printf(" +----------+-------+-------+-------+-------+-------+-------+-------|\n");
 		printf(" | Letter   | X-Pos | Y-Pos | Width | Height| X-Off | Y-Off | X-Step|\n");
 		printf(" +----------+-------+-------+-------+-------+-------+-------+-------|\n");

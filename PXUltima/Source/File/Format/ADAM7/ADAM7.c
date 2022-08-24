@@ -49,12 +49,12 @@ unsigned int ADAM7ScanlinesDecode(unsigned char* out, unsigned char* in, size_t 
         }    
         case PNGInterlaceADAM7:
         {
-            unsigned passw[7], passh[7]; size_t filter_passstart[8], padded_passstart[8], passstart[8];
-            unsigned i;
+            unsigned passw[7], passh[7];
+            size_t filter_passstart[8], padded_passstart[8], passstart[8];
 
             ADAM7_getpassvalues(passw, passh, filter_passstart, padded_passstart, passstart, width, height, bpp);
 
-            for (i = 0; i != 7; ++i)
+            for (size_t i = 0; i != 7u; ++i)
             {
                 CERROR_TRY_RETURN(ADAM7unfilter(&in[padded_passstart[i]], &in[filter_passstart[i]], passw[i], passh[i], bpp));
                 /*TODO: possible efficiency improvement: if in this reduced image the bits fit nicely in 1 scanline,

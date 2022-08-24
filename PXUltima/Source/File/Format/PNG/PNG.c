@@ -30,7 +30,7 @@ unsigned int color_tree_add(PNGColorTree* tree, unsigned char r, unsigned char g
     return 0;
 }
 
-unsigned int Decompress(const unsigned char* pixelDataIn, unsigned char* pixelDataOut, size_t width, size_t height, unsigned char bitDepth, PNGColorType colorType)
+unsigned int ImageDataDecompress(const PNG* const png, const unsigned char* pixelDataIn, unsigned char* pixelDataOut, unsigned char bitDepth, PNGColorType colorType)
 {
     LodePNGColorMode colorModeIn;
     LodePNGColorMode colorModeOut;
@@ -55,30 +55,37 @@ unsigned int Decompress(const unsigned char* pixelDataIn, unsigned char* pixelDa
             colorModeIn.colortype = LCT_GREY;
             break;
 
-        case PNGColorTruecolor:
+        case PNGColorRGB:
             colorModeIn.colortype = LCT_RGB;
+            colorModeOut.colortype = LCT_RGB;
             break;
 
-        case PNGColorIndexedColor:
+        case PNGColorPalette:
             colorModeIn.colortype = LCT_PALETTE;
+            colorModeOut.colortype = LCT_RGBA;
             break;
 
-        case PNGColorGrayscaleWithAlphaChannel:
+        case PNGColorGrayscaleAlpha:
             colorModeIn.colortype = LCT_GREY_ALPHA;
             break;
 
-        case PNGColorTruecolorWithAlphaChannel:
+        case PNGColorRGBA:
             colorModeIn.colortype = LCT_RGBA;
+            colorModeOut.colortype = LCT_RGBA;
             break;
     }
 
     colorModeOut.bitdepth = colorModeIn.bitdepth;
-    colorModeOut.colortype = colorModeIn.colortype;
+   // colorModeOut.colortype = colorModeIn.colortype;
 
-    size_t i;
     PNGColorTree tree;
-    size_t numpixels = width * height;
+    const size_t width = png->ImageHeader.Width;
+    const size_t height = png->ImageHeader.Height;
+    const size_t numpixels = width * height ;
     unsigned error = 0;
+
+    colorModeIn.palettesize = png->PaletteSize;
+    colorModeIn.palette = png->Palette;
 
     if(colorModeIn.colortype == LCT_PALETTE && !colorModeIn.palette)
     {
@@ -110,7 +117,7 @@ unsigned int Decompress(const unsigned char* pixelDataIn, unsigned char* pixelDa
             if(colorModeIn.colortype == LCT_PALETTE && colorModeIn.bitdepth == colorModeOut.bitdepth)
             {
                 size_t numbytes = lodepng_get_raw_size(width, height, &colorModeIn);
-                memcpy(pixelDataOut, pixelDataIn, numbytes);
+                MemoryCopy(pixelDataIn, numbytes, pixelDataOut, numbytes);
                 return 0;
             }
         }
@@ -118,10 +125,10 @@ unsigned int Decompress(const unsigned char* pixelDataIn, unsigned char* pixelDa
 
         // color_tree_init(&tree);
 
-        for(i = 0; i != palsize; ++i)
+        for(size_t i = 0; i != palsize; ++i)
         {
             const unsigned char* p = &palette[i * 4];
-            error = color_tree_add(&tree, p[0], p[1], p[2], p[3], (unsigned)i);
+            error = color_tree_add(&tree, p[0], p[1], p[2], p[3], i);
             if(error) break;
         }
     }
@@ -130,7 +137,7 @@ unsigned int Decompress(const unsigned char* pixelDataIn, unsigned char* pixelDa
     {
         if(colorModeIn.bitdepth == 16 && colorModeOut.bitdepth == 16)
         {
-            for(i = 0; i != numpixels; ++i)
+            for(size_t i = 0; i != numpixels; ++i)
             {
                 unsigned short r = 0, g = 0, b = 0, a = 0;
                 getPixelColorRGBA16(&r, &g, &b, &a, pixelDataIn, i, &colorModeIn);
@@ -148,7 +155,7 @@ unsigned int Decompress(const unsigned char* pixelDataIn, unsigned char* pixelDa
         else
         {
             unsigned char r = 0, g = 0, b = 0, a = 0;
-            for(i = 0; i != numpixels; ++i)
+            for(size_t i = 0; i != numpixels; ++i)
             {
                 getPixelColorRGBA8(&r, &g, &b, &a, pixelDataIn, i, &colorModeIn);
                 error = rgba8ToPixel(pixelDataOut, i, &colorModeOut, &tree, r, g, b, a);
@@ -325,7 +332,7 @@ void getPixelColorsRGBA8(unsigned char* buffer, size_t numpixels, const unsigned
         {
             for(i = 0; i != numpixels; ++i, buffer += num_channels)
             {
-                memcpy(buffer, &in[i * 3], 3);
+                MemoryCopy(&in[i * 3], 3, buffer, 3);
                 buffer[3] = 255;
             }
             if(mode->key_defined)
@@ -359,7 +366,7 @@ void getPixelColorsRGBA8(unsigned char* buffer, size_t numpixels, const unsigned
             {
                 unsigned index = in[i];
                 /*out of bounds of palette not checked: see lodepng_color_mode_alloc_palette.*/
-                memcpy(buffer, &mode->palette[index * 4], 4);
+                MemoryCopy(&mode->palette[index * 4], 4, buffer, 4u);
             }
         }
         else
@@ -369,7 +376,7 @@ void getPixelColorsRGBA8(unsigned char* buffer, size_t numpixels, const unsigned
             {
                 unsigned index = readBitsFromReversedStream(&j, in, mode->bitdepth);
                 /*out of bounds of palette not checked: see lodepng_color_mode_alloc_palette.*/
-                memcpy(buffer, &mode->palette[index * 4], 4);
+                MemoryCopy(&mode->palette[index * 4], 4, buffer, 4u);
             }
         }
     }
@@ -784,16 +791,16 @@ PNGColorType ConvertToPNGColorType(const unsigned int colorType)
             return PNGColorGrayscale;
 
         case 2u:
-            return PNGColorTruecolor;
+            return PNGColorRGB;
 
         case 3u:
-            return PNGColorIndexedColor;
+            return PNGColorPalette;
 
         case 4u:
-            return PNGColorGrayscaleWithAlphaChannel;
+            return PNGColorGrayscaleAlpha;
 
         case 6u:
-            return PNGColorTruecolorWithAlphaChannel;
+            return PNGColorRGBA;
 
         default:
             return PNGColorInvalid;
@@ -811,16 +818,16 @@ unsigned int ConvertFromPNGColorType(const PNGColorType colorType)
         case PNGColorGrayscale:
             return 0u;
 
-        case PNGColorTruecolor:
+        case PNGColorRGB:
             return 2u;
 
-        case PNGColorIndexedColor:
+        case PNGColorPalette:
             return 3u;
 
-        case PNGColorGrayscaleWithAlphaChannel:
+        case PNGColorGrayscaleAlpha:
             return 4u;
 
-        case PNGColorTruecolorWithAlphaChannel:
+        case PNGColorRGBA:
             return 6u;
     }
 }
@@ -877,19 +884,17 @@ size_t NumberOfColorChannels(const PNGColorType pngColorType)
         case PNGColorInvalid:
             return -1;
 
+        case PNGColorPalette:
         case PNGColorGrayscale:
             return 1;
 
-        case PNGColorTruecolor:
-            return 3;
-
-        case PNGColorIndexedColor:
-            return 1;
-
-        case PNGColorGrayscaleWithAlphaChannel:
+        case PNGColorGrayscaleAlpha:
             return 2;
 
-        case PNGColorTruecolorWithAlphaChannel:
+        case PNGColorRGB:
+            return 3;
+
+        case PNGColorRGBA:
             return 4;
     }
 }
@@ -907,8 +912,9 @@ size_t PNGFilePredictSize(const size_t width, const size_t height, const size_t 
     const size_t header = 25;
     const size_t time = 19;
     const size_t end = 12;
+    const size_t idat = 32768;
 
-    const size_t sum = signature + header + time + end;
+    const size_t sum = signature + header + time + end + height* width* bbp;
 
     return sum;
 }
@@ -924,7 +930,7 @@ ActionResult PNGParse(PNG* png, const void* data, const size_t dataSize, size_t*
     size_t imageDataCounter = 0;
     size_t imageDataChunkCacheSizeUSED = 0;
     size_t imageDataChunkCacheSizeMAX = 0u;
-    unsigned char* imageDataChunkCache = 0; 
+    unsigned char* imageDataChunkCache = 0;
 
     //---<Parse PNG File>------------------------------------------------------
     {
@@ -1081,7 +1087,7 @@ ActionResult PNGParse(PNG* png, const void* data, const size_t dataSize, size_t*
 
 
                     ParsingStreamReadD(&parsingStream, imageDataChunkCache + imageDataChunkCacheSizeUSED, chunk.Lengh);
-                    
+
                     imageDataChunkCacheSizeUSED += chunk.Lengh;
 
                     ++imageDataCounter;
@@ -1120,21 +1126,21 @@ ActionResult PNGParse(PNG* png, const void* data, const size_t dataSize, size_t*
                 }
                 case PNGChunkStandardRGBColorSpace:
                 {
-                   // dataStream.Read(RenderingIntent);
+                    // dataStream.Read(RenderingIntent);
 
                     break;
                 }
                 case PNGChunkEmbeddedICCProfile:
                 {
-                  //  dataStream.DataCursor += chunk.Lengh;
+                    //  dataStream.DataCursor += chunk.Lengh;
 
                     break;
                 }
                 case PNGChunkTextualData:
                 {
-                  //  dataStream.DataCursor += chunk.Lengh;
+                    //  dataStream.DataCursor += chunk.Lengh;
 
-           
+
                     break;
                 }
                 case PNGChunkCompressedTextualData:
@@ -1150,7 +1156,7 @@ ActionResult PNGParse(PNG* png, const void* data, const size_t dataSize, size_t*
                 }
                 case PNGChunkInternationalTextualData:
                 {
-                  //  dataStream.DataCursor += chunk.Lengh;
+                    //  dataStream.DataCursor += chunk.Lengh;
 
                     break;
                 }
@@ -1163,20 +1169,20 @@ ActionResult PNGParse(PNG* png, const void* data, const size_t dataSize, size_t*
                             break; // ERROR
 
                         case PNGColorGrayscale:
-                        case PNGColorGrayscaleWithAlphaChannel:
+                        case PNGColorGrayscaleAlpha:
                         {
-                          //  dataStream.Read(png->BackgroundColor.GreyScale, EndianBig);
+                            //  dataStream.Read(png->BackgroundColor.GreyScale, EndianBig);
                             break;
                         }
-                        case PNGColorTruecolor:
-                        case PNGColorTruecolorWithAlphaChannel:
+                        case PNGColorRGB:
+                        case PNGColorRGBA:
                         {
-                           // dataStream.Read(png->BackgroundColor.Red, EndianBig);
-                           // dataStream.Read(png->BackgroundColor.Green, EndianBig);
-                           // dataStream.Read(png->BackgroundColor.Blue, EndianBig);
+                            // dataStream.Read(png->BackgroundColor.Red, EndianBig);
+                            // dataStream.Read(png->BackgroundColor.Green, EndianBig);
+                            // dataStream.Read(png->BackgroundColor.Blue, EndianBig);
                             break;
                         }
-                        case PNGColorIndexedColor:
+                        case PNGColorPalette:
                         {
                             //dataStream.Read(png->BackgroundColor.PaletteIndex);
                             break;
@@ -1228,7 +1234,7 @@ ActionResult PNGParse(PNG* png, const void* data, const size_t dataSize, size_t*
                         result = (result << (i * 8)) | calcbyte;
                     }
 
-                    SignificantBits = result;*/          
+                    SignificantBits = result;*/
 
                     break;
                 }
@@ -1295,7 +1301,7 @@ ActionResult PNGParse(PNG* png, const void* data, const size_t dataSize, size_t*
 
 
     //---<Unpack compressed data>----------------------------------------------
-    
+
     unsigned char* workingMemory = 0;
     size_t workingMemorySize = 0;
     const size_t bitsPerPixel = BitsPerPixel(png);
@@ -1308,15 +1314,15 @@ ActionResult PNGParse(PNG* png, const void* data, const size_t dataSize, size_t*
 
         workingMemorySize = expectedzlibCacheSize;
         workingMemory = MemoryReallocate(workingMemory, sizeof(unsigned char) * expectedzlibCacheSize);
-              
-        const ActionResult actionResult = ZLIBDecompress(imageDataChunkCache, imageDataChunkCacheSizeUSED, workingMemory, &writtenBytes);
+
+        const ActionResult actionResult = ZLIBDecompress(imageDataChunkCache, imageDataChunkCacheSizeUSED, workingMemory, expectedzlibCacheSize, &writtenBytes);
         const unsigned char sucess = actionResult == ResultSuccessful;
 
         if(!sucess)
         {
             return actionResult;
         }
-    }  
+    }
 
     // ADAM
     const size_t expectedadam7CacheSize = ADAM7CaluclateExpectedSize(png->ImageHeader.Width, png->ImageHeader.Height, bitsPerPixel);
@@ -1327,13 +1333,590 @@ ActionResult PNGParse(PNG* png, const void* data, const size_t dataSize, size_t*
 
 
     // Color COmprerss
-    const unsigned int decompress = Decompress(adam7Cache, png->PixelData, png->ImageHeader.Width, png->ImageHeader.Height, png->ImageHeader.BitDepth, png->ImageHeader.ColorType);
+    const unsigned int decompress = ImageDataDecompress(&png, adam7Cache, png->PixelData, png->ImageHeader.BitDepth, png->ImageHeader.ColorType);
 
 
     MemoryRelease(workingMemory, workingMemorySize);
     MemoryRelease(adam7Cache, expectedadam7CacheSize);
     //-------------------------------------------------------------------------
 
+
+    return ResultSuccessful;
+}
+
+ActionResult PNGParseToImage(Image* const image, const void* const data, const size_t dataSize, size_t* dataRead)
+{
+    ParsingStream parsingStream;
+    PNG png;
+
+    ParsingStreamConstruct(&parsingStream, data, dataSize);
+    PNGConstruct(&png);
+    *dataRead = 0;
+
+    size_t imageDataCounter = 0;
+    size_t imageDataChunkCacheSizeUSED = 0;
+    size_t imageDataChunkCacheSizeMAX = 0u;
+    unsigned char* imageDataChunkCache = 0;
+
+    //---<Parse PNG File>------------------------------------------------------
+    {
+        unsigned char parseFinished = 0;
+
+        //---<Check PNG Header>------------------------------------------------
+        {
+            const unsigned char pngFileHeader[8] = PNGHeaderSequenz;
+            const size_t pngFileHeaderSize = sizeof(pngFileHeader);
+            const unsigned char isValidHeader = ParsingStreamReadAndCompare(&parsingStream, pngFileHeader, pngFileHeaderSize);
+
+            if(!isValidHeader)
+            {
+                return ResultInvalidHeaderSignature;
+            }
+        }
+
+        // Allocate Memory for later ImageData Chunks
+        imageDataChunkCacheSizeMAX = parsingStream.DataSize - 0u;
+        imageDataChunkCache = MemoryAllocate(sizeof(unsigned char) * imageDataChunkCacheSizeMAX);
+
+        //---------------------------------------------------------------------
+
+#if PNGDebugInfo
+        printf
+        (
+            "+------+--------------------------------------------+---+---+---+-------+-----+\n"
+            "| ID   | Name                                       | E | R | S | Bytes | CRC |\n"
+            "+------+--------------------------------------------+---+---+---+-------+-----+\n"
+        );
+#endif
+
+        // Parse every chunk until finished.
+        while(!parseFinished)
+        {
+            PNGChunk chunk;
+            size_t predictedOffset = 0;
+
+            MemorySet(&chunk, sizeof(PNGChunk), 0);
+
+            //chunk.ChunkData = dataStream.Data + dataStream.DataCursor;
+
+            ParsingStreamReadIU(&parsingStream, &chunk.Lengh, EndianBig);
+            ParsingStreamReadD(&parsingStream, chunk.ChunkTypeRaw, 4u);
+
+            // Check
+            {
+                // Ancillary bit : bit 5 of first byte
+                 // 0 (uppercase) = critical, 1 (lowercase) = ancillary.
+                chunk.IsEssential = !((chunk.ChunkTypeRaw[0] & 0b00100000) >> 5);
+
+                // Private bit: bit 5 of second byte
+                // Must be 0 (uppercase)in files conforming to this version of PNG.
+                chunk.IsRegisteredStandard = !((chunk.ChunkTypeRaw[1] & 0b00100000) >> 5);
+
+                // Safe-to-copy bit: bit 5 of fourth byte
+                // 0 (uppercase) = unsafe to copy, 1 (lowercase) = safe to copy.
+                chunk.IsSafeToCopy = !((chunk.ChunkTypeRaw[3] & 0b00100000) >> 5);
+
+                const unsigned int ChunkTypeID = MakeInt(chunk.ChunkTypeRaw[0], chunk.ChunkTypeRaw[1], chunk.ChunkTypeRaw[2], chunk.ChunkTypeRaw[3]);
+
+                chunk.ChunkType = ConvertToChunkType(ChunkTypeID);
+
+                predictedOffset = parsingStream.DataCursor + chunk.Lengh;
+            }
+
+#if PNGDebugInfo
+            printf
+            (
+                "| %c%c%c%c | %-42s | %c | %c | %c | %5i | Yes |\n",
+                chunk.ChunkTypeRaw[0],
+                chunk.ChunkTypeRaw[1],
+                chunk.ChunkTypeRaw[2],
+                chunk.ChunkTypeRaw[3],
+                ChunkTypeToString(chunk.ChunkType),
+                chunk.IsEssential ? 'x' : '-',
+                chunk.IsRegisteredStandard ? 'x' : '-',
+                chunk.IsSafeToCopy ? 'x' : '-',
+                chunk.Lengh
+            );
+#endif
+
+            //---Get Chunk Data------------------------------------------
+            switch(chunk.ChunkType)
+            {
+                case PNGChunkImageHeader:
+                {
+                    unsigned char colorTypeRaw = 0;
+                    unsigned char interlaceMethodRaw = 0;
+
+                    ParsingStreamReadIU(&parsingStream, &png.ImageHeader.Width, EndianBig); // 4 Bytes
+                    ParsingStreamReadIU(&parsingStream, &png.ImageHeader.Height, EndianBig); // 4 Bytes
+
+                    ParsingStreamReadCU(&parsingStream, &png.ImageHeader.BitDepth); // 1 Byte__
+                    ParsingStreamReadCU(&parsingStream, &colorTypeRaw); // 1 Byte__
+                    ParsingStreamReadCU(&parsingStream, &png.ImageHeader.CompressionMethod); // 1 Byte__
+                    ParsingStreamReadCU(&parsingStream, &png.ImageHeader.FilterMethod); // 1 Byte__
+                    ParsingStreamReadCU(&parsingStream, &interlaceMethodRaw); // 1 Byte__
+
+                    png.ImageHeader.ColorType = ConvertToPNGColorType(colorTypeRaw);
+                    png.ImageHeader.InterlaceMethod = ConvertToPNGInterlaceMethod(interlaceMethodRaw);
+
+                    break;
+                }
+                case PNGChunkPalette:
+                {
+                    unsigned pos = 0;
+                    const size_t palettSize = chunk.Lengh / 3u;
+                    const unsigned char validSize = palettSize != 0 && palettSize <= 256;
+
+                    if(!validSize) 
+                        return ResultFormatNotAsExpected; // palette too small or big
+
+                    png.PaletteSize = palettSize;
+
+                    for(size_t i = 0; i < palettSize; ++i)
+                    {
+                        unsigned char* paletteInsertion = png.Palette + i*4;
+
+                        ParsingStreamReadD(&parsingStream, paletteInsertion, 3u); // Read RGB value
+                        
+                        paletteInsertion[3] = 0xFF; // Add alpha
+                    }
+      
+                    break;
+                }
+                case PNGChunkImageData:
+                {
+                    /*
+                    ZLIB zlib(dataStream.Data + dataStream.DataCursor, chunk.Lengh);
+
+                    // Dump content into buffer
+                    // There may be multiple IDAT chunks; if so, they shall appear consecutively with no other intervening chunks.
+                    // the compressed datastream is then the concatenation of the contents of the data fields of all the IDAT chunks.
+
+                    printf
+                    (
+                        "| [ZLIB Header]          |\n"
+                        "| CompressionMethod : %7s |\n"
+                        "| CompressionInfo   : %7i |\n"
+                        "| WindowSize        : %7i |\n"
+                        "| CheckFlag         : %7i |\n"
+                        "| DictionaryPresent : %7i |\n"
+                        "| CompressionLevel  : %7s |\n",
+                        CompressionMethodToString(zlib.Header.CompressionMethod),
+                        zlib.Header.CompressionInfo,
+                        zlib.Header.WindowSize,
+                        zlib.Header.CheckFlag,
+                        zlib.Header.DictionaryPresent,
+                        CompressionLevelToString(zlib.Header.CompressionLevel)
+                    );
+
+                    printf
+                    (
+                        "| [DEFLATE]                 |\n"
+                        "| IsLastBlock          : %15i |\n"
+                        "| EncodingMethod       : %15s |\n"
+                        "| BitStreamDataRawSize : %15i |\n",
+                        zlib.DeflateData.IsLastBlock,
+                        DeflateEncodingMethodToString(zlib.DeflateData.EncodingMethod),
+                        zlib.DeflateData.BitStreamDataRawSize
+                    );*/
+
+
+                    //zlib.Unpack(imageDataChunkCache, imageDataChunkCacheSizeUSED);
+
+
+                    ParsingStreamReadD(&parsingStream, imageDataChunkCache + imageDataChunkCacheSizeUSED, chunk.Lengh);
+
+                    imageDataChunkCacheSizeUSED += chunk.Lengh;
+
+                    ++imageDataCounter;
+
+                    break;
+                }
+                case PNGChunkImageEnd:
+                {
+                    parseFinished = 1;
+                    break;
+                }
+                case PNGChunkTransparency:
+                {
+                    switch(png.ImageHeader.ColorType)
+                    {                   
+                        case PNGColorGrayscale:
+                        {
+                            /*error: this chunk must be 2 bytes for grayscale image*/
+                            if(chunk.Lengh != 2) return 30;
+
+                            unsigned short value;
+
+                            ParsingStreamReadSU(&parsingStream, &value, EndianBig);
+
+                           // color->key_defined = 1;
+                            //color->key_r = color->key_g = color->key_b = 256u * data[0] + data[1];
+
+                            break;
+                        }
+                        case PNGColorRGB:
+                        {
+                            /*error: this chunk must be 6 bytes for RGB image*/
+                            if(chunk.Lengh != 6) return 41;
+
+                            unsigned short red;
+                            unsigned short green;
+                            unsigned short blue;
+
+                            ParsingStreamReadSU(&parsingStream, &red, EndianBig);
+                            ParsingStreamReadSU(&parsingStream, &green, EndianBig);
+                            ParsingStreamReadSU(&parsingStream, &blue, EndianBig);
+
+                            //color->key_defined = 1;
+                            //color->key_r = 256u * data[0] + data[1];
+                            //color->key_g = 256u * data[2] + data[3];
+                            //color->key_b = 256u * data[4] + data[5];
+
+                            break;
+                        }
+                        case PNGColorPalette:
+                        {
+                            /*error: more alpha values given than there are palette entries*/
+                            //if(chunkLength > color->palettesize) return 39;
+
+                            //for(size_t i = 0; i != chunkLength; ++i) color->palette[4 * i + 3] = data[i];
+
+                            for(size_t i = 0; i < chunk.Lengh; ++i)
+                            {
+                                unsigned char value = 0;
+
+                                ParsingStreamReadCU(&parsingStream, &value, EndianBig);
+
+                                png.Palette[i * 4 + 3] = value;
+                            }
+
+                            break;
+                        }
+                        case PNGColorGrayscaleAlpha:       
+                        case PNGColorRGBA:      
+                        case PNGColorInvalid: 
+                        default:
+                            return ResultFormatNotAsExpected; // tRNS chunk not allowed for other color models
+                    }
+
+                    break;
+                }
+                case PNGChunkImageGamma:
+                {
+                    ParsingStreamReadIU(&parsingStream, &png.Gamma, EndianBig);
+
+                    break;
+                }
+                case PNGChunkPrimaryChromaticities:
+                {
+                    ParsingStreamReadIU(&parsingStream, &png.PrimaryChromatics.WhiteX, EndianBig);
+                    ParsingStreamReadIU(&parsingStream, &png.PrimaryChromatics.WhiteY, EndianBig);
+                    ParsingStreamReadIU(&parsingStream, &png.PrimaryChromatics.RedX, EndianBig);
+                    ParsingStreamReadIU(&parsingStream, &png.PrimaryChromatics.RedY, EndianBig);
+                    ParsingStreamReadIU(&parsingStream, &png.PrimaryChromatics.GreenX, EndianBig);
+                    ParsingStreamReadIU(&parsingStream, &png.PrimaryChromatics.GreenY, EndianBig);
+                    ParsingStreamReadIU(&parsingStream, &png.PrimaryChromatics.BlueX, EndianBig);
+                    ParsingStreamReadIU(&parsingStream, &png.PrimaryChromatics.BlueY, EndianBig);
+
+                    break;
+                }
+                case PNGChunkStandardRGBColorSpace:
+                {
+                    // dataStream.Read(RenderingIntent);
+
+                    // COpy array
+
+                    break;
+                }
+                case PNGChunkEmbeddedICCProfile:
+                {
+                    //  dataStream.DataCursor += chunk.Lengh;
+
+                    break;
+                }
+                case PNGChunkTextualData:
+                {
+                    //  dataStream.DataCursor += chunk.Lengh;
+
+
+                    break;
+                }
+                case PNGChunkCompressedTextualData:
+                {
+                    // Keyword 	                    1 - 79 bytes(character string)
+                    // Null separator 	            1 byte(null character)
+                    // Compression method 	        1 byte
+                    // Compressed text datastream 	n bytes
+
+                  //  dataStream.DataCursor += chunk.Lengh;
+
+                    break;
+                }
+                case PNGChunkInternationalTextualData:
+                {
+                    //  dataStream.DataCursor += chunk.Lengh;
+
+                    break;
+                }
+                case PNGChunkBackgroundColor:
+                {
+                    switch(png.ImageHeader.ColorType)
+                    {
+                        default:
+                        case PNGColorInvalid:
+                            break; // ERROR
+
+                        case PNGColorGrayscale:
+                        case PNGColorGrayscaleAlpha:
+                        {
+                            //  dataStream.Read(png.BackgroundColor.GreyScale, EndianBig);
+                            break;
+                        }
+                        case PNGColorRGB:
+                        case PNGColorRGBA:
+                        {
+                            // dataStream.Read(png.BackgroundColor.Red, EndianBig);
+                            // dataStream.Read(png.BackgroundColor.Green, EndianBig);
+                            // dataStream.Read(png.BackgroundColor.Blue, EndianBig);
+                            break;
+                        }
+                        case PNGColorPalette:
+                        {
+                            //dataStream.Read(png.BackgroundColor.PaletteIndex);
+                            break;
+                        }
+                    }
+
+                    break;
+                }
+                case PNGChunkPhysicalPixelDimensions:
+                {
+                    unsigned char unitSpecifier = 0;
+
+                    ParsingStreamReadIU(&parsingStream, &png.PhysicalPixelDimension.PixelsPerUnit[0], EndianBig);
+                    ParsingStreamReadIU(&parsingStream, &png.PhysicalPixelDimension.PixelsPerUnit[1], EndianBig);
+                    ParsingStreamReadCU(&parsingStream, &unitSpecifier);
+                                        
+                    switch(unitSpecifier)
+                    {
+                        case 0:
+                            png.PhysicalPixelDimension.UnitSpecifier = PNGUnitSpecifierUnkown;
+                            break;
+
+                        case 1:
+                            png.PhysicalPixelDimension.UnitSpecifier = PNGUnitSpecifierMeter;
+                            break;
+
+                        default:
+                            png.PhysicalPixelDimension.UnitSpecifier = PNGUnitSpecifierInvalid;
+                            break;
+                    }
+                    
+                    break;
+                }
+                case PNGChunkSignificantBits:
+                {
+                    /*
+                    unsigned int byteLength = 0;
+                    unsigned int result = 0;
+
+                    switch (ColorType)
+                    {
+                        case PNGColorGrayscale: // single byte,
+                            byteLength = 1;
+                            break;
+
+                        case PNGColorTruecolor: // three bytes,
+                        case PNGColorIndexedColor:
+                            byteLength = 3;
+                            break;
+
+                        case PNGColorGrayscaleWithAlphaChannel: // two bytes
+                            byteLength = 2;
+                            break;
+
+                        case PNGColorTruecolorWithAlphaChannel: //  four bytes,
+                            byteLength = 4;
+                            break;
+                    }
+
+                    for (unsigned int i = 0; i < byteLength; i++)
+                    {
+                        char calcbyte;
+
+                        dataStream.Read(calcbyte);
+
+                        result = (result << (i * 8)) | calcbyte;
+                    }
+
+                    SignificantBits = result;*/
+
+                    break;
+                }
+                case PNGChunkSuggestedPalette:
+                {
+                    break;
+                }
+                case PNGChunkPaletteHistogram:
+                {
+                    const size_t listSize = chunk.Lengh / 2;
+
+                    unsigned short* list = MemoryAllocate(sizeof(unsigned short) * listSize);
+
+                    png.PaletteHistogram.ColorFrequencyListSize = listSize;
+                    png.PaletteHistogram.ColorFrequencyList = list;
+
+                    for(size_t i = 0; i < listSize; i++)
+                    {
+                        ParsingStreamReadSU(&parsingStream, &list[i], EndianBig);
+                    }
+
+                    break;
+                }
+                case PNGChunkLastModificationTime:
+                {
+                    ParsingStreamReadSU(&parsingStream, &png.LastModificationTime.Year, EndianBig);
+                    ParsingStreamReadCU(&parsingStream, &png.LastModificationTime.Month);
+                    ParsingStreamReadCU(&parsingStream, &png.LastModificationTime.Day);
+                    ParsingStreamReadCU(&parsingStream, &png.LastModificationTime.Hour);
+                    ParsingStreamReadCU(&parsingStream, &png.LastModificationTime.Minute);
+                    ParsingStreamReadCU(&parsingStream, &png.LastModificationTime.Second);
+
+                    break;
+                }
+                case PNGChunkCustom:
+                default:
+                {
+                    ParsingStreamCursorAdvance(&parsingStream, chunk.Lengh);
+                    break;
+                }
+            }
+            //---------------------------------------------------------------
+
+#if PNGDebugInfo
+            if(parsingStream.DataCursor != predictedOffset)
+            {
+                printf("[i][PNG] Chunk did not handle all Bytes\n");
+            }
+#endif
+            parsingStream.DataCursor = predictedOffset;
+
+            ParsingStreamReadIU(&parsingStream, &chunk.CRC, EndianBig); // 4 Bytes
+
+            //---<Check CRC>---
+            // TODO: Yes
+            //-----------------
+        }
+    }
+
+    //---<Allocate>------------------------------------------------------------
+    
+
+     {
+        
+
+        size_t size = png.ImageHeader.Width * png.ImageHeader.Height * NumberOfColorChannels(png.ImageHeader.ColorType);
+
+        if(png.ImageHeader.ColorType == PNGColorPalette)
+        {
+            size *= 4;
+        }
+
+        const unsigned char* data = MemoryAllocate(sizeof(unsigned char) * size);
+
+        if(!data)
+        {
+            return ResultOutOfMemory;
+        }
+
+        image->Width = png.ImageHeader.Width;
+        image->Height = png.ImageHeader.Height;
+        image->PixelDataSize = size;
+        image->PixelData = data;
+
+        switch(png.ImageHeader.ColorType)
+        {
+            case PNGColorGrayscale:
+                image->Format = ImageDataFormatAlphaMask;
+                break;
+
+            case PNGColorRGB:
+                image->Format = ImageDataFormatRGB;
+                break;
+
+            case PNGColorInvalid:       
+            case PNGColorGrayscaleAlpha:
+                image->Format = ImageDataFormatInvalid;
+                break;
+
+            case PNGColorPalette:
+            case PNGColorRGBA:
+                image->Format = ImageDataFormatRGBA;
+                break;
+
+            default:
+                image->Format = ImageDataFormatInvalid;
+                break;
+        }
+     }
+    //-------------------------------------------------------------------------    
+
+
+    //---<Unpack compressed data>----------------------------------------------
+
+    unsigned char* workingMemory = 0;
+    size_t workingMemorySize = 0;
+    const size_t bitsPerPixel = BitsPerPixel(&png);
+
+    // ZLIB
+    {
+        size_t writtenBytes = 0;
+
+        const size_t expectedzlibCacheSize = ZLIBCalculateExpectedSize(png.ImageHeader.Width, png.ImageHeader.Height, bitsPerPixel, png.ImageHeader.InterlaceMethod);
+
+        workingMemorySize = expectedzlibCacheSize;
+        workingMemory = MemoryReallocate(workingMemory, sizeof(unsigned char) * expectedzlibCacheSize);
+
+        const ActionResult actionResult = ZLIBDecompress(imageDataChunkCache, imageDataChunkCacheSizeUSED, workingMemory, expectedzlibCacheSize, &writtenBytes);
+        const unsigned char sucess = actionResult == ResultSuccessful;
+
+        if(!sucess)
+        {
+            return actionResult;
+        }
+    }
+
+    if(1)// png.ImageHeader.InterlaceMethod == PNGInterlaceADAM7)
+    {
+        // ADAM
+        const size_t expectedadam7CacheSize = ADAM7CaluclateExpectedSize(png.ImageHeader.Width, png.ImageHeader.Height, bitsPerPixel);
+
+        unsigned char* adam7Cache = MemoryAllocate(sizeof(unsigned char) * expectedadam7CacheSize);
+
+        const unsigned int scanDecodeResult = ADAM7ScanlinesDecode(adam7Cache, workingMemory, png.ImageHeader.Width, png.ImageHeader.Height, bitsPerPixel, png.ImageHeader.InterlaceMethod);
+    
+
+        // Color COmprerss
+        const unsigned int decompress = ImageDataDecompress(&png, adam7Cache, image->PixelData, png.ImageHeader.BitDepth, png.ImageHeader.ColorType); 
+  
+    
+        MemoryRelease(adam7Cache, expectedadam7CacheSize);
+    }
+    else
+    {
+        // Color COmprerss
+        unsigned int decompress = ImageDataDecompress(&png, workingMemory, image->PixelData, png.ImageHeader.BitDepth, png.ImageHeader.ColorType);
+
+        decompress += 0;
+    }
+
+
+    MemoryRelease(workingMemory, workingMemorySize);
+ 
+    //-------------------------------------------------------------------------
+
+    PNGDestruct(&png);
 
     return ResultSuccessful;
 }
@@ -1387,7 +1970,7 @@ ActionResult PNGSerialize(PNG* png, void* data, const size_t dataSize, size_t* d
     // pHYs
     // IDAT
     {
-   
+
 
         // ZLIB comprssion
     }   
@@ -1407,6 +1990,38 @@ ActionResult PNGSerialize(PNG* png, void* data, const size_t dataSize, size_t* d
 
     return ResultSuccessful;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ActionResult PNGSerializeFromImage(const Image* const image, void* data, const size_t dataSize, size_t* dataWritten)
 {
@@ -1439,17 +2054,17 @@ ActionResult PNGSerializeFromImage(const Image* const image, void* data, const s
                 return ResultFormatInvalid;
 
             case ImageDataFormatAlphaMask:
-                colorType = PNGColorGrayscaleWithAlphaChannel;
+                colorType = PNGColorGrayscaleAlpha;
                 break;
 
             case ImageDataFormatBGR:
             case ImageDataFormatRGB:
-                colorType = PNGColorTruecolor;
+                colorType = PNGColorRGB;
                 break;
 
             case ImageDataFormatRGBA:
             case ImageDataFormatBGRA:
-                colorType = PNGColorTruecolorWithAlphaChannel;
+                colorType = PNGColorRGBA;
                 break;
         }
 
@@ -1485,16 +2100,16 @@ ActionResult PNGSerializeFromImage(const Image* const image, void* data, const s
                 return ResultInvalid;
 
             case PNGColorGrayscale: // ColorType = 0
-            case PNGColorGrayscaleWithAlphaChannel:  // ColorType = 4
+            case PNGColorGrayscaleAlpha:  // ColorType = 4
                 shouldPrint = 0;
                 break;
 
-            case PNGColorTruecolor:  // ColorType = 2
-            case PNGColorTruecolorWithAlphaChannel:  // ColorType = 6
+            case PNGColorRGB:  // ColorType = 2
+            case PNGColorRGBA:  // ColorType = 6
                 shouldPrint = 1;
                 break;
 
-            case PNGColorIndexedColor:  // ColorType = 3;
+            case PNGColorPalette:  // ColorType = 3;
                 shouldPrint = 2;
                 break;
         }
@@ -1591,7 +2206,18 @@ ActionResult PNGSerializeFromImage(const Image* const image, void* data, const s
 
     // [IDAT] Image data	
     {
+        size_t written = 0;        
 
+        ParsingStreamWriteIU(&parsingStream, 0u, EndianBig); // Length
+        ParsingStreamWriteD(&parsingStream, "IDAT", 4u);
+ 
+
+        ZLIBCompress(image->PixelData, image->PixelDataSize, ParsingStreamCursorPosition(&parsingStream), ParsingStreamRemainingSize(&parsingStream), &written);
+
+        parsingStream.DataCursor += written;
+
+
+        ParsingStreamWriteIU(&parsingStream, 0u, EndianBig); // CRC
     }
 
     //---<IEND>---------------------------------------------------------------- 12 Bytes

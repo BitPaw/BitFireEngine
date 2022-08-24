@@ -111,7 +111,10 @@ extern "C"
 
 	extern size_t TGAFilePredictSize(const size_t width, const size_t height, const size_t bbp);
 
+
+
 	extern ActionResult TGAParse(TGA* tga, const void* data, const size_t dataSize, size_t* dataRead);
+	extern ActionResult TGAParseToImage(Image* const image, const void* const data, const size_t dataSize, size_t* dataRead);
 
 	extern ActionResult TGASerializeFromImage(const Image* const image, void* data, const size_t dataSize, size_t* dataWritten);
 

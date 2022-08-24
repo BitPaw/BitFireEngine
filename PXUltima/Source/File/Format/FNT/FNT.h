@@ -3,11 +3,12 @@
 
 #define FontNameSize 30u
 #define CharSetNameSize 30u
-#define FNTPageFileNameSize 50
+#define FNTPageFileNameSize 128
 
 #include <stddef.h>
 
 #include <Error/ActionResult.h>
+#include <File/Image.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -60,7 +61,7 @@ extern "C"
 
 	typedef struct FNTCharacter_
 	{
-		int ID;
+		unsigned int ID;
 		float Position[2]; // Position of the character image in the texture.
 		float Size[2];	// Size of the character image in the texture.		
 		float Offset[2];// Offset from the position-center.				
@@ -73,13 +74,12 @@ extern "C"
 
 	typedef struct FNTPage_
 	{
-		int PageID;
-		char PageFileName[FNTPageFileNameSize];
+		int PageID;	
 		size_t CharacteListSize;
 		FNTCharacter* CharacteList;
+		Image FontTextureMap;
 	}
 	FNTPage;
-
 
 	typedef enum FNTLineType_
 	{
@@ -104,7 +104,14 @@ extern "C"
 
 	extern FNTCharacter* FNTGetCharacter(FNT* fnt, const wchar_t character);
 
-	extern ActionResult FNTParse(FNT* fnt, const void* fileData, const size_t fileDataSize, size_t* readBytes);
+	extern ActionResult FNTParse
+	(
+		FNT* fnt,
+		const void* fileData,
+		const size_t fileDataSize,
+		size_t* readBytes, 
+		const wchar_t* filePath
+	);
 
 	static FNTLineType PeekLineType(const void* line, const size_t fileDataSize);
 

@@ -530,14 +530,18 @@ void BF::BitFireEngine::OnWindowCreated(const void* const receiver, const CWindo
 
 void BF::BitFireEngine::OnWindowSizeChanged(const void* const receiver, const CWindow* sender, const size_t width, const size_t height)
 {
-    BitFireEngine* engine = (BitFireEngine*)receiver;
-    Camera& camera = engine->MainCamera;
+    BitFireEngine* const engine = (BitFireEngine* const)receiver;
+
+    if(engine)
+    {
+        Camera& camera = engine->MainCamera;
+
+        camera.AspectRatioSet(width, height);
+    }   
 
     printf("[Camera] Is now %li x %li\n", width, height);
 
-    glViewport(0, 0, width, height);
-
-    camera.AspectRatioSet(width, height);
+    glViewport(0, 0, width, height);   
 }
 
 void BF::BitFireEngine::OnSystemSignal(int signalID)
@@ -1848,11 +1852,6 @@ ActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePath, cons
                 Load(*font, filePathW);
 
                 level.FontList[fontCounter++] = font;
-
-                for(size_t i = 0; i < font->AdditionalResourceListSize; i++)
-                {
-                    font->AdditionalResourceList[i];
-                }
 
                 Register(*font);
 

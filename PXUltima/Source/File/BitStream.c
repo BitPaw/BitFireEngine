@@ -69,6 +69,11 @@ size_t BitStreamRead(BitStream* bitStream, const size_t amountOfBits)
 	return result;
 }
 
+size_t BitStreamWrite(BitStream* const bitStream, const size_t bitData, const size_t amountOfBits)
+{
+	return 0;
+}
+
 size_t BitStreamReadFullByte(BitStream* bitStream)
 {
 	return BitStreamRead(bitStream, 8u);

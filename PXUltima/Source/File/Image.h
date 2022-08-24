@@ -53,21 +53,21 @@ extern "C"
 	typedef ActionResult(*ParseToImage)(Image* const image, void* data, const size_t dataSize, size_t* dataWritten);
 	typedef ActionResult(*SerializeFromImage)(const Image* const image, void* data, const size_t dataSize, size_t* dataWritten);
 
-	extern void ImageConstruct(Image* image);
-	extern void ImageDestruct(Image* image);
+	extern void ImageConstruct(Image* const image);
+	extern void ImageDestruct(Image* const image);
 
-	extern ImageFileFormat ImageGuessFormat(const wchar_t* filePath);
+	extern ImageFileFormat ImageGuessFormat(const wchar_t* const filePath);
 
-	extern ActionResult ImageLoadA(Image* image, const char* filePath);
-	extern ActionResult ImageLoadW(Image* image, const wchar_t* filePath);
-	extern ActionResult ImageLoadD(Image* image, const void* data, const size_t dataSize, const ImageFileFormat guessedFormat);
+	extern ActionResult ImageLoadA(Image* const image, const char* const filePath);
+	extern ActionResult ImageLoadW(Image* const image, const wchar_t* const filePath);
+	extern ActionResult ImageLoadD(Image* const image, const void* const data, const size_t dataSize, const ImageFileFormat guessedFormat);
 
-	extern ActionResult ImageSaveA(Image* image, const char* filePath, const ImageFileFormat fileFormat, const ImageDataFormat dataFormat);
-	extern ActionResult ImageSaveW(Image* image, const wchar_t* filePath, const ImageFileFormat fileFormat, const ImageDataFormat dataFormat);
+	extern ActionResult ImageSaveA(Image* const image, const char* const filePath, const ImageFileFormat fileFormat, const ImageDataFormat dataFormat);
+	extern ActionResult ImageSaveW(Image* const image, const wchar_t* const filePath, const ImageFileFormat fileFormat, const ImageDataFormat dataFormat);
 	extern ActionResult ImageSaveD
 	(
 		Image* image, 
-		void* data, 
+		void* const data,
 		const size_t dataSize, 
 		const ImageFileFormat fileFormat,
 		const ImageDataFormat dataFormat
@@ -120,7 +120,11 @@ extern "C"
 		Image* const image,
 		const size_t x,
 		const size_t y,
-		Image* const imageInsert
+		const size_t InsertX,
+		const size_t InsertY,
+		const size_t InsertWidth,
+		const size_t InsertHeight,
+		const Image* const imageInsert
 	);
 
 	//extern void ImageFillRandome();

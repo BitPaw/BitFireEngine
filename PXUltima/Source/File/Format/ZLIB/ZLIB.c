@@ -2,8 +2,8 @@
 
 #include <Algorithm/ADLER/Adler32.h>
 #include <Math/Math.h>
-#include <File/BitStream.h>
-#include <File/Format/DEFLATE/DeflateBlock.h>
+#include <File/ParsingStream.h>
+#include <File/Format/DEFLATE/DEFLATE.h>
 
 ZLIBCompressionLevel ConvertToCompressionLevel(const unsigned char compressionLevel)
 {
@@ -79,12 +79,12 @@ unsigned char ConvertFromCompressionMethod(const ZLIBCompressionMethod compressi
     }
 }
 
-ActionResult ZLIBDecompress(const void* const inputData, const size_t inputDataSize, void* const outputData, size_t* const outputDataSize)
+ActionResult ZLIBDecompress(const void* const inputData, const size_t inputDataSize, void* const outputData, const size_t outputDataSize, size_t* const outputDataSizeRead)
 {
-    BitStream bitStream;
+    ParsingStream parsingStream;
     ZLIB zlib;
 
-    BitStreamConstruct(&bitStream, inputData, inputDataSize);
+    ParsingStreamConstruct(&parsingStream, inputData, inputDataSize);
 
     const size_t headerSize = 2u;
     const size_t adlerSize = 4u;    
@@ -94,8 +94,8 @@ ActionResult ZLIBDecompress(const void* const inputData, const size_t inputDataS
         unsigned char compressionFormatByte = 0;
         unsigned char flagByte = 0;
 
-        compressionFormatByte = BitStreamReadFullByte(&bitStream);
-        flagByte = BitStreamReadFullByte(&bitStream);
+        ParsingStreamReadCU(&parsingStream, &compressionFormatByte);
+        ParsingStreamReadCU(&parsingStream, &flagByte);
 
         // Valid Check
         {
@@ -110,8 +110,8 @@ ActionResult ZLIBDecompress(const void* const inputData, const size_t inputDataS
         //---<Parse First Byte__ - Compression Info>---------------------------------
         {
             unsigned char compressionMethodValue = (compressionFormatByte & 0b00001111);
-            zlib.Header.CompressionMethod = ConvertToCompressionMethod(compressionMethodValue);
 
+            zlib.Header.CompressionMethod = ConvertToCompressionMethod(compressionMethodValue);
             zlib.Header.CompressionInfo = (compressionFormatByte & 0b11110000) >> 4;
 
             // log_2(WindowSize) - 8 = CompressionInfo
@@ -137,7 +137,6 @@ ActionResult ZLIBDecompress(const void* const inputData, const size_t inputDataS
 
             zlib.Header.CheckFlag = (flagByte & 0b00011111);
             zlib.Header.DictionaryPresent = ((flagByte & 0b00100000) >> 5) == 1;
-
             zlib.Header.CompressionLevel = ConvertToCompressionLevel(compressionLevelValue);
         }
         //-------------------------------------------------------------------------        
@@ -159,21 +158,19 @@ ActionResult ZLIBDecompress(const void* const inputData, const size_t inputDataS
     }*/
 
 
-    zlib.CompressedDataSize = BitStreamRemainingSize(&bitStream) - adlerSize;
-    zlib.CompressedData = BitStreamCursorPosition(&bitStream);
+    zlib.CompressedDataSize = ParsingStreamRemainingSize(&parsingStream) - adlerSize;
+    zlib.CompressedData = ParsingStreamCursorPosition(&parsingStream);
 
     switch(zlib.Header.CompressionMethod)
     {
         case ZLIBCompressionMethodDeflate:
         {
-            DeflateBlock deflateBlock;
+            int deflateResult = DEFLATEParse(zlib.CompressedData, zlib.CompressedDataSize, outputData, outputDataSizeRead);
 
-            do
+            if(deflateResult)
             {
-                DeflateBlockParse(&deflateBlock, &bitStream);
-                DeflateBlockInflate(&deflateBlock, &bitStream, outputData, outputDataSize);
+                deflateResult += 2;
             }
-            while(!deflateBlock.IsLastBlock);
 
             break;
         }
@@ -198,48 +195,56 @@ ActionResult ZLIBDecompress(const void* const inputData, const size_t inputDataS
     return ResultSuccessful;
 }
 
-ActionResult ZLIBCompress(const void* const inputData, const size_t inputDataSize, void* const outputData, size_t* const outputDataSize)
+ActionResult ZLIBCompress(const void* const inputData, const size_t inputDataSize, void* const outputData, const size_t outputDataSize, size_t* const outputDataSizeWritten)
 {
-    const size_t headerSize = 2u;
-    const size_t adlerSize = 4u;
- /*   unsigned char compressionFormatByte = outputData[0];
-    unsigned char flagByte = outputData[1];
+    ParsingStream parsingSteam;
 
-    Header.Parse(compressionFormatByte, flagByte);
+    ParsingStreamConstruct(&parsingSteam, outputData, outputDataSize);
 
-    //Adler32::
-
-    /* Header
-    * 
-    *
-      //---<Parse First Byte__ - Compression Info>---------------------------------
+    // Write 1 Byte
     {
-        unsigned char WindowSizeValue = MathLogarithmusBase2(WindowSize) - 8;
-        unsigned char compressionMethodValue = ConvertCompressionMethod(CompressionMethod);
+        unsigned char buffer[2];
+        buffer[0] = 0u;
+        buffer[1] = 0u;
+    
+        const unsigned char compressionMethod = ConvertFromCompressionMethod(ZLIBCompressionMethodDeflate);
+        const unsigned char compressionInfo = 7u;
 
-        compressionFormatByte = compressionMethodValue << 4; // 0b11110000
-        compressionFormatByte += WindowSizeValue; // 0b00001111
+        const unsigned char dictionary = 0;
+        const unsigned char level = ConvertFromCompressionLevel(ZLIBCompressionLevelFastest);
+
+
+        buffer[0] = (compressionMethod) | ((compressionInfo) << 4u);
+        buffer[1] = dictionary << 2u | level;
+
+        // Check
+        {
+            const unsigned short checksum = buffer[0] << 8u | buffer[1];
+            const unsigned char multble = 31-checksum % 31;
+
+            buffer[1] += multble;
+        }
+    
+
+        ParsingStreamWriteD(&parsingSteam, buffer, 2u);
     }
-    //-------------------------------------------------------------------------
 
-    //---<Parse Second Byte__ - Flags>-------------------------------------------
+    // Wirte Data
     {
-        unsigned char compressionLevelValue = ConvertCompressionLevel(CompressionLevel);
+        const unsigned int value = DEFLATESerialize(inputData, inputDataSize, (const unsigned char* const)outputData + 2u, outputDataSize - 4u);
 
-        flagByte |= compressionLevelValue << 6;
-        flagByte |= DictionaryPresent << 5;
-        flagByte |= CheckFlag;
+
     }
-    //-------------------------------------------------------------------------
 
-    * /
+    // Write ADLER
+    {
+        const unsigned int adler = Adler32Create(1, inputData, inputDataSize);
 
-    outputDataSize += headerSize + adlerSize;*/
-
-    return ResultInvalid;
+        ParsingStreamWriteIU(&parsingSteam, adler, EndianBig);
+    }
 }
 
-size_t ZLIBCalculateExpectedSize(size_t width, size_t height, size_t bpp, PNGInterlaceMethod interlaceMethod)
+size_t ZLIBCalculateExpectedSize(const size_t width, const size_t height, const size_t bpp, const PNGInterlaceMethod interlaceMethod)
 {
     size_t expected_size = 0;
 
@@ -275,7 +280,7 @@ size_t ZLIBCalculateExpectedSize(size_t width, size_t height, size_t bpp, PNGInt
     return expected_size;
 }
 
-size_t CalculateRawSizeIDAT(unsigned w, unsigned h, unsigned bpp)
+size_t CalculateRawSizeIDAT(const size_t w, const size_t h, const size_t bpp)
 {
     /* + 1 for the filter byte, and possibly plus padding bits per line. */
            /* Ignoring casts, the expression is equal to (w * bpp + 7) / 8 + 1, but avoids overflow of w * bpp */

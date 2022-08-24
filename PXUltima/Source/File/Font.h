@@ -4,7 +4,6 @@
 #include <stddef.h>
 
 #include <Error/ActionResult.h>
-#include <File\Format\FNT\FNT.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -13,6 +12,10 @@ extern "C"
 
 #ifndef Image_
 	typedef struct Image_ Image;
+#endif
+
+#ifndef FNT_
+	typedef struct FNT_ FNT;
 #endif
 
 	typedef enum FontFileFormat_
@@ -30,24 +33,21 @@ extern "C"
 		unsigned short SizeBetweenCharacters;
 		unsigned short SizeBetweenLines;
 
-		size_t AdditionalResourceListSize;
-		char** AdditionalResourceList;
-
-		Image* Texture;
-		FNT BitMapFont;
+		FNT* FontElement;
+		size_t FontElementSize;
 	}
 	CFont;
 
 	//---[ Public-Functions ]----------------------------------------------
 
-	extern void FontConstruct(CFont* font);
-	extern void FontDestruct(CFont* font);
+	extern void FontConstruct(CFont* const font);
+	extern void FontDestruct(CFont* const font);
 
 	extern FontFileFormat FontGuessFormat(const wchar_t* filePath);
 
-	extern ActionResult FontLoadA(CFont* font, const char* filePath);
-	extern ActionResult FontLoadW(CFont* font, const wchar_t* filePath);
-	extern ActionResult FontLoadD(CFont* font, const FontFileFormat guessedFormat, const void* data, const size_t dataSize);
+	extern ActionResult FontLoadA(CFont* const font, const char* filePath);
+	extern ActionResult FontLoadW(CFont* const font, const wchar_t* filePath);
+	extern ActionResult FontLoadD(CFont* const font, const FontFileFormat guessedFormat, const void* data, const size_t dataSize);
 
 
 #ifdef __cplusplus

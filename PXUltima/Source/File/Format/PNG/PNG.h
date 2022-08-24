@@ -11,14 +11,17 @@ extern "C"
 {
 #endif
 
+	// 0x0001 = palette used
+	// 0x0010 = color used
+	// 0x0100 = alpha channel used
 	typedef enum PNGColorType_
 	{
 		PNGColorInvalid,
 		PNGColorGrayscale, // ColorType = 0
-		PNGColorTruecolor,  // ColorType = 2
-		PNGColorIndexedColor,  // ColorType = 3
-		PNGColorGrayscaleWithAlphaChannel,  // ColorType = 4
-		PNGColorTruecolorWithAlphaChannel  // ColorType = 6
+		PNGColorRGB,  // ColorType = 2
+		PNGColorPalette,  // ColorType = 3
+		PNGColorGrayscaleAlpha,  // ColorType = 4
+		PNGColorRGBA  // ColorType = 6
 	}
 	PNGColorType;
 
@@ -30,10 +33,18 @@ extern "C"
 	}
 	PNGInterlaceMethod;
 
+	typedef enum PNGUnitSpecifier_
+	{
+		PNGUnitSpecifierInvalid,
+		PNGUnitSpecifierUnkown,
+		PNGUnitSpecifierMeter
+	}
+	PNGUnitSpecifier;
+
 	typedef struct PNGPhysicalPixelDimension_
 	{
 		unsigned int PixelsPerUnit[2];
-		unsigned char UnitSpecifier;
+		PNGUnitSpecifier UnitSpecifier;
 	}
 	PNGPhysicalPixelDimension;
 
@@ -49,14 +60,6 @@ extern "C"
 		unsigned int BlueY;
 	}
 	PNGPrimaryChromatics;
-
-	typedef struct PNGPalette_
-	{
-		unsigned char Red;
-		unsigned char Green;
-		unsigned char Blue;
-	}
-	PNGPalette;
 
 	typedef struct PNGBackgroundColor_
 	{
@@ -196,7 +199,8 @@ extern "C"
 	{
 		//---[Important Data]--------------------------------------------------------
 		PNGImageHeader ImageHeader;
-		PNGPalette Palette;
+		unsigned short PaletteSize;
+		unsigned char Palette[1024];
 		PNGPrimaryChromatics PrimaryChromatics;
 		//---------------------------------------------------------------------------
 
@@ -312,9 +316,21 @@ node has 16 instead of 8 children.
 	}
 	PNGColorTree;
 
+
+
+
+
+	static unsigned int ImageDataDecompress(const PNG* const png, const unsigned char* pixelDataIn, unsigned char* pixelDataOut, unsigned char bitDepth, PNGColorType colorType);
+
+
+
+
+
+
+
 	static unsigned int color_tree_add(PNGColorTree* tree, unsigned char r, unsigned char g, unsigned char b, unsigned char a, unsigned index);
 	
-	static unsigned int Decompress(const unsigned char* pixelDataIn, unsigned char* pixelDataOut, size_t width, size_t height, unsigned char bitDepth, PNGColorType colorType);
+	
 
 	static unsigned getNumColorChannels(LodePNGColorType colortype);
 
@@ -388,6 +404,8 @@ enough memory.*/
 	extern size_t PNGFilePredictSize(const size_t width, const size_t height, const size_t bbp);
 
 	extern ActionResult PNGParse(PNG* png, const void* data, const size_t dataSize, size_t* dataRead);
+	extern ActionResult PNGParseToImage(Image* const image, const void* const data, const size_t dataSize, size_t* dataRead);
+
 	extern ActionResult PNGSerialize(PNG* png, void* data, const size_t dataSize, size_t* dataWritten);
 	extern ActionResult PNGSerializeFromImage(const Image* const image, void* data, const size_t dataSize, size_t* dataWritten);
 

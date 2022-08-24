@@ -14,6 +14,8 @@
 #include <File/Font.h>
 #include <Math/Math.h>
 
+#include <File/Format/FNT/FNT.h>
+
 size_t ImageBytePerPixel(const ImageDataFormat imageDataFormat)
 {
     switch(imageDataFormat)
@@ -41,19 +43,19 @@ size_t ImageBitsPerPixel(const ImageDataFormat imageDataFormat)
     return ImageBytePerPixel(imageDataFormat) * 8u;
 }
 
-void ImageConstruct(Image* image)
+void ImageConstruct(Image* const image)
 {
     MemorySet(image, sizeof(Image), 0);
 }
 
-void ImageDestruct(Image* image)
+void ImageDestruct(Image* const image)
 {
     MemoryRelease(image->PixelData, image->PixelDataSize);
 
     ImageConstruct(image);
 }
 
-ImageFileFormat ImageGuessFormat(const wchar_t* filePath)
+ImageFileFormat ImageGuessFormat(const wchar_t* const filePath)
 {
     wchar_t extension[ExtensionMaxSize];
 
@@ -81,11 +83,12 @@ ActionResult ImageLoadA(Image* image, const char* filePath)
     return actionResult;  
 }
 
-ActionResult ImageLoadW(Image* image, const wchar_t* filePath)
+ActionResult ImageLoadW(Image* const image, const wchar_t* const filePath)
 {
     File file;
 
     FileConstruct(&file);
+    ImageConstruct(image);
 
     {
         const ActionResult fileLoadingResult = FileMapToVirtualMemoryW(&file, filePath, 0, MemoryReadOnly);
@@ -126,174 +129,55 @@ ActionResult ImageLoadW(Image* image, const wchar_t* filePath)
     FileDestruct(&file);
 }
 
-ActionResult ImageLoadD(Image* image, const void* data, const size_t dataSize, const ImageFileFormat guessedFormat)
+ActionResult ImageLoadD(Image* const image, const void* const data, const size_t dataSize, const ImageFileFormat guessedFormat)
 {
     size_t bytesRead = 0;
-
-    ImageConstruct(image);
+    ParseToImage parseToImage = 0;
 
     switch(guessedFormat)
     {
         case ImageFileFormatBitMap:
         {
-            BMP bitmap;                      
-
-            {
-                size_t bytesRead = 0;
-                const ActionResult loadResult = BMPParse(&bitmap, data, dataSize, &bytesRead);
-                const unsigned char sucessful = ResultSuccessful == loadResult;
-
-                if(sucessful)
-                {
-                    unsigned char* pixelData = MemoryAllocate(sizeof(unsigned char) * bitmap.PixelDataSize);
-
-                    if(!pixelData)
-                    {
-                        return ResultOutOfMemory;
-                    }
-
-                    image->Format = ImageDataFormatBGR;
-                    image->Height = bitmap.InfoHeader.Height;
-                    image->Width = bitmap.InfoHeader.Width;
-                    image->PixelDataSize = bitmap.PixelDataSize;
-                    image->PixelData = pixelData;
-
-                    MemoryCopy(bitmap.PixelData, bitmap.PixelDataSize, image->PixelData, image->PixelDataSize);
-
-                    //image.FlipHorizontal(); ??
-
-                    //image.RemoveColor(0,0,0);
-
-                    return ResultSuccessful;
-                }
-            }
-
-            BMPDestruct(&bitmap);
-
+            parseToImage = BMPParseToImage;
             break;
         }
         case ImageFileFormatGIF:
         {
-            GIF gif;
-
-            /*
-            {
-                const ActionResult fileActionResult = gif.Load(fileData, fileDataSize);
-                const bool sucessful = fileActionResult == ResultSuccessful;
-
-                if(sucessful)
-                {
-                    gif.ConvertTo(*this);
-
-                    return ResultSuccessful;
-                }
-            }*/
-
+            parseToImage = GIFParseToImage;
             break;
         }
         case ImageFileFormatJPEG:
         {
-            const ActionResult fileActionResult = JPEGParseToImage(image, data, dataSize, &bytesRead);
-            const unsigned char sucessful = ResultSuccessful != fileActionResult;
-
-            if(sucessful)
-            {
-                return fileActionResult;
-            }
-
+            parseToImage = JPEGParseToImage;
             break;
         }
         case ImageFileFormatPNG:
         {
-            PNG png;
-
-            size_t bytesRead = 0;
-            const ActionResult fileActionResult = PNGParse(&png, data, dataSize, &bytesRead);
-            const unsigned char sucessful = fileActionResult == ResultSuccessful;
-
-            if(sucessful)
-            {
-                ImageDataFormat format;
-
-                switch(png.ImageHeader.ColorType)
-                {
-                    case PNGColorGrayscale:
-                        format = ImageDataFormatAlphaMask;
-                        break;
-
-                    case PNGColorTruecolor:
-                        format = ImageDataFormatRGB;
-                        break;
-
-                    case PNGColorInvalid:
-                    case PNGColorIndexedColor:
-                    case PNGColorGrayscaleWithAlphaChannel:
-                        format = ImageDataFormatInvalid;
-                        break;
-
-                    case PNGColorTruecolorWithAlphaChannel:
-                        format = ImageDataFormatRGBA;
-                        break;
-
-                    default:
-                        format = ImageDataFormatInvalid;
-                        break;
-                }
-
-
-                ImageResize(image, format, png.ImageHeader.Width, png.ImageHeader.Height);
-
-                MemoryCopy(png.PixelData, png.PixelDataSize, image->PixelData, image->PixelDataSize);
-
-                return ResultSuccessful;
-            }
-
+            parseToImage = PNGParseToImage;
             break;
         }
         case ImageFileFormatTGA:
         {
-            TGA tga;
-
-            /*
-            {
-                const ActionResult fileActionResult = tga.Load(fileData, fileDataSize);
-                const bool sucessful = fileActionResult == ResultSuccessful;
-
-                if(sucessful)
-                {
-                    tga.ConvertTo(*this);
-
-                    return ResultSuccessful;
-                }
-            }*/
-
+            parseToImage = TGAParseToImage;
             break;
         }
         case ImageFileFormatTIFF:
         {
-            TIFF tiff;
-
-            /*
-            {
-                const ActionResult fileActionResult = tiff.Load(fileData, fileDataSize);
-                const bool sucessful = fileActionResult == ResultSuccessful;
-
-                if(sucessful)
-                {
-                    tiff.ConvertTo(*this);
-
-                    return ResultSuccessful;
-                }
-            }*/
-
+            parseToImage = TIFFParseToImage;
             break;
+        }
+        default:
+        {
+            return ResultFormatNotSupported;
         }
     }
 
-    return ResultFormatNotSupported;
+    const ActionResult actionResult = parseToImage(image, data, dataSize, &bytesRead);
+
+    return actionResult;
 }
 
-ActionResult ImageSaveA(Image* image, const char* filePath, const ImageFileFormat fileFormat, const ImageDataFormat dataFormat)
+ActionResult ImageSaveA(Image* const image, const char* const filePath, const ImageFileFormat fileFormat, const ImageDataFormat dataFormat)
 {
     wchar_t filePathW[PathMaxSize];
 
@@ -304,7 +188,7 @@ ActionResult ImageSaveA(Image* image, const char* filePath, const ImageFileForma
     return actionResult;
 }
 
-ActionResult ImageSaveW(Image* image, const wchar_t* filePath, const ImageFileFormat fileFormat, const ImageDataFormat dataFormat)
+ActionResult ImageSaveW(Image* const image, const wchar_t* const filePath, const ImageFileFormat fileFormat, const ImageDataFormat dataFormat)
 {
     size_t fileSize = 0;
     size_t writtenBytes = 0;
@@ -385,7 +269,7 @@ ActionResult ImageSaveW(Image* image, const wchar_t* filePath, const ImageFileFo
     return ResultInvalid;
 }
 
-ActionResult ImageSaveD(Image* image, void* data, const size_t dataSize, const ImageFileFormat fileFormat, const ImageDataFormat dataFormat)
+ActionResult ImageSaveD(Image* const image, void* const data, const size_t dataSize, const ImageFileFormat fileFormat, const ImageDataFormat dataFormat)
 {
     return ResultInvalid;
 }
@@ -394,6 +278,12 @@ void ImageResize(Image* image, const ImageDataFormat format, const size_t width,
 {
     const size_t bbp = ImageBytePerPixel(format);
     const size_t newSize = width * height * bbp;
+    const size_t oldSize = image->PixelDataSize;
+
+    if(newSize == oldSize)
+    {
+        return;
+    }
 
     const void* newadress = MemoryReallocate(image->PixelData, sizeof(unsigned char) * newSize);
 
@@ -522,15 +412,15 @@ void ImageDrawTextW
 )
 {
     float fontSize = 0.002;
-    size_t lastPositionX = x;
+    float lastPositionX = x;
 
 
-    FNTPrtinf(&font->BitMapFont);
+   // FNTPrtinf(&font->BitMapFont);
 
     for (size_t i = 0; (i < 1024u) && (text[i] != '\0'); ++i)
     {
         const wchar_t character = text[i];
-        const FNTCharacter* fntCharacter = FNTGetCharacter(&font->BitMapFont, character);
+        const FNTCharacter* fntCharacter = FNTGetCharacter(&font->FontElement[0], character);
 
         if (!fntCharacter)
         {
@@ -545,18 +435,84 @@ void ImageDrawTextW
         float positionY = fntCharacter->Position[1];
         float sizeX = fntCharacter->Size[0];
         float sizeY = fntCharacter->Size[1];
-        
+             
+#if 0
+        ImageDrawRectangle
+        (
+            image, 
+            lastPositionX+ offsetX, 
+            y+ offsetY,
+            sizeX,
+            sizeY, 
+            0xFF,
+            0,
+            0xFF, 
+            0
+        );
+#endif
+        ImageMerge
+        (
+            image,
+            lastPositionX + offsetX, 
+            y + offsetY, 
+            positionX,
+            positionY,
+            sizeX,
+            sizeY,       
+            &font->FontElement[0].FontPageList[0].FontTextureMap
+        );
 
         lastPositionX += fntCharacter->XAdvance;
-
-        ImageDrawRectangle(image, lastPositionX+ offsetX, y + offsetY, sizeX, sizeY, 0xFF, 0, 0xFF, 0);
-
-        lastPositionX += 15;
+        //lastPositionX += 15;
     }
 }
 
-void ImageMerge(Image* const image, const size_t x, const size_t y, Image* const imageInsert)
+void ImageMerge
+(
+    Image* const image,
+    const size_t x,
+    const size_t y,
+    const size_t insertX,
+    const size_t insertY,
+    const size_t insertWidth,
+    const size_t insertHeight,
+    const Image* const imageInsert
+)
 {
 
+    //unsigned char* data = ImageDataPoint(image, x, y);
 
+    const size_t sourceMimimumInBoundsX = MathMinimum(x + insertWidth, image->Width);
+    const size_t sourceMimimumInBoundsY = MathMinimum(y + insertHeight, image->Height);
+    const size_t targetMimimumInBoundsX = MathMinimum(insertX + insertWidth, imageInsert->Width);
+    const size_t targetMimimumInBoundsY = MathMinimum(insertY + insertHeight, imageInsert->Height);
+
+    const size_t sourceBytesPerPixel = ImageBytePerPixel(image->Format);
+    const size_t targetBytesPerPixel = ImageBytePerPixel(imageInsert->Format);
+    const size_t bytesPerPixel = MathMinimum(sourceBytesPerPixel, targetBytesPerPixel);
+
+    for (size_t cy = 0u; cy < insertHeight; ++cy)
+    {
+        for (size_t cx = 0u; cx < insertWidth; ++cx)
+        {
+            const size_t indexSource = (cx + x) * sourceBytesPerPixel + (cy + y) * image->Width * sourceBytesPerPixel;
+            const size_t indexTarget = (cx + insertX) * targetBytesPerPixel + (cy + insertY) * imageInsert->Width * targetBytesPerPixel;
+
+            unsigned char* source = ((unsigned char*)image->PixelData) + indexSource;
+            unsigned char* target = ((unsigned char*)imageInsert->PixelData) + indexTarget;
+
+            if(targetBytesPerPixel == 4)
+            {
+                if(target[3] == 0)
+                {
+                    continue;
+                }
+            }
+
+            for(size_t i = 0; i < bytesPerPixel; ++i)
+            {
+                source[i] = target[i];
+            }
+        }
+    }
 }

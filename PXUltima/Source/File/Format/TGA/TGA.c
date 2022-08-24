@@ -307,6 +307,11 @@ ActionResult TGAParse(TGA* tga, const void* data, const size_t dataSize, size_t*
 	return ResultSuccessful;
 }
 
+ActionResult TGAParseToImage(Image* const image, const void* const data, const size_t dataSize, size_t* dataRead)
+{
+	return ResultInvalid;
+}
+
 ActionResult TGASerializeFromImage(const Image* const image, void* data, const size_t dataSize, size_t* dataWritten)
 {
 	return ResultInvalid;

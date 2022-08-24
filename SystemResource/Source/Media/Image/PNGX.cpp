@@ -83,17 +83,17 @@ ActionResult BF::PNGX::ConvertTo(Image& image)
             format = ImageDataFormatAlphaMask;
             break;
 
-        case PNGColorTruecolor:
+        case PNGColorRGB:
             format = ImageDataFormatRGB;
             break;
 
         case PNGColorInvalid:
-        case PNGColorIndexedColor:
-        case PNGColorGrayscaleWithAlphaChannel:
+        case PNGColorPalette:
+        case PNGColorGrayscaleAlpha:
             format = ImageDataFormatInvalid;
             break;
 
-        case PNGColorTruecolorWithAlphaChannel:
+        case PNGColorRGBA:
             format = ImageDataFormatRGBA;
             break;
     }

@@ -183,7 +183,7 @@
     <ClInclude Include="Source\File\Format\ADAM7\ADAM7.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Source\File\Format\DEFLATE\DeflateBlock.h">
+    <ClInclude Include="Source\File\Format\DEFLATE\DEFLATE.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\File\Format\HUFFMAN\HuffmanTree.h">
@@ -425,7 +425,7 @@
     <ClCompile Include="Source\File\Format\ADAM7\ADAM7.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\File\Format\DEFLATE\DeflateBlock.c">
+    <ClCompile Include="Source\File\Format\DEFLATE\DEFLATE.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\File\Format\HUFFMAN\HuffmanTree.c">

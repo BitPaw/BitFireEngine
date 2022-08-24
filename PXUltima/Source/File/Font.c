@@ -9,14 +9,14 @@
 
 #include <File/Image.h>
 
-void FontConstruct(CFont* font)
+void FontConstruct(CFont* const font)
 {
     MemorySet(font, sizeof(CFont), 0);
 }
 
-void FontDestruct(CFont* font)
+void FontDestruct(CFont* const font)
 {
-
+    MemoryRelease(font->FontElement, font->FontElementSize);
 }
 
 FontFileFormat FontGuessFormat(const wchar_t* filePath)
@@ -32,7 +32,7 @@ FontFileFormat FontGuessFormat(const wchar_t* filePath)
     return FontFileFormatUnkown;
 }
 
-ActionResult FontLoadA(CFont* font, const char* filePath)
+ActionResult FontLoadA(CFont* const font, const char* filePath)
 {
     wchar_t filePathW[PathMaxSize];
 
@@ -43,7 +43,7 @@ ActionResult FontLoadA(CFont* font, const char* filePath)
     return actionResult;
 }
 
-ActionResult FontLoadW(CFont* font, const wchar_t* filePath)
+ActionResult FontLoadW(CFont* const font, const wchar_t* filePath)
 {
     File file;
 
@@ -89,7 +89,7 @@ ActionResult FontLoadW(CFont* font, const wchar_t* filePath)
     FileDestruct(&file);
 }
 
-ActionResult FontLoadD(CFont* font, const FontFileFormat guessedFormat, const void* data, const size_t dataSize)
+ActionResult FontLoadD(CFont* const font, const FontFileFormat guessedFormat, const void* data, const size_t dataSize)
 {
     FontConstruct(font);
 
@@ -97,9 +97,13 @@ ActionResult FontLoadD(CFont* font, const FontFileFormat guessedFormat, const vo
     {
         case FontFileFormatFNT:
         {
+            font->FontElementSize = 1u;
+            font->FontElement = MemoryAllocateClear(sizeof(FNT) * 1u);
+
             {
+
                 size_t readBytes = 0;
-                const ActionResult fileActionResult = FNTParse(&font->BitMapFont, data, dataSize, &readBytes);
+                const ActionResult fileActionResult = FNTParse(font->FontElement, data, dataSize, &readBytes, L"D:/_Data/");
                 const unsigned char sucessful = ResultSuccessful == fileActionResult;
 
                 if(!sucessful)
