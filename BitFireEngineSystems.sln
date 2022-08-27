@@ -31,8 +31,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestConsole", "TestConsole\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestNetworkQT", "TestNetworkQT\TestNetworkQT.vcxproj", "{9F4C3950-2D60-4B63-A36A-3FE32D69A222}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PXUltima", "PXUltima\PXUltima.vcxproj", "{7D027ED8-ED69-414C-A832-40CD80BE72D7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -267,24 +265,6 @@ Global
 		{9F4C3950-2D60-4B63-A36A-3FE32D69A222}.Release|x64.ActiveCfg = Release|x64
 		{9F4C3950-2D60-4B63-A36A-3FE32D69A222}.Release|x64.Build.0 = Release|x64
 		{9F4C3950-2D60-4B63-A36A-3FE32D69A222}.Release|x86.ActiveCfg = Release|x64
-		{7D027ED8-ED69-414C-A832-40CD80BE72D7}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{7D027ED8-ED69-414C-A832-40CD80BE72D7}.Debug|Windows 10 - 32Bit.ActiveCfg = Debug|Win32
-		{7D027ED8-ED69-414C-A832-40CD80BE72D7}.Debug|Windows 10 - 64Bit.ActiveCfg = Debug|Win32
-		{7D027ED8-ED69-414C-A832-40CD80BE72D7}.Debug|Windows 7 - 64Bit.ActiveCfg = Debug|Win32
-		{7D027ED8-ED69-414C-A832-40CD80BE72D7}.Debug|Windows XP.ActiveCfg = Debug|Win32
-		{7D027ED8-ED69-414C-A832-40CD80BE72D7}.Debug|x64.ActiveCfg = Debug|x64
-		{7D027ED8-ED69-414C-A832-40CD80BE72D7}.Debug|x64.Build.0 = Debug|x64
-		{7D027ED8-ED69-414C-A832-40CD80BE72D7}.Debug|x86.ActiveCfg = Debug|Win32
-		{7D027ED8-ED69-414C-A832-40CD80BE72D7}.Debug|x86.Build.0 = Debug|Win32
-		{7D027ED8-ED69-414C-A832-40CD80BE72D7}.Release|Any CPU.ActiveCfg = Release|Win32
-		{7D027ED8-ED69-414C-A832-40CD80BE72D7}.Release|Windows 10 - 32Bit.ActiveCfg = Release|Win32
-		{7D027ED8-ED69-414C-A832-40CD80BE72D7}.Release|Windows 10 - 64Bit.ActiveCfg = Release|Win32
-		{7D027ED8-ED69-414C-A832-40CD80BE72D7}.Release|Windows 7 - 64Bit.ActiveCfg = Release|Win32
-		{7D027ED8-ED69-414C-A832-40CD80BE72D7}.Release|Windows XP.ActiveCfg = Release|Win32
-		{7D027ED8-ED69-414C-A832-40CD80BE72D7}.Release|x64.ActiveCfg = Release|x64
-		{7D027ED8-ED69-414C-A832-40CD80BE72D7}.Release|x64.Build.0 = Release|x64
-		{7D027ED8-ED69-414C-A832-40CD80BE72D7}.Release|x86.ActiveCfg = Release|Win32
-		{7D027ED8-ED69-414C-A832-40CD80BE72D7}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
