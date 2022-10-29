@@ -1,5 +1,12 @@
 # BitFireEngine
 
+## Info
+### Dependeny
+    This Engine usees another project "PXUltima".
+    This is a library that contains all kinds of basic utility.
+  
+Link to git repository: https://github.com/BitPaw/PXUltima
+
 ## Images
 ### Test-Project: Cleaved
 ![Image](_Images/Cleaved.png)
@@ -20,9 +27,3 @@
 | If you do 'everything' what do you have in mind? | Well.. 'everything' sure is a very vague.<br>I mean by that, that i will add support for all sorts of formats. From music and video to images and models, maybe even more? So that you could juggle with all types, no matter common or uncommon, why not every type? We have time enough, don't we? |
 | Sounds like a lot of work | It's a lot of work.. Yes... : ^)<br>It's hard to stay motivated. |
 | Do you have someone to help you? | Not really, a one man army. <br>I do have a lot of 'sometime i'll do something' helpers tho.. heh.. |
-
-### Details
-
-The code is written in a way that you could remove some systems and use your own. Even Engine itself. 
-(Ofcorse.. there are limitations)
-
