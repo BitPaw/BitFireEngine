@@ -1,16 +1,14 @@
 #include "Collider.h"
 
-#include <Math/Geometry/Form/Cube.h>
-
 BF::Collider::Collider(ColliderType type)
 {
 	Type = type;
     OnCollisionCallBack = nullptr;
 }
 
-bool BF::Collider::IsInBoundingBox(Vector3<float> ancerPosition, Vector3<float> ancerSize, Vector3<float> targetPosition, Vector3<float> targetSize)
+bool BF::Collider::IsInBoundingBox(PXVector3F ancerPosition, PXVector3F ancerSize, PXVector3F targetPosition, PXVector3F targetSize)
 {
-    bool IsPointInObject = Cube::IsPointInObject
+    bool IsPointInObject = 0;/*;Cube::IsPointInObject
     (
         ancerPosition.X,
         ancerPosition.Y,
@@ -24,7 +22,7 @@ bool BF::Collider::IsInBoundingBox(Vector3<float> ancerPosition, Vector3<float> 
         targetSize.X,
         targetSize.Y,
         targetSize.Z
-    );
+    );*/
 
     return IsPointInObject;
 }

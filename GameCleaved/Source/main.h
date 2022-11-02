@@ -1,20 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <Video/Shader.h>
-#include <Model/Model.h>
-#include <Math/Math.h>
+
 #include <Math/Geometry/Rectangle.hpp>
 #include <Math/Geometry/Form/Cube.h>
 #include <Time/StopWatch.h>
-
-#include <Graphic/OpenGL/SkyBox.h>
-#include <Graphic/OpenGL/Sprite.h>
-#include <UI/DialogBox/UIDialogBox.h>
 #include <UI/UIText.h>
 #include <Entity/Sign.h>
 #include <Physic/GravityCube.h>
-#include <File/Format/FNT/FNT.h>
 #include <System/BitFireEngine.h>
 
 using namespace BF;
@@ -23,7 +16,7 @@ float _deltaTime = 0;
 BF::Renderable _rectangleMesh;
 
 FNT fnt;
-CFont _font;
+PXFont _font;
 
 BF::Texture testTextue;
 

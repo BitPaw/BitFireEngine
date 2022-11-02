@@ -5,40 +5,23 @@
 //#include <AL/alc.h>
 
 // OpenGL - Graphics
-#include <GL/glew.h>
+//#include <GL/glew.h>
+#include <Graphic/Graphic.h>
 #include <Graphic/OpenGL/OpenGL.h>
+#include <Async/PXLock.h>
+#include <Async/PXThread.h>
+#include <Graphic/PXCamera.h>
+#include <OS/PXWindow.h>
+#include <Time/PXTime.h>
+#include <Container/LinkedList/PXLinkedList.h>
 
 
 // Resource System
-#include <File/Font.h>
-#include <File/Image.h>
-
-#include <Time/StopWatch.h>
-#include <Async/Thread.h>
-#include <Async/AsyncLock.h>
-#include <Camera/Camera.h>
-#include <Container/LinkedList.hpp>
-#include <Math/Geometry/Matrix4x4.hpp>
-#include <Video/Shader.h>
-#include <Model/Model.h>
-#include <Media/Sound/AudioClip.h>
-#include <Media/Sound/AudioSource.h>
-#include <Media/Sound/Sound.h>
-
-//#include "Window/Window.h"
-
-//#include "../Resource/SkyBox.h"
-#include "../Player/Player.h"
-
-//#include "../Resource/Sprite.h"
-
-#include <Window/Window.h>
+#include <Format/Font.h>
+#include <Format/Image.h>
 
 #include "../Level/Level.h"
 #include "../Physic/Collider.h"
-#include <Graphic/OpenGL/Renderable.h>
-#include <Graphic/OpenGL/SkyBox.h>
-#include <Graphic/OpenGL/Sprite.h>
 #include "InputContainer.h"
 
 namespace BF
@@ -55,7 +38,7 @@ namespace BF
 	{
 		private:
 		//---[Elements}---------------------------------
-		StopWatch _stopWatch;
+        PXTime _lastUpdate;
 
 		float _deltaTime;
 
@@ -65,16 +48,16 @@ namespace BF
 		//----------------------------------------------
 
         // Resources
-        LinkedList<Renderable*> _renderList;
-        LinkedList<Texture*> _textureList;
-        LinkedList<AudioClip*> _audioClipList;
+        PXLinkedListFixed _renderList; // PXRenderable
+        PXLinkedListFixed _textureList; // PXTexture
+        //LinkedList<AudioClip*> _audioClipList;
 
         //LinkedList<Sound*> _soundList;
-        LinkedList<CFont*> _fontList;
-        LinkedList<ShaderProgram*> _shaderProgramList;
+        PXLinkedListFixed _fontList; // PXFont
+        PXLinkedListFixed _shaderProgramList; // ShaderProgram;
         //LinkedList<Dialog*> _dialogList;
         //LinkedList<Level*> _levelList;
-        LinkedList<Collider*> _physicList;
+        //LinkedList<Collider*> _physicList;
         //---------------
 
         // Render -runtime info
@@ -89,21 +72,21 @@ namespace BF
         //----
 
         // ASYNC LOCKS
-        AsyncLock _imageAdd;
-        AsyncLock _modelAdd;
+        PXLock _imageAdd;
+        PXLock _modelAdd;
         //-------------------------
 
 
 
 
-        static void GLAPIENTRY ErrorMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
+       // static void GLAPIENTRY ErrorMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 
-        static void OnMouseButton(const void* const receiver, const CWindow* sender, const MouseButton mouseButton, const ButtonState buttonState);
-        static void OnMouseMove(const void* const receiver, const CWindow* sender, const Mouse* mouse);
-        static void OnKeyBoardKey(const void* const receiver, const CWindow* sender, const KeyBoardKeyInfo keyBoardKeyInfo);
-        static void OnWindowCreated(const void* const receiver, const CWindow* sender);
-        static void OnWindowSizeChanged(const void* const receiver, const CWindow* sender, const size_t width, const size_t height);
-        static void OnWindowsMouseCaptureChanged(const void* const receiver, const CWindow* sender);
+        static void OnMouseButton(const void* const receiver, const PXWindow* sender, const MouseButton mouseButton, const ButtonState buttonState);
+        static void OnMouseMove(const void* const receiver, const PXWindow* sender, const Mouse* mouse);
+        static void OnKeyBoardKey(const void* const receiver, const PXWindow* sender, const KeyBoardKeyInfo keyBoardKeyInfo);
+        static void OnWindowCreated(const void* const receiver, const PXWindow* sender);
+        static void OnWindowSizeChanged(const void* const receiver, const PXWindow* sender, const size_t width, const size_t height);
+        static void OnWindowsMouseCaptureChanged(const void* const receiver, const PXWindow* sender);
 
 #if defined(OSUnix)
         static void OnSystemSignal(int signalID);
@@ -116,12 +99,12 @@ namespace BF
         //---------------------------------------------------------------------
 
 		public:
-        Window _mainWindow;
+        PXWindow _mainWindow;
 
 		bool IsRunning;
-        Camera MainCamera;
-        CFont* DefaultFont;
-        SkyBox* DefaultSkyBox;
+        PXCamera MainCamera;
+        PXFont* DefaultFont;
+        PXSkyBox* DefaultSkyBox;
 
         UpdateUIEvent UpdateUICallBack;
         StartUpEvent StartUpCallBack;
@@ -135,68 +118,39 @@ namespace BF
         void Start();
 		void Update();
 		void Stop();
+  
+        void MakeRectangle(PXRenderable& renderable);
 
-       // ShaderProgram ShaderHitBox;
+        static PXThreadResult LoadResourceAsync(void* resourceAdress);
 
-       // BF::Model CubeHitBoxViewModel;
-
-        //void Load(Sprite& sprite, const char* model, const char* texturePath);
-      //  Matrix4x4<float> TransformBoundingBox(Matrix4x4<float> modelMatrix, Vector3<float> boundingBox, bool half);
-
-
-        void Register(Texture& texture);
-        void Register(TextureCube& textureCube);
-        void Register(Renderable& renderable, const Model& model);
-        void Register(Renderable& renderable, const float* vertexData, const size_t vertexDataSize, const unsigned int* indexList, const size_t indexListSize);
-        void Register(SkyBox& skyBox);
-        bool Register(ShaderProgram& shaderProgram, const wchar_t* vertexShaderFilePath, const wchar_t* fragmentShaderFilePath);
-        void Register(AudioSource& audioSource);
-        void Register(CFont& font);
-        void Register(AudioClip& audioClip, const Sound& sound);
-
-        void Use(Texture& texture);
-        void Use(const ImageType imageType, const int textureID);
-        void Use(Renderable& renderable);
-        void Use(SkyBox& skyBox);
-        void Use(const AudioSource& audioSource, const AudioClip& audioClip);
-
-        void Update(const AudioSource& audioSource);
-
-        void UnRegister(AudioSource& audioSource);
-        void UnRegister(AudioClip& audioClip);
-
-
-        void MakeRectangle(Renderable& renderable);
-
-
-        static ThreadResult LoadResourceAsync(void* resourceAdress);
-
-        ActionResult Load(Resource* resource, const wchar_t* filePath, const bool loadAsynchronously = true);
+      /*  ActionResult Load(Resource* resource, const wchar_t* filePath, const bool loadAsynchronously = true); */
         ActionResult Load(Level& level, const wchar_t* filePath, const bool loadAsynchronously = true);
 
 
-        ActionResult Load(CFont& font, const wchar_t* filePath, bool loadAsynchronously = true);
+        ActionResult Load(PXFont& font, const wchar_t* filePath, bool loadAsynchronously = true);
         ActionResult Load(ShaderProgram& shaderProgram, const wchar_t* vertexShaderFilePath, const wchar_t* fragmentShaderFilePath);
 
         // Model
         ActionResult Load(Model& model, const wchar_t* filePath, const bool loadAsynchronously = true);
-        ActionResult Load(Renderable& renderable, const wchar_t* filePath, bool loadAsynchronously = true);
-        ActionResult Load(Renderable& renderable, const float* vertexData, const size_t vertexDataSize, const unsigned int* indexList, const size_t indexListSize);
+        ActionResult Load(PXRenderable& renderable, Model* model, const wchar_t* filePath, bool loadAsynchronously = true);
+        ActionResult Load(PXRenderable& renderable, const float* vertexData, const size_t vertexDataSize, const unsigned int* indexList, const size_t indexListSize);
 
         // Texture
         ActionResult Load(Image& image, const wchar_t* filePath, bool loadAsynchronously = true);
-        ActionResult Load(Texture& texture, const wchar_t* filePath, bool loadAsynchronously = true);
-        ActionResult Load(Sprite& sprite, const wchar_t* filePath);
+       
+        
+        ActionResult Load(PXTexture& texture, const wchar_t* filePath, bool loadAsynchronously = true);
+      //  ActionResult Load(Sprite& sprite, const wchar_t* filePath);
 
         // Audio
-        ActionResult Load(Sound& sound, const wchar_t* filePath, const bool loadAsynchronously = true);
-        ActionResult Load(AudioClip& audioClip, const wchar_t* filePath, bool loadAsynchronously = true);
+       // ActionResult Load(Sound& sound, const wchar_t* filePath, const bool loadAsynchronously = true);
+       // ActionResult Load(AudioClip& audioClip, const wchar_t* filePath, bool loadAsynchronously = true);
 
 
         ActionResult Load(Collider* collider);
         ActionResult Load
         (
-            SkyBox& skyBox,
+            PXSkyBox& skyBox,
             const wchar_t* shaderVertex,
             const wchar_t* shaderFragment,
             const wchar_t* textureRight,
@@ -209,33 +163,10 @@ namespace BF
 
         void UnloadAll();
 
-
         void ModelsPhysicsApply(float deltaTime);
 
         void ModelsRender(const float deltaTime);
-        void BoundingBoxRender(Matrix4x4<float> modelMatrix, Vector3<float> boundingBox, Vector3<float> color);
 
         void PrintContent(bool detailed);
-
-
-
-        // Convert
-        static const unsigned short ToRenderMode(const RenderMode renderMode);
-
-        static const ShaderType ToShaderType(const OpenGLID token);
-        static const OpenGLID ToShaderType(const ShaderType shaderType);
-
-        static const ImageDataFormat ToImageFormat(const OpenGLID token);
-        static const OpenGLID ToImageFormat(const ImageDataFormat imageFormat);
-
-        static const ImageType ToImageType(const OpenGLID token);
-        static const OpenGLID ToImageType(const ImageType imageType);
-
-        static int ImageWrapToOpenGLFormat(ImageWrap imageWrap);
-        static int ImageLayoutToOpenGLFormat(ImageLayout layout);
-
-        unsigned int ToChannalFormat(const unsigned short numerOfChannels, const unsigned short bitsPerSample);
-
-        static const char* ShaderTypeToString(int type);
 	};
 }

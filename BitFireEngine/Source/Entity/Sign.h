@@ -3,11 +3,11 @@
 #include "../Physic/CollisionListener.h"
 #include "../Physic/Collider.h"
 
-#include <Graphic/OpenGL/Sprite.h>
+#include <Graphic/Graphic.h>
 
 namespace BF
 {
-	class Sign : public Sprite, public CollisionListener
+	class Sign : /*public Sprite, */ public CollisionListener
 	{
 		public:
 		bool Interactable;

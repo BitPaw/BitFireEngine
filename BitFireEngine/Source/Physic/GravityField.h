@@ -2,7 +2,6 @@
 
 #include "Collider.h"
 #include "ColliderType.h"
-#include <Math/Geometry/Vector3.hpp>
 
 #define GravityForceSun 274
 #define GravityForceMercury 3.7
@@ -22,8 +21,8 @@ namespace BF
 	{
 		public:	
 		float PullForce;
-		Vector3<float> PullDirection;
-		Vector3<bool> IgnoreAxis;
+		PXVector3F PullDirection;
+		PXVector3F IgnoreAxis;
 
 		GravityField();
 	};

@@ -1,11 +1,11 @@
 #include "UIText.h"
 
-#include <File/Format/FNT/FNT.h>
-#include <Math/Interpolate.h>
+#include <Format/FNT/FNT.h>
 #include <Text/Text.h>
 
-void BF::UIText::Setup(const wchar_t* text, CFont* font, float x, float y)
+void BF::UIText::Setup(const wchar_t* text, PXFont* font, float x, float y)
 {
+	/*
 	AncerPosition.Set(x, y);
 	Width = 0;
 	Height = 0;
@@ -17,7 +17,7 @@ void BF::UIText::Setup(const wchar_t* text, CFont* font, float x, float y)
 
 	Mesh& mesh = MeshList[0];
 	//mesh.Structure.RenderType = RenderMode::Square;
-	//mesh.Structure.RenderType = RenderMode::Square;
+	//mesh.Structure.RenderType = RenderMode::Square;*/
 
 	//strcpy(mesh.Name, "<Text-Mesh>");
 	//strcpy(mesh.FilePath, "<Internal>");
@@ -32,7 +32,7 @@ BF::UIText::UIText()
 	Setup(L"-----------------------", nullptr, 0, 0);
 }
 
-void BF::UIText::FontSet(CFont& font)
+void BF::UIText::FontSet(PXFont& font)
 {
 	_font = &font;
 }
@@ -41,8 +41,8 @@ void BF::UIText::TextPositionSet(float x, float y)
 {
 	float offset = 1;
 
-	x = Interpolate::Liniar(-Width* offset, Width* offset, -1, 1, x);
-	y = Interpolate::Liniar(-Height* offset, Height* offset, -1, 1, y);
+	//x = Interpolate::Liniar(-Width* offset, Width* offset, -1, 1, x);
+	//y = Interpolate::Liniar(-Height* offset, Height* offset, -1, 1, y);
 
 	//MatrixModel.MoveTo(x- Width, y- Height, 0);
 }
@@ -306,6 +306,7 @@ void BF::UIText::TextUpdate()
 
 void BF::UIText::PrintObjectData()
 {
+	/*
 	Mesh& mesh = MeshList[0];
 
 	unsigned int vertexIndex = 0;
@@ -315,7 +316,7 @@ void BF::UIText::PrintObjectData()
 
 	for (unsigned int i = 0; TextContent[i] != '\0'; i++)
 	{
-		/*
+		
 		Rectangle vertexRectangle
 		(
 			mesh.VertexList[vertexIndex++].CurrentPosition,
@@ -336,6 +337,7 @@ void BF::UIText::PrintObjectData()
 		printf("B| %5.1f | %5.1f | %1.5f | %1.5f |\n", vertexRectangle.PointB.X, vertexRectangle.PointB.Y, textureRectangle.PointB.X, textureRectangle.PointB.Y);
 		printf("C| %5.1f | %5.1f | %1.5f | %1.5f |\n", vertexRectangle.PointC.X, vertexRectangle.PointC.Y, textureRectangle.PointC.X, textureRectangle.PointC.Y);
 		printf("D| %5.1f | %5.1f | %1.5f | %1.5f |\n", vertexRectangle.PointD.X, vertexRectangle.PointD.Y, textureRectangle.PointD.X, textureRectangle.PointD.Y);
-		printf(" | \n");*/
+		printf(" | \n");
 	}
+	*/
 }

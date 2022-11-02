@@ -25,5 +25,7 @@ void main()
 {
     vec3 color = vertex.Color.xyz;
 
-   fragcolor = texture(MaterialTexture, vertex.TexturePosition) * vec4(color, 1.0f);
+  // fragcolor = texture(MaterialTexture, vertex.TexturePosition) * vec4(color, 1.0f);
+
+   fragcolor = vec4(1,1,0, 1.0f);
 }

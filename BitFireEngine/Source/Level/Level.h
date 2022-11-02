@@ -1,33 +1,25 @@
 #pragma once
 
-#include <File/Image.h>
-#include <File/Font.h>
-
-#include <Model/Model.h>
-#include <Media/Sound/Sound.h>
 #include <Error/ActionResult.h>
-#include <Camera/Camera.h>
-
-#include <Graphic/OpenGL/Texture.h>
-
-#include <Video/Shader.h>
+#include <Graphic/PXCamera.h>
 
 #include "../Dialog/Dialog.h"
+#include <Graphic/Graphic.h>
 
 
 namespace BF
 {
-	class Level : public Resource
+	class Level// : public Resource
 	{
 		public:
 		// Physics Container
-		List<Model*> ModelList;
-		List<Texture*> TextureList;
-		List<Sound*> SoundList;
-		List<CFont*> FontList;
-		List<Shader*> ShaderList;
-		List<Dialog*> DialogList;
-		List<Camera*> CameraList;
+		//List<Model*> ModelList;
+		//List<Texture*> TextureList;
+		//List<Sound*> SoundList;
+		//List<PXFont*> FontList;
+		//List<Shader*> ShaderList;
+		//List<Dialog*> DialogList;
+		//List<PXCamera*> CameraList;
 
 		static bool IsLevelFile(const wchar_t* filePath);
 

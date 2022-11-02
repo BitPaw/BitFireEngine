@@ -12,7 +12,7 @@
 #include <File/File.h>
 #include <File/Format/MP3/MP3.h>
 #include <File/Format/PNG/PNG.h>
-#include <OS/CWindow.h>
+#include <OS/PXWindow.h>
 #include <OS/OSUI.h>
 #include <CommCtrl.h>
 #include <File/Image.h>
@@ -26,7 +26,7 @@
 using namespace BF;
 
 
-void OnWindowCreated(const void* const receiver, const CWindow* window)
+void OnWindowCreated(const void* const receiver, const PXWindow* window)
 {
     OSButton button;
     OSListBox listBox;
@@ -111,7 +111,7 @@ void OnWindowCreated(const void* const receiver, const CWindow* window)
 
 }
 
-void OnKeyBoardKey(const void* const receiver, const CWindow* sender, const KeyBoardKeyInfo keyBoardKeyInfo)
+void OnKeyBoardKey(const void* const receiver, const PXWindow* sender, const KeyBoardKeyInfo keyBoardKeyInfo)
 {
    // printf("[#]\n");
 }
@@ -164,7 +164,7 @@ void TestSaveImage()
 void ImageWriteText()
 {
     Image image;
-    CFont font;
+    PXFont font;
 
     Image imageAA;
     //ActionResult dfsdsfdsf = ImageLoadA(&imageAA, "D:/_Data/A.png");
@@ -200,15 +200,15 @@ void ImageWriteText()
 
 void TestCreateWindow()
 {
-    CWindow window;
+    PXWindow window;
 
 
-    CWindowConstruct(&window);
+    PXWindowConstruct(&window);
 
     window.WindowCreatedCallBack = OnWindowCreated;
     window.KeyBoardKeyCallBack = OnKeyBoardKey;
 
-    CWindowCreate(&window, 600, 400, "I BIMS", true);
+    PXWindowCreate(&window, 600, 400, "I BIMS", true);
 
     while(!window.IsRunning)
     {

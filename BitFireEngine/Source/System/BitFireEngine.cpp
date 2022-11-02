@@ -4,19 +4,18 @@
 #include "../UI/UIText.h"
 
 #include <File/File.h>
-#include <Media/Image/BMP/BMPP.h>
-#include <Model/Model.h>
-#include <Time/StopWatch.h>
+#include <Format/Model.h>
 #include <Text/Text.h>
-#include <Graphic/OpenGL/OpenGL.h>
-#include <Graphic/OpenGL/ResourceType.hpp>
+#include <Graphic/Graphic.h>
 #include <Async/Await.h>
-#include <File/ParsingStream.h>
+#include <Time/PXStopWatch.h>
 
 #include <stdlib.h>
 #include <signal.h>
 #include <Device/Controller.h>
 #include <Event/Event.h>
+#include <File/DataStream.h>
+#include <Device/InputButton.h>
 
 OpenGLID _matrixModelID;
 OpenGLID _matrixViewID;
@@ -24,18 +23,18 @@ OpenGLID _matrixProjectionID;
 OpenGLID _materialTextureID;
 RefreshRateMode RefreshRate;
 
-void CameraDataGet(const unsigned int shaderID)
+void CameraDataGet(PXWindow* const window, const unsigned int shaderID)
 {
-    _matrixModelID = BF::OpenGL::ShaderGetUniformLocationID(shaderID, "MatrixModel");
-    _matrixViewID = BF::OpenGL::ShaderGetUniformLocationID(shaderID, "MatrixView");
-    _matrixProjectionID = BF::OpenGL::ShaderGetUniformLocationID(shaderID, "MatrixProjection");
-    _materialTextureID = BF::OpenGL::ShaderGetUniformLocationID(shaderID, "MaterialTexture");
+    _matrixModelID = GraphicShaderVariableIDFetch(&window->GraphicInstance, shaderID, "MatrixModel");
+    _matrixViewID = GraphicShaderVariableIDFetch(&window->GraphicInstance, shaderID, "MatrixView");
+    _matrixProjectionID = GraphicShaderVariableIDFetch(&window->GraphicInstance, shaderID, "MatrixProjection");
+    _materialTextureID = GraphicShaderVariableIDFetch(&window->GraphicInstance, shaderID, "MaterialTexture");
 }
 
-void CameraDataUpdate(BF::Camera& camera)
+void CameraDataUpdate(PXWindow* const window, PXCamera& camera)
 {
     //BF::OpenGL::ShaderSetUniformMatrix4x4(_matrixModelID, camera.MatrixModel.Data);
-    BF::Matrix4x4<float> viewModel = BF::Matrix4x4<float>(camera.MatrixModel);
+    //Matrix4x4<float> viewModel = BF::Matrix4x4<float>(camera.MatrixModel);
 
     //auto pos = camera.MatrixModel.CurrentPosition();
 
@@ -45,8 +44,8 @@ void CameraDataUpdate(BF::Camera& camera)
 
     //viewModel.Print();
 
-    BF::OpenGL::ShaderSetUniformMatrix4x4(_matrixViewID, camera.MatrixView.Data);
-    BF::OpenGL::ShaderSetUniformMatrix4x4(_matrixProjectionID, camera.MatrixProjection.Data);
+    GraphicShaderUpdateMatrix4x4F(&window->GraphicInstance, _matrixViewID, camera.MatrixView.Data);
+    GraphicShaderUpdateMatrix4x4F(&window->GraphicInstance, _matrixProjectionID, camera.MatrixProjection.Data);
 }
 
 
@@ -67,126 +66,13 @@ BF::BitFireEngine::BitFireEngine()
     ShutDownCallBack = nullptr;
     UpdateGameLogicCallBack = nullptr;
     UpdateInputCallBack = nullptr;
-}
 
-void BF::BitFireEngine::ErrorMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
-{
-    bool openGLspecific = type == GL_DEBUG_TYPE_ERROR;
-    const char* sourceText = 0;
-    const char* typeText = 0;
-    const char* servertyText = 0;
-
-    switch(source)
-    {
-        case GL_DEBUG_SOURCE_API:
-            sourceText = "API";
-            break;
-
-        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
-            sourceText = "Window";
-            break;
-
-        case GL_DEBUG_SOURCE_SHADER_COMPILER:
-            sourceText = "Shader";
-            break;
-
-        case GL_DEBUG_SOURCE_THIRD_PARTY:
-            sourceText = "3rd Party";
-            break;
-
-        case GL_DEBUG_SOURCE_APPLICATION:
-            sourceText = "Application";
-            break;
-
-        case GL_DEBUG_SOURCE_OTHER:
-            sourceText = "Other";
-            break;
-
-        default:
-            break;
-    }
-
-    switch(type)
-    {
-        case GL_DEBUG_TYPE_ERROR:
-            typeText = "Error";
-            break;
-
-        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
-            typeText = "DEPRECATED_BEHAVIOR";
-            break;
-
-        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
-            typeText = "UNDEFINED_BEHAVIOR";
-            break;
-
-        case GL_DEBUG_TYPE_PORTABILITY:
-            typeText = "PORTABILITY";
-            break;
-
-        case GL_DEBUG_TYPE_PERFORMANCE:
-            typeText = "PERFORMANCE";
-            break;
-
-        case GL_DEBUG_TYPE_OTHER:
-            typeText = "OTHER";
-            break;
-
-        case GL_DEBUG_TYPE_MARKER:
-            typeText = "MARKER";
-            break;
-
-        case GL_DEBUG_TYPE_PUSH_GROUP:
-            typeText = "PUSH_GROUP";
-            break;
-
-        case GL_DEBUG_TYPE_POP_GROUP:
-            typeText = "POP_GROUP";
-            break;
-
-        default:
-            break;
-    }
-
-    switch(severity)
-    {
-        case GL_DEBUG_SEVERITY_HIGH:
-            servertyText = "High";
-            break;
-
-        case GL_DEBUG_SEVERITY_MEDIUM:
-            servertyText = "Medium";
-            break;
-
-        case GL_DEBUG_SEVERITY_LOW:
-            servertyText = "Low";
-            break;
-
-        case GL_DEBUG_SEVERITY_NOTIFICATION:
-            servertyText = "Info";
-            break;
-
-        default:
-            break;
-    }
-
-
-    // (0x%x)
-
-    fprintf
-    (
-        stderr,
-        "[x][OpenGL][%s][%s][%s] %s\n",
-        sourceText,
-        typeText,
-        servertyText,
-        message
-    );
+    PXCameraConstruct(&MainCamera);
 }
 
 void BF::BitFireEngine::Start()
 {
-    BF::StopWatch stopwatch;
+    PXStopWatch stopwatch;
 
     printf
     (
@@ -201,11 +87,12 @@ void BF::BitFireEngine::Start()
         __TIME__
     );
 
-    _imageAdd.Create();
-    _modelAdd.Create();
-
+    PXLockCreate(&_imageAdd);
+    PXLockCreate(&_modelAdd);
+    
     //SYSTEM_INFO systemInfo; // Windows SystemInfo
     //GetSystemInfo(&systemInfo);
+    _mainWindow.EventReceiver = this;
 
     _mainWindow.MouseClickCallBack = OnMouseButton;
     _mainWindow.MouseMoveCallBack = OnMouseMove;
@@ -224,66 +111,44 @@ void BF::BitFireEngine::Start()
         }
     }
 
-    stopwatch.Start();
+    char* memww = (char*)MemoryAllocate(2048);
 
-    _mainWindow.Create(600 * 2, 400 * 2, "[BFE] <BitFireEngine>");
-
-    // Sound
-    /*
-    {
-        //---<Select Device>
-        _audioDevice = alcOpenDevice(nullptr);
-
-        if (!_audioDevice)
-        {
-            // Failed to get Sound device
-            ALCenum error;
-
-            error = alGetError();
-
-            if (error != AL_NO_ERROR)
-            {
-                // something wrong happened
-            }
-        }
-        //----------------------------------------------
+    PXLinkedListFixedNodeSet(&_renderList, memww, 2, (size_t)-1); // PXRendere
+    PXLinkedListFixedNodeSet(&_textureList, memww+64, 2, sizeof(PXTexture));
+    PXLinkedListFixedNodeSet(&_fontList, memww+128, 2, sizeof(PXFont));
+    PXLinkedListFixedNodeSet(&_shaderProgramList, memww+256, 2, sizeof(ShaderProgram));
 
 
-        // Create context
-        _audioContext = alcCreateContext(_audioDevice, nullptr);
-        bool contextCreationSuccessful = alcMakeContextCurrent(_audioContext);
 
-        if (!contextCreationSuccessful)
-        {
-            // failed to make context current
-        }
+    PXTime timeBefore;
 
-        /*
-        // test for errors here using alGetError();
+    PXStopWatchTrigger(&stopwatch, &timeBefore);
 
-        ALfloat listenerOri[] = { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f };
 
-        alListener3f(AL_POSITION, 0, 0, 1.0f);
-        // check for errors
-        alListener3f(AL_VELOCITY, 0, 0, 0);
-        // check for errors
-        alListenerfv(AL_ORIENTATION, listenerOri);
-        // check for errors
+    PXWindowCreate(&this->_mainWindow, -1, -1, "[BFE] <BitFireEngine>", 1);
 
-        * /
-    }*/
 
     while(!_mainWindow.IsRunning);
 
+    PXCameraAspectRatioChange(&MainCamera, _mainWindow.Width, _mainWindow.Height);
+
     //AwaitChange(!_mainWindow.IsRunning);
 
-    _mainWindow.FrameBufferContextRegister();
+    PXWindowCursorCaptureMode(&_mainWindow, PXWindowCursorLockAndHide);
+
+    OpenGLContextSelect(&_mainWindow.GraphicInstance.OpenGLInstance);
 
     InvokeEvent(this->StartUpCallBack, this);
 
-    double time = stopwatch.Stop();
 
-    printf("[i][Info] Loading took %.2fs\n", time);
+    PXTime timeAfter;
+
+    PXStopWatchTrigger(&stopwatch, &timeAfter);
+
+    size_t time = PXTimeMillisecondsDelta(&timeBefore, &timeAfter);
+    float timeInS = time / 1000.0f;
+
+    printf("[i][Info] Loading took %.2fs\n", timeInS);
 
     //PrintContent(true);
 
@@ -295,7 +160,14 @@ float _lastUIUpdate = 0;
 void BF::BitFireEngine::Update()
 {
     //---[Variable Reset]--------------------------------------------------
-    float deltaTime = _stopWatch.Reset();
+    PXTime current;
+
+    PXTimeNow(&current);
+    size_t deltaInt = PXTimeMillisecondsDelta(&_lastUpdate, &current);
+
+    _lastUpdate = current;
+
+    float deltaTime = deltaInt / 1000.0;
     _deltaTime = deltaTime;
 
     _lastUIUpdate += deltaTime;
@@ -334,16 +206,16 @@ void BF::BitFireEngine::Update()
     //---------------------------------------------------------------------
 #endif
 
-   _mainWindow.FrameBufferSwap();
+    GraphicImageBufferSwap(&_mainWindow.GraphicInstance);
 
    if(_mainWindow.HasSizeChanged)
    {
        const unsigned int width = _mainWindow.Width;
        const unsigned int height = _mainWindow.Height;
 
-       printf("[Window] Size chnaged %i x %i\n", width, height);
+       printf("[Window] Size changed (%i x %i)\n", width, height);
 
-       MainCamera.AspectRatioSet(width, height);
+       PXCameraAspectRatioChange(&MainCamera, width, height);
 
        glViewport(0, 0, width, height);
 
@@ -351,12 +223,10 @@ void BF::BitFireEngine::Update()
    }
 
     UpdateInput(_inputContainer);
-
-    InvokeEvent(this->UpdateInputCallBack, this, _inputContainer);
     //---------------------------------------------------------------------
 }
 
-void BF::BitFireEngine::OnMouseButton(const void* const receiver, const CWindow* sender, const MouseButton mouseButton, const ButtonState buttonState)
+void BF::BitFireEngine::OnMouseButton(const void* const receiver, const PXWindow* sender, const MouseButton mouseButton, const ButtonState buttonState)
 {
     BitFireEngine& engine = *(BitFireEngine*)receiver;
 
@@ -385,17 +255,17 @@ void BF::BitFireEngine::OnMouseButton(const void* const receiver, const CWindow*
     //printf("[#][OnMouseButton]\n");
 }
 
-void BF::BitFireEngine::OnMouseMove(const void* const receiver, const CWindow* sender, const Mouse* mouse)
+void BF::BitFireEngine::OnMouseMove(const void* const receiver, const PXWindow* sender, const Mouse* mouse)
 {
     BitFireEngine& engine = *(BitFireEngine*)receiver;
-    //Mouse& mouse = engine->_inputContainer.MouseInput;
+    MouseCache& mouseInput = engine._inputContainer.MouseInput;
 
 #if UseRawMouseData
-    //mouse.InputAxis[0] = -deltaX;
-    //mouse.InputAxis[1] = -deltaY;
+    mouseInput.InputAxis[0] = -mouse->InputAxis[0];
+    mouseInput.InputAxis[1] = -mouse->InputAxis[1];
 
-    //mouse.Position[0] = positionX;
-    //mouse.Position[1] = positionY;
+    mouseInput.Position[0] = mouse->Position[0];
+    mouseInput.Position[1] = mouse->Position[1];
 #else
     // Calculate relative input
     mouse.InputAxis[0] = mouse.Position[0] - deltaX;
@@ -407,77 +277,77 @@ void BF::BitFireEngine::OnMouseMove(const void* const receiver, const CWindow* s
 #endif
 
 
-  // printf("[#][OnMouseMove] X:%5i Y:%5i\n", mouse.Position[0], mouse.Position[1]);
-  // printf("[#]------------- X:%5i Y:%5i\n", mouse.InputAxis[0], mouse.InputAxis[1]);
+  //printf("[#][OnMouseMove] X:%5i Y:%5i\n", mouse->Position[0], mouse->Position[1]);
+  //printf("[#]------------- X:%5i Y:%5i\n", mouse->InputAxis[0], mouse->InputAxis[1]);
 }
 
-void BF::BitFireEngine::OnKeyBoardKey(const void* const receiver, const CWindow* sender, const KeyBoardKeyInfo keyBoardKeyInfo)
+void BF::BitFireEngine::OnKeyBoardKey(const void* const receiver, const PXWindow* sender, const KeyBoardKeyInfo keyBoardKeyInfo)
 {
     BitFireEngine* engine = (BitFireEngine*)receiver;
     InputContainer& input = engine->_inputContainer;
-    //KeyBoard& keyBoard = input.KeyBoardInput;
+    KeyBoardCache& keyBoard = input.KeyBoardInput;
 
-    /*InputButton* inputButton = nullptr;
+    unsigned char* inputButton = nullptr;
 
 
-    switch(keyBoardKeyInfo.Key)
+    switch (keyBoardKeyInfo.Key)
     {
-        case KeyBoardKey::KeySpace: inputButton = &keyBoard.SpaceBar; break;
-        case KeyBoardKey::KeyShiftLeft: inputButton = &keyBoard.ShitftLeft; break;
+        case KeySpace: inputButton = &keyBoard.SpaceBar; break;
+        case KeyShiftLeft: inputButton = &keyBoard.ShitftLeft; break;
 
-        case KeyBoardKey::KeyA:
-        case KeyBoardKey::KeyASmal: inputButton = &keyBoard.A; break;
-         case KeyBoardKey::KeyB:
-        case KeyBoardKey::KeyBSmal: inputButton = &keyBoard.B; break;
-         case KeyBoardKey::KeyC:
-        case KeyBoardKey::KeyCSmal: inputButton = &keyBoard.C; break;
-         case KeyBoardKey::KeyD:
-        case KeyBoardKey::KeyDSmal: inputButton = &keyBoard.D; break;
-         case KeyBoardKey::KeyE:
-        case KeyBoardKey::KeyESmal: inputButton = &keyBoard.E; break;
-         case KeyBoardKey::KeyF:
-        case KeyBoardKey::KeyFSmal: inputButton = &keyBoard.F; break;
-         case KeyBoardKey::KeyG:
-        case KeyBoardKey::KeyGSmal: inputButton = &keyBoard.G; break;
-         case KeyBoardKey::KeyH:
-        case KeyBoardKey::KeyHSmal: inputButton = &keyBoard.H; break;
-         case KeyBoardKey::KeyI:
-        case KeyBoardKey::KeyISmal: inputButton = &keyBoard.I; break;
-         case KeyBoardKey::KeyJ:
-        case KeyBoardKey::KeyJSmal: inputButton = &keyBoard.J; break;
-         case KeyBoardKey::KeyK:
-        case KeyBoardKey::KeyKSmal: inputButton = &keyBoard.K; break;
+        case KeyA:
+        case KeyASmal: inputButton = &keyBoard.A; break;
+        case KeyB:
+        case KeyBSmal: inputButton = &keyBoard.B; break;
+        case KeyC:
+        case KeyCSmal: inputButton = &keyBoard.C; break;
+        case KeyD:
+        case KeyDSmal: inputButton = &keyBoard.D; break;
+        case KeyE:
+        case KeyESmal: inputButton = &keyBoard.E; break;
+        case KeyF:
+        case KeyFSmal: inputButton = &keyBoard.F; break;
+        case KeyG:
+        case KeyGSmal: inputButton = &keyBoard.G; break;
+        case KeyH:
+        case KeyHSmal: inputButton = &keyBoard.H; break;
+        case KeyI:
+        case KeyISmal: inputButton = &keyBoard.I; break;
+        case KeyJ:
+        case KeyJSmal: inputButton = &keyBoard.J; break;
+        case KeyK:
+        case KeyKSmal: inputButton = &keyBoard.K; break;
 
-         case KeyBoardKey::KeyL:
-        case KeyBoardKey::KeyLSmal: inputButton = &keyBoard.L; break;
-        case KeyBoardKey::KeyM:
-        case KeyBoardKey::KeyMSmal: inputButton = &keyBoard.M; break;
-        case KeyBoardKey::KeyN:
-        case KeyBoardKey::KeyNSmal: inputButton = &keyBoard.N; break;
-        case KeyBoardKey::KeyO:
-        case KeyBoardKey::KeyOSmal: inputButton = &keyBoard.O; break;
-        case KeyBoardKey::KeyP:
-        case KeyBoardKey::KeyPSmal: inputButton = &keyBoard.P; break;
-         case KeyBoardKey::KeyQ:
-        case KeyBoardKey::KeyQSmal: inputButton = &keyBoard.Q; break;
-        case KeyBoardKey::KeyR:
-        case KeyBoardKey::KeyRSmal: inputButton = &keyBoard.R; break;
-       case KeyBoardKey::KeyS:
-        case KeyBoardKey::KeySSmal: inputButton = &keyBoard.S; break;
-        case KeyBoardKey::KeyT:
-        case KeyBoardKey::KeyTSmal: inputButton = &keyBoard.T; break;
-        case KeyBoardKey::KeyU:
-        case KeyBoardKey::KeyUSmal: inputButton = &keyBoard.U; break;
-        case KeyBoardKey::KeyV:
-        case KeyBoardKey::KeyVSmal: inputButton = &keyBoard.V; break;
-        case KeyBoardKey::KeyW:
-         case KeyBoardKey::KeyWSmal:inputButton = &keyBoard.W; break;
-        case KeyBoardKey::KeyX:
-        case KeyBoardKey::KeyXSmal: inputButton = &keyBoard.X; break;
-          case KeyBoardKey::KeyY:
-        case KeyBoardKey::KeyYSmal: inputButton = &keyBoard.Y; break;
-         case KeyBoardKey::KeyZ:
-        case KeyBoardKey::KeyZSmal: inputButton = &keyBoard.Z; break;
+        case KeyL:
+        case KeyLSmal: inputButton = &keyBoard.L; break;
+        case KeyM:
+        case KeyMSmal: inputButton = &keyBoard.M; break;
+        case KeyN:
+        case KeyNSmal: inputButton = &keyBoard.N; break;
+        case KeyO:
+        case KeyOSmal: inputButton = &keyBoard.O; break;
+        case KeyP:
+        case KeyPSmal: inputButton = &keyBoard.P; break;
+        case KeyQ:
+        case KeyQSmal: inputButton = &keyBoard.Q; break;
+        case KeyR:
+        case KeyRSmal: inputButton = &keyBoard.R; break;
+        case KeyS:
+        case KeySSmal: inputButton = &keyBoard.S; break;
+        case KeyT:
+        case KeyTSmal: inputButton = &keyBoard.T; break;
+        case KeyU:
+        case KeyUSmal: inputButton = &keyBoard.U; break;
+        case KeyV:
+        case KeyVSmal: inputButton = &keyBoard.V; break;
+        case KeyW:
+        case KeyWSmal:inputButton = &keyBoard.W; break;
+        case KeyX:
+        case KeyXSmal: inputButton = &keyBoard.X; break;
+        case KeyY:
+        case KeyYSmal: inputButton = &keyBoard.Y; break;
+        case KeyZ:
+        case KeyZSmal: inputButton = &keyBoard.Z; break;
     }
 
     if(!inputButton)
@@ -487,22 +357,22 @@ void BF::BitFireEngine::OnKeyBoardKey(const void* const receiver, const CWindow*
 
     switch(keyBoardKeyInfo.Mode)
     {
-        case ButtonDown:
-        {
-            inputButton->Increment();
+        case ButtonStateDown:
+        {          
+            InputButtonIncrement(inputButton);
             break;
         }
-        case ButtonRelease:
+        case ButtonStateRelease:
         {
-            inputButton->Reset();
+            InputButtonReset(inputButton);
             break;
         }
-    }*/
+    }
 }
 
-void BF::BitFireEngine::OnWindowCreated(const void* const receiver, const CWindow* sender)
+void BF::BitFireEngine::OnWindowCreated(const void* const receiver, const PXWindow* sender)
 {
-    const CWindow& window = *sender;
+    const PXWindow& window = *sender;
 
     printf
     (
@@ -515,31 +385,26 @@ void BF::BitFireEngine::OnWindowCreated(const void* const receiver, const CWindo
         "| Texture Slots    : %-33u |\n"
         "| Maximal Textures : %-33u |\n"
         "+------------------------------------------------------+\n",
-        OpenGL::GPUVendorName(),
-        OpenGL::GPUModel(),
-        OpenGL::GLSLVersionPrimary(),
-        OpenGL::TextureMaxSlots(),
-        OpenGL::TextureMaxLoaded()
+        window.GraphicInstance.OpenGLInstance.Vendor,
+        window.GraphicInstance.OpenGLInstance.Renderer,
+        window.GraphicInstance.OpenGLInstance.VersionText,
+        0,// OpenGL::TextureMaxSlots(),
+        0 //OpenGL::TextureMaxLoaded()
     );
-
-#if 0 // Debug
-    glDebugMessageCallback(BF::BitFireEngine::ErrorMessageCallback, 0);
-    glEnable(GL_DEBUG_OUTPUT);
-#endif
 }
 
-void BF::BitFireEngine::OnWindowSizeChanged(const void* const receiver, const CWindow* sender, const size_t width, const size_t height)
+void BF::BitFireEngine::OnWindowSizeChanged(const void* const receiver, const PXWindow* sender, const size_t width, const size_t height)
 {
     BitFireEngine* const engine = (BitFireEngine* const)receiver;
 
     if(engine)
     {
-        Camera& camera = engine->MainCamera;
+        PXCamera& camera = engine->MainCamera;
 
-        camera.AspectRatioSet(width, height);
+        PXCameraAspectRatioChange(&camera, width, height);
     }   
 
-    printf("[Camera] Is now %li x %li\n", width, height);
+    printf("[Camera] Is now %zi x %zi\n", width, height);
 
     glViewport(0, 0, width, height);   
 }
@@ -550,41 +415,36 @@ void BF::BitFireEngine::OnSystemSignal(int signalID)
 }
 
 void BF::BitFireEngine::UpdateInput(InputContainer& input)
-{
-    /*
-    KeyBoard& keyboard = input.KeyBoardInput;
-    Mouse& mouse = input.MouseInput;
-    Camera& camera = MainCamera;
+{    
+    KeyBoardCache& keyboard = input.KeyBoardInput;
+    MouseCache& mouse = input.MouseInput;
+    PXCamera& camera = MainCamera;
 
-    Vector3<float> movement;
-
-    _callbackListener->OnUpdateInput(input);
-
-    if(keyboard.J.IsShortPressed())
+    if(InputButtonIsShortPressed(keyboard.J))
     {
         PrintContent(true);
-    }
+    }   
 
-    if(keyboard.R.IsShortPressed())
+    if(InputButtonIsShortPressed(keyboard.R))
     {
         switch(_mainWindow.CursorModeCurrent)
         {
-            case CWindowCursorShow:
+            case PXWindowCursorShow:
             {
-                _mainWindow.CursorCaptureMode(CWindowCursorLockAndHide);
+                PXWindowCursorCaptureMode(&_mainWindow, PXWindowCursorLockAndHide);
                 break;
             }
-            case CWindowCursorLockAndHide:
+            case PXWindowCursorLockAndHide:
             {
-                _mainWindow.CursorCaptureMode(CWindowCursorShow);
+                PXWindowCursorCaptureMode(&_mainWindow, PXWindowCursorShow);
                 break;
             }
         }
 
-        keyboard.R.Value = 0xFF;
+        keyboard.R = 0xFF;
     }
 
-    if(keyboard.K.IsShortPressed())
+    if(InputButtonIsShortPressed(keyboard.K))
     {
         Image image;
 
@@ -593,23 +453,23 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
       //  ImageSave(L"ScreenShot.bmp", ImageFileFormatBitMap);
     }
 
-    if(keyboard.E.IsShortPressed())
+    if(InputButtonIsShortPressed(keyboard.E))
     {
-        keyboard.E.Value = 0xFF;
+        keyboard.E = 0xFF;
 
         switch(camera.Perspective)
         {
-            case CameraPerspective::Orthographic:
-                camera.ViewChange(CameraPerspective::Perspective);
+            case CameraPerspective2D:                
+                PXCameraViewChange(&MainCamera, PXCameraPerspective3D);
                 break;
 
-            case CameraPerspective::Perspective:
-                camera.ViewChange(CameraPerspective::Orthographic);
+            case CameraPerspective3D:
+                PXCameraViewChange(&MainCamera, PXCameraPerspective2D);
                 break;
         }
     }
 
-#if 1 // DEBUG
+#if 0 // DEBUG
     if(keyboard.ShitftLeft.IsPressed()) { movement.Add(0, -1, 0); }
     if(keyboard.W.IsPressed()) { movement.Add(0, 0, 1); }
     if(keyboard.A.IsPressed()) { movement.Add(-1, 0, 0); }
@@ -673,8 +533,23 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
     camera.Update(_deltaTime);
 #endif
 
+    InvokeEvent(this->UpdateInputCallBack, this, _inputContainer);
+
+
+ 
+
+    PXCameraUpdate(&camera, _deltaTime);
+
     keyboard.IncrementButtonTick();
-    mouse.ResetAxis();*/
+    mouse.ResetAxis();
+
+#if 0
+    char buffer[256];
+
+    PXMatrix4x4FPrint(&MainCamera.MatrixModel, buffer);
+
+    printf("%s", buffer);
+#endif
 }
 
 void BF::BitFireEngine::Stop()
@@ -691,591 +566,11 @@ void BF::BitFireEngine::Stop()
         alcCloseDevice(_audioDevice);
     }*/
 
-    _imageAdd.Delete();
-    _modelAdd.Delete();
+    PXLockDelete(&_imageAdd);
+    PXLockDelete(&_modelAdd);
 }
 
-void BF::BitFireEngine::Register(Texture& texture)
-{
-    Image& image = texture.DataImage;
-
-    const OpenGLID format = ToImageFormat(image.Format);
-    const OpenGLID textureType = ToImageType(texture.Type);
-
-    if(!image.PixelData)
-    {
-        return; // No image data
-    }
-
-    glGenTextures(1, &texture.ID);
-
-    glBindTexture(textureType, texture.ID);
-
-    // Texture Style
-    {
-        const int textureWrapWidth = ImageWrapToOpenGLFormat(texture.WrapWidth);
-        const int textureWrapHeight = ImageWrapToOpenGLFormat(texture.WrapHeight);
-        const int textueFilterNear = ImageLayoutToOpenGLFormat(texture.LayoutNear);
-        const int textueFilterFar = ImageLayoutToOpenGLFormat(texture.LayoutFar);
-
-        glTexParameteri(textureType, GL_TEXTURE_WRAP_S, textureWrapWidth);
-        glTexParameteri(textureType, GL_TEXTURE_WRAP_T, textureWrapHeight);
-        glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, textueFilterNear);
-        glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, textueFilterFar);
-        glTexParameteri(textureType, GL_GENERATE_MIPMAP, GL_FALSE);
-    }
-
-    //glTexParameterf(textureType, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16.0f);
-
-    // ToDO: erro?
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glTexImage2D(textureType, 0, GL_RGBA, image.Width, image.Height, 0, format, GL_UNSIGNED_BYTE, image.PixelData);
-
-    //glGenerateMipmap(textureType);
-
-    //glBindTexture(textureType, 0);
-
-
-    if(_defaultTextureID == -1)
-    {
-        _defaultTextureID = texture.ID;
-    }
-}
-
-void BF::BitFireEngine::Register(TextureCube& textureCube)
-{
-    OpenGLID textureID = -1;
-
-    // Check
-    {
-        const bool isValid = textureCube.HasTextures();
-
-        if(!isValid)
-        {
-            return;
-        }
-    }
-
-    glGenTextures(1, &textureID);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 0);
-
-    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-
-    for(size_t i = 0; i < 6; i++)
-    {
-        Image& image = textureCube.ImageList[i];
-        const unsigned int textureTypeID = (unsigned int)GL_TEXTURE_CUBE_MAP_POSITIVE_X + i;
-        const unsigned int imageFormat = ToImageFormat(image.Format);
-        const ImageType imageType = ToImageType(textureTypeID);
-
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        glTexImage2D(textureTypeID, 0, GL_RGB, image.Width, image.Height, 0, imageFormat, GL_UNSIGNED_BYTE, image.PixelData);
-    }
-
-    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-
-    textureCube.ID = textureID;
-}
-
-void BF::BitFireEngine::Register(Renderable& renderable, const Model& model)
-{
-    //float vaoIDList[128u];
-    //memset(vaoIDList, -1, 128u * sizeof(unsigned int));
-
-    //glGenVertexArrays(numberOfMeshes, vaoIDList); // Generate VAOs
-
-    glGenVertexArrays(1, &renderable.ID); // Create VAO
-
-    glBindVertexArray(renderable.ID);
-
-    // VBO creator
-    {
-        const size_t numberOfMeshes = model.MeshListSize;
-        size_t meshIndexCounter = 0;
-
-        OpenGLID meshIDList[128u];
-        MemorySet(meshIDList, 128u * sizeof(OpenGLID), -1);
-
-        glGenBuffers(numberOfMeshes, meshIDList); // Create VBO Buffers
-
-        renderable.ChunkListSize = numberOfMeshes;
-        renderable.ChunkList = new RenderableChunk[numberOfMeshes];
-
-        for(size_t i = 0; i < numberOfMeshes; ++i)
-        {
-            const Mesh& mesh = model.MeshList[i];
-            const size_t segmentListSize = mesh.SegmentListSize;
-            const OpenGLID vertexBufferID = meshIDList[meshIndexCounter++];
-
-            assert(vertexBufferID != -1);
-
-            RenderableChunk& chunk = renderable.ChunkList[i];
-
-            chunk.ID = vertexBufferID;
-            chunk.SegmentListSize = segmentListSize;
-            chunk.SegmentList = new RenderableSegment[segmentListSize];
-
-            // Select VBO
-            glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID); // Select Buffer
-            glBufferData(GL_ARRAY_BUFFER, mesh.VertexDataListSize * sizeof(float), mesh.VertexDataList, GL_STATIC_DRAW);
-
-            OpenGL::VertexAttributeArrayDefine(sizeof(float), mesh.VertexDataStructureListSize, mesh.VertexDataStructureList);
-
-#if 0
-            printf("+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+\n");
-
-            printf
-            (
-                "| %7s | %7s | %7s | %7s | %7s | %7s | %7s | %7s | %7s | %7s | %7s | %7s |\n",
-                "x",
-                "y",
-                "z",
-                "nx",
-                "ny",
-                "nz",
-                "r",
-                "g",
-                "b",
-                "a",
-                "u",
-                "v"
-            );
-
-            for(size_t i = 0; i < mesh.VertexDataListSize; )
-            {
-                float x = mesh.VertexDataList[i++];
-                float y = mesh.VertexDataList[i++];
-                float z = mesh.VertexDataList[i++];
-
-                float nx = mesh.VertexDataList[i++];
-                float ny = mesh.VertexDataList[i++];
-                float nz = mesh.VertexDataList[i++];
-
-                float r = mesh.VertexDataList[i++];
-                float g = mesh.VertexDataList[i++];
-                float b = mesh.VertexDataList[i++];
-                float a = mesh.VertexDataList[i++];
-
-                float u = mesh.VertexDataList[i++];
-                float v = mesh.VertexDataList[i++];
-
-                printf
-                (
-                    "| %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f | %7.2f |\n",
-                    x,
-                    y,
-                    z,
-                    nx,
-                    ny,
-                    nz,
-                    r,
-                    g,
-                    b,
-                    a,
-                    u,
-                    v
-                );
-            }
-
-            printf("+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+\n");
-#endif
-            size_t segmentIndexCounter = 0;
-
-            OpenGLID segmentIDList[128u];
-            MemorySet(segmentIDList, 128u * sizeof(OpenGLID), -1);
-
-            glGenBuffers(segmentListSize, segmentIDList); // Generate IBO
-
-            for(size_t segmentIndex = 0; segmentIndex < segmentListSize; ++segmentIndex)
-            {
-                const MeshSegment& meshSegment = mesh.SegmentList[segmentIndex];
-                const OpenGLID indexBufferID = segmentIDList[segmentIndexCounter++];
-                RenderableSegment& segment = chunk.SegmentList[segmentIndex];
-
-                assert(indexBufferID != -1);
-
-                segment.ID = indexBufferID;
-                segment.Size = meshSegment.IndexDataListSize;
-
-
-                segment.MaterialRangeSize = meshSegment.MaterialInfoSize;
-                segment.MaterialRange = new SegmentMaterialRange[meshSegment.MaterialInfoSize];
-
-                for(size_t i = 0; i < meshSegment.MaterialInfoSize; i++)
-                {
-                    const OBJElementMaterialInfo& info = meshSegment.MaterialInfo[i];
-                    SegmentMaterialRange& range = segment.MaterialRange[i];
-
-                    range.Size = info.Size;
-                    range.TextureID = 3;
-
-                }
-
-#if 0
-
-                for(size_t i = 0; i < meshSegment.IndexDataListSize; )
-                {
-                    unsigned int x = meshSegment.IndexDataList[i++];
-                    unsigned int y = meshSegment.IndexDataList[i++];
-                    unsigned int z = meshSegment.IndexDataList[i++];
-
-                    printf("| %5i | %5i | %5i |\n", x, y, z);
-                }
-#endif
-                // Select IBÒ
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
-                glBufferData(GL_ELEMENT_ARRAY_BUFFER, meshSegment.IndexDataListSize * sizeof(unsigned int), meshSegment.IndexDataList, GL_STATIC_DRAW);
-            }
-        }
-    }
-
-   // printf("[OpenGL] Register Mesh <%ls> from <%ls>. Sub-Meshes <%zu>\n", , model.FilePath, model.MeshListSize);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
-
-
-    // Merge
-}
-
-void BF::BitFireEngine::Register(Renderable& renderable, const float* vertexData, const size_t vertexDataSize, const unsigned int* indexList, const size_t indexListSize)
-{
-    // Check
-    {
-        const bool hasData = vertexData && vertexDataSize && indexList && indexListSize;
-
-        if(!hasData)
-        {
-            return;
-        }
-    }
-
-    OpenGLID id[3] = { (unsigned int)-1,(unsigned int)-1,(unsigned int)-1 };
-
-    glGenVertexArrays(1, &id[0]);
-
-    glBindVertexArray(id[0]);
-
-    glGenBuffers(2, &id[1]);
-
-    glBindBuffer(GL_ARRAY_BUFFER, id[1]);
-    glBufferData(GL_ARRAY_BUFFER, vertexDataSize * sizeof(float), vertexData, GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id[2]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexListSize * sizeof(unsigned int), indexList, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
-    renderable.ID = id[0];
-    renderable.ChunkListSize = 1;
-    renderable.ChunkList = new RenderableChunk();
-    renderable.ChunkList->ID = id[1];
-    renderable.ChunkList->SegmentListSize = 1;
-    renderable.ChunkList->SegmentList = new RenderableSegment();
-    renderable.ChunkList->SegmentList[0].ID = id[2];
-    renderable.ChunkList->SegmentList[0].Size = indexListSize;
-    renderable.ChunkList->SegmentList[0].MaterialRange = new SegmentMaterialRange();
-    renderable.ChunkList->SegmentList[0].MaterialRangeSize = 1;
-    renderable.ChunkList->SegmentList[0].MaterialRange[0].Size = indexListSize;
-}
-
-void BF::BitFireEngine::Register(SkyBox& skyBox)
-{
-    const float vertexData[] =
-    {
-         1,  1,  1,
-        -1,  1,  1,
-         1, -1,  1,
-        -1, -1,  1,
-         1,  1, -1,
-        -1,  1, -1,
-         1, -1, -1,
-        -1, -1, -1,
-    };
-    const unsigned int indexList[] =
-    {
-        0,1,3,2, // Left OK
-        6,7,5,4, // Right  OK
-        4,5,1,0, // Top OK
-        2,3,7,6, // Bot OK
-        0,2,6,4, // Front OK
-        5,7,3,1 // Back OK
-    };
-    const size_t vertexDataSize = sizeof(vertexData) / sizeof(float);
-    const size_t indexListSize = sizeof(indexList) / sizeof(unsigned int);
-    TextureCube& textureCube = skyBox.Texture;
-    Renderable& renderable = skyBox.RenderInfo;
-
-    Register(renderable, vertexData, vertexDataSize, indexList, indexListSize);
-    Register(textureCube);
-
-    renderable.TextureUse(textureCube.ID);
-}
-
-bool BF::BitFireEngine::Register(ShaderProgram& shaderProgram, const wchar_t* vertexShaderFilePath, const wchar_t* fragmentShaderFilePath)
-{
-    Shader vertexShader;
-    Shader fragmentShader;
-    File vertexShaderFile;
-    File fragmentFile;
-
-    FileConstruct(&vertexShaderFile);
-    FileConstruct(&fragmentFile);
-
-    {
-        const bool isAlreadyLoaded = shaderProgram.ID != -1;
-        const bool hasEmptyPaths = !vertexShaderFilePath || !fragmentShaderFilePath;
-
-        if(isAlreadyLoaded)
-        {
-            return false;
-        }
-
-        if(hasEmptyPaths)
-        {
-            return false;
-        }
-    }
-
-
-    {
-        const ActionResult actionResult = FileMapToVirtualMemoryW(&vertexShaderFile, vertexShaderFilePath, 0, MemoryReadOnly);
-        const unsigned char sucessful = ResultSuccessful == actionResult;
-
-        if(!sucessful)
-        {
-            return false;
-        }
-
-        vertexShader.Type = ShaderTypeVertex;
-        vertexShader.Content = (char*)vertexShaderFile.Data;
-        vertexShader.ContentSize = vertexShaderFile.DataSize;
-    }
-
-
-    {
-        const ActionResult actionResult = FileMapToVirtualMemoryW(&fragmentFile, fragmentShaderFilePath, 0, MemoryReadOnly);
-        const unsigned char sucessful = ResultSuccessful == actionResult;
-
-        if(!sucessful)
-        {
-            return false;
-        }
-
-        fragmentShader.Type = ShaderTypeFragment;
-        fragmentShader.Content = (char*)fragmentFile.Data;
-        fragmentShader.ContentSize = fragmentFile.DataSize;
-    }
-    //-----
-
-    const size_t shaderListSize = 2;
-    const Shader* shaderList[shaderListSize]{ &vertexShader, &fragmentShader };
-    const OpenGLID shaderProgrammID = OpenGL::ShaderProgramCreate();
-    OpenGLID shaderIDList[shaderListSize] = { (unsigned int)-1,(unsigned int)-1 };
-    unsigned int  sucessfulCounter = 0;
-    bool isValidShader = false;
-
-    for(size_t i = 0; i < shaderListSize; ++i)
-    {
-        const Shader& shader = *shaderList[i];
-        const OpenGLID type = ToShaderType(shader.Type);
-        const OpenGLID shaderID = OpenGL::ShaderCompile(type, shader.Content);
-        const bool compileFailed = shaderID == -1;
-
-        if(compileFailed)
-        {
-            isValidShader = false;
-
-            const wchar_t* text = i == 0 ? vertexShaderFilePath : fragmentShaderFilePath;
-            printf("[x][OpenGL][Shader] Failed to compile <%ls>!\n", text);
-            break;
-        }
-
-        shaderIDList[i] = shaderID;
-
-        isValidShader = true;
-
-        glAttachShader(shaderProgrammID, shaderID);
-    }
-
-    if(isValidShader)
-    {
-        glLinkProgram(shaderProgrammID);
-        glValidateProgram(shaderProgrammID);
-
-        shaderProgram.ID = shaderProgrammID;
-    }
-
-    // We used the Shaders above to compile, these elements are not used anymore.
-    for(size_t i = 0; i < shaderListSize; ++i)
-    {
-        const OpenGLID shaderID = shaderIDList[i];
-        const bool isLoaded = shaderID != -1;
-
-        if(isLoaded)
-        {
-            glDeleteShader(shaderID);
-        }
-    }
-
-    if(!isValidShader)
-    {
-        glDeleteProgram(shaderProgrammID);
-    }
-
-    FileDestruct(&vertexShaderFile);
-    FileDestruct(&fragmentFile);
-
-    return isValidShader;
-}
-
-void BF::BitFireEngine::Register(AudioSource& audioSource)
-{
-    /* REWORK THIS
-    const float numberOfBuffers = 1u;
-    unsigned int& sourceID = audioSource.ID;
-
-    alGenSources(numberOfBuffers, &audioSource.ID);
-    // check for errors
-
-    Update(audioSource);
-
-    */
-}
-
-void BF::BitFireEngine::Register(CFont& font)
-{
-
-}
-
-void BF::BitFireEngine::Register(AudioClip& audioClip, const Sound& sound)
-{
-    /* REWORK THIS
-    const ALuint numberOfBuffers = 1;
-
-    alGenBuffers(numberOfBuffers, &audioClip.ID);
-
-    {
-        const ALenum format = ToChannalFormat(sound.NumerOfChannels, sound.BitsPerSample);
-
-        alBufferData(audioClip.ID, format, sound.Data, sound.DataSize, sound.SampleRate);
-    }*/
-}
-
-void BF::BitFireEngine::Use(Texture& texture)
-{
-    Use(texture.Type, texture.ID);
-}
-
-void BF::BitFireEngine::Use(const ImageType imageType, const int textureID)
-{
-    const bool isValidTexture = textureID != -1 && imageType != ImageType::Invalid;
-
-#if 1 // Ignore
-    if(!isValidTexture)
-    {
-        return;
-    }
-#else
-    assert(isValidTexture);
-#endif
-
-    glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
-
-    const OpenGLID imageTypeID = ToImageType(imageType);
-
-    glBindTexture(imageTypeID, textureID);
-}
-
-void BF::BitFireEngine::Use(Renderable& renderable)
-{
-    // TODO
-}
-
-void BF::BitFireEngine::Use(SkyBox& skyBox)
-{
-    // TODO:TEST REMOVAL !!!    OpenGL::VertexArrayBind(skyBox.RenderInfo.VAO);
-
-    OpenGLID skyBoxTextureLocation = OpenGL::ShaderGetUniformLocationID(skyBox.Shader.ID, "SkyBoxTexture");
-
-
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_TEXTURE_CUBE_MAP);
-
-
-
-    glUniform1i(skyBoxTextureLocation, 0);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, skyBox.Texture.ID);
-    // glBindTexture(GL_TEXTURE_2D, skyBox.Texture.ID);
-
-}
-
-void BF::BitFireEngine::Use(const AudioSource& audioSource, const AudioClip& audioClip)
-{
-    /*
-    // Bind
-    alSourcei(audioSource.ID, AL_BUFFER, audioClip.ID);
-    // check for errors
-
-
-    alSourcePlay(audioSource.ID);
-    // check for errors
-
-    //----<Check State>---------------
-    //int sourceState;
-
-    //alGetSourcei(audioSource.ID, AL_SOURCE_STATE, &sourceState);
-    // check for errors
-    //while (sourceState == AL_PLAYING)
-    //{
-        //alGetSourcei(audioSource.ID, AL_SOURCE_STATE, &sourceState);
-        // check for errors
-    //}
-    //---------------------------------*/
-}
-
-void BF::BitFireEngine::Update(const AudioSource& audioSource)
-{
-    /*
-    alSourcef(audioSource.ID, AL_PITCH, audioSource.Pitch);
-    // check for errors
-    alSourcef(audioSource.ID, AL_GAIN, audioSource.Volume);
-    // check for errors
-    alSource3f(audioSource.ID, AL_POSITION, audioSource.Position[0], audioSource.Position[1], audioSource.Position[2]);
-    // check for errors
-    alSource3f(audioSource.ID, AL_VELOCITY, audioSource.Velocity[0], audioSource.Velocity[1], audioSource.Velocity[2]);
-    // check for errors
-    alSourcei(audioSource.ID, AL_LOOPING, audioSource.Looping);
-    */
-}
-
-void BF::BitFireEngine::UnRegister(AudioSource& audioSource)
-{
-    // alDeleteSources(1, &audioSource.ID);
-}
-
-void BF::BitFireEngine::UnRegister(AudioClip& audioClip)
-{
-    //  alDeleteBuffers(1, &audioClip.ID);
-}
-
-void BF::BitFireEngine::MakeRectangle(Renderable& renderable)
+void BF::BitFireEngine::MakeRectangle(PXRenderable& renderable)
 {
     const float vtx[12] =
     {
@@ -1292,10 +587,10 @@ void BF::BitFireEngine::MakeRectangle(Renderable& renderable)
 
     Load(renderable, vtx, 12, itx, 4);
 
-    renderable.Mode = RenderMode::Square;
+    //renderable.Mode = GraphicRenderModeSquare;
 }
 
-ThreadResult BF::BitFireEngine::LoadResourceAsync(void* resourceAdress)
+PXThreadResult BF::BitFireEngine::LoadResourceAsync(void* resourceAdress)
 {
     /*
     ResourceAsyncLoadInfo* resourceAsyncLoadInfo = (ResourceAsyncLoadInfo*)resourceAdress;
@@ -1308,12 +603,12 @@ ThreadResult BF::BitFireEngine::LoadResourceAsync(void* resourceAdress)
     return 0;
 }
 
-ActionResult BF::BitFireEngine::Load(Renderable& renderable, const wchar_t* filePath, bool loadAsynchronously)
+ActionResult BF::BitFireEngine::Load(PXRenderable& renderable, Model* model, const wchar_t* filePath, bool loadAsynchronously)
 {
-    _modelAdd.Lock();
-    _renderList.Add(&renderable);
-    _modelAdd.Release();
-
+    PXLockEngage(&_modelAdd);
+    PXLinkedListFixedNodeAdd(&_renderList, &renderable);
+    PXLockRelease(&_modelAdd);
+        
     if(loadAsynchronously)
     {
         // ResourceAsyncLoadInfo* resourceAsyncLoadInfo = new ResourceAsyncLoadInfo();
@@ -1322,83 +617,80 @@ ActionResult BF::BitFireEngine::Load(Renderable& renderable, const wchar_t* file
     }
     else
     {
-        Model model;
-
-        const ActionResult fileActionResult = model.Load(filePath);
-        const bool successful = fileActionResult == ResultSuccessful;
+        const ActionResult fileActionResult =  ModelLoadW(model, filePath);
+        const bool successful = ActionSuccessful == fileActionResult;
 
         if(successful)
         {
-            renderable.Mode = RenderMode::Triangle;
-
-            Register(renderable, model);
+            GraphicModelRegisterFromModel(&this->_mainWindow.GraphicInstance, &renderable, model);
         }
     }
 
-    return ResultSuccessful;
+    return ActionSuccessful;
 }
 
 ActionResult BF::BitFireEngine::Load(Model& model, const wchar_t* filePath, const bool loadAsynchronously)
 {
-    const ActionResult result = model.Load(filePath);
+    const ActionResult result = ActionInvalid;// model.Load(filePath);
 
     return result;
 }
 
-ActionResult BF::BitFireEngine::Load(Renderable& renderable, const float* vertexData, const size_t vertexDataSize, const unsigned int* indexList, const size_t indexListSize)
+ActionResult BF::BitFireEngine::Load(PXRenderable& renderable, const float* vertexData, const size_t vertexDataSize, const unsigned int* indexList, const size_t indexListSize)
 {
+    /*
     Register(renderable, vertexData, vertexDataSize, indexList, indexListSize);
 
     _modelAdd.Lock();
     _renderList.Add(&renderable);
-    _modelAdd.Release();
+    _modelAdd.Release();*/
 
-    return ResultSuccessful;
+    return ActionSuccessful;
 }
 
 ActionResult BF::BitFireEngine::Load(Image& image, const wchar_t* filePath, const bool loadAsynchronously)
 {
-    return ResultSuccessful;
+    return ActionSuccessful;
 }
 
-ActionResult BF::BitFireEngine::Load(Texture& texture, const wchar_t* filePath, bool loadAsynchronously)
+ActionResult BF::BitFireEngine::Load(PXTexture& texture, const wchar_t* filePath, bool loadAsynchronously)
 {
-    Image& image = texture.DataImage;
+    Image* image = &texture.Image;
 
-    _imageAdd.Lock();
-    _textureList.Add(&texture);
-    _imageAdd.Release();
+    PXLockEngage(&_imageAdd);
+    PXLinkedListFixedNodeAdd(&_textureList, &texture);
+    PXLockRelease(&_imageAdd);
 
     if(loadAsynchronously)
     {
-        ThreadRun(LoadResourceAsync, &image);
+        PXThreadRun(0, LoadResourceAsync, &image);
 
-        return ResultSuccessful;
+        return ActionSuccessful;
     }
     else
     {
-        const ActionResult imageLoadResult = ImageLoadW(&image, filePath);
-        const bool isSucessful = imageLoadResult == ResultSuccessful;
+        const ActionResult imageLoadResult = ImageLoadW(image, filePath);
+        const bool isSucessful = imageLoadResult == ActionSuccessful;
 
         if(isSucessful)
         {
-            texture.Type = ImageType::Texture2D;
-            texture.Filter = ImageFilter::Trilinear;
-            texture.LayoutNear = ImageLayout::Linear;
-            texture.LayoutFar = ImageLayout::Linear;
-            texture.WrapHeight = ImageWrap::Repeat;
-            texture.WrapWidth = ImageWrap::Repeat;
+            texture.Type = GraphicImageTypeTexture2D;
+            texture.Filter = GraphicRenderFilterTrilinear;
+            texture.LayoutNear = GraphicImageLayoutLinear;
+            texture.LayoutFar = GraphicImageLayoutLinear;
+            texture.WrapHeight = GraphicImageWrapRepeat;
+            texture.WrapWidth = GraphicImageWrapRepeat;
 
-            Register(texture);
+            GraphicTextureRegister(&_mainWindow.GraphicInstance, &texture);
         }
 
         return imageLoadResult;
     }
 
-    return ResultSuccessful;
+    return ActionSuccessful;
 }
 
-ActionResult BF::BitFireEngine::Load(CFont& font, const wchar_t* filePath, bool loadAsynchronously)
+ActionResult BF::BitFireEngine::Load(PXFont& font, const wchar_t* filePath, bool loadAsynchronously)
 {
     /*
     bool firstImage = _fontList.Size() == 0;
@@ -1415,9 +707,9 @@ ActionResult BF::BitFireEngine::Load(CFont& font, const wchar_t* filePath, bool 
         DefaultFont = &font;
     }*/
 
-    return ResultSuccessful;
+    return ActionSuccessful;
 }
-
+/*
 ActionResult BF::BitFireEngine::Load(AudioClip& audioClip, const wchar_t* filePath, bool loadAsynchronously)
 {
     printf("[+][Resource] AudioClip <%ls> loading...\n", filePath);
@@ -1439,7 +731,7 @@ ActionResult BF::BitFireEngine::Load(AudioClip& audioClip, const wchar_t* filePa
     {
         const ActionResult soundLoadResult = sound.Load(filePath);
 
-        if(soundLoadResult != ResultSuccessful)
+        if(soundLoadResult != ActionSuccessful)
         {
             delete soundAdress;
 
@@ -1449,33 +741,35 @@ ActionResult BF::BitFireEngine::Load(AudioClip& audioClip, const wchar_t* filePa
         Register(audioClip, sound);
     }
 
-    return ResultSuccessful;
-}
+    return ActionSuccessful;
+}*/
 
 ActionResult BF::BitFireEngine::Load(ShaderProgram& shaderProgram, const wchar_t* vertexShaderFilePath, const wchar_t* fragmentShaderFilePath)
 {
     printf("[+][Resource] ShaderProgram V:<%ls> F:<%ls> loading...\n", vertexShaderFilePath, fragmentShaderFilePath);
-
-    const bool firstShaderProgram = _shaderProgramList.Size() == 0;
+    
+    const bool firstShaderProgram = _shaderProgramList.NodeListSizeCurrent == 0;
     const bool isRegistered = shaderProgram.ID != -1;
 
     if(!isRegistered)
     {
-        _shaderProgramList.Add(&shaderProgram);
+        PXLinkedListFixedNodeAdd(&_shaderProgramList, &shaderProgram);
 
-        const bool successful = Register(shaderProgram, vertexShaderFilePath, fragmentShaderFilePath);
+        const ActionResult successful = GraphicShaderProgramCreateVFPath(&_mainWindow.GraphicInstance, &shaderProgram, vertexShaderFilePath, fragmentShaderFilePath);
+     
 
         if(firstShaderProgram && successful)
         {
             _defaultShaderID = shaderProgram.ID;
 
-            CameraDataGet(_defaultShaderID);
+            CameraDataGet(&_mainWindow, _defaultShaderID);
         }
     }
 
-    return ResultSuccessful;
+    return ActionSuccessful;
 }
 
+/*
 ActionResult BF::BitFireEngine::Load(Resource* resource, const wchar_t* filePath, const bool loadAsynchronously)
 {
     ResourceType resourceType = ResourceType::Unknown;
@@ -1513,7 +807,7 @@ ActionResult BF::BitFireEngine::Load(Resource* resource, const wchar_t* filePath
 
         case ResourceType::Font:
         {
-            CFont* font = new CFont();
+            PXFont* font = new PXFont();
 
             Load(*font, filePath, loadAsynchronously);
 
@@ -1577,7 +871,7 @@ ActionResult BF::BitFireEngine::Load(Resource* resource, const wchar_t* filePath
     }
 
     return ResultSuccessful;
-}
+}*/
 
 ActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePath, const bool loadAsynchronously)
 {
@@ -1597,9 +891,8 @@ ActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePath, cons
     unsigned int dialogCounter = 0;
 
     printf("[+][Resource] Level <%ls> loading...\n", filePath);
-
-    File file;
-    ParsingStream parsingStream;
+    /*
+    DataStream dataStream;
 
     {
         const ActionResult mappingResult = FileMapToVirtualMemoryW(&file, filePath, 0, MemoryReadOnly);
@@ -1722,7 +1015,7 @@ ActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePath, cons
               for (size_t i = 0; i < loadedModel->MeshListSize; i++)
               {
                   loadedModel->MeshList[i].Structure.RenderType = RenderMode::Point;
-              }*/
+              }* /
 
                     level.ModelList[modelCounter++] = loadedModel;
                     //-------------------
@@ -1847,7 +1140,7 @@ ActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePath, cons
                 wchar_t filePathW[PathMaxSize];
                 TextCopyAW(filePathA, PathMaxSize, filePathW, PathMaxSize);
 
-                CFont* font = new CFont();
+                PXFont* font = new PXFont();
 
                 Load(*font, filePathW);
 
@@ -1873,8 +1166,12 @@ ActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePath, cons
         }
     }
     while(ParsingStreamSkipLine(&parsingStream));
-}
 
+     */
+
+return ActionSuccessful;
+}
+/*
 ActionResult BF::BitFireEngine::Load(Sprite& sprite, const wchar_t* filePath)
 {
     printf("[+][Resource] Sprite <%ls> loading...\n", filePath);
@@ -1905,24 +1202,27 @@ ActionResult BF::BitFireEngine::Load(Sprite& sprite, const wchar_t* filePath)
     // Add(collider);
     // model.BoundingBoxUpdate();
 
-    return ResultSuccessful;
+    return ActionSuccessful;
 }
+ActionResult BF::BitFireEngine::Load(Sound& sound, const wchar_t* filePath, const bool loadAsynchronously)
+{
+    return ActionSuccessful;
+}
+
+*/
 
 ActionResult BF::BitFireEngine::Load(Collider* collider)
 {
-    _physicList.Add(collider);
+   // _physicList.Add(collider);
 
-    return ResultSuccessful;
+    return ActionSuccessful;
 }
 
-ActionResult BF::BitFireEngine::Load(Sound& sound, const wchar_t* filePath, const bool loadAsynchronously)
-{
-    return ResultSuccessful;
-}
+
 
 ActionResult BF::BitFireEngine::Load
 (
-    SkyBox& skyBox,
+    PXSkyBox& skyBox,
     const wchar_t* shaderVertex,
     const wchar_t* shaderFragment,
     const wchar_t* textureRight,
@@ -1935,9 +1235,11 @@ ActionResult BF::BitFireEngine::Load
 {
     printf("[+][Resource] SkyBox loading...\n");
 
-    ShaderProgram& shaderProgram = skyBox.Shader;
+    //ShaderProgram& shaderProgram = skyBox.Shader;
 
-    Load(shaderProgram, shaderVertex, shaderFragment);
+   // Load(shaderProgram, shaderVertex, shaderFragment);
+
+    /*
 
     Image* imageList = skyBox.Texture.ImageList;
 
@@ -1948,11 +1250,13 @@ ActionResult BF::BitFireEngine::Load
     const ActionResult textureBackResult = ImageLoadW(&imageList[4], textureBack);
     const ActionResult textureFrontResult = ImageLoadW(&imageList[5],textureFront);
 
-    Register(skyBox);
+    //GraphicSkyboxRegister(&skyBox);
 
     DefaultSkyBox = &skyBox;
 
-    return ResultSuccessful;
+    */
+
+    return ActionSuccessful;
 }
 
 void BF::BitFireEngine::UnloadAll()
@@ -2058,7 +1362,11 @@ void BF::BitFireEngine::ModelsPhysicsApply(float deltaTime)
 
 void BF::BitFireEngine::ModelsRender(const float deltaTime)
 {
-    MainCamera.Update(deltaTime);
+    GraphicContext* graphicContext = &_mainWindow.GraphicInstance;
+
+    //PXCameraUpdate(&MainCamera, deltaTime);
+
+    /*
 
     if(1)// Render Skybox first, if it is used
     {
@@ -2078,11 +1386,13 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
             OpenGL::DepthMaskEnable(false);
             OpenGL::DrawOrder(true);
 
+            GraphicShaderUse(shaderID);
+
             OpenGL::UseShaderProgram(shaderID);
             _lastUsedShaderProgram = shaderID;
 
-            CameraDataGet(shaderID);
-            CameraDataUpdate(MainCamera);
+            CameraDataGet(&_mainWindow, shaderID);
+            CameraDataUpdate(graphicContext, MainCamera);
 
             OpenGL::ShaderSetUniformMatrix4x4(_matrixViewID, viewTri.Data);
             //OpenGL::Use(*DefaultSkyBox);
@@ -2095,14 +1405,16 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
             assert(vbo != -1);
             assert(ibo != -1);
 
-            glBindVertexArray(vao);
-            glBindBuffer(GL_ARRAY_BUFFER, vbo);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+            OpenGLVertexArrayBind(&graphicContext->OpenGLInstance, vao);
+            OpenGLBufferBind(&graphicContext->OpenGLInstance, OpenGLBufferArray, vbo);
+            OpenGLBufferBind(&graphicContext->OpenGLInstance, OpenGLBufferElementArray, vbo);
 
             Use(ImageType::TextureCubeContainer, renderable.ChunkList[0].SegmentList[0].MaterialRange[0].TextureID);
 
             glDrawElements(GL_QUADS, 24, GL_UNSIGNED_INT, 0);
 
+            GraphicTextureUse();
+            
             Use(ImageType::TextureCubeContainer, 0);
             OpenGL::DepthMaskEnable(true);
             OpenGL::DrawOrder(false);
@@ -2111,34 +1423,85 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
         }
-    }
+    }*/
 
-    glPointSize(10);
+  
+    
+
+    glPointSize(5);
     glLineWidth(5);
 
-    for(LinkedListNode<Renderable*>* currentModel = _renderList.GetFirst(); currentModel; currentModel = currentModel->Next)
+
+    PXLinkedListNodeFixed currentModel;
+
+    PXLinkedListFixedNodeAt(&_renderList, &currentModel,0);
+
+    do
     {
-        const Renderable* renderableAdress = currentModel->Element;
+        const PXRenderable* const pxRenderable = (const PXRenderable* const)currentModel.BlockData;
 
-        if(!renderableAdress)
+#if 0 // Should never be 0
         {
-            continue;
+            const PXBool skip = !pxRenderable;
+
+            if (skip)
+            {
+                continue;
+            }
+        }
+#endif 
+
+
+        {
+            const PXBool skip = !pxRenderable->DoRendering;
+
+            if (skip)
+            {
+                continue;
+            }
         }
 
-        const Renderable& renderable = *renderableAdress;
-        const OpenGLID vertexArrayID = renderable.ID;
-        const bool hasMesh = renderable.IsRegistered();
-        const bool skipRendering = !(renderable.DoRendering && hasMesh);
-        const OpenGLID renderModeID = ToRenderMode(renderable.Mode);
 
-        if(skipRendering)
-        {
-            continue; // Skip to next model.
-        }
 
-        assert(vertexArrayID != -1);
 
-        glBindVertexArray(vertexArrayID); // VAO
+        // const bool hasMesh = renderable.IsRegistered();
+        // const bool skipRendering = !(renderable.DoRendering && hasMesh);
+        // const OpenGLID renderModeID = ToRenderMode(renderable.Mode);
+
+       //  if(skipRendering)
+       //  {
+        //     continue; // Skip to next model.
+      //   }   
+
+        auto glContext = &_mainWindow.GraphicInstance.OpenGLInstance;
+
+        // OpenGLVertexArrayBind(glContext, renderable.ID); ; // VAO
+        GraphicShaderUse(&_mainWindow.GraphicInstance, 1);
+        CameraDataGet(&_mainWindow, 1);
+        CameraDataUpdate(&_mainWindow, MainCamera);
+
+        GraphicShaderUpdateMatrix4x4F(&_mainWindow.GraphicInstance, _matrixModelID, pxRenderable->MatrixModel.Data);
+
+
+
+        OpenGLBufferBind(glContext, OpenGLBufferArray, pxRenderable->VBO);
+        OpenGLBufferUnbind(glContext, OpenGLBufferElementArray);
+
+        //glDrawBuffer(GL_POINTS);
+        //glDrawElements(GL_LINES, 3, GL_UNSIGNED_INT, 0);
+        glDrawArrays(GL_POINTS, 0, pxRenderable->RenderSize);
+        //glDrawArrays(GL_TRIANGLES, 0, renderable.RenderSize);
+
+        OpenGLBufferUnbind(glContext, OpenGLBufferArray);
+
+        //       OpenGLVertexArrayUnbind(glContext);
+    } 
+    while (PXLinkedListFixedNodeNext(&_renderList, &currentModel));
+
+
+
+
+        /*
 
         for(size_t chunkIndex = 0; chunkIndex < renderable.ChunkListSize; ++chunkIndex)
         {
@@ -2173,10 +1536,12 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
 
                     // Check if shader need to be changed
 
-                    OpenGL::UseShaderProgram(shaderID);
+                    GraphicShaderUse(shaderID);
+
                     CameraDataGet(shaderID);
                     CameraDataUpdate(MainCamera);
-                    OpenGL::ShaderSetUniformMatrix4x4(_matrixModelID, renderable.Data);
+
+                    GraphicShaderUpdateMatrix4x4F(_matrixModelID, renderable.Data);
 
                     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID); // IBO
 
@@ -2202,6 +1567,7 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
                 //printf("[>] Render %i\n", indexBufferID);
             }
         }
+        */
 
         //glBindBuffer(GL_ARRAY_BUFFER, 0);
         //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -2294,7 +1660,7 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
             //BoundingBoxRender(model->MatrixModel, boundingBox, Vector3<float>(0, 1, 1));
 #endif
 
-        }      */
+        }     
     }
 
     for(LinkedListNode<Collider*>* colliderCurrent = _physicList.GetFirst(); colliderCurrent; colliderCurrent = colliderCurrent->Next)
@@ -2329,16 +1695,13 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
 
         //BoundingBoxRender(model, boundingBox, color);
     }
-}
 
-void BF::BitFireEngine::BoundingBoxRender(Matrix4x4<float> modelMatrix, Vector3<float> boundingBox, Vector3<float> color)
-{
-
+     */
 }
 
 void BF::BitFireEngine::PrintContent(bool detailed)
 {
-    if(detailed)
+    if (detailed)
     {
         const char* noValue = "| %-73s |\n";
         const char* message =
@@ -2356,11 +1719,15 @@ void BF::BitFireEngine::PrintContent(bool detailed)
 
 
         printf("+-----------------------------\n");
-
-        for(LinkedListNode<Renderable*>* currentRenderable = _renderList.GetFirst(); currentRenderable; currentRenderable = currentRenderable->Next)
+        /*
+        for(LinkedListNode<PXRenderable*>* currentRenderable = _renderList.GetFirst(); currentRenderable; currentRenderable = currentRenderable->Next)
         {
-            const Renderable& renderable = *currentRenderable->Element;
-            const size_t chunkListSize = renderable.ChunkListSize;
+            const PXRenderable& renderable = *currentRenderable->Element;
+            //const size_t chunkListSize = renderable.ChunkListSize;
+
+            printf("ID:%i\n", renderable.ID);
+
+            /*
 
             printf("| Rendable ID:%i |\n", renderable.ID);
 
@@ -2399,7 +1766,7 @@ void BF::BitFireEngine::PrintContent(bool detailed)
                         );
                     }
                 }
-            }
+            }* /
         }
 
 
@@ -2407,11 +1774,11 @@ void BF::BitFireEngine::PrintContent(bool detailed)
         printf(endLine);
         printf(message, "Images");
 
-        for(LinkedListNode<Texture*>* currentTexture = _textureList.GetFirst(); currentTexture; currentTexture = currentTexture->Next)
+        for(LinkedListNode<PXTexture*>* currentTexture = _textureList.GetFirst(); currentTexture; currentTexture = currentTexture->Next)
         {
-            const Texture& texture = *currentTexture->Element;
+            const PXTexture& texture = *currentTexture->Element;
 
-            printf("| %3i | %4zix%4zi | \n", texture.ID, texture.DataImage.Width, texture.DataImage.Height );
+           // printf("| %3i | %4zix%4zi | \n", texture.ID, texture.DataImage.Width, texture.DataImage.Height );
         }
 
         printf(endLine);
@@ -2423,7 +1790,7 @@ void BF::BitFireEngine::PrintContent(bool detailed)
 
 
             printf("Shader ID:%3i \n", shaderProgram.ID);
-        }
+        }*/
 
 
 
@@ -2461,7 +1828,7 @@ void BF::BitFireEngine::PrintContent(bool detailed)
             printf(line, dialog->ID, dialog->Name, dialog->FilePath, sizeof(*dialog));
         }
 
-        printf(endLine);*/
+        printf(endLine);* /
     }
     else
     {
@@ -2483,277 +1850,9 @@ void BF::BitFireEngine::PrintContent(bool detailed)
             _shaderProgramList.Size(),
             -1//_dialogList.Size()
         );
+    }*/
     }
 }
-
-const unsigned short BF::BitFireEngine::ToRenderMode(const RenderMode renderMode)
-{
-    switch(renderMode)
-    {
-        case RenderMode::Point:
-            return GL_POINTS;
-
-        case RenderMode::Line:
-            return GL_LINES;
-
-        case RenderMode::LineAdjacency:
-            return GL_LINES_ADJACENCY;
-
-        case RenderMode::LineStripAdjacency:
-            return GL_LINE_STRIP_ADJACENCY;
-
-        case RenderMode::LineLoop:
-            return GL_LINE_LOOP;
-
-        case RenderMode::LineStrip:
-            return GL_LINE_STRIP;
-
-        case RenderMode::Triangle:
-            return GL_TRIANGLES;
-
-        case RenderMode::TriangleAdjacency:
-            return GL_TRIANGLES_ADJACENCY;
-
-        case RenderMode::TriangleFAN:
-            return GL_TRIANGLE_FAN;
-
-        case RenderMode::TriangleStrip:
-            return GL_TRIANGLE_STRIP;
-
-        case RenderMode::TriangleStripAdjacency:
-            return GL_TRIANGLE_STRIP_ADJACENCY;
-
-        case RenderMode::Square:
-            return GL_QUADS;
-
-        case RenderMode::Patches:
-            return GL_PATCHES;
-
-        case RenderMode::Invalid:
-            return -1;
-    }
-}
-
-const ShaderType BF::BitFireEngine::ToShaderType(const OpenGLID token)
-{
-    return ShaderType();
-}
-
-const OpenGLID BF::BitFireEngine::ToShaderType(ShaderType shaderType)
-{
-    switch(shaderType)
-    {
-        case ShaderTypeVertex:
-            return GL_VERTEX_SHADER;
-
-        case   ShaderTypeTessellationControl:
-            return -1; // ???
-
-        case   ShaderTypeTessellationEvaluation:
-            return -1; // ???
-
-        case   ShaderTypeGeometry:
-            return GL_GEOMETRY_SHADER;
-
-        case   ShaderTypeFragment:
-            return GL_FRAGMENT_SHADER;
-
-        case  ShaderTypeCompute:
-            return GL_COMPUTE_SHADER;
-
-        case ShaderTypeUnkown:
-        default:
-            return -1;
-    }
-}
-
-const ImageDataFormat BF::BitFireEngine::ToImageFormat(const OpenGLID token)
-{
-    return ImageDataFormat();
-}
-
-const OpenGLID BF::BitFireEngine::ToImageFormat(ImageDataFormat imageFormat)
-{
-    switch(imageFormat)
-    {
-        case ImageDataFormatBGR:
-            return GL_BGR;
-
-        case ImageDataFormatBGRA:
-            return GL_BGRA;
-
-        case ImageDataFormatRGB:
-            return GL_RGB;
-
-        case ImageDataFormatRGBA:
-            return GL_RGBA;
-
-        case ImageDataFormatAlphaMask:
-        default:
-            return -1;
-    }
-}
-
-const BF::ImageType BF::BitFireEngine::ToImageType(const OpenGLID token)
-{
-    switch(token)
-    {
-        case GL_TEXTURE_2D:
-            return ImageType::Texture2D;
-
-        case GL_TEXTURE_3D:
-            return ImageType::Texture3D;
-
-        case GL_TEXTURE_CUBE_MAP:
-            return ImageType::TextureCubeContainer;
-
-        case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-            return ImageType::TextureCubeRight;
-
-        case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-            return ImageType::TextureCubeLeft;
-
-        case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-            return ImageType::TextureCubeTop;
-
-        case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-            return ImageType::TextureCubeDown;
-
-        case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-            return ImageType::TextureCubeBack;
-
-        case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-            return ImageType::TextureCubeFront;
-
-        default:
-            return ImageType::Invalid;
-    }
-}
-
-const OpenGLID BF::BitFireEngine::ToImageType(ImageType imageType)
-{
-    switch(imageType)
-    {
-        case ImageType::Texture2D:
-            return GL_TEXTURE_2D;
-
-        case ImageType::Texture3D:
-            return GL_TEXTURE_3D;
-
-        case ImageType::TextureCubeContainer:
-            return GL_TEXTURE_CUBE_MAP;
-
-        case ImageType::TextureCubeRight:
-            return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-
-        case ImageType::TextureCubeLeft:
-            return GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
-
-        case ImageType::TextureCubeTop:
-            return GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
-
-        case ImageType::TextureCubeDown:
-            return GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
-
-        case ImageType::TextureCubeBack:
-            return GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
-
-        case ImageType::TextureCubeFront:
-            return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
-
-        default:
-            return -1;
-    }
-}
-
-int BF::BitFireEngine::ImageWrapToOpenGLFormat(ImageWrap imageWrap)
-{
-    switch(imageWrap)
-    {
-        case ImageWrap::NoModification:
-            return GL_CLAMP_TO_BORDER;
-
-        case ImageWrap::StrechEdges:
-            return GL_CLAMP_TO_EDGE;
-
-        case ImageWrap::StrechEdgesAndMirror:
-            return GL_MIRROR_CLAMP_TO_EDGE;
-
-        case ImageWrap::Repeat:
-            return GL_REPEAT;
-
-        case ImageWrap::RepeatAndMirror:
-            return GL_MIRRORED_REPEAT;
-    }
-}
-
-int BF::BitFireEngine::ImageLayoutToOpenGLFormat(ImageLayout layout)
-{
-    switch(layout)
-    {
-        case ImageLayout::Nearest:
-            return GL_NEAREST;
-
-        case ImageLayout::Linear:
-            return GL_LINEAR;
-
-        case ImageLayout::MipMapNearestNearest:
-            return GL_NEAREST_MIPMAP_NEAREST;
-
-        case ImageLayout::MipMapLinearNearest:
-            return GL_LINEAR_MIPMAP_NEAREST;
-
-        case ImageLayout::MipMapNNearestLinear:
-            return GL_NEAREST_MIPMAP_LINEAR;
-
-        case ImageLayout::MipMapLinearLinear:
-            return GL_LINEAR_MIPMAP_LINEAR;
-    }
-}
-
-unsigned int BF::BitFireEngine::ToChannalFormat(const unsigned short numerOfChannels, const unsigned short bitsPerSample)
-{
-    bool stereo = (numerOfChannels > 1);
-
-    switch(bitsPerSample)
-    {
-        //case 16u:
-        //    return stereo ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
-
-        //case 8u:
-        //    return stereo ? AL_FORMAT_STEREO8 : AL_FORMAT_MONO8;
-
-        default:
-            return -1;
-    }
-}
-
-const char* BF::BitFireEngine::ShaderTypeToString(int type)
-{
-    switch(type)
-    {
-        case GL_VERTEX_SHADER:
-            return "Vertex";
-
-        case  GL_GEOMETRY_SHADER:
-            return "Geometry";
-
-        case  GL_FRAGMENT_SHADER:
-            return "Fragment";
-
-        case  GL_COMPUTE_SHADER:
-            return "Compute";
-
-        default:
-            return "Unkown";
-    }
-}
-
-
-
-
-
-
 
 
 

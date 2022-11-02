@@ -1,33 +1,30 @@
 #pragma once
 
-#include "UIElement.h"
-
-#include <Math/Geometry/Rectangle.hpp>
-#include <File/Font.h>
+#include <Format/Font.h>
 
 #define TextSizeMax 1024
 
 namespace BF
 {
-	class UIText : public UIElement
+	class UIText
 	{
 		private:
 		float* _textBlockMeshList;
 		size_t _textBlockMeshListSize;
 
-		CFont* _font;
+		PXFont* _font;
 
 		public:
-		Vector2<float> AncerPosition;
+		float AncerPosition[2];
 		size_t FontID;
 		size_t TextSizeCurrent;
 		wchar_t TextContent[TextSizeMax];
 
 		UIText();
 
-		void Setup(const wchar_t* text, CFont* font, float x, float y);
+		void Setup(const wchar_t* text, PXFont* font, float x, float y);
 
-		void FontSet(CFont& font);
+		void FontSet(PXFont& font);
 
 		void TextPositionSet(float x, float y);
 		void TextSet(const char* text);

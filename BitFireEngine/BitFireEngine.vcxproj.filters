@@ -15,21 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Player\Player.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\UI\DialogBox\UIDialogBox.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\UI\UIButton.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\UI\UIElement.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\UI\UIImage.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\UI\UIText.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -46,9 +31,6 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\System\Device\KeyBoard\KeyBoardCache.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\VideoConfig.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Source\Physic\Collider.cpp">
@@ -72,9 +54,6 @@
     <ClCompile Include="Source\Dialog\DialogBox.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Animation\AnimatorSprite.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Level\Level.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -86,21 +65,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Player\Player.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\UI\DialogBox\UIDialogBox.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\UI\UIButton.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\UI\UIElement.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\UI\UIImage.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\UI\UIText.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -117,9 +81,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\System\Device\KeyBoard\KeyBoardCache.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\VideoConfig.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Physic\Collider.h">
@@ -144,9 +105,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Dialog\DialogBox.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Animation\AnimatorSprite.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Level\Level.h">

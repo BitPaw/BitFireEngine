@@ -2166,9 +2166,9 @@
 1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Media/Sound/AudioSource.h
 
 1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Window/Window.h
-	<OS/CWindow.h>
+	<OS/PXWindow.h>
 
-1660596034 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/OS/CWindow.h
+1660596034 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/OS/PXWindow.h
 	<stddef.h>
 	<OS/OSVersion.h>
 	<X11/X.h>
@@ -2245,7 +2245,7 @@
 
 1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Device/Controller.h
 	<OS/OSVersion.h>
-	<OS/CWindow.h>
+	<OS/PXWindow.h>
 
 1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/Event/Event.h
 

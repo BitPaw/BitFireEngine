@@ -1,15 +1,11 @@
 #include "GravityCube.h"
 
-#include <Math/Geometry/Form/Cube.h>
-
-#include <cassert>
-
-bool BF::GravityCube::IsColliding(Vector2<float> position)
+bool BF::GravityCube::IsColliding(PXVector2F* const  position)
 {
     return false;
 }
 
-bool BF::GravityCube::IsColliding(Vector3<float> position)
+bool BF::GravityCube::IsColliding(PXVector3F* const position)
 {
     /*
     bool IsPointInObject = Cube::IsPointInObject
@@ -24,7 +20,7 @@ bool BF::GravityCube::IsColliding(Vector3<float> position)
         position.Y,
         INFINITY
     );*/
-    assert(false);
+    //assert(false);
 
     return true;
 }

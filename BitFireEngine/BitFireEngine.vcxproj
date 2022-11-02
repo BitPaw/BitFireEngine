@@ -28,7 +28,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Level\Level.cpp" />
-    <ClCompile Include="Source\Animation\AnimatorSprite.cpp" />
     <ClCompile Include="Source\Dialog\DialogBox.cpp" />
     <ClCompile Include="Source\Dialog\Dialog.cpp" />
     <ClCompile Include="Source\Entity\Sign.cpp" />
@@ -38,22 +37,15 @@
     <ClCompile Include="Source\Physic\GravityCube.cpp" />
     <ClCompile Include="Source\Physic\GravityField.cpp" />
     <ClCompile Include="Source\Physic\GravitySphere.cpp" />
-    <ClCompile Include="Source\Player\Player.cpp" />
     <ClCompile Include="Source\System\BitFireEngine.cpp" />
     <ClCompile Include="Source\System\Device\KeyBoard\KeyBoardCache.cpp" />
     <ClCompile Include="Source\System\Device\Mouse\MouseCache.cpp" />
     <ClCompile Include="Source\System\InputContainer.cpp" />
-    <ClCompile Include="Source\System\VideoConfig.cpp" />
-    <ClCompile Include="Source\UI\DialogBox\UIDialogBox.cpp" />
-    <ClCompile Include="Source\UI\UIButton.cpp" />
-    <ClCompile Include="Source\UI\UIElement.cpp" />
-    <ClCompile Include="Source\UI\UIImage.cpp" />
     <ClCompile Include="Source\UI\UIText.cpp" />
     <ClCompile Include="Source\Collision\SystemPhysics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Level\Level.h" />
-    <ClInclude Include="Source\Animation\AnimatorSprite.h" />
     <ClInclude Include="Source\Dialog\DialogBox.h" />
     <ClInclude Include="Source\Dialog\Dialog.h" />
     <ClInclude Include="Source\Entity\Sign.h" />
@@ -64,16 +56,10 @@
     <ClInclude Include="Source\Physic\GravityCube.h" />
     <ClInclude Include="Source\Physic\GravityField.h" />
     <ClInclude Include="Source\Physic\GravitySphere.h" />
-    <ClInclude Include="Source\Player\Player.h" />
     <ClInclude Include="Source\System\Device\KeyBoard\KeyBoardCache.h" />
     <ClInclude Include="Source\System\BitFireEngine.h" />
     <ClInclude Include="Source\System\Device\Mouse\MouseCache.h" />
     <ClInclude Include="Source\System\InputContainer.h" />
-    <ClInclude Include="Source\System\VideoConfig.h" />
-    <ClInclude Include="Source\UI\DialogBox\UIDialogBox.h" />
-    <ClInclude Include="Source\UI\UIButton.h" />
-    <ClInclude Include="Source\UI\UIElement.h" />
-    <ClInclude Include="Source\UI\UIImage.h" />
     <ClInclude Include="Source\UI\UIText.h" />
     <ClInclude Include="Source\Collision\SystemPhysics.h" />
   </ItemGroup>
@@ -83,9 +69,6 @@
     </ProjectReference>
     <ProjectReference Include="..\RenderSystem\RenderSystem.vcxproj">
       <Project>{4304423b-6009-45f9-b023-7c0c2c405e0e}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\ResourceSystem\ResourceSystem.vcxproj">
-      <Project>{398c5630-9092-486f-920c-c9992f8b7f6c}</Project>
     </ProjectReference>
     <ProjectReference Include="..\SystemResource\SystemResource.vcxproj">
       <Project>{398c5630-9092-486f-920c-c9992f8b7f6c}</Project>
@@ -118,7 +101,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -138,7 +121,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -168,43 +151,45 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath);$(SolutionDir)SystemResource/Source/</IncludePath>
-    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_32_Debug/;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)__Export__/x86 Debug</OutDir>
-    <IntDir>$(SolutionDir)__Temp__/x86 Debug/$(ProjectName)</IntDir>
+    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)SystemResource/Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration);D:/_Data/Git/PXUltima/PXUltima/Source/</IncludePath>
+    <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
+    <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_32_Release/;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath);$(SolutionDir)SystemResource/Source/</IncludePath>
-    <OutDir>$(SolutionDir)__Export__/x86 Release</OutDir>
-    <IntDir>$(SolutionDir)__Temp__/x86 Release/$(ProjectName)</IntDir>
+    <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)SystemResource/Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration);D:/_Data/Git/PXUltima/PXUltima/Source/</IncludePath>
+    <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
+    <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(LibraryPath);$(SolutionDir)Dependencies\lib32\AL\Rel;$(SolutionDir)Dependencies\lib32\GL;$(SolutionDir)Dependencies\lib32\GLFW;$(SolutionDir)Dependencies\lib32\zlib</LibraryPath>
-    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath);$(SolutionDir)SystemResource/Source/</IncludePath>
-    <IntDir>$(SolutionDir)__Temp__/x86 XP/$(ProjectName)</IntDir>
-    <OutDir>$(SolutionDir)__Export__/x86 XP</OutDir>
+    <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)SystemResource/Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration);D:/_Data/Git/PXUltima/PXUltima/Source/</IncludePath>
+    <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
+    <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath);$(SolutionDir)__Dependencies__/include;$(SolutionDir)SystemResource/Source/</IncludePath>
-    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_64_Debug/;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)__Export__/x64 Debug</OutDir>
-    <IntDir>$(SolutionDir)__Temp__/x64 Debug/$(ProjectName)</IntDir>
+    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)SystemResource/Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration);D:/_Data/Git/PXUltima/PXUltima/Source/</IncludePath>
+    <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
+    <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(SolutionDir)__Dependencies__/lib_Windows_10_64_Release/;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)__Dependencies__/include/;$(SolutionDir)SystemResource/Source/;$(IncludePath);$(SolutionDir)SystemResource/Source/</IncludePath>
-    <OutDir>$(SolutionDir)__Export__/x64 Release</OutDir>
-    <IntDir>$(SolutionDir)__Temp__/x64 Release/$(ProjectName)</IntDir>
+    <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)SystemResource/Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration);D:/_Data/Git/PXUltima/PXUltima/Source/</IncludePath>
+    <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
+    <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(LibraryPath);$(SolutionDir)Dependencies\lib64\AL\Rel;$(SolutionDir)Dependencies\lib64\GL;$(SolutionDir)Dependencies\lib64\GLFW</LibraryPath>
-    <IncludePath>$(SolutionDir)__Dependencies__/include;$(IncludePath);$(SolutionDir)SystemResource/Source/</IncludePath>
+    <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)SystemResource/Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration);D:/_Data/Git/PXUltima/PXUltima/Source/</IncludePath>
+    <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
+    <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -263,6 +248,7 @@
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;$(SolutionDir)PXUltima/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -332,6 +318,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;$(SolutionDir)PXUltima/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

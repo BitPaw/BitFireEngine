@@ -1732,9 +1732,9 @@
 1660430819 /home/bitpaw/Desktop/BFE/BitFireEngine/BitFireEngine/Source/Player/Player.h
 
 1660430822 /home/bitpaw/Desktop/BFE/BitFireEngine/SystemResource/Source/Window/Window.h
-	<OS/CWindow.h>
+	<OS/PXWindow.h>
 
-1660596034 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/OS/CWindow.h
+1660596034 /home/bitpaw/Desktop/BFE/BitFireEngine/PXUltima/Source/OS/PXWindow.h
 	<stddef.h>
 	<OS/OSVersion.h>
 	<X11/X.h>

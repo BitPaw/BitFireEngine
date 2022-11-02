@@ -29,8 +29,11 @@ int main(int amountOFParameters, char** parameter)
     return EXIT_SUCCESS;
 }
 
+Model _cubeThing;
+
 void OnStartUp(BitFireEngine* const bitFireEngine)
-{
+{    
+
     _worldShader.ID = -1;
     _hudShaderID.ID = -1;
 
@@ -53,7 +56,7 @@ void OnStartUp(BitFireEngine* const bitFireEngine)
     //GameSystem.Load(textureBix, "Model/Dialog/DialogBox.obj");
 
     bitFireEngine->Load(_blockTexture, L"Texture/Block.bmp", false);
-    //GameSystem.Resource.Load("Model/Triangle.obj");
+    //bitFireEngine->Load("Model/Triangle.obj");
 
    // _worldGravity.IgnoreAxis.Set(true, true, true);
    // _worldGravity.PullForce = GravityForceEarth;
@@ -62,15 +65,26 @@ void OnStartUp(BitFireEngine* const bitFireEngine)
 
     bitFireEngine->Load(_level, L"Level/MainMenu.lev");
 
+    //bitFireEngine->Load();
+
     //GameSystem.Resource.Load(L"B:/Daten/Textures/PR/Countrry/Neo/FI/Country.obj");
 
-    bitFireEngine->Load(_cubeModel, L"Model/Cube.obj", false);
+
+
+
+
+     //  bitFireEngine->Load(_cubeModel, &_cubeThing, L"Model/Cube.obj", false);
+    //bitFireEngine->Load(_cubeModel, &_cubeThing, L"Model/Triangle.obj", false);
+    bitFireEngine->Load(_cubeModel, &_cubeThing, L"B:/Daten/Objects/Moze/Moze.obj", false);
+    //bitFireEngine->Load(_cubeModel, &_cubeThing, L"B:/Daten/Objects/arwing/arwing_SNES.obj", false);
+    //bitFireEngine->Load(_cubeModel, &_cubeThing, L"Model/Dust_II/DustII.obj", false);
+
     // _cubeModel.Move(0,50,0);
     // _cubeModel.Scale(100.0f);
-    _cubeModel.ShaderUse(_worldShader.ID);
-    _cubeModel.TextureUse(_blockTexture.ID);
-    _cubeModel.Scale(100);
-    _cubeModel.Move(250, 0, 0);
+    //_cubeModel.ShaderUse(_worldShader.ID);
+    //_cubeModel.TextureUse(_blockTexture.ID);
+    //_cubeModel.Scale(100);
+   // _cubeModel.Move(250, 0, 0);
 
     //cube.EnablePhysics = true;
 //cube.Mass = 1000;
@@ -120,9 +134,9 @@ void OnStartUp(BitFireEngine* const bitFireEngine)
 //sound.Load("Sound/Our.mp3");
 //sound.Load("Sound/CaveStory.mid");
 
-    bitFireEngine->Register(_audioSource);
-    bitFireEngine->Load(_audioClip, L"Sound/CatFeet.wav", false);
-    bitFireEngine->Use(_audioSource, _audioClip);
+    //>>bitFireEngine->Register(_audioSource);
+    //>>bitFireEngine->Load(_audioClip, L"Sound/CatFeet.wav", false);
+    //>>bitFireEngine->Use(_audioSource, _audioClip);
 
     // GameSystem.LoopPart(audioSource, 100, 100);
     // GameSystem.Play(audioSource, sound);
@@ -139,7 +153,7 @@ void OnShutDown(const BitFireEngine* bitFireEngine)
 
 }
 
-BF::Vector3<float> rot(0.0349066, 0, 0);
+//BF::Vector3<float> rot(0.0349066, 0, 0);
 
 void OnUpdateGameLogic(const BitFireEngine* bitFireEngine, const float deltaTime)
 {
@@ -161,58 +175,47 @@ void OnUpdateInput(BitFireEngine* const bitFireEngine, BF::InputContainer& input
 
     if(InputButtonIsPressed(input.KeyBoardInput.O))
     {
-        _audioSource.PitchIncrease(value);
+        //>> _audioSource.PitchIncrease(value);
 
         changed = true;
     }
 
     if(InputButtonIsPressed(input.KeyBoardInput.L))
     {
-        _audioSource.PitchReduce(value);
+        //>> _audioSource.PitchReduce(value);
 
         changed = true;
     }
 
     if(changed)
     {
-        bitFireEngine->Update(_audioSource);
+        //>>   bitFireEngine->Update(_audioSource);
     }
 #endif
 
     KeyBoardCache& keyboard = input.KeyBoardInput;
     MouseCache& mouse = input.MouseInput;
-    Camera& camera = bitFireEngine->MainCamera;
-    Vector3<float> movement;
+    PXCamera& camera = bitFireEngine->MainCamera;
+    PXVector3F movement = {0,0,0};
 
-    if(InputButtonIsPressed(keyboard.ShitftLeft)) { movement.Add(0, -1, 0); }
-    if(InputButtonIsPressed(keyboard.W)) { movement.Add(0, 0, 1); }
-    if(InputButtonIsPressed(keyboard.A)) { movement.Add(-1, 0, 0); }
-    if(InputButtonIsPressed(keyboard.S)) { movement.Add(0, 0, -1); }
-    if(InputButtonIsPressed(keyboard.D)) { movement.Add(1, 0, 0); }
+    if(InputButtonIsPressed(keyboard.ShitftLeft)) { PXVector3FAddXYZ(&movement, 0, -1, 0, &movement); }
+    if(InputButtonIsPressed(keyboard.W)) { PXVector3FAddXYZ(&movement,0, 0, 1, &movement); }
+    if(InputButtonIsPressed(keyboard.A)) { PXVector3FAddXYZ(&movement,-1, 0, 0, &movement); }
+    if(InputButtonIsPressed(keyboard.S)) { PXVector3FAddXYZ(&movement,0, 0, -1, &movement); }
+    if(InputButtonIsPressed(keyboard.D)) { PXVector3FAddXYZ(&movement,1, 0, 0, &movement); }
     if(InputButtonIsPressed(keyboard.SpaceBar))
     {
-        camera.Velocity.Set(0.0f, 6.0f, .0f);
+        //camera.Velocity.Set(0.0f, 6.0f, .0f);
 
-        //movement.Add(0, 1, 0);
+        PXVector3FAddXYZ(&movement, 0, 1, 0, &movement);
     }
 
-    camera.Move(movement);
-
-    camera.Rotate(mouse.InputAxis[0], mouse.InputAxis[1]);
-
-    camera.Update(_deltaTime);
-    keyboard.IncrementButtonTick();
-    mouse.ResetAxis();
-
-    // auto x = GameSystem.MainCamera.MatrixModel.PositionXYZ();
-    // printf("Camera Pos : %5.2f %5.2f %5.2f\n", x.X, x.Y, x.Z);
+    PXCameraMove(&camera, &movement);
+    PXCameraRotateXYZ(&camera, mouse.InputAxis[0], mouse.InputAxis[1], 0);
 }
 
 void OnUpdateUI(const BitFireEngine* bitFireEngine)
 {
-
-
-
     //sprintf_s(text->TextContent, "FPS: %4i", (BF::MathCeiling(1 / _deltaTime)));
     //text->SetText(text->TextContent);
 
