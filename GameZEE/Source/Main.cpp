@@ -55,7 +55,7 @@ void OnStartUp(BitFireEngine* const bitFireEngine)
 
     //GameSystem.Load(textureBix, "Model/Dialog/DialogBox.obj");
 
-    bitFireEngine->Load(_blockTexture, L"Texture/Block.bmp", false);
+    //bitFireEngine->Load(_blockTexture, L"Texture/Block.bmp", false);
     //bitFireEngine->Load("Model/Triangle.obj");
 
    // _worldGravity.IgnoreAxis.Set(true, true, true);
@@ -63,7 +63,7 @@ void OnStartUp(BitFireEngine* const bitFireEngine)
    // _worldGravity.PullDirection.Set(0, -1, 0);
    // GameSystem.Resource.Add(&_worldGravity);
 
-    bitFireEngine->Load(_level, L"Level/MainMenu.lev");
+    //bitFireEngine->Load(_level, L"Level/MainMenu.lev");
 
     //bitFireEngine->Load();
 
@@ -73,11 +73,11 @@ void OnStartUp(BitFireEngine* const bitFireEngine)
 
 
 
-     //  bitFireEngine->Load(_cubeModel, &_cubeThing, L"Model/Cube.obj", false);
-    //bitFireEngine->Load(_cubeModel, &_cubeThing, L"Model/Triangle.obj", false);
-    bitFireEngine->Load(_cubeModel, &_cubeThing, L"B:/Daten/Objects/Moze/Moze.obj", false);
+    // bitFireEngine->Load(_cubeModel, &_cubeThing, L"Model/Cube.obj", false);
+   // bitFireEngine->Load(_cubeModel, &_cubeThing, L"Model/Triangle.obj", false);
+    //bitFireEngine->Load(_cubeModel, &_cubeThing, L"B:/Daten/Objects/Moze/Moze.obj", false);
     //bitFireEngine->Load(_cubeModel, &_cubeThing, L"B:/Daten/Objects/arwing/arwing_SNES.obj", false);
-    //bitFireEngine->Load(_cubeModel, &_cubeThing, L"Model/Dust_II/DustII.obj", false);
+    bitFireEngine->Load(_cubeModel, &_cubeThing, L"Model/Dust_II_OLD/DustII.obj", false);
 
     // _cubeModel.Move(0,50,0);
     // _cubeModel.Scale(100.0f);

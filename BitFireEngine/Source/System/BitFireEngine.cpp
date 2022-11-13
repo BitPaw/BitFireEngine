@@ -611,13 +611,13 @@ ActionResult BF::BitFireEngine::Load(PXRenderable& renderable, Model* model, con
         
     if(loadAsynchronously)
     {
-        // ResourceAsyncLoadInfo* resourceAsyncLoadInfo = new ResourceAsyncLoadInfo();
+        //ResourceAsyncLoadInfo* resourceAsyncLoadInfo = new ResourceAsyncLoadInfo();
 
         // Thread::Run(LoadResourceAsync, &model);
     }
     else
     {
-        const ActionResult fileActionResult =  ModelLoadW(model, filePath);
+        const ActionResult fileActionResult = ModelLoadW(model, filePath);
         const bool successful = ActionSuccessful == fileActionResult;
 
         if(successful)
@@ -1425,10 +1425,10 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
         }
     }*/
 
-  
+  //  glDisable(GL_CULL_FACE);
     
 
-    glPointSize(5);
+    glPointSize(10);
     glLineWidth(5);
 
 
@@ -1482,15 +1482,15 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
 
         GraphicShaderUpdateMatrix4x4F(&_mainWindow.GraphicInstance, _matrixModelID, pxRenderable->MatrixModel.Data);
 
-
+        //glFrontFace(0x0900);
 
         OpenGLBufferBind(glContext, OpenGLBufferArray, pxRenderable->VBO);
-        OpenGLBufferUnbind(glContext, OpenGLBufferElementArray);
 
         //glDrawBuffer(GL_POINTS);
-        //glDrawElements(GL_LINES, 3, GL_UNSIGNED_INT, 0);
+        //glDrawElements(GL_LINES, pxRenderable->RenderSize, GL_UNSIGNED_INT, 0);
         glDrawArrays(GL_POINTS, 0, pxRenderable->RenderSize);
-        //glDrawArrays(GL_TRIANGLES, 0, renderable.RenderSize);
+        //glDrawArrays(GL_LINES, 0, pxRenderable->RenderSize);
+        glDrawArrays(GL_TRIANGLES, 0, pxRenderable->RenderSize);
 
         OpenGLBufferUnbind(glContext, OpenGLBufferArray);
 
