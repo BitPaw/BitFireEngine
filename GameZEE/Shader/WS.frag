@@ -23,9 +23,7 @@ uniform sampler2D MaterialTexture;
 
 void main()
 {
-    //vec3 color = vertex.Color.xyz;
+   vec3 color = (vec3(vertex.TexturePosition, 1.0f) + vertex.Normal) / 2.0f;
 
-   //fragcolor = texture(MaterialTexture, vertex.TexturePosition) * vec4(color, 1.0f);
-
-   fragcolor = vec4(vertex.TexturePosition,1.0f, 1.0f);
+   fragcolor = vec4(color + vec3(texture(MaterialTexture, vertex.TexturePosition)), 1.0f);
 }

@@ -128,7 +128,7 @@ void BF::BitFireEngine::Start()
     PXWindowCreate(&this->_mainWindow, -1, -1, "[BFE] <BitFireEngine>", 1);
 
 
-    while(!_mainWindow.IsRunning);
+    PXAwaitChangeCU(&_mainWindow.IsRunning);
 
     PXCameraAspectRatioChange(&MainCamera, _mainWindow.Width, _mainWindow.Height);
 
@@ -145,7 +145,7 @@ void BF::BitFireEngine::Start()
 
     PXStopWatchTrigger(&stopwatch, &timeAfter);
 
-    size_t time = PXTimeMillisecondsDelta(&timeBefore, &timeAfter);
+    size_t time = 0;// PXTimeMillisecondsDelta(&timeBefore, &timeAfter);
     float timeInS = time / 1000.0f;
 
     printf("[i][Info] Loading took %.2fs\n", timeInS);
@@ -1486,11 +1486,35 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
 
         OpenGLBufferBind(glContext, OpenGLBufferArray, pxRenderable->VBO);
 
-        //glDrawBuffer(GL_POINTS);
-        //glDrawElements(GL_LINES, pxRenderable->RenderSize, GL_UNSIGNED_INT, 0);
-        glDrawArrays(GL_POINTS, 0, pxRenderable->RenderSize);
-        //glDrawArrays(GL_LINES, 0, pxRenderable->RenderSize);
-        glDrawArrays(GL_TRIANGLES, 0, pxRenderable->RenderSize);
+        // Render mesh segments
+        
+        unsigned int renderAmountOffset = 0;
+
+        OpenGLTextureActivate(glContext, 0);
+        unsigned int shaderVarID = OpenGLShaderVariableIDGet(glContext, 1, "MaterialTexture");
+        OpenGLShaderVariableIx1(glContext, shaderVarID, 0);
+
+
+
+        for (size_t i = 0; i < 1; ++i) // pxRenderable->MeshSegmentListSize
+        {
+            const PXRenderableMeshSegment* const pxRenderableMeshSegment = &pxRenderable->MeshSegmentList[i];
+
+            unsigned int renderAmount = pxRenderableMeshSegment->NumberOfVertices;
+
+           
+            OpenGLTextureBind(glContext, OpenGLTextureType2D, pxRenderableMeshSegment->TextureID);
+
+            // Render
+            //glDrawBuffer(GL_POINTS);
+            //glDrawElements(GL_LINES, pxRenderable->RenderSize, GL_UNSIGNED_INT, 0);
+            //glDrawArrays(GL_POINTS, renderAmountOffset, renderAmount);
+            //glDrawArrays(GL_LINES, 0, pxRenderable->RenderSize);
+            glDrawArrays(GL_TRIANGLES, renderAmountOffset, renderAmount);
+
+            renderAmountOffset += renderAmount;
+        }
+      
 
         OpenGLBufferUnbind(glContext, OpenGLBufferArray);
 
@@ -1717,6 +1741,7 @@ void BF::BitFireEngine::PrintContent(bool detailed)
 
         printf(message, "Models");
 
+        
 
         printf("+-----------------------------\n");
         /*
