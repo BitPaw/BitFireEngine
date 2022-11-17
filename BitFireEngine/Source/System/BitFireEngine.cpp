@@ -1494,14 +1494,10 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
         unsigned int shaderVarID = OpenGLShaderVariableIDGet(glContext, 1, "MaterialTexture");
         OpenGLShaderVariableIx1(glContext, shaderVarID, 0);
 
-
-
-        for (size_t i = 0; i < 1; ++i) // pxRenderable->MeshSegmentListSize
+        for (size_t i = 0; i < pxRenderable->MeshSegmentListSize; ++i)
         {
             const PXRenderableMeshSegment* const pxRenderableMeshSegment = &pxRenderable->MeshSegmentList[i];
-
-            unsigned int renderAmount = pxRenderableMeshSegment->NumberOfVertices;
-
+            const size_t renderAmount = pxRenderableMeshSegment->NumberOfVertices;
            
             OpenGLTextureBind(glContext, OpenGLTextureType2D, pxRenderableMeshSegment->TextureID);
 
@@ -1741,7 +1737,38 @@ void BF::BitFireEngine::PrintContent(bool detailed)
 
         printf(message, "Models");
 
+
+
+
         
+        PXLinkedListNodeFixed currentModel;
+
+        PXLinkedListFixedNodeAt(&_renderList, &currentModel, 0);
+
+        do
+        {
+            const PXRenderable* const pxRenderable = (const PXRenderable* const)currentModel.BlockData;
+
+            printf("| VAO %2i | VBO %2i | IBO %2i |\n", pxRenderable->VAO, pxRenderable->VBO, pxRenderable->IBO);
+
+            size_t total = 0;
+
+            printf("| %8s | %9s | %16s |\n", "ShaderID", "TextureID", "NumberOfVertices");
+
+            for (size_t i = 0; i < pxRenderable->MeshSegmentListSize; ++i)
+            {
+                const PXRenderableMeshSegment* const pxRenderableMeshSegment = &pxRenderable->MeshSegmentList[i];
+
+                printf("| %8i | %9i | %16i |\n", pxRenderableMeshSegment->ShaderID, pxRenderableMeshSegment->TextureID, pxRenderableMeshSegment->NumberOfVertices);
+
+                total += pxRenderableMeshSegment->NumberOfVertices;
+            }
+
+            printf("| Total %-5i |\n", total);
+            
+     
+        } while (PXLinkedListFixedNodeNext(&_renderList, &currentModel));
+
 
         printf("+-----------------------------\n");
         /*
