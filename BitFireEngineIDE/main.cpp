@@ -1,8 +1,10 @@
 #include <iostream>
 
-#include <Window/Window.h>
 //#include <System/BitFireEngine.h>
 #include "../BitFireEngine/Source/System/BitFireEngine.h"
+
+void OnStartUp(BF::BitFireEngine* const bitFireEngine);
+void OnShutDown(const BF::BitFireEngine* bitFireEngine);
 
 #if !defined(_DEBUG) && defined(OSWindows)
 #include <windows.h>
@@ -11,20 +13,31 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int nShowCmd)
 int main(int amountOFParameters, char** parameter)
 #endif
 {
-    BF::BitFireEngine gameSystem;
+    BF::BitFireEngine bitFireEngine;
 
-    gameSystem.Start();
+    bitFireEngine.StartUpCallBack = OnStartUp; 
+    bitFireEngine.ShutDownCallBack = OnShutDown;
 
-    BF::Window window;
+    bitFireEngine.Start();
 
-    window.Create(600, 400, "BFE-IDE", false);
-
-    while(gameSystem.IsRunning)
+    while(bitFireEngine.IsRunning)
     {
-        gameSystem.Update();
+        bitFireEngine.Update();
     }
 
-    gameSystem.Stop();
+    bitFireEngine.Stop();
 
     return EXIT_SUCCESS;
+}
+
+
+
+void OnStartUp(BF::BitFireEngine* const bitFireEngine)
+{
+    
+}
+    
+void OnShutDown(const BF::BitFireEngine* bitFireEngine)
+{
+
 }

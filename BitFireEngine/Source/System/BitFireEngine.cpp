@@ -16,6 +16,7 @@
 #include <Event/Event.h>
 #include <File/DataStream.h>
 #include <Device/InputButton.h>
+#include <Processor/Processor.h>
 
 OpenGLID _matrixModelID;
 OpenGLID _matrixViewID;
@@ -74,18 +75,58 @@ void BF::BitFireEngine::Start()
 {
     PXStopWatch stopwatch;
 
-    printf
-    (
-        "+------------------------------------------------------+----------------------+\n"
-        "| __________ .__   __  ___________.__                  |                      |\n"
-        "| \\______   \\|__|_/  |_\\_   _____/|__|_______   ____   | Date %15s |\n"
-        "|  |    |  _/|  |\\   __\\|   __)   |  |\\_  __ \\_/ __ \\  | Time %15s |\n"
-        "|  |    |   \\|  | |  |  |   |     |  | |  | \\/\\  ___/  |                      |\n"
-        "|  |________/|__| |__|  \\___|     |__| |__|    \\_____> |                      |\n"
-        "+------------------------------------------------------+----------------------+\n",
-        __DATE__,
-        __TIME__
-    );
+    // Create Banner
+    {
+        char stampBuffer[256];
+
+        sprintf(stampBuffer, "%s - %s", __DATE__, __TIME__);
+
+        printf
+        (
+            "\n"
+            "+++-----------------------------------------------------+++\n"
+            "||| %51s |||\n"
+            "+++-----------------------------------------------------+++\n"
+            "|/| __________ .__   __  __________.__                  |/|\n"
+            "|/| \\______   \\|__|_/  |_\\_  _____/|__|_______   ____   |/|\n"
+            "|/|  |    |  _/|  |\\   __\\|  __)   |  |\\_  __ \\_/ __ \\  |/|\n"
+            "|/|  |    |   \\|  | |  |  |  |     |  | |  | \\/\\  ___/  |/|\n"
+            "|/|  |________/|__| |__|  \\__|     |__| |__|    \\_____> |/|\n"
+            "|/|_____________________________________________________|/|\n"
+            "+-+-----------------------------------------------------+-+\n\n",
+            stampBuffer
+        );
+    }
+
+    // Processor
+    {
+        Processor processor;
+
+        ProcessorFetchInfo(&processor);
+
+        printf
+        (
+            "+---------------------------------------------------------+\n"
+            "| Processor - Information                                 |\n"
+            "+---------------------------------------------------------+\n"
+            "| BrandName : %-43s |\n"
+            "| Identity  : %-43s |\n"
+            "| Cores     : %-43i |\n"
+            "| Family    : %-43i |\n"
+            "| Model     : %-43i |\n"
+            "+---------------------------------------------------------+\n",
+            processor.BrandName,
+            processor.IdentityString,
+            processor.NumberOfProcessors,
+            processor.Family,
+            processor.Model
+        );
+    }
+
+
+
+
+   
 
     PXLockCreate(&_imageAdd);
     PXLockCreate(&_modelAdd);
@@ -125,10 +166,27 @@ void BF::BitFireEngine::Start()
     PXStopWatchTrigger(&stopwatch, &timeBefore);
 
 
-    PXWindowCreate(&this->_mainWindow, -1, -1, "[BFE] <BitFireEngine>", 1);
+    PXWindowCreateA(&this->_mainWindow, -1, -1, "[BFE] <BitFireEngine>", 1);
 
 
     PXAwaitChangeCU(&_mainWindow.IsRunning);
+
+
+    printf
+    (
+        "+---------------------------------------------------------+\n"
+        "| Graphics Card - Information                             |\n"
+        "+---------------------------------------------------------+\n"
+        "| Vendor    : %-43s |\n"
+        "| Model     : %-43s |\n"
+        "| OpenGL    : %-43s |\n"
+        "+---------------------------------------------------------+\n",
+        _mainWindow.GraphicInstance.OpenGLInstance.Vendor,
+        _mainWindow.GraphicInstance.OpenGLInstance.Renderer,
+        _mainWindow.GraphicInstance.OpenGLInstance.VersionText    
+    );
+
+
 
     PXCameraAspectRatioChange(&MainCamera, _mainWindow.Width, _mainWindow.Height);
 
@@ -374,23 +432,7 @@ void BF::BitFireEngine::OnWindowCreated(const void* const receiver, const PXWind
 {
     const PXWindow& window = *sender;
 
-    printf
-    (
-        "+------------------------------------------------------+\n"
-        "| Graphics Card - Information                          |\n"
-        "+------------------------------------------------------+\n"
-        "| Vendor           : %-33s |\n"
-        "| Model            : %-33s |\n"
-        "| OpenGL Version   : %-33s |\n"
-        "| Texture Slots    : %-33u |\n"
-        "| Maximal Textures : %-33u |\n"
-        "+------------------------------------------------------+\n",
-        window.GraphicInstance.OpenGLInstance.Vendor,
-        window.GraphicInstance.OpenGLInstance.Renderer,
-        window.GraphicInstance.OpenGLInstance.VersionText,
-        0,// OpenGL::TextureMaxSlots(),
-        0 //OpenGL::TextureMaxLoaded()
-    );
+  
 }
 
 void BF::BitFireEngine::OnWindowSizeChanged(const void* const receiver, const PXWindow* sender, const size_t width, const size_t height)
@@ -603,7 +645,7 @@ PXThreadResult BF::BitFireEngine::LoadResourceAsync(void* resourceAdress)
     return 0;
 }
 
-ActionResult BF::BitFireEngine::Load(PXRenderable& renderable, Model* model, const wchar_t* filePath, bool loadAsynchronously)
+ActionResult BF::BitFireEngine::Load(PXRenderable& renderable, PXModel* model, const wchar_t* filePath, bool loadAsynchronously)
 {
     PXLockEngage(&_modelAdd);
     PXLinkedListFixedNodeAdd(&_renderList, &renderable);
@@ -629,7 +671,7 @@ ActionResult BF::BitFireEngine::Load(PXRenderable& renderable, Model* model, con
     return ActionSuccessful;
 }
 
-ActionResult BF::BitFireEngine::Load(Model& model, const wchar_t* filePath, const bool loadAsynchronously)
+ActionResult BF::BitFireEngine::Load(PXModel& model, const wchar_t* filePath, const bool loadAsynchronously)
 {
     const ActionResult result = ActionInvalid;// model.Load(filePath);
 
@@ -1440,17 +1482,14 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
     {
         const PXRenderable* const pxRenderable = (const PXRenderable* const)currentModel.BlockData;
 
-#if 0 // Should never be 0
         {
             const PXBool skip = !pxRenderable;
 
             if (skip)
             {
-                continue;
+                break; // No data to render
             }
         }
-#endif 
-
 
         {
             const PXBool skip = !pxRenderable->DoRendering;
@@ -1460,18 +1499,6 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
                 continue;
             }
         }
-
-
-
-
-        // const bool hasMesh = renderable.IsRegistered();
-        // const bool skipRendering = !(renderable.DoRendering && hasMesh);
-        // const OpenGLID renderModeID = ToRenderMode(renderable.Mode);
-
-       //  if(skipRendering)
-       //  {
-        //     continue; // Skip to next model.
-      //   }   
 
         auto glContext = &_mainWindow.GraphicInstance.OpenGLInstance;
 
@@ -1748,6 +1775,11 @@ void BF::BitFireEngine::PrintContent(bool detailed)
         do
         {
             const PXRenderable* const pxRenderable = (const PXRenderable* const)currentModel.BlockData;
+
+            if (!pxRenderable)
+            {
+                break;
+            }
 
             printf("| VAO %2i | VBO %2i | IBO %2i |\n", pxRenderable->VAO, pxRenderable->VBO, pxRenderable->IBO);
 

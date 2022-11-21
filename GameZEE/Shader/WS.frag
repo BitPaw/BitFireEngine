@@ -28,5 +28,34 @@ void main()
 
    //fragcolor = vec4(color + vec3(texture(MaterialTexture, vertex.TexturePosition)), 1.0f);
 
-   fragcolor = texture(MaterialTexture, vec2(vertex.TexturePosition.x, -vertex.TexturePosition.y));
+   vec4 textureColor = texture(MaterialTexture, vec2(vertex.TexturePosition.x, -vertex.TexturePosition.y));
+
+
+
+
+
+
+   vec3 lightPosition = vec3(1,1,1);
+   vec3 lightColor = vec3(1,1,1);
+    vec3 ambient = vec3(0.5,0.5,0.5);
+         vec3 objectColor = vec3(1,1,1);
+   
+vec3 norm = normalize(vertex.Normal);
+vec3 lightDir = normalize(lightPosition - vertex.Position);  
+
+float diff = max(dot(norm, lightPosition), 0.0);
+vec3 diffuse = diff * lightColor;
+
+
+vec4 diffuseColor =  vec4(((ambient + diffuse) * objectColor), 1.0);
+
+
+
+
+
+
+
+
+
+   fragcolor = textureColor * diffuseColor;
 }

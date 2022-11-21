@@ -1,11 +1,5 @@
 #pragma once
 
-// OpenAL - Sound
-//#include <AL/al.h>
-//#include <AL/alc.h>
-
-// OpenGL - Graphics
-//#include <GL/glew.h>
 #include <Graphic/Graphic.h>
 #include <Graphic/OpenGL/OpenGL.h>
 #include <Async/PXLock.h>
@@ -14,7 +8,6 @@
 #include <OS/PXWindow.h>
 #include <Time/PXTime.h>
 #include <Container/LinkedList/PXLinkedList.h>
-
 
 // Resource System
 #include <Format/Font.h>
@@ -131,8 +124,8 @@ namespace BF
         ActionResult Load(ShaderProgram& shaderProgram, const wchar_t* vertexShaderFilePath, const wchar_t* fragmentShaderFilePath);
 
         // Model
-        ActionResult Load(Model& model, const wchar_t* filePath, const bool loadAsynchronously = true);
-        ActionResult Load(PXRenderable& renderable, Model* model, const wchar_t* filePath, bool loadAsynchronously = true);
+        ActionResult Load(PXModel& model, const wchar_t* filePath, const bool loadAsynchronously = true);
+        ActionResult Load(PXRenderable& renderable, PXModel* model, const wchar_t* filePath, bool loadAsynchronously = true);
         ActionResult Load(PXRenderable& renderable, const float* vertexData, const size_t vertexDataSize, const unsigned int* indexList, const size_t indexListSize);
 
         // Texture

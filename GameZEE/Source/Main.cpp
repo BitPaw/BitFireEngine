@@ -29,7 +29,7 @@ int main(int amountOFParameters, char** parameter)
     return EXIT_SUCCESS;
 }
 
-Model _cubeThing;
+PXModel _cubeThing;
 
 void OnStartUp(BitFireEngine* const bitFireEngine)
 {    

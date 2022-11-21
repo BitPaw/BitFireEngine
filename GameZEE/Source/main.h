@@ -23,8 +23,8 @@ ShaderProgram _hudShaderID;
 //BF::AudioSource _audioSource;
 BF::GravityCube _worldGravity;
 float _deltaTime = 0;
-Model* model;
-Model textureBix;
+PXModel* model;
+PXModel textureBix;
 //BF::Level _level;
 //BF::AudioClip _audioClip;
 
