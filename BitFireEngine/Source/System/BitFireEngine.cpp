@@ -123,13 +123,6 @@ void BF::BitFireEngine::Start()
         );
     }
 
-
-
-
-   
-
-    PXLockCreate(&_imageAdd);
-    PXLockCreate(&_modelAdd);
     
     //SYSTEM_INFO systemInfo; // Windows SystemInfo
     //GetSystemInfo(&systemInfo);
@@ -152,12 +145,7 @@ void BF::BitFireEngine::Start()
         }
     }
 
-    char* memww = (char*)MemoryAllocate(2048);
 
-    PXLinkedListFixedNodeSet(&_renderList, memww, 2, (size_t)-1); // PXRendere
-    PXLinkedListFixedNodeSet(&_textureList, memww+64, 2, sizeof(PXTexture));
-    PXLinkedListFixedNodeSet(&_fontList, memww+128, 2, sizeof(PXFont));
-    PXLinkedListFixedNodeSet(&_shaderProgramList, memww+256, 2, sizeof(ShaderProgram));
 
 
 
@@ -596,20 +584,9 @@ void BF::BitFireEngine::UpdateInput(InputContainer& input)
 
 void BF::BitFireEngine::Stop()
 {
-    IsRunning = false;
-
     UnloadAll();
 
-    // Sound
-    /*
-    {
-        alcMakeContextCurrent(nullptr);
-        alcDestroyContext(_audioContext);
-        alcCloseDevice(_audioDevice);
-    }*/
-
-    PXLockDelete(&_imageAdd);
-    PXLockDelete(&_modelAdd);
+    IsRunning = false;
 }
 
 void BF::BitFireEngine::MakeRectangle(PXRenderable& renderable)
@@ -645,30 +622,11 @@ PXThreadResult BF::BitFireEngine::LoadResourceAsync(void* resourceAdress)
     return 0;
 }
 
-ActionResult BF::BitFireEngine::Load(PXRenderable& renderable, PXModel* model, const wchar_t* filePath, bool loadAsynchronously)
+ActionResult BF::BitFireEngine::Load(PXRenderable& renderable, const char* filePath, bool loadAsynchronously)
 {
-    PXLockEngage(&_modelAdd);
-    PXLinkedListFixedNodeAdd(&_renderList, &renderable);
-    PXLockRelease(&_modelAdd);
-        
-    if(loadAsynchronously)
-    {
-        //ResourceAsyncLoadInfo* resourceAsyncLoadInfo = new ResourceAsyncLoadInfo();
+    PXRenderable* renderableAdress = &renderable;
 
-        // Thread::Run(LoadResourceAsync, &model);
-    }
-    else
-    {
-        const ActionResult fileActionResult = ModelLoadW(model, filePath);
-        const bool successful = ActionSuccessful == fileActionResult;
-
-        if(successful)
-        {
-            GraphicModelRegisterFromModel(&this->_mainWindow.GraphicInstance, &renderable, model);
-        }
-    }
-
-    return ActionSuccessful;
+    return GraphicModelRegisterA(&this->_mainWindow.GraphicInstance, &renderableAdress, filePath);
 }
 
 ActionResult BF::BitFireEngine::Load(PXModel& model, const wchar_t* filePath, const bool loadAsynchronously)
@@ -697,39 +655,14 @@ ActionResult BF::BitFireEngine::Load(Image& image, const wchar_t* filePath, cons
 
 ActionResult BF::BitFireEngine::Load(PXTexture& texture, const wchar_t* filePath, bool loadAsynchronously)
 {
-    Image* image = &texture.Image;
+    texture.Type = GraphicImageTypeTexture2D;
+    texture.Filter = GraphicRenderFilterTrilinear;
+    texture.LayoutNear = GraphicImageLayoutLinear;
+    texture.LayoutFar = GraphicImageLayoutLinear;
+    texture.WrapHeight = GraphicImageWrapRepeat;
+    texture.WrapWidth = GraphicImageWrapRepeat;
 
-    PXLockEngage(&_imageAdd);
-    PXLinkedListFixedNodeAdd(&_textureList, &texture);
-    PXLockRelease(&_imageAdd);
-
-    if(loadAsynchronously)
-    {
-        PXThreadRun(0, LoadResourceAsync, &image);
-
-        return ActionSuccessful;
-    }
-    else
-    {
-        const ActionResult imageLoadResult = ImageLoadW(image, filePath);
-        const bool isSucessful = imageLoadResult == ActionSuccessful;
-
-        if(isSucessful)
-        {
-            texture.Type = GraphicImageTypeTexture2D;
-            texture.Filter = GraphicRenderFilterTrilinear;
-            texture.LayoutNear = GraphicImageLayoutLinear;
-            texture.LayoutFar = GraphicImageLayoutLinear;
-            texture.WrapHeight = GraphicImageWrapRepeat;
-            texture.WrapWidth = GraphicImageWrapRepeat;
-
-            GraphicTextureRegister(&_mainWindow.GraphicInstance, &texture);
-        }
-
-        return imageLoadResult;
-    }
-
-    return ActionSuccessful;
+    return GraphicTextureRegisterW(&this->_mainWindow.GraphicInstance, &texture, filePath);
 }
 
 ActionResult BF::BitFireEngine::Load(PXFont& font, const wchar_t* filePath, bool loadAsynchronously)
@@ -786,29 +719,20 @@ ActionResult BF::BitFireEngine::Load(AudioClip& audioClip, const wchar_t* filePa
     return ActionSuccessful;
 }*/
 
-ActionResult BF::BitFireEngine::Load(ShaderProgram& shaderProgram, const wchar_t* vertexShaderFilePath, const wchar_t* fragmentShaderFilePath)
+ActionResult BF::BitFireEngine::Load(ShaderProgram& shaderProgram, const char* vertexShaderFilePath, const char* fragmentShaderFilePath)
 {
     printf("[+][Resource] ShaderProgram V:<%ls> F:<%ls> loading...\n", vertexShaderFilePath, fragmentShaderFilePath);
     
-    const bool firstShaderProgram = _shaderProgramList.NodeListSizeCurrent == 0;
-    const bool isRegistered = shaderProgram.ID != -1;
+    const ActionResult successful = GraphicShaderProgramCreateVFPathA(&_mainWindow.GraphicInstance, &shaderProgram, vertexShaderFilePath, fragmentShaderFilePath);
 
-    if(!isRegistered)
+    if (successful)
     {
-        PXLinkedListFixedNodeAdd(&_shaderProgramList, &shaderProgram);
+        _defaultShaderID = shaderProgram.ID;
 
-        const ActionResult successful = GraphicShaderProgramCreateVFPath(&_mainWindow.GraphicInstance, &shaderProgram, vertexShaderFilePath, fragmentShaderFilePath);
-     
-
-        if(firstShaderProgram && successful)
-        {
-            _defaultShaderID = shaderProgram.ID;
-
-            CameraDataGet(&_mainWindow, _defaultShaderID);
-        }
+        CameraDataGet(&_mainWindow, _defaultShaderID);
     }
 
-    return ActionSuccessful;
+    return successful;
 }
 
 /*
@@ -1265,40 +1189,35 @@ ActionResult BF::BitFireEngine::Load(Collider* collider)
 ActionResult BF::BitFireEngine::Load
 (
     PXSkyBox& skyBox,
-    const wchar_t* shaderVertex,
-    const wchar_t* shaderFragment,
-    const wchar_t* textureRight,
-    const wchar_t* textureLeft,
-    const wchar_t* textureTop,
-    const wchar_t* textureBottom,
-    const wchar_t* textureBack,
-    const wchar_t* textureFront
+    const char* shaderVertex,
+    const char* shaderFragment,
+    const char* textureRight,
+    const char* textureLeft,
+    const char* textureTop,
+    const char* textureBottom,
+    const char* textureBack,
+    const char* textureFront
 )
 {
     printf("[+][Resource] SkyBox loading...\n");
 
-    //ShaderProgram& shaderProgram = skyBox.Shader;
+    PXSkyBox* skyBoxAdress = &skyBox;
 
-   // Load(shaderProgram, shaderVertex, shaderFragment);
+    ActionResult actionResult = GraphicSkyboxRegisterA
+    (
+        &this->_mainWindow.GraphicInstance,
+        &skyBoxAdress,
+        shaderVertex,
+        shaderFragment,
+        textureRight,
+        textureLeft,
+        textureTop,
+        textureBottom,
+        textureBack,
+        textureFront
+    );
 
-    /*
-
-    Image* imageList = skyBox.Texture.ImageList;
-
-    const ActionResult textureRightResult = ImageLoadW(&imageList[0], textureRight);
-    const ActionResult textureLeftResult = ImageLoadW(&imageList[1], textureLeft);
-    const ActionResult textureTopResult = ImageLoadW(&imageList[2], textureTop);
-    const ActionResult textureBottomResult = ImageLoadW(&imageList[3], textureBottom);
-    const ActionResult textureBackResult = ImageLoadW(&imageList[4], textureBack);
-    const ActionResult textureFrontResult = ImageLoadW(&imageList[5],textureFront);
-
-    //GraphicSkyboxRegister(&skyBox);
-
-    DefaultSkyBox = &skyBox;
-
-    */
-
-    return ActionSuccessful;
+    return actionResult;
 }
 
 void BF::BitFireEngine::UnloadAll()
@@ -1474,31 +1393,33 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
     glLineWidth(5);
 
 
-    PXLinkedListNodeFixed currentModel;
 
-    PXLinkedListFixedNodeAt(&_renderList, &currentModel,0);
+    const size_t renderList = GraphicRenderableListSize(graphicContext);
 
-    do
+    for (size_t renderIndex = 0; renderIndex < renderList; ++renderIndex)
     {
-        const PXRenderable* const pxRenderable = (const PXRenderable* const)currentModel.BlockData;
+        PXRenderable* pxRenderable;
 
+        // Fetch
         {
-            const PXBool skip = !pxRenderable;
+            const PXBool fetchSuccessful = GraphicRenderableListGetFromIndex(graphicContext, &pxRenderable, renderIndex);
 
-            if (skip)
+            if (!fetchSuccessful)
             {
-                break; // No data to render
+                break; // Stop
             }
         }
 
+        // Should be rendered?
         {
-            const PXBool skip = !pxRenderable->DoRendering;
+            const PXBool doRender = pxRenderable->DoRendering;
 
-            if (skip)
+            if (!doRender)
             {
                 continue;
             }
         }
+
 
         auto glContext = &_mainWindow.GraphicInstance.OpenGLInstance;
 
@@ -1514,7 +1435,7 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
         OpenGLBufferBind(glContext, OpenGLBufferArray, pxRenderable->VBO);
 
         // Render mesh segments
-        
+
         unsigned int renderAmountOffset = 0;
 
         OpenGLTextureActivate(glContext, 0);
@@ -1525,7 +1446,7 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
         {
             const PXRenderableMeshSegment* const pxRenderableMeshSegment = &pxRenderable->MeshSegmentList[i];
             const size_t renderAmount = pxRenderableMeshSegment->NumberOfVertices;
-           
+
             OpenGLTextureBind(glContext, OpenGLTextureType2D, pxRenderableMeshSegment->TextureID);
 
             // Render
@@ -1537,13 +1458,14 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
 
             renderAmountOffset += renderAmount;
         }
-      
+
 
         OpenGLBufferUnbind(glContext, OpenGLBufferArray);
 
         //       OpenGLVertexArrayUnbind(glContext);
-    } 
-    while (PXLinkedListFixedNodeNext(&_renderList, &currentModel));
+    }
+
+
 
 
 
@@ -1765,20 +1687,24 @@ void BF::BitFireEngine::PrintContent(bool detailed)
         printf(message, "Models");
 
 
+        GraphicContext* graphicContext = &this->_mainWindow.GraphicInstance;
 
 
-        
-        PXLinkedListNodeFixed currentModel;
+        const size_t renderList = GraphicRenderableListSize(graphicContext);
 
-        PXLinkedListFixedNodeAt(&_renderList, &currentModel, 0);
 
-        do
+        for (size_t renderIndex = 0; renderIndex < renderList; ++renderIndex)
         {
-            const PXRenderable* const pxRenderable = (const PXRenderable* const)currentModel.BlockData;
+            PXRenderable* pxRenderable;
 
-            if (!pxRenderable)
+            // Fetch
             {
-                break;
+                const PXBool succ = GraphicRenderableListGetFromIndex(graphicContext, &pxRenderable, renderIndex);
+
+                if (!succ)
+                {
+                    break; // Stop
+                }
             }
 
             printf("| VAO %2i | VBO %2i | IBO %2i |\n", pxRenderable->VAO, pxRenderable->VBO, pxRenderable->IBO);
@@ -1797,9 +1723,7 @@ void BF::BitFireEngine::PrintContent(bool detailed)
             }
 
             printf("| Total %-5i |\n", total);
-            
-     
-        } while (PXLinkedListFixedNodeNext(&_renderList, &currentModel));
+        }
 
 
         printf("+-----------------------------\n");

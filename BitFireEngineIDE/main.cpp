@@ -30,11 +30,13 @@ int main(int amountOFParameters, char** parameter)
     return EXIT_SUCCESS;
 }
 
-
+PXUIPanel panel;
 
 void OnStartUp(BF::BitFireEngine* const bitFireEngine)
 {
-    
+    GraphicContext* const graphicContext = &bitFireEngine->_mainWindow.GraphicInstance;
+
+    GraphicUIPanelRegister(graphicContext, &panel);
 }
     
 void OnShutDown(const BF::BitFireEngine* bitFireEngine)

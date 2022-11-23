@@ -39,20 +39,8 @@ namespace BF
 
         //Queue<> Engine Event
 		//----------------------------------------------
-
-        // Resources
-        PXLinkedListFixed _renderList; // PXRenderable
-        PXLinkedListFixed _textureList; // PXTexture
-        //LinkedList<AudioClip*> _audioClipList;
-
-        //LinkedList<Sound*> _soundList;
-        PXLinkedListFixed _fontList; // PXFont
-        PXLinkedListFixed _shaderProgramList; // ShaderProgram;
-        //LinkedList<Dialog*> _dialogList;
-        //LinkedList<Level*> _levelList;
-        //LinkedList<Collider*> _physicList;
-        //---------------
-
+         
+        
         // Render -runtime info
         unsigned int _lastUsedShaderProgram;
         unsigned int _defaultShaderID;
@@ -65,8 +53,7 @@ namespace BF
         //----
 
         // ASYNC LOCKS
-        PXLock _imageAdd;
-        PXLock _modelAdd;
+     
         //-------------------------
 
 
@@ -121,11 +108,11 @@ namespace BF
 
 
         ActionResult Load(PXFont& font, const wchar_t* filePath, bool loadAsynchronously = true);
-        ActionResult Load(ShaderProgram& shaderProgram, const wchar_t* vertexShaderFilePath, const wchar_t* fragmentShaderFilePath);
+        ActionResult Load(ShaderProgram& shaderProgram, const char* vertexShaderFilePath, const char* fragmentShaderFilePath);
 
         // Model
         ActionResult Load(PXModel& model, const wchar_t* filePath, const bool loadAsynchronously = true);
-        ActionResult Load(PXRenderable& renderable, PXModel* model, const wchar_t* filePath, bool loadAsynchronously = true);
+        ActionResult Load(PXRenderable& renderable, const char* filePath, bool loadAsynchronously = true);
         ActionResult Load(PXRenderable& renderable, const float* vertexData, const size_t vertexDataSize, const unsigned int* indexList, const size_t indexListSize);
 
         // Texture
@@ -144,14 +131,14 @@ namespace BF
         ActionResult Load
         (
             PXSkyBox& skyBox,
-            const wchar_t* shaderVertex,
-            const wchar_t* shaderFragment,
-            const wchar_t* textureRight,
-            const wchar_t* textureLeft,
-            const wchar_t* textureTop,
-            const wchar_t* textureBottom,
-            const wchar_t* textureBack,
-            const wchar_t* textureFront
+            const char* shaderVertex,
+            const char* shaderFragment,
+            const char* textureRight,
+            const char* textureLeft,
+            const char* textureTop,
+            const char* textureBottom,
+            const char* textureBack,
+            const char* textureFront
         );
 
         void UnloadAll();

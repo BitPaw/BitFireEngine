@@ -37,20 +37,20 @@ void OnStartUp(BitFireEngine* const bitFireEngine)
     _worldShader.ID = -1;
     _hudShaderID.ID = -1;
 
-    bitFireEngine->Load(_worldShader, L"Shader/WS.vert", L"Shader/WS.frag");
-    bitFireEngine->Load(_hudShaderID, L"Shader/HUD.vert", L"Shader/HUD.frag");
+    bitFireEngine->Load(_worldShader, "Shader/WS.vert", "Shader/WS.frag");
+    bitFireEngine->Load(_hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
 
     bitFireEngine->Load
     (
         skybox,
-        L"Shader/SkyBox.vert",
-        L"Shader/SkyBox.frag",
-        L"Texture/SkyBox/Right.png",
-        L"Texture/SkyBox/Left.png",
-        L"Texture/SkyBox/Top.png",
-        L"Texture/SkyBox/Bottom.png",
-        L"Texture/SkyBox/Back.png",
-        L"Texture/SkyBox/Front.png"
+        "Shader/SkyBox.vert",
+        "Shader/SkyBox.frag",
+        "Texture/SkyBox/Right.png",
+        "Texture/SkyBox/Left.png",
+        "Texture/SkyBox/Top.png",
+        "Texture/SkyBox/Bottom.png",
+        "Texture/SkyBox/Back.png",
+        "Texture/SkyBox/Front.png"
     );
 
     //GameSystem.Load(textureBix, "Model/Dialog/DialogBox.obj");
@@ -77,7 +77,7 @@ void OnStartUp(BitFireEngine* const bitFireEngine)
    // bitFireEngine->Load(_cubeModel, &_cubeThing, L"Model/Triangle.obj", false);
     //bitFireEngine->Load(_cubeModel, &_cubeThing, L"B:/Daten/Objects/Moze/Moze.obj", false);
     //bitFireEngine->Load(_cubeModel, &_cubeThing, L"B:/Daten/Objects/arwing/arwing_SNES.obj", false);
-    bitFireEngine->Load(_cubeModel, &_cubeThing, L"Model/Dust_II/DustII.obj", false);
+    bitFireEngine->Load(_cubeModel, /*&_cubeThing,*/ "Model/Dust_II/DustII.obj", false);
 
     // _cubeModel.Move(0,50,0);
     // _cubeModel.Scale(100.0f);
