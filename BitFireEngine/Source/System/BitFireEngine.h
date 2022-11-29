@@ -68,11 +68,6 @@ namespace BF
         static void OnWindowSizeChanged(const void* const receiver, const PXWindow* sender, const size_t width, const size_t height);
         static void OnWindowsMouseCaptureChanged(const void* const receiver, const PXWindow* sender);
 
-#if defined(OSUnix)
-        static void OnSystemSignal(int signalID);
-#elif defined(OSWindows)
-        static void __CRTDECL OnSystemSignal(int signalID);
-#endif
 
 		void UpdateInput(InputContainer& input);
 

@@ -17,6 +17,7 @@
 #include <File/DataStream.h>
 #include <Device/InputButton.h>
 #include <Processor/Processor.h>
+#include <Math/PXMatrix.h>
 
 OpenGLID _matrixModelID;
 OpenGLID _matrixViewID;
@@ -136,13 +137,7 @@ void BF::BitFireEngine::Start()
 
     // Set signal
     {
-        const auto functionPointer = signal(SIGABRT, OnSystemSignal);
-        const bool validLinkage = functionPointer != SIG_ERR;
-
-        if(!validLinkage)
-        {
-            fputs("[x][Core] An error occurred while setting a signal handler.\n", stderr);
-        }
+       
     }
 
 
@@ -437,11 +432,6 @@ void BF::BitFireEngine::OnWindowSizeChanged(const void* const receiver, const PX
     printf("[Camera] Is now %zi x %zi\n", width, height);
 
     glViewport(0, 0, width, height);   
-}
-
-void BF::BitFireEngine::OnSystemSignal(int signalID)
-{
-
 }
 
 void BF::BitFireEngine::UpdateInput(InputContainer& input)
@@ -1203,7 +1193,7 @@ ActionResult BF::BitFireEngine::Load
 
     PXSkyBox* skyBoxAdress = &skyBox;
 
-    ActionResult actionResult = GraphicSkyboxRegisterA
+    const ActionResult actionResult = GraphicSkyboxRegisterA
     (
         &this->_mainWindow.GraphicInstance,
         &skyBoxAdress,
@@ -1327,73 +1317,60 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
 
     //PXCameraUpdate(&MainCamera, deltaTime);
 
-    /*
-
-    if(1)// Render Skybox first, if it is used
-    {
-        const bool hasSkyBox = DefaultSkyBox != nullptr;
-
-        OpenGL::RenderBothSides(true);
-
-        if(hasSkyBox)
-        {
-            const SkyBox& skyBox = *DefaultSkyBox;
-            const Renderable& renderable = skyBox.RenderInfo;
-            const OpenGLID shaderID = skyBox.Shader.ID;
-            Matrix4x4<float> viewTri(MainCamera.MatrixView);
-
-            viewTri.ResetForthAxis();
-
-            OpenGL::DepthMaskEnable(false);
-            OpenGL::DrawOrder(true);
-
-            GraphicShaderUse(shaderID);
-
-            OpenGL::UseShaderProgram(shaderID);
-            _lastUsedShaderProgram = shaderID;
-
-            CameraDataGet(&_mainWindow, shaderID);
-            CameraDataUpdate(graphicContext, MainCamera);
-
-            OpenGL::ShaderSetUniformMatrix4x4(_matrixViewID, viewTri.Data);
-            //OpenGL::Use(*DefaultSkyBox);
-
-            const OpenGLID vao = renderable.ID;
-            const OpenGLID vbo = renderable.ChunkList[0].ID;
-            const OpenGLID ibo = renderable.ChunkList[0].SegmentList[0].ID;
-
-            assert(vao != -1);
-            assert(vbo != -1);
-            assert(ibo != -1);
-
-            OpenGLVertexArrayBind(&graphicContext->OpenGLInstance, vao);
-            OpenGLBufferBind(&graphicContext->OpenGLInstance, OpenGLBufferArray, vbo);
-            OpenGLBufferBind(&graphicContext->OpenGLInstance, OpenGLBufferElementArray, vbo);
-
-            Use(ImageType::TextureCubeContainer, renderable.ChunkList[0].SegmentList[0].MaterialRange[0].TextureID);
-
-            glDrawElements(GL_QUADS, 24, GL_UNSIGNED_INT, 0);
-
-            GraphicTextureUse();
-            
-            Use(ImageType::TextureCubeContainer, 0);
-            OpenGL::DepthMaskEnable(true);
-            OpenGL::DrawOrder(false);
-
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-            glBindVertexArray(0);
-        }
-    }*/
-
-  //  glDisable(GL_CULL_FACE);
-    
 
     glPointSize(10);
     glLineWidth(5);
 
+#if 1 // Render SkyBox 
+
+    PXSkyBox* skybox = graphicContext->_currentSkyBox;
+    OpenGLContext* openGLContext = &graphicContext->OpenGLInstance;
+
+    if (skybox)
+    {          
+        PXMatrix4x4F viewTri;
+
+        PXMatrix4x4FCopy(&MainCamera.MatrixView, &viewTri);
+        PXMatrix4x4FResetAxisW(&viewTri);
+
+        OpenGLPolygonRenderOrder(openGLContext, OpenGLPolygonRenderOrderModeCounterClockwise);
+        OpenGLSettingChange(openGLContext, OpenGLCULL_FACE, PXFalse);
+        OpenGLSettingChange(openGLContext, OpenGLDEPTH_TEST, PXFalse);
+        //OpenGLPolygonRenderOrder(openGLContext, OpenGLPolygonRenderOrderModeClockwise);
+
+        PXRenderable* renderable = &skybox->Renderable;
+        unsigned int shaderID = renderable->MeshSegmentList[0].ShaderID;
+
+        OpenGLShaderProgramUse(openGLContext, shaderID);
+
+        CameraDataGet(&_mainWindow, shaderID);
+        CameraDataUpdate((PXWindow*)graphicContext->AttachedWindow, MainCamera);
+
+        OpenGLShaderVariableMatrix4fv(openGLContext, _matrixViewID, 1, 0, viewTri.Data);
+
+        OpenGLVertexArrayBind(openGLContext, renderable->VAO);
+        OpenGLBufferBind(openGLContext, OpenGLBufferArray, renderable->VBO);
+        OpenGLBufferBind(openGLContext, OpenGLBufferElementArray, renderable->IBO);
+        OpenGLTextureBind(openGLContext, OpenGLTextureTypeCubeMap, skybox->TextureCube.ID);
 
 
+        OpenGLDrawElements(openGLContext, OpenGLRenderQuads, 24u, OpenGLTypeIntegerUnsigned, 0);
+        OpenGLDrawElements(openGLContext, OpenGLRenderLineLoop, 24u, OpenGLTypeIntegerUnsigned, 0);
+
+        OpenGLTextureUnbind(openGLContext, OpenGLTextureTypeCubeMap);
+        OpenGLBufferUnbind(openGLContext, OpenGLBufferArray);
+        OpenGLBufferUnbind(openGLContext, OpenGLBufferElementArray);
+        OpenGLVertexArrayUnbind(openGLContext);
+
+       // OpenGLSettingChange(openGLContext, OpenGLCULL_FACE, PXTrue);
+        OpenGLSettingChange(openGLContext, OpenGLDEPTH_TEST, PXTrue);
+
+        OpenGLPolygonRenderOrder(openGLContext, OpenGLPolygonRenderOrderModeCounterClockwise);
+    }
+
+#endif
+
+  
     const size_t renderList = GraphicRenderableListSize(graphicContext);
 
     for (size_t renderIndex = 0; renderIndex < renderList; ++renderIndex)
@@ -1432,9 +1409,12 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
 
         //glFrontFace(0x0900);
 
+        OpenGLVertexArrayBind(glContext, pxRenderable->VAO);
+
         OpenGLBufferBind(glContext, OpenGLBufferArray, pxRenderable->VBO);
 
         // Render mesh segments
+
 
         unsigned int renderAmountOffset = 0;
 
@@ -1461,8 +1441,7 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
 
 
         OpenGLBufferUnbind(glContext, OpenGLBufferArray);
-
-        //       OpenGLVertexArrayUnbind(glContext);
+        OpenGLVertexArrayUnbind(glContext);
     }
 
 
