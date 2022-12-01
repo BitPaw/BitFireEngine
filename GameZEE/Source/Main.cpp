@@ -31,14 +31,16 @@ int main(int amountOFParameters, char** parameter)
 
 PXModel _cubeThing;
 
+PXUIPanel pxUIPanelMain;
+
 void OnStartUp(BitFireEngine* const bitFireEngine)
 {    
+    GraphicContext* const graphicContext = &bitFireEngine->_mainWindow.GraphicInstance;
 
     _worldShader.ID = -1;
     _hudShaderID.ID = -1;
 
     bitFireEngine->Load(_worldShader, "Shader/WS.vert", "Shader/WS.frag");
-    bitFireEngine->Load(_hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
 
     bitFireEngine->Load
     (
@@ -77,7 +79,8 @@ void OnStartUp(BitFireEngine* const bitFireEngine)
    // bitFireEngine->Load(_cubeModel, &_cubeThing, L"Model/Triangle.obj", false);
     //bitFireEngine->Load(_cubeModel, &_cubeThing, L"B:/Daten/Objects/Moze/Moze.obj", false);
     //bitFireEngine->Load(_cubeModel, &_cubeThing, L"B:/Daten/Objects/arwing/arwing_SNES.obj", false);
-    bitFireEngine->Load(_cubeModel, /*&_cubeThing,*/ "Model/Dust_II/DustII.obj", false);
+    bitFireEngine->Load(_cubeModel, "Model/Dust_II/DustII.obj", false);
+    GraphicModelShaderSet(graphicContext, &_cubeModel, &_worldShader);
 
     // _cubeModel.Move(0,50,0);
     // _cubeModel.Scale(100.0f);
@@ -119,6 +122,12 @@ void OnStartUp(BitFireEngine* const bitFireEngine)
 
 
 
+    bitFireEngine->Load(_hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
+
+   GraphicUIPanelRegister(graphicContext, &pxUIPanelMain);
+   GraphicModelShaderSet(graphicContext, &pxUIPanelMain.Renderable, &_hudShaderID);
+   PXMatrix4x4FScaleSet(0.025, 0.025 , 0.025 ,&pxUIPanelMain.Renderable.MatrixModel);
+   pxUIPanelMain.Renderable.MeshSegmentList[0].RenderMode = GraphicRenderModeSquare;
 
 #endif
     //-------------------------------------------------------------------------

@@ -16,5 +16,5 @@ void main()
    
     TexturePosition = position;
 
-    gl_Position = pos;
+    gl_Position = pos;//.xyww;
 }

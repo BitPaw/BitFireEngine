@@ -1331,7 +1331,7 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
         PXMatrix4x4F viewTri;
 
         PXMatrix4x4FCopy(&MainCamera.MatrixView, &viewTri);
-        PXMatrix4x4FResetAxisW(&viewTri);
+        PXMatrix4x4FResetAxisW(&viewTri); // if removed, you can move out of the skybox
 
         OpenGLPolygonRenderOrder(openGLContext, OpenGLPolygonRenderOrderModeCounterClockwise);
         OpenGLSettingChange(openGLContext, OpenGLCULL_FACE, PXFalse);
@@ -1339,23 +1339,25 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
         //OpenGLPolygonRenderOrder(openGLContext, OpenGLPolygonRenderOrderModeClockwise);
 
         PXRenderable* renderable = &skybox->Renderable;
-        unsigned int shaderID = renderable->MeshSegmentList[0].ShaderID;
 
-        OpenGLShaderProgramUse(openGLContext, shaderID);
+        // ShaderSetup
+        {
+            const unsigned int shaderID = renderable->MeshSegmentList[0].ShaderID;
 
-        CameraDataGet(&_mainWindow, shaderID);
-        CameraDataUpdate((PXWindow*)graphicContext->AttachedWindow, MainCamera);
+            OpenGLShaderProgramUse(openGLContext, shaderID);
 
-        OpenGLShaderVariableMatrix4fv(openGLContext, _matrixViewID, 1, 0, viewTri.Data);
+            CameraDataGet(&_mainWindow, shaderID);
+            CameraDataUpdate((PXWindow*)graphicContext->AttachedWindow, MainCamera);
+
+            OpenGLShaderVariableMatrix4fv(openGLContext, _matrixViewID, 1, 0, viewTri.Data);
+        }     
 
         OpenGLVertexArrayBind(openGLContext, renderable->VAO);
         OpenGLBufferBind(openGLContext, OpenGLBufferArray, renderable->VBO);
         OpenGLBufferBind(openGLContext, OpenGLBufferElementArray, renderable->IBO);
         OpenGLTextureBind(openGLContext, OpenGLTextureTypeCubeMap, skybox->TextureCube.ID);
 
-
         OpenGLDrawElements(openGLContext, OpenGLRenderQuads, 24u, OpenGLTypeIntegerUnsigned, 0);
-        OpenGLDrawElements(openGLContext, OpenGLRenderLineLoop, 24u, OpenGLTypeIntegerUnsigned, 0);
 
         OpenGLTextureUnbind(openGLContext, OpenGLTextureTypeCubeMap);
         OpenGLBufferUnbind(openGLContext, OpenGLBufferArray);
@@ -1397,51 +1399,64 @@ void BF::BitFireEngine::ModelsRender(const float deltaTime)
             }
         }
 
+        // Shader
+        {
+            const unsigned int shaderID = pxRenderable->MeshSegmentList[0].ShaderID;
+            
+            GraphicShaderUse(&_mainWindow.GraphicInstance, shaderID);
+            CameraDataGet(&_mainWindow, shaderID);
+            CameraDataUpdate(&_mainWindow, MainCamera);
 
-        auto glContext = &_mainWindow.GraphicInstance.OpenGLInstance;
-
-        // OpenGLVertexArrayBind(glContext, renderable.ID); ; // VAO
-        GraphicShaderUse(&_mainWindow.GraphicInstance, 1);
-        CameraDataGet(&_mainWindow, 1);
-        CameraDataUpdate(&_mainWindow, MainCamera);
-
-        GraphicShaderUpdateMatrix4x4F(&_mainWindow.GraphicInstance, _matrixModelID, pxRenderable->MatrixModel.Data);
+            GraphicShaderUpdateMatrix4x4F(&_mainWindow.GraphicInstance, _matrixModelID, pxRenderable->MatrixModel.Data);
+        }
 
         //glFrontFace(0x0900);
 
-        OpenGLVertexArrayBind(glContext, pxRenderable->VAO);
+        OpenGLVertexArrayBind(openGLContext, pxRenderable->VAO); // VAO
 
-        OpenGLBufferBind(glContext, OpenGLBufferArray, pxRenderable->VBO);
+        OpenGLBufferBind(openGLContext, OpenGLBufferArray, pxRenderable->VBO);
 
         // Render mesh segments
 
 
         unsigned int renderAmountOffset = 0;
 
-        OpenGLTextureActivate(glContext, 0);
-        unsigned int shaderVarID = OpenGLShaderVariableIDGet(glContext, 1, "MaterialTexture");
-        OpenGLShaderVariableIx1(glContext, shaderVarID, 0);
+        //OpenGLTextureActivate(openGLContext, 0);
+        //unsigned int shaderVarID = OpenGLShaderVariableIDGet(openGLContext, 1, "MaterialTexture");
+        //OpenGLShaderVariableIx1(openGLContext, shaderVarID, 0);
+
+        const PXBool ownsIBO = pxRenderable->IBO != (unsigned int)-1 && false;
 
         for (size_t i = 0; i < pxRenderable->MeshSegmentListSize; ++i)
         {
             const PXRenderableMeshSegment* const pxRenderableMeshSegment = &pxRenderable->MeshSegmentList[i];
             const size_t renderAmount = pxRenderableMeshSegment->NumberOfVertices;
 
-            OpenGLTextureBind(glContext, OpenGLTextureType2D, pxRenderableMeshSegment->TextureID);
+            const OpenGLRenderMode renderMode = GraphicRenderModeToOpenGL(pxRenderableMeshSegment->RenderMode);
+
+            OpenGLTextureBind(openGLContext, OpenGLTextureType2D, pxRenderableMeshSegment->TextureID);
 
             // Render
             //glDrawBuffer(GL_POINTS);
             //glDrawElements(GL_LINES, pxRenderable->RenderSize, GL_UNSIGNED_INT, 0);
             //glDrawArrays(GL_POINTS, renderAmountOffset, renderAmount);
             //glDrawArrays(GL_LINES, 0, pxRenderable->RenderSize);
-            glDrawArrays(GL_TRIANGLES, renderAmountOffset, renderAmount);
+            if (ownsIBO)
+            {
+                OpenGLBufferBind(openGLContext, OpenGLBufferElementArray, pxRenderable->IBO);              
+               // OpenGLDrawElements(openGLContext, renderMode, renderAmount, OpenGLTypeByteUnsigned, 0);
+                OpenGLBufferUnbind(openGLContext, OpenGLBufferElementArray);
+            }
+            else
+            {
+                OpenGLDrawArrays(openGLContext, renderMode, renderAmountOffset, renderAmount);
+            }         
 
             renderAmountOffset += renderAmount;
         }
 
-
-        OpenGLBufferUnbind(glContext, OpenGLBufferArray);
-        OpenGLVertexArrayUnbind(glContext);
+        OpenGLBufferUnbind(openGLContext, OpenGLBufferArray);
+        OpenGLVertexArrayUnbind(openGLContext);
     }
 
 
