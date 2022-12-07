@@ -125,7 +125,7 @@ namespace BF
         ActionResult Load(Collider* collider);
         ActionResult Load
         (
-            PXSkyBox& skyBox,
+            PXSkyBox* skyBox,
             const char* shaderVertex,
             const char* shaderFragment,
             const char* textureRight,

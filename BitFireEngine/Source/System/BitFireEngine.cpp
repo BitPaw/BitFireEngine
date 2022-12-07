@@ -1178,7 +1178,7 @@ ActionResult BF::BitFireEngine::Load(Collider* collider)
 
 ActionResult BF::BitFireEngine::Load
 (
-    PXSkyBox& skyBox,
+    PXSkyBox* skyBox,
     const char* shaderVertex,
     const char* shaderFragment,
     const char* textureRight,
@@ -1191,12 +1191,10 @@ ActionResult BF::BitFireEngine::Load
 {
     printf("[+][Resource] SkyBox loading...\n");
 
-    PXSkyBox* skyBoxAdress = &skyBox;
-
     const ActionResult actionResult = GraphicSkyboxRegisterA
     (
         &this->_mainWindow.GraphicInstance,
-        &skyBoxAdress,
+        &skyBox,
         shaderVertex,
         shaderFragment,
         textureRight,

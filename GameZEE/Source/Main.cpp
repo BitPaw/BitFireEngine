@@ -32,6 +32,7 @@ int main(int amountOFParameters, char** parameter)
 PXModel _cubeThing;
 
 PXUIPanel pxUIPanelMain;
+PXUIPanel pxUIPanelMainCopy;
 
 void OnStartUp(BitFireEngine* const bitFireEngine)
 {    
@@ -40,11 +41,11 @@ void OnStartUp(BitFireEngine* const bitFireEngine)
     _worldShader.ID = -1;
     _hudShaderID.ID = -1;
 
-    bitFireEngine->Load(_worldShader, "Shader/WS.vert", "Shader/WS.frag");
+    GraphicShaderProgramCreateVFPathA(graphicContext, &_worldShader, "Shader/WorldShader_V.glsl", "Shader/WorldShader_F.glsl");
 
     bitFireEngine->Load
     (
-        skybox,
+        &skybox,
         "Shader/SkyBox.vert",
         "Shader/SkyBox.frag",
         "Texture/SkyBox/Right.png",
@@ -118,16 +119,21 @@ void OnStartUp(BitFireEngine* const bitFireEngine)
 
 
  //-----<UI>----------------------------------------------------------------
-#if 1
+#if 1    
+
+    //GraphicUIPanelRegister(graphicContext, &pxUIPanelMainCopy);
+    //GraphicModelShaderSet(graphicContext, &pxUIPanelMainCopy.Renderable, &_worldShader);
+    //PXMatrix4x4FScaleSet(1, 1, 1, &pxUIPanelMainCopy.Renderable.MatrixModel);
+    //pxUIPanelMainCopy.Renderable.MeshSegmentList[0].RenderMode = GraphicRenderModeSquare;
+
+    GraphicShaderProgramCreateVFPathA(graphicContext, &_hudShaderID, "Shader/HUD_V.glsl", "Shader/HUD_F.glsl");
+    GraphicUIPanelRegister(graphicContext, &pxUIPanelMain);
+    GraphicModelShaderSet(graphicContext, &pxUIPanelMain.Renderable, &_hudShaderID);
+    PXMatrix4x4FScaleSet(1, 1, 1, &pxUIPanelMain.Renderable.MatrixModel);
+    pxUIPanelMain.Renderable.MeshSegmentList[0].RenderMode = GraphicRenderModeSquare;
 
 
 
-    bitFireEngine->Load(_hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
-
-   GraphicUIPanelRegister(graphicContext, &pxUIPanelMain);
-   GraphicModelShaderSet(graphicContext, &pxUIPanelMain.Renderable, &_hudShaderID);
-   PXMatrix4x4FScaleSet(0.025, 0.025 , 0.025 ,&pxUIPanelMain.Renderable.MatrixModel);
-   pxUIPanelMain.Renderable.MeshSegmentList[0].RenderMode = GraphicRenderModeSquare;
 
 #endif
     //-------------------------------------------------------------------------
