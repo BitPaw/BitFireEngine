@@ -14,16 +14,12 @@ uniform mat4 MatrixModel;
 
 void main() 
 {
+    vec4 matrixPosition = MatrixModel * vec4(position, 1);
+
     //vertexColor = color;
     //vertexNormal = normal;
     vertexPosition = position;
     //vertexTexturePosition = texturePosition;
 
-    vec4 ppp =  vec4(position, 1);
-
-    ppp.x = ppp.x * 0.25f - 0.5f;
-    ppp.y = ppp.y * 0.25f;
-   // ppp.z = ppp.z - 0.25f;
-
-    gl_Position = ppp; 
+    gl_Position = matrixPosition;
 }

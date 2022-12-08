@@ -127,9 +127,12 @@ void OnStartUp(BitFireEngine* const bitFireEngine)
     //pxUIPanelMainCopy.Renderable.MeshSegmentList[0].RenderMode = GraphicRenderModeSquare;
 
     GraphicShaderProgramCreateVFPathA(graphicContext, &_hudShaderID, "Shader/HUD_V.glsl", "Shader/HUD_F.glsl");
+
+
+
     GraphicUIPanelRegister(graphicContext, &pxUIPanelMain);
     GraphicModelShaderSet(graphicContext, &pxUIPanelMain.Renderable, &_hudShaderID);
-    PXMatrix4x4FScaleSet(1, 1, 1, &pxUIPanelMain.Renderable.MatrixModel);
+    PXMatrix4x4FScaleSet(0.9, 0.9, 1, &pxUIPanelMain.Renderable.MatrixModel);
     pxUIPanelMain.Renderable.MeshSegmentList[0].RenderMode = GraphicRenderModeSquare;
 
 
@@ -201,6 +204,14 @@ void OnUpdateInput(BitFireEngine* const bitFireEngine, BF::InputContainer& input
 
         changed = true;
     }
+
+
+    if (InputButtonIsShortPressed(input.KeyBoardInput.I))
+    {
+        pxUIPanelMain.Renderable.DoRendering = !pxUIPanelMain.Renderable.DoRendering;
+        input.KeyBoardInput.I = 0xFF;
+    }
+
 
     if(changed)
     {
