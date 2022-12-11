@@ -132,7 +132,7 @@ void OnStartUp(BitFireEngine* const bitFireEngine)
 
     GraphicUIPanelRegister(graphicContext, &pxUIPanelMain);
     GraphicModelShaderSet(graphicContext, &pxUIPanelMain.Renderable, &_hudShaderID);
-    PXMatrix4x4FScaleSet(0.9, 0.9, 1, &pxUIPanelMain.Renderable.MatrixModel);
+    PXMatrix4x4FScaleSet(0.3, 0.2, 1, &pxUIPanelMain.Renderable.MatrixModel);
     pxUIPanelMain.Renderable.MeshSegmentList[0].RenderMode = GraphicRenderModeSquare;
 
 

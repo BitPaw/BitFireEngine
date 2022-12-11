@@ -14,7 +14,7 @@
 #include <signal.h>
 #include <Device/Controller.h>
 #include <Event/Event.h>
-#include <File/DataStream.h>
+#include <File/PXDataStream.h>
 #include <Device/InputButton.h>
 #include <Processor/Processor.h>
 #include <Math/PXMatrix.h>
