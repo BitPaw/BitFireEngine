@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Error/ActionResult.h>
+#include <Error/PXActionResult.h>
 #include <Graphic/PXCamera.h>
 
 #include "../Dialog/Dialog.h"
@@ -23,7 +23,7 @@ namespace BF
 
 		static bool IsLevelFile(const wchar_t* filePath);
 
-		ActionResult Load(const wchar_t* filePath);
+		PXActionResult Load(const wchar_t* filePath);
 
 		size_t FullSizeInMemory();
 	};

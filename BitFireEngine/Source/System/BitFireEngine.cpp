@@ -605,28 +605,28 @@ PXThreadResult BF::BitFireEngine::LoadResourceAsync(void* resourceAdress)
     ResourceAsyncLoadInfo* resourceAsyncLoadInfo = (ResourceAsyncLoadInfo*)resourceAdress;
     Resource* resource = resourceAsyncLoadInfo->ResourceAdress;
     const wchar_t* filePath = resourceAsyncLoadInfo->FilePath;
-    const ActionResult loadResult = resource->Load(filePath);
+    const PXActionResult loadResult = resource->Load(filePath);
 
     printf("[#][Resource][ASYNC] Loaded <%ls> ... [%i]\n", filePath, loadResult);
     */
     return 0;
 }
 
-ActionResult BF::BitFireEngine::Load(PXRenderable& renderable, const char* filePath, bool loadAsynchronously)
+PXActionResult BF::BitFireEngine::Load(PXRenderable& renderable, const char* filePath, bool loadAsynchronously)
 {
     PXRenderable* renderableAdress = &renderable;
 
     return GraphicModelRegisterA(&this->_mainWindow.GraphicInstance, &renderableAdress, filePath);
 }
 
-ActionResult BF::BitFireEngine::Load(PXModel& model, const wchar_t* filePath, const bool loadAsynchronously)
+PXActionResult BF::BitFireEngine::Load(PXModel& model, const wchar_t* filePath, const bool loadAsynchronously)
 {
-    const ActionResult result = ActionInvalid;// model.Load(filePath);
+    const PXActionResult result = PXActionInvalid;// model.Load(filePath);
 
     return result;
 }
 
-ActionResult BF::BitFireEngine::Load(PXRenderable& renderable, const float* vertexData, const size_t vertexDataSize, const unsigned int* indexList, const size_t indexListSize)
+PXActionResult BF::BitFireEngine::Load(PXRenderable& renderable, const float* vertexData, const size_t vertexDataSize, const unsigned int* indexList, const size_t indexListSize)
 {
     /*
     Register(renderable, vertexData, vertexDataSize, indexList, indexListSize);
@@ -635,15 +635,15 @@ ActionResult BF::BitFireEngine::Load(PXRenderable& renderable, const float* vert
     _renderList.Add(&renderable);
     _modelAdd.Release();*/
 
-    return ActionSuccessful;
+    return PXActionSuccessful;
 }
 
-ActionResult BF::BitFireEngine::Load(Image& image, const wchar_t* filePath, const bool loadAsynchronously)
+PXActionResult BF::BitFireEngine::Load(Image& image, const wchar_t* filePath, const bool loadAsynchronously)
 {
-    return ActionSuccessful;
+    return PXActionSuccessful;
 }
 
-ActionResult BF::BitFireEngine::Load(PXTexture& texture, const wchar_t* filePath, bool loadAsynchronously)
+PXActionResult BF::BitFireEngine::Load(PXTexture& texture, const wchar_t* filePath, bool loadAsynchronously)
 {
     texture.Type = GraphicImageTypeTexture2D;
     texture.Filter = GraphicRenderFilterTrilinear;
@@ -655,7 +655,7 @@ ActionResult BF::BitFireEngine::Load(PXTexture& texture, const wchar_t* filePath
     return GraphicTextureRegisterW(&this->_mainWindow.GraphicInstance, &texture, filePath);
 }
 
-ActionResult BF::BitFireEngine::Load(PXFont& font, const wchar_t* filePath, bool loadAsynchronously)
+PXActionResult BF::BitFireEngine::Load(PXFont& font, const wchar_t* filePath, bool loadAsynchronously)
 {
     /*
     bool firstImage = _fontList.Size() == 0;
@@ -672,10 +672,10 @@ ActionResult BF::BitFireEngine::Load(PXFont& font, const wchar_t* filePath, bool
         DefaultFont = &font;
     }*/
 
-    return ActionSuccessful;
+    return PXActionSuccessful;
 }
 /*
-ActionResult BF::BitFireEngine::Load(AudioClip& audioClip, const wchar_t* filePath, bool loadAsynchronously)
+PXActionResult BF::BitFireEngine::Load(AudioClip& audioClip, const wchar_t* filePath, bool loadAsynchronously)
 {
     printf("[+][Resource] AudioClip <%ls> loading...\n", filePath);
 
@@ -694,7 +694,7 @@ ActionResult BF::BitFireEngine::Load(AudioClip& audioClip, const wchar_t* filePa
     }
     else
     {
-        const ActionResult soundLoadResult = sound.Load(filePath);
+        const PXActionResult soundLoadResult = sound.Load(filePath);
 
         if(soundLoadResult != ActionSuccessful)
         {
@@ -709,11 +709,11 @@ ActionResult BF::BitFireEngine::Load(AudioClip& audioClip, const wchar_t* filePa
     return ActionSuccessful;
 }*/
 
-ActionResult BF::BitFireEngine::Load(ShaderProgram& shaderProgram, const char* vertexShaderFilePath, const char* fragmentShaderFilePath)
+PXActionResult BF::BitFireEngine::Load(ShaderProgram& shaderProgram, const char* vertexShaderFilePath, const char* fragmentShaderFilePath)
 {
     printf("[+][Resource] ShaderProgram V:<%ls> F:<%ls> loading...\n", vertexShaderFilePath, fragmentShaderFilePath);
     
-    const ActionResult successful = GraphicShaderProgramCreateVFPathA(&_mainWindow.GraphicInstance, &shaderProgram, vertexShaderFilePath, fragmentShaderFilePath);
+    const PXActionResult successful = GraphicShaderProgramCreateVFPathA(&_mainWindow.GraphicInstance, &shaderProgram, vertexShaderFilePath, fragmentShaderFilePath);
 
     if (successful)
     {
@@ -726,7 +726,7 @@ ActionResult BF::BitFireEngine::Load(ShaderProgram& shaderProgram, const char* v
 }
 
 /*
-ActionResult BF::BitFireEngine::Load(Resource* resource, const wchar_t* filePath, const bool loadAsynchronously)
+PXActionResult BF::BitFireEngine::Load(Resource* resource, const wchar_t* filePath, const bool loadAsynchronously)
 {
     ResourceType resourceType = ResourceType::Unknown;
 
@@ -829,7 +829,7 @@ ActionResult BF::BitFireEngine::Load(Resource* resource, const wchar_t* filePath
     return ResultSuccessful;
 }*/
 
-ActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePath, const bool loadAsynchronously)
+PXActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePath, const bool loadAsynchronously)
 {
     const char _modelToken = 'O';
     const char _textureToken = 'T';
@@ -851,7 +851,7 @@ ActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePath, cons
     DataStream dataStream;
 
     {
-        const ActionResult mappingResult = FileMapToVirtualMemoryW(&file, filePath, 0, MemoryReadOnly);
+        const PXActionResult mappingResult = FileMapToVirtualMemoryW(&file, filePath, 0, MemoryReadOnly);
         const unsigned char sucessful = mappingResult == ResultSuccessful;
 
         if(!sucessful)
@@ -962,7 +962,7 @@ ActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePath, cons
                 wchar_t filePathW[PathMaxSize];
                 TextCopyAW(filePathA, PathMaxSize, filePathW, PathMaxSize);
 
-                const ActionResult result = Load(*loadedModel, filePathW, false);
+                const PXActionResult result = Load(*loadedModel, filePathW, false);
                 const bool successful = result == ResultSuccessful;
 
                 if(successful)
@@ -1018,7 +1018,7 @@ ActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePath, cons
 
                                     Texture* texture = new Texture();
 
-                                    const ActionResult loadResult = Load(*texture, material.TextureFilePath, false);
+                                    const PXActionResult loadResult = Load(*texture, material.TextureFilePath, false);
                                     const bool sucessful = loadResult == ResultSuccessful;
 
                                     if(sucessful)
@@ -1053,8 +1053,8 @@ ActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePath, cons
 
                 TextCopyAW(filePathA, PathMaxSize, filePathW, PathMaxSize);
 
-                const ActionResult fileActionResult = Load(*texture, filePathW, false);
-                const bool sucessful = fileActionResult == ResultSuccessful;
+                const PXActionResult filePXActionResult = Load(*texture, filePathW, false);
+                const bool sucessful = filePXActionResult == ResultSuccessful;
 
                 if(sucessful)
                 {
@@ -1125,17 +1125,17 @@ ActionResult BF::BitFireEngine::Load(Level& level, const wchar_t* filePath, cons
 
      */
 
-return ActionSuccessful;
+return PXActionSuccessful;
 }
 /*
-ActionResult BF::BitFireEngine::Load(Sprite& sprite, const wchar_t* filePath)
+PXActionResult BF::BitFireEngine::Load(Sprite& sprite, const wchar_t* filePath)
 {
     printf("[+][Resource] Sprite <%ls> loading...\n", filePath);
 
     Renderable& renderable = sprite;
     Texture* texture = sprite.UsedTexture = new Texture;
 
-    const ActionResult textureLoadResult = Load(*texture, filePath, false);
+    const PXActionResult textureLoadResult = Load(*texture, filePath, false);
     const bool sucessful = textureLoadResult == ResultSuccessful;
 
     if(sucessful)
@@ -1160,23 +1160,23 @@ ActionResult BF::BitFireEngine::Load(Sprite& sprite, const wchar_t* filePath)
 
     return ActionSuccessful;
 }
-ActionResult BF::BitFireEngine::Load(Sound& sound, const wchar_t* filePath, const bool loadAsynchronously)
+PXActionResult BF::BitFireEngine::Load(Sound& sound, const wchar_t* filePath, const bool loadAsynchronously)
 {
     return ActionSuccessful;
 }
 
 */
 
-ActionResult BF::BitFireEngine::Load(Collider* collider)
+PXActionResult BF::BitFireEngine::Load(Collider* collider)
 {
    // _physicList.Add(collider);
 
-    return ActionSuccessful;
+    return PXActionSuccessful;
 }
 
 
 
-ActionResult BF::BitFireEngine::Load
+PXActionResult BF::BitFireEngine::Load
 (
     PXSkyBox* skyBox,
     const char* shaderVertex,
@@ -1191,7 +1191,7 @@ ActionResult BF::BitFireEngine::Load
 {
     printf("[+][Resource] SkyBox loading...\n");
 
-    const ActionResult actionResult = GraphicSkyboxRegisterA
+    const PXActionResult actionResult = GraphicSkyboxRegisterA
     (
         &this->_mainWindow.GraphicInstance,
         &skyBox,

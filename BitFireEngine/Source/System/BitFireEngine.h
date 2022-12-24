@@ -98,32 +98,32 @@ namespace BF
 
         static PXThreadResult LoadResourceAsync(void* resourceAdress);
 
-      /*  ActionResult Load(Resource* resource, const wchar_t* filePath, const bool loadAsynchronously = true); */
-        ActionResult Load(Level& level, const wchar_t* filePath, const bool loadAsynchronously = true);
+      /*  PXActionResult Load(Resource* resource, const wchar_t* filePath, const bool loadAsynchronously = true); */
+        PXActionResult Load(Level& level, const wchar_t* filePath, const bool loadAsynchronously = true);
 
 
-        ActionResult Load(PXFont& font, const wchar_t* filePath, bool loadAsynchronously = true);
-        ActionResult Load(ShaderProgram& shaderProgram, const char* vertexShaderFilePath, const char* fragmentShaderFilePath);
+        PXActionResult Load(PXFont& font, const wchar_t* filePath, bool loadAsynchronously = true);
+        PXActionResult Load(ShaderProgram& shaderProgram, const char* vertexShaderFilePath, const char* fragmentShaderFilePath);
 
         // Model
-        ActionResult Load(PXModel& model, const wchar_t* filePath, const bool loadAsynchronously = true);
-        ActionResult Load(PXRenderable& renderable, const char* filePath, bool loadAsynchronously = true);
-        ActionResult Load(PXRenderable& renderable, const float* vertexData, const size_t vertexDataSize, const unsigned int* indexList, const size_t indexListSize);
+        PXActionResult Load(PXModel& model, const wchar_t* filePath, const bool loadAsynchronously = true);
+        PXActionResult Load(PXRenderable& renderable, const char* filePath, bool loadAsynchronously = true);
+        PXActionResult Load(PXRenderable& renderable, const float* vertexData, const size_t vertexDataSize, const unsigned int* indexList, const size_t indexListSize);
 
         // Texture
-        ActionResult Load(Image& image, const wchar_t* filePath, bool loadAsynchronously = true);
+        PXActionResult Load(Image& image, const wchar_t* filePath, bool loadAsynchronously = true);
        
         
-        ActionResult Load(PXTexture& texture, const wchar_t* filePath, bool loadAsynchronously = true);
-      //  ActionResult Load(Sprite& sprite, const wchar_t* filePath);
+        PXActionResult Load(PXTexture& texture, const wchar_t* filePath, bool loadAsynchronously = true);
+      //  PXActionResult Load(Sprite& sprite, const wchar_t* filePath);
 
         // Audio
-       // ActionResult Load(Sound& sound, const wchar_t* filePath, const bool loadAsynchronously = true);
-       // ActionResult Load(AudioClip& audioClip, const wchar_t* filePath, bool loadAsynchronously = true);
+       // PXActionResult Load(Sound& sound, const wchar_t* filePath, const bool loadAsynchronously = true);
+       // PXActionResult Load(AudioClip& audioClip, const wchar_t* filePath, bool loadAsynchronously = true);
 
 
-        ActionResult Load(Collider* collider);
-        ActionResult Load
+        PXActionResult Load(Collider* collider);
+        PXActionResult Load
         (
             PXSkyBox* skyBox,
             const char* shaderVertex,

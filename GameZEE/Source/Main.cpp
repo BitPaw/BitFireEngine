@@ -80,6 +80,7 @@ void OnStartUp(BitFireEngine* const bitFireEngine)
    // bitFireEngine->Load(_cubeModel, &_cubeThing, L"Model/Triangle.obj", false);
     //bitFireEngine->Load(_cubeModel, &_cubeThing, L"B:/Daten/Objects/Moze/Moze.obj", false);
     //bitFireEngine->Load(_cubeModel, &_cubeThing, L"B:/Daten/Objects/arwing/arwing_SNES.obj", false);
+    
     bitFireEngine->Load(_cubeModel, "Model/Dust_II/DustII.obj", false);
     GraphicModelShaderSet(graphicContext, &_cubeModel, &_worldShader);
 

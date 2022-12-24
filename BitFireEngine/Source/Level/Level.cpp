@@ -5,9 +5,9 @@ bool BF::Level::IsLevelFile(const wchar_t* filePath)
 	return false;
 }
 
-ActionResult BF::Level::Load(const wchar_t* filePath)
+PXActionResult BF::Level::Load(const wchar_t* filePath)
 {
-	return ActionResult();
+	return PXActionInvalid;
 }
 
 size_t BF::Level::FullSizeInMemory()
