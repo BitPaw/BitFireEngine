@@ -4,12 +4,14 @@ precision mediump float;
 
 layout(location = 0) out vec4 fragcolor;
 
-in vec3 vertexPosition;
-in vec3 vertexNormal;
-in vec4 vertexColor;
-in vec2 vertexTexturePosition;
+in struct Vertex 
+{
+  vec3 Position;
+  vec4 Color;
+  vec2 TexturePosition;
+} vertex;
 
-uniform sampler2D objtexture;
+uniform sampler2D MaterialTexture;
 
 void main()
 {
@@ -26,7 +28,22 @@ void main()
 
    // vec4 calcolr = vec4(ambient + diffuse + specular, 1.0f);
 
-   fragcolor = vec4(1,1,0,0.25f);//;texture(objtexture, vertexTexturePosition);
+   vec4 testColor = vec4(1.0f - (vertex.Position.x), 0.5f - (vertex.Position.y), (vertex.Position.x), 0.66f);
+   //vec4 testColor = vec4(1.0f-vertex.Position.x, 1.0f, 1.0f, 0.66f);
+
+   vec4 textureColor = texture(MaterialTexture, vertex.TexturePosition);
+
+   if(textureColor.x == 0.0 && textureColor.y == 0.0 && textureColor.z == 0.0)
+   {
+        textureColor.w = 0.0;   
+        fragcolor = textureColor;
+   }
+   else 
+   {
+     fragcolor = textureColor + testColor;
+   }
+
+ 
 
  // fragcolor = vec4( vertexNormal, 1);
 }

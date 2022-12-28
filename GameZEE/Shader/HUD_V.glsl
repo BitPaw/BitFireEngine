@@ -1,14 +1,15 @@
 #version 300 es
 
 layout(location = 0) in vec3 position;
-//layout(location = 1) in vec3 normal;
+layout(location = 1) in vec2 texturePosition;
 //layout(location = 2) in vec4 color;
-//layout(location = 3) in vec2 texturePosition;
 
-out vec3 vertexPosition;
-out vec3 vertexNormal;
-out vec4 vertexColor;
-out vec2 vertexTexturePosition;
+out struct Vertex 
+{
+  vec3 Position;
+  vec4 Color;
+  vec2 TexturePosition;
+} vertex;
 
 uniform mat4 MatrixModel;
 
@@ -18,7 +19,9 @@ void main()
 
     //vertexColor = color;
     //vertexNormal = normal;
-    vertexPosition = position;
+    vertex.Position = position;
+    vertex.Color = vec4(position, 1.0);
+    vertex.TexturePosition = texturePosition;
     //vertexTexturePosition = texturePosition;
 
     gl_Position = matrixPosition;

@@ -11,7 +11,8 @@ out struct Vertex
   vec3 Normal;
   vec4 Color;
   vec2 TexturePosition;
-} vertex;
+} 
+vertex;
 
 uniform mat4 MatrixModel;
 uniform mat4 MatrixView;

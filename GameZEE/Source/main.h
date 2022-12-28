@@ -5,6 +5,7 @@
 #include <Entity/Sign.h>
 #include <Physic/GravityCube.h>
 #include <System/BitFireEngine.h>
+#include <Format/PXFont.h>
 
 using namespace BF;
 

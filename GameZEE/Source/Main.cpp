@@ -30,9 +30,13 @@ int main(int amountOFParameters, char** parameter)
 }
 
 PXModel _cubeThing;
+PXFont _textFont;
 
 PXUIPanel pxUIPanelMain;
 PXUIPanel pxUIPanelMainCopy;
+
+PXUIText pxUITextFPS;
+PXUIText pxUITextPosition;
 
 void OnStartUp(BitFireEngine* const bitFireEngine)
 {    
@@ -84,6 +88,9 @@ void OnStartUp(BitFireEngine* const bitFireEngine)
     bitFireEngine->Load(_cubeModel, "Model/Dust_II/DustII.obj", false);
     GraphicModelShaderSet(graphicContext, &_cubeModel, &_worldShader);
 
+ 
+
+
     // _cubeModel.Move(0,50,0);
     // _cubeModel.Scale(100.0f);
     //_cubeModel.ShaderUse(_worldShader.ID);
@@ -129,15 +136,23 @@ void OnStartUp(BitFireEngine* const bitFireEngine)
 
     GraphicShaderProgramCreateVFPathA(graphicContext, &_hudShaderID, "Shader/HUD_V.glsl", "Shader/HUD_F.glsl");
 
+    PXFontLoadA(&_textFont, (char*)"Font/segoe.fnt");
 
 
     GraphicUIPanelRegister(graphicContext, &pxUIPanelMain);
-    GraphicModelShaderSet(graphicContext, &pxUIPanelMain.Renderable, &_hudShaderID);
+    GraphicModelShaderSet(graphicContext, &pxUIPanelMain.Renderable, &_hudShaderID);    // _hudShaderID
     PXMatrix4x4FScaleSet(0.3, 0.2, 1, &pxUIPanelMain.Renderable.MatrixModel);
+    PXMatrix4x4FMoveToScaleXY(&pxUIPanelMain.Renderable.MatrixModel, -1, 0, &pxUIPanelMain.Renderable.MatrixModel);
     pxUIPanelMain.Renderable.MeshSegmentList[0].RenderMode = GraphicRenderModeSquare;
 
+    pxUITextPosition.TextFont = &_textFont;
 
+    GraphicUITextRegister(graphicContext, &pxUITextPosition, 0, 0, 1, 1, (char*)"Test");
+    GraphicModelShaderSet(graphicContext, &pxUITextPosition.Renderable, &_hudShaderID);
+    PXMatrix4x4FScaleSet(0.005, 0.005, 1, &pxUITextPosition.Renderable.MatrixModel);
+    pxUITextPosition.Renderable.MeshSegmentList[0].RenderMode = GraphicRenderModeSquare;
 
+    pxUIPanelMain.Renderable.MeshSegmentList[0].TextureID = pxUITextPosition.Renderable.MeshSegmentList[0].TextureID;
 
 #endif
     //-------------------------------------------------------------------------
