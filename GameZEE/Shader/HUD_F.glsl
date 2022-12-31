@@ -28,19 +28,19 @@ void main()
 
    // vec4 calcolr = vec4(ambient + diffuse + specular, 1.0f);
 
-   vec4 testColor = vec4(1.0f - (vertex.Position.x), 0.5f - (vertex.Position.y), (vertex.Position.x), 0.66f);
+  // vec4 testColor = vec4(1.0f - (vertex.Position.x), 0.5f - (vertex.Position.y), (vertex.Position.x), 0.66f);
    //vec4 testColor = vec4(1.0f-vertex.Position.x, 1.0f, 1.0f, 0.66f);
 
    vec4 textureColor = texture(MaterialTexture, vertex.TexturePosition);
 
    if(textureColor.x == 0.0 && textureColor.y == 0.0 && textureColor.z == 0.0)
    {
-        textureColor.w = 0.0;   
-        fragcolor = textureColor;
+        discard;
+        //  fragcolor = testColor;
    }
    else 
    {
-     fragcolor = textureColor + testColor;
+     fragcolor = textureColor;// + testColor;
    }
 
  
