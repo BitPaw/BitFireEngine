@@ -30,24 +30,50 @@ int main(int amountOFParameters, char** parameter)
 }
 
 PXTexture _dialogBoxTexture;
+PXTexture _dialogBoxTextureSelected;
 
 PXModel _cubeThing;
+PXRenderable _bohrThing;
 PXFont _textFont;
 
 PXUIPanel pxUIPanelMain;
 PXUIPanel pxUIPanelMainCopy;
 
+PXUIButton pxDoStuffButton;
+
 PXUIText pxUITextFPS;
 PXUIText pxUITextPosition;
 
+
+#include <Format/FNT/FNT.h>
+
+
+void OnUIOnClick(PXUIElement* const pxUIElement)
+{
+    printf("[#][Event] Mouse button clicked\n");
+}
+void OnUIOnMouseEnter(PXUIElement* const pxUIElement)
+{
+    printf("[#][Event] Mouse button enter\n");
+
+    pxUIPanelMain.UIElement.Renderable.MeshSegmentList[0].TextureID = _dialogBoxTextureSelected.ID;
+}
+void OnUIOnMouseLeave(PXUIElement* const pxUIElement)
+{
+    printf("[#][Event] Mouse button leave\n");
+
+    pxUIPanelMain.UIElement.Renderable.MeshSegmentList[0].TextureID = _dialogBoxTexture.ID;
+}
+
+
 void OnStartUp(BitFireEngine* const bitFireEngine)
 {    
-    GraphicContext* const graphicContext = &bitFireEngine->_mainWindow.GraphicInstance;
+    PXGraphicContext* const graphicContext = &bitFireEngine->_mainWindow.GraphicInstance;
 
     _worldShader.ID = -1;
     _hudShaderID.ID = -1;
 
-    GraphicShaderProgramCreateVFPathA(graphicContext, &_worldShader, "Shader/WorldShader_V.glsl", "Shader/WorldShader_F.glsl");
+    PXGraphicShaderProgramLoadGLSLA(graphicContext, &_worldShader, (char*)"Shader/WorldShader_V.glsl", (char*)"Shader/WorldShader_F.glsl");
 
     bitFireEngine->Load
     (
@@ -63,113 +89,45 @@ void OnStartUp(BitFireEngine* const bitFireEngine)
     );
 
 
-    _dialogBoxTexture.Type = GraphicImageTypeTexture2D;
-    _dialogBoxTexture.Filter = GraphicRenderFilterNoFilter;
-    _dialogBoxTexture.LayoutNear = GraphicImageLayoutNearest;
-    _dialogBoxTexture.LayoutFar = GraphicImageLayoutNearest;
-    _dialogBoxTexture.WrapHeight = GraphicImageWrapRepeat;
-    _dialogBoxTexture.WrapWidth = GraphicImageWrapRepeat;
+   
 
-    GraphicTextureRegisterA(graphicContext, &_dialogBoxTexture, "Texture/MissingTexture.bmp");
+    PXGraphicTextureLoadA(graphicContext, &_dialogBoxTexture, (char*)"Texture/DialogueBox.bmp");
+
+    PXGraphicTextureLoadA(graphicContext, &_dialogBoxTextureSelected, (char*)"Texture/DialogueBoxB.bmp");
+   
 
 
-    //GameSystem.Load(textureBix, "Model/Dialog/DialogBox.obj");
-
-   // bitFireEngine->Load(_blockTexture, L"Font/segoe.png", false);
-
-  //  bitFireEngine->Load(_blockTexture, L"Texture/Block.bmp", false);
-    //bitFireEngine->Load("Model/Triangle.obj");
-
-   // _worldGravity.IgnoreAxis.Set(true, true, true);
-   // _worldGravity.PullForce = GravityForceEarth;
-   // _worldGravity.PullDirection.Set(0, -1, 0);
-   // GameSystem.Resource.Add(&_worldGravity);
-
-    //bitFireEngine->Load(_level, L"Level/MainMenu.lev");
-
-    //bitFireEngine->Load();
-
-    //GameSystem.Resource.Load(L"B:/Daten/Textures/PR/Countrry/Neo/FI/Country.obj");
-
-
-
-
-
-    // bitFireEngine->Load(_cubeModel, &_cubeThing, L"Model/Cube.obj", false);
-   // bitFireEngine->Load(_cubeModel, &_cubeThing, L"Model/Triangle.obj", false);
-    //bitFireEngine->Load(_cubeModel, &_cubeThing, L"B:/Daten/Objects/Moze/Moze.obj", false);
-    //bitFireEngine->Load(_cubeModel, &_cubeThing, L"B:/Daten/Objects/arwing/arwing_SNES.obj", false);
-    
-    bitFireEngine->Load(_cubeModel, "Model/Dust_II/DustII.obj", false);
-    GraphicModelShaderSet(graphicContext, &_cubeModel, &_worldShader);
+    PXGraphicModelLoadA(graphicContext, &_cubeModel, (char*)"Model/Dust_II/DustII.obj");
+    PXGraphicModelShaderSet(graphicContext, &_cubeModel, &_worldShader);
 
  
-
-
-    // _cubeModel.Move(0,50,0);
-    // _cubeModel.Scale(100.0f);
-    //_cubeModel.ShaderUse(_worldShader.ID);
-    //_cubeModel.TextureUse(_blockTexture.ID);
-    //_cubeModel.Scale(100);
-   // _cubeModel.Move(250, 0, 0);
-
-    //cube.EnablePhysics = true;
-//cube.Mass = 1000;
-
-// cube.MaterialListSize++;
-// cube.MaterialList = new Material();
-
- //GameSystem.Resource.Add(cube.MaterialList[0].Texture, "C:/Users/BitPaw/Videos/TEST_PNG3.png", false);
- //cube.MeshList[0].RenderInfo.MaterialID = 0;
-
-
-
-
-// textureBix.MatrixModel.Scale(10, 2, 1);
-
-
-
-
-
-
- //text = new BF::UIText("SampleText", *GameSystem.Resource.DefaultFont, -1, -0.8);
- //text->MeshList[0].RenderInformation.ShaderProgramID = hudShaderID.ID;
- //text->SetFont(*Resource.DefaultFont);
- //text->SetText(text->TextContent);
- //GameSystem.Resource.Add(*text);
-
-
-
+    //PXGraphicModelLoadA(graphicContext, &_bohrThing, (char*)"Model/Bohr.obj");
+    //PXGraphicModelShaderSet(graphicContext, &_bohrThing, &_worldShader);
 
  //-----<UI>----------------------------------------------------------------
 #if 1    
-
+    
     //GraphicUIPanelRegister(graphicContext, &pxUIPanelMainCopy);
     //GraphicModelShaderSet(graphicContext, &pxUIPanelMainCopy.Renderable, &_worldShader);
     //PXMatrix4x4FScaleSet(1, 1, 1, &pxUIPanelMainCopy.Renderable.MatrixModel);
     //pxUIPanelMainCopy.Renderable.MeshSegmentList[0].RenderMode = GraphicRenderModeSquare;
 
-    GraphicShaderProgramCreateVFPathA(graphicContext, &_hudShaderID, "Shader/HUD_V.glsl", "Shader/HUD_F.glsl");
+    PXGraphicShaderProgramLoadGLSLA(graphicContext, &_hudShaderID, (char*)"Shader/HUD_V.glsl", (char*)"Shader/HUD_F.glsl");
 
     PXFontLoadA(&_textFont, (char*)"Font/A.fnt");
 
+    
+    PXGraphicUIButtonRegister(graphicContext, &pxDoStuffButton, 0, 0, 1, 1, (char*)"Button", &_textFont, &_hudShaderID);
+    pxDoStuffButton.UIElement.OnClickCallback = OnUIOnClick;
+    pxDoStuffButton.UIElement.OnMouseEnterCallback = OnUIOnMouseEnter;
+    pxDoStuffButton.UIElement.OnMouseLeaveCallback = OnUIOnMouseLeave;
 
-    pxUITextPosition.TextFont = &_textFont;
-    GraphicUITextRegister(graphicContext, &pxUITextPosition, 0, 0, 1, 1, (char*)"Button");
-    GraphicModelShaderSet(graphicContext, &pxUITextPosition.Renderable, &_hudShaderID);
-    PXMatrix4x4FScaleSet(0.0017, 0.002, 1, &pxUITextPosition.Renderable.MatrixModel);
-    PXMatrix4x4FMoveToScaleXY(&pxUITextPosition.Renderable.MatrixModel, -0.9, -0.9, &pxUITextPosition.Renderable.MatrixModel);
-    pxUITextPosition.Renderable.MeshSegmentList[0].RenderMode = GraphicRenderModeSquare;
-   
-
-
-
-    GraphicUIPanelRegister(graphicContext, &pxUIPanelMain);
-    GraphicModelShaderSet(graphicContext, &pxUIPanelMain.Renderable, &_hudShaderID);    // _hudShaderID
-    PXMatrix4x4FScaleSet(0.3, 0.13, 1, &pxUIPanelMain.Renderable.MatrixModel);
-    PXMatrix4x4FMoveToScaleXY(&pxUIPanelMain.Renderable.MatrixModel, -0.9, -0.9, &pxUIPanelMain.Renderable.MatrixModel);
-    pxUIPanelMain.Renderable.MeshSegmentList[0].RenderMode = GraphicRenderModeSquare;
-    pxUIPanelMain.Renderable.MeshSegmentList[0].TextureID = _dialogBoxTexture.ID;
+    PXGraphicUIPanelRegister(graphicContext, &pxUIPanelMain);
+    PXGraphicModelShaderSet(graphicContext, &pxUIPanelMain.UIElement.Renderable, &_hudShaderID);    // _hudShaderID
+    PXMatrix4x4FScaleSet(0.3, 0.13, 1, &pxUIPanelMain.UIElement.Renderable.MatrixModel);
+    PXMatrix4x4FMoveToScaleXY(&pxUIPanelMain.UIElement.Renderable.MatrixModel, -0.9, -0.9, &pxUIPanelMain.UIElement.Renderable.MatrixModel);
+    pxUIPanelMain.UIElement.Renderable.MeshSegmentList[0].RenderMode = PXGraphicRenderModeSquare;
+    pxUIPanelMain.UIElement.Renderable.MeshSegmentList[0].TextureID = _dialogBoxTexture.ID;
 
  
 
@@ -242,8 +200,9 @@ void OnUpdateInput(BitFireEngine* const bitFireEngine, BF::InputContainer& input
 
 
     if (InputButtonIsShortPressed(input.KeyBoardInput.I))
-    {
-        pxUIPanelMain.Renderable.DoRendering = !pxUIPanelMain.Renderable.DoRendering;
+    {       
+
+        pxUIPanelMain.UIElement.Renderable.DoRendering = !pxUIPanelMain.UIElement.Renderable.DoRendering;
         input.KeyBoardInput.I = 0xFF;
     }
 
@@ -263,7 +222,7 @@ void OnUpdateInput(BitFireEngine* const bitFireEngine, BF::InputContainer& input
     KeyBoardCache& keyboard = input.KeyBoardInput;
     MouseCache& mouse = input.MouseInput;
     PXCamera& camera = bitFireEngine->MainCamera;
-    PXVector3F movement = {0,0,0};
+    PXVector3F movement = { 0,0,0 };
 
     if(InputButtonIsPressed(keyboard.ShitftLeft)) { PXVector3FAddXYZ(&movement, 0, -1, 0, &movement); }
     if(InputButtonIsPressed(keyboard.W)) { PXVector3FAddXYZ(&movement,0, 0, 1, &movement); }

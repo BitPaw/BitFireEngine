@@ -4,8 +4,6 @@
 #include <Graphic/PXCamera.h>
 
 #include "../Dialog/Dialog.h"
-#include <Graphic/Graphic.h>
-
 
 namespace BF
 {

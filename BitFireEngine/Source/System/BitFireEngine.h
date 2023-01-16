@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Graphic/Graphic.h>
+#include <Graphic/PXGraphic.h>
 #include <Graphic/OpenGL/OpenGL.h>
 #include <Async/PXLock.h>
 #include <Async/PXThread.h>
