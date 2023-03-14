@@ -151,7 +151,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)SystemResource/Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration);D:/_Data/Git/PXUltima/PXUltima/Source/</IncludePath>
+    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration)</IncludePath>
     <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
@@ -159,20 +159,20 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)SystemResource/Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration);D:/_Data/Git/PXUltima/PXUltima/Source/</IncludePath>
+    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration)</IncludePath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)SystemResource/Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration);D:/_Data/Git/PXUltima/PXUltima/Source/</IncludePath>
+    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration)</IncludePath>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)SystemResource/Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration);D:/_Data/Git/PXUltima/PXUltima/Source/</IncludePath>
+    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration)</IncludePath>
     <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
@@ -180,14 +180,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)SystemResource/Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration);D:/_Data/Git/PXUltima/PXUltima/Source/</IncludePath>
+    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration)</IncludePath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|x64'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)SystemResource/Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration);D:/_Data/Git/PXUltima/PXUltima/Source/</IncludePath>
+    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration)</IncludePath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
   </PropertyGroup>

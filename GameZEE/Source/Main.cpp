@@ -9,6 +9,28 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int nShowCmd)
 int main(int amountOFParameters, char** parameter)
 #endif  
 {
+
+#if 0
+    PXSteam stream;
+
+    PXSteamConstruct(&stream);
+
+    PXSteamInitialize(&stream);
+
+    PXSteamFriend pxSteamFriend[60];
+
+    unsigned int number = PXSteamFriendsFetchList(&stream, PXSteamFriendFlagAll, pxSteamFriend, 60);
+
+    for (size_t i = 0; i < number; ++i)
+    {
+        PXSteamFriend* pxFriend = &pxSteamFriend[i];
+
+        printf("Friend [%3i] %s\n", pxFriend->Level, pxFriend->NameProfile);
+    }
+
+    PXSteamShutdown(&stream);
+#endif
+
     BitFireEngine bitFireEngine;
 
     bitFireEngine.UpdateUICallBack = OnUpdateUI;
@@ -41,8 +63,8 @@ PXUIPanel pxUIPanelMainCopy;
 
 PXUIButton pxDoStuffButton;
 
-PXUIText pxUITextFPS;
-PXUIText pxUITextPosition;
+//PXUIText pxUITextFPS;
+//PXUIText pxUITextPosition;
 
 
 #include <Format/FNT/FNT.h>

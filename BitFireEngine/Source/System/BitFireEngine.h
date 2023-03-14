@@ -1,15 +1,11 @@
 #pragma once
 
 #include <Graphic/PXGraphic.h>
-#include <Graphic/OpenGL/OpenGL.h>
-#include <Async/PXLock.h>
-#include <Async/PXThread.h>
-#include <Graphic/PXCamera.h>
-#include <OS/PXWindow.h>
-#include <Time/PXTime.h>
+#include <OS/Thread/PXLock.h>
+#include <OS/Thread/PXThread.h>
+#include <OS/Window/PXWindow.h>
+#include <OS/Time/PXTime.h>
 #include <Container/LinkedList/PXLinkedList.h>
-
-// Resource System
 #include <Format/PXFont.h>
 #include <Format/Image.h>
 

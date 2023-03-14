@@ -1,7 +1,7 @@
 #include "UIText.h"
 
 #include <Format/FNT/FNT.h>
-#include <Text/Text.h>
+#include <Text/PXText.h>
 
 void BF::UIText::Setup(const wchar_t* text, PXFont* font, float x, float y)
 {
@@ -54,7 +54,7 @@ void BF::UIText::TextSet(const char* text)
 		return;
 	}
 
-	TextSizeCurrent = TextCopyAW(text, TextSizeMax, TextContent, TextSizeMax);
+	TextSizeCurrent = PXTextCopyAW(text, TextSizeMax, TextContent, TextSizeMax);
 }
 
 void BF::UIText::TextSet(const wchar_t* text)
@@ -64,7 +64,7 @@ void BF::UIText::TextSet(const wchar_t* text)
 		return;
 	}
 
-	TextSizeCurrent = TextCopyW(text, TextSizeMax, TextContent, TextSizeMax);
+	TextSizeCurrent = PXTextCopyW(text, TextSizeMax, TextContent, TextSizeMax);
 }
 
 void BF::UIText::TextUpdate()
