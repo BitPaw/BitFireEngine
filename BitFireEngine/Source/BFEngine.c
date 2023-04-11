@@ -13,6 +13,7 @@
 #include <OS/Thread/Await.h>
 #include <OS/Time/PXStopWatch.h>
 #include <OS/Processor/PXProcessor.h>
+#include <Math/PXCollision.h>
 
 #include <stdlib.h>
 #include <signal.h>
@@ -1627,6 +1628,13 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
         pxBitFireEngine->WindowMain.HasSizeChanged = PXFalse;
     }
 
+    {
+        PXGraphicContext* const graphicContext = &pxBitFireEngine->WindowMain.GraphicInstance;
+
+        OpenGLClearColor(&graphicContext->OpenGLInstance, 0, 0, 0, 0);
+        OpenGLClear(&graphicContext->OpenGLInstance, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
 
     //---<Fetch UI-Input>----------------------------------------------------------
     {
@@ -1635,7 +1643,10 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
 
         const PXSize uiElementAmount = graphicContext->UIElementLookUp.EntryAmountCurrent;
 
-        for (PXSize i = 0; i < uiElementAmount; ++i)
+        PXUIHoverState* lastEntry = 0;
+
+        // for (int i = uiElementAmount; i >= 0 ; --i)
+        for (int i = 0; i < uiElementAmount; ++i)
         {
             PXDictionaryEntry pxDictionaryEntry;
 
@@ -1649,7 +1660,27 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
             float mouseBX = pxBitFireEngine->InputContainer.MouseInput.PositionNormalisized[0] + mouseHitBoxOffset;
             float mouseBY = pxBitFireEngine->InputContainer.MouseInput.PositionNormalisized[1] - mouseHitBoxOffset;
 
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            glColor4f(0, 0.7, 0, 1);
+            glRectf(mouseAX, mouseAY, mouseBX, mouseBY);
+            glRectf(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
 
+            const PXBool isCollising = PXCollisionAABB(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height, mouseAX, mouseAY, mouseBX, mouseBY);
+
+            if (!isCollising)
+            {
+                pxUIElement->Hover = PXUIHoverStateNotBeeingHovered;
+                continue;
+            }
+
+            pxUIElement->Hover = PXUIHoverStateHovered;
+
+            if (lastEntry)
+            {
+                *lastEntry = PXUIHoverStateHoveredButOverlapped;               
+            }
+
+            lastEntry = &pxUIElement->Hover;
         }
     }
    //--------------------------------------------------------------------------
@@ -1764,8 +1795,8 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
     const float blue = 0.2f;
     const float alpha = 1.0f;
 
-    OpenGLClearColor(&graphicContext->OpenGLInstance, red, green, blue, alpha);
-    OpenGLClear(&graphicContext->OpenGLInstance, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   // OpenGLClearColor(&graphicContext->OpenGLInstance, red, green, blue, alpha);
+  //  OpenGLClear(&graphicContext->OpenGLInstance, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glPointSize(10);
     glLineWidth(2);
@@ -1840,12 +1871,12 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 
         glColor4f(0, 0.7, 0, 1);
         float mouseHitBoxOffset = 0.05f;
-        glRectf(mouseX - mouseHitBoxOffset, mouseY + mouseHitBoxOffset, mouseX + mouseHitBoxOffset, mouseY - mouseHitBoxOffset);
+       // glRectf(mouseX - mouseHitBoxOffset, mouseY + mouseHitBoxOffset, mouseX + mouseHitBoxOffset, mouseY - mouseHitBoxOffset);
 
 
         const PXSize uiElementAmount = graphicContext->UIElementLookUp.EntryAmountCurrent;
 
-        for (PXSize i = 0; i < uiElementAmount; ++i)
+        for (int i = uiElementAmount; i >= 0; --i)
         {
             PXDictionaryEntry pxDictionaryEntry;
 
@@ -1855,15 +1886,17 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-            const float colorSelectedOffset = pxUIElement->HasMouseHover * 3.0f;
+            const float colorSelectedOffset = (pxUIElement->Hover == PXUIHoverStateHovered) * 0.3f;
 
             glColor4f(pxUIElement->Red + colorSelectedOffset, pxUIElement->Green + colorSelectedOffset, pxUIElement->Blue + colorSelectedOffset, pxUIElement->Alpha);
             glRectf(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
+            
+   
 
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+           // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-            glColor4f(0, 0.7, 0, 1);
-            glRectf(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
+            //glColor4f(0, 0.7, 0, 1);
+            //glRectf(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
         }
     }
     //-------------------------------------------------------------------------

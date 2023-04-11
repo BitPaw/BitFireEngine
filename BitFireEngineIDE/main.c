@@ -43,11 +43,7 @@ void OnStartUp(BFEngine* const bitFireEngine)
     PXGraphicContext* const graphicContext = &bitFireEngine->WindowMain.GraphicInstance;
     
 
-    PXUIElementConstruct(&_infoPanelSpawn);
-    PXUIElementColorSet4F(&_infoPanelSpawn, 0.2, 0.1, 0.2, 1);
-    PXUIElementPositionSetXYWH(&_infoPanelSpawn, -0.85f, -0.85f, -0.55f, -0.7f);
 
-    PXGraphicUIElementRegister(graphicContext, &_infoPanelSpawn);
 
 
     PXUIElementConstruct(&_infoPanel);
@@ -57,6 +53,11 @@ void OnStartUp(BFEngine* const bitFireEngine)
     //PXGraphicUIImage
 
 
+    PXUIElementConstruct(&_infoPanelSpawn);
+    PXUIElementColorSet4F(&_infoPanelSpawn, 0.2, 0.1, 0.2, 1);
+    PXUIElementPositionSetXYWH(&_infoPanelSpawn, -0.85f, -0.85f, -0.55f, -0.7f);
+
+    PXGraphicUIElementRegister(graphicContext, &_infoPanelSpawn);
  
 
 
