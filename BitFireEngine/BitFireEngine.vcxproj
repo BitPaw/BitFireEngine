@@ -27,41 +27,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Level\Level.cpp" />
-    <ClCompile Include="Source\Dialog\DialogBox.cpp" />
-    <ClCompile Include="Source\Dialog\Dialog.cpp" />
-    <ClCompile Include="Source\Entity\Sign.cpp" />
-    <ClCompile Include="Source\Entity\Entity.cpp" />
-    <ClCompile Include="Source\Physic\Collider.cpp" />
-    <ClCompile Include="Source\Physic\CollisionListener.cpp" />
-    <ClCompile Include="Source\Physic\GravityCube.cpp" />
-    <ClCompile Include="Source\Physic\GravityField.cpp" />
-    <ClCompile Include="Source\Physic\GravitySphere.cpp" />
-    <ClCompile Include="Source\System\BitFireEngine.cpp" />
-    <ClCompile Include="Source\System\Device\KeyBoard\KeyBoardCache.cpp" />
-    <ClCompile Include="Source\System\Device\Mouse\MouseCache.cpp" />
-    <ClCompile Include="Source\System\InputContainer.cpp" />
-    <ClCompile Include="Source\UI\UIText.cpp" />
-    <ClCompile Include="Source\Collision\SystemPhysics.cpp" />
+    <ClCompile Include="Source\Dialog\BFDialogSystem.c" />
+    <ClCompile Include="Source\Entity\BFSign.c" />
+    <ClCompile Include="Source\BFEngine.c" />
+    <ClCompile Include="Source\System\Device\KeyBoard\KeyBoardCache.c" />
+    <ClCompile Include="Source\UI\UIText.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Level\Level.h" />
-    <ClInclude Include="Source\Dialog\DialogBox.h" />
-    <ClInclude Include="Source\Dialog\Dialog.h" />
-    <ClInclude Include="Source\Entity\Sign.h" />
-    <ClInclude Include="Source\Entity\Entity.h" />
-    <ClInclude Include="Source\Physic\Collider.h" />
-    <ClInclude Include="Source\Physic\ColliderType.h" />
-    <ClInclude Include="Source\Physic\CollisionListener.h" />
-    <ClInclude Include="Source\Physic\GravityCube.h" />
-    <ClInclude Include="Source\Physic\GravityField.h" />
-    <ClInclude Include="Source\Physic\GravitySphere.h" />
+    <ClInclude Include="Source\Dialog\BFDialogSystem.h" />
+    <ClInclude Include="Source\Entity\BFSign.h" />
     <ClInclude Include="Source\System\Device\KeyBoard\KeyBoardCache.h" />
-    <ClInclude Include="Source\System\BitFireEngine.h" />
-    <ClInclude Include="Source\System\Device\Mouse\MouseCache.h" />
-    <ClInclude Include="Source\System\InputContainer.h" />
+    <ClInclude Include="Source\BFEngine.h" />
     <ClInclude Include="Source\UI\UIText.h" />
-    <ClInclude Include="Source\Collision\SystemPhysics.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PXUltima\PXUltima.vcxproj">
@@ -151,7 +128,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration)</IncludePath>
+    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration);D:\_Data\Git\PXUltima\Code\PXUltima\Source\</IncludePath>
     <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
@@ -159,20 +136,20 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration)</IncludePath>
+    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration);D:\_Data\Git\PXUltima\Code\PXUltima\Source\</IncludePath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration)</IncludePath>
+    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration);D:\_Data\Git\PXUltima\Code\PXUltima\Source\</IncludePath>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration)</IncludePath>
+    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration);D:\_Data\Git\PXUltima\Code\PXUltima\Source\</IncludePath>
     <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
@@ -180,14 +157,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration)</IncludePath>
+    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration);D:\_Data\Git\PXUltima\Code\PXUltima\Source\</IncludePath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|x64'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration)</IncludePath>
+    <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(IncludePath);$(Configuration);D:\_Data\Git\PXUltima\Code\PXUltima\Source\</IncludePath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
   </PropertyGroup>
@@ -201,6 +178,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;$(SolutionDir)PXUltima/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -225,6 +203,7 @@
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;$(SolutionDir)PXUltima/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -249,6 +228,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;$(SolutionDir)PXUltima/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -268,6 +248,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;$(SolutionDir)PXUltima/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -294,6 +275,7 @@
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;$(SolutionDir)PXUltima/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -319,6 +301,7 @@
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;$(SolutionDir)PXUltima/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

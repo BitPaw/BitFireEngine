@@ -2,18 +2,12 @@
 #include <stdlib.h>
 
 #include <UI/UIText.h>
-#include <Entity/Sign.h>
-#include <Physic/GravityCube.h>
-#include <System/BitFireEngine.h>
-#include <Format/PXFont.h>
+#include <System/BFEngine.h>
 
-using namespace BF;
 
-BF::UIText* text;
+//BF::UIText* text;
 //BF::Model* sphere;
 PXTexture _blockTexture;
-
-BF::Level _level;
 
 PXSkyBox skybox;
 PXRenderable _cubeModel;
@@ -22,7 +16,6 @@ ShaderProgram _worldShader;
 ShaderProgram _hudShaderID;
 
 //BF::AudioSource _audioSource;
-BF::GravityCube _worldGravity;
 float _deltaTime = 0;
 PXModel* model;
 PXModel textureBix;
@@ -33,8 +26,8 @@ PXModel textureBix;
 
 
 
-void OnUpdateUI(const BitFireEngine* bitFireEngine);
-void OnStartUp(BitFireEngine* const bitFireEngine);
-void OnShutDown(const BitFireEngine* bitFireEngine);
-void OnUpdateGameLogic(const BitFireEngine* bitFireEngine, const float deltaTime);
-void OnUpdateInput(BitFireEngine* const bitFireEngine, BF::InputContainer& input);
+void OnUpdateUI(const BFEngine* bitFireEngine);
+void OnStartUp(BFEngine* const bitFireEngine);
+void OnShutDown(const BFEngine* bitFireEngine);
+void OnUpdateGameLogic(const BFEngine* bitFireEngine, const float deltaTime);
+void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input);

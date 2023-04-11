@@ -1,3 +1,4 @@
+#if 0
 #pragma once
 
 #include <Format/PXFont.h>
@@ -34,3 +35,4 @@ namespace BF
 		void PrintObjectData();
 	};
 }
+#endif

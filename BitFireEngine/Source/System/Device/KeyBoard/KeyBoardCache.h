@@ -1,10 +1,14 @@
 #pragma once
 
-namespace BF
+#include <Media/Type.h>
+
+#ifdef __cplusplus
+extern "C"
 {
-	struct KeyBoardCache
+#endif
+
+	typedef struct KeyBoardCache_
 	{
-		public:
 		unsigned char A;
 		unsigned char B;
 		unsigned char C;
@@ -47,10 +51,13 @@ namespace BF
 		unsigned char ShitftRight;
 
 		unsigned char SpaceBar;
+	}
+	KeyBoardCache;
 
-		KeyBoardCache();
+	PXPublic void KeyBoardCacheConstruct(KeyBoardCache* const keyBoardCache);
+	PXPublic void KeyBoardCacheIncrementButtonTick(KeyBoardCache* const keyBoardCache);
+	PXPublic void KeyBoardCacheReset(KeyBoardCache* const keyBoardCache);
 
-		void IncrementButtonTick();
-		void Reset();
-	};
+#ifdef __cplusplus
 }
+#endif
