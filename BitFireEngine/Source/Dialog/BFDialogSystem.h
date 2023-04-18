@@ -1,7 +1,7 @@
 #ifndef BFDialogSystemINCLUDE
 #define BFDialogSystemINCLUDE
 
-#include <Media/Type.h>
+#include <Media/PXType.h>
 
 #ifdef __cplusplus
 extern "C"

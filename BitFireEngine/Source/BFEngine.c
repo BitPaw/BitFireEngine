@@ -1,11 +1,11 @@
 #include "BFEngine.h"
 
-#include <Text/PXText.h>
-#include <Media/Model.h>
+#include <Media/PXText.h>
+#include <Media/PXModel.h>
 #include <Graphic/PXGraphic.h>
 #include <Math/PXMatrix.h>
 #include <File/PXDataStream.h>
-#include <Event/Event.h>
+#include <Event/PXEvent.h>
 #include <Device/Controller.h>
 #include <Device/InputButton.h>
 
@@ -1631,7 +1631,7 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
     {
         PXGraphicContext* const graphicContext = &pxBitFireEngine->WindowMain.GraphicInstance;
 
-        OpenGLClearColor(&graphicContext->OpenGLInstance, 0, 0, 0, 0);
+        OpenGLClearColor(&graphicContext->OpenGLInstance, 0.5, 0.5, 0.5, 1);
         OpenGLClear(&graphicContext->OpenGLInstance, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
@@ -1652,18 +1652,22 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
 
             PXDictionaryIndex(&graphicContext->UIElementLookUp, i, &pxDictionaryEntry);
 
-            PXUIElement* const pxUIElement = (PXUIElement*)pxDictionaryEntry.Value;
+            PXUIElement* const pxUIElement = *(PXUIElement**)pxDictionaryEntry.Value;
 
-            float mouseHitBoxOffset = 0.05f;
-            float mouseAX = pxBitFireEngine->InputContainer.MouseInput.PositionNormalisized[0] - mouseHitBoxOffset;
-            float mouseAY = pxBitFireEngine->InputContainer.MouseInput.PositionNormalisized[1] + mouseHitBoxOffset;
-            float mouseBX = pxBitFireEngine->InputContainer.MouseInput.PositionNormalisized[0] + mouseHitBoxOffset;
-            float mouseBY = pxBitFireEngine->InputContainer.MouseInput.PositionNormalisized[1] - mouseHitBoxOffset;
+            float mouseHitBoxOffset = 0.01f;
+            float scale = PXWindowScreenRatio(&pxBitFireEngine->WindowMain);
+            float mouseAX = pxBitFireEngine->InputContainer.MouseInput.PositionNormalisized[0] + mouseHitBoxOffset * scale;
+            float mouseAY = pxBitFireEngine->InputContainer.MouseInput.PositionNormalisized[1] - mouseHitBoxOffset* scale;
+            float mouseBX = pxBitFireEngine->InputContainer.MouseInput.PositionNormalisized[0] - mouseHitBoxOffset* scale;
+            float mouseBY = pxBitFireEngine->InputContainer.MouseInput.PositionNormalisized[1] + mouseHitBoxOffset* scale;
 
+#if 0
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             glColor4f(0, 0.7, 0, 1);
             glRectf(mouseAX, mouseAY, mouseBX, mouseBY);
             glRectf(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
+
+#endif // 1
 
             const PXBool isCollising = PXCollisionAABB(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height, mouseAX, mouseAY, mouseBX, mouseBY);
 
@@ -1759,6 +1763,8 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
     //---[Game-Logic]------------------------------------------------------
     //ModelsPhysicsApply(deltaTime);
 
+    InvokeEvent(pxBitFireEngine->UpdateGameLogicCallBack, pxBitFireEngine, deltaTime);
+
     //_callbackListener->OnUpdateGameLogic(deltaTime);
     //---------------------------------------------------------------------
 
@@ -1795,8 +1801,8 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
     const float blue = 0.2f;
     const float alpha = 1.0f;
 
-   // OpenGLClearColor(&graphicContext->OpenGLInstance, red, green, blue, alpha);
-  //  OpenGLClear(&graphicContext->OpenGLInstance, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //OpenGLClearColor(&graphicContext->OpenGLInstance, red, green, blue, alpha);
+    //OpenGLClear(&graphicContext->OpenGLInstance, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glPointSize(10);
     glLineWidth(2);
@@ -1867,7 +1873,7 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
      
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-        printf("%5.2f, %5.2f\n", mouseX, mouseY);
+       // printf("%5.2f, %5.2f\n", mouseX, mouseY);
 
         glColor4f(0, 0.7, 0, 1);
         float mouseHitBoxOffset = 0.05f;
@@ -1876,20 +1882,141 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 
         const PXSize uiElementAmount = graphicContext->UIElementLookUp.EntryAmountCurrent;
 
-        for (int i = uiElementAmount; i >= 0; --i)
+        for (int i = uiElementAmount-1; i >= 0; --i)
         {
             PXDictionaryEntry pxDictionaryEntry;
 
             PXDictionaryIndex(&graphicContext->UIElementLookUp, i, &pxDictionaryEntry);
 
-            PXUIElement* const pxUIElement = (PXUIElement*)pxDictionaryEntry.Value;
+            PXUIElement* const pxUIElement = *(PXUIElement**)pxDictionaryEntry.Value;
 
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            switch (pxUIElement->Type)
+            {
+                case PXUIElementTypePanel:
+                {
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-            const float colorSelectedOffset = (pxUIElement->Hover == PXUIHoverStateHovered) * 0.3f;
+                    const float colorSelectedOffset = (pxUIElement->Hover == PXUIHoverStateHovered) * 0.3f;
 
-            glColor4f(pxUIElement->Red + colorSelectedOffset, pxUIElement->Green + colorSelectedOffset, pxUIElement->Blue + colorSelectedOffset, pxUIElement->Alpha);
-            glRectf(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
+                    glColor4f(pxUIElement->BackGroundColor.Red + colorSelectedOffset, pxUIElement->BackGroundColor.Green + colorSelectedOffset, pxUIElement->BackGroundColor.Blue + colorSelectedOffset, pxUIElement->BackGroundColor.Alpha);
+                    glRectf(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
+
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                    glLineWidth(5);
+                    glColor3f(0, 0, 0);
+                    glRectf(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
+
+                    break;
+                }
+                case PXUIElementTypeText:
+                {
+                    float startX = pxUIElement->X;
+                    float startY = pxUIElement->Y;
+                    float xB = pxUIElement->Width;
+                    float yB = pxUIElement->Height;
+
+                    float offsetX = 0;
+
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+                    
+
+                    glColor4f(pxUIElement->BackGroundColor.Red, pxUIElement->BackGroundColor.Green, pxUIElement->BackGroundColor.Blue, pxUIElement->BackGroundColor.Alpha);
+
+                    PXFont* const font = pxUIElement->FontID;
+
+                    for (PXSize i = 0; pxUIElement->Name[i] ; ++i)
+                    {
+                        PXSpriteFontCharacter* pxSpriteFontCharacter = PXSpriteFontGetCharacter(&font->FontElement[0], pxUIElement->Name[i]);
+                                               
+                        float sclaingWidth = 0.5;
+                        float scalingHeight = 0.8;
+
+                        float x1 = startX + offsetX; // offset
+                        float y1 = startY;
+                        float x2 = x1 + ((pxSpriteFontCharacter->Size[0] / 512.0f) * sclaingWidth);
+                        float y2 = y1 + ((pxSpriteFontCharacter->Size[1] / 512.0f) * scalingHeight);
+
+                        offsetX += ((pxSpriteFontCharacter->XAdvance / 512.0f) * sclaingWidth);
+
+                        if (pxUIElement->Name[i] == ' ')
+                        {
+                            continue;
+                        }
+
+#if 0
+                        float tx1 = 0;
+                        float ty1 = 0;
+                        float tx2 = 1;
+                        float ty2 = 1;
+
+#else
+                        float tx1 = pxSpriteFontCharacter->Position[0] / 512.0f;
+                        float ty1 = pxSpriteFontCharacter->Position[1] / 512.0f;
+                        float tx2 = (pxSpriteFontCharacter->Position[0] + pxSpriteFontCharacter->Size[0]) / 512.0f;
+                        float ty2 = (pxSpriteFontCharacter->Position[1] + pxSpriteFontCharacter->Size[1]) / 512.0f;
+#endif // 1
+
+
+                        
+                        glEnable(GL_TEXTURE_2D);
+                        //glActiveTexture(0);
+                        glBindTexture(GL_TEXTURE_2D, 1);
+
+#if 1
+                        glBegin(GL_POLYGON);
+                        glTexCoord2f(tx1, ty2); glColor3f(1, 0.55f, 0.25f); glVertex2f(x1, y1);// 11
+                        glTexCoord2f(tx2, ty2); glColor3f(1, 0.55f, 0.25f); glVertex2f(x2, y1);// 10
+                        glTexCoord2f(tx2, ty1); glColor3f(0.5f, 0.0f, 0); glVertex2f(x2, y2);// 00
+                        glTexCoord2f(tx1, ty1); glColor3f(0.5f, 0.0f, 0); glVertex2f(x1, y2);// 01
+                        glEnd();
+#else
+                        glRectf(-0.8, -0.8, 0.8, 0.8);
+#endif                     
+
+                        glBindTexture(GL_TEXTURE_2D, 0);
+                        glDisable(GL_TEXTURE_2D);           
+
+            
+
+                   
+                    }
+
+                    break;
+                }
+                case PXUIElementTypeButton:
+                {
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+                    const float colorSelectedOffset = (pxUIElement->Hover == PXUIHoverStateHovered) * 0.3f;
+
+                    glColor4f(pxUIElement->BackGroundColor.Red + colorSelectedOffset, pxUIElement->BackGroundColor.Green + colorSelectedOffset, pxUIElement->BackGroundColor.Blue + colorSelectedOffset, pxUIElement->BackGroundColor.Alpha);
+                    glRectf(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
+                    
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                    glLineWidth(5);
+                    glColor3f(0, 0, 0);
+                    glRectf(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
+
+                    break;
+                }
+                case PXUIElementTypeImage:
+                case PXUIElementTypeDropDown:
+                case PXUIElementTypeToggle:
+                case PXUIElementTypeCheckBox:
+                case PXUIElementTypeColorPicker:
+                case PXUIElementTypeSlider:
+                case PXUIElementTypeRadioButton:
+                case PXUIElementTypeToolTip:
+                case PXUIElementTypeCustom:
+                default:
+                    // Error
+                    break;
+            }
+
+        
+
+
             
    
 

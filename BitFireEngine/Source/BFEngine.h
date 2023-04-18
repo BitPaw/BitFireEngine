@@ -5,8 +5,8 @@
 #include <Graphic/PXCamera.h>
 #include <Device/PXMouse.h>
 #include <Media/PXFont.h>
-#include <Media/Image.h>
-#include <Media/Type.h>
+#include <Media/PXImage.h>
+#include <Media/PXType.h>
 #include <Graphic/PXGraphic.h>
 #include <OS/Thread/PXLock.h>
 #include <OS/Thread/PXThread.h>
