@@ -14,6 +14,7 @@
 #include <OS/Time/PXStopWatch.h>
 #include <OS/Processor/PXProcessor.h>
 #include <Math/PXCollision.h>
+#include <OS/Time/PXTime.h>
 
 #include <stdlib.h>
 #include <signal.h>
@@ -1463,6 +1464,10 @@ void BFEngineOnWindowsMouseCaptureChanged(const BFEngine* const receiver, const 
 
 void BFEngineStart(BFEngine* const pxBitFireEngine)
 {
+    pxBitFireEngine->TimeCounterStart = PXTimeCounterStampGet();
+    pxBitFireEngine->TimeFrequency = PXTimeCounterFrequencyGet();
+
+
     PXStopWatch stopwatch;
 
     // Create Banner
@@ -1593,7 +1598,15 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
 {
     // Pre-input
 
-      //---[Variable Reset]--------------------------------------------------
+    //---[Variable Reset]--------------------------------------------------
+    pxBitFireEngine->TimeCounterEnd = PXTimeCounterStampGet();
+
+    pxBitFireEngine->TimeCounterDelta = pxBitFireEngine->TimeCounterEnd - pxBitFireEngine->TimeCounterStart;
+    pxBitFireEngine->TimeCounterStart = pxBitFireEngine->TimeCounterEnd;
+
+    pxBitFireEngine->TimeFPS = pxBitFireEngine->TimeFrequency / (float)pxBitFireEngine->TimeCounterDelta;
+    pxBitFireEngine->TimeMS = ((1000 * pxBitFireEngine->TimeCounterDelta) / (float)pxBitFireEngine->TimeFrequency);
+
     PXTime current;
 
     PXTimeNow(&current);
@@ -1661,6 +1674,11 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
             float mouseBX = pxBitFireEngine->InputContainer.MouseInput.PositionNormalisized[0] - mouseHitBoxOffset* scale;
             float mouseBY = pxBitFireEngine->InputContainer.MouseInput.PositionNormalisized[1] + mouseHitBoxOffset* scale;
 
+            if (!pxUIElement->IsHoverable)
+            {
+                continue;
+            }
+
 #if 0
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             glColor4f(0, 0.7, 0, 1);
@@ -1671,7 +1689,7 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
 
             const PXBool isCollising = PXCollisionAABB(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height, mouseAX, mouseAY, mouseBX, mouseBY);
 
-            if (!isCollising)
+            if (!isCollising || !pxUIElement->IsHoverable)
             {
                 pxUIElement->Hover = PXUIHoverStateNotBeeingHovered;
                 continue;
@@ -1807,10 +1825,8 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
     glPointSize(10);
     glLineWidth(2);
 
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_ALPHA_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
     
 
 #if 0 // Render SkyBox 
@@ -1890,6 +1906,12 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 
             PXUIElement* const pxUIElement = *(PXUIElement**)pxDictionaryEntry.Value;
 
+           // glDisable(GL_DEPTH_TEST);
+            glEnable(GL_DEPTH_TEST);
+            glEnable(GL_ALPHA_TEST);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
             switch (pxUIElement->Type)
             {
                 case PXUIElementTypePanel:
@@ -1958,6 +1980,19 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 #endif // 1
 
 
+                  
+                        glEnable(GL_BLEND);
+                        glEnable(GL_STENCIL_TEST);
+
+
+                        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+                        glStencilMask(0xFF);
+                        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+
+                        glBlendFunc(GL_ONE, GL_ONE);
+                        //glDisable(GL_DEPTH_TEST);
+
+                        //glDepthFunc(GL_NOTEQUAL);
                         
                         glEnable(GL_TEXTURE_2D);
                         //glActiveTexture(0);
@@ -1977,7 +2012,7 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
                         glBindTexture(GL_TEXTURE_2D, 0);
                         glDisable(GL_TEXTURE_2D);           
 
-            
+                        glDisable(GL_BLEND);
 
                    
                     }

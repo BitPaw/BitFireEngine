@@ -41,7 +41,16 @@ extern "C"
         //---[Private}---------------------------------
         PXTime _lastUpdate;
 
+
+
         float _deltaTime;
+
+        PXInt64U TimeCounterStart;
+        PXInt64U TimeCounterDelta;
+        PXInt64U TimeCounterEnd;
+        PXInt64U TimeFrequency;
+        float TimeFPS;
+        float TimeMS;
 
         BFInputContainer InputContainer;
         //----------------------------------------------

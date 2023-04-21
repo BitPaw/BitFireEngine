@@ -51,22 +51,21 @@ void OnStartUp(BFEngine* const bitFireEngine)
 #if 1
     PXUIElementConstruct(&_infoPanel);
     _infoPanel.Type = PXUIElementTypePanel;
+    _infoPanel.IsHoverable = PXTrue;
     PXUIElementColorSet4F(&_infoPanel, 0.1, 0.1, 0.1, 1);
     PXUIElementPositionSetXYWH(&_infoPanel, -0.9, -0.9, -0.5, 0.8);
     PXGraphicUIElementRegister(graphicContext, &_infoPanel);
     //PXGraphicUIImage
 
 
-
     PXUIElementConstruct(&_infoPanelSpawn);
     _infoPanelSpawn.Type = PXUIElementTypeButton;
+    _infoPanelSpawn.IsHoverable = PXTrue;
     PXUIElementColorSet4F(&_infoPanelSpawn, 0.2, 0.1, 0.2, 1);
     PXUIElementPositionSetXYWH(&_infoPanelSpawn, -0.85f, -0.85f, -0.55f, -0.7f);
 
     PXGraphicUIElementRegister(graphicContext, &_infoPanelSpawn);
 #endif
-
-
 
 
     PXUIElementConstruct(&_infoPanelText);
@@ -80,6 +79,7 @@ void OnStartUp(BFEngine* const bitFireEngine)
     PXGraphicUIElementRegister(graphicContext, &_infoPanelText);
 
     //PXGraphicTextureLoadA(graphicContext, &_dialogBoxTexture, (char*)"C:\\Users\\BitPaw\\Videos\\SquareBlue.png");
+
 }
 
 void OnUpdateGameLogicEvent(BFEngine* const bitFireEngine, const float deltaTime)
@@ -88,9 +88,17 @@ void OnUpdateGameLogicEvent(BFEngine* const bitFireEngine, const float deltaTime
     float y = bitFireEngine->InputContainer.MouseInput.PositionNormalisized[1];
 
     sprintf_s(_infoPanelText.Name, 32, "Mouse Pos x:%6.3f y:%6.3f", x, y);
+
+
+    char buffer[64];
+
+    int bufferSize = sprintf_s(buffer, 64, "[BitFireEngine] FPS:%5.2f, ms:%4.2f", bitFireEngine->TimeFPS, bitFireEngine->TimeMS);
+
+    PXWindowTitleSetA(&bitFireEngine->WindowMain, buffer, bufferSize);
+
 }
     
 void OnShutDown(const BFEngine* bitFireEngine)
 {
-
+    PXWindowDestruct(&bitFireEngine->WindowMain);
 }
