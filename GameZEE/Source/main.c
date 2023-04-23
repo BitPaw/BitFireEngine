@@ -9,7 +9,6 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int nShowCmd)
 int main(int amountOFParameters, char** parameter)
 #endif  
 {
-
 #if 0
     PXSteam stream;
 

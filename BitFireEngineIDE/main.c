@@ -48,7 +48,15 @@ void OnStartUp(BFEngine* const bitFireEngine)
     
     PXGraphicFontLoadA(graphicContext, &DefaultFont, "Font/segoe.fnt");
 
+
+
+
+
+
+
+
 #if 1
+
     PXUIElementConstruct(&_infoPanel);
     _infoPanel.Type = PXUIElementTypePanel;
     _infoPanel.IsHoverable = PXTrue;
@@ -57,7 +65,6 @@ void OnStartUp(BFEngine* const bitFireEngine)
     PXGraphicUIElementRegister(graphicContext, &_infoPanel);
     //PXGraphicUIImage
 
-
     PXUIElementConstruct(&_infoPanelSpawn);
     _infoPanelSpawn.Type = PXUIElementTypeButton;
     _infoPanelSpawn.IsHoverable = PXTrue;
@@ -65,18 +72,31 @@ void OnStartUp(BFEngine* const bitFireEngine)
     PXUIElementPositionSetXYWH(&_infoPanelSpawn, -0.85f, -0.85f, -0.55f, -0.7f);
 
     PXGraphicUIElementRegister(graphicContext, &_infoPanelSpawn);
+
+
+
+
+
+
+ 
 #endif
 
 
+        // TEXT
+#if 1
     PXUIElementConstruct(&_infoPanelText);
     _infoPanelText.Type = PXUIElementTypeText;
     _infoPanelText.FontID = &DefaultFont;
     PXUIElementColorSet4F(&_infoPanelText, 1, 0.5, 0.5, 1);
     //PXUIElementPositionSetXYWH(&_infoPanelText, -0.85f, -0.85f, -0.55f, -0.7f);
-    PXUIElementPositionSetXYWH(&_infoPanelText, -0.95, -0.95, 0.55f, 0.7f);
+    PXUIElementPositionSetXYWH(&_infoPanelText, -0.82f, -0.82f, -0.48f, -0.67f);
+
+    sprintf_s(_infoPanelText.Name, 32, "Button");
 
 
     PXGraphicUIElementRegister(graphicContext, &_infoPanelText);
+#endif // 0
+
 
     //PXGraphicTextureLoadA(graphicContext, &_dialogBoxTexture, (char*)"C:\\Users\\BitPaw\\Videos\\SquareBlue.png");
 
@@ -87,7 +107,7 @@ void OnUpdateGameLogicEvent(BFEngine* const bitFireEngine, const float deltaTime
     float x = bitFireEngine->InputContainer.MouseInput.PositionNormalisized[0];
     float y = bitFireEngine->InputContainer.MouseInput.PositionNormalisized[1];
 
-    sprintf_s(_infoPanelText.Name, 32, "Mouse Pos x:%6.3f y:%6.3f", x, y);
+   // sprintf_s(_infoPanelText.Name, 32, "Mouse Pos x:%6.3f y:%6.3f", x, y);
 
 
     char buffer[64];

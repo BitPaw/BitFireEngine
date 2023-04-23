@@ -1644,7 +1644,7 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
     {
         PXGraphicContext* const graphicContext = &pxBitFireEngine->WindowMain.GraphicInstance;
 
-        OpenGLClearColor(&graphicContext->OpenGLInstance, 0.5, 0.5, 0.5, 1);
+        OpenGLClearColor(&graphicContext->OpenGLInstance, 0.15, 0.15, 0.15, 1);
         OpenGLClear(&graphicContext->OpenGLInstance, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
@@ -1814,16 +1814,16 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 
     //PXCameraUpdate(&MainCamera, deltaTime);
 
-    const float red = 0.2f;
-    const float green = 0.2f;
-    const float blue = 0.2f;
+    const float red = 0.15f;
+    const float green = 0.15f;
+    const float blue = 0.15f;
     const float alpha = 1.0f;
 
     //OpenGLClearColor(&graphicContext->OpenGLInstance, red, green, blue, alpha);
     //OpenGLClear(&graphicContext->OpenGLInstance, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glPointSize(10);
-    glLineWidth(2);
+    glPointSize(6);
+    glLineWidth(4);
 
 
 
@@ -1898,19 +1898,22 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 
         const PXSize uiElementAmount = graphicContext->UIElementLookUp.EntryAmountCurrent;
 
-        for (int i = uiElementAmount-1; i >= 0; --i)
+        // glDisable(GL_DEPTH_TEST);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_ALPHA_TEST);
+   
+        glDepthFunc(GL_LEQUAL);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
+
+        for (PXSize i = 0; i < uiElementAmount; ++i)
         {
             PXDictionaryEntry pxDictionaryEntry;
 
             PXDictionaryIndex(&graphicContext->UIElementLookUp, i, &pxDictionaryEntry);
 
-            PXUIElement* const pxUIElement = *(PXUIElement**)pxDictionaryEntry.Value;
-
-           // glDisable(GL_DEPTH_TEST);
-            glEnable(GL_DEPTH_TEST);
-            glEnable(GL_ALPHA_TEST);
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            PXUIElement* const pxUIElement = *(PXUIElement**)pxDictionaryEntry.Value;                                 
 
             switch (pxUIElement->Type)
             {
@@ -1924,7 +1927,10 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
                     glRectf(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
 
                     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                    glLineWidth(5);
+                    glColor3f(0, 0, 0);
+                    glRectf(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
+
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
                     glColor3f(0, 0, 0);
                     glRectf(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
 
@@ -1940,12 +1946,26 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
                     float offsetX = 0;
 
                     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                    
+                    PXFont* const font = pxUIElement->FontID;
+
+                  
+                    //glEnable(GL_STENCIL_TEST);
+                    glEnable(GL_TEXTURE_2D);
+                    glEnable(GL_DEPTH_TEST);
+         
+                    glEnable(GL_BLEND);
+
+                    //glClearStencil(0x00);
+                    //glClear(GL_STENCIL_BUFFER_BIT);
 
                     
-
-                    glColor4f(pxUIElement->BackGroundColor.Red, pxUIElement->BackGroundColor.Green, pxUIElement->BackGroundColor.Blue, pxUIElement->BackGroundColor.Alpha);
-
-                    PXFont* const font = pxUIElement->FontID;
+                    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+                     
+                    //glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_SRC_COLOR);
+                     
+                   // glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+                    glBindTexture(GL_TEXTURE_2D, 1);
 
                     for (PXSize i = 0; pxUIElement->Name[i] ; ++i)
                     {
@@ -1981,41 +2001,86 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 
 
                   
-                        glEnable(GL_BLEND);
-                        glEnable(GL_STENCIL_TEST);
+           
 
+                        // glDepthFunc(GL_ALWAYS);
 
-                        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-                        glStencilMask(0xFF);
-                        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+                      //  OpenGLClear(&graphicContext->OpenGLInstance, GL_STENCIL_BUFFER_BIT);
+                       // glStencilMask(0xFF); // We set the value the stencil buffer uses
+                       
+          
 
-                        glBlendFunc(GL_ONE, GL_ONE);
+                     
+                    
                         //glDisable(GL_DEPTH_TEST);
 
                         //glDepthFunc(GL_NOTEQUAL);
                         
-                        glEnable(GL_TEXTURE_2D);
+                   
                         //glActiveTexture(0);
-                        glBindTexture(GL_TEXTURE_2D, 1);
+                
+                      //  glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+                        //glStencilFunc(GL_ALWAYS, 0, 0xFF);
+                      //  glDisable(GL_DEPTH_TEST);
+                       // glStencilMask(0x00);
+                        //glDisable(GL_BLEND);
+
+                        glEnable(GL_BLEND);
+
+                        OpenGLClear(&graphicContext->OpenGLInstance, GL_STENCIL_BUFFER_BIT);
+                   
+                        glColor4f(1,1,1,1); // Set White color for fake-alpha 
+                        glBlendFunc(GL_ONE, GL_ONE); // Direct 1:1 mixing
+
+                 
+                        glStencilMask(0xFF); // Rendering mask is 1
+                        glStencilFunc(GL_ALWAYS, 1, 0xFF);  // We setthe behaviour, sete everything we render to 0xFF
+                        glStencilOp(GL_ZERO, GL_ZERO, GL_REPLACE);
 
 #if 1
                         glBegin(GL_POLYGON);
-                        glTexCoord2f(tx1, ty2); glColor3f(1, 0.55f, 0.25f); glVertex2f(x1, y1);// 11
-                        glTexCoord2f(tx2, ty2); glColor3f(1, 0.55f, 0.25f); glVertex2f(x2, y1);// 10
-                        glTexCoord2f(tx2, ty1); glColor3f(0.5f, 0.0f, 0); glVertex2f(x2, y2);// 00
-                        glTexCoord2f(tx1, ty1); glColor3f(0.5f, 0.0f, 0); glVertex2f(x1, y2);// 01
+                        glTexCoord2f(tx1, ty2); glVertex2f(x1, y1);// 11
+                        glTexCoord2f(tx2, ty2); glVertex2f(x2, y1);// 10
+                        glTexCoord2f(tx2, ty1); glVertex2f(x2, y2);// 00
+                        glTexCoord2f(tx1, ty1); glVertex2f(x1, y2);// 01
                         glEnd();
 #else
-                        glRectf(-0.8, -0.8, 0.8, 0.8);
-#endif                     
+                        float triColorA = 11.0f;
+                        float triColorB = 10.5f;
+                        float triColorC = 10.25f;
 
-                        glBindTexture(GL_TEXTURE_2D, 0);
-                        glDisable(GL_TEXTURE_2D);           
+                        glBegin(GL_POLYGON);
+                        glTexCoord2f(tx1, ty2); glColor4f(triColorA, triColorB, triColorC, 1); glVertex2f(x1, y1);// 11
+                        glTexCoord2f(tx2, ty2); glColor4f(triColorA, triColorB, triColorC, 1); glVertex2f(x2, y1);// 10
+                        glTexCoord2f(tx2, ty1); glColor4f(0, triColorC, 0, 1); glVertex2f(x2, y2);// 00
+                        glTexCoord2f(tx1, ty1); glColor4f(0, triColorC, 0, 1); glVertex2f(x1, y2);// 01
+                        glEnd();
+#endif
+
 
                         glDisable(GL_BLEND);
+                        
+                        
+                       // glBlendFunc(GL_ONE, GL_ONE);
 
-                   
+                        //glAlphaFunc();
+
+                       // glStencilFunc(GL_EQUAL, 1, 0xFF);
+                       // glStencilMask(0x00);
+                       // glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+                       // glDisable(GL_DEPTH_TEST);
+                      
+
+
+
+                        glEnable(GL_DEPTH_TEST);
                     }
+
+                    glBindTexture(GL_TEXTURE_2D, 0);
+                    glDisable(GL_TEXTURE_2D);
+
+                    glDisable(GL_BLEND);
+                    glDisable(GL_STENCIL_TEST);
 
                     break;
                 }
@@ -2029,7 +2094,10 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
                     glRectf(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
                     
                     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                    glLineWidth(5);
+                    glColor3f(0, 0, 0);
+                    glRectf(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
+
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
                     glColor3f(0, 0, 0);
                     glRectf(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
 
