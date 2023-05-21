@@ -101,7 +101,7 @@ void OnStartUp(BFEngine* const bitFireEngine)
     PXGraphicSkyboxRegisterA
     (
         graphicContext,
-        &skybox,
+        &_skybox,
         "Shader/SkyBox.vert",
         "Shader/SkyBox.frag",
         "Texture/SkyBox/Right.png",

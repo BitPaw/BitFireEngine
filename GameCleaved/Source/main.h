@@ -1,57 +1,52 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// Engine
+#include <BFEngine.h>
+#include <Entity/BFSprite.h>
+#include <Entity/BFSign.h>
 
-#include <Math/Geometry/Rectangle.hpp>
-#include <Math/Geometry/Form/Cube.h>
-#include <Time/StopWatch.h>
+// PXUltima
+#include <Graphic/PXGraphic.h>
+#include <OS/Time/PXStopWatch.h>
 #include <UI/UIText.h>
-#include <Entity/Sign.h>
-#include <Physic/GravityCube.h>
-#include <System/BitFireEngine.h>
-
-using namespace BF;
 
 float _deltaTime = 0;
-BF::Renderable _rectangleMesh;
+PXRenderable _rectangleMesh;
 
-FNT fnt;
 PXFont _font;
 
-BF::Texture testTextue;
+PXTexture testTextue;
 
-BF::SkyBox skybox;
-ShaderProgram worldShader;
-ShaderProgram hudShaderID;
+PXSkyBox _skybox;
+PXShaderProgram _worldShader;
+PXShaderProgram _hudShaderID;
 
-BF::GravityCube _gravityField;
+//PXGravityCube _gravityField;
 
-BF::Camera* _camera = nullptr;
-BF::Sprite _playerCharacterLuna;
-BF::Sprite _backGround;
-BF::Sprite _playerCharacterNyte;
-BF::Sprite _lamp;
-BF::Sprite _fireplace;
-BF::Sign _sign;
-BF::Sprite _floor;
+BFSprite _playerCharacterLuna;
+BFSprite _backGround;
+BFSprite _playerCharacterNyte;
+BFSprite _lamp;
+BFSprite _fireplace;
+BFSign _sign;
+BFSprite _floor;
 
-BF::UIDialogBox _dialogBox;
-
-bool moveCamera = false;
+//BFUIDialogBox _dialogBox;
 
 
-BF::Model _cubeModel;
-ShaderProgram _simplex;
+PXModel _cubeModel;
+PXShaderProgram _simplex;
 
 // UI
-BF::Sprite _menuFrame;
-BF::Sprite _menuButtonA;
-BF::UIText _buttonTextA;
-BF::Sprite _menuButtonB;
-BF::Sprite _menuButtonC;
+BFSprite _menuFrame;
+BFSprite _menuButtonA;
+//BFUIText _buttonTextA;
+BFSprite _menuButtonB;
+BFSprite _menuButtonC;
 
-void OnUpdateUI(const BitFireEngine* bitFireEngine);
-void OnStartUp(BitFireEngine* const bitFireEngine);
-void OnShutDown(const BitFireEngine* bitFireEngine);
-void OnUpdateGameLogic(const BitFireEngine* bitFireEngine, const float deltaTime);
-void OnUpdateInput(BitFireEngine* const bitFireEngine, BF::InputContainer& input);
+void OnUpdateUI(const BFEngine* bitFireEngine);
+void OnStartUp(BFEngine* const bitFireEngine);
+void OnShutDown(const BFEngine* bitFireEngine);
+void OnUpdateGameLogic(const BFEngine* bitFireEngine, const float deltaTime);
+void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input);

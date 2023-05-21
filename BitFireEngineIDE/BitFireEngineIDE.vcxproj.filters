@@ -19,19 +19,4 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="resource.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="BitFireEngineIDE.rc">
-      <Filter>Ressourcendateien</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="C:\Users\BitPaw\Videos\SquareBlue.ico">
-      <Filter>Ressourcendateien</Filter>
-    </Image>
-  </ItemGroup>
 </Project>

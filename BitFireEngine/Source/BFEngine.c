@@ -4,12 +4,10 @@
 #include <Media/PXModel.h>
 #include <Graphic/PXGraphic.h>
 #include <Math/PXMatrix.h>
-#include <File/PXDataStream.h>
 #include <Event/PXEvent.h>
-#include <Device/Controller.h>
 #include <Device/InputButton.h>
 
-#include <OS/File/File.h>
+#include <OS/File/PXFile.h>
 #include <OS/Thread/Await.h>
 #include <OS/Time/PXStopWatch.h>
 #include <OS/Processor/PXProcessor.h>
@@ -23,10 +21,10 @@
 #include <Log/PXLog.h>
 
 
-OpenGLID _matrixModelID;
-OpenGLID _matrixViewID;
-OpenGLID _matrixProjectionID;
-OpenGLID _materialTextureID;
+PXOpenGLID _matrixModelID;
+PXOpenGLID _matrixViewID;
+PXOpenGLID _matrixProjectionID;
+PXOpenGLID _materialTextureID;
 RefreshRateMode RefreshRate;
 
 
@@ -1290,9 +1288,10 @@ void ByteToString(char* string, size_t value)
 
 void BFEngineConstruct(BFEngine* const pxBitFireEngine)
 {
-    MemoryClear(pxBitFireEngine, sizeof(BFEngine));
+    PXMemoryClear(pxBitFireEngine, sizeof(BFEngine));
 
     PXCameraConstruct(&pxBitFireEngine->MainCamera);
+    PXWindowConstruct(&pxBitFireEngine->WindowMain);
 }
 
 void BFEngineOnMouseButton(const BFEngine* const receiver, const PXWindow* sender, const MouseButton mouseButton, const ButtonState buttonState)
@@ -1427,12 +1426,12 @@ void BFEngineOnKeyBoardKey(const BFEngine* const engine, const PXWindow* sender,
     {
         case ButtonStateDown:
         {
-            InputButtonIncrement(inputButton);
+            PXInputButtonIncrement(inputButton);
             break;
         }
         case ButtonStateRelease:
         {
-            InputButtonReset(inputButton);
+            PXInputButtonReset(inputButton);
             break;
         }
     }
@@ -1454,7 +1453,7 @@ void BFEngineOnWindowSizeChanged(const BFEngine* const receiver, const PXWindow*
 
     printf("[Camera] Is now %zi x %zi\n", width, height);
 
-    OpenGLViewSize(&sender->GraphicInstance.OpenGLInstance, 0, 0, width, height);
+    PXOpenGLViewSize(&sender->GraphicInstance.OpenGLInstance, 0, 0, width, height);
 }
 
 void BFEngineOnWindowsMouseCaptureChanged(const BFEngine* const receiver, const PXWindow* sender)
@@ -1469,6 +1468,8 @@ void BFEngineStart(BFEngine* const pxBitFireEngine)
 
 
     PXStopWatch stopwatch;
+
+    PXStopWatchConstruct(&stopwatch);
 
     // Create Banner
     {
@@ -1527,6 +1528,7 @@ void BFEngineStart(BFEngine* const pxBitFireEngine)
     // Setupwindow
     {
         PXWindow* const window = &pxBitFireEngine->WindowMain;
+        PXWindowConstruct(window);
 
         window->EventReceiver = pxBitFireEngine;
         window->MouseClickCallBack = BFEngineOnMouseButton;
@@ -1535,7 +1537,9 @@ void BFEngineStart(BFEngine* const pxBitFireEngine)
         window->WindowCreatedCallBack = BFEngineOnWindowCreated;
         window->WindowSizeChangedCallBack = BFEngineOnWindowSizeChanged;
 
-        PXWindowCreateA(window, -1, -1, "[BFE] <BitFireEngine>", 1);
+        PXText pxText;
+        PXTextMakeFixedA(&pxText, "[BFE] <BitFireEngine>");    
+        PXWindowCreate(window, -1, -1, &pxText, 1);
 
         PXAwaitChangeCU(&window->IsRunning);
     }
@@ -1577,7 +1581,7 @@ void BFEngineStart(BFEngine* const pxBitFireEngine)
 
     //AwaitChange(!_mainWindow.IsRunning);
 
-    OpenGLContextSelect(&pxBitFireEngine->WindowMain.GraphicInstance.OpenGLInstance);
+    PXOpenGLContextSelect(&pxBitFireEngine->WindowMain.GraphicInstance.OpenGLInstance);
 
     InvokeEvent(pxBitFireEngine->StartUpCallBack, pxBitFireEngine);
 
@@ -1644,15 +1648,15 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
     {
         PXGraphicContext* const graphicContext = &pxBitFireEngine->WindowMain.GraphicInstance;
 
-        OpenGLClearColor(&graphicContext->OpenGLInstance, 0.15, 0.15, 0.15, 1);
-        OpenGLClear(&graphicContext->OpenGLInstance, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        PXOpenGLClearColor(&graphicContext->OpenGLInstance, 0.15, 0.15, 0.15, 1);
+        PXOpenGLClear(&graphicContext->OpenGLInstance, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
 
     //---<Fetch UI-Input>----------------------------------------------------------
     {
         PXGraphicContext* const graphicContext = &pxBitFireEngine->WindowMain.GraphicInstance;
-        OpenGLContext* const openGLContext = &graphicContext->OpenGLInstance;
+        PXOpenGLContext* const openGLContext = &graphicContext->OpenGLInstance;
 
         const PXSize uiElementAmount = graphicContext->UIElementLookUp.EntryAmountCurrent;
 
@@ -1709,6 +1713,9 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
 
 
    //---<Update everything>----------------------------------------------------
+   InvokeEvent(pxBitFireEngine->UpdateInputCallBack, pxBitFireEngine, &pxBitFireEngine->InputContainer);
+   // 
+   // 
     //UpdateInput(_inputContainer);
 
 
@@ -1808,9 +1815,10 @@ void BFEngineStop(BFEngine* const pxBitFireEngine)
 
 void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 {
-    PXCamera* const mainCamera = &pxBitFireEngine->WindowMain;
+    PXCamera* const mainCamera = &pxBitFireEngine->MainCamera;
     PXGraphicContext* const graphicContext = &pxBitFireEngine->WindowMain.GraphicInstance;
-    OpenGLContext* const openGLContext = &graphicContext->OpenGLInstance;
+    PXOpenGLContext* const openGLContext = &graphicContext->OpenGLInstance;
+    PXWindow* const window = (PXWindow*)graphicContext->AttachedWindow;
 
     //PXCameraUpdate(&MainCamera, deltaTime);
 
@@ -1829,10 +1837,9 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 
     
 
-#if 0 // Render SkyBox 
+#if 1 // Render SkyBox 
 
     PXSkyBox* skybox = graphicContext->_currentSkyBox;
-    OpenGLContext* openGLContext = &graphicContext->OpenGLInstance;
 
     if (skybox)
     {
@@ -1841,9 +1848,9 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
         PXMatrix4x4FCopy(&mainCamera->MatrixView, &viewTri);
         PXMatrix4x4FResetAxisW(&viewTri); // if removed, you can move out of the skybox
 
-        OpenGLPolygonRenderOrder(openGLContext, OpenGLPolygonRenderOrderModeCounterClockwise);
-        OpenGLSettingChange(openGLContext, OpenGLCULL_FACE, PXFalse);
-        OpenGLSettingChange(openGLContext, OpenGLDEPTH_TEST, PXFalse);
+        PXOpenGLPolygonRenderOrder(openGLContext, PXOpenGLPolygonRenderOrderModeCounterClockwise);
+        PXOpenGLSettingChange(openGLContext, PXOpenGLCULL_FACE, PXFalse);
+        PXOpenGLSettingChange(openGLContext, PXOpenGLDEPTH_TEST, PXFalse);
         //OpenGLPolygonRenderOrder(openGLContext, OpenGLPolygonRenderOrderModeClockwise);
 
         PXRenderable* renderable = &skybox->Renderable;
@@ -1852,30 +1859,31 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
         {
             const unsigned int shaderID = renderable->MeshSegmentList[0].ShaderID;
 
-            OpenGLShaderProgramUse(openGLContext, shaderID);
+            PXOpenGLShaderProgramUse(openGLContext, shaderID);         
 
-            CameraDataGet(mainCamera, shaderID);
-            CameraDataUpdate((PXWindow*)graphicContext->AttachedWindow, mainCamera);
+            CameraDataGet(window, shaderID);
+            CameraDataUpdate(window, mainCamera);
 
-            OpenGLShaderVariableMatrix4fv(openGLContext, _matrixViewID, 1, 0, viewTri.Data);
+            PXOpenGLShaderVariableMatrix4fv(openGLContext, _matrixViewID, 1, 0, viewTri.Data);
         }
 
-        OpenGLVertexArrayBind(openGLContext, renderable->VAO);
-        OpenGLBufferBind(openGLContext, OpenGLBufferArray, renderable->VBO);
-        OpenGLBufferBind(openGLContext, OpenGLBufferElementArray, renderable->IBO);
-        OpenGLTextureBind(openGLContext, OpenGLTextureTypeCubeMap, skybox->TextureCube.ID);
+        PXOpenGLVertexArrayBind(openGLContext, renderable->VAO);
+        PXOpenGLBufferBind(openGLContext, PXOpenGLBufferArray, renderable->VBO);
+        PXOpenGLBufferBind(openGLContext, PXOpenGLBufferElementArray, renderable->IBO);
+        PXOpenGLTextureBind(openGLContext, PXOpenGLTextureTypeCubeMap, skybox->TextureCube.ID);
 
-        OpenGLDrawElements(openGLContext, OpenGLRenderQuads, 24u, OpenGLTypeIntegerUnsigned, 0);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        PXOpenGLDrawElements(openGLContext, PXOpenGLRenderQuads, 24u, PXOpenGLTypeIntegerUnsigned, 0);
 
-        OpenGLTextureUnbind(openGLContext, OpenGLTextureTypeCubeMap);
-        OpenGLBufferUnbind(openGLContext, OpenGLBufferArray);
-        OpenGLBufferUnbind(openGLContext, OpenGLBufferElementArray);
-        OpenGLVertexArrayUnbind(openGLContext);
+        PXOpenGLTextureUnbind(openGLContext, PXOpenGLTextureTypeCubeMap);
+        PXOpenGLBufferUnbind(openGLContext, PXOpenGLBufferArray);
+        PXOpenGLBufferUnbind(openGLContext, PXOpenGLBufferElementArray);
+        PXOpenGLVertexArrayUnbind(openGLContext);
 
         // OpenGLSettingChange(openGLContext, OpenGLCULL_FACE, PXTrue);
-        OpenGLSettingChange(openGLContext, OpenGLDEPTH_TEST, PXTrue);
+        PXOpenGLSettingChange(openGLContext, PXOpenGLDEPTH_TEST, PXTrue);
 
-        OpenGLPolygonRenderOrder(openGLContext, OpenGLPolygonRenderOrderModeCounterClockwise);
+        PXOpenGLPolygonRenderOrder(openGLContext, PXOpenGLPolygonRenderOrderModeCounterClockwise);
     }
 
 #endif   
@@ -2027,7 +2035,7 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 
                         glEnable(GL_BLEND);
 
-                        OpenGLClear(&graphicContext->OpenGLInstance, GL_STENCIL_BUFFER_BIT);
+                        PXOpenGLClear(&graphicContext->OpenGLInstance, GL_STENCIL_BUFFER_BIT);
                    
                         glColor4f(1,1,1,1); // Set White color for fake-alpha 
                         glBlendFunc(GL_ONE, GL_ONE); // Direct 1:1 mixing
@@ -2178,9 +2186,9 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 
         //glFrontFace(0x0900);
 
-        OpenGLVertexArrayBind(openGLContext, pxRenderable->VAO); // VAO
+        PXOpenGLVertexArrayBind(&graphicContext->OpenGLInstance, pxRenderable->VAO); // VAO
 
-        OpenGLBufferBind(openGLContext, OpenGLBufferArray, pxRenderable->VBO);
+        PXOpenGLBufferBind(&graphicContext->OpenGLInstance, PXOpenGLBufferArray, pxRenderable->VBO);
 
         // Render mesh segments
 
@@ -2198,9 +2206,9 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
             const PXRenderableMeshSegment* const pxRenderableMeshSegment = &pxRenderable->MeshSegmentList[i];
             const size_t renderAmount = pxRenderableMeshSegment->NumberOfVertices;
 
-            const OpenGLRenderMode renderMode = PXGraphicRenderModeToOpenGL(pxRenderableMeshSegment->RenderMode);
+            const PXOpenGLRenderMode renderMode = PXGraphicRenderModeToPXOpenGL(pxRenderableMeshSegment->RenderMode);
 
-            OpenGLTextureBind(openGLContext, OpenGLTextureType2D, pxRenderableMeshSegment->TextureID);
+            PXOpenGLTextureBind(&graphicContext->OpenGLInstance, PXOpenGLTextureType2D, pxRenderableMeshSegment->TextureID);
 
             // Render
             //glDrawBuffer(GL_POINTS);
@@ -2209,20 +2217,20 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
             //glDrawArrays(GL_LINES, 0, pxRenderable->RenderSize);
             if (ownsIBO)
             {
-                OpenGLBufferBind(openGLContext, OpenGLBufferElementArray, pxRenderable->IBO);
+                PXOpenGLBufferBind(&graphicContext->OpenGLInstance, PXOpenGLBufferElementArray, pxRenderable->IBO);
                 // OpenGLDrawElements(openGLContext, renderMode, renderAmount, OpenGLTypeByteUnsigned, 0);
-                OpenGLBufferUnbind(openGLContext, OpenGLBufferElementArray);
+                PXOpenGLBufferUnbind(&graphicContext->OpenGLInstance, PXOpenGLBufferElementArray);
             }
             else
             {
-                OpenGLDrawArrays(openGLContext, renderMode, renderAmountOffset, renderAmount);
+                PXOpenGLDrawArrays(&graphicContext->OpenGLInstance, renderMode, renderAmountOffset, renderAmount);
             }
 
             renderAmountOffset += renderAmount;
         }
 
-        OpenGLBufferUnbind(openGLContext, OpenGLBufferArray);
-        OpenGLVertexArrayUnbind(openGLContext);
+        PXOpenGLBufferUnbind(&graphicContext->OpenGLInstance, PXOpenGLBufferArray);
+        PXOpenGLVertexArrayUnbind(&graphicContext->OpenGLInstance);
     }
 
 

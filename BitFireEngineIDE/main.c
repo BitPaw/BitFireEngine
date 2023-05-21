@@ -4,7 +4,7 @@ void OnStartUp(BFEngine* const bitFireEngine);
 void OnShutDown(const BFEngine* bitFireEngine);
 void OnUpdateGameLogicEvent(BFEngine* const bitFireEngine, const float deltaTime);
 
-#if !defined(_DEBUG) && defined(OSWindows)
+#if !defined(_DEBUG) && defined(OSWindows) && 0
 #include <windows.h>
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char* name, int nShowCmd)
 #else
@@ -46,16 +46,14 @@ void OnStartUp(BFEngine* const bitFireEngine)
 {
     PXGraphicContext* const graphicContext = &bitFireEngine->WindowMain.GraphicInstance;
     
-    PXGraphicFontLoadA(graphicContext, &DefaultFont, "Font/segoe.fnt");
-
-
-
-
-
-
-
-
 #if 1
+
+    PXText pxText;
+
+    PXTextMakeFixedA(&pxText, "Font/segoe.fnt");
+
+    PXGraphicFontLoad(graphicContext, &DefaultFont, &pxText);
+
 
     PXUIElementConstruct(&_infoPanel);
     _infoPanel.Type = PXUIElementTypePanel;
@@ -73,17 +71,11 @@ void OnStartUp(BFEngine* const bitFireEngine)
 
     PXGraphicUIElementRegister(graphicContext, &_infoPanelSpawn);
 
-
-
-
-
-
- 
-#endif
+	
 
 
         // TEXT
-#if 1
+
     PXUIElementConstruct(&_infoPanelText);
     _infoPanelText.Type = PXUIElementTypeText;
     _infoPanelText.FontID = &DefaultFont;
@@ -95,6 +87,8 @@ void OnStartUp(BFEngine* const bitFireEngine)
 
 
     PXGraphicUIElementRegister(graphicContext, &_infoPanelText);
+
+
 #endif // 0
 
 
@@ -104,6 +98,7 @@ void OnStartUp(BFEngine* const bitFireEngine)
 
 void OnUpdateGameLogicEvent(BFEngine* const bitFireEngine, const float deltaTime)
 {
+#if 1
     float x = bitFireEngine->InputContainer.MouseInput.PositionNormalisized[0];
     float y = bitFireEngine->InputContainer.MouseInput.PositionNormalisized[1];
 
@@ -115,7 +110,7 @@ void OnUpdateGameLogicEvent(BFEngine* const bitFireEngine, const float deltaTime
     int bufferSize = sprintf_s(buffer, 64, "[BitFireEngine] FPS:%5.2f, ms:%4.2f", bitFireEngine->TimeFPS, bitFireEngine->TimeMS);
 
     PXWindowTitleSetA(&bitFireEngine->WindowMain, buffer, bufferSize);
-
+#endif
 }
     
 void OnShutDown(const BFEngine* bitFireEngine)

@@ -2,14 +2,14 @@
 #include <stdlib.h>
 
 #include <UI/UIText.h>
-#include <System/BFEngine.h>
+#include <BFEngine.h>
 
 
 //BF::UIText* text;
 //BF::Model* sphere;
 PXTexture _blockTexture;
 
-PXSkyBox skybox;
+PXSkyBox _skybox;
 PXRenderable _cubeModel;
 
 ShaderProgram _worldShader;

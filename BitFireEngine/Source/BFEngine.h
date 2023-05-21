@@ -1,9 +1,6 @@
 #ifndef BFEngineINCLUDE
 #define BFEngineINCLUDE
 
-#include <Container/LinkedList/PXLinkedList.h>
-#include <Graphic/PXCamera.h>
-#include <Device/PXMouse.h>
 #include <Media/PXFont.h>
 #include <Media/PXImage.h>
 #include <Media/PXType.h>
@@ -12,6 +9,7 @@
 #include <OS/Thread/PXThread.h>
 #include <OS/Window/PXWindow.h>
 #include <OS/Time/PXTime.h>
+#include <Graphic/PXCamera.h>
 
 #include <System/Device/KeyBoard/KeyBoardCache.h>
 
