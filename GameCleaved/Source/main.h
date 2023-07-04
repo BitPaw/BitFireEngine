@@ -3,7 +3,6 @@
 
 // Engine
 #include <BFEngine.h>
-#include <Entity/BFSprite.h>
 #include <Entity/BFSign.h>
 
 // PXUltima
@@ -24,13 +23,13 @@ PXShaderProgram _hudShaderID;
 
 //PXGravityCube _gravityField;
 
-BFSprite _playerCharacterLuna;
-BFSprite _backGround;
-BFSprite _playerCharacterNyte;
-BFSprite _lamp;
-BFSprite _fireplace;
+PXSprite _playerCharacterLuna;
+PXSprite _backGround;
+PXSprite _playerCharacterNyte;
+PXSprite _lamp;
+PXSprite _fireplace;
 BFSign _sign;
-BFSprite _floor;
+PXSprite _floor;
 
 //BFUIDialogBox _dialogBox;
 
@@ -39,11 +38,11 @@ PXModel _cubeModel;
 PXShaderProgram _simplex;
 
 // UI
-BFSprite _menuFrame;
-BFSprite _menuButtonA;
+PXSprite _menuFrame;
+PXSprite _menuButtonA;
 //BFUIText _buttonTextA;
-BFSprite _menuButtonB;
-BFSprite _menuButtonC;
+PXSprite _menuButtonB;
+PXSprite _menuButtonC;
 
 void OnUpdateUI(const BFEngine* bitFireEngine);
 void OnStartUp(BFEngine* const bitFireEngine);

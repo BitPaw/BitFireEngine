@@ -56,6 +56,15 @@ void OnStartUp(BFEngine* const bitFireEngine)
     _hudShaderID.ID = -1;
 
 
+    {
+        PXText vertexShader;
+        PXTextMakeFixedNamedA(&vertexShader, vertexShaderBuffer, "Shader/HUD.vert");
+
+        PXText fragmentShader;
+        PXTextMakeFixedNamedA(&fragmentShader, fragmentShaderBuffer, "Shader/HUD.frag");
+
+        PXGraphicShaderProgramLoadGLSL(&bitFireEngine->WindowMain.GraphicInstance, &_hudShaderID, &vertexShader, &fragmentShader);
+    }
 
     //---<Load>
     {
@@ -69,15 +78,7 @@ void OnStartUp(BFEngine* const bitFireEngine)
     }
 
 
-    {
-        PXText vertexShader;
-        PXTextMakeFixedNamedA(&vertexShader, vertexShaderBuffer, "Shader/HUD.vert");
 
-        PXText fragmentShader;
-        PXTextMakeFixedNamedA(&fragmentShader, fragmentShaderBuffer, "Shader/HUD.frag");
-
-        PXGraphicShaderProgramLoadGLSL(&bitFireEngine->WindowMain.GraphicInstance, &_hudShaderID, &vertexShader, &fragmentShader);
-    }
 
     {
         PXText vertexShader;
@@ -92,10 +93,8 @@ void OnStartUp(BFEngine* const bitFireEngine)
     //  //GameSystem.Load(GameSystem.ShaderHitBox, L"Shader/HitBox.vert", L"Shader/HitBox.frag");
 
 
-
-
+    if(0)
     {
-
         PXText shaderVertex;
         PXText shaderFragment;
         PXText textureRight;
@@ -113,9 +112,9 @@ void OnStartUp(BFEngine* const bitFireEngine)
         PXTextMakeFixedNamedA(&textureTop, textureTopBuffer, "Texture/SkyBox_Top.png");
         PXTextMakeFixedNamedA(&textureBottom, textureBottomBuffer, "Texture/SkyBox_Bottom.png");
         PXTextMakeFixedNamedA(&textureBack, textureBackBuffer, "Texture/SkyBox_Side.png");
-        PXTextMakeFixedNamedA(&textureFront, textureFrontBuffer, "Texture/SkyBox_Side.png");
+        PXTextMakeFixedNamedA(&textureFront, textureFrontBuffer, "Texture/SkyBox_Side.png");       
 
-        PXGraphicSkyboxRegisterD
+        PXActionResult skyBuxRegisterResult = PXGraphicSkyboxRegisterD
         (
             &bitFireEngine->WindowMain.GraphicInstance,
             &_skybox,
@@ -127,9 +126,32 @@ void OnStartUp(BFEngine* const bitFireEngine)
             &textureBottom,
             &textureBack,
             &textureFront
-        );
-
+        ); 
     }
+
+    PXMemoryClear(&_backGround, sizeof(PXSprite));
+
+    PXMatrix4x4FScaleBy(&_backGround.Position, 0.5, &_backGround.Position);
+
+    {
+        PXVector3F moveTo = { 13.5, -0.2, -5 };
+
+        PXMatrix4x4FMoveTo(&_backGround.Position, &moveTo, &_backGround.Position);
+    }
+   
+    {
+        PXText filePath;
+        PXTextMakeFixedA(&filePath, "Texture/MissingTexture.bmp");
+
+        PXGraphicTextureLoad(&bitFireEngine->WindowMain.GraphicInstance, &_backGround.Texture, &filePath);
+    }
+
+    PXGraphicSpriteRegister(&bitFireEngine->WindowMain.GraphicInstance, &_backGround);
+    
+
+
+    //_backGround.ShaderUse(_simplex);
+    //_backGround.MeshShare(_rectangleMesh);
 
 
 
@@ -138,22 +160,6 @@ void OnStartUp(BFEngine* const bitFireEngine)
 #if 0
 
   
-
-    bitFireEngine->Load
-    (
-        _skybox,
-        L"Shader/SkyBox.vert",
-        L"Shader/SkyBox.frag",
-        L"Texture/SkyBox_Side.png",
-        L"Texture/SkyBox_Side.png",
-        L"Texture/SkyBox_Top.png",
-        L"Texture/SkyBox_Bottom.png",
-        L"Texture/SkyBox_Side.png",
-        L"Texture/SkyBox_Side.png"
-    );
-
-    bitFireEngine->Load(testTextue, L"Texture/SkyBox.bmp", false);
-
     // PXCube cube;
 
      //GameSystem.Resource.Add(_cubeRenderable, cube.VertexList, cube.VertexListSize, cube.IndexList, cube.IndexListSize);
@@ -338,13 +344,12 @@ void OnUpdateGameLogic(const BFEngine* bitFireEngine, const float deltaTime)
 
     PXCameraFollow(&bitFireEngine->MainCamera, deltaTime);
 
-
-    char buffer[64];
     PXText pxText;
+    PXTextConstructBufferW(&pxText, 64);
 
-    int bufferSize = sprintf_s(buffer, 64, "[BitFireEngine] FPS:%5.2f, ms:%4.2f", bitFireEngine->TimeFPS, bitFireEngine->TimeMS);
-    PXTextMakeExternA(&pxText, buffer, bufferSize);
+    PXTextClear(&pxText);
 
+    PXTextPrint(&pxText, L"[BitFireEngine] FPS:%5.2f, ms:%4.2f", bitFireEngine->TimeFPS, bitFireEngine->TimeMS);
 
     PXWindowTitleSet(&bitFireEngine->WindowMain, &pxText);
 
@@ -353,17 +358,23 @@ void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input)
 {
 #if 1
     PXWindow* pxWindow = &bitFireEngine->WindowMain;
-    PXKeyBoard* keyboard = &input->KeyBoardInput;
+    PXKeyBoard* keyboard = &bitFireEngine->WindowMain.KeyBoardCurrentInput;
     PXMouse* mouse = &input->MouseInput;
     PXCamera* camera = &bitFireEngine->MainCamera;
     PXVector3F movement = {0,0,0};
 
-    if (PXKeyBoardKeyPressedGet(keyboard, KeyShiftLeft)) { PXVector3FAddXYZ(&movement, 0, -1, 0, &movement); }
-    if (PXKeyBoardKeyPressedGet(keyboard, KeyW)) { PXVector3FAddXYZ(&movement, 0, 0, 1, &movement); }
-    if (PXKeyBoardKeyPressedGet(keyboard, KeyS)) { PXVector3FAddXYZ(&movement, -1, 0, 0, &movement); }
-    if (PXKeyBoardKeyPressedGet(keyboard, KeyA)) { PXVector3FAddXYZ(&movement, 0, 0, -1, &movement); }
-    if (PXKeyBoardKeyPressedGet(keyboard, KeyD)) { PXVector3FAddXYZ(&movement, 1, 0, 0, &movement); }
-    if (PXKeyBoardKeyPressedGet(keyboard, KeySpace))
+    if (keyboard->Commands & KeyBoardIDShiftLeft)
+    {
+        PXVector3FAddXYZ(&movement, 0, -1, 0, &movement); 
+    }
+    if (keyboard->Letters & KeyBoardIDLetterW)
+    {
+        PXVector3FAddXYZ(&movement, 0, 0, 1, &movement); 
+    }
+    if (keyboard->Letters & KeyBoardIDLetterA) { PXVector3FAddXYZ(&movement, -1, 0, 0, &movement); }
+    if (keyboard->Letters & KeyBoardIDLetterS) { PXVector3FAddXYZ(&movement, 0, 0, -1, &movement); }
+    if (keyboard->Letters & KeyBoardIDLetterD) { PXVector3FAddXYZ(&movement, 1, 0, 0, &movement); }
+    if (keyboard->Letters & KeyBoardIDSpace)
     {
 
 
@@ -388,7 +399,7 @@ void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input)
 
     if(PXWindowInteractable(pxWindow) || 1)
     {
-       // PXCameraMove(camera, &movement);
+        PXCameraMove(camera, &movement);
 
         PXVector3F mouseMovement = { mouse->Delta[0], mouse->Delta[1], 0};
 

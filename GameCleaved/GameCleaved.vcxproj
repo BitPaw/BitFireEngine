@@ -41,6 +41,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <CopyFileToFolders Include="..\..\PXUltima\Code\[Export]\PXUltimaC\64B-Windows-Debug\PXUltima.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
     <None Include="Shader\HitBox.frag" />
     <None Include="Shader\HitBox.vert" />
     <None Include="Shader\HUD.frag" />
@@ -133,42 +136,42 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltima/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(SolutionDir)__Dependencies__/lib_Windows_10_32_Debug/;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltima\Source\</IncludePath>
+    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltimaC\</IncludePath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltima/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(SolutionDir)__Dependencies__/lib_Windows_10_32_Release/;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltima\Source\</IncludePath>
+    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltimaC\</IncludePath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltima/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(SolutionDir)Dependencies\lib32XP;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltima\Source\</IncludePath>
+    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltimaC\</IncludePath>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltima/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(SolutionDir)__Dependencies__/lib_Windows_10_64_Debug/;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltima\Source\</IncludePath>
+    <LibraryPath>C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltimaC/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(SolutionDir)__Dependencies__/lib_Windows_10_64_Debug/;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltimaC\</IncludePath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltima/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(SolutionDir)__Dependencies__/lib_Windows_10_64_Release/;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltima\Source\</IncludePath>
+    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltimaC\</IncludePath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|x64'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltima/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(SolutionDir)Dependencies\lib32XP;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltima\Source\</IncludePath>
+    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltimaC\</IncludePath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
   </PropertyGroup>
@@ -180,8 +183,8 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;$(SolutionDir)BitFireEngine\Source;$(SolutionDir)SystemResource/Source;$(SolutionDir)PXUltima/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsC</CompileAs>
+      <CallingConvention>StdCall</CallingConvention>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -201,9 +204,9 @@
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;$(SolutionDir)BitFireEngine\Source;$(SolutionDir)SystemResource/Source;$(SolutionDir)PXUltima/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <CompileAs>CompileAsC</CompileAs>
+      <CallingConvention>StdCall</CallingConvention>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -225,10 +228,10 @@
       <ConformanceMode>true</ConformanceMode>
       <Optimization>Disabled</Optimization>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;$(SolutionDir)BitFireEngine\Source;$(SolutionDir)SystemResource/Source;$(SolutionDir)PXUltima/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <CompileAs>CompileAsC</CompileAs>
+      <CallingConvention>StdCall</CallingConvention>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -246,8 +249,8 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;$(SolutionDir)BitFireEngine\Source;$(SolutionDir)SystemResource/Source;$(SolutionDir)PXUltima/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsC</CompileAs>
+      <CallingConvention>StdCall</CallingConvention>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -267,9 +270,9 @@
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;$(SolutionDir)BitFireEngine\Source;$(SolutionDir)SystemResource/Source;$(SolutionDir)PXUltima/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <CompileAs>CompileAsC</CompileAs>
+      <CallingConvention>StdCall</CallingConvention>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -291,10 +294,10 @@
       <ConformanceMode>true</ConformanceMode>
       <Optimization>Disabled</Optimization>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;$(SolutionDir)BitFireEngine\Source;$(SolutionDir)SystemResource/Source;$(SolutionDir)PXUltima/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <CompileAs>CompileAsC</CompileAs>
+      <CallingConvention>StdCall</CallingConvention>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -30,9 +30,6 @@
     <ClCompile Include="Source\Dialog\BFDialogSystem.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Entity\BFSprite.c">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\UI\UIText.h">
@@ -48,9 +45,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Source\Dialog\BFDialogSystem.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Entity\BFSprite.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

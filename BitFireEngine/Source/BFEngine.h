@@ -5,8 +5,8 @@
 #include <Media/PXImage.h>
 #include <Media/PXType.h>
 #include <Graphic/PXGraphic.h>
-#include <OS/Thread/PXLock.h>
-#include <OS/Thread/PXThread.h>
+#include <OS/Async/PXLock.h>
+#include <OS/Async/PXThread.h>
 #include <OS/Window/PXWindow.h>
 #include <OS/Time/PXTime.h>
 #include <Graphic/PXCamera.h>
@@ -21,7 +21,6 @@ extern "C"
     typedef struct BFInputContainer_
     {
         KeyBoardCache KeyBoardInput;
-        PXMouse MouseInput;
     }
     BFInputContainer;
 
@@ -77,7 +76,7 @@ extern "C"
 
     PXPublic void BFEngineConstruct(BFEngine* const pxBitFireEngine);
 
-    PXPrivate void BFEngineOnMouseButton(const BFEngine* const receiver, const PXWindow* sender, const MouseButton mouseButton, const ButtonState buttonState);
+    PXPrivate void BFEngineOnMouseButton(const BFEngine* const receiver, const PXWindow* sender, const MouseButton mouseButton, const PXKeyPressState buttonState);
     PXPrivate void BFEngineOnMouseMove(const BFEngine* const receiver, const PXWindow* sender, const PXMouse* mouse);
     PXPrivate void BFEngineOnKeyBoardKey(const BFEngine* const receiver, const PXWindow* sender, const KeyBoardKeyInfo keyBoardKeyInfo);
     PXPrivate void BFEngineOnWindowCreated(const BFEngine* const receiver, const PXWindow* sender);

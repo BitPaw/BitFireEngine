@@ -1,7 +1,7 @@
 #include "KeyBoardCache.h"
 
 #include <OS/Memory/PXMemory.h>
-#include <Device/InputButton.h>
+#include <OS/Hardware/PXKeyBoard.h>
 
 void KeyBoardCacheConstruct(KeyBoardCache* const keyBoardCache)
 {
@@ -10,6 +10,7 @@ void KeyBoardCacheConstruct(KeyBoardCache* const keyBoardCache)
 
 void KeyBoardCacheIncrementButtonTick(KeyBoardCache* const keyBoardCache)
 {
+	/*
 	InputButtonIncrementIfAlreadyPressed(&keyBoardCache->A);
 	InputButtonIncrementIfAlreadyPressed(&keyBoardCache->B);
 	InputButtonIncrementIfAlreadyPressed(&keyBoardCache->C);
@@ -52,9 +53,10 @@ void KeyBoardCacheIncrementButtonTick(KeyBoardCache* const keyBoardCache)
 	InputButtonIncrementIfAlreadyPressed(&keyBoardCache->ShitftRight);
 
 	InputButtonIncrementIfAlreadyPressed(&keyBoardCache->SpaceBar);
+	*/
 }
 
 void KeyBoardCacheReset(KeyBoardCache* const keyBoardCache)
 {
-	MemoryClear(keyBoardCache, sizeof(KeyBoardCache));
+	PXMemoryClear(keyBoardCache, sizeof(KeyBoardCache));
 }

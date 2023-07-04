@@ -4,15 +4,15 @@
 #include <Media/PXModel.h>
 #include <Graphic/PXGraphic.h>
 #include <Math/PXMatrix.h>
-#include <Event/PXEvent.h>
-#include <Device/InputButton.h>
+#include <OS/Async/PXEvent.h>
 
 #include <OS/File/PXFile.h>
-#include <OS/Thread/Await.h>
+#include <OS/Async/PXAwait.h>
 #include <OS/Time/PXStopWatch.h>
-#include <OS/Processor/PXProcessor.h>
+#include <OS/Hardware/PXProcessor.h>
 #include <Math/PXCollision.h>
 #include <OS/Time/PXTime.h>
+#include <Math/PXMath.h>
 
 #include <stdlib.h>
 #include <signal.h>
@@ -1294,46 +1294,19 @@ void BFEngineConstruct(BFEngine* const pxBitFireEngine)
     PXWindowConstruct(&pxBitFireEngine->WindowMain);
 }
 
-void BFEngineOnMouseButton(const BFEngine* const receiver, const PXWindow* sender, const MouseButton mouseButton, const ButtonState buttonState)
+void BFEngineOnMouseButton(const BFEngine* const receiver, const PXWindow* sender, const MouseButton mouseButton, const PXKeyPressState buttonState)
 {
-    /*
-    Mouse& mouse = engine->_inputContainer.MouseInput;
 
-    switch(mouseButton)
-    {
-        case MouseButtonLeft:
-        {
-            mouse.LeftButton.IncrementIfAlreadyPressed();
-            break;
-        }
-        case MouseButtonMiddle:
-        {
-            mouse.ScrollButton.IncrementIfAlreadyPressed();
-            break;
-        }
-        case MouseButtonRight:
-        {
-            mouse.RightButton.IncrementIfAlreadyPressed();
-            break;
-        }
-    }*/
+  
 
     //printf("[#][OnMouseButton]\n");
 }
 
 void BFEngineOnMouseMove(const BFEngine* const engine, const PXWindow* sender, const PXMouse* mouse)
 {
-    PXMouse* const mouseInput = &engine->InputContainer.MouseInput;
 
 #if UseRawMouseData
-    mouseInput->Delta[0] = -mouse->Delta[0];
-    mouseInput->Delta[1] = -mouse->Delta[1];
 
-    mouseInput->PositionNormalisized[0] = mouse->PositionNormalisized[0];
-    mouseInput->PositionNormalisized[1] = mouse->PositionNormalisized[1];
-
-    mouseInput->Position[0] = mouse->Position[0];
-    mouseInput->Position[1] = mouse->Position[1];
 #else
     // Calculate relative input
     mouse.InputAxis[0] = mouse.Position[0] - deltaX;
@@ -1424,12 +1397,12 @@ void BFEngineOnKeyBoardKey(const BFEngine* const engine, const PXWindow* sender,
 
     switch (keyBoardKeyInfo.Mode)
     {
-        case ButtonStateDown:
+        case PXKeyPressStateDown:
         {
             PXInputButtonIncrement(inputButton);
             break;
         }
-        case ButtonStateRelease:
+        case PXKeyPressStateUp:
         {
             PXInputButtonReset(inputButton);
             break;
@@ -1497,7 +1470,7 @@ void BFEngineStart(BFEngine* const pxBitFireEngine)
 
     // Processor
     {
-        Processor processor;
+        PXProcessor processor;
 
         PXProcessorFetchInfo(&processor);
 
@@ -1512,7 +1485,7 @@ void BFEngineStart(BFEngine* const pxBitFireEngine)
             "| Cores     : %-43i |\n"
             "| Family    : %-43i |\n"
             "| Model     : %-43i |\n"
-            "+---------------------------------------------------------+\n",
+            "+---------------------------------------------------------+\n\n",
             processor.BrandName,
             processor.IdentityString,
             processor.NumberOfProcessors,
@@ -1569,7 +1542,7 @@ void BFEngineStart(BFEngine* const pxBitFireEngine)
         "| Vendor    : %-43s |\n"
         "| Model     : %-43s |\n"
         "| OpenGL    : %-43s |\n"
-        "+---------------------------------------------------------+\n",
+        "+---------------------------------------------------------+\n\n",
         pxBitFireEngine->WindowMain.GraphicInstance.OpenGLInstance.Vendor,
         pxBitFireEngine->WindowMain.GraphicInstance.OpenGLInstance.Renderer,
         pxBitFireEngine->WindowMain.GraphicInstance.OpenGLInstance.VersionText
@@ -1581,7 +1554,7 @@ void BFEngineStart(BFEngine* const pxBitFireEngine)
 
     //AwaitChange(!_mainWindow.IsRunning);
 
-    PXOpenGLContextSelect(&pxBitFireEngine->WindowMain.GraphicInstance.OpenGLInstance);
+    PXOpenGLSelect(&pxBitFireEngine->WindowMain.GraphicInstance.OpenGLInstance);
 
     InvokeEvent(pxBitFireEngine->StartUpCallBack, pxBitFireEngine);
 
@@ -1595,7 +1568,9 @@ void BFEngineStart(BFEngine* const pxBitFireEngine)
 
     printf("[i][Info] Loading took %.2fs\n", timeInS);
 
-    //PrintContent(true);
+   // PrintContent(1);
+
+    PXOpenGLSwapIntervalSet(&pxBitFireEngine->WindowMain.GraphicInstance.OpenGLInstance,1);
 }
 
 void BFEngineUpdate(BFEngine* const pxBitFireEngine)
@@ -1656,11 +1631,14 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
     //---<Fetch UI-Input>----------------------------------------------------------
     {
         PXGraphicContext* const graphicContext = &pxBitFireEngine->WindowMain.GraphicInstance;
-        PXOpenGLContext* const openGLContext = &graphicContext->OpenGLInstance;
+        PXOpenGL* const openGLContext = &graphicContext->OpenGLInstance;
 
         const PXSize uiElementAmount = graphicContext->UIElementLookUp.EntryAmountCurrent;
 
         PXUIHoverState* lastEntry = 0;
+        int lastTargetID = -1;
+
+        PXMouse* const mouse = &pxBitFireEngine->WindowMain.MouseCurrentInput;
 
         // for (int i = uiElementAmount; i >= 0 ; --i)
         for (int i = 0; i < uiElementAmount; ++i)
@@ -1673,17 +1651,17 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
 
             float mouseHitBoxOffset = 0.01f;
             float scale = PXWindowScreenRatio(&pxBitFireEngine->WindowMain);
-            float mouseAX = pxBitFireEngine->InputContainer.MouseInput.PositionNormalisized[0] + mouseHitBoxOffset * scale;
-            float mouseAY = pxBitFireEngine->InputContainer.MouseInput.PositionNormalisized[1] - mouseHitBoxOffset* scale;
-            float mouseBX = pxBitFireEngine->InputContainer.MouseInput.PositionNormalisized[0] - mouseHitBoxOffset* scale;
-            float mouseBY = pxBitFireEngine->InputContainer.MouseInput.PositionNormalisized[1] + mouseHitBoxOffset* scale;
+            float mouseAX = mouse->PositionNormalisized[0] + mouseHitBoxOffset * scale;
+            float mouseAY = mouse->PositionNormalisized[1] - mouseHitBoxOffset * scale;
+            float mouseBX = mouse->PositionNormalisized[0] - mouseHitBoxOffset * scale;
+            float mouseBY = mouse->PositionNormalisized[1] + mouseHitBoxOffset * scale;
 
             if (!pxUIElement->IsHoverable)
             {
                 continue;
             }
 
-#if 0
+#if 1
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             glColor4f(0, 0.7, 0, 1);
             glRectf(mouseAX, mouseAY, mouseBX, mouseBY);
@@ -1700,14 +1678,48 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
             }
 
             pxUIElement->Hover = PXUIHoverStateHovered;
+            lastTargetID = i;
 
             if (lastEntry)
             {
-                *lastEntry = PXUIHoverStateHoveredButOverlapped;               
-            }
+                *lastEntry = PXUIHoverStateHoveredButOverlapped;              
+            }            
 
-            lastEntry = &pxUIElement->Hover;
+            lastEntry = &pxUIElement->Hover;         
+       
         }
+
+        // Drag
+        if(lastTargetID != -1)
+        {
+            PXDictionaryEntry pxDictionaryEntry;
+
+            PXDictionaryIndex(&graphicContext->UIElementLookUp, lastTargetID, &pxDictionaryEntry);
+
+            PXUIElement* const pxUIElement = *(PXUIElement**)pxDictionaryEntry.Value;
+            PXKeyBoard* const keyBoard = &pxBitFireEngine->WindowMain.KeyBoardCurrentInput;
+            PXMouse* const mouse = &pxBitFireEngine->WindowMain.MouseCurrentInput;
+
+            if (IsPressedButtonLeft(mouse->Buttons))
+            {
+                
+                //deltaNormal[0] *= 0.005f;
+                //deltaNormal[1] *= 0.005f;
+                float deadZone = 0.001f;               
+                //deltaNormal[0] *= !PXMathIsInRange(deltaNormal[0], -deadZone, deadZone);
+                //deltaNormal[1] *= !PXMathIsInRange(deltaNormal[1], -deadZone, deadZone);
+
+               // printf("MD %8.6f, %8.6f\n", mouse->DeltaNormalisized[0], mouse->DeltaNormalisized[1]);
+
+                float scale = 0.005f;
+
+                pxUIElement->X += mouse->Delta[0] * scale;
+                pxUIElement->Y -= mouse->Delta[1] * scale;
+                pxUIElement->Width += mouse->Delta[0] * scale;
+                pxUIElement->Height -= mouse->Delta[1] * scale;
+
+            }
+        }  
     }
    //--------------------------------------------------------------------------
 
@@ -1790,15 +1802,16 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
 
     InvokeEvent(pxBitFireEngine->UpdateGameLogicCallBack, pxBitFireEngine, deltaTime);
 
-    //_callbackListener->OnUpdateGameLogic(deltaTime);
     //---------------------------------------------------------------------
 
     //---[Render World]----------------------------------------------------    
     BFEngineSceneRender(pxBitFireEngine);
     //---------------------------------------------------------------------
 
-    PXGraphicImageBufferSwap(&pxBitFireEngine->WindowMain.GraphicInstance);
+    PXGraphicFrameBufferSwap(&pxBitFireEngine->WindowMain.GraphicInstance);
     //--------------------------------------------------------------------------
+
+    //PXThreadSleep(0, 12);
 }
 
 PXBool BFEngineIsRunning(const BFEngine* const pxBitFireEngine)
@@ -1817,14 +1830,14 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 {
     PXCamera* const mainCamera = &pxBitFireEngine->MainCamera;
     PXGraphicContext* const graphicContext = &pxBitFireEngine->WindowMain.GraphicInstance;
-    PXOpenGLContext* const openGLContext = &graphicContext->OpenGLInstance;
+    PXOpenGL* const openGLContext = &graphicContext->OpenGLInstance;
     PXWindow* const window = (PXWindow*)graphicContext->AttachedWindow;
 
     //PXCameraUpdate(&MainCamera, deltaTime);
 
-    const float red = 0.15f;
-    const float green = 0.15f;
-    const float blue = 0.15f;
+    const float red = 0.35f;
+    const float green = 0.35f;
+    const float blue = 0.35f;
     const float alpha = 1.0f;
 
     //OpenGLClearColor(&graphicContext->OpenGLInstance, red, green, blue, alpha);
@@ -1832,10 +1845,6 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 
     glPointSize(6);
     glLineWidth(4);
-
-
-
-    
 
 #if 1 // Render SkyBox 
 
@@ -1887,13 +1896,15 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
     }
 
 #endif   
-
+    
     //-------------------------------------------------------------------------
     // UI-Rendering
     //-------------------------------------------------------------------------
     {
-        float mouseX = pxBitFireEngine->InputContainer.MouseInput.PositionNormalisized[0];
-        float mouseY = pxBitFireEngine->InputContainer.MouseInput.PositionNormalisized[1];
+        PXMouse* const mouse = &pxBitFireEngine->WindowMain.MouseCurrentInput;
+
+        float mouseX = mouse->PositionNormalisized[0];
+        float mouseY = mouse->PositionNormalisized[1];
      
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -1911,8 +1922,7 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
         glEnable(GL_ALPHA_TEST);
    
         glDepthFunc(GL_LEQUAL);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+       /// glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
         for (PXSize i = 0; i < uiElementAmount; ++i)
@@ -1953,63 +1963,112 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 
                     float offsetX = 0;
 
-                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                   
                     
                     PXFont* const font = pxUIElement->FontID;
 
                   
-                    //glEnable(GL_STENCIL_TEST);
-                    glEnable(GL_TEXTURE_2D);
-                    glEnable(GL_DEPTH_TEST);
+                   // glEnable(GL_STENCIL_TEST);
+                   
+                   // glEnable(GL_DEPTH_TEST);
          
-                    glEnable(GL_BLEND);
+                  // glEnable(GL_BLEND);
 
                     //glClearStencil(0x00);
                     //glClear(GL_STENCIL_BUFFER_BIT);
 
                     
-                    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+                  // glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
                      
-                    //glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_SRC_COLOR);
+                   //glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_SRC_COLOR);
                      
                    // glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
-                    glBindTexture(GL_TEXTURE_2D, 1);
+
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+                    glEnable(GL_BLEND);
+
+                    glEnable(GL_TEXTURE_2D);
+                    glBindTexture(GL_TEXTURE_2D, font->FontElement[0].FontPageList[0].TextureID);
 
                     for (PXSize i = 0; pxUIElement->Name[i] ; ++i)
                     {
-                        PXSpriteFontCharacter* pxSpriteFontCharacter = PXSpriteFontGetCharacter(&font->FontElement[0], pxUIElement->Name[i]);
-                                               
+                        PXSpriteFontCharacter* const pxSpriteFontCharacter = PXSpriteFontGetCharacter(&font->FontElement[0], pxUIElement->Name[i]);
+        
+                        float charWidth;
+                        float charHeight;
+                        float charWidthSpacing;
+                        float tx1;
+                        float ty1;
+                        float tx2;
+                        float ty2;
+
+                        if (pxSpriteFontCharacter)
+                        {
+                            charWidth = pxSpriteFontCharacter->Size[0];
+                            charHeight = pxSpriteFontCharacter->Size[1];
+                            charWidthSpacing = pxSpriteFontCharacter->XAdvance;
+
+                            tx1 = pxSpriteFontCharacter->Position[0] / 512.0f;
+                            ty1 = pxSpriteFontCharacter->Position[1] / 512.0f;
+                            tx2 = (pxSpriteFontCharacter->Position[0] + pxSpriteFontCharacter->Size[0]) / 512.0f;
+                            ty2 = (pxSpriteFontCharacter->Position[1] + pxSpriteFontCharacter->Size[1]) / 512.0f;                        
+                        }
+                        else
+                        {
+                            charWidth = 40;
+                            charHeight = 60;
+                            charWidthSpacing = 45;
+
+                            tx1 = 0;
+                            ty1 = 0;
+                            tx2 = 1;
+                            ty2 = 1;
+                        }
+
                         float sclaingWidth = 0.5;
                         float scalingHeight = 0.8;
 
                         float x1 = startX + offsetX; // offset
                         float y1 = startY;
-                        float x2 = x1 + ((pxSpriteFontCharacter->Size[0] / 512.0f) * sclaingWidth);
-                        float y2 = y1 + ((pxSpriteFontCharacter->Size[1] / 512.0f) * scalingHeight);
+                        float x2 = x1 + ((charWidth / 512.0f) * sclaingWidth);
+                        float y2 = y1 + ((charHeight / 512.0f) * scalingHeight);
 
-                        offsetX += ((pxSpriteFontCharacter->XAdvance / 512.0f) * sclaingWidth);
+                        offsetX += ((charWidthSpacing / 512.0f) * sclaingWidth);
 
                         if (pxUIElement->Name[i] == ' ')
                         {
                             continue;
+                        }                 
+           
+
+
+                        glColor4f
+                        (
+                            pxUIElement->BackGroundColor.Red,
+                            pxUIElement->BackGroundColor.Green,
+                            pxUIElement->BackGroundColor.Blue,
+                            pxUIElement->BackGroundColor.Alpha
+                        ); // Text color
+
+                        if (pxSpriteFontCharacter)
+                        {
+                            glBlendFunc(GL_ONE, GL_ONE); // Direct 1:1 mixing
+                           
+                            glBegin(GL_QUADS);
+                            glTexCoord2f(tx1, ty2); glVertex2f(x1, y1);// 11
+                            glTexCoord2f(tx2, ty2); glVertex2f(x2, y1);// 10
+                            glTexCoord2f(tx2, ty1); glVertex2f(x2, y2);// 00
+                            glTexCoord2f(tx1, ty1); glVertex2f(x1, y2);// 01
+                            glEnd();
+                        }
+                        else
+                        {
+                            glBindTexture(GL_TEXTURE_2D, 0);
+                            glRectf(x1, y1, x2, y2);
+                            glBindTexture(GL_TEXTURE_2D, font->FontElement[0].FontPageList[0].TextureID);
                         }
 
-#if 0
-                        float tx1 = 0;
-                        float ty1 = 0;
-                        float tx2 = 1;
-                        float ty2 = 1;
-
-#else
-                        float tx1 = pxSpriteFontCharacter->Position[0] / 512.0f;
-                        float ty1 = pxSpriteFontCharacter->Position[1] / 512.0f;
-                        float tx2 = (pxSpriteFontCharacter->Position[0] + pxSpriteFontCharacter->Size[0]) / 512.0f;
-                        float ty2 = (pxSpriteFontCharacter->Position[1] + pxSpriteFontCharacter->Size[1]) / 512.0f;
-#endif // 1
-
-
-                  
-           
 
                         // glDepthFunc(GL_ALWAYS);
 
@@ -2033,31 +2092,30 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
                        // glStencilMask(0x00);
                         //glDisable(GL_BLEND);
 
-                        glEnable(GL_BLEND);
+                      //  glEnable(GL_BLEND);
 
-                        PXOpenGLClear(&graphicContext->OpenGLInstance, GL_STENCIL_BUFFER_BIT);
+                      //  PXOpenGLClear(&graphicContext->OpenGLInstance, GL_STENCIL_BUFFER_BIT);
                    
-                        glColor4f(1,1,1,1); // Set White color for fake-alpha 
-                        glBlendFunc(GL_ONE, GL_ONE); // Direct 1:1 mixing
+                      // Set White color for fake-alpha 
+                   
 
                  
-                        glStencilMask(0xFF); // Rendering mask is 1
-                        glStencilFunc(GL_ALWAYS, 1, 0xFF);  // We setthe behaviour, sete everything we render to 0xFF
-                        glStencilOp(GL_ZERO, GL_ZERO, GL_REPLACE);
+                        //glStencilMask(0xFF); // Rendering mask is 1
+                        //glStencilFunc(GL_ALWAYS, 1, 0xFF);  // We setthe behaviour, sete everything we render to 0xFF
+                        //glStencilOp(GL_ZERO, GL_ZERO, GL_REPLACE);
 
 #if 1
-                        glBegin(GL_POLYGON);
-                        glTexCoord2f(tx1, ty2); glVertex2f(x1, y1);// 11
-                        glTexCoord2f(tx2, ty2); glVertex2f(x2, y1);// 10
-                        glTexCoord2f(tx2, ty1); glVertex2f(x2, y2);// 00
-                        glTexCoord2f(tx1, ty1); glVertex2f(x1, y2);// 01
-                        glEnd();
-#else
-                        float triColorA = 11.0f;
-                        float triColorB = 10.5f;
-                        float triColorC = 10.25f;
+                     //   glBegin(GL_QUADS);
+                        //glRectf(x1, y1, x2, y2);
+                      //  glEnd();
 
-                        glBegin(GL_POLYGON);
+                
+#else
+                        float triColorA = 0.0f;
+                        float triColorB = 0.5f;
+                        float triColorC = 0.25f;
+
+                        glBegin(GL_QUADS);
                         glTexCoord2f(tx1, ty2); glColor4f(triColorA, triColorB, triColorC, 1); glVertex2f(x1, y1);// 11
                         glTexCoord2f(tx2, ty2); glColor4f(triColorA, triColorB, triColorC, 1); glVertex2f(x2, y1);// 10
                         glTexCoord2f(tx2, ty1); glColor4f(0, triColorC, 0, 1); glVertex2f(x2, y2);// 00
@@ -2066,7 +2124,7 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 #endif
 
 
-                        glDisable(GL_BLEND);
+                       // glDisable(GL_BLEND);
                         
                         
                        // glBlendFunc(GL_ONE, GL_ONE);
@@ -2081,14 +2139,14 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 
 
 
-                        glEnable(GL_DEPTH_TEST);
+                      //  glEnable(GL_DEPTH_TEST);
                     }
 
-                    glBindTexture(GL_TEXTURE_2D, 0);
-                    glDisable(GL_TEXTURE_2D);
+                   glBindTexture(GL_TEXTURE_2D, 0);
+                   glDisable(GL_TEXTURE_2D);
 
-                    glDisable(GL_BLEND);
-                    glDisable(GL_STENCIL_TEST);
+                   glDisable(GL_BLEND);
+                   // glDisable(GL_STENCIL_TEST);
 
                     break;
                 }
@@ -2112,6 +2170,37 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
                     break;
                 }
                 case PXUIElementTypeImage:
+                {
+                    const float colorSelectedOffset = (pxUIElement->Hover == PXUIHoverStateHovered) * 0.3f;
+
+                    glEnable(GL_TEXTURE_2D);
+                    //PXOpenGLTextureActivate(openGLContext, 0);
+
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                    glColor4f(1,1,1,1);
+
+                    glColor4f(pxUIElement->BackGroundColor.Red + colorSelectedOffset, pxUIElement->BackGroundColor.Green + colorSelectedOffset, pxUIElement->BackGroundColor.Blue + colorSelectedOffset, pxUIElement->BackGroundColor.Alpha);
+                    glBindTexture(GL_TEXTURE_2D, pxUIElement->TextureID);
+
+          
+#if 1
+                    glBegin(GL_QUADS);
+                    glTexCoord2f(0, 1);
+                    glVertex2f(pxUIElement->X, pxUIElement->Y);
+                    glTexCoord2f(1, 1);
+                    glVertex2f(pxUIElement->Width, pxUIElement->Y);
+                    glTexCoord2f(1, 0);
+                    glVertex2f(pxUIElement->Width, pxUIElement->Height);
+                    glTexCoord2f(0, 0);
+                    glVertex2f(pxUIElement->X, pxUIElement->Height);
+                    glEnd();
+#endif
+
+                    glBindTexture(GL_TEXTURE_2D, 0);
+                    glDisable(GL_TEXTURE_2D);
+
+                    break;
+                }
                 case PXUIElementTypeDropDown:
                 case PXUIElementTypeToggle:
                 case PXUIElementTypeCheckBox:
@@ -2139,14 +2228,69 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
     }
     //-------------------------------------------------------------------------
 
+    return;
+
+    PXOpenGLShaderProgramUse(openGLContext, 1);
+    CameraDataGet(window, 1);
+    CameraDataUpdate(window, mainCamera);
+
+ 
 
     //-------------------------------------------------------------------------
-    // 3D-Scene Rendering
+    // 2D-Scene Rendering (Sprites)
+    //-------------------------------------------------------------------------
+    const PXSize spriteListSize = graphicContext->SpritelLookUp.EntryAmountCurrent;
+
+    for (PXSize i = 0; i < spriteListSize; ++i)
+    {
+        PXDictionaryEntry pxDictionaryEntry;
+
+        PXDictionaryIndex(&graphicContext->SpritelLookUp, i, &pxDictionaryEntry);
+
+        PXSprite* const pxSprite = *(PXSprite**)pxDictionaryEntry.Value;
+
+        PXVector3F position;
+
+        PXMatrix4x4FPosition(&pxSprite->Position, &position);
+
+        PXOpenGLShaderProgramUse(graphicContext, 1);
+        //glBindTexture(GL_TEXTURE_2D, 0);
+        glBindTexture(GL_TEXTURE_2D, pxSprite->Texture.ID);
+
+        //glColor3f(1,1,1);
+
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glBegin(GL_POLYGON);
+        glTexCoord2f(0, 0); glVertex3f(0, 1, 0);
+        glTexCoord2f(1, 0); glVertex3f(1, 1, 0); // 10
+        glTexCoord2f(1, 1); glVertex3f(1, 0, 0); // 00
+        glTexCoord2f(0, 1); glVertex3f(0, 0, 0); // 01
+        glEnd();
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
     //-------------------------------------------------------------------------
 
-    const size_t renderList = PXGraphicRenderableListSize(graphicContext);
 
-    for (size_t renderIndex = 0; renderIndex < renderList; ++renderIndex)
+    //-------------------------------------------------------------------------
+    // 3D-Scene Rendering (Models)
+    //-------------------------------------------------------------------------
+
+    PXOpenGLShaderProgramUse(openGLContext, 0);
+    glColor4f(1,1,1,1);
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glBegin(GL_TRIANGLES);
+    glVertex2d(-0.5f, -0.5f);
+    glVertex2d(0.5f, -0.5f);
+    glVertex2d(0.5f, 0.5f);
+    glEnd();
+
+    return;
+
+    const PXSize renderList = PXGraphicRenderableListSize(graphicContext);
+
+    for (PXSize renderIndex = 0; renderIndex < renderList; ++renderIndex)
     {
         PXRenderable* pxRenderable;
 

@@ -88,41 +88,41 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltima\Source\</IncludePath>
+    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltimaC\</IncludePath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
-    <LibraryPath>C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltima/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(SolutionDir)__Dependencies__/lib_Windows_10_32_Debug/;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltimaC/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(SolutionDir)__Dependencies__/lib_Windows_10_32_Debug/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltima\Source\</IncludePath>
+    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltimaC\</IncludePath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
-    <LibraryPath>C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltima/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(SolutionDir)__Dependencies__/lib_Windows_10_32_Release/;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltimaC/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(SolutionDir)__Dependencies__/lib_Windows_10_32_Release/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltima\Source\</IncludePath>
+    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltimaC\</IncludePath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
-    <LibraryPath>C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltima/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(SolutionDir)__Dependencies__/lib_Windows_10_64_Debug/;D:/_Data/Git/PXUltima/[Export]/PXUltima/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltimaC/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(SolutionDir)__Dependencies__/lib_Windows_10_64_Debug/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltima\Source\</IncludePath>
+    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltimaC\</IncludePath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
-    <LibraryPath>C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltima/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(SolutionDir)__Dependencies__/lib_Windows_10_64_Release/;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltimaC/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(SolutionDir)__Dependencies__/lib_Windows_10_64_Release/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|Win32'">
-    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltima\Source\</IncludePath>
-    <LibraryPath>C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltima/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(VC_LibraryPath_x86);$(WindowsSdk_71A_LibraryPath_x86);</LibraryPath>
+    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltimaC\</IncludePath>
+    <LibraryPath>C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltimaC/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(VC_LibraryPath_x86);$(WindowsSdk_71A_LibraryPath_x86);</LibraryPath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|x64'">
-    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltima\Source\</IncludePath>
-    <LibraryPath>C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltima/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(VC_LibraryPath_x64);$(WindowsSdk_71A_LibraryPath_x64);</LibraryPath>
+    <IncludePath>$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(SolutionDir)__Dependencies__/include;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltimaC\</IncludePath>
+    <LibraryPath>C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltimaC/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(VC_LibraryPath_x64);$(WindowsSdk_71A_LibraryPath_x64);</LibraryPath>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
   </PropertyGroup>
@@ -132,17 +132,17 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <CompileAs>CompileAsC</CompileAs>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <CallingConvention>StdCall</CallingConvention>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>PXUltima.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;PXUltima.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -153,20 +153,20 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <CompileAs>CompileAsC</CompileAs>
       <Optimization>Disabled</Optimization>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <CallingConvention>StdCall</CallingConvention>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>PXUltima.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;PXUltima.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -175,15 +175,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <CompileAs>CompileAsC</CompileAs>
+      <CallingConvention>StdCall</CallingConvention>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>PXUltima.lib;opengl32.lib;PXUltima.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;PXUltima.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -194,23 +194,23 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <CompileAs>CompileAsC</CompileAs>
+      <CallingConvention>StdCall</CallingConvention>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>PXUltima.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;PXUltima.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|Win32'">
     <Link>
-      <AdditionalDependencies>PXUltima.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;PXUltima.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClCompile>
       <CompileAs>CompileAsC</CompileAs>
@@ -218,16 +218,18 @@
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <CallingConvention>StdCall</CallingConvention>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|x64'">
     <Link>
-      <AdditionalDependencies>PXUltima.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;PXUltima.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClCompile>
       <CompileAs>CompileAsC</CompileAs>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <CallingConvention>StdCall</CallingConvention>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -243,6 +245,11 @@
     <ProjectReference Include="..\SystemResource\SystemResource.vcxproj">
       <Project>{398c5630-9092-486f-920c-c9992f8b7f6c}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="..\..\PXUltima\Code\[Export]\PXUltimaC\64B-Windows-Debug\PXUltima.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
