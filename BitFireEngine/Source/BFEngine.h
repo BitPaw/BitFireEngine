@@ -90,6 +90,11 @@ extern "C"
 
     PXPrivate void BFEngineSceneRender(BFEngine* const pxBitFireEngine);
 
+
+    PXPrivate void BFEngineRenderText(BFEngine* const bfEngine, PXUIElement* const pxUIElement);
+    PXPrivate void BFEngineRenderScene(BFEngine* const bfEngine);
+
+
     /*
 
     void MakeRectangle(PXRenderable& renderable);
