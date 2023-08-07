@@ -1,7 +1,5 @@
 #include "main.h"
 
-#include <Device/InputButton.h>
-
 #if !defined(_DEBUG) && defined(OSWindows5)
 #include <windows.h>
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int nShowCmd)
@@ -41,7 +39,7 @@ int main(int amountOFParameters, char** parameter)
 
     BFEngineStart(&bitFireEngine);
 
-    while (bitFireEngine.IsRunning)
+    while (BFEngineIsRunning(&bitFireEngine))
     {
         BFEngineUpdate(&bitFireEngine);
     }
@@ -51,17 +49,17 @@ int main(int amountOFParameters, char** parameter)
     return EXIT_SUCCESS;
 }
 
-PXTexture _dialogBoxTexture;
-PXTexture _dialogBoxTextureSelected;
+PXTexture2D _dialogBoxTexture;
+PXTexture2D _dialogBoxTextureSelected;
 
 PXModel _cubeThing;
 PXRenderable _bohrThing;
 PXFont _textFont;
 
-PXUIPanel pxUIPanelMain;
-PXUIPanel pxUIPanelMainCopy;
+//PXUIPanel pxUIPanelMain;
+//PXUIPanel pxUIPanelMainCopy;
 
-PXUIButton pxDoStuffButton;
+//PXUIButton pxDoStuffButton;
 
 //PXUIText pxUITextFPS;
 //PXUIText pxUITextPosition;
@@ -75,13 +73,13 @@ void OnUIOnMouseEnter(PXUIElement* const pxUIElement)
 {
     printf("[#][Event] Mouse button enter\n");
 
-    pxUIPanelMain.UIElement.Renderable.MeshSegmentList[0].TextureID = _dialogBoxTextureSelected.ID;
+   // pxUIPanelMain.UIElement.Renderable.MeshSegmentList[0].TextureID = _dialogBoxTextureSelected.ID;
 }
 void OnUIOnMouseLeave(PXUIElement* const pxUIElement)
 {
     printf("[#][Event] Mouse button leave\n");
 
-    pxUIPanelMain.UIElement.Renderable.MeshSegmentList[0].TextureID = _dialogBoxTexture.ID;
+   // pxUIPanelMain.UIElement.Renderable.MeshSegmentList[0].TextureID = _dialogBoxTexture.ID;
 }
 
 
@@ -90,13 +88,13 @@ void OnStartUp(BFEngine* const bitFireEngine)
     PXGraphicContext* const graphicContext = &bitFireEngine->WindowMain.GraphicInstance;
 
 
-    PXWindowCursorCaptureMode(&pxBitFireEngine->WindowMain, PXWindowCursorLockAndHide);
+//    PXWindowCursorCaptureMode(&bitFireEngine->WindowMain, PXWindowCursorLockAndHide);
 
 
-    _worldShader.ID = -1;
-    _hudShaderID.ID = -1;
+    _worldShader.ResourceID.PXID = -1;
+    _hudShaderID.ResourceID.PXID = -1;
 
-    PXGraphicShaderProgramLoadGLSLA(graphicContext, &_worldShader, (char*)"Shader/WorldShader_V.glsl", (char*)"Shader/WorldShader_F.glsl");
+    PXGraphicShaderProgramLoadA(graphicContext, &_worldShader, "Shader/WorldShader_V.glsl", "Shader/WorldShader_F.glsl");
         
     PXGraphicSkyboxRegisterA
     (
@@ -112,16 +110,16 @@ void OnStartUp(BFEngine* const bitFireEngine)
         "Texture/SkyBox/Front.png"
     );   
 
-    PXGraphicTextureLoadA(graphicContext, &_dialogBoxTexture, (char*)"Texture/DialogueBox.bmp");
+    PXGraphicTextureLoadA(graphicContext, &_dialogBoxTexture, "Texture/DialogueBox.bmp");
 
-    PXGraphicTextureLoadA(graphicContext, &_dialogBoxTextureSelected, (char*)"Texture/DialogueBoxB.bmp");
+    PXGraphicTextureLoadA(graphicContext, &_dialogBoxTextureSelected, "Texture/DialogueBoxB.bmp");
    
 
-    PXGraphicModelLoadA(graphicContext, &_cubeModel, (char*)"Model/Dust_II/DustII.obj");
+   // PXGraphicModelLoadA(graphicContext, &_cubeModel, "Model/Dust_II/DustII.obj");
     PXGraphicModelShaderSet(graphicContext, &_cubeModel, &_worldShader);
 
  
-    PXGraphicModelLoadA(graphicContext, &_bohrThing, (char*)"Model/Bohr.obj");
+   // PXGraphicModelLoadA(graphicContext, &_bohrThing, "Model/Bohr.obj");
     PXGraphicModelShaderSet(graphicContext, &_bohrThing, &_worldShader);
 
  //-----<UI>----------------------------------------------------------------
@@ -131,6 +129,8 @@ void OnStartUp(BFEngine* const bitFireEngine)
     //GraphicModelShaderSet(graphicContext, &pxUIPanelMainCopy.Renderable, &_worldShader);
     //PXMatrix4x4FScaleSet(1, 1, 1, &pxUIPanelMainCopy.Renderable.MatrixModel);
     //pxUIPanelMainCopy.Renderable.MeshSegmentList[0].RenderMode = GraphicRenderModeSquare;
+
+    /*
 
     PXGraphicShaderProgramLoadGLSLA(graphicContext, &_hudShaderID, (char*)"Shader/HUD_V.glsl", (char*)"Shader/HUD_F.glsl");
 
@@ -148,7 +148,7 @@ void OnStartUp(BFEngine* const bitFireEngine)
     PXMatrix4x4FMoveToScaleXY(&pxUIPanelMain.UIElement.Renderable.MatrixModel, -0.9, -0.9, &pxUIPanelMain.UIElement.Renderable.MatrixModel);
     pxUIPanelMain.UIElement.Renderable.MeshSegmentList[0].RenderMode = PXGraphicRenderModeSquare;
     pxUIPanelMain.UIElement.Renderable.MeshSegmentList[0].TextureID = _dialogBoxTexture.ID;
-
+    */
  
 
 #endif
@@ -222,7 +222,7 @@ void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input)
     if (InputButtonIsShortPressed(input->KeyBoardInput.I))
     {       
 
-        pxUIPanelMain.UIElement.Renderable.DoRendering = !pxUIPanelMain.UIElement.Renderable.DoRendering;
+        //pxUIPanelMain.UIElement.Renderable.DoRendering = !pxUIPanelMain.UIElement.Renderable.DoRendering;
         input->KeyBoardInput.I = 0xFF;
     }
 
@@ -240,7 +240,7 @@ void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input)
     }
 
     KeyBoardCache* keyboard = &input->KeyBoardInput;
-    PXMouse* mouse = &input->MouseInput;
+    PXMouse* mouse = &bitFireEngine->WindowMain.MouseCurrentInput;
     PXCamera* camera = &bitFireEngine->MainCamera;
     PXVector3F movement = { 0,0,0 };
 
@@ -257,7 +257,7 @@ void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input)
     }
 
     PXCameraMove(&camera, &movement);
-    PXCameraRotateXYZ(&camera, mouse->InputAxis[0], mouse->InputAxis[1], 0);
+    PXCameraRotateXYZ(&camera, mouse->Delta[0], mouse->Delta[1], 0);
 }
 
 void OnUpdateUI(const BFEngine* bitFireEngine)

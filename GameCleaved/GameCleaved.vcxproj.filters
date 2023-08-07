@@ -24,14 +24,14 @@
     <None Include="Shader\WorldSpace.frag" />
     <None Include="Shader\WS.vert" />
     <None Include="Shader\WS.frag" />
-    <None Include="Shader\SkyBox.vert" />
-    <None Include="Shader\SkyBox.frag" />
     <None Include="Shader\HUD.vert" />
     <None Include="Shader\HUD.frag" />
     <None Include="Shader\HitBox.vert" />
     <None Include="Shader\HitBox.frag" />
     <None Include="Shader\Simplex.vert" />
     <None Include="Shader\Simplex.frag" />
+    <None Include="Shader\SkyBox.vert" />
+    <None Include="Shader\SkyBox.frag" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\main.h">

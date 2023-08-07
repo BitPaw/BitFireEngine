@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\UI\UIText.c">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Source\BFEngine.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -32,9 +29,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\UI\UIText.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Source\BFEngine.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>

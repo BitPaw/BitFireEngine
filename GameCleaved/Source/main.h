@@ -8,14 +8,13 @@
 // PXUltima
 #include <Graphic/PXGraphic.h>
 #include <OS/Time/PXStopWatch.h>
-#include <UI/UIText.h>
 
 float _deltaTime = 0;
 PXRenderable _rectangleMesh;
 
 PXFont _font;
 
-PXTexture testTextue;
+PXTexture2D testTextue;
 
 PXSkyBox _skybox;
 PXShaderProgram _worldShader;
@@ -23,8 +22,16 @@ PXShaderProgram _hudShaderID;
 
 //PXGravityCube _gravityField;
 
-PXSprite _playerCharacterLuna;
+// Sprites - Imgame
 PXSprite _backGround;
+
+// Sprites - menu
+PXSprite _dialogBox;
+
+
+
+PXSprite _playerCharacterLuna;
+
 PXSprite _playerCharacterNyte;
 PXSprite _lamp;
 PXSprite _fireplace;
@@ -33,8 +40,6 @@ PXSprite _floor;
 
 //BFUIDialogBox _dialogBox;
 
-
-PXModel _cubeModel;
 PXShaderProgram _simplex;
 
 // UI

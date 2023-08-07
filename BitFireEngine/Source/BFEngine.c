@@ -21,39 +21,14 @@
 #include <Log/PXLog.h>
 
 
-PXOpenGLID _matrixModelID;
-PXOpenGLID _matrixViewID;
-PXOpenGLID _matrixProjectionID;
-PXOpenGLID _materialTextureID;
+PXInt32U _matrixModelID;
+PXInt32U _matrixViewID;
+PXInt32U _matrixProjectionID;
+PXInt32U _materialTextureID;
 RefreshRateMode RefreshRate;
 
 
 float _lastUIUpdate = 0;
-
-void CameraDataGet(PXWindow* const window, const unsigned int shaderID)
-{
-    _matrixModelID = PXGraphicShaderVariableIDFetch(&window->GraphicInstance, shaderID, "MatrixModel");
-    _matrixViewID = PXGraphicShaderVariableIDFetch(&window->GraphicInstance, shaderID, "MatrixView");
-    _matrixProjectionID = PXGraphicShaderVariableIDFetch(&window->GraphicInstance, shaderID, "MatrixProjection");
-    _materialTextureID = PXGraphicShaderVariableIDFetch(&window->GraphicInstance, shaderID, "MaterialTexture");
-}
-
-void CameraDataUpdate(PXWindow* const window, PXCamera* camera)
-{
-    //BF::OpenGL::ShaderSetUniformMatrix4x4(_matrixModelID, camera.MatrixModel.Data);
-    //Matrix4x4<float> viewModel = BF::Matrix4x4<float>(camera.MatrixModel);
-
-    //auto pos = camera.MatrixModel.CurrentPosition();
-
-    //viewModel.Multiply(camera.MatrixModel);
-
-    //viewModel.Move(camera.MatrixModel.Data[11], camera.MatrixModel.Data[12], camera.MatrixModel.Data[13]);
-
-    //viewModel.Print();
-
-    PXGraphicShaderUpdateMatrix4x4F(&window->GraphicInstance, _matrixViewID, camera->MatrixView.Data);
-    PXGraphicShaderUpdateMatrix4x4F(&window->GraphicInstance, _matrixProjectionID, camera->MatrixProjection.Data);
-}
 
 /*
 
@@ -1426,7 +1401,15 @@ void BFEngineOnWindowSizeChanged(const BFEngine* const receiver, const PXWindow*
 
     printf("[Camera] Is now %zi x %zi\n", width, height);
 
-    PXOpenGLViewSize(&sender->GraphicInstance.OpenGLInstance, 0, 0, width, height);
+    PXViewPort pxViewPort;
+    pxViewPort.X = 0;
+    pxViewPort.Y = 0;
+    pxViewPort.Width = width;
+    pxViewPort.Height = height;
+    pxViewPort.ClippingMinimum = 0;
+    pxViewPort.ClippingMaximum = 1;
+
+    PXGraphicViewPortSet(&sender->GraphicInstance, &pxViewPort);
 }
 
 void BFEngineOnWindowsMouseCaptureChanged(const BFEngine* const receiver, const PXWindow* sender)
@@ -1525,6 +1508,7 @@ void BFEngineStart(BFEngine* const pxBitFireEngine)
     }
 
 
+    PXControllerAttachToWindow(&pxBitFireEngine->Controller, pxBitFireEngine->WindowMain.ID);
 
 
 
@@ -1554,7 +1538,7 @@ void BFEngineStart(BFEngine* const pxBitFireEngine)
 
     //AwaitChange(!_mainWindow.IsRunning);
 
-    PXOpenGLSelect(&pxBitFireEngine->WindowMain.GraphicInstance.OpenGLInstance);
+    PXGraphicSelect(&pxBitFireEngine->WindowMain.GraphicInstance);
 
     InvokeEvent(pxBitFireEngine->StartUpCallBack, pxBitFireEngine);
 
@@ -1570,7 +1554,7 @@ void BFEngineStart(BFEngine* const pxBitFireEngine)
 
    // PrintContent(1);
 
-    PXOpenGLSwapIntervalSet(&pxBitFireEngine->WindowMain.GraphicInstance.OpenGLInstance,1);
+    PXGraphicSwapIntervalSet(&pxBitFireEngine->WindowMain.GraphicInstance, 1);
 }
 
 void BFEngineUpdate(BFEngine* const pxBitFireEngine)
@@ -1615,7 +1599,15 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
 
         PXCameraAspectRatioChange(&pxBitFireEngine->MainCamera, width, height);
 
-        glViewport(0, 0, width, height);
+        PXViewPort pxViewPort;
+        pxViewPort.X = 0;
+        pxViewPort.Y = 0;
+        pxViewPort.Width = width;
+        pxViewPort.Height = height;
+        pxViewPort.ClippingMinimum = 0;
+        pxViewPort.ClippingMaximum = 1;
+
+        PXGraphicViewPortSet(&pxBitFireEngine->WindowMain.GraphicInstance, &pxViewPort);
 
         pxBitFireEngine->WindowMain.HasSizeChanged = PXFalse;
     }
@@ -1623,7 +1615,9 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
     {
         PXGraphicContext* const graphicContext = &pxBitFireEngine->WindowMain.GraphicInstance;
 
-        PXOpenGLClearColor(&graphicContext->OpenGLInstance, 0.15, 0.15, 0.15, 1);
+        const PXColorRGBAF pxColorRGBAF = { 0, 0, 0, 1 }; // 0.315, 0.15, 0.15
+        PXGraphicClear(graphicContext, &pxColorRGBAF);
+
         PXOpenGLClear(&graphicContext->OpenGLInstance, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
@@ -1661,11 +1655,13 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
                 continue;
             }
 
+    
+
 #if 1
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            glColor4f(0, 0.7, 0, 1);
-            glRectf(mouseAX, mouseAY, mouseBX, mouseBY);
-            glRectf(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
+            PXGraphicDrawModeSet(graphicContext, PXGraphicDrawFillModeLines);
+            PXGraphicDrawColorRGBAF(graphicContext, 0, 0.7, 0, 1);
+            PXGraphicRectangleDraw(graphicContext, mouseAX, mouseAY, mouseBX, mouseBY);
+            PXGraphicRectangleDraw(graphicContext, pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
 
 #endif // 1
 
@@ -1808,7 +1804,7 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
     BFEngineSceneRender(pxBitFireEngine);
     //---------------------------------------------------------------------
 
-    PXGraphicFrameBufferSwap(&pxBitFireEngine->WindowMain.GraphicInstance);
+    PXGraphicSceneDeploy(&pxBitFireEngine->WindowMain.GraphicInstance);
     //--------------------------------------------------------------------------
 
     //PXThreadSleep(0, 12);
@@ -1843,85 +1839,51 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
     //OpenGLClearColor(&graphicContext->OpenGLInstance, red, green, blue, alpha);
     //OpenGLClear(&graphicContext->OpenGLInstance, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //glPointSize(6);
+    
+#if 0
+        //glPointSize(6);
+    glEnable(GL_DEPTH_TEST);
     glLineWidth(2);
+    glColor4f(1, 1, 1, 1);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glBegin(GL_TRIANGLES);
+    glVertex2f(-0.7, -0.5);
+    glVertex2f(0.7, -0.5);
+    glVertex2f(0, 0.7);
+    glEnd();
+#endif
 
-#if 1 // Render SkyBox 
+    BFEngineRenderSkyBox(pxBitFireEngine);
 
-    PXSkyBox* skybox = graphicContext->_currentSkyBox;
 
-    if (skybox)
-    {
-        PXMatrix4x4F viewTri;
+    PXGraphicVertexStructureDraw(graphicContext, &pxBitFireEngine->pxModelTEST, &pxBitFireEngine->MainCamera);
 
-        PXMatrix4x4FCopy(&mainCamera->MatrixView, &viewTri);
-        PXMatrix4x4FResetAxisW(&viewTri); // if removed, you can move out of the skybox
 
-        PXOpenGLPolygonRenderOrder(openGLContext, PXOpenGLPolygonRenderOrderModeCounterClockwise);
-        PXOpenGLSettingChange(openGLContext, PXOpenGLCULL_FACE, PXFalse);
-        PXOpenGLSettingChange(openGLContext, PXOpenGLDEPTH_TEST, PXFalse);
-        //OpenGLPolygonRenderOrder(openGLContext, OpenGLPolygonRenderOrderModeClockwise);
-
-        PXRenderable* renderable = &skybox->Renderable;
-
-        // ShaderSetup
-        {
-            const unsigned int shaderID = renderable->MeshSegmentList[0].ShaderID;
-
-            PXOpenGLShaderProgramUse(openGLContext, shaderID);         
-
-            CameraDataGet(window, shaderID);
-            CameraDataUpdate(window, mainCamera);
-
-            PXOpenGLShaderVariableMatrix4fv(openGLContext, _matrixViewID, 1, 0, viewTri.Data);
-        }
-
-        PXOpenGLVertexArrayBind(openGLContext, renderable->VAO);
-        PXOpenGLBufferBind(openGLContext, PXOpenGLBufferArray, renderable->VBO);
-        PXOpenGLBufferBind(openGLContext, PXOpenGLBufferElementArray, renderable->IBO);
-        PXOpenGLTextureBind(openGLContext, PXOpenGLTextureTypeCubeMap, skybox->TextureCube.ID);
-
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        PXOpenGLDrawElements(openGLContext, PXOpenGLRenderQuads, 24u, PXOpenGLTypeIntegerUnsigned, 0);
-
-        PXOpenGLTextureUnbind(openGLContext, PXOpenGLTextureTypeCubeMap);
-        PXOpenGLBufferUnbind(openGLContext, PXOpenGLBufferArray);
-        PXOpenGLBufferUnbind(openGLContext, PXOpenGLBufferElementArray);
-        PXOpenGLVertexArrayUnbind(openGLContext);
-
-        // OpenGLSettingChange(openGLContext, OpenGLCULL_FACE, PXTrue);
-        PXOpenGLSettingChange(openGLContext, PXOpenGLDEPTH_TEST, PXTrue);
-
-        PXOpenGLPolygonRenderOrder(openGLContext, PXOpenGLPolygonRenderOrderModeCounterClockwise);
-    }
-
-#endif   
     
     //-------------------------------------------------------------------------
     // UI-Rendering
     //-------------------------------------------------------------------------
+#if 1
+    const PXSize uiElementAmount = graphicContext->UIElementLookUp.EntryAmountCurrent;
+
+    if(uiElementAmount > 0)
     {
         PXMouse* const mouse = &pxBitFireEngine->WindowMain.MouseCurrentInput;
 
         float mouseX = mouse->PositionNormalisized[0];
         float mouseY = mouse->PositionNormalisized[1];
      
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+       PXGraphicDrawColorRGBAF(graphicContext, 1, 1, 1, 1);
 
        // printf("%5.2f, %5.2f\n", mouseX, mouseY);
 
-        glColor4f(0, 0.7, 0, 1);
         float mouseHitBoxOffset = 0.05f;
        // glRectf(mouseX - mouseHitBoxOffset, mouseY + mouseHitBoxOffset, mouseX + mouseHitBoxOffset, mouseY - mouseHitBoxOffset);
 
-
-        const PXSize uiElementAmount = graphicContext->UIElementLookUp.EntryAmountCurrent;
-
         // glDisable(GL_DEPTH_TEST);
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_ALPHA_TEST);
-   
-        glDepthFunc(GL_LEQUAL);
+        //glEnable(GL_DEPTH_TEST);
+        //glEnable(GL_ALPHA_TEST);   
+        //glDepthFunc(GL_LEQUAL);
        /// glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
@@ -1937,23 +1899,29 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
             {
                 case PXUIElementTypePanel:
                 {
-                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                    PXGraphicDrawModeSet(graphicContext, PXGraphicDrawFillModeFill);
 
                     const float colorSelectedOffset = (pxUIElement->Hover == PXUIHoverStateHovered) * 0.3f;
-
                     const float titleBarHeight = 0.06;
 
-                    glColor4f(pxUIElement->BackGroundColor.Red + colorSelectedOffset, pxUIElement->BackGroundColor.Green + colorSelectedOffset, pxUIElement->BackGroundColor.Blue + colorSelectedOffset, pxUIElement->BackGroundColor.Alpha);
-                    glRectf(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height - titleBarHeight);
-                    glColor4f(0.60f, 0.25f, 0.25f, 1);
-                    glRectf(pxUIElement->X, pxUIElement->Height - titleBarHeight, pxUIElement->Width, pxUIElement->Height);
+                    PXGraphicDrawColorRGBAF
+                    (
+                        graphicContext,
+                        pxUIElement->BackGroundColor.Red + colorSelectedOffset,
+                        pxUIElement->BackGroundColor.Green + colorSelectedOffset,
+                        pxUIElement->BackGroundColor.Blue + colorSelectedOffset, 
+                        pxUIElement->BackGroundColor.Alpha
+                    );
+                    PXGraphicRectangleDraw(graphicContext, pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height - titleBarHeight);
+                    PXGraphicDrawColorRGBAF(graphicContext, 0.60f, 0.25f, 0.25f, 1);
+                    PXGraphicRectangleDraw(graphicContext, pxUIElement->X, pxUIElement->Height - titleBarHeight, pxUIElement->Width, pxUIElement->Height);
 
                     float xxx = pxUIElement->Height;  
                     float yyyy = pxUIElement->Y;
 
                     PXColorRGBAF uuu = pxUIElement->BackGroundColor;
 
-                    PXUIElementColorSet4F(pxUIElement, 1,1,1,1);
+                    PXUIElementColorSet4F(pxUIElement, 1, 1, 1, 1);
 
                     pxUIElement->NameTextScale = 0.45;
                     pxUIElement->Y = pxUIElement->Height - titleBarHeight;
@@ -1971,9 +1939,9 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
                     PXUIElementColorSet4F(pxUIElement, uuu.Red, uuu.Green, uuu.Blue, uuu.Alpha);
 
 
-                    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                    glColor3f(0.2f, 0.2f, 0.2f);
-                    glRectf(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
+                    PXGraphicDrawModeSet(graphicContext, PXGraphicDrawFillModeLines);
+                    PXGraphicDrawColorRGBF(graphicContext, 0.2f, 0.2f, 0.2f);
+                    PXGraphicRectangleDraw(graphicContext, pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
 
                     break;
                 }
@@ -1999,17 +1967,16 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
                         bY = bY + pxUIElementParent->Height;
                     }
 
-
-                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                    PXGraphicDrawModeSet(graphicContext, PXGraphicDrawFillModeFill);
 
                     const float colorSelectedOffset = (pxUIElement->Hover == PXUIHoverStateHovered) * 0.3f;
 
-                    glColor4f(pxUIElement->BackGroundColor.Red + colorSelectedOffset, pxUIElement->BackGroundColor.Green + colorSelectedOffset, pxUIElement->BackGroundColor.Blue + colorSelectedOffset, pxUIElement->BackGroundColor.Alpha);
-                    glRectf(aX, aY, bX, bY);
+                    PXGraphicDrawColorRGBAF(graphicContext, pxUIElement->BackGroundColor.Red + colorSelectedOffset, pxUIElement->BackGroundColor.Green + colorSelectedOffset, pxUIElement->BackGroundColor.Blue + colorSelectedOffset, pxUIElement->BackGroundColor.Alpha);
+                    PXGraphicRectangleDraw(graphicContext, aX, aY, bX, bY);
                     
-                    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                    glColor3f(0, 0, 0);
-                    glRectf(aX, aY, bX, bY);
+                    PXGraphicDrawModeSet(graphicContext, PXGraphicDrawFillModeLines);
+                    PXGraphicDrawColorRGBF(graphicContext, 0, 0, 0);
+                    PXGraphicRectangleDraw(graphicContext, aX, aY, bX, bY);
 
                     break;
                 }
@@ -2017,14 +1984,11 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
                 {
                     const float colorSelectedOffset = (pxUIElement->Hover == PXUIHoverStateHovered) * 0.3f;
 
-                    glEnable(GL_TEXTURE_2D);
-                    //PXOpenGLTextureActivate(openGLContext, 0);
+                    PXGraphicDrawModeSet(graphicContext, PXGraphicDrawFillModeFill);
 
-                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-                    glColor4f(1,1,1,1);
-
-                    glColor4f(pxUIElement->BackGroundColor.Red + colorSelectedOffset, pxUIElement->BackGroundColor.Green + colorSelectedOffset, pxUIElement->BackGroundColor.Blue + colorSelectedOffset, pxUIElement->BackGroundColor.Alpha);
-                    glBindTexture(GL_TEXTURE_2D, pxUIElement->TextureID);
+                    PXGraphicDrawColorRGBF(graphicContext, pxUIElement->BackGroundColor.Red + colorSelectedOffset, pxUIElement->BackGroundColor.Green + colorSelectedOffset, pxUIElement->BackGroundColor.Blue + colorSelectedOffset, pxUIElement->BackGroundColor.Alpha);
+                   
+                    PXGraphicTexture2DSelect(graphicContext, pxUIElement->TextureReference);
 
                     // Parent
                     PXUIElement* const pxUIElementParent = pxUIElement->Parent;               
@@ -2042,23 +2006,11 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
                         aY = aY + pxUIElementParent->Y;
                         bX = bX + pxUIElementParent->Width;
                         bY = bY + pxUIElementParent->Height;
-                    }           
-          
-#if 1
-                    glBegin(GL_QUADS);
-                    glTexCoord2f(0, 1);
-                    glVertex2f(aX, aY);
-                    glTexCoord2f(1, 1);
-                    glVertex2f(bX, aY);
-                    glTexCoord2f(1, 0);
-                    glVertex2f(bX, bY);
-                    glTexCoord2f(0, 0);
-                    glVertex2f(aX, bY);
-                    glEnd();
-#endif
+                    } 
 
-                    glBindTexture(GL_TEXTURE_2D, 0);
-                    glDisable(GL_TEXTURE_2D);
+                    PXGraphicRectangleDrawTx(graphicContext, aX, aY, bX, bY, 0, 1, 1, 0);
+
+                    PXGraphicTexture2DSelect(graphicContext, pxUIElement->TextureReference);
 
                     break;
                 }
@@ -2096,16 +2048,21 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
                         ((bY + 1) / 2.0f)* window->Height,
                     };
 
+
+                    PXViewPort pxViewPort;
+
                     // Render to our framebuffer
                     //glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
-                    glViewport(viewSize[0], viewSize[1], viewSize[2] - viewSize[0], viewSize[3] - viewSize[1]); // Render on the whole framebuffer, complete from the lower left corner to the upper right
-
+                    // Render on the whole framebuffer, complete from the lower left corner to the upper right
+                    PXViewPortSetXYWH(&pxViewPort, viewSize[0], viewSize[1], viewSize[2] - viewSize[0], viewSize[3] - viewSize[1]);
+                    PXGraphicViewPortSet(graphicContext, &pxViewPort);
 
                     BFEngineRenderScene(pxBitFireEngine);
                  
                     // Render to our framebuffer
                     //glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
-                    glViewport(0, 0, window->Width, window->Height);
+                    PXViewPortSetWH(&pxViewPort, window->Width, window->Height);
+                    PXGraphicViewPortSet(graphicContext, &pxViewPort);
 
                     break;
                 }
@@ -2116,14 +2073,8 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
         }
     }
     //-------------------------------------------------------------------------
+#endif
 
-    return;
-
-    PXOpenGLShaderProgramUse(openGLContext, 1);
-    CameraDataGet(window, 1);
-    CameraDataUpdate(window, mainCamera);
-
- 
 
     //-------------------------------------------------------------------------
     // 2D-Scene Rendering (Sprites)
@@ -2138,31 +2089,15 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 
         PXSprite* const pxSprite = *(PXSprite**)pxDictionaryEntry.Value;
 
-        PXVector3F position;
-
-        PXMatrix4x4FPosition(&pxSprite->Position, &position);
-
-        PXOpenGLShaderProgramUse(graphicContext, 1);
-        //glBindTexture(GL_TEXTURE_2D, 0);
-        glBindTexture(GL_TEXTURE_2D, pxSprite->Texture.ID);
-
-        //glColor3f(1,1,1);
-
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        glBegin(GL_POLYGON);
-        glTexCoord2f(0, 0); glVertex3f(0, 1, 0);
-        glTexCoord2f(1, 0); glVertex3f(1, 1, 0); // 10
-        glTexCoord2f(1, 1); glVertex3f(1, 0, 0); // 00
-        glTexCoord2f(0, 1); glVertex3f(0, 0, 0); // 01
-        glEnd();
-
-        glBindTexture(GL_TEXTURE_2D, 0);
+        PXGraphicSpriteDraw(graphicContext, pxSprite);
     }
     //-------------------------------------------------------------------------
 }
 
 void BFEngineRenderText(BFEngine* const bfEngine, PXUIElement* const pxUIElement)
 {
+    PXGraphicContext* const pxGraphicContext = &bfEngine->WindowMain.GraphicInstance;
+
     PXUIElement* const pxUIElementParent = pxUIElement->Parent;
 
     float aX = pxUIElement->X;
@@ -2180,37 +2115,17 @@ void BFEngineRenderText(BFEngine* const bfEngine, PXUIElement* const pxUIElement
 
     float offsetX = 0;
 
-
-
     PXFont* const font = pxUIElement->FontID;
 
+    PXGraphicDrawModeSet(pxGraphicContext, PXGraphicDrawFillModeFill);
 
-    // glEnable(GL_STENCIL_TEST);
+    PXOpenGLBlendingMode(pxGraphicContext, PXBlendingModeOneToOne);
 
-    // glEnable(GL_DEPTH_TEST);
-
-   // glEnable(GL_BLEND);
-
-     //glClearStencil(0x00);
-     //glClear(GL_STENCIL_BUFFER_BIT);
-
-
-   // glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
-    //glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_SRC_COLOR);
-
-    // glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
-
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-    glEnable(GL_BLEND);
-
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, font->FontElement[0].FontPageList[0].TextureID);
+    PXGraphicTexture2DSelect(&bfEngine->WindowMain.GraphicInstance, &font->MainPage.Texture);
 
     for (PXSize i = 0; pxUIElement->Name[i]; ++i)
     {
-        PXSpriteFontCharacter* const pxSpriteFontCharacter = PXSpriteFontGetCharacter(&font->FontElement[0], pxUIElement->Name[i]);
+        PXFontPageCharacter* const pxFontPageCharacter = PXFontPageCharacterFetch(&font->MainPage, pxUIElement->Name[i]);
 
         float charWidth;
         float charHeight;
@@ -2220,16 +2135,16 @@ void BFEngineRenderText(BFEngine* const bfEngine, PXUIElement* const pxUIElement
         float tx2;
         float ty2;
 
-        if (pxSpriteFontCharacter)
+        if (pxFontPageCharacter)
         {
-            charWidth = pxSpriteFontCharacter->Size[0];
-            charHeight = pxSpriteFontCharacter->Size[1];
-            charWidthSpacing = pxSpriteFontCharacter->XAdvance;
+            charWidth = pxFontPageCharacter->Size[0];
+            charHeight = pxFontPageCharacter->Size[1];
+            charWidthSpacing = pxFontPageCharacter->XAdvance;
 
-            tx1 = pxSpriteFontCharacter->Position[0] / 512.0f;
-            ty1 = pxSpriteFontCharacter->Position[1] / 512.0f;
-            tx2 = ((pxSpriteFontCharacter->Position[0] + pxSpriteFontCharacter->Size[0]) / 512.0f);
-            ty2 = ((pxSpriteFontCharacter->Position[1] + pxSpriteFontCharacter->Size[1]) / 512.0f);
+            tx1 = pxFontPageCharacter->Position[0] / 512.0f;
+            ty1 = pxFontPageCharacter->Position[1] / 512.0f;
+            tx2 = ((pxFontPageCharacter->Position[0] + pxFontPageCharacter->Size[0]) / 512.0f);
+            ty2 = ((pxFontPageCharacter->Position[1] + pxFontPageCharacter->Size[1]) / 512.0f);
         }
         else
         {
@@ -2258,144 +2173,40 @@ void BFEngineRenderText(BFEngine* const bfEngine, PXUIElement* const pxUIElement
             continue;
         }
 
-
-
-        glColor4f
+        PXGraphicDrawColorRGBAF // Text color
         (
+            pxGraphicContext,
             pxUIElement->BackGroundColor.Red,
             pxUIElement->BackGroundColor.Green,
             pxUIElement->BackGroundColor.Blue,
             pxUIElement->BackGroundColor.Alpha
-        ); // Text color
+        );
 
-        if (pxSpriteFontCharacter)
-        {
-            glBlendFunc(GL_ONE, GL_ONE); // Direct 1:1 mixing
-            
-            glBegin(GL_QUADS);
-            glTexCoord2f(tx1, ty2); glVertex2f(x1, y1);// 11
-            glTexCoord2f(tx2, ty2); glVertex2f(x2, y1);// 10
-            glTexCoord2f(tx2, ty1); glVertex2f(x2, y2);// 00
-            glTexCoord2f(tx1, ty1); glVertex2f(x1, y2);// 01
-            glEnd();
+        if (pxFontPageCharacter)
+        { 
+            PXGraphicRectangleDrawTx(pxGraphicContext, x1, y1, x2, y2, tx1, ty1, tx2, ty2);
         }
         else
         {
-            glBindTexture(GL_TEXTURE_2D, 0);
-            glRectf(x1, y1, x2, y2);
-            glBindTexture(GL_TEXTURE_2D, font->FontElement[0].FontPageList[0].TextureID);
-        }
-
-
-        // glDepthFunc(GL_ALWAYS);
-
-      //  OpenGLClear(&graphicContext->OpenGLInstance, GL_STENCIL_BUFFER_BIT);
-       // glStencilMask(0xFF); // We set the value the stencil buffer uses
-
-
-
-
-
-        //glDisable(GL_DEPTH_TEST);
-
-        //glDepthFunc(GL_NOTEQUAL);
-
-
-        //glActiveTexture(0);
-
-      //  glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-        //glStencilFunc(GL_ALWAYS, 0, 0xFF);
-      //  glDisable(GL_DEPTH_TEST);
-       // glStencilMask(0x00);
-        //glDisable(GL_BLEND);
-
-      //  glEnable(GL_BLEND);
-
-      //  PXOpenGLClear(&graphicContext->OpenGLInstance, GL_STENCIL_BUFFER_BIT);
-
-      // Set White color for fake-alpha 
-
-
-
-        //glStencilMask(0xFF); // Rendering mask is 1
-        //glStencilFunc(GL_ALWAYS, 1, 0xFF);  // We setthe behaviour, sete everything we render to 0xFF
-        //glStencilOp(GL_ZERO, GL_ZERO, GL_REPLACE);
-
-#if 1
-                     //   glBegin(GL_QUADS);
-                        //glRectf(x1, y1, x2, y2);
-                      //  glEnd();
-
-
-#else
-        float triColorA = 0.0f;
-        float triColorB = 0.5f;
-        float triColorC = 0.25f;
-
-        glBegin(GL_QUADS);
-        glTexCoord2f(tx1, ty2); glColor4f(triColorA, triColorB, triColorC, 1); glVertex2f(x1, y1);// 11
-        glTexCoord2f(tx2, ty2); glColor4f(triColorA, triColorB, triColorC, 1); glVertex2f(x2, y1);// 10
-        glTexCoord2f(tx2, ty1); glColor4f(0, triColorC, 0, 1); glVertex2f(x2, y2);// 00
-        glTexCoord2f(tx1, ty1); glColor4f(0, triColorC, 0, 1); glVertex2f(x1, y2);// 01
-        glEnd();
-#endif
-
-
-        // glDisable(GL_BLEND);
-
-
-        // glBlendFunc(GL_ONE, GL_ONE);
-
-         //glAlphaFunc();
-
-        // glStencilFunc(GL_EQUAL, 1, 0xFF);
-        // glStencilMask(0x00);
-        // glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-        // glDisable(GL_DEPTH_TEST);
-
-
-
-
-       //  glEnable(GL_DEPTH_TEST);
+            PXGraphicTexture2DSelect(pxGraphicContext, 0);
+            PXGraphicRectangleDraw(pxGraphicContext, x1, y1, x2, y2);
+            PXGraphicTexture2DSelect(pxGraphicContext, &font->MainPage.Texture);
+        }   
     }
 
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glDisable(GL_TEXTURE_2D);
-
-    glDisable(GL_BLEND);
-    // glDisable(GL_STENCIL_TEST);
+    PXGraphicTexture2DSelect(&bfEngine->WindowMain.GraphicInstance, 0);
+    PXOpenGLBlendingMode(pxGraphicContext, PXBlendingModeNone);
 }
 
 void BFEngineRenderScene(BFEngine* const bfEngine)
 {
     PXGraphicContext* const graphicContext = &bfEngine->WindowMain.GraphicInstance;
-    PXOpenGL* const openGLContext = &graphicContext->OpenGLInstance;
 
     //-------------------------------------------------------------------------
     // 3D-Scene Rendering (Models)
     //-------------------------------------------------------------------------
 
     //PXOpenGLShaderProgramUse(openGLContext, 0); 
-
-    glColor4f(1, 1, 1, 1);
-#if 0
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-    glBegin(GL_TRIANGLES);
-    glVertex2d(-0.5f, -0.5f);
-    glVertex2d(0.5f, -0.5f);
-    glVertex2d(0.5f, 0.5f);
-#else
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-    glBegin(GL_QUADS);
-    glColor4f(1, 0, 0, 1); glVertex2d(-1, -1);
-    glColor4f(0, 1, 0, 1); glVertex2d(1, -1);
-    glColor4f(0, 0, 1, 1); glVertex2d(1, 1);
-    glColor4f(1, 1, 0, 0.5); glVertex2d(-1, 1);
-#endif
-    glEnd();
-
 
     const PXSize renderList = PXGraphicRenderableListSize(graphicContext);
 
@@ -2429,61 +2240,23 @@ void BFEngineRenderScene(BFEngine* const bfEngine)
             {
                 const unsigned int shaderID = pxRenderable->MeshSegmentList[0].ShaderID;
 
-                PXGraphicShaderUse(&bfEngine->WindowMain.GraphicInstance, shaderID);
-                CameraDataGet(&bfEngine->WindowMain, shaderID);
-                CameraDataUpdate(&bfEngine->WindowMain, &bfEngine->MainCamera);
+                PXGraphicShaderProgramSelect(&bfEngine->WindowMain.GraphicInstance, shaderID);
 
+                PXGraphicShaderVariableIDFetch(&bfEngine->WindowMain.GraphicInstance, shaderID, &_matrixModelID, "MatrixModel");
+                PXGraphicShaderVariableIDFetch(&bfEngine->WindowMain.GraphicInstance, shaderID, &_matrixViewID, "MatrixView");
+                PXGraphicShaderVariableIDFetch(&bfEngine->WindowMain.GraphicInstance, shaderID, &_matrixProjectionID, "MatrixProjection");
+                PXGraphicShaderVariableIDFetch(&bfEngine->WindowMain.GraphicInstance, shaderID, &_materialTextureID, "MaterialTexture");
+
+                PXGraphicShaderUpdateMatrix4x4F(&bfEngine->WindowMain.GraphicInstance, _matrixViewID, bfEngine->MainCamera.MatrixView.Data);
+                PXGraphicShaderUpdateMatrix4x4F(&bfEngine->WindowMain.GraphicInstance, _matrixProjectionID, bfEngine->MainCamera.MatrixProjection.Data);
                 PXGraphicShaderUpdateMatrix4x4F(&bfEngine->WindowMain.GraphicInstance, _matrixModelID, pxRenderable->MatrixModel.Data);
+
+              
             }
         }
+  
 
-        //glFrontFace(0x0900);
-
-        PXOpenGLVertexArrayBind(&graphicContext->OpenGLInstance, pxRenderable->VAO); // VAO
-
-        PXOpenGLBufferBind(&graphicContext->OpenGLInstance, PXOpenGLBufferArray, pxRenderable->VBO);
-
-        // Render mesh segments
-
-
-        unsigned int renderAmountOffset = 0;
-
-        //OpenGLTextureActivate(openGLContext, 0);
-        //unsigned int shaderVarID = OpenGLShaderVariableIDGet(openGLContext, 1, "MaterialTexture");
-        //OpenGLShaderVariableIx1(openGLContext, shaderVarID, 0);
-
-        const PXBool ownsIBO = pxRenderable->IBO != (unsigned int)-1 && 0;
-
-        for (size_t i = 0; i < pxRenderable->MeshSegmentListSize; ++i)
-        {
-            const PXRenderableMeshSegment* const pxRenderableMeshSegment = &pxRenderable->MeshSegmentList[i];
-            const size_t renderAmount = pxRenderableMeshSegment->NumberOfVertices;
-
-            const PXOpenGLRenderMode renderMode = PXGraphicRenderModeToPXOpenGL(pxRenderableMeshSegment->RenderMode);
-
-            PXOpenGLTextureBind(&graphicContext->OpenGLInstance, PXOpenGLTextureType2D, pxRenderableMeshSegment->TextureID);
-
-            // Render
-            //glDrawBuffer(GL_POINTS);
-            //glDrawElements(GL_LINES, pxRenderable->RenderSize, GL_UNSIGNED_INT, 0);
-            //glDrawArrays(GL_POINTS, renderAmountOffset, renderAmount);
-            //glDrawArrays(GL_LINES, 0, pxRenderable->RenderSize);
-            if (ownsIBO)
-            {
-                PXOpenGLBufferBind(&graphicContext->OpenGLInstance, PXOpenGLBufferElementArray, pxRenderable->IBO);
-                // OpenGLDrawElements(openGLContext, renderMode, renderAmount, OpenGLTypeByteUnsigned, 0);
-                PXOpenGLBufferUnbind(&graphicContext->OpenGLInstance, PXOpenGLBufferElementArray);
-            }
-            else
-            {
-                PXOpenGLDrawArrays(&graphicContext->OpenGLInstance, renderMode, renderAmountOffset, renderAmount);
-            }
-
-            renderAmountOffset += renderAmount;
-        }
-
-        PXOpenGLBufferUnbind(&graphicContext->OpenGLInstance, PXOpenGLBufferArray);
-        PXOpenGLVertexArrayUnbind(&graphicContext->OpenGLInstance);
+       // PXGraphicVertexStructureDraw(&pxBitFireEngine->WindowMain.GraphicInstance, &pxBitFireEngine->pxModelTEST, &pxBitFireEngine->MainCamera);
     }
 
 
@@ -2687,4 +2460,13 @@ void BFEngineRenderScene(BFEngine* const bfEngine)
     }
 
      */
+}
+
+void BFEngineRenderSkyBox(BFEngine* const bfEngine)
+{
+    PXWindow* const window = &bfEngine->WindowMain;
+    PXGraphicContext* const graphicContext = &bfEngine->WindowMain.GraphicInstance;
+    PXOpenGL* const openGLContext = &graphicContext->OpenGLInstance;
+
+    PXOpenGLSkyboxDraw(openGLContext, bfEngine->DefaultSkyBox, &bfEngine->MainCamera);
 }

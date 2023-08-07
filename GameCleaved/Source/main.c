@@ -1,4 +1,4 @@
-#include "main.h"
+﻿#include "main.h"
 
 #if !defined(_DEBUG) && defined(OSWindowsE)
 #include <windows.h>
@@ -46,114 +46,87 @@ void OnUpdateUI(const BFEngine* bitFireEngine)
 }
 void OnStartUp(BFEngine* const bitFireEngine)
 {
+    PXGraphicContext* const pxGraphicContext = &bitFireEngine->WindowMain.GraphicInstance;
+
     PXCameraConstruct(&bitFireEngine->MainCamera);
 
-    PXWindowCursorCaptureMode(&bitFireEngine->WindowMain, PXWindowCursorLockAndHide);
+    //PXWindowCursorCaptureMode(&bitFireEngine->WindowMain, PXWindowCursorLockAndHide);
 
     //---<Setup>
-    _simplex.ID = -1;
-    _worldShader.ID = -1;
-    _hudShaderID.ID = -1;
+    _simplex.ResourceID.PXID = -1;
+    _worldShader.ResourceID.PXID = -1;
+    _hudShaderID.ResourceID.PXID = -1;
 
+    //PXGraphicBlendingMode(&bitFireEngine->WindowMain.GraphicInstance, PXBlendingModeOneToOne);
 
-    {
-        PXText vertexShader;
-        PXTextMakeFixedNamedA(&vertexShader, vertexShaderBuffer, "Shader/HUD.vert");
-
-        PXText fragmentShader;
-        PXTextMakeFixedNamedA(&fragmentShader, fragmentShaderBuffer, "Shader/HUD.frag");
-
-        PXGraphicShaderProgramLoadGLSL(&bitFireEngine->WindowMain.GraphicInstance, &_hudShaderID, &vertexShader, &fragmentShader);
-    }
-
-    //---<Load>
-    {
-        PXText vertexShader;
-        PXTextMakeFixedNamedA(&vertexShader, vertexShaderBuffer, "Shader/WS.vert");
-
-        PXText fragmentShader;
-        PXTextMakeFixedNamedA(&fragmentShader, fragmentShaderBuffer, "Shader/WS.frag");
-
-        PXGraphicShaderProgramLoadGLSL(&bitFireEngine->WindowMain.GraphicInstance, &_worldShader, &vertexShader, &fragmentShader);
-    }
-
-
-
-
-    {
-        PXText vertexShader;
-        PXTextMakeFixedNamedA(&vertexShader, vertexShaderBuffer, "Shader/Simplex.vert");
-
-        PXText fragmentShader;
-        PXTextMakeFixedNamedA(&fragmentShader, fragmentShaderBuffer, "Shader/Simplex.frag");
-
-        PXGraphicShaderProgramLoadGLSL(&bitFireEngine->WindowMain.GraphicInstance, &_simplex, &vertexShader, &fragmentShader);
-    }
-
-    //  //GameSystem.Load(GameSystem.ShaderHitBox, L"Shader/HitBox.vert", L"Shader/HitBox.frag");
-
-
-    if(0)
-    {
-        PXText shaderVertex;
-        PXText shaderFragment;
-        PXText textureRight;
-        PXText textureLeft;
-        PXText textureTop;
-        PXText textureBottom;
-        PXText textureBack;
-        PXText textureFront;
-
-        PXTextMakeFixedNamedA(&shaderVertex, shaderVertexBuffer, "Shader/SkyBox.vert");
-        PXTextMakeFixedNamedA(&shaderFragment, shaderFragmentBuffer, "Shader/SkyBox.frag");
-
-        PXTextMakeFixedNamedA(&textureRight, textureRightBuffer, "Texture/SkyBox_Side.png");
-        PXTextMakeFixedNamedA(&textureLeft, textureLeftBuffer, "Texture/SkyBox_Side.png");
-        PXTextMakeFixedNamedA(&textureTop, textureTopBuffer, "Texture/SkyBox_Top.png");
-        PXTextMakeFixedNamedA(&textureBottom, textureBottomBuffer, "Texture/SkyBox_Bottom.png");
-        PXTextMakeFixedNamedA(&textureBack, textureBackBuffer, "Texture/SkyBox_Side.png");
-        PXTextMakeFixedNamedA(&textureFront, textureFrontBuffer, "Texture/SkyBox_Side.png");       
-
-        PXActionResult skyBuxRegisterResult = PXGraphicSkyboxRegisterD
-        (
-            &bitFireEngine->WindowMain.GraphicInstance,
-            &_skybox,
-            &shaderVertex,
-            &shaderFragment,
-            &textureRight,
-            &textureLeft,
-            &textureTop,
-            &textureBottom,
-            &textureBack,
-            &textureFront
-        ); 
-    }
-
-    PXMemoryClear(&_backGround, sizeof(PXSprite));
-
-    PXMatrix4x4FScaleBy(&_backGround.Position, 0.5, &_backGround.Position);
-
-    {
-        PXVector3F moveTo = { 13.5, -0.2, -5 };
-
-        PXMatrix4x4FMoveTo(&_backGround.Position, &moveTo, &_backGround.Position);
-    }
-   
-    {
-        PXText filePath;
-        PXTextMakeFixedA(&filePath, "Texture/MissingTexture.bmp");
-
-        PXGraphicTextureLoad(&bitFireEngine->WindowMain.GraphicInstance, &_backGround.Texture, &filePath);
-    }
-
-    PXGraphicSpriteRegister(&bitFireEngine->WindowMain.GraphicInstance, &_backGround);
+    PXGraphicShaderProgramCreateVPA(pxGraphicContext, &_hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
+    PXGraphicShaderProgramCreateVPA(pxGraphicContext, &_worldShader, "Shader/WS.vert", "Shader/WS.frag");
+    PXGraphicShaderProgramCreateVPA(pxGraphicContext, &_simplex, "Shader/Simplex.vert", "Shader/Simplex.frag");
+       
+    
+    PXGraphicSkyboxRegisterA
+    (
+        &bitFireEngine->WindowMain.GraphicInstance,
+        &_skybox,
+        "Shader/SkyBox.vert",
+        "Shader/SkyBox.frag",
+        "Texture/MissingTexture.bmp",
+        "Texture/MissingTexture.bmp",
+        "Texture/MissingTexture.bmp",
+        "Texture/MissingTexture.bmp",
+        "Texture/MissingTexture.bmp",
+        "Texture/MissingTexture.bmp"
+    );
+    bitFireEngine->DefaultSkyBox = &_skybox;
     
 
 
+
+
+    PXGraphicResourceLoadA(&bitFireEngine->pxModelTEST, "Model/Tiger.obj");
+    PXGraphicVertexStructureRegister(&bitFireEngine->WindowMain.GraphicInstance,&bitFireEngine->pxModelTEST);
+
+    bitFireEngine->pxModelTEST.ShaderProgramReference = &_worldShader;
+
+#if 1
+
+    
+
+  
+
+
+
+
+
+
+
+
+
+    PXGraphicSpriteConstruct(pxGraphicContext, &_dialogBox);
+   // PXMatrix4x4FMoveXY(&_dialogBox.Position, 0.8, 0.2);
+    //PXVector2FSetXY(&_dialogBox.Margin, );
+    PXMarginSet(&_dialogBox.Margin, 0.8f, 0.9f, 0.8f, -0.2f);
+   // PXMatrix4x4FScaleSetXY(&_dialogBox.Position, 0.8, 0.2);
+    // PXMatrix4x4FMoveTo(&_backGround.Position, &moveTo,  13.5, -0.2, -5;   
+    PXGraphicSpriteTextureLoadA(pxGraphicContext, &_dialogBox, "Texture/Dialog.png");
+    PXGraphicSpriteTextureScaleBorder(&_dialogBox, 20, 20);
     //_backGround.ShaderUse(_simplex);
     //_backGround.MeshShare(_rectangleMesh);
+    PXGraphicSpriteRegister(&bitFireEngine->WindowMain.GraphicInstance, &_dialogBox);
 
 
+    PXGraphicSpriteConstruct(pxGraphicContext, &_backGround);
+    PXMatrix4x4FScaleBy(&_backGround.Position, 0.25, &_backGround.Position);
+    // PXMatrix4x4FMoveTo(&_backGround.Position, &moveTo,  13.5, -0.2, -5;   
+    PXGraphicSpriteTextureLoadA(pxGraphicContext, &_backGround, "Texture/BackGround.png");
+    //_backGround.ShaderUse(_simplex);
+    //_backGround.MeshShare(_rectangleMesh);
+    PXGraphicSpriteRegister(pxGraphicContext, &_backGround);
+
+
+    PXCameraViewChangeToPerspective(&bitFireEngine->MainCamera,80, PXCameraAspectRatio(&bitFireEngine->MainCamera), -0.5, 2000);
+
+#endif
 
 
 
@@ -359,7 +332,7 @@ void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input)
 #if 1
     PXWindow* pxWindow = &bitFireEngine->WindowMain;
     PXKeyBoard* keyboard = &bitFireEngine->WindowMain.KeyBoardCurrentInput;
-    PXMouse* mouse = &input->MouseInput;
+    PXMouse* mouse = &bitFireEngine->WindowMain.MouseCurrentInput;
     PXCamera* camera = &bitFireEngine->MainCamera;
     PXVector3F movement = {0,0,0};
 
@@ -395,13 +368,25 @@ void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input)
     }
 #endif
 
+    PXControllerDataGet(&bitFireEngine->Controller);
+
     //_playerCharacterLuna.MatrixModel.Move(movement);
 
     if(PXWindowInteractable(pxWindow) || 1)
     {
         PXCameraMove(camera, &movement);
 
-        PXVector3F mouseMovement = { mouse->Delta[0], mouse->Delta[1], 0};
+        PXVector3F mouseMovement = 
+        //{ mouse->Delta[0] * 2, mouse->Delta[1] * 2, 0};
+        {
+            (bitFireEngine->Controller.Axis[2] / (float)0xFFFF) * 2 - 1 + -mouse->Delta[0],
+            
+            (bitFireEngine->Controller.Axis[3] / (float)0xFFFF) * 2 - 1 + mouse->Delta[1] ,
+
+  0
+        };
+
+     
 
        // printf("[#][OnMouseMove] X:%5.2f Y:%5.2f\n", mouseMovement.X, mouseMovement.Y);
 

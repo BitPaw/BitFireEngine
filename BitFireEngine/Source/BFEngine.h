@@ -1,7 +1,6 @@
 #ifndef BFEngineINCLUDE
 #define BFEngineINCLUDE
 
-#include <Media/PXFont.h>
 #include <Media/PXImage.h>
 #include <Media/PXType.h>
 #include <Graphic/PXGraphic.h>
@@ -10,8 +9,11 @@
 #include <OS/Window/PXWindow.h>
 #include <OS/Time/PXTime.h>
 #include <Graphic/PXCamera.h>
+#include <OS/Hardware/PXController.h>
 
 #include <System/Device/KeyBoard/KeyBoardCache.h>
+
+#include <OS/Graphic/PXGraphicGeneral.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -62,6 +64,8 @@ extern "C"
    
         PXWindow WindowMain;
 
+        PXController Controller;
+
         PXCamera MainCamera;
         PXFont* DefaultFont;
         PXSkyBox* DefaultSkyBox;
@@ -71,6 +75,9 @@ extern "C"
         ShutDownEvent ShutDownCallBack;
         UpdateGameLogicEvent UpdateGameLogicCallBack;
         UpdateInputEvent UpdateInputCallBack;
+
+
+        PXVertexStructure pxModelTEST;
     }
     BFEngine;
 
@@ -93,7 +100,7 @@ extern "C"
 
     PXPrivate void BFEngineRenderText(BFEngine* const bfEngine, PXUIElement* const pxUIElement);
     PXPrivate void BFEngineRenderScene(BFEngine* const bfEngine);
-
+    PXPrivate void BFEngineRenderSkyBox(BFEngine* const bfEngine);
 
     /*
 

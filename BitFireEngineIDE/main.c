@@ -30,7 +30,7 @@ int main(int amountOFParameters, char** parameter)
     return 0;
 }
 
-PXTexture _dialogBoxTexture;
+PXTexture2D _dialogBoxTexture;
 
 
 
@@ -38,8 +38,11 @@ PXTexture _dialogBoxTexture;
 
 PXUIElement _uiSceneElements;
 PXUIElement _uiPanelScene;
-PXUIElement _uiSceneTexture;
+PXUIElement _uiSceneTexturePanel;
+PXTexture2D _uiSceneTexture;
+
 PXUIElement _uiInfoPanel;
+PXUIElement _uiInfoPositionText;
 
 PXUIElement _infoPanelImage;
 PXUIElement _infoPanelSpawn;
@@ -48,10 +51,13 @@ PXUIElement _positionText;
 PXFont DefaultFont;
 
 PXUIElement _textureTestA;
-PXTexture _testImage;
+PXTexture2D _testImage;
+PXRenderable _pxRenderableModel;
 
 void OnStartUp(BFEngine* const bitFireEngine)
 {
+
+
     PXGraphicContext* const graphicContext = &bitFireEngine->WindowMain.GraphicInstance;
     
 #if 1
@@ -65,14 +71,14 @@ void OnStartUp(BFEngine* const bitFireEngine)
 
         PXTextMakeFixedA(&pxText, "Texture/Scene.png");
 
-        PXGraphicTextureLoad(graphicContext, &_testImage, &pxText);
+        PXGraphicTexture2DLoad(graphicContext, &_testImage, &pxText);
     }
+
+
 
     PXText pxText;
     PXTextMakeFixedA(&pxText, "Font/A.fnt");
-    PXGraphicFontLoad(graphicContext, &DefaultFont, &pxText);
-
-
+    PXGraphicFontLoad(graphicContext, &DefaultFont, &pxText); 
 
 
     PXUIElementConstruct(&_uiSceneElements, PXUIElementTypePanel);
@@ -108,13 +114,14 @@ void OnStartUp(BFEngine* const bitFireEngine)
     PXGraphicUIElementRegister(graphicContext, &_uiPanelScene);
 
 
-    PXUIElementConstruct(&_uiSceneTexture, PXUIElementTypeRenderFrame);
-    PXUIElementParentSet(&_uiSceneTexture, &_uiPanelScene);
-    PXUIElementHoverable(&_uiSceneTexture, PXTrue);
-    PXUIElementPositionSetXYWH(&_uiSceneTexture, 0.02, 0.05, -0.02, -0.1, PXUIElementPositionRelative);
-    PXUIElementFontSet(&_uiSceneTexture, &DefaultFont);
-    _uiSceneTexture.TextureID = _testImage.ID;
-    PXGraphicUIElementRegister(graphicContext, &_uiSceneTexture);
+    PXUIElementConstruct(&_uiSceneTexturePanel, PXUIElementTypeRenderFrame);
+    PXUIElementParentSet(&_uiSceneTexturePanel, &_uiPanelScene);
+    PXUIElementHoverable(&_uiSceneTexturePanel, PXTrue);
+    PXUIElementPositionSetXYWH(&_uiSceneTexturePanel, 0.02, 0.05, -0.02, -0.1, PXUIElementPositionRelative);
+    PXUIElementFontSet(&_uiSceneTexturePanel, &DefaultFont);
+    _uiSceneTexturePanel.TextureReference = &_testImage;
+    _uiSceneTexturePanel.FrameRenderTextureReference = &_uiSceneTexture;
+    PXGraphicUIElementRegister(graphicContext, &_uiSceneTexturePanel);
     //_textureTestA.TextureID = _testImage.ID;
 
     PXUIElementConstruct(&_uiInfoPanel, PXUIElementTypePanel);
@@ -127,7 +134,28 @@ void OnStartUp(BFEngine* const bitFireEngine)
 
 
 
+    PXUIElementConstruct(&_uiInfoPositionText, PXUIElementTypeText);
+    PXUIElementParentSet(&_uiInfoPositionText, &_uiInfoPanel);
+    PXUIElementHoverable(&_uiInfoPositionText, PXTrue);
+    PXUIElementColorSet4F(&_uiInfoPositionText, 1, 1, 1, 1);
+    PXUIElementPositionSetXYWH(&_uiInfoPositionText, -0.02, -0.02, -0.02, -0.02, PXUIElementPositionRelative);
+    PXUIElementTextSetA(&_uiInfoPositionText, "Position");
+    PXUIElementFontSet(&_uiInfoPositionText, &DefaultFont);
+    PXGraphicUIElementRegister(graphicContext, &_uiInfoPositionText);
 
+
+    // Load model
+    {
+     //   PXModel pxModel;
+
+        PXText modelFilePath;
+        PXTextMakeFixedA(&modelFilePath, "Model/Tiger.obj");
+        //PXModelLoad(&bitFireEngine->pxModelTEST, &modelFilePath);
+
+       // PXGraphicModelLoad(graphicContext, &_pxRenderableModel, &modelFilePath);
+    }
+
+ 
 
 
 

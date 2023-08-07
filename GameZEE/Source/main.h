@@ -1,19 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <UI/UIText.h>
 #include <BFEngine.h>
 
 
 //BF::UIText* text;
 //BF::Model* sphere;
-PXTexture _blockTexture;
+PXTexture2D _blockTexture;
 
 PXSkyBox _skybox;
 PXRenderable _cubeModel;
 
-ShaderProgram _worldShader;
-ShaderProgram _hudShaderID;
+PXShaderProgram _worldShader;
+PXShaderProgram _hudShaderID;
 
 //BF::AudioSource _audioSource;
 float _deltaTime = 0;

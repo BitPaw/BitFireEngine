@@ -9,7 +9,8 @@ struct Material
     vec4 Ambient;
     vec4 Diffuse;
     vec4 Specular;
-}material;
+}
+material;
 
 in struct Vertex 
 {
@@ -17,13 +18,16 @@ in struct Vertex
   vec3 Normal;
   vec4 Color;
   vec2 TexturePosition;
-} vertex;
+}
+vertex;
 
 uniform sampler2D MaterialTexture;
 
 void main()
 {
-    vec3 color = vertex.Color.xyz;
+    float red = 1.0f;//vertex.Color.r / 1000.0f;
+    float green =  1.0f;//vertex.Color.g / 1000.0f;
+    float blue =  1.0f;//vertex.Color.b / 1000.0f;
 
-   fragcolor = texture(MaterialTexture, vertex.TexturePosition) * vec4(color, 1.0f);
+    fragcolor = vec4(red, green, blue, 1.0f);// + texture(MaterialTexture, vertex.TexturePosition);
 }
