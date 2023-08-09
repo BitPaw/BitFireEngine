@@ -83,7 +83,7 @@ void OnStartUp(BFEngine* const bitFireEngine)
 
 
 
-    PXGraphicResourceLoadA(&bitFireEngine->pxModelTEST, "Model/Tiger.obj");
+    PXResourceLoadA(&bitFireEngine->pxModelTEST, "Model/Tiger.obj");
     PXGraphicVertexStructureRegister(&bitFireEngine->WindowMain.GraphicInstance,&bitFireEngine->pxModelTEST);
 
     bitFireEngine->pxModelTEST.ShaderProgramReference = &_worldShader;

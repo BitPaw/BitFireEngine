@@ -6,7 +6,6 @@
 #include <Entity/BFSign.h>
 
 // PXUltima
-#include <Graphic/PXGraphic.h>
 #include <OS/Time/PXStopWatch.h>
 
 float _deltaTime = 0;

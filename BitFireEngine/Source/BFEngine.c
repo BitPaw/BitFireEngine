@@ -2,7 +2,6 @@
 
 #include <Media/PXText.h>
 #include <Media/PXModel.h>
-#include <Graphic/PXGraphic.h>
 #include <Math/PXMatrix.h>
 #include <OS/Async/PXEvent.h>
 
@@ -1423,6 +1422,8 @@ void BFEngineStart(BFEngine* const pxBitFireEngine)
     pxBitFireEngine->TimeFrequency = PXTimeCounterFrequencyGet();
 
 
+    PXMemorySet(&pxBitFireEngine->pxModelTEST, 0, sizeof(PXVertexStructure));
+
     PXStopWatch stopwatch;
 
     PXStopWatchConstruct(&stopwatch);
@@ -1856,7 +1857,7 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
     BFEngineRenderSkyBox(pxBitFireEngine);
 
 
-    PXGraphicVertexStructureDraw(graphicContext, &pxBitFireEngine->pxModelTEST, &pxBitFireEngine->MainCamera);
+   PXGraphicVertexStructureDraw(graphicContext, &pxBitFireEngine->pxModelTEST, &pxBitFireEngine->MainCamera);
 
 
     

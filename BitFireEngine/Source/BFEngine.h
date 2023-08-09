@@ -3,7 +3,7 @@
 
 #include <Media/PXImage.h>
 #include <Media/PXType.h>
-#include <Graphic/PXGraphic.h>
+#include <OS/Graphic/PXGraphic.h>
 #include <OS/Async/PXLock.h>
 #include <OS/Async/PXThread.h>
 #include <OS/Window/PXWindow.h>
@@ -13,7 +13,6 @@
 
 #include <System/Device/KeyBoard/KeyBoardCache.h>
 
-#include <OS/Graphic/PXGraphicGeneral.h>
 
 #ifdef __cplusplus
 extern "C"
