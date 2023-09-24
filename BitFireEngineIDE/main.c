@@ -58,7 +58,7 @@ void OnStartUp(BFEngine* const bitFireEngine)
 {
 
 
-    PXGraphicContext* const graphicContext = &bitFireEngine->WindowMain.GraphicInstance;
+    PXGraphicContext* const graphicContext = &bitFireEngine->Graphic;
     
 #if 1
 
@@ -84,7 +84,7 @@ void OnStartUp(BFEngine* const bitFireEngine)
     PXUIElementConstruct(&_uiSceneElements, PXUIElementTypePanel);
     PXUIElementHoverable(&_uiSceneElements, PXTrue);
     PXUIElementColorSet4F(&_uiSceneElements, 0.1, 0.1, 0.1, 1);
-    PXUIElementPositionSetXYWH(&_uiSceneElements, -0.98, -0.95, -0.60, 0.95, PXUIElementPositionRelative);
+    PXUIElementSizeSet(&_uiSceneElements, -0.98, -0.95, -0.60, 0.95, PXUIElementPositionRelative);
     PXUIElementTextSetA(&_uiSceneElements, "Assets");
     PXUIElementFontSet(&_uiSceneElements, &DefaultFont);
     PXGraphicUIElementRegister(graphicContext, &_uiSceneElements);
@@ -93,14 +93,14 @@ void OnStartUp(BFEngine* const bitFireEngine)
     PXUIElementParentSet(&_infoPanelSpawn, &_uiSceneElements);
     PXUIElementHoverable(&_infoPanelSpawn, PXTrue);
     PXUIElementColorSet4F(&_infoPanelSpawn, 0.40f, 0.15f, 0.15f, 1);
-    PXUIElementPositionSetXYWH(&_infoPanelSpawn, 0.02, 0.05, -0.02, -1.65, PXUIElementPositionRelative);
+    PXUIElementSizeSet(&_infoPanelSpawn, 0.02, 0.05, -0.02, -1.65, PXUIElementPositionRelative);
     PXGraphicUIElementRegister(graphicContext, &_infoPanelSpawn);
 
     PXUIElementConstruct(&_infoPanelText, PXUIElementTypeText);
     PXUIElementParentSet(&_infoPanelText, &_uiSceneElements);
     PXUIElementFontSet(&_infoPanelText, &DefaultFont);
     PXUIElementColorSet4F(&_infoPanelText, 0.5, 0.5, 0.5, 1);
-    PXUIElementPositionSetXYWH(&_infoPanelText, 0.06, 0.1, -0.025, -0.025, PXUIElementPositionRelative);
+    PXUIElementSizeSet(&_infoPanelText, 0.06, 0.1, -0.025, -0.025, PXUIElementPositionRelative);
     PXUIElementTextSetA(&_infoPanelText, "Button");
     PXGraphicUIElementRegister(graphicContext, &_infoPanelText);
 
@@ -108,7 +108,7 @@ void OnStartUp(BFEngine* const bitFireEngine)
     PXUIElementConstruct(&_uiPanelScene, PXUIElementTypePanel);
     PXUIElementHoverable(&_uiPanelScene, PXTrue);
     PXUIElementColorSet4F(&_uiPanelScene, 0.1, 0.1, 0.1, 1);
-    PXUIElementPositionSetXYWH(&_uiPanelScene, -0.59, -0.95, 0.6, 0.95, PXUIElementPositionRelative);
+    PXUIElementSizeSet(&_uiPanelScene, -0.59, -0.95, 0.6, 0.95, PXUIElementPositionRelative);
     PXUIElementTextSetA(&_uiPanelScene, "Scene");
     PXUIElementFontSet(&_uiPanelScene, &DefaultFont);
     PXGraphicUIElementRegister(graphicContext, &_uiPanelScene);
@@ -117,7 +117,7 @@ void OnStartUp(BFEngine* const bitFireEngine)
     PXUIElementConstruct(&_uiSceneTexturePanel, PXUIElementTypeRenderFrame);
     PXUIElementParentSet(&_uiSceneTexturePanel, &_uiPanelScene);
     PXUIElementHoverable(&_uiSceneTexturePanel, PXTrue);
-    PXUIElementPositionSetXYWH(&_uiSceneTexturePanel, 0.02, 0.05, -0.02, -0.1, PXUIElementPositionRelative);
+    PXUIElementSizeSet(&_uiSceneTexturePanel, 0.02, 0.05, -0.02, -0.1, PXUIElementPositionRelative);
     PXUIElementFontSet(&_uiSceneTexturePanel, &DefaultFont);
     _uiSceneTexturePanel.TextureReference = &_testImage;
     _uiSceneTexturePanel.FrameRenderTextureReference = &_uiSceneTexture;
@@ -127,7 +127,7 @@ void OnStartUp(BFEngine* const bitFireEngine)
     PXUIElementConstruct(&_uiInfoPanel, PXUIElementTypePanel);
     PXUIElementHoverable(&_uiInfoPanel, PXTrue);
     PXUIElementColorSet4F(&_uiInfoPanel, 0.1, 0.1, 0.1, 1);
-    PXUIElementPositionSetXYWH(&_uiInfoPanel, 0.62, -0.95, 0.98, 0.95, PXUIElementPositionRelative);
+    PXUIElementSizeSet(&_uiInfoPanel, 0.62, -0.95, 0.98, 0.95, PXUIElementPositionRelative);
     PXUIElementTextSetA(&_uiInfoPanel, "Info");
     PXUIElementFontSet(&_uiInfoPanel, &DefaultFont);
     PXGraphicUIElementRegister(graphicContext, &_uiInfoPanel);
@@ -138,7 +138,7 @@ void OnStartUp(BFEngine* const bitFireEngine)
     PXUIElementParentSet(&_uiInfoPositionText, &_uiInfoPanel);
     PXUIElementHoverable(&_uiInfoPositionText, PXTrue);
     PXUIElementColorSet4F(&_uiInfoPositionText, 1, 1, 1, 1);
-    PXUIElementPositionSetXYWH(&_uiInfoPositionText, -0.02, -0.02, -0.02, -0.02, PXUIElementPositionRelative);
+    PXUIElementSizeSet(&_uiInfoPositionText, -0.02, -0.02, -0.02, -0.02, PXUIElementPositionRelative);
     PXUIElementTextSetA(&_uiInfoPositionText, "Position");
     PXUIElementFontSet(&_uiInfoPositionText, &DefaultFont);
     PXGraphicUIElementRegister(graphicContext, &_uiInfoPositionText);

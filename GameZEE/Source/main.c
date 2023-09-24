@@ -52,7 +52,7 @@ int main(int amountOFParameters, char** parameter)
 PXTexture2D _dialogBoxTexture;
 PXTexture2D _dialogBoxTextureSelected;
 
-PXModel _cubeThing;
+PXVertexStructure _cubeThing;
 PXRenderable _bohrThing;
 PXFont _textFont;
 
@@ -94,7 +94,7 @@ void OnStartUp(BFEngine* const bitFireEngine)
     _worldShader.ResourceID.PXID = -1;
     _hudShaderID.ResourceID.PXID = -1;
 
-    PXGraphicShaderProgramLoadA(graphicContext, &_worldShader, "Shader/WorldShader_V.glsl", "Shader/WorldShader_F.glsl");
+    PXGraphicShaderProgramCreateVPA(graphicContext, &_worldShader, "Shader/WorldShader_V.glsl", "Shader/WorldShader_F.glsl");
         
     PXGraphicSkyboxRegisterA
     (
@@ -110,9 +110,9 @@ void OnStartUp(BFEngine* const bitFireEngine)
         "Texture/SkyBox/Front.png"
     );   
 
-    PXGraphicTextureLoadA(graphicContext, &_dialogBoxTexture, "Texture/DialogueBox.bmp");
+    PXGraphicTexture2DLoadA(graphicContext, &_dialogBoxTexture, "Texture/DialogueBox.bmp");
 
-    PXGraphicTextureLoadA(graphicContext, &_dialogBoxTextureSelected, "Texture/DialogueBoxB.bmp");
+    PXGraphicTexture2DLoadA(graphicContext, &_dialogBoxTextureSelected, "Texture/DialogueBoxB.bmp");
    
 
    // PXGraphicModelLoadA(graphicContext, &_cubeModel, "Model/Dust_II/DustII.obj");
@@ -204,6 +204,7 @@ void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input)
     PXBool changed = PXFalse;
     float value = 0.01f;
 
+    /*
     if(InputButtonIsPressed(input->KeyBoardInput.O))
     {
         //>> _audioSource.PitchIncrease(value);
@@ -225,7 +226,7 @@ void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input)
         //pxUIPanelMain.UIElement.Renderable.DoRendering = !pxUIPanelMain.UIElement.Renderable.DoRendering;
         input->KeyBoardInput.I = 0xFF;
     }
-
+    */
 
     if(changed)
     {
@@ -239,25 +240,33 @@ void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input)
         return;
     }
 
-    KeyBoardCache* keyboard = &input->KeyBoardInput;
+    PXKeyBoard* keyboard = &bitFireEngine->WindowMain.KeyBoardCurrentInput;
     PXMouse* mouse = &bitFireEngine->WindowMain.MouseCurrentInput;
-    PXCamera* camera = &bitFireEngine->MainCamera;
     PXVector3F movement = { 0,0,0 };
 
-    if(InputButtonIsPressed(keyboard->ShitftLeft)) { PXVector3FAddXYZ(&movement, 0, -1, 0, &movement); }
-    if(InputButtonIsPressed(keyboard->W)) { PXVector3FAddXYZ(&movement,0, 0, 1, &movement); }
-    if(InputButtonIsPressed(keyboard->A)) { PXVector3FAddXYZ(&movement,-1, 0, 0, &movement); }
-    if(InputButtonIsPressed(keyboard->S)) { PXVector3FAddXYZ(&movement,0, 0, -1, &movement); }
-    if(InputButtonIsPressed(keyboard->D)) { PXVector3FAddXYZ(&movement,1, 0, 0, &movement); }
-    if(InputButtonIsPressed(keyboard->SpaceBar))
+    if (keyboard->Commands & KeyBoardIDShiftLeft)
     {
-        //camera.Velocity.Set(0.0f, 6.0f, .0f);
+        PXVector3FAddXYZ(&movement, 0, -1, 0, &movement);
+    }
+    if (keyboard->Letters & KeyBoardIDLetterW)
+    {
+        PXVector3FAddXYZ(&movement, 0, 0, 1, &movement);
+    }
+    if (keyboard->Letters & KeyBoardIDLetterA) { PXVector3FAddXYZ(&movement, -1, 0, 0, &movement); }
+    if (keyboard->Letters & KeyBoardIDLetterS) { PXVector3FAddXYZ(&movement, 0, 0, -1, &movement); }
+    if (keyboard->Letters & KeyBoardIDLetterD) { PXVector3FAddXYZ(&movement, 1, 0, 0, &movement); }
+    if (keyboard->Letters & KeyBoardIDSpace)
+    {
+
+
+        //  PXCamera.Velocity.Set(0.0f, 6.0f, .0f);
 
         PXVector3FAddXYZ(&movement, 0, 1, 0, &movement);
+
     }
 
-    PXCameraMove(&camera, &movement);
-    PXCameraRotateXYZ(&camera, mouse->Delta[0], mouse->Delta[1], 0);
+    PXCameraMove(bitFireEngine->CameraCurrent, &movement);
+    PXCameraRotateXYZ(bitFireEngine->CameraCurrent, mouse->Delta[0], mouse->Delta[1], 0);
 }
 
 void OnUpdateUI(const BFEngine* bitFireEngine)

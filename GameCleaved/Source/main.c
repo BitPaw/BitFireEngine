@@ -44,11 +44,10 @@ void OnUpdateUI(const BFEngine* bitFireEngine)
 
   //text->SetText(text->TextContent);
 }
+
 void OnStartUp(BFEngine* const bitFireEngine)
 {
-    PXGraphicContext* const pxGraphicContext = &bitFireEngine->WindowMain.GraphicInstance;
-
-    PXCameraConstruct(&bitFireEngine->MainCamera);
+    PXGraphicContext* const pxGraphicContext = &bitFireEngine->Graphic;
 
     //PXWindowCursorCaptureMode(&bitFireEngine->WindowMain, PXWindowCursorLockAndHide);
 
@@ -63,7 +62,7 @@ void OnStartUp(BFEngine* const bitFireEngine)
     PXGraphicShaderProgramCreateVPA(pxGraphicContext, &_worldShader, "Shader/WS.vert", "Shader/WS.frag");
     PXGraphicShaderProgramCreateVPA(pxGraphicContext, &_simplex, "Shader/Simplex.vert", "Shader/Simplex.frag");
        
-    
+#if 0
     PXGraphicSkyboxRegisterA
     (
         &bitFireEngine->WindowMain.GraphicInstance,
@@ -78,14 +77,15 @@ void OnStartUp(BFEngine* const bitFireEngine)
         "Texture/MissingTexture.bmp"
     );
     bitFireEngine->DefaultSkyBox = &_skybox;
-    
+#endif
 
 
 
-
+    PXVertexStructureConstruct(&bitFireEngine->pxModelTEST);
     PXResourceLoadA(&bitFireEngine->pxModelTEST, "Model/Tiger.obj");
-    PXGraphicVertexStructureRegister(&bitFireEngine->WindowMain.GraphicInstance,&bitFireEngine->pxModelTEST);
+    pxGraphicContext->VertexStructureRegister(pxGraphicContext->EventOwner, &bitFireEngine->pxModelTEST);
 
+    //bitFireEngine->pxModelTEST.IndexBuffer.DrawModeID |= PXDrawModeIDLineLoop | PXDrawModeIDPoint;
     bitFireEngine->pxModelTEST.ShaderProgramReference = &_worldShader;
 
 #if 1
@@ -94,39 +94,69 @@ void OnStartUp(BFEngine* const bitFireEngine)
 
   
 
+    PXGraphicSpriteConstruct(pxGraphicContext, &_backGround);
+    PXGraphicSpriteTextureLoadA(pxGraphicContext, &_backGround, "Texture/BackGround.png");
+    PXGraphicSpriteRegister(pxGraphicContext, &_backGround);
+    _backGround.VertexStructure.ShaderProgramReference = &_worldShader;
+    _backGround.VertexStructure.IgnoreViewRotation = 0;
+    _backGround.VertexStructure.IgnoreViewPosition = 0;
 
 
 
-
-
-
-
+    PXGraphicSpriteConstruct(pxGraphicContext, &_playerCharacterNyte);
+   // PXMatrix4x4FMoveXYZ(&_playerCharacterNyte.VertexStructure.ModelMatrix, 0, 0, -0.8f, &_playerCharacterNyte.VertexStructure.ModelMatrix);
+    PXGraphicSpriteTextureLoadA(pxGraphicContext, &_playerCharacterNyte, "Texture/Nyte.png");
+    PXGraphicSpriteRegister(pxGraphicContext, &_playerCharacterNyte);
+    PXMatrix4x4FScaleSetXY(&_playerCharacterNyte.VertexStructure.ModelMatrix, 0.2, 0.2);
+    PXMatrix4x4FMoveXY(&_playerCharacterNyte.VertexStructure.ModelMatrix, 0, -0.50, &_playerCharacterNyte.VertexStructure.ModelMatrix);
+    _playerCharacterNyte.VertexStructure.ShaderProgramReference = &_worldShader;
+    _playerCharacterNyte.VertexStructure.IgnoreViewRotation = 0;
+    _playerCharacterNyte.VertexStructure.IgnoreViewPosition = 0;
 
     PXGraphicSpriteConstruct(pxGraphicContext, &_dialogBox);
-   // PXMatrix4x4FMoveXY(&_dialogBox.Position, 0.8, 0.2);
-    //PXVector2FSetXY(&_dialogBox.Margin, );
-    PXMarginSet(&_dialogBox.Margin, 0.8f, 0.9f, 0.8f, -0.2f);
-   // PXMatrix4x4FScaleSetXY(&_dialogBox.Position, 0.8, 0.2);
-    // PXMatrix4x4FMoveTo(&_backGround.Position, &moveTo,  13.5, -0.2, -5;   
+    PXRectangleOffsetSet(&_dialogBox.VertexStructure.Margin, 0.95f, 0.4f, 0.95f, 0.98f);
     PXGraphicSpriteTextureLoadA(pxGraphicContext, &_dialogBox, "Texture/Dialog.png");
+    PXMatrix4x4FScaleSetXY(&_dialogBox.VertexStructure.ModelMatrix, PXCameraAspectRatio(bitFireEngine->CameraCurrent), 1);
     PXGraphicSpriteTextureScaleBorder(&_dialogBox, 20, 20);
-    //_backGround.ShaderUse(_simplex);
-    //_backGround.MeshShare(_rectangleMesh);
-    PXGraphicSpriteRegister(&bitFireEngine->WindowMain.GraphicInstance, &_dialogBox);
+    PXGraphicSpriteRegister(pxGraphicContext, &_dialogBox);
+    _dialogBox.VertexStructure.ShaderProgramReference = &_worldShader;
+    _dialogBox.VertexStructure.IgnoreViewRotation = 0;
+    _dialogBox.VertexStructure.IgnoreViewPosition = 0;
+
+    PXGraphicSpriteConstruct(pxGraphicContext, &_dialogBoxCharacterImage);
+    PXRectangleOffsetSet(&_dialogBoxCharacterImage.VertexStructure.Margin, 0.99f, 0.38f, 0.2, 0.96f);
+    PXGraphicSpriteTextureLoadA(pxGraphicContext, &_dialogBoxCharacterImage, "Texture/Dialog.png");
+    PXGraphicSpriteTextureScaleBorder(&_dialogBoxCharacterImage, 20, 20);
+    PXGraphicSpriteRegister(pxGraphicContext, &_dialogBoxCharacterImage);
+
+    //PXMatrix4x4FScaleSetXY(&_dialogBoxCharacterImage.VertexStructure.ModelMatrix, 0.5, 0.5);
+    _dialogBoxCharacterImage.VertexStructure.ShaderProgramReference = &_worldShader;
+    _dialogBoxCharacterImage.VertexStructure.IgnoreViewRotation = 0;
+    _dialogBoxCharacterImage.VertexStructure.IgnoreViewPosition = 0;
+
+    //PXRectangleOffset(&_dialogBoxCharacterImage.VertexStructure.Margin, 0.95f, 0.4f, 0.95f, 0.9f);
 
 
-    PXGraphicSpriteConstruct(pxGraphicContext, &_backGround);
-    PXMatrix4x4FScaleBy(&_backGround.Position, 0.25, &_backGround.Position);
-    // PXMatrix4x4FMoveTo(&_backGround.Position, &moveTo,  13.5, -0.2, -5;   
-    PXGraphicSpriteTextureLoadA(pxGraphicContext, &_backGround, "Texture/BackGround.png");
-    //_backGround.ShaderUse(_simplex);
-    //_backGround.MeshShare(_rectangleMesh);
-    PXGraphicSpriteRegister(pxGraphicContext, &_backGround);
 
 
-    PXCameraViewChangeToPerspective(&bitFireEngine->MainCamera,80, PXCameraAspectRatio(&bitFireEngine->MainCamera), -0.5, 2000);
+    //-----------------------------------------------------
+    // Camera
+    //-----------------------------------------------------
+    PXCameraViewChangeToPerspective(bitFireEngine->CameraCurrent, 70, PXCameraAspectRatio(bitFireEngine->CameraCurrent), 0.05, 10000);
+
+
+    // PXCameraViewChangeToOrthographic(bitFireEngine->CameraCurrent, 1,1,0.05, 1000);
+
+    // bitFireEngine->CameraCurrent->Perspective = PXCameraPerspective2D;
+    //-----------------------------------------------------
+
+
+
+
 
 #endif
+
+
 
 
 
@@ -304,7 +334,7 @@ void OnStartUp(BFEngine* const bitFireEngine)
 
     // _camera->Target = &_playerCharacterLuna.MatrixModel;
    // _camera->Offset.Set(0, 20, 60);
-    bitFireEngine->MainCamera.FollowSpeed = 1;
+    bitFireEngine->CameraCurrent->FollowSpeed = 1;
 
 }
 void OnShutDown(const BFEngine* bitFireEngine)
@@ -315,7 +345,7 @@ void OnUpdateGameLogic(const BFEngine* bitFireEngine, const float deltaTime)
 {
     _deltaTime = deltaTime;
 
-    PXCameraFollow(&bitFireEngine->MainCamera, deltaTime);
+    PXCameraFollow(bitFireEngine->CameraCurrent, deltaTime);
 
     PXText pxText;
     PXTextConstructBufferW(&pxText, 64);
@@ -333,7 +363,7 @@ void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input)
     PXWindow* pxWindow = &bitFireEngine->WindowMain;
     PXKeyBoard* keyboard = &bitFireEngine->WindowMain.KeyBoardCurrentInput;
     PXMouse* mouse = &bitFireEngine->WindowMain.MouseCurrentInput;
-    PXCamera* camera = &bitFireEngine->MainCamera;
+    PXCamera* camera = bitFireEngine->CameraCurrent;
     PXVector3F movement = {0,0,0};
 
     if (keyboard->Commands & KeyBoardIDShiftLeft)
@@ -370,6 +400,8 @@ void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input)
 
     PXControllerDataGet(&bitFireEngine->Controller);
 
+    //printf("%6i, %6i\n", bitFireEngine->Controller.Axis[0], bitFireEngine->Controller.Axis[1]);
+
     //_playerCharacterLuna.MatrixModel.Move(movement);
 
     if(PXWindowInteractable(pxWindow) || 1)
@@ -379,11 +411,9 @@ void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input)
         PXVector3F mouseMovement = 
         //{ mouse->Delta[0] * 2, mouse->Delta[1] * 2, 0};
         {
-            (bitFireEngine->Controller.Axis[2] / (float)0xFFFF) * 2 - 1 + -mouse->Delta[0],
-            
-            (bitFireEngine->Controller.Axis[3] / (float)0xFFFF) * 2 - 1 + mouse->Delta[1] ,
-
-  0
+            bitFireEngine->Controller.AxisNormalised[PXControllerAxisX] + -mouse->Delta[0],
+            bitFireEngine->Controller.AxisNormalised[PXControllerAxisY] + mouse->Delta[1],
+            0
         };
 
      

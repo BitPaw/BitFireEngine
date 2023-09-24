@@ -1,7 +1,7 @@
 #ifndef BFDialogSystemINCLUDE
 #define BFDialogSystemINCLUDE
 
-#include <Media/PXType.h>
+#include <Media/PXResource.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -23,7 +23,8 @@ extern "C"
 
 	typedef struct BFDialogBox_
 	{
-		int dummy;
+		PXSprite DialogBoxTexture;
+
 	}
 	BFDialogBox;
 

@@ -8,7 +8,6 @@
 #include <OS/Async/PXThread.h>
 #include <OS/Window/PXWindow.h>
 #include <OS/Time/PXTime.h>
-#include <Graphic/PXCamera.h>
 #include <OS/Hardware/PXController.h>
 
 #include <System/Device/KeyBoard/KeyBoardCache.h>
@@ -62,10 +61,15 @@ extern "C"
 
    
         PXWindow WindowMain;
+        PXGraphicContext Graphic;
 
         PXController Controller;
 
-        PXCamera MainCamera;
+        PXCamera CameraFree;
+        PXCamera CameraPlayer;
+
+        PXCamera* CameraCurrent;
+
         PXFont* DefaultFont;
         PXSkyBox* DefaultSkyBox;
 
@@ -82,11 +86,11 @@ extern "C"
 
     PXPublic void BFEngineConstruct(BFEngine* const pxBitFireEngine);
 
-    PXPrivate void BFEngineOnMouseButton(const BFEngine* const receiver, const PXWindow* sender, const MouseButton mouseButton, const PXKeyPressState buttonState);
+    PXPrivate void BFEngineOnMouseButton(const BFEngine* const receiver, const PXWindow* sender, const PXMouseButton mouseButton, const PXKeyPressState buttonState);
     PXPrivate void BFEngineOnMouseMove(const BFEngine* const receiver, const PXWindow* sender, const PXMouse* mouse);
-    PXPrivate void BFEngineOnKeyBoardKey(const BFEngine* const receiver, const PXWindow* sender, const KeyBoardKeyInfo keyBoardKeyInfo);
+    PXPrivate void BFEngineOnKeyBoardKey(const BFEngine* const receiver, const PXWindow* sender, const PXKeyBoardKeyInfo keyBoardKeyInfo);
     PXPrivate void BFEngineOnWindowCreated(const BFEngine* const receiver, const PXWindow* sender);
-    PXPrivate void BFEngineOnWindowSizeChanged(const BFEngine* const receiver, const PXWindow* sender, const size_t width, const size_t height);
+    PXPrivate void BFEngineOnWindowSizeChanged(const BFEngine* const receiver, const PXWindow* sender);
     PXPrivate void BFEngineOnWindowsMouseCaptureChanged(const BFEngine* const receiver, const PXWindow* sender);
 
     PXPublic void BFEngineStart(BFEngine* const pxBitFireEngine);
@@ -97,9 +101,11 @@ extern "C"
     PXPrivate void BFEngineSceneRender(BFEngine* const pxBitFireEngine);
 
 
+    PXPrivate void PXCalculateUIOffset(PX);
+
     PXPrivate void BFEngineRenderText(BFEngine* const bfEngine, PXUIElement* const pxUIElement);
     PXPrivate void BFEngineRenderScene(BFEngine* const bfEngine);
-    PXPrivate void BFEngineRenderSkyBox(BFEngine* const bfEngine);
+
 
     /*
 

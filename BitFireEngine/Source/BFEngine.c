@@ -1,9 +1,7 @@
 #include "BFEngine.h"
 
 #include <Media/PXText.h>
-#include <Media/PXModel.h>
 #include <Math/PXMatrix.h>
-#include <OS/Async/PXEvent.h>
 
 #include <OS/File/PXFile.h>
 #include <OS/Async/PXAwait.h>
@@ -24,7 +22,7 @@ PXInt32U _matrixModelID;
 PXInt32U _matrixViewID;
 PXInt32U _matrixProjectionID;
 PXInt32U _materialTextureID;
-RefreshRateMode RefreshRate;
+PXRefreshRateMode RefreshRate;
 
 
 float _lastUIUpdate = 0;
@@ -1264,11 +1262,12 @@ void BFEngineConstruct(BFEngine* const pxBitFireEngine)
 {
     PXMemoryClear(pxBitFireEngine, sizeof(BFEngine));
 
-    PXCameraConstruct(&pxBitFireEngine->MainCamera);
+    PXCameraConstruct(&pxBitFireEngine->CameraFree);
+    PXCameraConstruct(&pxBitFireEngine->CameraPlayer);
     PXWindowConstruct(&pxBitFireEngine->WindowMain);
 }
 
-void BFEngineOnMouseButton(const BFEngine* const receiver, const PXWindow* sender, const MouseButton mouseButton, const PXKeyPressState buttonState)
+void BFEngineOnMouseButton(const BFEngine* const receiver, const PXWindow* sender, const PXMouseButton mouseButton, const PXKeyPressState buttonState)
 {
 
   
@@ -1296,7 +1295,7 @@ void BFEngineOnMouseMove(const BFEngine* const engine, const PXWindow* sender, c
     //printf("[#]------------- X:%5i Y:%5i\n", mouse->InputAxis[0], mouse->InputAxis[1]);
 }
 
-void BFEngineOnKeyBoardKey(const BFEngine* const engine, const PXWindow* sender, const KeyBoardKeyInfo keyBoardKeyInfo)
+void BFEngineOnKeyBoardKey(const BFEngine* const engine, const PXWindow* sender, const PXKeyBoardKeyInfo keyBoardKeyInfo)
 {
     BFInputContainer* input = &engine->InputContainer;
     KeyBoardCache* keyBoard = &input->KeyBoardInput;
@@ -1389,26 +1388,27 @@ void BFEngineOnWindowCreated(const BFEngine* const receiver, const PXWindow* sen
     
 }
 
-void BFEngineOnWindowSizeChanged(const BFEngine* const receiver, const PXWindow* sender, const size_t width, const size_t height)
+void BFEngineOnWindowSizeChanged(const BFEngine* const receiver, const PXWindow* sender)
 {
     if (receiver)
     {
-        PXCamera* const camera = &receiver->MainCamera;
-
-        PXCameraAspectRatioChange(&camera, width, height);
+        PXCameraAspectRatioChange(receiver->CameraCurrent, sender->Width, sender->Height);
     }
 
-    printf("[Camera] Is now %zi x %zi\n", width, height);
+    //printf("[Camera] Is now %i x %i\n", sender->Width, sender->Height);
 
     PXViewPort pxViewPort;
     pxViewPort.X = 0;
     pxViewPort.Y = 0;
-    pxViewPort.Width = width;
-    pxViewPort.Height = height;
+    pxViewPort.Width = sender->Width;
+    pxViewPort.Height = sender->Height;
     pxViewPort.ClippingMinimum = 0;
     pxViewPort.ClippingMaximum = 1;
 
-    PXGraphicViewPortSet(&sender->GraphicInstance, &pxViewPort);
+    if (receiver->Graphic.ViewPortSet)
+    {
+        receiver->Graphic.ViewPortSet(receiver->Graphic.EventOwner, &pxViewPort);
+    }
 }
 
 void BFEngineOnWindowsMouseCaptureChanged(const BFEngine* const receiver, const PXWindow* sender)
@@ -1418,8 +1418,11 @@ void BFEngineOnWindowsMouseCaptureChanged(const BFEngine* const receiver, const 
 
 void BFEngineStart(BFEngine* const pxBitFireEngine)
 {
+    PXGraphicContext* const graphicContext = &pxBitFireEngine->Graphic;
+
     pxBitFireEngine->TimeCounterStart = PXTimeCounterStampGet();
     pxBitFireEngine->TimeFrequency = PXTimeCounterFrequencyGet();
+    pxBitFireEngine->CameraCurrent = &pxBitFireEngine->CameraFree;
 
 
     PXMemorySet(&pxBitFireEngine->pxModelTEST, 0, sizeof(PXVertexStructure));
@@ -1496,12 +1499,10 @@ void BFEngineStart(BFEngine* const pxBitFireEngine)
 
         PXText pxText;
         PXTextMakeFixedA(&pxText, "[BFE] <BitFireEngine>");    
-        PXWindowCreate(window, -1, -1, &pxText, 1);
-
-        PXAwaitChangeCU(&window->IsRunning);
+        PXWindowCreate(window, 0, 0, -1, -1, &pxText, 1);
     }
 
-
+    PXGraphicInstantiate(graphicContext, 0, 0, &pxBitFireEngine->WindowMain);
 
     // Set signal
     {
@@ -1518,30 +1519,13 @@ void BFEngineStart(BFEngine* const pxBitFireEngine)
     PXStopWatchTrigger(&stopwatch, &timeBefore);
 
 
-
-    printf
-    (
-        "+---------------------------------------------------------+\n"
-        "| Graphics Card - Information                             |\n"
-        "+---------------------------------------------------------+\n"
-        "| Vendor    : %-43s |\n"
-        "| Model     : %-43s |\n"
-        "| OpenGL    : %-43s |\n"
-        "+---------------------------------------------------------+\n\n",
-        pxBitFireEngine->WindowMain.GraphicInstance.OpenGLInstance.Vendor,
-        pxBitFireEngine->WindowMain.GraphicInstance.OpenGLInstance.Renderer,
-        pxBitFireEngine->WindowMain.GraphicInstance.OpenGLInstance.VersionText
-    );
-
-
-
-    PXCameraAspectRatioChange(&pxBitFireEngine->MainCamera, pxBitFireEngine->WindowMain.Width, pxBitFireEngine->WindowMain.Height);
+    PXCameraAspectRatioChange(pxBitFireEngine->CameraCurrent, pxBitFireEngine->WindowMain.Width, pxBitFireEngine->WindowMain.Height);
 
     //AwaitChange(!_mainWindow.IsRunning);
 
-    PXGraphicSelect(&pxBitFireEngine->WindowMain.GraphicInstance);
+    graphicContext->Select(graphicContext->EventOwner);
 
-    InvokeEvent(pxBitFireEngine->StartUpCallBack, pxBitFireEngine);
+    PXFunctionInvoke(pxBitFireEngine->StartUpCallBack, pxBitFireEngine);
 
 
     PXTime timeAfter;
@@ -1555,11 +1539,12 @@ void BFEngineStart(BFEngine* const pxBitFireEngine)
 
    // PrintContent(1);
 
-    PXGraphicSwapIntervalSet(&pxBitFireEngine->WindowMain.GraphicInstance, 1);
+    graphicContext->SwapIntervalSet(graphicContext->EventOwner, 1);
 }
 
 void BFEngineUpdate(BFEngine* const pxBitFireEngine)
 {
+    PXGraphicContext* const graphicContext = &pxBitFireEngine->Graphic;
     // Pre-input
 
     //---[Variable Reset]--------------------------------------------------
@@ -1598,7 +1583,7 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
     {
         printf("[Window] Size changed (%i x %i)\n", width, height);
 
-        PXCameraAspectRatioChange(&pxBitFireEngine->MainCamera, width, height);
+        PXCameraAspectRatioChange(pxBitFireEngine->CameraCurrent, width, height);
 
         PXViewPort pxViewPort;
         pxViewPort.X = 0;
@@ -1608,32 +1593,38 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
         pxViewPort.ClippingMinimum = 0;
         pxViewPort.ClippingMaximum = 1;
 
-        PXGraphicViewPortSet(&pxBitFireEngine->WindowMain.GraphicInstance, &pxViewPort);
+        graphicContext->ViewPortSet(graphicContext->EventOwner, &pxViewPort);
 
         pxBitFireEngine->WindowMain.HasSizeChanged = PXFalse;
     }
 
     {
-        PXGraphicContext* const graphicContext = &pxBitFireEngine->WindowMain.GraphicInstance;
-
         const PXColorRGBAF pxColorRGBAF = { 0, 0, 0, 1 }; // 0.315, 0.15, 0.15
-        PXGraphicClear(graphicContext, &pxColorRGBAF);
-
-        PXOpenGLClear(&graphicContext->OpenGLInstance, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        graphicContext->Clear(graphicContext->EventOwner, &pxColorRGBAF);
     }
 
 
     //---<Fetch UI-Input>----------------------------------------------------------
     {
-        PXGraphicContext* const graphicContext = &pxBitFireEngine->WindowMain.GraphicInstance;
-        PXOpenGL* const openGLContext = &graphicContext->OpenGLInstance;
-
         const PXSize uiElementAmount = graphicContext->UIElementLookUp.EntryAmountCurrent;
 
         PXUIHoverState* lastEntry = 0;
         int lastTargetID = -1;
 
         PXMouse* const mouse = &pxBitFireEngine->WindowMain.MouseCurrentInput;
+
+        float mouseHitBoxOffset = 0.01f;
+        float scale = PXWindowScreenRatio(&pxBitFireEngine->WindowMain);
+        float mouseAX = mouse->PositionNormalisized[0] + mouseHitBoxOffset * scale;
+        float mouseAY = mouse->PositionNormalisized[1] - mouseHitBoxOffset * scale;
+        float mouseBX = mouse->PositionNormalisized[0] - mouseHitBoxOffset * scale;
+        float mouseBY = mouse->PositionNormalisized[1] + mouseHitBoxOffset * scale;
+
+#if 0
+        PXGraphicDrawModeSet(graphicContext, PXGraphicDrawFillModeLines);
+        PXGraphicDrawColorRGBAF(graphicContext, 0, 0.7, 0, 1);
+        PXGraphicRectangleDraw(graphicContext, mouseAX, mouseAY, mouseBX, mouseBY);
+#endif
 
         // for (int i = uiElementAmount; i >= 0 ; --i)
         for (int i = 0; i < uiElementAmount; ++i)
@@ -1642,31 +1633,18 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
 
             PXDictionaryIndex(&graphicContext->UIElementLookUp, i, &pxDictionaryEntry);
 
-            PXUIElement* const pxUIElement = *(PXUIElement**)pxDictionaryEntry.Value;
-
-            float mouseHitBoxOffset = 0.01f;
-            float scale = PXWindowScreenRatio(&pxBitFireEngine->WindowMain);
-            float mouseAX = mouse->PositionNormalisized[0] + mouseHitBoxOffset * scale;
-            float mouseAY = mouse->PositionNormalisized[1] - mouseHitBoxOffset * scale;
-            float mouseBX = mouse->PositionNormalisized[0] - mouseHitBoxOffset * scale;
-            float mouseBY = mouse->PositionNormalisized[1] + mouseHitBoxOffset * scale;
+            PXUIElement* const pxUIElement = *(PXUIElement**)pxDictionaryEntry.Value;         
 
             if (!pxUIElement->IsHoverable)
             {
                 continue;
-            }
+            }    
 
-    
-
-#if 1
-            PXGraphicDrawModeSet(graphicContext, PXGraphicDrawFillModeLines);
-            PXGraphicDrawColorRGBAF(graphicContext, 0, 0.7, 0, 1);
-            PXGraphicRectangleDraw(graphicContext, mouseAX, mouseAY, mouseBX, mouseBY);
+#if 0          
             PXGraphicRectangleDraw(graphicContext, pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
+#endif
 
-#endif // 1
-
-            const PXBool isCollising = PXCollisionAABB(pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height, mouseAX, mouseAY, mouseBX, mouseBY);
+            const PXBool isCollising = PXCollisionAABB(pxUIElement->Margin.Left, pxUIElement->Margin.Top, pxUIElement->Margin.Right, pxUIElement->Margin.Bottom, mouseAX, mouseAY, mouseBX, mouseBY);
 
             if (!isCollising || !pxUIElement->IsHoverable)
             {
@@ -1710,10 +1688,10 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
 
                 float scale = 0.005f;
 
-                pxUIElement->X += mouse->Delta[0] * scale;
-                pxUIElement->Y -= mouse->Delta[1] * scale;
-                pxUIElement->Width += mouse->Delta[0] * scale;
-                pxUIElement->Height -= mouse->Delta[1] * scale;
+                pxUIElement->Margin.Left += mouse->Delta[0] * scale;
+                pxUIElement->Margin.Top -= mouse->Delta[1] * scale;
+                pxUIElement->Margin.Right += mouse->Delta[0] * scale;
+                pxUIElement->Margin.Bottom -= mouse->Delta[1] * scale;
 
             }
         }  
@@ -1722,7 +1700,7 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
 
 
    //---<Update everything>----------------------------------------------------
-   InvokeEvent(pxBitFireEngine->UpdateInputCallBack, pxBitFireEngine, &pxBitFireEngine->InputContainer);
+    PXFunctionInvoke(pxBitFireEngine->UpdateInputCallBack, pxBitFireEngine, &pxBitFireEngine->InputContainer);
    // 
    // 
     //UpdateInput(_inputContainer);
@@ -1797,7 +1775,7 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
     //---[Game-Logic]------------------------------------------------------
     //ModelsPhysicsApply(deltaTime);
 
-    InvokeEvent(pxBitFireEngine->UpdateGameLogicCallBack, pxBitFireEngine, deltaTime);
+    PXFunctionInvoke(pxBitFireEngine->UpdateGameLogicCallBack, pxBitFireEngine, deltaTime);
 
     //---------------------------------------------------------------------
 
@@ -1805,7 +1783,7 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
     BFEngineSceneRender(pxBitFireEngine);
     //---------------------------------------------------------------------
 
-    PXGraphicSceneDeploy(&pxBitFireEngine->WindowMain.GraphicInstance);
+    pxBitFireEngine->Graphic.SceneDeploy(pxBitFireEngine->Graphic.EventOwner);
     //--------------------------------------------------------------------------
 
     //PXThreadSleep(0, 12);
@@ -1825,8 +1803,7 @@ void BFEngineStop(BFEngine* const pxBitFireEngine)
 
 void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 {
-    PXCamera* const mainCamera = &pxBitFireEngine->MainCamera;
-    PXGraphicContext* const graphicContext = &pxBitFireEngine->WindowMain.GraphicInstance;
+    PXGraphicContext* const graphicContext = &pxBitFireEngine->Graphic;
     PXOpenGL* const openGLContext = &graphicContext->OpenGLInstance;
     PXWindow* const window = (PXWindow*)graphicContext->AttachedWindow;
 
@@ -1840,24 +1817,11 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
     //OpenGLClearColor(&graphicContext->OpenGLInstance, red, green, blue, alpha);
     //OpenGLClear(&graphicContext->OpenGLInstance, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    PXOpenGLSkyboxDraw(openGLContext, pxBitFireEngine->DefaultSkyBox, pxBitFireEngine->CameraCurrent);
     
-#if 0
-        //glPointSize(6);
-    glEnable(GL_DEPTH_TEST);
-    glLineWidth(2);
-    glColor4f(1, 1, 1, 1);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glBegin(GL_TRIANGLES);
-    glVertex2f(-0.7, -0.5);
-    glVertex2f(0.7, -0.5);
-    glVertex2f(0, 0.7);
-    glEnd();
-#endif
-
-    BFEngineRenderSkyBox(pxBitFireEngine);
-
-
-   PXGraphicVertexStructureDraw(graphicContext, &pxBitFireEngine->pxModelTEST, &pxBitFireEngine->MainCamera);
+    
+    // ERROR!!
+    // graphicContext->VertexStructureDraw(graphicContext->EventOwner, &pxBitFireEngine->pxModelTEST, pxBitFireEngine->CameraCurrent);
 
 
     
@@ -1874,7 +1838,7 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
         float mouseX = mouse->PositionNormalisized[0];
         float mouseY = mouse->PositionNormalisized[1];
      
-       PXGraphicDrawColorRGBAF(graphicContext, 1, 1, 1, 1);
+        graphicContext->DrawColorRGBAF(graphicContext->EventOwner, 1, 1, 1, 1);
 
        // printf("%5.2f, %5.2f\n", mouseX, mouseY);
 
@@ -1894,55 +1858,75 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 
             PXDictionaryIndex(&graphicContext->UIElementLookUp, i, &pxDictionaryEntry);
 
-            PXUIElement* const pxUIElement = *(PXUIElement**)pxDictionaryEntry.Value;                                 
+            PXUIElement* const pxUIElement = *(PXUIElement**)pxDictionaryEntry.Value;
+
+            PXRectangleOffset position;
+
+            PXCopy(PXRectangleOffset, &pxUIElement->Margin, &position);
 
             switch (pxUIElement->Type)
             {
                 case PXUIElementTypePanel:
                 {
-                    PXGraphicDrawModeSet(graphicContext, PXGraphicDrawFillModeFill);
+                    PXColorRGBAF titleColor = { 0.60f, 0.25f, 0.25f, 1 };
+
+                    graphicContext->DrawModeSet(graphicContext->EventOwner, PXGraphicDrawFillModeFill);
 
                     const float colorSelectedOffset = (pxUIElement->Hover == PXUIHoverStateHovered) * 0.3f;
                     const float titleBarHeight = 0.06;
 
-                    PXGraphicDrawColorRGBAF
+                    // Panel Color
+                    graphicContext->DrawColorRGBAF
                     (
-                        graphicContext,
+                        graphicContext->EventOwner,
                         pxUIElement->BackGroundColor.Red + colorSelectedOffset,
                         pxUIElement->BackGroundColor.Green + colorSelectedOffset,
                         pxUIElement->BackGroundColor.Blue + colorSelectedOffset, 
                         pxUIElement->BackGroundColor.Alpha
                     );
-                    PXGraphicRectangleDraw(graphicContext, pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height - titleBarHeight);
-                    PXGraphicDrawColorRGBAF(graphicContext, 0.60f, 0.25f, 0.25f, 1);
-                    PXGraphicRectangleDraw(graphicContext, pxUIElement->X, pxUIElement->Height - titleBarHeight, pxUIElement->Width, pxUIElement->Height);
+                    // Panel base
+                    graphicContext->RectangleDraw(graphicContext->EventOwner, position.Left, position.Top, position.Right, position.Bottom - titleBarHeight);
+        
 
-                    float xxx = pxUIElement->Height;  
-                    float yyyy = pxUIElement->Y;
+         
 
+                    // title Color
+                    graphicContext->DrawColorRGBAF(graphicContext->EventOwner, titleColor.Red, titleColor.Green, titleColor.Blue, titleColor.Alpha);
+                  
+                    // title base
+                    graphicContext->RectangleDraw(graphicContext->EventOwner, position.Left, position.Bottom - titleBarHeight, position.Right, position.Bottom);
+
+        
                     PXColorRGBAF uuu = pxUIElement->BackGroundColor;
-
-                    PXUIElementColorSet4F(pxUIElement, 1, 1, 1, 1);
+                    float xxx = position.Bottom;
+                    float yyyy = position.Top;
+                    PXUIElementColorSet4F(pxUIElement, 1, 0, 1, 1);
 
                     pxUIElement->NameTextScale = 0.45;
-                    pxUIElement->Y = pxUIElement->Height - titleBarHeight;
-                    pxUIElement->Height = pxUIElement->Height;
-                    pxUIElement->X += 0.01f;
-                    pxUIElement->Y += 0.01f;
+                    position.Top += titleBarHeight;
+                    position.Bottom = position.Bottom;
+                    position.Left += 0.01f;
+                    position.Right += 0.01f;
+
+                    // Add temp parrent
+
            
                     BFEngineRenderText(pxBitFireEngine, pxUIElement);
 
-                    pxUIElement->X -= 0.01f;
-                    pxUIElement->Height = xxx;
-                    pxUIElement->Y = yyyy;
+                    position.Left -= 0.01f;
+                    position.Bottom = xxx;
+                    position.Top = yyyy;
             
 
                     PXUIElementColorSet4F(pxUIElement, uuu.Red, uuu.Green, uuu.Blue, uuu.Alpha);
 
+                    // Rendering panel border
+                    graphicContext->DrawModeSet(graphicContext->EventOwner, PXGraphicDrawFillModeLines);
+                    graphicContext->DrawColorRGBAF(graphicContext->EventOwner, 0.2f, 0.2f, 0.2f, 1.0f);
+                    graphicContext->RectangleDraw(graphicContext->EventOwner, position.Left, position.Top, position.Right, position.Bottom);
 
-                    PXGraphicDrawModeSet(graphicContext, PXGraphicDrawFillModeLines);
-                    PXGraphicDrawColorRGBF(graphicContext, 0.2f, 0.2f, 0.2f);
-                    PXGraphicRectangleDraw(graphicContext, pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
+
+                   
 
                     break;
                 }
@@ -1951,6 +1935,7 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
                     BFEngineRenderText(pxBitFireEngine, pxUIElement);
                     break;
                 }
+#if 0
                 case PXUIElementTypeButton:
                 {
                     PXUIElement* const pxUIElementParent = pxUIElement->Parent;
@@ -1972,12 +1957,12 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 
                     const float colorSelectedOffset = (pxUIElement->Hover == PXUIHoverStateHovered) * 0.3f;
 
-                    PXGraphicDrawColorRGBAF(graphicContext, pxUIElement->BackGroundColor.Red + colorSelectedOffset, pxUIElement->BackGroundColor.Green + colorSelectedOffset, pxUIElement->BackGroundColor.Blue + colorSelectedOffset, pxUIElement->BackGroundColor.Alpha);
-                    PXGraphicRectangleDraw(graphicContext, aX, aY, bX, bY);
+                    graphicContext->DrawColorRGBAF(graphicContext->EventOwner, pxUIElement->BackGroundColor.Red + colorSelectedOffset, pxUIElement->BackGroundColor.Green + colorSelectedOffset, pxUIElement->BackGroundColor.Blue + colorSelectedOffset, pxUIElement->BackGroundColor.Alpha);
+                    graphicContext->RectangleDraw(graphicContext->EventOwner, aX, aY, bX, bY);
                     
                     PXGraphicDrawModeSet(graphicContext, PXGraphicDrawFillModeLines);
-                    PXGraphicDrawColorRGBF(graphicContext, 0, 0, 0);
-                    PXGraphicRectangleDraw(graphicContext, aX, aY, bX, bY);
+                    graphicContext->DrawColorRGBAF(graphicContext->EventOwner, 0, 0, 0, 1);
+                    graphicContext->RectangleDraw(graphicContext->EventOwner, aX, aY, bX, bY);
 
                     break;
                 }
@@ -1987,9 +1972,9 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 
                     PXGraphicDrawModeSet(graphicContext, PXGraphicDrawFillModeFill);
 
-                    PXGraphicDrawColorRGBF(graphicContext, pxUIElement->BackGroundColor.Red + colorSelectedOffset, pxUIElement->BackGroundColor.Green + colorSelectedOffset, pxUIElement->BackGroundColor.Blue + colorSelectedOffset, pxUIElement->BackGroundColor.Alpha);
+                    graphicContext->DrawColorRGBAF(graphicContext->EventOwner, pxUIElement->BackGroundColor.Red + colorSelectedOffset, pxUIElement->BackGroundColor.Green + colorSelectedOffset, pxUIElement->BackGroundColor.Blue + colorSelectedOffset, pxUIElement->BackGroundColor.Alpha);
                    
-                    PXGraphicTexture2DSelect(graphicContext, pxUIElement->TextureReference);
+                    graphicContext->Texture2DSelect(graphicContext->EventOwner, pxUIElement->TextureReference);
 
                     // Parent
                     PXUIElement* const pxUIElementParent = pxUIElement->Parent;               
@@ -2009,9 +1994,8 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
                         bY = bY + pxUIElementParent->Height;
                     } 
 
-                    PXGraphicRectangleDrawTx(graphicContext, aX, aY, bX, bY, 0, 1, 1, 0);
-
-                    PXGraphicTexture2DSelect(graphicContext, pxUIElement->TextureReference);
+                    graphicContext->RectangleDrawTx(graphicContext->EventOwner, aX, aY, bX, bY, 0, 1, 1, 0);
+                    graphicContext->Texture2DSelect(graphicContext->EventOwner, pxUIElement->TextureReference);
 
                     break;
                 }
@@ -2056,17 +2040,18 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
                     //glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
                     // Render on the whole framebuffer, complete from the lower left corner to the upper right
                     PXViewPortSetXYWH(&pxViewPort, viewSize[0], viewSize[1], viewSize[2] - viewSize[0], viewSize[3] - viewSize[1]);
-                    PXGraphicViewPortSet(graphicContext, &pxViewPort);
+                    graphicContext->ViewPortSet(graphicContext->EventOwner, &pxViewPort);
 
                     BFEngineRenderScene(pxBitFireEngine);
                  
                     // Render to our framebuffer
                     //glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
                     PXViewPortSetWH(&pxViewPort, window->Width, window->Height);
-                    PXGraphicViewPortSet(graphicContext, &pxViewPort);
+                    graphicContext->ViewPortSet(graphicContext->EventOwner, &pxViewPort);
 
                     break;
                 }
+#endif
                 default:
                     // Error
                     break;
@@ -2090,39 +2075,38 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 
         PXSprite* const pxSprite = *(PXSprite**)pxDictionaryEntry.Value;
 
-        PXGraphicSpriteDraw(graphicContext, pxSprite);
+        PXGraphicSpriteDraw(graphicContext, pxSprite, pxBitFireEngine->CameraCurrent);
     }
     //-------------------------------------------------------------------------
 }
 
 void BFEngineRenderText(BFEngine* const bfEngine, PXUIElement* const pxUIElement)
 {
-    PXGraphicContext* const pxGraphicContext = &bfEngine->WindowMain.GraphicInstance;
+    PXGraphicContext* const pxGraphic = &bfEngine->Graphic;
 
     PXUIElement* const pxUIElementParent = pxUIElement->Parent;
 
-    float aX = pxUIElement->X;
-    float aY = pxUIElement->Y;
-    float bX = pxUIElement->Width;
-    float bY = pxUIElement->Height;
+    float aX = pxUIElement->Margin.Left;
+    float aY = pxUIElement->Margin.Top;
+    float bX = pxUIElement->Margin.Right;
+    float bY = pxUIElement->Margin.Bottom;
 
     if (pxUIElementParent)
     {
-        aX = aX + pxUIElementParent->X;
-        aY = aY + pxUIElementParent->Y;
-        bX = bX + pxUIElementParent->Width;
-        bY = bY + pxUIElementParent->Height;
+        aX = aX + pxUIElementParent->Margin.Left;
+        aY = aY + pxUIElementParent->Margin.Top;
+        bX = bX + pxUIElementParent->Margin.Right;
+        bY = bY + pxUIElementParent->Margin.Bottom;
     }
 
     float offsetX = 0;
 
     PXFont* const font = pxUIElement->FontID;
 
-    PXGraphicDrawModeSet(pxGraphicContext, PXGraphicDrawFillModeFill);
+    pxGraphic->DrawModeSet(pxGraphic->EventOwner, PXGraphicDrawFillModeFill);
+    PXOpenGLBlendingMode(pxGraphic->EventOwner, PXBlendingModeOneToOne);
 
-    PXOpenGLBlendingMode(pxGraphicContext, PXBlendingModeOneToOne);
-
-    PXGraphicTexture2DSelect(&bfEngine->WindowMain.GraphicInstance, &font->MainPage.Texture);
+    pxGraphic->Texture2DSelect(pxGraphic->EventOwner, &font->MainPage.Texture);
 
     for (PXSize i = 0; pxUIElement->Name[i]; ++i)
     {
@@ -2174,9 +2158,9 @@ void BFEngineRenderText(BFEngine* const bfEngine, PXUIElement* const pxUIElement
             continue;
         }
 
-        PXGraphicDrawColorRGBAF // Text color
+        pxGraphic->DrawColorRGBAF // Text color
         (
-            pxGraphicContext,
+            pxGraphic->EventOwner,
             pxUIElement->BackGroundColor.Red,
             pxUIElement->BackGroundColor.Green,
             pxUIElement->BackGroundColor.Blue,
@@ -2185,23 +2169,23 @@ void BFEngineRenderText(BFEngine* const bfEngine, PXUIElement* const pxUIElement
 
         if (pxFontPageCharacter)
         { 
-            PXGraphicRectangleDrawTx(pxGraphicContext, x1, y1, x2, y2, tx1, ty1, tx2, ty2);
+             pxGraphic->RectangleDrawTx(pxGraphic->EventOwner, x1, y1, x2, y2, tx1, ty1, tx2, ty2);
         }
         else
         {
-            PXGraphicTexture2DSelect(pxGraphicContext, 0);
-            PXGraphicRectangleDraw(pxGraphicContext, x1, y1, x2, y2);
-            PXGraphicTexture2DSelect(pxGraphicContext, &font->MainPage.Texture);
+            pxGraphic->Texture2DSelect(pxGraphic->EventOwner, PXNull);
+            pxGraphic->RectangleDraw(pxGraphic->EventOwner, x1, y1, x2, y2);
+            pxGraphic->Texture2DSelect(pxGraphic->EventOwner, &font->MainPage.Texture);
         }   
     }
 
-    PXGraphicTexture2DSelect(&bfEngine->WindowMain.GraphicInstance, 0);
-    PXOpenGLBlendingMode(pxGraphicContext, PXBlendingModeNone);
+    pxGraphic->Texture2DSelect(pxGraphic->EventOwner, PXNull);
+    PXOpenGLBlendingMode(pxGraphic, PXBlendingModeNone);
 }
 
 void BFEngineRenderScene(BFEngine* const bfEngine)
 {
-    PXGraphicContext* const graphicContext = &bfEngine->WindowMain.GraphicInstance;
+    PXGraphicContext* const pxGraphicContext = &bfEngine->Graphic;
 
     //-------------------------------------------------------------------------
     // 3D-Scene Rendering (Models)
@@ -2209,7 +2193,7 @@ void BFEngineRenderScene(BFEngine* const bfEngine)
 
     //PXOpenGLShaderProgramUse(openGLContext, 0); 
 
-    const PXSize renderList = PXGraphicRenderableListSize(graphicContext);
+    const PXSize renderList = PXGraphicRenderableListSize(pxGraphicContext);
 
     for (PXSize renderIndex = 0; renderIndex < renderList; ++renderIndex)
     {
@@ -2217,7 +2201,7 @@ void BFEngineRenderScene(BFEngine* const bfEngine)
 
         // Fetch
         {
-            const PXBool fetchSuccessful = PXGraphicRenderableListGetFromIndex(graphicContext, &pxRenderable, renderIndex);
+            const PXBool fetchSuccessful = PXGraphicRenderableListGetFromIndex(pxGraphicContext, &pxRenderable, renderIndex);
 
             if (!fetchSuccessful)
             {
@@ -2241,16 +2225,16 @@ void BFEngineRenderScene(BFEngine* const bfEngine)
             {
                 const unsigned int shaderID = pxRenderable->MeshSegmentList[0].ShaderID;
 
-                PXGraphicShaderProgramSelect(&bfEngine->WindowMain.GraphicInstance, shaderID);
+                pxGraphicContext->ShaderProgramSelect(pxGraphicContext->EventOwner, shaderID);                
 
-                PXGraphicShaderVariableIDFetch(&bfEngine->WindowMain.GraphicInstance, shaderID, &_matrixModelID, "MatrixModel");
-                PXGraphicShaderVariableIDFetch(&bfEngine->WindowMain.GraphicInstance, shaderID, &_matrixViewID, "MatrixView");
-                PXGraphicShaderVariableIDFetch(&bfEngine->WindowMain.GraphicInstance, shaderID, &_matrixProjectionID, "MatrixProjection");
-                PXGraphicShaderVariableIDFetch(&bfEngine->WindowMain.GraphicInstance, shaderID, &_materialTextureID, "MaterialTexture");
+                pxGraphicContext->ShaderVariableIDFetch(pxGraphicContext->EventOwner, shaderID, &_matrixModelID, "MatrixModel");
+                pxGraphicContext->ShaderVariableIDFetch(pxGraphicContext->EventOwner, shaderID, &_matrixViewID, "MatrixView");
+                pxGraphicContext->ShaderVariableIDFetch(pxGraphicContext->EventOwner, shaderID, &_matrixProjectionID, "MatrixProjection");
+                pxGraphicContext->ShaderVariableIDFetch(pxGraphicContext->EventOwner, shaderID, &_materialTextureID, "MaterialTexture");
 
-                PXGraphicShaderUpdateMatrix4x4F(&bfEngine->WindowMain.GraphicInstance, _matrixViewID, bfEngine->MainCamera.MatrixView.Data);
-                PXGraphicShaderUpdateMatrix4x4F(&bfEngine->WindowMain.GraphicInstance, _matrixProjectionID, bfEngine->MainCamera.MatrixProjection.Data);
-                PXGraphicShaderUpdateMatrix4x4F(&bfEngine->WindowMain.GraphicInstance, _matrixModelID, pxRenderable->MatrixModel.Data);
+                PXGraphicShaderUpdateMatrix4x4F(pxGraphicContext, _matrixViewID, bfEngine->CameraCurrent->MatrixView.Data);
+                PXGraphicShaderUpdateMatrix4x4F(pxGraphicContext, _matrixProjectionID, bfEngine->CameraCurrent->MatrixProjection.Data);
+                PXGraphicShaderUpdateMatrix4x4F(pxGraphicContext, _matrixModelID, pxRenderable->MatrixModel.Data);
 
               
             }
@@ -2461,13 +2445,4 @@ void BFEngineRenderScene(BFEngine* const bfEngine)
     }
 
      */
-}
-
-void BFEngineRenderSkyBox(BFEngine* const bfEngine)
-{
-    PXWindow* const window = &bfEngine->WindowMain;
-    PXGraphicContext* const graphicContext = &bfEngine->WindowMain.GraphicInstance;
-    PXOpenGL* const openGLContext = &graphicContext->OpenGLInstance;
-
-    PXOpenGLSkyboxDraw(openGLContext, bfEngine->DefaultSkyBox, &bfEngine->MainCamera);
 }

@@ -16,8 +16,8 @@ PXShaderProgram _hudShaderID;
 
 //BF::AudioSource _audioSource;
 float _deltaTime = 0;
-PXModel* model;
-PXModel textureBix;
+PXVertexStructure* model;
+PXVertexStructure textureBix;
 //BF::Level _level;
 //BF::AudioClip _audioClip;
 

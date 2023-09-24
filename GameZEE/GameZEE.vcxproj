@@ -41,7 +41,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\PXUltima\Code\[Export]\PXUltimaC\64B-Windows-Debug\PXUltima.dll" />
+    <CopyFileToFolders Include="..\..\PXUltima\Code\[Export]\PXUltimaC\64B-Windows-Debug\PXUltima.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -103,40 +105,40 @@
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
     <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltimaC\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltimaC/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
     <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltimaC\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltimaC/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
     <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(SolutionDir)BitFireEngine/Source/;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltimaC\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltimaC\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltimaC/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
     <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltimaC\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltimaC/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|Win32'">
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
     <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltimaC\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltimaC/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Windows XP|x64'">
     <OutDir>$(SolutionDir)[Export]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)[Temp]/$(ProjectName)/$(PlatformArchitecture)B-Windows-$(Configuration)/</IntDir>
     <IncludePath>$(ProjectDir)Source/;$(SolutionDir)[Dependency]/Include/;$(SolutionDir)BitFireEngine/Source/;D:\_Data\Git\PXUltima\Code\PXUltima\Source\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;C:\Data\WorkSpace\[GIT]\PXUltima\Code\PXUltimaC\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)[Dependency]/$(PlatformArchitecture)B-Windows-$(Configuration)/;C:\Data\WorkSpace\[GIT]\PXUltima\Code\[Export]\PXUltimaC/$(PlatformArchitecture)B-Windows-$(Configuration)/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

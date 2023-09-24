@@ -1,5 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
+//#include <stdio.h>
+//#include <stdlib.h>
 
 // Engine
 #include <BFEngine.h>
@@ -26,7 +26,7 @@ PXSprite _backGround;
 
 // Sprites - menu
 PXSprite _dialogBox;
-
+PXSprite _dialogBoxCharacterImage;
 
 
 PXSprite _playerCharacterLuna;

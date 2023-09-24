@@ -25,6 +25,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\PXUltima\Code\[Export]\PXUltimaC\64B-Windows-Debug\PXUltima.dll" />
+    <CopyFileToFolders Include="..\..\PXUltima\Code\[Export]\PXUltimaC\64B-Windows-Debug\PXUltima.dll" />
   </ItemGroup>
 </Project>

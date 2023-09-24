@@ -25,9 +25,8 @@ uniform sampler2D MaterialTexture;
 
 void main()
 {
-    float red = 1.0f;//vertex.Color.r / 1000.0f;
-    float green =  1.0f;//vertex.Color.g / 1000.0f;
-    float blue =  1.0f;//vertex.Color.b / 1000.0f;
+    vec4 texturedColor = texture(MaterialTexture, vertex.TexturePosition);
+    vec4 positionColor = vec4(vertex.TexturePosition, 1.0f, 1.0f);
 
-    fragcolor = vec4(red, green, blue, 1.0f);// + texture(MaterialTexture, vertex.TexturePosition);
+    fragcolor = texturedColor * positionColor;
 }
