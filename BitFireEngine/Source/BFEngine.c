@@ -913,10 +913,10 @@ void BF::BitFireEngine::PrintContent(bool detailed)
         printf(message, "Models");
 
 
-        PXGraphicContext* graphicContext = &this->_mainWindow.GraphicInstance;
+        PXGraphic* pxGraphic = &this->_mainWindow.GraphicInstance;
 
 
-        const size_t renderList = PXGraphicRenderableListSize(graphicContext);
+        const size_t renderList = PXGraphicRenderableListSize(pxGraphic);
 
 
         for (size_t renderIndex = 0; renderIndex < renderList; ++renderIndex)
@@ -925,7 +925,7 @@ void BF::BitFireEngine::PrintContent(bool detailed)
 
             // Fetch
             {
-                const PXBool succ = PXGraphicRenderableListGetFromIndex(graphicContext, &pxRenderable, renderIndex);
+                const PXBool succ = PXGraphicRenderableListGetFromIndex(pxGraphic, &pxRenderable, renderIndex);
 
                 if (!succ)
                 {
@@ -1418,7 +1418,7 @@ void BFEngineOnWindowsMouseCaptureChanged(const BFEngine* const receiver, const 
 
 void BFEngineStart(BFEngine* const pxBitFireEngine)
 {
-    PXGraphicContext* const graphicContext = &pxBitFireEngine->Graphic;
+    PXGraphic* const pxGraphic = &pxBitFireEngine->Graphic;
 
     pxBitFireEngine->TimeCounterStart = PXTimeCounterStampGet();
     pxBitFireEngine->TimeFrequency = PXTimeCounterFrequencyGet();
@@ -1502,7 +1502,15 @@ void BFEngineStart(BFEngine* const pxBitFireEngine)
         PXWindowCreate(window, 0, 0, -1, -1, &pxText, 1);
     }
 
-    PXGraphicInstantiate(graphicContext, 0, 0, &pxBitFireEngine->WindowMain);
+    PXGraphicInitializeInfo pxGraphicInitializeInfo;
+    pxGraphicInitializeInfo.WindowReference = &pxBitFireEngine->WindowMain;
+    pxGraphicInitializeInfo.Width = -1;
+    pxGraphicInitializeInfo.Height = -1;
+    pxGraphicInitializeInfo.DirectXVersion = PXDirectXVersionNewest;
+    pxGraphicInitializeInfo.DirectXDriverType = PXDirectXDriverTypeHardwareDevice;
+    pxGraphicInitializeInfo.GraphicSystem = PXGraphicSystemOpenGL;
+
+    PXGraphicInstantiate(pxGraphic, &pxGraphicInitializeInfo);
 
     // Set signal
     {
@@ -1523,7 +1531,8 @@ void BFEngineStart(BFEngine* const pxBitFireEngine)
 
     //AwaitChange(!_mainWindow.IsRunning);
 
-    graphicContext->Select(graphicContext->EventOwner);
+    
+    PXFunctionInvoke(pxGraphic->Select, pxGraphic->EventOwner);
 
     PXFunctionInvoke(pxBitFireEngine->StartUpCallBack, pxBitFireEngine);
 
@@ -1539,12 +1548,12 @@ void BFEngineStart(BFEngine* const pxBitFireEngine)
 
    // PrintContent(1);
 
-    graphicContext->SwapIntervalSet(graphicContext->EventOwner, 1);
+    pxGraphic->SwapIntervalSet(pxGraphic->EventOwner, 1);
 }
 
 void BFEngineUpdate(BFEngine* const pxBitFireEngine)
 {
-    PXGraphicContext* const graphicContext = &pxBitFireEngine->Graphic;
+    PXGraphic* const pxGraphic = &pxBitFireEngine->Graphic;
     // Pre-input
 
     //---[Variable Reset]--------------------------------------------------
@@ -1593,20 +1602,20 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
         pxViewPort.ClippingMinimum = 0;
         pxViewPort.ClippingMaximum = 1;
 
-        graphicContext->ViewPortSet(graphicContext->EventOwner, &pxViewPort);
+        pxGraphic->ViewPortSet(pxGraphic->EventOwner, &pxViewPort);
 
         pxBitFireEngine->WindowMain.HasSizeChanged = PXFalse;
     }
 
     {
         const PXColorRGBAF pxColorRGBAF = { 0, 0, 0, 1 }; // 0.315, 0.15, 0.15
-        graphicContext->Clear(graphicContext->EventOwner, &pxColorRGBAF);
+        pxGraphic->Clear(pxGraphic->EventOwner, &pxColorRGBAF);
     }
 
 
     //---<Fetch UI-Input>----------------------------------------------------------
     {
-        const PXSize uiElementAmount = graphicContext->UIElementLookUp.EntryAmountCurrent;
+        const PXSize uiElementAmount = pxGraphic->UIElementLookUp.EntryAmountCurrent;
 
         PXUIHoverState* lastEntry = 0;
         int lastTargetID = -1;
@@ -1621,32 +1630,36 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
         float mouseBY = mouse->PositionNormalisized[1] + mouseHitBoxOffset * scale;
 
 #if 0
-        PXGraphicDrawModeSet(graphicContext, PXGraphicDrawFillModeLines);
-        PXGraphicDrawColorRGBAF(graphicContext, 0, 0.7, 0, 1);
-        PXGraphicRectangleDraw(graphicContext, mouseAX, mouseAY, mouseBX, mouseBY);
+        PXGraphicDrawModeSet(pxGraphic, PXGraphicDrawFillModeLines);
+        PXGraphicDrawColorRGBAF(pxGraphic, 0, 0.7, 0, 1);
+        PXGraphicRectangleDraw(pxGraphic, mouseAX, mouseAY, mouseBX, mouseBY);
 #endif
 
         // for (int i = uiElementAmount; i >= 0 ; --i)
         for (int i = 0; i < uiElementAmount; ++i)
         {
+
+
             PXDictionaryEntry pxDictionaryEntry;
 
-            PXDictionaryIndex(&graphicContext->UIElementLookUp, i, &pxDictionaryEntry);
+            PXDictionaryIndex(&pxGraphic->UIElementLookUp, i, &pxDictionaryEntry);
 
             PXUIElement* const pxUIElement = *(PXUIElement**)pxDictionaryEntry.Value;         
 
-            if (!pxUIElement->IsHoverable)
+            const PXBool isHoverable = pxUIElement->FlagsList & PXUIElementIsHoverable;
+
+            if (!isHoverable)
             {
                 continue;
             }    
 
 #if 0          
-            PXGraphicRectangleDraw(graphicContext, pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
+            PXGraphicRectangleDraw(pxGraphic, pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
 #endif
 
             const PXBool isCollising = PXCollisionAABB(pxUIElement->Margin.Left, pxUIElement->Margin.Top, pxUIElement->Margin.Right, pxUIElement->Margin.Bottom, mouseAX, mouseAY, mouseBX, mouseBY);
 
-            if (!isCollising || !pxUIElement->IsHoverable)
+            if (!isCollising || !isHoverable)
             {
                 pxUIElement->Hover = PXUIHoverStateNotBeeingHovered;
                 continue;
@@ -1669,7 +1682,7 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
         {
             PXDictionaryEntry pxDictionaryEntry;
 
-            PXDictionaryIndex(&graphicContext->UIElementLookUp, lastTargetID, &pxDictionaryEntry);
+            PXDictionaryIndex(&pxGraphic->UIElementLookUp, lastTargetID, &pxDictionaryEntry);
 
             PXUIElement* const pxUIElement = *(PXUIElement**)pxDictionaryEntry.Value;
             PXKeyBoard* const keyBoard = &pxBitFireEngine->WindowMain.KeyBoardCurrentInput;
@@ -1803,9 +1816,9 @@ void BFEngineStop(BFEngine* const pxBitFireEngine)
 
 void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
 {
-    PXGraphicContext* const graphicContext = &pxBitFireEngine->Graphic;
-    PXOpenGL* const openGLContext = &graphicContext->OpenGLInstance;
-    PXWindow* const window = (PXWindow*)graphicContext->AttachedWindow;
+    PXGraphic* const pxGraphic = &pxBitFireEngine->Graphic;
+    PXOpenGL* const openGLContext = &pxGraphic->OpenGLInstance;
+    PXWindow* const window = (PXWindow*)pxGraphic->AttachedWindow;
 
     //PXCameraUpdate(&MainCamera, deltaTime);
 
@@ -1814,14 +1827,14 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
     const float blue = 0.35f;
     const float alpha = 1.0f;
 
-    //OpenGLClearColor(&graphicContext->OpenGLInstance, red, green, blue, alpha);
-    //OpenGLClear(&graphicContext->OpenGLInstance, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //OpenGLClearColor(&pxGraphic->OpenGLInstance, red, green, blue, alpha);
+    //OpenGLClear(&pxGraphic->OpenGLInstance, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     PXOpenGLSkyboxDraw(openGLContext, pxBitFireEngine->DefaultSkyBox, pxBitFireEngine->CameraCurrent);
     
     
     // ERROR!!
-    // graphicContext->VertexStructureDraw(graphicContext->EventOwner, &pxBitFireEngine->pxModelTEST, pxBitFireEngine->CameraCurrent);
+    // pxGraphic->VertexStructureDraw(pxGraphic->EventOwner, &pxBitFireEngine->pxModelTEST, pxBitFireEngine->CameraCurrent);
 
 
     
@@ -1829,7 +1842,15 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
     // UI-Rendering
     //-------------------------------------------------------------------------
 #if 1
-    const PXSize uiElementAmount = graphicContext->UIElementLookUp.EntryAmountCurrent;
+
+    PXGraphicUIElementIterator(pxGraphic, pxBitFireEngine, BFEngineUIElementRender, PXNull);
+
+#endif // 1
+
+
+
+#if 0
+    const PXSize uiElementAmount = pxGraphic->UIElementLookUp.EntryAmountCurrent;
 
     if(uiElementAmount > 0)
     {
@@ -1838,7 +1859,7 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
         float mouseX = mouse->PositionNormalisized[0];
         float mouseY = mouse->PositionNormalisized[1];
      
-        graphicContext->DrawColorRGBAF(graphicContext->EventOwner, 1, 1, 1, 1);
+        pxGraphic->DrawColorRGBAF(pxGraphic->EventOwner, 1, 1, 1, 1);
 
        // printf("%5.2f, %5.2f\n", mouseX, mouseY);
 
@@ -1856,206 +1877,11 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
         {
             PXDictionaryEntry pxDictionaryEntry;
 
-            PXDictionaryIndex(&graphicContext->UIElementLookUp, i, &pxDictionaryEntry);
+            PXDictionaryIndex(&pxGraphic->UIElementLookUp, i, &pxDictionaryEntry);
 
             PXUIElement* const pxUIElement = *(PXUIElement**)pxDictionaryEntry.Value;
 
-            PXRectangleOffset position;
-
-            PXCopy(PXRectangleOffset, &pxUIElement->Margin, &position);
-
-            switch (pxUIElement->Type)
-            {
-                case PXUIElementTypePanel:
-                {
-                    PXColorRGBAF titleColor = { 0.60f, 0.25f, 0.25f, 1 };
-
-                    graphicContext->DrawModeSet(graphicContext->EventOwner, PXGraphicDrawFillModeFill);
-
-                    const float colorSelectedOffset = (pxUIElement->Hover == PXUIHoverStateHovered) * 0.3f;
-                    const float titleBarHeight = 0.06;
-
-                    // Panel Color
-                    graphicContext->DrawColorRGBAF
-                    (
-                        graphicContext->EventOwner,
-                        pxUIElement->BackGroundColor.Red + colorSelectedOffset,
-                        pxUIElement->BackGroundColor.Green + colorSelectedOffset,
-                        pxUIElement->BackGroundColor.Blue + colorSelectedOffset, 
-                        pxUIElement->BackGroundColor.Alpha
-                    );
-                    // Panel base
-                    graphicContext->RectangleDraw(graphicContext->EventOwner, position.Left, position.Top, position.Right, position.Bottom - titleBarHeight);
-        
-
-         
-
-                    // title Color
-                    graphicContext->DrawColorRGBAF(graphicContext->EventOwner, titleColor.Red, titleColor.Green, titleColor.Blue, titleColor.Alpha);
-                  
-                    // title base
-                    graphicContext->RectangleDraw(graphicContext->EventOwner, position.Left, position.Bottom - titleBarHeight, position.Right, position.Bottom);
-
-        
-                    PXColorRGBAF uuu = pxUIElement->BackGroundColor;
-                    float xxx = position.Bottom;
-                    float yyyy = position.Top;
-                    PXUIElementColorSet4F(pxUIElement, 1, 0, 1, 1);
-
-                    pxUIElement->NameTextScale = 0.45;
-                    position.Top += titleBarHeight;
-                    position.Bottom = position.Bottom;
-                    position.Left += 0.01f;
-                    position.Right += 0.01f;
-
-                    // Add temp parrent
-
-           
-                    BFEngineRenderText(pxBitFireEngine, pxUIElement);
-
-                    position.Left -= 0.01f;
-                    position.Bottom = xxx;
-                    position.Top = yyyy;
-            
-
-                    PXUIElementColorSet4F(pxUIElement, uuu.Red, uuu.Green, uuu.Blue, uuu.Alpha);
-
-                    // Rendering panel border
-                    graphicContext->DrawModeSet(graphicContext->EventOwner, PXGraphicDrawFillModeLines);
-                    graphicContext->DrawColorRGBAF(graphicContext->EventOwner, 0.2f, 0.2f, 0.2f, 1.0f);
-                    graphicContext->RectangleDraw(graphicContext->EventOwner, position.Left, position.Top, position.Right, position.Bottom);
-
-
-                   
-
-                    break;
-                }
-                case PXUIElementTypeText:
-                {
-                    BFEngineRenderText(pxBitFireEngine, pxUIElement);
-                    break;
-                }
-#if 0
-                case PXUIElementTypeButton:
-                {
-                    PXUIElement* const pxUIElementParent = pxUIElement->Parent;
-
-                    float aX = pxUIElement->X;
-                    float aY = pxUIElement->Y;
-                    float bX = pxUIElement->Width;
-                    float bY = pxUIElement->Height;
-
-                    if (pxUIElementParent)
-                    {
-                        aX = aX + pxUIElementParent->X;
-                        aY = aY + pxUIElementParent->Y;
-                        bX = bX + pxUIElementParent->Width;
-                        bY = bY + pxUIElementParent->Height;
-                    }
-
-                    PXGraphicDrawModeSet(graphicContext, PXGraphicDrawFillModeFill);
-
-                    const float colorSelectedOffset = (pxUIElement->Hover == PXUIHoverStateHovered) * 0.3f;
-
-                    graphicContext->DrawColorRGBAF(graphicContext->EventOwner, pxUIElement->BackGroundColor.Red + colorSelectedOffset, pxUIElement->BackGroundColor.Green + colorSelectedOffset, pxUIElement->BackGroundColor.Blue + colorSelectedOffset, pxUIElement->BackGroundColor.Alpha);
-                    graphicContext->RectangleDraw(graphicContext->EventOwner, aX, aY, bX, bY);
-                    
-                    PXGraphicDrawModeSet(graphicContext, PXGraphicDrawFillModeLines);
-                    graphicContext->DrawColorRGBAF(graphicContext->EventOwner, 0, 0, 0, 1);
-                    graphicContext->RectangleDraw(graphicContext->EventOwner, aX, aY, bX, bY);
-
-                    break;
-                }
-                case PXUIElementTypeImage:
-                {
-                    const float colorSelectedOffset = (pxUIElement->Hover == PXUIHoverStateHovered) * 0.3f;
-
-                    PXGraphicDrawModeSet(graphicContext, PXGraphicDrawFillModeFill);
-
-                    graphicContext->DrawColorRGBAF(graphicContext->EventOwner, pxUIElement->BackGroundColor.Red + colorSelectedOffset, pxUIElement->BackGroundColor.Green + colorSelectedOffset, pxUIElement->BackGroundColor.Blue + colorSelectedOffset, pxUIElement->BackGroundColor.Alpha);
-                   
-                    graphicContext->Texture2DSelect(graphicContext->EventOwner, pxUIElement->TextureReference);
-
-                    // Parent
-                    PXUIElement* const pxUIElementParent = pxUIElement->Parent;               
-
-                    // Calculate the relative position
-
-                    float aX = pxUIElement->X;
-                    float aY = pxUIElement->Y;
-                    float bX = pxUIElement->Width;
-                    float bY = pxUIElement->Height;
-
-                    if (pxUIElementParent)
-                    {
-                        aX = aX + pxUIElementParent->X;
-                        aY = aY + pxUIElementParent->Y;
-                        bX = bX + pxUIElementParent->Width;
-                        bY = bY + pxUIElementParent->Height;
-                    } 
-
-                    graphicContext->RectangleDrawTx(graphicContext->EventOwner, aX, aY, bX, bY, 0, 1, 1, 0);
-                    graphicContext->Texture2DSelect(graphicContext->EventOwner, pxUIElement->TextureReference);
-
-                    break;
-                }
-                case PXUIElementTypeDropDown:
-                case PXUIElementTypeToggle:
-                case PXUIElementTypeCheckBox:
-                case PXUIElementTypeColorPicker:
-                case PXUIElementTypeSlider:
-                case PXUIElementTypeRadioButton:
-                case PXUIElementTypeToolTip:
-                case PXUIElementTypeCustom:
-                case PXUIElementTypeRenderFrame:
-                {
-                    PXUIElement* const pxUIElementParent = pxUIElement->Parent;
-
-                    float aX = pxUIElement->X;
-                    float aY = pxUIElement->Y;
-                    float bX = pxUIElement->Width;
-                    float bY = pxUIElement->Height;
-
-                    if (pxUIElementParent)
-                    {
-                        aX = aX + pxUIElementParent->X;
-                        aY = aY + pxUIElementParent->Y;
-                        bX = bX + pxUIElementParent->Width;
-                        bY = bY + pxUIElementParent->Height;
-                    }
           
-
-                    const int viewSize[4] = 
-                    {
-                        ((aX + 1) / 2.0f)* window->Width,
-                        ((aY + 1) / 2.0f)* window->Height,
-                        ((bX + 1) / 2.0f)* window->Width,
-                        ((bY + 1) / 2.0f)* window->Height,
-                    };
-
-
-                    PXViewPort pxViewPort;
-
-                    // Render to our framebuffer
-                    //glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
-                    // Render on the whole framebuffer, complete from the lower left corner to the upper right
-                    PXViewPortSetXYWH(&pxViewPort, viewSize[0], viewSize[1], viewSize[2] - viewSize[0], viewSize[3] - viewSize[1]);
-                    graphicContext->ViewPortSet(graphicContext->EventOwner, &pxViewPort);
-
-                    BFEngineRenderScene(pxBitFireEngine);
-                 
-                    // Render to our framebuffer
-                    //glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
-                    PXViewPortSetWH(&pxViewPort, window->Width, window->Height);
-                    graphicContext->ViewPortSet(graphicContext->EventOwner, &pxViewPort);
-
-                    break;
-                }
-#endif
-                default:
-                    // Error
-                    break;
-            }
         }
     }
     //-------------------------------------------------------------------------
@@ -2065,127 +1891,24 @@ void BFEngineSceneRender(BFEngine* const pxBitFireEngine)
     //-------------------------------------------------------------------------
     // 2D-Scene Rendering (Sprites)
     //-------------------------------------------------------------------------
-    const PXSize spriteListSize = graphicContext->SpritelLookUp.EntryAmountCurrent;
+    const PXSize spriteListSize = pxGraphic->SpritelLookUp.EntryAmountCurrent;
 
     for (PXSize i = 0; i < spriteListSize; ++i)
     {
         PXDictionaryEntry pxDictionaryEntry;
 
-        PXDictionaryIndex(&graphicContext->SpritelLookUp, i, &pxDictionaryEntry);
+        PXDictionaryIndex(&pxGraphic->SpritelLookUp, i, &pxDictionaryEntry);
 
         PXSprite* const pxSprite = *(PXSprite**)pxDictionaryEntry.Value;
 
-        PXGraphicSpriteDraw(graphicContext, pxSprite, pxBitFireEngine->CameraCurrent);
+        PXGraphicSpriteDraw(pxGraphic, pxSprite, pxBitFireEngine->CameraCurrent);
     }
     //-------------------------------------------------------------------------
 }
 
-void BFEngineRenderText(BFEngine* const bfEngine, PXUIElement* const pxUIElement)
-{
-    PXGraphicContext* const pxGraphic = &bfEngine->Graphic;
-
-    PXUIElement* const pxUIElementParent = pxUIElement->Parent;
-
-    float aX = pxUIElement->Margin.Left;
-    float aY = pxUIElement->Margin.Top;
-    float bX = pxUIElement->Margin.Right;
-    float bY = pxUIElement->Margin.Bottom;
-
-    if (pxUIElementParent)
-    {
-        aX = aX + pxUIElementParent->Margin.Left;
-        aY = aY + pxUIElementParent->Margin.Top;
-        bX = bX + pxUIElementParent->Margin.Right;
-        bY = bY + pxUIElementParent->Margin.Bottom;
-    }
-
-    float offsetX = 0;
-
-    PXFont* const font = pxUIElement->FontID;
-
-    pxGraphic->DrawModeSet(pxGraphic->EventOwner, PXGraphicDrawFillModeFill);
-    PXOpenGLBlendingMode(pxGraphic->EventOwner, PXBlendingModeOneToOne);
-
-    pxGraphic->Texture2DSelect(pxGraphic->EventOwner, &font->MainPage.Texture);
-
-    for (PXSize i = 0; pxUIElement->Name[i]; ++i)
-    {
-        PXFontPageCharacter* const pxFontPageCharacter = PXFontPageCharacterFetch(&font->MainPage, pxUIElement->Name[i]);
-
-        float charWidth;
-        float charHeight;
-        float charWidthSpacing;
-        float tx1;
-        float ty1;
-        float tx2;
-        float ty2;
-
-        if (pxFontPageCharacter)
-        {
-            charWidth = pxFontPageCharacter->Size[0];
-            charHeight = pxFontPageCharacter->Size[1];
-            charWidthSpacing = pxFontPageCharacter->XAdvance;
-
-            tx1 = pxFontPageCharacter->Position[0] / 512.0f;
-            ty1 = pxFontPageCharacter->Position[1] / 512.0f;
-            tx2 = ((pxFontPageCharacter->Position[0] + pxFontPageCharacter->Size[0]) / 512.0f);
-            ty2 = ((pxFontPageCharacter->Position[1] + pxFontPageCharacter->Size[1]) / 512.0f);
-        }
-        else
-        {
-            charWidth = 40;
-            charHeight = 60;
-            charWidthSpacing = 45;
-
-            tx1 = 0;
-            ty1 = 0;
-            tx2 = 1;
-            ty2 = 1;
-        }
-
-        float sclaingWidth = 0.5 * pxUIElement->NameTextScale;
-        float scalingHeight = 0.8 * pxUIElement->NameTextScale;
-
-        float x1 = aX + offsetX; // offset
-        float y1 = aY;
-        float x2 = (x1 + ((charWidth / 512.0f) * sclaingWidth));
-        float y2 = (y1 + ((charHeight / 512.0f) * scalingHeight));
-
-        offsetX += ((charWidthSpacing / 512.0f) * sclaingWidth);
-
-        if (pxUIElement->Name[i] == ' ')
-        {
-            continue;
-        }
-
-        pxGraphic->DrawColorRGBAF // Text color
-        (
-            pxGraphic->EventOwner,
-            pxUIElement->BackGroundColor.Red,
-            pxUIElement->BackGroundColor.Green,
-            pxUIElement->BackGroundColor.Blue,
-            pxUIElement->BackGroundColor.Alpha
-        );
-
-        if (pxFontPageCharacter)
-        { 
-             pxGraphic->RectangleDrawTx(pxGraphic->EventOwner, x1, y1, x2, y2, tx1, ty1, tx2, ty2);
-        }
-        else
-        {
-            pxGraphic->Texture2DSelect(pxGraphic->EventOwner, PXNull);
-            pxGraphic->RectangleDraw(pxGraphic->EventOwner, x1, y1, x2, y2);
-            pxGraphic->Texture2DSelect(pxGraphic->EventOwner, &font->MainPage.Texture);
-        }   
-    }
-
-    pxGraphic->Texture2DSelect(pxGraphic->EventOwner, PXNull);
-    PXOpenGLBlendingMode(pxGraphic, PXBlendingModeNone);
-}
-
 void BFEngineRenderScene(BFEngine* const bfEngine)
 {
-    PXGraphicContext* const pxGraphicContext = &bfEngine->Graphic;
+    PXGraphic* const pxGraphicContext = &bfEngine->Graphic;
 
     //-------------------------------------------------------------------------
     // 3D-Scene Rendering (Models)
@@ -2445,4 +2168,308 @@ void BFEngineRenderScene(BFEngine* const bfEngine)
     }
 
      */
+}
+
+void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIElement)
+{
+    const PXBool isEnabled = pxUIElement->FlagsList & PXUIElementIsEnabled;
+
+    if (!isEnabled)
+    {
+        printf("[Render] Canceled <%i>\n", pxUIElement->ID);
+        return;
+    }
+
+    PXGraphic* const pxGraphic = &bfEngine->Graphic;
+
+    PXRectangleOffset currentOffset;
+
+    PXCopy(PXRectangleOffset, &pxUIElement->Margin, &currentOffset);
+
+    printf("[Render] Do <%i>\n", pxUIElement->ID);
+
+
+    // Calculate accululated offset
+    for (PXUIElement* pxUIElementParent = pxUIElement->Parent; pxUIElementParent; pxUIElementParent = pxUIElementParent->Parent)
+    {
+        currentOffset.Left += pxUIElementParent->Margin.Left;
+        currentOffset.Top += pxUIElementParent->Margin.Top;
+        currentOffset.Right += pxUIElementParent->Margin.Right;
+        currentOffset.Bottom += pxUIElementParent->Margin.Bottom;
+    }  
+
+#if 0 // Debug
+    pxGraphic->DrawModeSet(pxGraphic->EventOwner, PXGraphicDrawFillModeLines);
+    pxGraphic->DrawColorRGBAF(pxGraphic->EventOwner, 0.2f, 1.0f, 1.0f, 1.0f);
+    pxGraphic->RectangleDraw(pxGraphic->EventOwner, currentOffset.Left, currentOffset.Top, currentOffset.Right, currentOffset.Bottom, 0x02);
+    return;
+#endif
+
+    switch (pxUIElement->Type)
+    {
+        case PXUIElementTypePanel:
+        {
+            pxGraphic->DrawModeSet(pxGraphic->EventOwner, PXGraphicDrawFillModeFill);
+            //pxGraphic->DrawModeSet(pxGraphic->EventOwner, PXGraphicDrawFillModeLines);
+
+            const float colorSelectedOffset = (pxUIElement->Hover == PXUIHoverStateHovered) * 0.3f;
+           // const float titleBarHeight = 0.06;
+           // const float titleBarCorrectingOffset = 1.90;
+
+            // Panel Color
+            pxGraphic->DrawColorRGBAF
+            (
+                pxGraphic->EventOwner,
+                pxUIElement->ColorTintReference->Red + colorSelectedOffset,
+                pxUIElement->ColorTintReference->Green + colorSelectedOffset,
+                pxUIElement->ColorTintReference->Blue + colorSelectedOffset,
+                pxUIElement->ColorTintReference->Alpha
+            );
+            // Panel base
+            pxGraphic->RectangleDraw(pxGraphic->EventOwner, currentOffset.Left, currentOffset.Top, currentOffset.Right, currentOffset.Bottom, 0x02);
+
+
+
+
+            // title Color
+            //pxGraphic->DrawColorRGBAF(pxGraphic->EventOwner, titleColor.Red, titleColor.Green, titleColor.Blue, titleColor.Alpha);
+
+            // title base
+            //pxGraphic->RectangleDraw(pxGraphic->EventOwner, currentOffset.Left, currentOffset.Top + titleBarCorrectingOffset, currentOffset.Right, currentOffset.Bottom, 0x02);
+
+
+         //   PXUIElementColorSet4F(pxUIElement, uuu.Red, uuu.Green, uuu.Blue, uuu.Alpha);
+
+          
+           // pxGraphic->RectangleDraw(pxGraphic->EventOwner, currentOffset.Left, currentOffset.Top, currentOffset.Right, currentOffset.Bottom, 0x02);
+
+
+            break;
+        }
+#if 1
+        case PXUIElementTypeText:
+        {
+            PXFont* const font = pxUIElement->TextInfo.FontID;
+            float offsetX = 0;         
+
+            if (!font)
+            {
+                return;
+            }
+
+            //pxGraphic->DrawModeSet(pxGraphic->EventOwner, PXGraphicDrawFillModeLines);
+            //pxGraphic->RectangleDraw(pxGraphic->EventOwner, currentOffset.Left, currentOffset.Top, currentOffset.Right, currentOffset.Bottom, 0x02);
+
+
+            pxGraphic->DrawModeSet(pxGraphic->EventOwner, PXGraphicDrawFillModeFill);
+            pxGraphic->DrawColorRGBAF(pxGraphic->EventOwner, 1,1,1,1);
+            PXOpenGLBlendingMode(pxGraphic->EventOwner, PXBlendingModeOneToOne);
+
+
+
+            pxGraphic->Texture2DSelect(pxGraphic->EventOwner, &font->MainPage.Texture);
+
+            for (PXSize i = 0; pxUIElement->TextInfo.Content[i]; ++i)
+            {
+                PXFontPageCharacter* const pxFontPageCharacter = PXFontPageCharacterFetch(&font->MainPage, pxUIElement->TextInfo.Content[i]);
+
+                float textureWidth;
+                float textureHeight;
+                float charWidth;
+                float charHeight;
+                float charWidthSpacing;
+                float tx1;
+                float ty1;
+                float tx2;
+                float ty2;
+
+                if (pxFontPageCharacter)
+                {
+                    textureWidth = font->MainPage.Texture.Image.Width;
+                    textureHeight = font->MainPage.Texture.Image.Height;
+
+                    charWidth = pxFontPageCharacter->Size[0];
+                    charHeight = pxFontPageCharacter->Size[1];
+                    charWidthSpacing = pxFontPageCharacter->XAdvance;
+
+                    tx1 = pxFontPageCharacter->Position[0] / textureWidth;
+                    ty1 = pxFontPageCharacter->Position[1] / textureHeight;
+                    tx2 = ((pxFontPageCharacter->Position[0] + pxFontPageCharacter->Size[0]) / textureWidth);
+                    ty2 = ((pxFontPageCharacter->Position[1] + pxFontPageCharacter->Size[1]) / textureHeight);
+                }
+                else
+                {
+                    textureWidth = 20;
+                    textureHeight = 20;
+
+                    charWidth = 40;
+                    charHeight = 60;
+                    charWidthSpacing = 45;
+
+                    tx1 = 0;
+                    ty1 = 0;
+                    tx2 = 1;
+                    ty2 = 1;
+                }
+
+                float sclaingWidth = 0.3;// 0.005 * pxUIElement->TextInfo.Scale;
+                float scalingHeight = 0.5;// 0.008 * pxUIElement->TextInfo.Scale;
+
+                float x1 = currentOffset.Left  + offsetX; // offset
+                float y1 = currentOffset.Bottom;
+                float x2 = (x1 + ((charWidth / textureWidth) * sclaingWidth));
+                float y2 = (y1 + ((charHeight / textureHeight) * scalingHeight));
+
+                offsetX += ((charWidthSpacing / textureWidth) * sclaingWidth);
+
+                x1 -= 1.0;
+                y1 += 0.9;
+                x2 -= 1.0;
+                y2 += 0.9;
+
+                if (pxUIElement->TextInfo.Content[i] == ' ')
+                {
+                    continue;
+                }
+
+                pxGraphic->DrawColorRGBAF // Text color
+                (
+                    pxGraphic->EventOwner,
+                    pxUIElement->ColorTintReference->Red,
+                    pxUIElement->ColorTintReference->Green,
+                    pxUIElement->ColorTintReference->Blue,
+                    pxUIElement->ColorTintReference->Alpha
+                );
+
+                if (pxFontPageCharacter)
+                {
+                    pxGraphic->RectangleDrawTx(pxGraphic->EventOwner, x1, y1, x2, y2, tx1, ty1, tx2, ty2, 0x01);
+                }
+                else
+                {
+                    pxGraphic->Texture2DSelect(pxGraphic->EventOwner, PXNull);
+                    pxGraphic->RectangleDraw(pxGraphic->EventOwner, x1, y1, x2, y2, 0x02);
+                    pxGraphic->Texture2DSelect(pxGraphic->EventOwner, &font->MainPage.Texture);
+                }
+            }
+
+            pxGraphic->Texture2DSelect(pxGraphic->EventOwner, PXNull);
+            PXOpenGLBlendingMode(pxGraphic, PXBlendingModeNone);
+            break;
+        }
+        case PXUIElementTypeButton:
+        {
+            pxGraphic->DrawModeSet(pxGraphic->EventOwner, PXGraphicDrawFillModeFill);
+
+            const float colorSelectedOffset = (pxUIElement->Hover == PXUIHoverStateHovered) * 0.3f;
+
+            pxGraphic->DrawColorRGBAF
+            (
+                pxGraphic->EventOwner,
+                pxUIElement->ColorTintReference->Red + colorSelectedOffset,
+                pxUIElement->ColorTintReference->Green + colorSelectedOffset,
+                pxUIElement->ColorTintReference->Blue + colorSelectedOffset,
+                pxUIElement->ColorTintReference->Alpha
+            );
+
+            pxGraphic->RectangleDraw(pxGraphic->EventOwner, currentOffset.Left, currentOffset.Top, currentOffset.Right, currentOffset.Bottom, 0x02);
+
+            break;
+        }
+        case PXUIElementTypeImage:
+        {
+            const float colorSelectedOffset = (pxUIElement->Hover == PXUIHoverStateHovered) * 0.3f;
+
+            pxGraphic->DrawModeSet(pxGraphic->EventOwner, PXGraphicDrawFillModeFill);
+
+            pxGraphic->DrawColorRGBAF
+            (
+                pxGraphic->EventOwner,
+                pxUIElement->ColorTintReference->Red + colorSelectedOffset,
+                pxUIElement->ColorTintReference->Green + colorSelectedOffset,
+                pxUIElement->ColorTintReference->Blue + colorSelectedOffset,
+                pxUIElement->ColorTintReference->Alpha
+            );
+
+            pxGraphic->Texture2DSelect(pxGraphic->EventOwner, pxUIElement->ImageInfo.TextureReference);
+            pxGraphic->RectangleDrawTx(pxGraphic->EventOwner, currentOffset.Left, currentOffset.Top, currentOffset.Right, currentOffset.Bottom, 0, 1, 1, 0);
+
+            break;
+        }
+        case PXUIElementTypeDropDown:
+        case PXUIElementTypeToggle:
+        case PXUIElementTypeCheckBox:
+        case PXUIElementTypeColorPicker:
+        case PXUIElementTypeSlider:
+        case PXUIElementTypeRadioButton:
+        case PXUIElementTypeToolTip:
+        case PXUIElementTypeCustom:
+        case PXUIElementTypeRenderFrame:
+        {
+#if 0
+            pxGraphic->DrawColorRGBAF
+            (
+                pxGraphic->EventOwner,
+                pxUIElement->ColorTintReference->Red,
+                pxUIElement->ColorTintReference->Green,
+                pxUIElement->ColorTintReference->Blue,
+                pxUIElement->ColorTintReference->Alpha
+            );
+            pxGraphic->RectangleDraw(pxGraphic->EventOwner, currentOffset.Left, currentOffset.Top, currentOffset.Right, currentOffset.Bottom, 0x02);
+#endif
+
+#if 1
+            PXWindow* const pxWindows = &bfEngine->WindowMain;
+            PXViewPort pxViewPort;
+
+            // Offset -> -1/+1 => 0/2 => 0/1 => 
+            float viewSize[4] =
+            {
+                pxWindows->Width* (((-1 + currentOffset.Left) + 1) / 2.0f),
+                pxWindows->Height* (((-1 + currentOffset.Top) + 1) / 2.0f),
+                pxWindows->Width* (((+1 - currentOffset.Right) + 1) / 2.0f),
+                pxWindows->Height* (((+1 - currentOffset.Bottom) + 1) / 2.0f)
+            };
+            viewSize[2] -= viewSize[0];
+            viewSize[3] -= viewSize[1];       
+
+            // Render to our framebuffer
+            //glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
+            // Render on the whole framebuffer, complete from the lower left corner to the upper right
+            PXViewPortSetXYWH(&pxViewPort, viewSize[0], viewSize[1], viewSize[2], viewSize[3]);
+            pxGraphic->ViewPortSet(pxGraphic->EventOwner, &pxViewPort);
+
+#if 0
+            BFEngineRenderScene(bfEngine);
+#else
+            glLineWidth(10);
+            PXOpenGLDrawBegin(&pxGraphic->OpenGLInstance, PXGraphicDrawModeTriangle);
+            PXOpenGLDrawColorRGBF(&pxGraphic->OpenGLInstance, 1, 0, 0);
+            PXOpenGLDrawVertexXYZF(&pxGraphic->OpenGLInstance, -0.5, -0.5, 0);
+            PXOpenGLDrawColorRGBF(&pxGraphic->OpenGLInstance, 0, 0, 1);
+            PXOpenGLDrawVertexXYZF(&pxGraphic->OpenGLInstance, 0.5, -0.5, 0);
+            PXOpenGLDrawColorRGBF(&pxGraphic->OpenGLInstance, 0, 1, 0);
+            PXOpenGLDrawVertexXYZF(&pxGraphic->OpenGLInstance, 0.0, 0.5, 0);
+            PXOpenGLDrawEnd(&pxGraphic->OpenGLInstance);
+            glLineWidth(1);
+#endif
+
+            // Render to our framebuffer
+            //glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
+            PXViewPortSetWH(&pxViewPort, pxWindows->Width, pxWindows->Height);
+            pxGraphic->ViewPortSet(pxGraphic->EventOwner, &pxViewPort);
+#endif
+
+            break;
+        }
+#endif
+        default:
+            // Error
+            break;
+    }
+
+    // Rendering panel border
+    pxGraphic->DrawModeSet(pxGraphic->EventOwner, PXGraphicDrawFillModeLines);
+    pxGraphic->DrawColorRGBAF(pxGraphic->EventOwner, 0.2f, 0.5f, 0.5f, 1.0f);
+    pxGraphic->RectangleDraw(pxGraphic->EventOwner, currentOffset.Left, currentOffset.Top, currentOffset.Right, currentOffset.Bottom, 0x02);
 }

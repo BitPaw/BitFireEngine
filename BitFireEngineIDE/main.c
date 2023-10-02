@@ -1,5 +1,7 @@
 #include <BFEngine.h>
 
+#include <Math/PXMath.h>
+
 void OnStartUp(BFEngine* const bitFireEngine);
 void OnShutDown(const BFEngine* bitFireEngine);
 void OnUpdateGameLogicEvent(BFEngine* const bitFireEngine, const float deltaTime);
@@ -36,29 +38,35 @@ PXTexture2D _dialogBoxTexture;
 
 // Frame A
 
-PXUIElement _uiSceneElements;
-PXUIElement _uiPanelScene;
-PXUIElement _uiSceneTexturePanel;
+PXUIElement* _uiSceneElements;
+PXUIElement* _uiSceneElementsTitleBar;
+PXUIElement* _uiSceneElementsTitleBarText;
+PXUIElement* _uiPanelScene;
+PXUIElement* _uiSceneTexturePanel;
 PXTexture2D _uiSceneTexture;
 
-PXUIElement _uiInfoPanel;
-PXUIElement _uiInfoPositionText;
+PXUIElement* _uiInfoPanel;
+PXUIElement* _uiInfoPositionText;
 
-PXUIElement _infoPanelImage;
-PXUIElement _infoPanelSpawn;
-PXUIElement _infoPanelText;
-PXUIElement _positionText;
+PXUIElement* _infoPanelImage;
+PXUIElement* _infoPanelSpawn;
+PXUIElement* _infoPanelText;
+PXUIElement* _positionText;
 PXFont DefaultFont;
 
-PXUIElement _textureTestA;
+PXUIElement* _textureTestA;
 PXTexture2D _testImage;
 PXRenderable _pxRenderableModel;
 
+const PXColorRGBAF buttonColor = { 0.1, 0.3, 0.5, 1 }; //  0.40f, 0.15f, 0.15f, 1
+const PXColorRGBAF panelReference = { 0.0, 0.1, 0.2, 1 };
+PXColorRGBAF titleColor = { 0.1, 0.2, 0.6, 1 };
+const PXColorRGBAF textColor = { 0.5, 0.5, 1.0, 1 };
+float animation = 0;
+
 void OnStartUp(BFEngine* const bitFireEngine)
 {
-
-
-    PXGraphicContext* const graphicContext = &bitFireEngine->Graphic;
+    PXGraphic* const pxGraphic = &bitFireEngine->Graphic;
     
 #if 1
 
@@ -69,79 +77,103 @@ void OnStartUp(BFEngine* const bitFireEngine)
 
       //  PXTextMakeFixedA(&pxText, "C:\\Users\\BitPaw\\Downloads\\2023-05-02 01_32_39-Window.png");
 
-        PXTextMakeFixedA(&pxText, "Texture/Scene.png");
+      //  PXTextMakeFixedA(&pxText, "Texture/Scene.png");
 
-        PXGraphicTexture2DLoad(graphicContext, &_testImage, &pxText);
+        // PXGraphicTexture2DLoad(pxGraphic, &_testImage, &pxText);
     }
 
 
 
     PXText pxText;
     PXTextMakeFixedA(&pxText, "Font/A.fnt");
-    PXGraphicFontLoad(graphicContext, &DefaultFont, &pxText); 
+    PXGraphicFontLoad(pxGraphic, &DefaultFont, &pxText); 
 
 
-    PXUIElementConstruct(&_uiSceneElements, PXUIElementTypePanel);
-    PXUIElementHoverable(&_uiSceneElements, PXTrue);
-    PXUIElementColorSet4F(&_uiSceneElements, 0.1, 0.1, 0.1, 1);
-    PXUIElementSizeSet(&_uiSceneElements, -0.98, -0.95, -0.60, 0.95, PXUIElementPositionRelative);
-    PXUIElementTextSetA(&_uiSceneElements, "Assets");
-    PXUIElementFontSet(&_uiSceneElements, &DefaultFont);
-    PXGraphicUIElementRegister(graphicContext, &_uiSceneElements);
+    // Rectangle: Assets
+    PXGraphicUIElementCreate(pxGraphic, &_uiSceneElements, 1, PXNull);
+    PXGraphicUIElementTypeSet(pxGraphic, _uiSceneElements, PXUIElementTypePanel);
+    PXGraphicUIElementFlagSet(_uiSceneElements, PXUIElementNormal | PXUIElementIsHoverable);
+    _uiSceneElements->ColorTintReference = &panelReference;
+    PXUIElementSizeSet(_uiSceneElements, 0.02, 0.02, 1.65, 0.02, PXUIElementPositionRelative);
+    // TitleBar:Panel
+    PXGraphicUIElementCreate(pxGraphic, &_uiSceneElementsTitleBar, 1, _uiSceneElements);
+    PXGraphicUIElementTypeSet(pxGraphic, _uiSceneElementsTitleBar, PXUIElementTypePanel);
+    PXGraphicUIElementFlagSet(_uiSceneElementsTitleBar, PXUIElementNormal | PXUIElementIsHoverable);
+    _uiSceneElementsTitleBar->ColorTintReference = &titleColor;
+    PXUIElementSizeSet(_uiSceneElementsTitleBar, 0.00, 1.90, 0.0, 0.00, PXUIElementPositionRelative);
+   // Titlebar:Text
+    PXGraphicUIElementCreate(pxGraphic, &_uiSceneElementsTitleBarText, 1, _uiSceneElementsTitleBar);
+    PXGraphicUIElementTypeSet(pxGraphic, _uiSceneElementsTitleBarText, PXUIElementTypeText);
+    PXGraphicUIElementFlagSet(_uiSceneElementsTitleBarText, PXUIElementNormal | PXUIElementIsHoverable);
+    _uiSceneElementsTitleBarText->ColorTintReference = &textColor;
+    PXUIElementSizeSet(_uiSceneElementsTitleBarText, 0.005, 0.005, 0.005, 0.005, PXUIElementPositionRelative);
+    PXGraphicPXUIElementTextSetA(_uiSceneElementsTitleBarText, "Scene");
+    _uiSceneElementsTitleBarText->TextInfo.FontID = &DefaultFont;
 
-    PXUIElementConstruct(&_infoPanelSpawn, PXUIElementTypeButton);
-    PXUIElementParentSet(&_infoPanelSpawn, &_uiSceneElements);
-    PXUIElementHoverable(&_infoPanelSpawn, PXTrue);
+    //PXUIElementTextSetA(&_uiSceneElements, "Assets");
+    //PXUIElementFontSet(&_uiSceneElements, &DefaultFont);
+    //PXGraphicUIElementRegister(pxGraphic, &_uiSceneElements);
+
+
+    PXGraphicUIElementCreate(pxGraphic, &_infoPanelSpawn, 1, _uiSceneElements);
+    PXGraphicUIElementTypeSet(pxGraphic, _infoPanelSpawn, PXUIElementTypeButton);
+   // PXUIElementParentSet(_infoPanelSpawn, &_uiSceneElements);
+    PXGraphicUIElementFlagSet(_infoPanelSpawn, PXUIElementNormal | PXUIElementIsHoverable);
+    _infoPanelSpawn->ColorTintReference = &buttonColor;
     PXUIElementColorSet4F(&_infoPanelSpawn, 0.40f, 0.15f, 0.15f, 1);
-    PXUIElementSizeSet(&_infoPanelSpawn, 0.02, 0.05, -0.02, -1.65, PXUIElementPositionRelative);
-    PXGraphicUIElementRegister(graphicContext, &_infoPanelSpawn);
-
-    PXUIElementConstruct(&_infoPanelText, PXUIElementTypeText);
-    PXUIElementParentSet(&_infoPanelText, &_uiSceneElements);
-    PXUIElementFontSet(&_infoPanelText, &DefaultFont);
-    PXUIElementColorSet4F(&_infoPanelText, 0.5, 0.5, 0.5, 1);
-    PXUIElementSizeSet(&_infoPanelText, 0.06, 0.1, -0.025, -0.025, PXUIElementPositionRelative);
-    PXUIElementTextSetA(&_infoPanelText, "Button");
-    PXGraphicUIElementRegister(graphicContext, &_infoPanelText);
+    PXUIElementSizeSet(_infoPanelSpawn, 0.02, 0.02, 0.02, 1.8, PXUIElementPositionRelative);
+  //  PXGraphicUIElementRegister(pxGraphic, &_infoPanelSpawn);
 
 
-    PXUIElementConstruct(&_uiPanelScene, PXUIElementTypePanel);
-    PXUIElementHoverable(&_uiPanelScene, PXTrue);
-    PXUIElementColorSet4F(&_uiPanelScene, 0.1, 0.1, 0.1, 1);
-    PXUIElementSizeSet(&_uiPanelScene, -0.59, -0.95, 0.6, 0.95, PXUIElementPositionRelative);
-    PXUIElementTextSetA(&_uiPanelScene, "Scene");
-    PXUIElementFontSet(&_uiPanelScene, &DefaultFont);
-    PXGraphicUIElementRegister(graphicContext, &_uiPanelScene);
+#if 1
+    PXGraphicUIElementCreate(pxGraphic, &_infoPanelText, 1, _infoPanelSpawn);
+    PXGraphicUIElementTypeSet(pxGraphic, _infoPanelText, PXUIElementTypeText);
+   // PXUIElementFontSet(&_infoPanelText, &DefaultFont);
+    PXUIElementColorSet4F(_infoPanelText, 0.5, 0.5, 0.5, 1);
+    PXUIElementSizeSet(_infoPanelText, 0.02, 0.02, 0.02, 0.02, PXUIElementPositionRelative);
+    //PXUIElementTextSetA(&_infoPanelText, "Button");
+  //  PXGraphicUIElementRegister(pxGraphic, &_infoPanelText);
 
 
-    PXUIElementConstruct(&_uiSceneTexturePanel, PXUIElementTypeRenderFrame);
-    PXUIElementParentSet(&_uiSceneTexturePanel, &_uiPanelScene);
-    PXUIElementHoverable(&_uiSceneTexturePanel, PXTrue);
-    PXUIElementSizeSet(&_uiSceneTexturePanel, 0.02, 0.05, -0.02, -0.1, PXUIElementPositionRelative);
-    PXUIElementFontSet(&_uiSceneTexturePanel, &DefaultFont);
-    _uiSceneTexturePanel.TextureReference = &_testImage;
-    _uiSceneTexturePanel.FrameRenderTextureReference = &_uiSceneTexture;
-    PXGraphicUIElementRegister(graphicContext, &_uiSceneTexturePanel);
+    // Panel: Scene
+    PXGraphicUIElementCreate(pxGraphic, &_uiPanelScene, 1, PXNull);
+    PXGraphicUIElementTypeSet(pxGraphic, _uiPanelScene, PXUIElementTypePanel);
+    PXGraphicUIElementFlagSet(_uiPanelScene, PXUIElementNormal | PXUIElementIsHoverable);
+    _uiPanelScene->ColorTintReference = &panelReference;
+      PXUIElementSizeSet(_uiPanelScene, 0.36, 0.02, 0.36, 0.02, PXUIElementPositionRelative);
+    //  PXUIElementTextSetA(&_uiPanelScene, "Scene");
+    // PXUIElementFontSet(&_uiPanelScene, &DefaultFont);
+   // PXGraphicUIElementRegister(pxGraphic, &_uiPanelScene);
+
+    // RenderFrame: Scene
+    PXGraphicUIElementCreate(pxGraphic, &_uiSceneTexturePanel, 1, _uiPanelScene);
+    PXGraphicUIElementTypeSet(pxGraphic, _uiSceneTexturePanel, PXUIElementTypeRenderFrame);
+    PXGraphicUIElementFlagSet(_uiSceneTexturePanel, PXUIElementNormal | PXUIElementIsHoverable);
+     PXUIElementSizeSet(_uiSceneTexturePanel, 0.05, 0.05, 0.05, 0.05, PXUIElementPositionRelative);
+    //  PXUIElementFontSet(&_uiSceneTexturePanel, &DefaultFont);
+   // _uiSceneTexturePanel.TextureReference = &_testImage;
+   // _uiSceneTexturePanel.FrameRenderTextureReference = &_uiSceneTexture;
+   // PXGraphicUIElementRegister(pxGraphic, &_uiSceneTexturePanel);
     //_textureTestA.TextureID = _testImage.ID;
 
-    PXUIElementConstruct(&_uiInfoPanel, PXUIElementTypePanel);
-    PXUIElementHoverable(&_uiInfoPanel, PXTrue);
-    PXUIElementColorSet4F(&_uiInfoPanel, 0.1, 0.1, 0.1, 1);
-    PXUIElementSizeSet(&_uiInfoPanel, 0.62, -0.95, 0.98, 0.95, PXUIElementPositionRelative);
-    PXUIElementTextSetA(&_uiInfoPanel, "Info");
-    PXUIElementFontSet(&_uiInfoPanel, &DefaultFont);
-    PXGraphicUIElementRegister(graphicContext, &_uiInfoPanel);
+    PXGraphicUIElementCreate(pxGraphic, &_uiInfoPanel, 1, PXNull);
+    PXGraphicUIElementTypeSet(pxGraphic, _uiInfoPanel, PXUIElementTypePanel);
+    PXGraphicUIElementFlagSet(_uiInfoPanel, PXUIElementNormal | PXUIElementIsHoverable);
+    _uiInfoPanel->ColorTintReference = &panelReference;
+     PXUIElementSizeSet(_uiInfoPanel, 1.65, 0.02, 0.02, 0.02, PXUIElementPositionRelative);
+    //  PXUIElementTextSetA(&_uiInfoPanel, "Info");
+    //  PXUIElementFontSet(&_uiInfoPanel, &DefaultFont);
+ //   PXGraphicUIElementRegister(pxGraphic, &_uiInfoPanel);
 
-
-
-    PXUIElementConstruct(&_uiInfoPositionText, PXUIElementTypeText);
-    PXUIElementParentSet(&_uiInfoPositionText, &_uiInfoPanel);
-    PXUIElementHoverable(&_uiInfoPositionText, PXTrue);
-    PXUIElementColorSet4F(&_uiInfoPositionText, 1, 1, 1, 1);
-    PXUIElementSizeSet(&_uiInfoPositionText, -0.02, -0.02, -0.02, -0.02, PXUIElementPositionRelative);
-    PXUIElementTextSetA(&_uiInfoPositionText, "Position");
-    PXUIElementFontSet(&_uiInfoPositionText, &DefaultFont);
-    PXGraphicUIElementRegister(graphicContext, &_uiInfoPositionText);
+    PXGraphicUIElementCreate(pxGraphic, &_uiInfoPositionText, 1, _uiInfoPanel);
+    PXGraphicUIElementTypeSet(pxGraphic, _uiInfoPositionText, PXUIElementTypeText);
+    //PXUIElementParentSet(&_uiInfoPositionText, &_uiInfoPanel);
+    PXGraphicUIElementFlagSet(_uiInfoPositionText, PXUIElementNormal | PXUIElementIsHoverable);
+    PXUIElementColorSet4F(_uiInfoPositionText, 1, 1, 1, 1);
+     PXUIElementSizeSet(_uiInfoPositionText, 0.02, 0.02, 0.02, 0.02, PXUIElementPositionRelative);
+    //  PXUIElementTextSetA(&_uiInfoPositionText, "Position");
+    //  PXUIElementFontSet(&_uiInfoPositionText, &DefaultFont);
+   // PXGraphicUIElementRegister(pxGraphic, &_uiInfoPositionText);
 
 
     // Load model
@@ -152,11 +184,11 @@ void OnStartUp(BFEngine* const bitFireEngine)
         PXTextMakeFixedA(&modelFilePath, "Model/Tiger.obj");
         //PXModelLoad(&bitFireEngine->pxModelTEST, &modelFilePath);
 
-       // PXGraphicModelLoad(graphicContext, &_pxRenderableModel, &modelFilePath);
+       // PXGraphicModelLoad(pxGraphic, &_pxRenderableModel, &modelFilePath);
     }
 
- 
-
+    PXGraphicUIElementPrint(pxGraphic);
+#endif
 
 
 #if 0
@@ -167,7 +199,7 @@ void OnStartUp(BFEngine* const bitFireEngine)
     PXUIElementPositionSetXYWH(&_textureTestA, 0.55f, -0.52f, 0.88f, 0.67f, PXUIElementPositionRelative);
     _textureTestA.TextureID = _testImage.ID;
 
-    PXGraphicUIElementRegister(graphicContext, &_textureTestA);
+    PXGraphicUIElementRegister(pxGraphic, &_textureTestA);
 #endif
 
 
@@ -187,23 +219,31 @@ void OnStartUp(BFEngine* const bitFireEngine)
 
     PXUIElementTextSetA(&_positionText, "Assets");
 
-    PXGraphicUIElementRegister(graphicContext, &_positionText);*/
+    PXGraphicUIElementRegister(pxGraphic, &_positionText);*/
 
 
 #endif // 0
 
 
-    //PXGraphicTextureLoadA(graphicContext, &_dialogBoxTexture, (char*)"C:\\Users\\BitPaw\\Videos\\SquareBlue.png");
+    //PXGraphicTextureLoadA(pxGraphic, &_dialogBoxTexture, (char*)"C:\\Users\\BitPaw\\Videos\\SquareBlue.png");
 
 }
 
 void OnUpdateGameLogicEvent(BFEngine* const bitFireEngine, const float deltaTime)
 {
+    float xx = PXMathSinus(animation);
+    float cosi = PXMathCosinus(animation);
+    titleColor.Red = (xx +1)*0.3;
+    titleColor.Green = (cosi +2)* 0.4;
+    titleColor.Blue = cosi * 1;
+
+    animation += 0.06;
+
 #if 1
     PXMouse* const mouse = &bitFireEngine->WindowMain.MouseCurrentInput;
 
 
-    PXUIElementTextSetAV(&_positionText, "Position : %3.2f", bitFireEngine->TimeFPS);
+    PXGraphicPXUIElementTextSetAV(&_positionText, "Position : %3.2f", bitFireEngine->TimeFPS);
 
     float x = mouse->Delta[0];
     float y = mouse->Delta[1];

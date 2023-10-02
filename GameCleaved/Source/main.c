@@ -47,7 +47,7 @@ void OnUpdateUI(const BFEngine* bitFireEngine)
 
 void OnStartUp(BFEngine* const bitFireEngine)
 {
-    PXGraphicContext* const pxGraphicContext = &bitFireEngine->Graphic;
+    PXGraphic* const pxGraphicContext = &bitFireEngine->Graphic;
 
     //PXWindowCursorCaptureMode(&bitFireEngine->WindowMain, PXWindowCursorLockAndHide);
 
@@ -57,10 +57,10 @@ void OnStartUp(BFEngine* const bitFireEngine)
     _hudShaderID.ResourceID.PXID = -1;
 
     //PXGraphicBlendingMode(&bitFireEngine->WindowMain.GraphicInstance, PXBlendingModeOneToOne);
-
-    PXGraphicShaderProgramCreateVPA(pxGraphicContext, &_hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
-    PXGraphicShaderProgramCreateVPA(pxGraphicContext, &_worldShader, "Shader/WS.vert", "Shader/WS.frag");
-    PXGraphicShaderProgramCreateVPA(pxGraphicContext, &_simplex, "Shader/Simplex.vert", "Shader/Simplex.frag");
+       
+    pxGraphicContext->ShaderProgramCreateFromFileVPA(pxGraphicContext->EventOwner, &_hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
+    pxGraphicContext->ShaderProgramCreateFromFileVPA(pxGraphicContext->EventOwner, &_worldShader, "Shader/WS.vert", "Shader/WS.frag");
+    pxGraphicContext->ShaderProgramCreateFromFileVPA(pxGraphicContext->EventOwner, &_simplex, "Shader/Simplex.vert", "Shader/Simplex.frag");
        
 #if 0
     PXGraphicSkyboxRegisterA

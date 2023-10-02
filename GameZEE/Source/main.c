@@ -85,7 +85,7 @@ void OnUIOnMouseLeave(PXUIElement* const pxUIElement)
 
 void OnStartUp(BFEngine* const bitFireEngine)
 {    
-    PXGraphicContext* const graphicContext = &bitFireEngine->WindowMain.GraphicInstance;
+    PXGraphic* const pxGraphic = &bitFireEngine->WindowMain.GraphicInstance;
 
 
 //    PXWindowCursorCaptureMode(&bitFireEngine->WindowMain, PXWindowCursorLockAndHide);
@@ -94,11 +94,11 @@ void OnStartUp(BFEngine* const bitFireEngine)
     _worldShader.ResourceID.PXID = -1;
     _hudShaderID.ResourceID.PXID = -1;
 
-    PXGraphicShaderProgramCreateVPA(graphicContext, &_worldShader, "Shader/WorldShader_V.glsl", "Shader/WorldShader_F.glsl");
+    PXGraphicShaderProgramCreateVPA(pxGraphic, &_worldShader, "Shader/WorldShader_V.glsl", "Shader/WorldShader_F.glsl");
         
     PXGraphicSkyboxRegisterA
     (
-        graphicContext,
+        pxGraphic,
         &_skybox,
         "Shader/SkyBox.vert",
         "Shader/SkyBox.frag",
@@ -110,40 +110,40 @@ void OnStartUp(BFEngine* const bitFireEngine)
         "Texture/SkyBox/Front.png"
     );   
 
-    PXGraphicTexture2DLoadA(graphicContext, &_dialogBoxTexture, "Texture/DialogueBox.bmp");
+    PXGraphicTexture2DLoadA(pxGraphic, &_dialogBoxTexture, "Texture/DialogueBox.bmp");
 
-    PXGraphicTexture2DLoadA(graphicContext, &_dialogBoxTextureSelected, "Texture/DialogueBoxB.bmp");
+    PXGraphicTexture2DLoadA(pxGraphic, &_dialogBoxTextureSelected, "Texture/DialogueBoxB.bmp");
    
 
-   // PXGraphicModelLoadA(graphicContext, &_cubeModel, "Model/Dust_II/DustII.obj");
-    PXGraphicModelShaderSet(graphicContext, &_cubeModel, &_worldShader);
+   // PXGraphicModelLoadA(pxGraphic, &_cubeModel, "Model/Dust_II/DustII.obj");
+    PXGraphicModelShaderSet(pxGraphic, &_cubeModel, &_worldShader);
 
  
-   // PXGraphicModelLoadA(graphicContext, &_bohrThing, "Model/Bohr.obj");
-    PXGraphicModelShaderSet(graphicContext, &_bohrThing, &_worldShader);
+   // PXGraphicModelLoadA(pxGraphic, &_bohrThing, "Model/Bohr.obj");
+    PXGraphicModelShaderSet(pxGraphic, &_bohrThing, &_worldShader);
 
  //-----<UI>----------------------------------------------------------------
 #if 1    
     
-    //GraphicUIPanelRegister(graphicContext, &pxUIPanelMainCopy);
-    //GraphicModelShaderSet(graphicContext, &pxUIPanelMainCopy.Renderable, &_worldShader);
+    //GraphicUIPanelRegister(pxGraphic, &pxUIPanelMainCopy);
+    //GraphicModelShaderSet(pxGraphic, &pxUIPanelMainCopy.Renderable, &_worldShader);
     //PXMatrix4x4FScaleSet(1, 1, 1, &pxUIPanelMainCopy.Renderable.MatrixModel);
     //pxUIPanelMainCopy.Renderable.MeshSegmentList[0].RenderMode = GraphicRenderModeSquare;
 
     /*
 
-    PXGraphicShaderProgramLoadGLSLA(graphicContext, &_hudShaderID, (char*)"Shader/HUD_V.glsl", (char*)"Shader/HUD_F.glsl");
+    PXGraphicShaderProgramLoadGLSLA(pxGraphic, &_hudShaderID, (char*)"Shader/HUD_V.glsl", (char*)"Shader/HUD_F.glsl");
 
     PXFontLoadA(&_textFont, (char*)"Font/A.fnt");
 
     
-    PXGraphicUIButtonRegister(graphicContext, &pxDoStuffButton, 0, 0, 1, 1, (char*)"Button", &_textFont, &_hudShaderID);
+    PXGraphicUIButtonRegister(pxGraphic, &pxDoStuffButton, 0, 0, 1, 1, (char*)"Button", &_textFont, &_hudShaderID);
     pxDoStuffButton.UIElement.OnClickCallback = OnUIOnClick;
     pxDoStuffButton.UIElement.OnMouseEnterCallback = OnUIOnMouseEnter;
     pxDoStuffButton.UIElement.OnMouseLeaveCallback = OnUIOnMouseLeave;
 
-    PXGraphicUIPanelRegister(graphicContext, &pxUIPanelMain);
-    PXGraphicModelShaderSet(graphicContext, &pxUIPanelMain.UIElement.Renderable, &_hudShaderID);    // _hudShaderID
+    PXGraphicUIPanelRegister(pxGraphic, &pxUIPanelMain);
+    PXGraphicModelShaderSet(pxGraphic, &pxUIPanelMain.UIElement.Renderable, &_hudShaderID);    // _hudShaderID
     PXMatrix4x4FScaleSet(0.3, 0.13, 1, &pxUIPanelMain.UIElement.Renderable.MatrixModel);
     PXMatrix4x4FMoveToScaleXY(&pxUIPanelMain.UIElement.Renderable.MatrixModel, -0.9, -0.9, &pxUIPanelMain.UIElement.Renderable.MatrixModel);
     pxUIPanelMain.UIElement.Renderable.MeshSegmentList[0].RenderMode = PXGraphicRenderModeSquare;

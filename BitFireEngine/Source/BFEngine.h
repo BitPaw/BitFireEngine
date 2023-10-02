@@ -61,7 +61,7 @@ extern "C"
 
    
         PXWindow WindowMain;
-        PXGraphicContext Graphic;
+        PXGraphic Graphic;
 
         PXController Controller;
 
@@ -103,8 +103,12 @@ extern "C"
 
     PXPrivate void PXCalculateUIOffset(PX);
 
-    PXPrivate void BFEngineRenderText(BFEngine* const bfEngine, PXUIElement* const pxUIElement);
     PXPrivate void BFEngineRenderScene(BFEngine* const bfEngine);
+
+
+
+    PXPrivate void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIElement);
+
 
 
     /*
