@@ -46,10 +46,13 @@ PXUIElement* _uiSceneTexturePanel;
 PXTexture2D _uiSceneTexture;
 
 PXUIElement* _uiInfoPanel;
+PXUIElement* _uiInfoPanelTitleBar;
+PXUIElement* _uiInfoPanelTitleBarText;
 PXUIElement* _uiInfoPositionText;
 
 PXUIElement* _infoPanelImage;
-PXUIElement* _infoPanelSpawn;
+PXUIElement* _infoPanelTextSpawn;
+PXUIElement* _infoPanelButtonText;
 PXUIElement* _infoPanelText;
 PXUIElement* _positionText;
 PXFont DefaultFont;
@@ -61,7 +64,7 @@ PXRenderable _pxRenderableModel;
 const PXColorRGBAF buttonColor = { 0.1, 0.3, 0.5, 1 }; //  0.40f, 0.15f, 0.15f, 1
 const PXColorRGBAF panelReference = { 0.0, 0.1, 0.2, 1 };
 PXColorRGBAF titleColor = { 0.1, 0.2, 0.6, 1 };
-const PXColorRGBAF textColor = { 0.5, 0.5, 1.0, 1 };
+const PXColorRGBAF textColor = { 0.6, 0.6, 1.0, 1 };
 float animation = 0;
 
 void OnStartUp(BFEngine* const bitFireEngine)
@@ -114,19 +117,25 @@ void OnStartUp(BFEngine* const bitFireEngine)
     //PXUIElementFontSet(&_uiSceneElements, &DefaultFont);
     //PXGraphicUIElementRegister(pxGraphic, &_uiSceneElements);
 
-
-    PXGraphicUIElementCreate(pxGraphic, &_infoPanelSpawn, 1, _uiSceneElements);
-    PXGraphicUIElementTypeSet(pxGraphic, _infoPanelSpawn, PXUIElementTypeButton);
-   // PXUIElementParentSet(_infoPanelSpawn, &_uiSceneElements);
-    PXGraphicUIElementFlagSet(_infoPanelSpawn, PXUIElementNormal | PXUIElementIsHoverable);
-    _infoPanelSpawn->ColorTintReference = &buttonColor;
-    PXUIElementColorSet4F(&_infoPanelSpawn, 0.40f, 0.15f, 0.15f, 1);
-    PXUIElementSizeSet(_infoPanelSpawn, 0.02, 0.02, 0.02, 1.8, PXUIElementPositionRelative);
-  //  PXGraphicUIElementRegister(pxGraphic, &_infoPanelSpawn);
+    // Button
+    PXGraphicUIElementCreate(pxGraphic, &_infoPanelTextSpawn, 1, _uiSceneElements);
+    PXGraphicUIElementTypeSet(pxGraphic, _infoPanelTextSpawn, PXUIElementTypeButton);
+    PXGraphicUIElementFlagSet(_infoPanelTextSpawn, PXUIElementNormal | PXUIElementIsHoverable);
+    PXUIElementColorSet4F(&_infoPanelTextSpawn, 0.40f, 0.15f, 0.15f, 1);
+    PXUIElementSizeSet(_infoPanelTextSpawn, 0.025, 0.05, 0.025, 1.8, PXUIElementPositionRelative);
+    _infoPanelTextSpawn->ColorTintReference = &buttonColor;
+    // Button Text
+    PXGraphicUIElementCreate(pxGraphic, &_infoPanelButtonText, 1, _infoPanelTextSpawn);
+    PXGraphicUIElementTypeSet(pxGraphic, _infoPanelButtonText, PXUIElementTypeText);
+    PXGraphicUIElementFlagSet(_infoPanelButtonText, PXUIElementNormal | PXUIElementIsHoverable);
+    PXUIElementSizeSet(_infoPanelButtonText, 0.005, 0.005, 0.005, 0.005, PXUIElementPositionRelative);
+    PXGraphicPXUIElementTextSetA(_infoPanelButtonText, "Button");
+    _infoPanelButtonText->TextInfo.FontID = &DefaultFont;
+    _infoPanelButtonText->ColorTintReference = &textColor;
 
 
 #if 1
-    PXGraphicUIElementCreate(pxGraphic, &_infoPanelText, 1, _infoPanelSpawn);
+    PXGraphicUIElementCreate(pxGraphic, &_infoPanelText, 1, _infoPanelTextSpawn);
     PXGraphicUIElementTypeSet(pxGraphic, _infoPanelText, PXUIElementTypeText);
    // PXUIElementFontSet(&_infoPanelText, &DefaultFont);
     PXUIElementColorSet4F(_infoPanelText, 0.5, 0.5, 0.5, 1);
@@ -156,6 +165,8 @@ void OnStartUp(BFEngine* const bitFireEngine)
    // PXGraphicUIElementRegister(pxGraphic, &_uiSceneTexturePanel);
     //_textureTestA.TextureID = _testImage.ID;
 
+
+     // Panel:Info
     PXGraphicUIElementCreate(pxGraphic, &_uiInfoPanel, 1, PXNull);
     PXGraphicUIElementTypeSet(pxGraphic, _uiInfoPanel, PXUIElementTypePanel);
     PXGraphicUIElementFlagSet(_uiInfoPanel, PXUIElementNormal | PXUIElementIsHoverable);
@@ -165,12 +176,23 @@ void OnStartUp(BFEngine* const bitFireEngine)
     //  PXUIElementFontSet(&_uiInfoPanel, &DefaultFont);
  //   PXGraphicUIElementRegister(pxGraphic, &_uiInfoPanel);
 
-    PXGraphicUIElementCreate(pxGraphic, &_uiInfoPositionText, 1, _uiInfoPanel);
-    PXGraphicUIElementTypeSet(pxGraphic, _uiInfoPositionText, PXUIElementTypeText);
-    //PXUIElementParentSet(&_uiInfoPositionText, &_uiInfoPanel);
-    PXGraphicUIElementFlagSet(_uiInfoPositionText, PXUIElementNormal | PXUIElementIsHoverable);
-    PXUIElementColorSet4F(_uiInfoPositionText, 1, 1, 1, 1);
-     PXUIElementSizeSet(_uiInfoPositionText, 0.02, 0.02, 0.02, 0.02, PXUIElementPositionRelative);
+         // TitleBar:Infol
+     PXGraphicUIElementCreate(pxGraphic, &_uiInfoPanelTitleBar, 1, _uiInfoPanel);
+     PXGraphicUIElementTypeSet(pxGraphic, _uiInfoPanelTitleBar, PXUIElementTypePanel);
+     PXGraphicUIElementFlagSet(_uiInfoPanelTitleBar, PXUIElementNormal | PXUIElementIsHoverable);
+     _uiInfoPanelTitleBar->ColorTintReference = &titleColor;
+     PXUIElementSizeSet(_uiInfoPanelTitleBar, 0.00, 1.90, 0.0, 0.00, PXUIElementPositionRelative);
+
+    PXGraphicUIElementCreate(pxGraphic, &_uiInfoPanelTitleBarText, 1, _uiInfoPanelTitleBar);
+    PXGraphicUIElementTypeSet(pxGraphic, _uiInfoPanelTitleBarText, PXUIElementTypeText);
+    PXGraphicUIElementFlagSet(_uiInfoPanelTitleBarText, PXUIElementNormal | PXUIElementIsHoverable);
+    PXUIElementColorSet4F(_uiInfoPanelTitleBarText, 1, 1, 1, 1);
+     PXUIElementSizeSet(_uiInfoPanelTitleBarText, 0.005, 0.005, 0.005, 0.005, PXUIElementPositionRelative);
+     PXGraphicPXUIElementTextSetA(_uiInfoPanelTitleBarText, "Info");
+     _uiInfoPanelTitleBarText->TextInfo.FontID = &DefaultFont;
+     _uiInfoPanelTitleBarText->ColorTintReference = &textColor;
+
+
     //  PXUIElementTextSetA(&_uiInfoPositionText, "Position");
     //  PXUIElementFontSet(&_uiInfoPositionText, &DefaultFont);
    // PXGraphicUIElementRegister(pxGraphic, &_uiInfoPositionText);
@@ -232,12 +254,12 @@ void OnStartUp(BFEngine* const bitFireEngine)
 void OnUpdateGameLogicEvent(BFEngine* const bitFireEngine, const float deltaTime)
 {
     float xx = PXMathSinus(animation);
-    float cosi = PXMathCosinus(animation);
-    titleColor.Red = (xx +1)*0.3;
-    titleColor.Green = (cosi +2)* 0.4;
-    titleColor.Blue = cosi * 1;
 
-    animation += 0.06;
+    titleColor.Red = (0.2);
+    titleColor.Green = (-xx) * 0.4;
+    titleColor.Blue = (xx);
+
+    animation += 0.03;
 
 #if 1
     PXMouse* const mouse = &bitFireEngine->WindowMain.MouseCurrentInput;

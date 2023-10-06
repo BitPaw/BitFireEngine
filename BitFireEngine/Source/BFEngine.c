@@ -1499,7 +1499,8 @@ void BFEngineStart(BFEngine* const pxBitFireEngine)
 
         PXText pxText;
         PXTextMakeFixedA(&pxText, "[BFE] <BitFireEngine>");    
-        PXWindowCreate(window, 0, 0, -1, -1, &pxText, 1);
+        PXWindowCreate(window, 0, 0, -1, -1, &pxText, PXFalse);
+        PXWindowUpdate(window);
     }
 
     PXGraphicInitializeInfo pxGraphicInitializeInfo;
@@ -1556,6 +1557,8 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
     PXGraphic* const pxGraphic = &pxBitFireEngine->Graphic;
     // Pre-input
 
+    PXWindowUpdate(&pxBitFireEngine->WindowMain);
+
     //---[Variable Reset]--------------------------------------------------
     pxBitFireEngine->TimeCounterEnd = PXTimeCounterStampGet();
 
@@ -1590,7 +1593,9 @@ void BFEngineUpdate(BFEngine* const pxBitFireEngine)
 
     if (pxBitFireEngine->WindowMain.HasSizeChanged)
     {
+#if 0
         printf("[Window] Size changed (%i x %i)\n", width, height);
+#endif
 
         PXCameraAspectRatioChange(pxBitFireEngine->CameraCurrent, width, height);
 
@@ -2176,7 +2181,9 @@ void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIEl
 
     if (!isEnabled)
     {
+#if 0
         printf("[Render] Canceled <%i>\n", pxUIElement->ID);
+#endif
         return;
     }
 
@@ -2186,8 +2193,9 @@ void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIEl
 
     PXCopy(PXRectangleOffset, &pxUIElement->Margin, &currentOffset);
 
+#if 0
     printf("[Render] Do <%i>\n", pxUIElement->ID);
-
+#endif
 
     // Calculate accululated offset
     for (PXUIElement* pxUIElementParent = pxUIElement->Parent; pxUIElementParent; pxUIElementParent = pxUIElementParent->Parent)
