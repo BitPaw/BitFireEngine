@@ -2,9 +2,12 @@
 
 #include <Math/PXMath.h>
 
-void OnStartUp(BFEngine* const bitFireEngine);
-void OnShutDown(const BFEngine* bitFireEngine);
-void OnUpdateGameLogicEvent(BFEngine* const bitFireEngine, const float deltaTime);
+void PXAPI OnStartUpEvent(void* const owner, PXEngine* const pxEngine);
+void PXAPI OnShutDownEvent(void* const owner, PXEngine* const pxEngine);
+void PXAPI OnUserUpdateEvent(void* const owner, PXEngine* const pxEngine);
+void PXAPI OnNetworkUpdate(void* const owner, PXEngine* const pxEngine);
+void PXAPI OnGameUpdateEvent(void* const owner, PXEngine* const pxEngine);
+void PXAPI OnRenderUpdateEvent(void* const owner, PXEngine* const pxEngine);
 
 #if !defined(_DEBUG) && defined(OSWindows) && 0
 #include <windows.h>
@@ -16,18 +19,18 @@ int main(int amountOFParameters, char** parameter)
     BFEngine bfEngine;
     BFEngineConstruct(&bfEngine);
 
-    bfEngine.StartUpCallBack = OnStartUp; 
-    bfEngine.ShutDownCallBack = OnShutDown;
-    bfEngine.UpdateGameLogicCallBack = OnUpdateGameLogicEvent;
+    bfEngine.OnStartUp = OnStartUpEvent;
+    bfEngine.OnShutDown = OnShutDownEvent;
+    bfEngine.OnUserUpdate = OnUserUpdateEvent;
+    bfEngine.OnNetworkUpdate = OnNetworkUpdate;
+    bfEngine.OnGameUpdate = OnGameUpdateEvent;
+    bfEngine.OnRenderUpdate = OnRenderUpdateEvent;
 
-    BFEngineStart(&bfEngine);
+    PXEngineStart(&bfEngine.Engine);
 
-    while(BFEngineIsRunning(&bfEngine))
-    {
-        BFEngineUpdate(&bfEngine);
-    }
+    while (PXEngineIsRunning(&bfEngine.Engine)) PXEngineUpdate(&bfEngine.Engine);
 
-    BFEngineStop(&bfEngine);
+    PXEngineStop(&bfEngine.Engine);
 
     return 0;
 }
@@ -63,13 +66,13 @@ PXRenderable _pxRenderableModel;
 
 const PXColorRGBAF buttonColor = { 0.1, 0.3, 0.5, 1 }; //  0.40f, 0.15f, 0.15f, 1
 const PXColorRGBAF panelReference = { 0.0, 0.1, 0.2, 1 };
-PXColorRGBAF titleColor = { 0.1, 0.2, 0.6, 1 };
-const PXColorRGBAF textColor = { 0.6, 0.6, 1.0, 1 };
+PXColorRGBAF titleColor = { 0.2, 0.2, 0.2, 1 };
+const PXColorRGBAF textColor = { 0.8, 0.8, 0.8, 1 };
 float animation = 0;
 
-void OnStartUp(BFEngine* const bitFireEngine)
+void PXAPI OnStartUpEvent(void* const owner, PXEngine* const pxEngine)
 {
-    PXGraphic* const pxGraphic = &bitFireEngine->Graphic;
+    PXGraphic* const pxGraphic = &pxEngine->Graphic;
     
 #if 1
 
@@ -251,7 +254,22 @@ void OnStartUp(BFEngine* const bitFireEngine)
 
 }
 
-void OnUpdateGameLogicEvent(BFEngine* const bitFireEngine, const float deltaTime)
+void PXAPI OnShutDownEvent(void* const owner, PXEngine* const pxEngine)
+{
+
+}
+
+void PXAPI OnUserUpdateEvent(void* const owner, PXEngine* const pxEngine)
+{
+
+}
+
+void PXAPI OnNetworkUpdate(void* const owner, PXEngine* const pxEngine)
+{
+
+}
+
+void PXAPI OnGameUpdateEvent(void* const owner, PXEngine* const pxEngine)
 {
     float xx = PXMathSinus(animation);
 
@@ -262,28 +280,31 @@ void OnUpdateGameLogicEvent(BFEngine* const bitFireEngine, const float deltaTime
     animation += 0.03;
 
 #if 1
-    PXMouse* const mouse = &bitFireEngine->WindowMain.MouseCurrentInput;
+    PXMouse* const mouse = &pxEngine->Window.MouseCurrentInput;
 
 
-    PXGraphicPXUIElementTextSetAV(&_positionText, "Position : %3.2f", bitFireEngine->TimeFPS);
+    PXGraphicPXUIElementTextSetAV(&_positionText, "Position : %3.2f", pxEngine->FramesPerSecound);
 
     float x = mouse->Delta[0];
     float y = mouse->Delta[1];
 
-   // sprintf_s(_infoPanelText.Name, 32, "Mouse Pos x:%6.3f y:%6.3f", x, y);
+    // sprintf_s(_infoPanelText.Name, 32, "Mouse Pos x:%6.3f y:%6.3f", x, y);
 
     PXText pxText;
     PXTextConstructBufferA(&pxText, 64);
 
     //PXTextPrint(&pxText, "[BitFireEngine] Mouse: X:%6.4f, Y:%6.4f", x, y);
 
-    PXTextPrint(&pxText, "[BitFireEngine] FPS:%5.2f, ms:%4.2f", bitFireEngine->TimeFPS, bitFireEngine->TimeMS);
+    const char* date = __DATE__;
+    const char* time = __TIME__;
 
-    PXWindowTitleSet(&bitFireEngine->WindowMain, &pxText);
+    PXTextPrint(&pxText, "[BitFireEngine] (Build:%s %s) FPS:%-3i", date, time, pxEngine->FramesPerSecound);
+
+    PXWindowTitleSet(&pxEngine->Window, &pxText);
 #endif
 }
-    
-void OnShutDown(const BFEngine* bitFireEngine)
+
+void PXAPI OnRenderUpdateEvent(void* const owner, PXEngine* const pxEngine)
 {
-    PXWindowDestruct(&bitFireEngine->WindowMain);
+
 }

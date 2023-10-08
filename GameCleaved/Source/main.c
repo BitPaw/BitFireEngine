@@ -9,21 +9,22 @@ int main(int amountOFParameters, char** parameter)
 {
     BFEngine bfEngine;
     BFEngineConstruct(&bfEngine);
+ 
+    bfEngine.OnStartUp = OnStartUp;
+    bfEngine.OnShutDown = OnShutDown;
+    bfEngine.OnUserUpdate = OnUpdateUI;
+    bfEngine.OnNetworkUpdate = OnUpdateUI;
+    bfEngine.OnGameUpdate = OnUpdateGameLogic;
+    bfEngine.OnRenderUpdate = OnUpdateInput;
 
-    bfEngine.UpdateUICallBack = OnUpdateUI;
-    bfEngine.StartUpCallBack = OnStartUp; // StartDoc
-    bfEngine.ShutDownCallBack = OnShutDown;
-    bfEngine.UpdateGameLogicCallBack = OnUpdateGameLogic;
-    bfEngine.UpdateInputCallBack = OnUpdateInput;
+    PXEngineStart(&bfEngine.Engine);
 
-    BFEngineStart(&bfEngine);
-
-    while (BFEngineIsRunning(&bfEngine))
+    while (PXEngineIsRunning(&bfEngine.Engine))
     {
-        BFEngineUpdate(&bfEngine);
+        PXEngineUpdate(&bfEngine.Engine);
     }
 
-    BFEngineStop(&bfEngine);
+    PXEngineStop(&bfEngine.Engine);
 
     return EXIT_SUCCESS;
 }

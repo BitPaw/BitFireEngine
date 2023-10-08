@@ -9,9 +9,8 @@
 #include <OS/Window/PXWindow.h>
 #include <OS/Time/PXTime.h>
 #include <OS/Hardware/PXController.h>
-
 #include <System/Device/KeyBoard/KeyBoardCache.h>
-
+#include <Engine/PXEngine.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -24,30 +23,25 @@ extern "C"
     }
     BFInputContainer;
 
-
-    typedef struct BFEngine_ BFEngine;
-
-    typedef void (*UpdateUIEvent)(BFEngine* const bitFireEngine);
-    typedef void (*StartUpEvent)(BFEngine* const bitFireEngine);
-    typedef void (*ShutDownEvent)(BFEngine* const bitFireEngine);
-    typedef void (*UpdateGameLogicEvent)(BFEngine* const bitFireEngine, const float deltaTime);
-    typedef void (*UpdateInputEvent)(BFEngine* const bitFireEngine, BFInputContainer* const input);
-
     typedef struct BFEngine_
     {
+        PXEngine Engine;
+
+
+        PXEngineStartUpEvent OnStartUp;
+        PXEngineShutDownEvent OnShutDown;
+        PXEngineUserUpdateEvent OnUserUpdate;
+        PXEngineNetworkUpdateEvent OnNetworkUpdate;
+        PXEngineGameUpdateEvent OnGameUpdate;
+        PXEngineRenderUpdateEvent OnRenderUpdate;
+
+
+
         //---[Private}---------------------------------
         PXTime _lastUpdate;
 
-
-
         float _deltaTime;
 
-        PXInt64U TimeCounterStart;
-        PXInt64U TimeCounterDelta;
-        PXInt64U TimeCounterEnd;
-        PXInt64U TimeFrequency;
-        float TimeFPS;
-        float TimeMS;
 
         BFInputContainer InputContainer;
         //----------------------------------------------
@@ -59,10 +53,6 @@ extern "C"
         unsigned int _defaultTextureID;
         //---------------------------------------------------------------------
 
-   
-        PXWindow WindowMain;
-        PXGraphic Graphic;
-
         PXController Controller;
 
         PXCamera CameraFree;
@@ -72,13 +62,6 @@ extern "C"
 
         PXFont* DefaultFont;
         PXSkyBox* DefaultSkyBox;
-
-        UpdateUIEvent UpdateUICallBack;
-        StartUpEvent StartUpCallBack;
-        ShutDownEvent ShutDownCallBack;
-        UpdateGameLogicEvent UpdateGameLogicCallBack;
-        UpdateInputEvent UpdateInputCallBack;
-
 
         PXVertexStructure pxModelTEST;
     }
@@ -93,12 +76,11 @@ extern "C"
     PXPrivate void BFEngineOnWindowSizeChanged(const BFEngine* const receiver, const PXWindow* sender);
     PXPrivate void BFEngineOnWindowsMouseCaptureChanged(const BFEngine* const receiver, const PXWindow* sender);
 
-    PXPublic void BFEngineStart(BFEngine* const pxBitFireEngine);
-    PXPublic void BFEngineUpdate(BFEngine* const pxBitFireEngine);
-    PXPublic PXBool BFEngineIsRunning(const BFEngine* const pxBitFireEngine);
-    PXPublic void BFEngineStop(BFEngine* const pxBitFireEngine);
+    PXPublic void BFEngineStart(BFEngine* const bfEngine, PXEngine* const pxEngine);
+        PXPublic void BFEngineUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine);
+        PXPublic void BFEngineStop(BFEngine* const bfEngine, PXEngine* const pxEngine);
 
-    PXPrivate void BFEngineSceneRender(BFEngine* const pxBitFireEngine);
+    PXPrivate void BFEngineSceneRender(BFEngine* const bfEngine, PXEngine* const pxEngine);
 
 
     PXPrivate void PXCalculateUIOffset(PX);
