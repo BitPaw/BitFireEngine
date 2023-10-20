@@ -52,7 +52,7 @@ int main(int amountOFParameters, char** parameter)
 PXTexture2D _dialogBoxTexture;
 PXTexture2D _dialogBoxTextureSelected;
 
-PXVertexStructure _cubeThing;
+PXModel _cubeThing;
 PXRenderable _bohrThing;
 PXFont _textFont;
 

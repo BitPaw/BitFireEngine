@@ -1265,6 +1265,15 @@ void BFEngineConstruct(BFEngine* const bfEngine)
     PXCameraConstruct(&bfEngine->CameraFree);
     PXCameraConstruct(&bfEngine->CameraPlayer);
 
+    bfEngine->Engine.Window.EventReceiver = bfEngine;
+    bfEngine->Engine.Window.MouseScrollCallBack = PXNull;
+    bfEngine->Engine.Window.MouseClickCallBack = PXNull;
+    bfEngine->Engine.Window.MouseClickDoubleCallBack = PXNull;
+    bfEngine->Engine.Window.MouseEnterCallBack = PXNull;
+    bfEngine->Engine.Window.MouseLeaveCallBack = PXNull;
+    bfEngine->Engine.Window.MouseMoveCallBack = BFEngineOnMouseMove;
+    bfEngine->Engine.Window.KeyBoardKeyCallBack = BFEngineOnKeyBoardKey;
+
     bfEngine->Engine.Owner = bfEngine;
     bfEngine->Engine.OnStartUp = BFEngineStart;
     bfEngine->Engine.OnShutDown = BFEngineStop;
@@ -1272,6 +1281,8 @@ void BFEngineConstruct(BFEngine* const bfEngine)
     //bfEngine->Engine.OnNetworkUpdate = xxxxxxxx;
     bfEngine->Engine.OnGameUpdate = BFEngineUpdate;
     bfEngine->Engine.OnRenderUpdate = BFEngineSceneRender;
+
+    bfEngine->Engine.Window.WindowSizeChangedCallBack = BFEngineOnWindowSizeChanged;
 }
 
 void BFEngineOnMouseButton(const BFEngine* const receiver, const PXWindow* sender, const PXMouseButton mouseButton, const PXKeyPressState buttonState)
@@ -1397,9 +1408,14 @@ void BFEngineOnWindowCreated(const BFEngine* const receiver, const PXWindow* sen
 
 void BFEngineOnWindowSizeChanged(const BFEngine* const receiver, const PXWindow* sender)
 {
-    if (receiver)
+    return;
+
+    if (receiver )
     {
-        PXCameraAspectRatioChange(receiver->CameraCurrent, sender->Width, sender->Height);
+        if (receiver->CameraCurrent)
+        {
+            PXCameraAspectRatioChange(receiver->CameraCurrent, sender->Width, sender->Height);
+        }  
     }
 
     //printf("[Camera] Is now %i x %i\n", sender->Width, sender->Height);
@@ -1426,7 +1442,7 @@ void BFEngineStart(BFEngine* const bfEngine, PXEngine* const pxEngine)
     bfEngine->CameraCurrent = &bfEngine->CameraFree;
 
 
-    PXMemorySet(&bfEngine->pxModelTEST, 0, sizeof(PXVertexStructure));
+    PXMemorySet(&bfEngine->pxModelTEST, 0, sizeof(PXModel));    
 
     PXStopWatch stopwatch;
 
@@ -1511,6 +1527,10 @@ void BFEngineStart(BFEngine* const bfEngine, PXEngine* const pxEngine)
 
    // PrintContent(1);   
 
+    PXCameraViewChangeToPerspective(bfEngine->CameraCurrent, 75, PXCameraAspectRatio(bfEngine->CameraCurrent), 0, 1);
+
+
+
     PXFunctionInvoke(bfEngine->OnStartUp, bfEngine, pxEngine);
 }
 
@@ -1542,36 +1562,10 @@ void BFEngineUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine)
     }
     //---------------------------------------------------------------------
 
-    const PXInt32S width = bfEngine->Engine.Window.Width;
-    const PXInt32S height = bfEngine->Engine.Window.Height;
-
-
-    if (bfEngine->Engine.Window.HasSizeChanged)
-    {
-#if 0
-        printf("[Window] Size changed (%i x %i)\n", width, height);
-#endif
-
-        PXCameraAspectRatioChange(bfEngine->CameraCurrent, width, height);
-
-        PXViewPort pxViewPort;
-        pxViewPort.X = 0;
-        pxViewPort.Y = 0;
-        pxViewPort.Width = width;
-        pxViewPort.Height = height;
-        pxViewPort.ClippingMinimum = 0;
-        pxViewPort.ClippingMaximum = 1;
-
-        pxGraphic->ViewPortSet(pxGraphic->EventOwner, &pxViewPort);
-
-        bfEngine->Engine.Window.HasSizeChanged = PXFalse;
-    }
-
     {
         const PXColorRGBAF pxColorRGBAF = { 0, 0, 0, 1 }; // 0.315, 0.15, 0.15
         pxGraphic->Clear(pxGraphic->EventOwner, &pxColorRGBAF);
     }
-
 
     //---<Fetch UI-Input>----------------------------------------------------------
     {
@@ -1684,7 +1678,7 @@ void BFEngineUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine)
     // UI collision
 
     // Should we even try to check? if cursor is not locked, we cant even click.
-#if 0
+#if 0       
     const PXBool shouldRegisterUIInput = pxBitFireEngine->WindowMain.CursorModeCurrent == PXWindowCursorShow;
 
     if (shouldRegisterUIInput)
@@ -1775,32 +1769,16 @@ void BFEngineSceneRender(BFEngine* const bfEngine, PXEngine* const pxEngine)
     PXGraphic* const pxGraphic = &bfEngine->Engine.Graphic;
     PXOpenGL* const openGLContext = &pxGraphic->OpenGLInstance;
     PXWindow* const window = (PXWindow*)pxGraphic->AttachedWindow;
-
-    //PXCameraUpdate(&MainCamera, deltaTime);
-
-    const float red = 0.35f;
-    const float green = 0.35f;
-    const float blue = 0.35f;
-    const float alpha = 1.0f;
-
-    //OpenGLClearColor(&pxGraphic->OpenGLInstance, red, green, blue, alpha);
-    //OpenGLClear(&pxGraphic->OpenGLInstance, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    PXOpenGLSkyboxDraw(openGLContext, bfEngine->DefaultSkyBox, bfEngine->CameraCurrent);
-    
-    
-    // ERROR!!
-    // pxGraphic->VertexStructureDraw(pxGraphic->EventOwner, &pxBitFireEngine->pxModelTEST, pxBitFireEngine->CameraCurrent);
-
-
     
     //-------------------------------------------------------------------------
     // UI-Rendering
     //-------------------------------------------------------------------------
 #if 1
+    PXGraphicUIElementIterator(pxGraphic, bfEngine, BFEngineUIElementCollision, PXNull);
 
     PXGraphicUIElementIterator(pxGraphic, bfEngine, BFEngineUIElementRender, PXNull);
-
+#else
+    PXFunctionInvoke(bfEngine->OnRenderUpdate, bfEngine, pxEngine);
 #endif // 1
 
 
@@ -1861,7 +1839,7 @@ void BFEngineSceneRender(BFEngine* const bfEngine, PXEngine* const pxEngine)
     }
     //-------------------------------------------------------------------------
 
-    PXFunctionInvoke(bfEngine->OnRenderUpdate, bfEngine, pxEngine);
+   // PXFunctionInvoke(bfEngine->OnRenderUpdate, bfEngine, pxEngine);
 }
 
 void BFEngineRenderScene(BFEngine* const bfEngine)
@@ -1917,7 +1895,7 @@ void BFEngineRenderScene(BFEngine* const bfEngine)
                 PXGraphicShaderUpdateMatrix4x4F(pxGraphicContext, _matrixProjectionID, bfEngine->CameraCurrent->MatrixProjection.Data);
                 PXGraphicShaderUpdateMatrix4x4F(pxGraphicContext, _matrixModelID, pxRenderable->MatrixModel.Data);
 
-              
+                
             }
         }
   
@@ -2128,8 +2106,15 @@ void BFEngineRenderScene(BFEngine* const bfEngine)
      */
 }
 
+void BFEngineUIElementCollision(BFEngine* const bfEngine, PXUIElement* const pxUIElement)
+{
+  
+}
+
 void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIElement)
 {
+    bfEngine->Engine.Graphic.ShaderProgramSelect(bfEngine->Engine.Graphic.EventOwner, 0);
+
     const PXBool isEnabled = pxUIElement->FlagsList & PXUIElementIsEnabled;
 
     if (!isEnabled)
@@ -2400,13 +2385,23 @@ void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIEl
             PXViewPortSetXYWH(&pxViewPort, viewSize[0], viewSize[1], viewSize[2], viewSize[3]);
             pxGraphic->ViewPortSet(pxGraphic->EventOwner, &pxViewPort);
 
-#if 0
-            BFEngineRenderScene(bfEngine);
-#else
-        
+            // Make Black
             pxGraphic->DrawModeSet(pxGraphic->EventOwner, PXGraphicDrawFillModeFill);
             PXOpenGLDrawColorRGBF(&pxGraphic->OpenGLInstance, 0, 0, 0);
             PXOpenGLRectangleDraw(&pxGraphic->OpenGLInstance, -1, -1, 1, 1, 0x01);
+     
+
+            PXOpenGLSkyboxDraw(&pxGraphic->OpenGLInstance, bfEngine->DefaultSkyBox, bfEngine->CameraCurrent);
+
+#if 1
+
+            
+
+            PXFunctionInvoke(bfEngine->OnRenderUpdate, bfEngine, &bfEngine->Engine);
+     //       BFEngineRenderScene(bfEngine);
+#else
+        
+    
 
             pxGraphic->DrawModeSet(pxGraphic->EventOwner, PXGraphicDrawFillModeLines);
             glLineWidth(10);
@@ -2420,11 +2415,13 @@ void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIEl
             PXOpenGLDrawEnd(&pxGraphic->OpenGLInstance);
             glLineWidth(1);
 #endif
-
             // Render to our framebuffer
             //glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
             PXViewPortSetWH(&pxViewPort, pxWindows->Width, pxWindows->Height);
             pxGraphic->ViewPortSet(pxGraphic->EventOwner, &pxViewPort);
+
+            pxGraphic->ShaderProgramSelect(pxGraphic->EventOwner, 0);
+
 #endif
 
             break;
@@ -2436,6 +2433,7 @@ void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIEl
     }
 
     // Rendering panel border
+    glLineWidth(1);
     pxGraphic->DrawModeSet(pxGraphic->EventOwner, PXGraphicDrawFillModeLines);
     pxGraphic->DrawColorRGBAF(pxGraphic->EventOwner, 0.2f, 0.2f, 0.2f, 1.0f);
     pxGraphic->RectangleDraw(pxGraphic->EventOwner, currentOffset.Left, currentOffset.Top, currentOffset.Right, currentOffset.Bottom, 0x02);

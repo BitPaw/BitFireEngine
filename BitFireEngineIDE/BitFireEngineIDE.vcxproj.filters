@@ -20,7 +20,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="..\..\PXUltima\Code\[Export]\PXUltimaC\64B-Windows-Debug\PXUltima.dll" />
+    <None Include="Shader\WorldGrid_Vertex.glsl" />
+    <None Include="Shader\WorldGrid_Fragment.glsl" />
+    <None Include="Shader\SkyBox_Fragment.glsl" />
+    <None Include="Shader\SkyBox_Vertex.glsl" />
+    <None Include="Shader\Object_Vertex.glsl" />
+    <None Include="Shader\Object_Fragment.frag" />
+    <None Include="Shader\Object_Fragment.glsl" />
+  </ItemGroup>
+  <ItemGroup>
     <CopyFileToFolders Include="..\..\PXUltima\Code\[Export]\PXUltimaC\64B-Windows-Debug\PXUltima.pdb" />
+    <CopyFileToFolders Include="..\..\PXUltima\Code\[Export]\PXUltimaC\64B-Windows-Debug\PXUltima.dll" />
   </ItemGroup>
 </Project>

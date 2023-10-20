@@ -82,7 +82,7 @@ void OnStartUp(BFEngine* const bitFireEngine)
 
 
 
-    PXVertexStructureConstruct(&bitFireEngine->pxModelTEST);
+    PXModelConstruct(&bitFireEngine->pxModelTEST);
     PXResourceLoadA(&bitFireEngine->pxModelTEST, "Model/Tiger.obj");
     pxGraphicContext->VertexStructureRegister(pxGraphicContext->EventOwner, &bitFireEngine->pxModelTEST);
 
@@ -355,7 +355,7 @@ void OnUpdateGameLogic(const BFEngine* bitFireEngine, const float deltaTime)
 
     PXTextPrint(&pxText, L"[BitFireEngine] FPS:%5.2f, ms:%4.2f", bitFireEngine->TimeFPS, bitFireEngine->TimeMS);
 
-    PXWindowTitleSet(&bitFireEngine->WindowMain, &pxText);
+    PXWindowTitleSet(&bitFireEngine->Engine.Window, &pxText);
 
 }
 void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input)
@@ -415,9 +415,7 @@ void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input)
             bitFireEngine->Controller.AxisNormalised[PXControllerAxisX] + -mouse->Delta[0],
             bitFireEngine->Controller.AxisNormalised[PXControllerAxisY] + mouse->Delta[1],
             0
-        };
-
-     
+        };     
 
        // printf("[#][OnMouseMove] X:%5.2f Y:%5.2f\n", mouseMovement.X, mouseMovement.Y);
 

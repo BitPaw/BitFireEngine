@@ -63,7 +63,7 @@ extern "C"
         PXFont* DefaultFont;
         PXSkyBox* DefaultSkyBox;
 
-        PXVertexStructure pxModelTEST;
+        PXModel pxModelTEST;
     }
     BFEngine;
 
@@ -88,6 +88,7 @@ extern "C"
     PXPrivate void BFEngineRenderScene(BFEngine* const bfEngine);
 
 
+    PXPrivate void BFEngineUIElementCollision(BFEngine* const bfEngine, PXUIElement* const pxUIElement);
 
     PXPrivate void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIElement);
 

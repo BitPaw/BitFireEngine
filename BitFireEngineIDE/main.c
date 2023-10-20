@@ -2,14 +2,14 @@
 
 #include <Math/PXMath.h>
 
-void PXAPI OnStartUpEvent(void* const owner, PXEngine* const pxEngine);
-void PXAPI OnShutDownEvent(void* const owner, PXEngine* const pxEngine);
-void PXAPI OnUserUpdateEvent(void* const owner, PXEngine* const pxEngine);
-void PXAPI OnNetworkUpdate(void* const owner, PXEngine* const pxEngine);
-void PXAPI OnGameUpdateEvent(void* const owner, PXEngine* const pxEngine);
-void PXAPI OnRenderUpdateEvent(void* const owner, PXEngine* const pxEngine);
+void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine);
+void PXAPI OnShutDownEvent(BFEngine* const bfEngine, PXEngine* const pxEngine);
+void PXAPI OnUserUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine);
+void PXAPI OnNetworkUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine);
+void PXAPI OnGameUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine);
+void PXAPI OnRenderUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine);
 
-#if !defined(_DEBUG) && defined(OSWindows) && 0
+#if !defined(_DEBUG) && defined(OSWindows)
 #include <windows.h>
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char* name, int nShowCmd)
 #else
@@ -64,13 +64,48 @@ PXUIElement* _textureTestA;
 PXTexture2D _testImage;
 PXRenderable _pxRenderableModel;
 
+// Frame Scene
+PXInt32U _matrixModelID;
+PXInt32U _matrixViewID;
+PXInt32U _matrixProjectionID;
+PXInt32U _materialTextureID;
+
+PXShaderProgram _pxWorldGridShader;
+
+PXShaderProgram _pxObjectShader;
+
+PXCamera _worldCamera;
+PXModel _worldGrid;
+PXModel _vehicle;
+
+PXSkyBox _sceneSkyBox;
+
 const PXColorRGBAF buttonColor = { 0.1, 0.3, 0.5, 1 }; //  0.40f, 0.15f, 0.15f, 1
 const PXColorRGBAF panelReference = { 0.0, 0.1, 0.2, 1 };
 PXColorRGBAF titleColor = { 0.2, 0.2, 0.2, 1 };
 const PXColorRGBAF textColor = { 0.8, 0.8, 0.8, 1 };
 float animation = 0;
 
-void PXAPI OnStartUpEvent(void* const owner, PXEngine* const pxEngine)
+// Register world grid
+const float vertexData[] =
+{
+    -1, 0,-1,
+        1, 0,1,
+    1, 0,-1, 
+ 
+
+     1, 0,1,
+       -1, 0,-1,
+    -1, 0,1, 
+  
+};
+
+const PXInt8U indexDATA[] =
+{
+    0,1,2,3,4,5
+};
+
+void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 {
     PXGraphic* const pxGraphic = &pxEngine->Graphic;
     
@@ -201,16 +236,30 @@ void PXAPI OnStartUpEvent(void* const owner, PXEngine* const pxEngine)
    // PXGraphicUIElementRegister(pxGraphic, &_uiInfoPositionText);
 
 
+
+
+
+
     // Load model
-    {
-     //   PXModel pxModel;
+     {
+         pxEngine->Graphic.ShaderProgramCreateFromFileVPA
+         (
+             pxEngine->Graphic.EventOwner,
+             &_pxObjectShader,
+             "Shader/Object_Vertex.glsl",
+             "Shader/Object_Fragment.glsl"
+         );
 
-        PXText modelFilePath;
-        PXTextMakeFixedA(&modelFilePath, "Model/Tiger.obj");
-        //PXModelLoad(&bitFireEngine->pxModelTEST, &modelFilePath);
+         PXModelConstruct(&_vehicle);
 
-       // PXGraphicModelLoad(pxGraphic, &_pxRenderableModel, &modelFilePath);
-    }
+         PXResourceLoadA(&_vehicle, "Model/Dust_II/DustII.obj"); // "Model/Tiger.obj", "H:/Daten/Objects/Moze/Moze.obj"
+
+         PXMatrix4x4FScaleBy(&_vehicle.ModelMatrix, 2);
+
+         pxGraphic->ModelRegister(pxGraphic->EventOwner, &_vehicle);
+
+         _vehicle.ShaderProgramReference = &_pxObjectShader;
+     }
 
     PXGraphicUIElementPrint(pxGraphic);
 #endif
@@ -252,25 +301,152 @@ void PXAPI OnStartUpEvent(void* const owner, PXEngine* const pxEngine)
 
     //PXGraphicTextureLoadA(pxGraphic, &_dialogBoxTexture, (char*)"C:\\Users\\BitPaw\\Videos\\SquareBlue.png");
 
+    PXGraphicSkyboxRegisterA
+    (
+        pxGraphic, 
+        &_sceneSkyBox,
+        "Shader/SkyBox_Vertex.glsl", 
+        "Shader/SkyBox_Fragment.glsl", 
+        "Texture/SkyBox_Side.png",
+        "Texture/SkyBox_Side.png",
+        "Texture/SkyBox_Top.png",
+        "Texture/SkyBox_Bottom.png",
+        "Texture/SkyBox_Side.png",
+        "Texture/SkyBox_Side.png"
+    );
+
+    bfEngine->DefaultSkyBox = &_sceneSkyBox;
+    
+
+
+
+
+
+    PXModelConstruct(&_worldGrid);
+    _worldGrid.VertexBuffer.VertexDataSize = sizeof(vertexData);
+    _worldGrid.VertexBuffer.VertexData = vertexData;
+    _worldGrid.VertexBuffer.Format = PXVertexBufferFormatXYZ;
+    _worldGrid.VertexBuffer.VertexDataRowSize = 3 * sizeof(float);
+        
+    _worldGrid.IndexBuffer.IndexTypeSize = 1;
+    _worldGrid.IndexBuffer.IndexData = indexDATA;
+    _worldGrid.IndexBuffer.IndexDataSize = sizeof(indexDATA);
+    _worldGrid.IndexBuffer.IndexDataAmount = sizeof(indexDATA) / sizeof(PXInt8U);
+    _worldGrid.IndexBuffer.DataType = PXDataTypeInt08U;
+    _worldGrid.IndexBuffer.DrawModeID = PXDrawModeIDTriangle; // PXDrawModeIDPoint | PXDrawModeIDLine;
+
+
+    pxEngine->Graphic.ModelRegister(pxEngine->Graphic.EventOwner, &_worldGrid);
+
+
+    pxEngine->Graphic.ShaderProgramCreateFromFileVPA
+    (
+        pxEngine->Graphic.EventOwner,
+        &_pxWorldGridShader,
+        "Shader/WorldGrid_Vertex.glsl", 
+        "Shader/WorldGrid_Fragment.glsl"
+    );
+    _worldGrid.ShaderProgramReference = &_pxWorldGridShader;
+    _worldGrid.RenderBothSides = PXTrue;
+
+    PXMatrix4x4FScaleBy(&_worldGrid.ModelMatrix, 1000);
+
+    PXCameraConstruct(&_worldCamera);
+
 }
 
-void PXAPI OnShutDownEvent(void* const owner, PXEngine* const pxEngine)
+void PXAPI OnShutDownEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 {
 
 }
 
-void PXAPI OnUserUpdateEvent(void* const owner, PXEngine* const pxEngine)
+void PXAPI OnUserUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 {
 
 }
 
-void PXAPI OnNetworkUpdate(void* const owner, PXEngine* const pxEngine)
+void PXAPI OnNetworkUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine)
 {
 
 }
 
-void PXAPI OnGameUpdateEvent(void* const owner, PXEngine* const pxEngine)
+void PXAPI OnGameUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 {
+    PXWindow* pxWindow = &pxEngine->Window;
+    PXKeyBoard* keyboard = &pxWindow->KeyBoardCurrentInput;
+    PXMouse* mouse = &pxWindow->MouseCurrentInput;
+    PXCamera* camera = bfEngine->CameraCurrent;
+    PXVector3F movement = { 0,0,0 };
+
+    if (keyboard->Commands & KeyBoardIDShiftLeft)
+    {
+        PXVector3FAddXYZ(&movement, 0, -1, 0, &movement);
+    }
+    if (keyboard->Letters & KeyBoardIDLetterW)
+    {
+        PXVector3FAddXYZ(&movement, 0, 0, 1, &movement);
+    }
+    if (keyboard->Letters & KeyBoardIDLetterA) { PXVector3FAddXYZ(&movement, -1, 0, 0, &movement); }
+    if (keyboard->Letters & KeyBoardIDLetterS) { PXVector3FAddXYZ(&movement, 0, 0, -1, &movement); }
+    if (keyboard->Letters & KeyBoardIDLetterD) { PXVector3FAddXYZ(&movement, 1, 0, 0, &movement); }
+    if (keyboard->Letters & KeyBoardIDSpace)
+    {
+
+
+        //  PXCamera.Velocity.Set(0.0f, 6.0f, .0f);
+
+        PXVector3FAddXYZ(&movement, 0, 1, 0, &movement);
+
+    }
+#if 0
+    if (keyboard.F.IsShortPressed())
+    {
+        keyboard.F.Value = 0xFF;
+
+        if (_sign.Interactable)
+        {
+            printf("[Event] Clicked Sign\n");
+        }
+    }
+#endif
+
+    PXControllerDataGet(&bfEngine->Controller);
+
+    //printf("%6i, %6i\n", bitFireEngine->Controller.Axis[0], bitFireEngine->Controller.Axis[1]);
+
+    //_playerCharacterLuna.MatrixModel.Move(movement);
+
+    if (PXWindowInteractable(pxWindow) || 1)
+    {
+        PXCameraMove(camera, &movement);
+
+        PXVector3F mouseMovement =
+            //{ mouse->Delta[0] * 2, mouse->Delta[1] * 2, 0};
+        {
+            bfEngine->Controller.AxisNormalised[PXControllerAxisX] + -mouse->Delta[0],
+            bfEngine->Controller.AxisNormalised[PXControllerAxisY] + mouse->Delta[1],
+            0
+        };
+
+
+
+        // printf("[#][OnMouseMove] X:%5.2f Y:%5.2f\n", mouseMovement.X, mouseMovement.Y);
+
+        PXCameraRotate(camera, &mouseMovement);
+    }
+
+    //printf("[#][OnMouseMove] X:%5.2f Y:%5.2f\n", mouse.Position[0], mouse.Position[1]);
+
+    PXCameraUpdate(camera, pxEngine->CounterTimeDelta);
+    // PXKeyboardIncrementButtonTick(keyboard);
+    PXMouseInputReset(mouse);
+
+
+
+
+
+
+
     float xx = PXMathSinus(animation);
 
     titleColor.Red = (0.2);
@@ -280,10 +456,9 @@ void PXAPI OnGameUpdateEvent(void* const owner, PXEngine* const pxEngine)
     animation += 0.03;
 
 #if 1
-    PXMouse* const mouse = &pxEngine->Window.MouseCurrentInput;
 
 
-    PXGraphicPXUIElementTextSetAV(&_positionText, "Position : %3.2f", pxEngine->FramesPerSecound);
+   // PXGraphicPXUIElementTextSetAV(&_positionText, "Position : %3.2f", pxEngine->FramesPerSecound);
 
     float x = mouse->Delta[0];
     float y = mouse->Delta[1];
@@ -301,10 +476,20 @@ void PXAPI OnGameUpdateEvent(void* const owner, PXEngine* const pxEngine)
     PXTextPrint(&pxText, "[BitFireEngine] (Build:%s %s) FPS:%-3i", date, time, pxEngine->FramesPerSecound);
 
     PXWindowTitleSet(&pxEngine->Window, &pxText);
+
+
+
+
 #endif
 }
 
-void PXAPI OnRenderUpdateEvent(void* const owner, PXEngine* const pxEngine)
+void PXAPI OnRenderUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 {
+    PXCameraFollow(bfEngine->CameraCurrent, 0.05);
+   
+    // Grid
+    pxEngine->Graphic.ModelDraw(pxEngine->Graphic.EventOwner, &_worldGrid, bfEngine->CameraCurrent);
 
+    // Tank
+    pxEngine->Graphic.ModelDraw(pxEngine->Graphic.EventOwner, &_vehicle, bfEngine->CameraCurrent);
 }
