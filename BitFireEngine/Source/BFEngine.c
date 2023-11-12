@@ -2360,7 +2360,7 @@ void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIEl
             );
 
             pxGraphic->Texture2DSelect(pxGraphic->EventOwner, pxUIElement->ImageInfo.TextureReference);
-            pxGraphic->RectangleDrawTx(pxGraphic->EventOwner, currentOffset.Left, currentOffset.Top, currentOffset.Right, currentOffset.Bottom, 0, 1, 1, 0);
+            pxGraphic->RectangleDrawTx(pxGraphic->EventOwner, currentOffset.Left, currentOffset.Top, currentOffset.Right, currentOffset.Bottom, 0, 1, 1, 0, 0x01);
 
             break;
         }
