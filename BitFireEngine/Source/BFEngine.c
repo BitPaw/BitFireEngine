@@ -2115,7 +2115,7 @@ void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIEl
 {
     bfEngine->Engine.Graphic.ShaderProgramSelect(bfEngine->Engine.Graphic.EventOwner, 0);
 
-    const PXBool isEnabled = pxUIElement->FlagsList & PXUIElementIsEnabled;
+    const PXBool isEnabled = pxUIElement->FlagsList & PXUIElementDoRendering;
 
     if (!isEnabled)
     {
@@ -2203,17 +2203,13 @@ void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIEl
                 return;
             }
 
-            //pxGraphic->DrawModeSet(pxGraphic->EventOwner, PXGraphicDrawFillModeLines);
-            //pxGraphic->RectangleDraw(pxGraphic->EventOwner, currentOffset.Left, currentOffset.Top, currentOffset.Right, currentOffset.Bottom, 0x02);
-
-
+#if 1 // Text debug
             pxGraphic->DrawModeSet(pxGraphic->EventOwner, PXGraphicDrawFillModeFill);
             pxGraphic->DrawColorRGBAF(pxGraphic->EventOwner, 1,1,1,1);
-            PXOpenGLBlendingMode(pxGraphic->EventOwner, PXBlendingModeOneToOne);
-
-
-
             pxGraphic->Texture2DSelect(pxGraphic->EventOwner, &font->MainPage.Texture);
+#endif
+
+            PXOpenGLBlendingMode(pxGraphic->EventOwner, PXBlendingModeOneToOne); 
 
             for (PXSize i = 0; pxUIElement->TextInfo.Content[i]; ++i)
             {
@@ -2258,20 +2254,29 @@ void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIEl
                     ty2 = 1;
                 }
 
-                float sclaingWidth = 0.3;// 0.005 * pxUIElement->TextInfo.Scale;
-                float scalingHeight = 0.5;// 0.008 * pxUIElement->TextInfo.Scale;
+                pxUIElement->TextInfo.Scale = 0.35;
 
-                float x1 = currentOffset.Left  + offsetX; // offset
-                float y1 = currentOffset.Bottom;
+                float sclaingWidth = pxUIElement->TextInfo.Scale * (9.0f / 16.0f);
+                float scalingHeight = pxUIElement->TextInfo.Scale;
+
+                float x1 = -1 + offsetX;// currentOffset.Left + offsetX; // offset // currentOffset.Left  
+                float y1 = -1;// currentOffset.Bottom;
+
+                // Add offset
+                x1 += currentOffset.Left;
+                y1 += currentOffset.Top;
+
                 float x2 = (x1 + ((charWidth / textureWidth) * sclaingWidth));
                 float y2 = (y1 + ((charHeight / textureHeight) * scalingHeight));
 
                 offsetX += ((charWidthSpacing / textureWidth) * sclaingWidth);
 
-                x1 -= 1.0;
-                y1 += 0.9;
-                x2 -= 1.0;
-                y2 += 0.9;
+
+
+                //x1 -= 1.0;
+                //y1 += 0.9;
+                //x2 -= 1.0;
+                //y2 += 0.9;
 
                 if (pxUIElement->TextInfo.Content[i] == ' ')
                 {
@@ -2287,6 +2292,13 @@ void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIEl
                     pxUIElement->ColorTintReference->Alpha
                 );
 
+#if 0 // Text debug
+                pxGraphic->Texture2DSelect(pxGraphic->EventOwner, 0);
+                pxGraphic->DrawModeSet(pxGraphic->EventOwner, PXGraphicDrawFillModeFill);
+                pxGraphic->DrawColorRGBAF(pxGraphic->EventOwner, 0, 1, 0, 1);
+                pxGraphic->RectangleDraw(pxGraphic->EventOwner, x1, y1, x2, y2, 0x01);
+#else
+
                 if (pxFontPageCharacter)
                 {
                     pxGraphic->RectangleDrawTx(pxGraphic->EventOwner, x1, y1, x2, y2, tx1, ty1, tx2, ty2, 0x01);
@@ -2294,13 +2306,23 @@ void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIEl
                 else
                 {
                     pxGraphic->Texture2DSelect(pxGraphic->EventOwner, PXNull);
-                    pxGraphic->RectangleDraw(pxGraphic->EventOwner, x1, y1, x2, y2, 0x02);
+                    pxGraphic->RectangleDraw(pxGraphic->EventOwner, x1, y1, x2, y2, 0x01);
                     pxGraphic->Texture2DSelect(pxGraphic->EventOwner, &font->MainPage.Texture);
                 }
+#endif // Text debug
+
             }
 
             pxGraphic->Texture2DSelect(pxGraphic->EventOwner, PXNull);
             PXOpenGLBlendingMode(pxGraphic, PXBlendingModeNone);
+
+#if 0 // Text debug
+            pxGraphic->DrawModeSet(pxGraphic->EventOwner, PXGraphicDrawFillModeFill);
+            pxGraphic->DrawColorRGBAF(pxGraphic->EventOwner, 0, 1, 0, 1);
+            pxGraphic->RectangleDraw(pxGraphic->EventOwner, currentOffset.Left, currentOffset.Top, currentOffset.Right, currentOffset.Bottom, 0x02);
+#endif // Text debug
+
+
             break;
         }
         case PXUIElementTypeButton:
@@ -2343,13 +2365,32 @@ void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIEl
             break;
         }
         case PXUIElementTypeDropDown:
+        {
+
+
+            break;
+        }
         case PXUIElementTypeToggle:
+            break;
+
         case PXUIElementTypeCheckBox:
+            break;
+
         case PXUIElementTypeColorPicker:
+            break;
+
         case PXUIElementTypeSlider:
+            break;
+
         case PXUIElementTypeRadioButton:
+            break;
+
         case PXUIElementTypeToolTip:
+            break;
+
         case PXUIElementTypeCustom:
+            break;
+
         case PXUIElementTypeRenderFrame:
         {
 #if 0
