@@ -7,6 +7,7 @@
 #include <OS/Async/PXAwait.h>
 #include <OS/Time/PXStopWatch.h>
 #include <OS/Hardware/PXProcessor.h>
+#include <OS/Console/PXConsole.h>
 #include <Math/PXCollision.h>
 #include <OS/Time/PXTime.h>
 #include <Math/PXMath.h>
@@ -15,7 +16,7 @@
 #include <signal.h>
 
 
-#include <Log/PXLog.h>
+
 
 
 PXInt32U _matrixModelID;
@@ -1439,6 +1440,14 @@ void BFEngineOnWindowsMouseCaptureChanged(const BFEngine* const receiver, const 
 void BFEngineStart(BFEngine* const bfEngine, PXEngine* const pxEngine)
 {
  
+    PXLogPrint
+    (
+        PXLoggingInfo,
+        "BFEngine",
+        "Loading start..."
+    );
+
+
     bfEngine->CameraCurrent = &bfEngine->CameraFree;
 
 
@@ -1523,13 +1532,14 @@ void BFEngineStart(BFEngine* const bfEngine, PXEngine* const pxEngine)
     size_t time = 0;// PXTimeMillisecondsDelta(&timeBefore, &timeAfter);
     float timeInS = time / 1000.0f;
 
-    printf("[i][Info] Loading took %.2fs\n", timeInS);
-
-   // PrintContent(1);   
-
     PXCameraViewChangeToPerspective(bfEngine->CameraCurrent, 75, PXCameraAspectRatio(bfEngine->CameraCurrent), 0, 1);
 
-
+    PXLogPrint
+    (
+        PXLoggingInfo,
+        "BFEngine",
+        "Loading Done."
+    ); 
 
     PXFunctionInvoke(bfEngine->OnStartUp, bfEngine, pxEngine);
 }
@@ -1583,53 +1593,14 @@ void BFEngineUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine)
         float mouseBX = mouse->PositionNormalisized[0] - mouseHitBoxOffset * scale;
         float mouseBY = mouse->PositionNormalisized[1] + mouseHitBoxOffset * scale;
 
-#if 0
-        PXGraphicDrawModeSet(pxGraphic, PXGraphicDrawFillModeLines);
-        PXGraphicDrawColorRGBAF(pxGraphic, 0, 0.7, 0, 1);
-        PXGraphicRectangleDraw(pxGraphic, mouseAX, mouseAY, mouseBX, mouseBY);
-#endif
 
-        // for (int i = uiElementAmount; i >= 0 ; --i)
-        for (int i = 0; i < uiElementAmount; ++i)
-        {
+        bfEngine->CollisionCheckInfo.MousePosition[0] = mouseAX;
+        bfEngine->CollisionCheckInfo.MousePosition[1] = mouseAY;
+        bfEngine->CollisionCheckInfo.MousePosition[2] = mouseBX;
+        bfEngine->CollisionCheckInfo.MousePosition[3] = mouseBY;
 
 
-            PXDictionaryEntry pxDictionaryEntry;
 
-            PXDictionaryIndex(&pxGraphic->UIElementLookUp, i, &pxDictionaryEntry);
-
-            PXUIElement* const pxUIElement = *(PXUIElement**)pxDictionaryEntry.Value;         
-
-            const PXBool isHoverable = pxUIElement->FlagsList & PXUIElementIsHoverable;
-
-            if (!isHoverable)
-            {
-                continue;
-            }    
-
-#if 0          
-            PXGraphicRectangleDraw(pxGraphic, pxUIElement->X, pxUIElement->Y, pxUIElement->Width, pxUIElement->Height);
-#endif
-
-            const PXBool isCollising = PXCollisionAABB(pxUIElement->Margin.Left, pxUIElement->Margin.Top, pxUIElement->Margin.Right, pxUIElement->Margin.Bottom, mouseAX, mouseAY, mouseBX, mouseBY);
-
-            if (!isCollising || !isHoverable)
-            {
-                pxUIElement->Hover = PXUIHoverStateNotBeeingHovered;
-                continue;
-            }
-
-            pxUIElement->Hover = PXUIHoverStateHovered;
-            lastTargetID = i;
-
-            if (lastEntry)
-            {
-                *lastEntry = PXUIHoverStateHoveredButOverlapped;              
-            }            
-
-            lastEntry = &pxUIElement->Hover;         
-       
-        }
 
         // Drag
         if(lastTargetID != -1)
@@ -1774,9 +1745,11 @@ void BFEngineSceneRender(BFEngine* const bfEngine, PXEngine* const pxEngine)
     // UI-Rendering
     //-------------------------------------------------------------------------
 #if 1
-    PXGraphicUIElementIterator(pxGraphic, bfEngine, BFEngineUIElementCollision, PXNull);
 
+  
     PXGraphicUIElementIterator(pxGraphic, bfEngine, BFEngineUIElementRender, PXNull);
+
+    PXGraphicUIElementIterator(pxGraphic, bfEngine, BFEngineUIElementCollision, PXNull);
 #else
     PXFunctionInvoke(bfEngine->OnRenderUpdate, bfEngine, pxEngine);
 #endif // 1
@@ -2106,9 +2079,98 @@ void BFEngineRenderScene(BFEngine* const bfEngine)
      */
 }
 
-void BFEngineUIElementCollision(BFEngine* const bfEngine, PXUIElement* const pxUIElement)
+void PXPositionTranslate(PXRectangleOffset* const pxRectangleOffset)
 {
-  
+    pxRectangleOffset->Left = -1 + pxRectangleOffset->Left;
+    pxRectangleOffset->Top = -1 + pxRectangleOffset->Top; 
+    pxRectangleOffset->Right = 1 - pxRectangleOffset->Right;
+    pxRectangleOffset->Bottom = 1- pxRectangleOffset->Bottom;
+}
+
+void BFEngineUIElementCollision
+(
+    BFEngine* const bfEngine,
+    PXUIElement* const pxUIElement
+)
+{
+    const PXBool checkCollision = pxUIElement->FlagsList & PXUIElementIsHoverable;
+
+    if (!checkCollision)
+    {
+        return;
+    }
+
+    PXRectangleOffset currentOffset;
+
+    PXCopy(PXRectangleOffset, &pxUIElement->Margin, &currentOffset);
+
+    // Calculate accululated offset
+    for (PXUIElement* pxUIElementParent = pxUIElement->Parent; pxUIElementParent; pxUIElementParent = pxUIElementParent->Parent)
+    {
+        currentOffset.Left += pxUIElementParent->Margin.Left;
+        currentOffset.Top += pxUIElementParent->Margin.Top;
+        currentOffset.Right += pxUIElementParent->Margin.Right;
+        currentOffset.Bottom += pxUIElementParent->Margin.Bottom;
+    }
+
+
+
+#if 0
+    bfEngine->Engine.Graphic.DrawModeSet(bfEngine->Engine.Graphic.EventOwner, PXGraphicDrawFillModeLines);
+    bfEngine->Engine.Graphic.DrawColorRGBAF(bfEngine->Engine.Graphic.EventOwner, 0, 0.7, 0, 1);
+    bfEngine->Engine.Graphic.RectangleDraw
+    (
+        bfEngine->Engine.Graphic.EventOwner,
+        bfEngine->CollisionCheckInfo.MousePosition[0],
+        bfEngine->CollisionCheckInfo.MousePosition[1],
+        bfEngine->CollisionCheckInfo.MousePosition[2],
+        bfEngine->CollisionCheckInfo.MousePosition[3],
+        0x01
+    );
+#endif
+
+    PXPositionTranslate(&currentOffset);
+
+#if 0
+    bfEngine->Engine.Graphic.DrawModeSet(bfEngine->Engine.Graphic.EventOwner, PXGraphicDrawFillModeLines);
+    bfEngine->Engine.Graphic.DrawColorRGBAF(bfEngine->Engine.Graphic.EventOwner, 0, 1, 0, 1);
+    bfEngine->Engine.Graphic.RectangleDraw
+    (
+        bfEngine->Engine.Graphic.EventOwner,
+        currentOffset.Left,
+        currentOffset.Top,
+        currentOffset.Right,
+        currentOffset.Bottom,
+        0x01
+    );
+#endif
+
+    const PXBool isCollising = PXCollisionAABB
+    (
+        currentOffset.Left,
+        currentOffset.Top,
+        currentOffset.Right,
+        currentOffset.Bottom,
+        bfEngine->CollisionCheckInfo.MousePosition[0],
+        bfEngine->CollisionCheckInfo.MousePosition[1],
+        bfEngine->CollisionCheckInfo.MousePosition[2],
+        bfEngine->CollisionCheckInfo.MousePosition[3]
+    );
+
+    if (!isCollising)
+    {
+        pxUIElement->Hover = PXUIHoverStateNotBeeingHovered;
+        return; // Is not collideing, quit.
+    }
+
+    if (bfEngine->CollisionCheckInfo.CurrentElement) // if we have a current target, it will be overlapped now.
+    {
+        bfEngine->CollisionCheckInfo.OverlappedElement = bfEngine->CollisionCheckInfo.CurrentElement; // Store old entry as overlapped
+        bfEngine->CollisionCheckInfo.OverlappedElement->Hover = PXUIHoverStateHoveredButOverlapped;
+    }
+
+    bfEngine->CollisionCheckInfo.CurrentElement = pxUIElement; // Store new element 
+    bfEngine->CollisionCheckInfo.CurrentElement->Hover = PXUIHoverStateHovered;
 }
 
 void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIElement)
@@ -2142,7 +2204,7 @@ void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIEl
         currentOffset.Top += pxUIElementParent->Margin.Top;
         currentOffset.Right += pxUIElementParent->Margin.Right;
         currentOffset.Bottom += pxUIElementParent->Margin.Bottom;
-    }  
+    }
 
 #if 0 // Debug
     pxGraphic->DrawModeSet(pxGraphic->EventOwner, PXGraphicDrawFillModeLines);
@@ -2366,7 +2428,16 @@ void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIEl
         }
         case PXUIElementTypeDropDown:
         {
+            pxGraphic->DrawColorRGBAF
+            (
+                pxGraphic->EventOwner,
+                pxUIElement->ColorTintReference->Red,
+                pxUIElement->ColorTintReference->Green,
+                pxUIElement->ColorTintReference->Blue,
+                pxUIElement->ColorTintReference->Alpha
+            );
 
+            pxGraphic->RectangleDrawTx(pxGraphic->EventOwner, currentOffset.Left, currentOffset.Top, currentOffset.Right, currentOffset.Bottom, 0, 1, 1, 0, 0x01);
 
             break;
         }
@@ -2474,8 +2545,11 @@ void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIEl
     }
 
     // Rendering panel border
-    glLineWidth(1);
-    pxGraphic->DrawModeSet(pxGraphic->EventOwner, PXGraphicDrawFillModeLines);
-    pxGraphic->DrawColorRGBAF(pxGraphic->EventOwner, 0.2f, 0.2f, 0.2f, 1.0f);
-    pxGraphic->RectangleDraw(pxGraphic->EventOwner, currentOffset.Left, currentOffset.Top, currentOffset.Right, currentOffset.Bottom, 0x02);
+    if (PXUIElementDrawBorder & pxUIElement->FlagsList)
+    {
+        glLineWidth(1);
+        pxGraphic->DrawModeSet(pxGraphic->EventOwner, PXGraphicDrawFillModeLines);
+        pxGraphic->DrawColorRGBAF(pxGraphic->EventOwner, 0.2f, 0.2f, 0.2f, 1.0f);
+        pxGraphic->RectangleDraw(pxGraphic->EventOwner, currentOffset.Left, currentOffset.Top, currentOffset.Right, currentOffset.Bottom, 0x02);
+    }   
 }

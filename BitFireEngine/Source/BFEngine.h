@@ -23,6 +23,16 @@ extern "C"
     }
     BFInputContainer;
 
+
+    typedef struct BFEngineUIElementCollisionCheckInfo_
+    {
+        float MousePosition[4];
+
+        PXUIElement* OverlappedElement; // Element beeing under the current selected one. Is NULL when no object is under current.
+        PXUIElement* CurrentElement; // Element beeing selected
+    }
+    BFEngineUIElementCollisionCheckInfo;
+
     typedef struct BFEngine_
     {
         PXEngine Engine;
@@ -45,6 +55,8 @@ extern "C"
 
         BFInputContainer InputContainer;
         //----------------------------------------------
+
+        BFEngineUIElementCollisionCheckInfo CollisionCheckInfo;
 
 
         // Render -runtime info
@@ -86,6 +98,9 @@ extern "C"
     PXPrivate void PXCalculateUIOffset(PX);
 
     PXPrivate void BFEngineRenderScene(BFEngine* const bfEngine);
+
+
+
 
 
     PXPrivate void BFEngineUIElementCollision(BFEngine* const bfEngine, PXUIElement* const pxUIElement);

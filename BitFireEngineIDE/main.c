@@ -1,6 +1,8 @@
 #include <BFEngine.h>
 
 #include <Math/PXMath.h>
+#include <OS/Dialog/PXDialog.h>
+#include <OS/Hardware/PXProcessor.h>
 
 void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine);
 void PXAPI OnShutDownEvent(BFEngine* const bfEngine, PXEngine* const pxEngine);
@@ -9,7 +11,7 @@ void PXAPI OnNetworkUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine);
 void PXAPI OnGameUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine);
 void PXAPI OnRenderUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine);
 
-#if !defined(_DEBUG) && defined(OSWindows)
+#if defined(_DEBUG) && defined(OSWindows0)
 #include <windows.h>
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char* name, int nShowCmd)
 #else
@@ -43,6 +45,8 @@ PXTexture2D _dialogBoxTexture;
 PXUIElement* _panelMenuMainContainer;
 PXUIElement* _panelMenuButtonFile;
 PXUIElement* _panelMenuButtonFileText;
+PXUIElement* _panelMenuButtonFileDropDownOpen;
+PXUIElement* _panelMenuButtonFileDropDownSave;
 PXUIElement* _panelMenuButtonEdit;
 PXUIElement* _panelMenuButtonEditText;
 PXUIElement* _panelMenuButtonView;
@@ -120,6 +124,17 @@ const PXInt8U indexDATA[] =
     0,1,2,3,4,5
 };
 
+void PXAPI ButtonThingOnClick(PXUIElement* pxUIElement)
+{
+    PXText pxText;
+    PXTextConstructBufferA(&pxText, 260);
+    PXTextClear(&pxText);
+
+    PXActionResult pxActionResult = PXDialogFileOpen(&pxText);
+
+    printf("Path Selected: %s\n", pxText.TextA);
+}
+
 void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 {
     PXGraphic* const pxGraphic = &pxEngine->Graphic;
@@ -160,30 +175,49 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
     //-----------------------------------------------------
     PXGraphicUIElementCreate(pxGraphic, &_panelMenuButtonFile, 1, _panelMenuMainContainer);
     PXGraphicUIElementTypeSet(pxGraphic, _panelMenuButtonFile, PXUIElementTypeButton);
-    PXGraphicUIElementFlagSet(_panelMenuButtonFile, PXUIElementNormal | PXUIElementIsHoverable);
+    PXGraphicUIElementFlagSet(_panelMenuButtonFile, PXUIElementNormal);
     _panelMenuButtonFile->ColorTintReference = &titleMenuButtonReference;
     PXUIElementSizeSet(_panelMenuButtonFile, 0.00, 0.00, 1.85, 0.00, PXUIElementPositionRelative);
 
 
     PXGraphicUIElementCreate(pxGraphic, &_panelMenuButtonFileText, 1, _panelMenuButtonFile);
     PXGraphicUIElementTypeSet(pxGraphic, _panelMenuButtonFileText, PXUIElementTypeText);
-    PXGraphicUIElementFlagSet(_panelMenuButtonFileText, PXUIElementDecorative);
+    PXGraphicUIElementFlagSet(_panelMenuButtonFileText, PXUIElementText);
     _panelMenuButtonFileText->ColorTintReference = &titleMenuButtonTextColorReference;
     PXGraphicPXUIElementTextSetA(_panelMenuButtonFileText, "File");
     PXUIElementSizeSet(_panelMenuButtonFileText, 0.00, 0.00, 0.00, 0.00, PXUIElementPositionRelative);
     _panelMenuButtonFileText->TextInfo.FontID = &DefaultFont;
 
 
+#if 0
+    PXGraphicUIElementCreate(pxGraphic, &_panelMenuButtonFileDropDownOpen, 1, _panelMenuButtonFileText);
+    PXGraphicUIElementTypeSet(pxGraphic, _panelMenuButtonFileDropDownOpen, PXUIElementTypeDropDown);
+    PXGraphicUIElementFlagSet(_panelMenuButtonFileDropDownOpen, PXUIElementDecorative);
+    _panelMenuButtonFileDropDownOpen->ColorTintReference = &titleMenuButtonTextColorReference;
+    PXUIElementSizeSet(_panelMenuButtonFileDropDownOpen, 0.00, 0.00, 0.00, 0.00, PXUIElementPositionRelative);
+    _panelMenuButtonFileDropDownOpen->TextInfo.FontID = &DefaultFont;
+
+
+    PXGraphicUIElementCreate(pxGraphic, &_panelMenuButtonFileDropDownSave, 1, _panelMenuButtonFileDropDownOpen);
+    PXGraphicUIElementTypeSet(pxGraphic, _panelMenuButtonFileDropDownSave, PXUIElementTypeDropDown);
+    PXGraphicUIElementFlagSet(_panelMenuButtonFileDropDownSave, PXUIElementDecorative);
+    _panelMenuButtonFileDropDownSave->ColorTintReference = &titleMenuButtonTextColorReference;
+    PXUIElementSizeSet(_panelMenuButtonFileDropDownSave, 0.00, 0.00, 0.00, 0.00, PXUIElementPositionRelative);
+    _panelMenuButtonFileDropDownSave->TextInfo.FontID = &DefaultFont;
+#endif
+
+
+
 
     PXGraphicUIElementCreate(pxGraphic, &_panelMenuButtonEdit, 1, _panelMenuMainContainer);
     PXGraphicUIElementTypeSet(pxGraphic, _panelMenuButtonEdit, PXUIElementTypeButton);
-    PXGraphicUIElementFlagSet(_panelMenuButtonEdit, PXUIElementNormal | PXUIElementIsHoverable);
+    PXGraphicUIElementFlagSet(_panelMenuButtonEdit, PXUIElementNormal);
     _panelMenuButtonEdit->ColorTintReference = &titleMenuButtonReference;
     PXUIElementSizeSet(_panelMenuButtonEdit, 0.15, 0.00, 1.65, 0.00, PXUIElementPositionRelative);
 
     PXGraphicUIElementCreate(pxGraphic, &_panelMenuButtonEditText, 1, _panelMenuButtonEdit);
     PXGraphicUIElementTypeSet(pxGraphic, _panelMenuButtonEditText, PXUIElementTypeText);
-    PXGraphicUIElementFlagSet(_panelMenuButtonEditText, PXUIElementDecorative);
+    PXGraphicUIElementFlagSet(_panelMenuButtonEditText, PXUIElementText);
     _panelMenuButtonEditText->ColorTintReference = &titleMenuButtonTextColorReference;
     PXGraphicPXUIElementTextSetA(_panelMenuButtonEditText, "Edit");
     PXUIElementSizeSet(_panelMenuButtonEditText, 0.00, 0.00, 0.00, 0.00, PXUIElementPositionRelative);
@@ -193,13 +227,13 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 
     PXGraphicUIElementCreate(pxGraphic, &_panelMenuButtonView, 1, _panelMenuMainContainer);
     PXGraphicUIElementTypeSet(pxGraphic, _panelMenuButtonView, PXUIElementTypeButton);
-    PXGraphicUIElementFlagSet(_panelMenuButtonView, PXUIElementNormal | PXUIElementIsHoverable);
+    PXGraphicUIElementFlagSet(_panelMenuButtonView, PXUIElementNormal);
     _panelMenuButtonView->ColorTintReference = &titleMenuButtonReference;
     PXUIElementSizeSet(_panelMenuButtonView, 0.35, 0.00, 1.45, 0.00, PXUIElementPositionRelative);
 
     PXGraphicUIElementCreate(pxGraphic, &_panelMenuButtonViewText, 1, _panelMenuButtonView);
     PXGraphicUIElementTypeSet(pxGraphic, _panelMenuButtonViewText, PXUIElementTypeText);
-    PXGraphicUIElementFlagSet(_panelMenuButtonViewText, PXUIElementDecorative);
+    PXGraphicUIElementFlagSet(_panelMenuButtonViewText, PXUIElementText);
     _panelMenuButtonViewText->ColorTintReference = &titleMenuButtonTextColorReference;
     PXGraphicPXUIElementTextSetA(_panelMenuButtonViewText, "View");
     PXUIElementSizeSet(_panelMenuButtonViewText, 0, 0, 0, 0, PXUIElementPositionRelative);
@@ -214,7 +248,7 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
     //-----------------------------------------------------
     PXGraphicUIElementCreate(pxGraphic, &_panelMainContent, 1, PXNull);
     PXGraphicUIElementTypeSet(pxGraphic, _panelMainContent, PXUIElementTypePanel);
-    PXGraphicUIElementFlagSet(_panelMainContent, PXUIElementNormal | PXUIElementIsHoverable);
+    PXGraphicUIElementFlagSet(_panelMainContent, PXUIElementDecorative);
     _panelMainContent->ColorTintReference = &panelReference;
     PXUIElementSizeSet(_panelMainContent, 0.00, 0, 0.0, 0.05, PXUIElementPositionRelative);
 
@@ -223,7 +257,7 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
     //-----------------------------------------------------
     PXGraphicUIElementCreate(pxGraphic, &_uiSceneElements, 1, _panelMainContent);
     PXGraphicUIElementTypeSet(pxGraphic, _uiSceneElements, PXUIElementTypePanel);
-    PXGraphicUIElementFlagSet(_uiSceneElements, PXUIElementNormal | PXUIElementIsHoverable);
+    PXGraphicUIElementFlagSet(_uiSceneElements, PXUIElementDecorative);
     _uiSceneElements->ColorTintReference = &panelReference;
     PXUIElementSizeSet(_uiSceneElements, 0.02, 0.02, 1.65, 0.02, PXUIElementPositionRelative);
     //-----------------------------------------------------
@@ -231,7 +265,7 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
     //-----------------------------------------------------
     PXGraphicUIElementCreate(pxGraphic, &_uiSceneElementsTitleBar, 1, _uiSceneElements);
     PXGraphicUIElementTypeSet(pxGraphic, _uiSceneElementsTitleBar, PXUIElementTypePanel);
-    PXGraphicUIElementFlagSet(_uiSceneElementsTitleBar, PXUIElementNormal | PXUIElementIsHoverable);
+    PXGraphicUIElementFlagSet(_uiSceneElementsTitleBar, PXUIElementNormal);
     _uiSceneElementsTitleBar->ColorTintReference = &titleColor;
     PXUIElementSizeSet(_uiSceneElementsTitleBar, 0.00, 1.85, 0.0, 0.00, PXUIElementPositionRelative);
     //-----------------------------------------------------
@@ -239,7 +273,7 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
     //-----------------------------------------------------    
     PXGraphicUIElementCreate(pxGraphic, &_uiSceneElementsTitleBarText, 1, _uiSceneElementsTitleBar);
     PXGraphicUIElementTypeSet(pxGraphic, _uiSceneElementsTitleBarText, PXUIElementTypeText);
-    PXGraphicUIElementFlagSet(_uiSceneElementsTitleBarText, PXUIElementNormal | PXUIElementIsHoverable);
+    PXGraphicUIElementFlagSet(_uiSceneElementsTitleBarText, PXUIElementText);
     _uiSceneElementsTitleBarText->ColorTintReference = &textColor;
     PXUIElementSizeSet(_uiSceneElementsTitleBarText, 0.005, 0.005, 0.005, 0.005, PXUIElementPositionRelative);
     PXGraphicPXUIElementTextSetA(_uiSceneElementsTitleBarText, "Scene");
@@ -252,16 +286,18 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
     //-----------------------------------------------------
     PXGraphicUIElementCreate(pxGraphic, &_infoPanelTextSpawn, 1, _uiSceneElements);
     PXGraphicUIElementTypeSet(pxGraphic, _infoPanelTextSpawn, PXUIElementTypeButton);
-    PXGraphicUIElementFlagSet(_infoPanelTextSpawn, PXUIElementNormal | PXUIElementIsHoverable);
+    PXGraphicUIElementFlagSet(_infoPanelTextSpawn, PXUIElementNormal);
     PXUIElementColorSet4F(&_infoPanelTextSpawn, 0.40f, 0.15f, 0.15f, 1);
     PXUIElementSizeSet(_infoPanelTextSpawn, 0.025, 0.05, 0.025, 1.8, PXUIElementPositionRelative);
     _infoPanelTextSpawn->ColorTintReference = &buttonColor;
+    _infoPanelTextSpawn->OnClickCallback = ButtonThingOnClick;
+
     //-----------------------------------------------------
     // Button:Text
     //-----------------------------------------------------
     PXGraphicUIElementCreate(pxGraphic, &_infoPanelButtonText, 1, _infoPanelTextSpawn);
     PXGraphicUIElementTypeSet(pxGraphic, _infoPanelButtonText, PXUIElementTypeText);
-    PXGraphicUIElementFlagSet(_infoPanelButtonText, PXUIElementNormal | PXUIElementIsHoverable);
+    PXGraphicUIElementFlagSet(_infoPanelButtonText, PXUIElementText);
     PXUIElementSizeSet(_infoPanelButtonText, 0.005, 0.005, 0.005, 0.005, PXUIElementPositionRelative);
     PXGraphicPXUIElementTextSetA(_infoPanelButtonText, "Button");
     _infoPanelButtonText->TextInfo.FontID = &DefaultFont;
@@ -271,6 +307,7 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 #if 1
     PXGraphicUIElementCreate(pxGraphic, &_infoPanelText, 1, _infoPanelTextSpawn);
     PXGraphicUIElementTypeSet(pxGraphic, _infoPanelText, PXUIElementTypeText);
+    PXGraphicUIElementFlagSet(_infoPanelText, PXUIElementText);
     // PXUIElementFontSet(&_infoPanelText, &DefaultFont);
     PXUIElementColorSet4F(_infoPanelText, 0.5, 0.5, 0.5, 1);
     PXUIElementSizeSet(_infoPanelText, 0.02, 0.02, 0.02, 0.02, PXUIElementPositionRelative);
@@ -281,7 +318,6 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
     // Panel: Scene
     PXGraphicUIElementCreate(pxGraphic, &_uiPanelScene, 1, _panelMainContent);
     PXGraphicUIElementTypeSet(pxGraphic, _uiPanelScene, PXUIElementTypePanel);
-    PXGraphicUIElementFlagSet(_uiPanelScene, PXUIElementNormal | PXUIElementIsHoverable);
     _uiPanelScene->ColorTintReference = &panelReference;
     PXUIElementSizeSet(_uiPanelScene, 0.36, 0.02, 0.36, 0.02, PXUIElementPositionRelative);
     //  PXUIElementTextSetA(&_uiPanelScene, "Scene");
@@ -291,7 +327,7 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
     // RenderFrame: Scene
     PXGraphicUIElementCreate(pxGraphic, &_uiSceneTexturePanel, 1, _uiPanelScene);
     PXGraphicUIElementTypeSet(pxGraphic, _uiSceneTexturePanel, PXUIElementTypeRenderFrame);
-    PXGraphicUIElementFlagSet(_uiSceneTexturePanel, PXUIElementNormal | PXUIElementIsHoverable);
+    PXGraphicUIElementFlagSet(_uiSceneTexturePanel, PXUIElementDecorative);
     PXUIElementSizeSet(_uiSceneTexturePanel, 0.05, 0.05, 0.05, 0.05, PXUIElementPositionRelative);
     //  PXUIElementFontSet(&_uiSceneTexturePanel, &DefaultFont);
    // _uiSceneTexturePanel.TextureReference = &_testImage;
@@ -303,7 +339,7 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
      // Panel:Info
     PXGraphicUIElementCreate(pxGraphic, &_uiInfoPanel, 1, _panelMainContent);
     PXGraphicUIElementTypeSet(pxGraphic, _uiInfoPanel, PXUIElementTypePanel);
-    PXGraphicUIElementFlagSet(_uiInfoPanel, PXUIElementNormal | PXUIElementIsHoverable);
+    PXGraphicUIElementFlagSet(_uiInfoPanel, PXUIElementDecorative);
     _uiInfoPanel->ColorTintReference = &panelReference;
     PXUIElementSizeSet(_uiInfoPanel, 1.65, 0.02, 0.02, 0.02, PXUIElementPositionRelative);
     //  PXUIElementTextSetA(&_uiInfoPanel, "Info");
@@ -313,13 +349,13 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
          // TitleBar:Infol
     PXGraphicUIElementCreate(pxGraphic, &_uiInfoPanelTitleBar, 1, _uiInfoPanel);
     PXGraphicUIElementTypeSet(pxGraphic, _uiInfoPanelTitleBar, PXUIElementTypePanel);
-    PXGraphicUIElementFlagSet(_uiInfoPanelTitleBar, PXUIElementNormal | PXUIElementIsHoverable);
+    PXGraphicUIElementFlagSet(_uiInfoPanelTitleBar, PXUIElementNormal);
     _uiInfoPanelTitleBar->ColorTintReference = &titleColor;
     PXUIElementSizeSet(_uiInfoPanelTitleBar, 0.00, 1.85, 0.0, 0.00, PXUIElementPositionRelative);
 
     PXGraphicUIElementCreate(pxGraphic, &_uiInfoPanelTitleBarText, 1, _uiInfoPanelTitleBar);
     PXGraphicUIElementTypeSet(pxGraphic, _uiInfoPanelTitleBarText, PXUIElementTypeText);
-    PXGraphicUIElementFlagSet(_uiInfoPanelTitleBarText, PXUIElementNormal | PXUIElementIsHoverable);
+    PXGraphicUIElementFlagSet(_uiInfoPanelTitleBarText, PXUIElementText);
     PXUIElementColorSet4F(_uiInfoPanelTitleBarText, 1, 1, 1, 1);
     PXUIElementSizeSet(_uiInfoPanelTitleBarText, 0.005, 0.005, 0.005, 0.005, PXUIElementPositionRelative);
     PXGraphicPXUIElementTextSetA(_uiInfoPanelTitleBarText, "Info");
@@ -510,7 +546,18 @@ void PXAPI OnGameUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 
     //_playerCharacterLuna.MatrixModel.Move(movement);
 
-    if (PXWindowInteractable(pxWindow) || IsPressedButtonRight(mouse->Buttons))
+    const PXBool isInteractable = PXWindowInteractable(pxWindow);
+
+    if (isInteractable || (IsPressedButtonLeft(mouse->Buttons) && IsPressedButtonLeft(mouse->ButtonsDelta)))
+    {
+        if (bfEngine->CollisionCheckInfo.CurrentElement)
+        {
+            PXFunctionInvoke(bfEngine->CollisionCheckInfo.CurrentElement->OnClickCallback, bfEngine->CollisionCheckInfo.CurrentElement);
+        }
+    }
+
+
+    if (isInteractable || IsPressedButtonRight(mouse->Buttons))
     {
         PXCameraMove(camera, &movement);
 
@@ -567,7 +614,11 @@ void PXAPI OnGameUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
     const char* date = __DATE__;
     const char* time = __TIME__;
 
-    PXTextPrint(&pxText, "[BitFireEngine] (Build:%s %s) FPS:%-3i", date, time, pxEngine->FramesPerSecound);
+    PXInt32U cpuTemp = 0;
+
+    PXProcessorTemperature(&cpuTemp);
+
+    PXTextPrint(&pxText, "[BitFireEngine] (Build:%s %s) FPS:%-3i CPU:%i°C", date, time, pxEngine->FramesPerSecound, cpuTemp);
 
     PXWindowTitleSet(&pxEngine->Window, &pxText);
 
