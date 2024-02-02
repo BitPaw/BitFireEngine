@@ -8,7 +8,6 @@
 // PXUltima
 #include <OS/Time/PXStopWatch.h>
 
-float _deltaTime = 0;
 PXRenderable _rectangleMesh;
 
 PXFont _font;
@@ -30,11 +29,10 @@ PXSprite _dialogBoxCharacterImage;
 
 
 PXSprite _playerCharacterLuna;
-
 PXSprite _playerCharacterNyte;
 PXSprite _lamp;
 PXSprite _fireplace;
-BFSign _sign;
+PXSprite _sign;
 PXSprite _floor;
 
 //BFUIDialogBox _dialogBox;
@@ -48,8 +46,8 @@ PXSprite _menuButtonA;
 PXSprite _menuButtonB;
 PXSprite _menuButtonC;
 
-void OnUpdateUI(const BFEngine* bitFireEngine);
-void OnStartUp(BFEngine* const bitFireEngine);
-void OnShutDown(const BFEngine* bitFireEngine);
-void OnUpdateGameLogic(const BFEngine* bitFireEngine, const float deltaTime);
-void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input);
+void OnNetworkUpdate(const BFEngine* bitFireEngine);
+void OnStartUpEvent(BFEngine* const bitFireEngine);
+void OnShutDownEvent(const BFEngine* bitFireEngine);
+void OnGameUpdateEvent(const BFEngine* bitFireEngine, const float deltaTime);
+void OnRenderUpdateEvent(BFEngine* const bitFireEngine, BFInputContainer* input);

@@ -10,12 +10,12 @@ int main(int amountOFParameters, char** parameter)
     BFEngine bfEngine;
     BFEngineConstruct(&bfEngine);
  
-    bfEngine.OnStartUp = OnStartUp;
-    bfEngine.OnShutDown = OnShutDown;
-    bfEngine.OnUserUpdate = OnUpdateUI;
-    bfEngine.OnNetworkUpdate = OnUpdateUI;
-    bfEngine.OnGameUpdate = OnUpdateGameLogic;
-    bfEngine.OnRenderUpdate = OnUpdateInput;
+    bfEngine.OnStartUp = OnStartUpEvent;
+    bfEngine.OnShutDown = OnShutDownEvent;
+    bfEngine.Engine.OnUserUpdate = OnNetworkUpdate;
+    bfEngine.OnNetworkUpdate = OnNetworkUpdate;
+    bfEngine.OnGameUpdate = OnGameUpdateEvent;
+    bfEngine.Engine.OnRenderUpdate = OnRenderUpdateEvent;
 
     PXEngineStart(&bfEngine.Engine);
 
@@ -29,7 +29,7 @@ int main(int amountOFParameters, char** parameter)
     return EXIT_SUCCESS;
 }
 
-void OnUpdateUI(const BFEngine* bitFireEngine)
+void OnNetworkUpdate(const BFEngine* bitFireEngine)
 {
     //wsprintfW(_dialogBox.Content.TextContent, L"FPS: %4i", (PXMathCeiling(1 / _deltaTime)));
 
@@ -46,11 +46,14 @@ void OnUpdateUI(const BFEngine* bitFireEngine)
   //text->SetText(text->TextContent);
 }
 
-void OnStartUp(BFEngine* const bitFireEngine)
+void OnStartUpEvent(BFEngine* const bitFireEngine)
 {
-    PXGraphic* const pxGraphicContext = &bitFireEngine->Graphic;
+    PXGraphic* const pxGraphicContext = &bitFireEngine->Engine.Graphic;
 
     //PXWindowCursorCaptureMode(&bitFireEngine->WindowMain, PXWindowCursorLockAndHide);
+
+    bitFireEngine->Engine.Graphic.Select(bitFireEngine->Engine.Graphic.EventOwner);
+
 
     //---<Setup>
     _simplex.ResourceID.PXID = -1;
@@ -60,102 +63,129 @@ void OnStartUp(BFEngine* const bitFireEngine)
     //PXGraphicBlendingMode(&bitFireEngine->WindowMain.GraphicInstance, PXBlendingModeOneToOne);
        
     pxGraphicContext->ShaderProgramCreateFromFileVPA(pxGraphicContext->EventOwner, &_hudShaderID, "Shader/HUD.vert", "Shader/HUD.frag");
-    pxGraphicContext->ShaderProgramCreateFromFileVPA(pxGraphicContext->EventOwner, &_worldShader, "Shader/WS.vert", "Shader/WS.frag");
+    pxGraphicContext->ShaderProgramCreateFromFileVPA(pxGraphicContext->EventOwner, &_worldShader, "Shader/Object_Vertex.glsl", "Shader/Object_Fragment.glsl");
     pxGraphicContext->ShaderProgramCreateFromFileVPA(pxGraphicContext->EventOwner, &_simplex, "Shader/Simplex.vert", "Shader/Simplex.frag");
        
-#if 0
-    PXGraphicSkyboxRegisterA
-    (
-        &bitFireEngine->WindowMain.GraphicInstance,
-        &_skybox,
-        "Shader/SkyBox.vert",
-        "Shader/SkyBox.frag",
-        "Texture/MissingTexture.bmp",
-        "Texture/MissingTexture.bmp",
-        "Texture/MissingTexture.bmp",
-        "Texture/MissingTexture.bmp",
-        "Texture/MissingTexture.bmp",
-        "Texture/MissingTexture.bmp"
-    );
-    bitFireEngine->DefaultSkyBox = &_skybox;
-#endif
 
 
 
-    PXModelConstruct(&bitFireEngine->pxModelTEST);
-    PXResourceLoadA(&bitFireEngine->pxModelTEST, "Model/Tiger.obj");
-    pxGraphicContext->VertexStructureRegister(pxGraphicContext->EventOwner, &bitFireEngine->pxModelTEST);
 
-    //bitFireEngine->pxModelTEST.IndexBuffer.DrawModeID |= PXDrawModeIDLineLoop | PXDrawModeIDPoint;
-    bitFireEngine->pxModelTEST.ShaderProgramReference = &_worldShader;
+    //-----------------------------------------------------
+    // SkyBox
+    //-----------------------------------------------------
+    {
+        PXSkyBoxCreateEventData pxSkyBoxCreateEventData;
+        PXClear(PXSkyBoxCreateEventData, &pxSkyBoxCreateEventData);
+        pxSkyBoxCreateEventData.SkyboxReference = &_skybox;
+        pxSkyBoxCreateEventData.SkyBoxShaderVertex = "Shader/SkyBox_Vertex.glsl";
+        pxSkyBoxCreateEventData.SkyBoxShaderPixel = "Shader/SkyBox_Fragment.glsl";
+        pxSkyBoxCreateEventData.SkyBoxTextureA = "Texture/MissingTexture.bmp";
+        pxSkyBoxCreateEventData.SkyBoxTextureB = "Texture/MissingTexture.bmp";
+        pxSkyBoxCreateEventData.SkyBoxTextureC = "Texture/MissingTexture.bmp";
+        pxSkyBoxCreateEventData.SkyBoxTextureD = "Texture/MissingTexture.bmp";
+        pxSkyBoxCreateEventData.SkyBoxTextureE = "Texture/MissingTexture.bmp";
+        pxSkyBoxCreateEventData.SkyBoxTextureF = "Texture/MissingTexture.bmp";
 
-#if 1
+        PXSkyBoxCreate(&bitFireEngine->Engine, &pxSkyBoxCreateEventData);
+    }
 
+    //-----------------------------------------------------
+    // Background
+    //-----------------------------------------------------
+    {
+        PXSpriteCreateEventData pxSpriteCreateEventData;
+        PXClear(PXSpriteCreateEventData, &pxSpriteCreateEventData);
+        pxSpriteCreateEventData.SpriteReference = &_backGround;
+        pxSpriteCreateEventData.TextureName = "Texture/BackGround.png";
+        pxSpriteCreateEventData.ShaderProgramCurrent = &_worldShader;
+        pxSpriteCreateEventData.Scaling.X = 2;
+        pxSpriteCreateEventData.Scaling.Y = 2;
+
+        PXSpriteCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
+    }
+
+
+    //-----------------------------------------------------
+    // Nyte
+    //-----------------------------------------------------
+    {
+        PXSpriteCreateEventData pxSpriteCreateEventData;
+        PXClear(PXSpriteCreateEventData, &pxSpriteCreateEventData);
+        pxSpriteCreateEventData.SpriteReference = &_playerCharacterNyte;
+        pxSpriteCreateEventData.TextureName = "Texture/Nyte.png";
+        pxSpriteCreateEventData.ShaderProgramCurrent = &_worldShader;
+        pxSpriteCreateEventData.Position.X = 0;
+        pxSpriteCreateEventData.Position.Y = -0.8;
+        pxSpriteCreateEventData.Position.Z = 0.01;
+        pxSpriteCreateEventData.Scaling.X = 0.5;
+        pxSpriteCreateEventData.Scaling.Y = 0.5;
+
+        PXSpriteCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
+    }
     
 
-  
+    //-----------------------------------------------------
+    // Dialog
+    //-----------------------------------------------------
+    {
+        PXSpriteCreateEventData pxSpriteCreateEventData;
+        PXClear(PXSpriteCreateEventData, &pxSpriteCreateEventData);
+        pxSpriteCreateEventData.SpriteReference = &_dialogBox;
+        pxSpriteCreateEventData.TextureName = "Texture/Dialog.png";
+        pxSpriteCreateEventData.ShaderProgramCurrent = &_worldShader;
+        pxSpriteCreateEventData.ViewPositionIgnore = 1;
+        pxSpriteCreateEventData.ViewRotationIgnore = 1;
+        //pxSpriteCreateEventData.Position.X = 0;
+        pxSpriteCreateEventData.Position.Y = -0.65;
+        //pxSpriteCreateEventData.Position.Z = 0.02;
+        pxSpriteCreateEventData.Scaling.X = 1.6f;
+        pxSpriteCreateEventData.Scaling.Y = 0.4f;
+        pxSpriteCreateEventData.TextureScalingPoints[0].X = 0.2 / pxSpriteCreateEventData.Scaling.X;
+        pxSpriteCreateEventData.TextureScalingPoints[0].Y = 0.2 / pxSpriteCreateEventData.Scaling.Y;
+        pxSpriteCreateEventData.TextureScalingPoints[1].X = 0.3;
+        pxSpriteCreateEventData.TextureScalingPoints[1].Y = 0.3;
 
-    PXGraphicSpriteConstruct(pxGraphicContext, &_backGround);
-    PXGraphicSpriteTextureLoadA(pxGraphicContext, &_backGround, "Texture/BackGround.png");
-    PXGraphicSpriteRegister(pxGraphicContext, &_backGround);
-    _backGround.VertexStructure.ShaderProgramReference = &_worldShader;
-    _backGround.VertexStructure.IgnoreViewRotation = 0;
-    _backGround.VertexStructure.IgnoreViewPosition = 0;
+        PXSpriteCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
+    }
 
-
-
-    PXGraphicSpriteConstruct(pxGraphicContext, &_playerCharacterNyte);
-   // PXMatrix4x4FMoveXYZ(&_playerCharacterNyte.VertexStructure.ModelMatrix, 0, 0, -0.8f, &_playerCharacterNyte.VertexStructure.ModelMatrix);
-    PXGraphicSpriteTextureLoadA(pxGraphicContext, &_playerCharacterNyte, "Texture/Nyte.png");
-    PXGraphicSpriteRegister(pxGraphicContext, &_playerCharacterNyte);
-    PXMatrix4x4FScaleSetXY(&_playerCharacterNyte.VertexStructure.ModelMatrix, 0.2, 0.2);
-    PXMatrix4x4FMoveXY(&_playerCharacterNyte.VertexStructure.ModelMatrix, 0, -0.50, &_playerCharacterNyte.VertexStructure.ModelMatrix);
-    _playerCharacterNyte.VertexStructure.ShaderProgramReference = &_worldShader;
-    _playerCharacterNyte.VertexStructure.IgnoreViewRotation = 0;
-    _playerCharacterNyte.VertexStructure.IgnoreViewPosition = 0;
-
-    PXGraphicSpriteConstruct(pxGraphicContext, &_dialogBox);
-    PXRectangleOffsetSet(&_dialogBox.VertexStructure.Margin, 0.95f, 0.4f, 0.95f, 0.98f);
-    PXGraphicSpriteTextureLoadA(pxGraphicContext, &_dialogBox, "Texture/Dialog.png");
-    PXMatrix4x4FScaleSetXY(&_dialogBox.VertexStructure.ModelMatrix, PXCameraAspectRatio(bitFireEngine->CameraCurrent), 1);
-    PXGraphicSpriteTextureScaleBorder(&_dialogBox, 20, 20);
-    PXGraphicSpriteRegister(pxGraphicContext, &_dialogBox);
-    _dialogBox.VertexStructure.ShaderProgramReference = &_worldShader;
-    _dialogBox.VertexStructure.IgnoreViewRotation = 0;
-    _dialogBox.VertexStructure.IgnoreViewPosition = 0;
-
-    PXGraphicSpriteConstruct(pxGraphicContext, &_dialogBoxCharacterImage);
-    PXRectangleOffsetSet(&_dialogBoxCharacterImage.VertexStructure.Margin, 0.99f, 0.38f, 0.2, 0.96f);
-    PXGraphicSpriteTextureLoadA(pxGraphicContext, &_dialogBoxCharacterImage, "Texture/Dialog.png");
-    PXGraphicSpriteTextureScaleBorder(&_dialogBoxCharacterImage, 20, 20);
-    PXGraphicSpriteRegister(pxGraphicContext, &_dialogBoxCharacterImage);
-
-    //PXMatrix4x4FScaleSetXY(&_dialogBoxCharacterImage.VertexStructure.ModelMatrix, 0.5, 0.5);
-    _dialogBoxCharacterImage.VertexStructure.ShaderProgramReference = &_worldShader;
-    _dialogBoxCharacterImage.VertexStructure.IgnoreViewRotation = 0;
-    _dialogBoxCharacterImage.VertexStructure.IgnoreViewPosition = 0;
-
-    //PXRectangleOffset(&_dialogBoxCharacterImage.VertexStructure.Margin, 0.95f, 0.4f, 0.95f, 0.9f);
-
+   
 
 
 
     //-----------------------------------------------------
-    // Camera
+    // Sign
     //-----------------------------------------------------
-    PXCameraViewChangeToPerspective(bitFireEngine->CameraCurrent, 70, PXCameraAspectRatio(bitFireEngine->CameraCurrent), 0.05, 10000);
+    {
+        PXSpriteCreateEventData pxSpriteCreateEventData;
+        PXClear(PXSpriteCreateEventData, &pxSpriteCreateEventData);
+        pxSpriteCreateEventData.SpriteReference = &_sign;
+        pxSpriteCreateEventData.TextureName = "Texture/Sign.png";
+        pxSpriteCreateEventData.ShaderProgramCurrent = &_worldShader;
+        pxSpriteCreateEventData.Position.X = -1.40f;
+        pxSpriteCreateEventData.Position.Y = -0.80f;
+        pxSpriteCreateEventData.Scaling.X = 0.6f;
+        pxSpriteCreateEventData.Scaling.Y = 0.6f;
+
+        PXSpriteCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
+    }
 
 
-    // PXCameraViewChangeToOrthographic(bitFireEngine->CameraCurrent, 1,1,0.05, 1000);
-
-    // bitFireEngine->CameraCurrent->Perspective = PXCameraPerspective2D;
     //-----------------------------------------------------
+    // Lamp
+    //-----------------------------------------------------
+    {
+        PXSpriteCreateEventData pxSpriteCreateEventData;
+        PXClear(PXSpriteCreateEventData, &pxSpriteCreateEventData);
+        pxSpriteCreateEventData.SpriteReference = &_lamp;
+        pxSpriteCreateEventData.TextureName = "Texture/LampB.png";
+        pxSpriteCreateEventData.ShaderProgramCurrent = &_worldShader;
+        pxSpriteCreateEventData.Position.X = -1.80f;
+        pxSpriteCreateEventData.Position.Y = -0.80f;
+        pxSpriteCreateEventData.Scaling.X = 1;
+        pxSpriteCreateEventData.Scaling.Y = 1;
 
-
-
-
-
-#endif
+        PXSpriteCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
+    }
 
 
 
@@ -335,142 +365,45 @@ void OnStartUp(BFEngine* const bitFireEngine)
 
     // _camera->Target = &_playerCharacterLuna.MatrixModel;
    // _camera->Offset.Set(0, 20, 60);
-    bitFireEngine->CameraCurrent->FollowSpeed = 1;
+    
+  //  bitFireEngine->CameraCurrent->FollowSpeed = 1;
 
 }
-void OnShutDown(const BFEngine* bitFireEngine)
+void OnShutDownEvent(const BFEngine* bitFireEngine)
 {
 
 }
-void OnUpdateGameLogic(const BFEngine* bitFireEngine, const float deltaTime)
+void OnGameUpdateEvent(const BFEngine* bitFireEngine, const float deltaTime)
 {
-    _deltaTime = deltaTime;
-
-    PXCameraFollow(bitFireEngine->CameraCurrent, deltaTime);
+    //PXCameraFollow(bitFireEngine->Engine.CameraCurrent, deltaTime);
 
     PXText pxText;
     PXTextConstructBufferW(&pxText, 64);
 
     PXTextClear(&pxText);
 
-    PXTextPrint(&pxText, L"[BitFireEngine] FPS:%5.2f, ms:%4.2f", bitFireEngine->TimeFPS, bitFireEngine->TimeMS);
+    PXTextPrint(&pxText, L"[Cleaved] FPS:%5.2f, ms:%4.2f", bitFireEngine->Engine.FramesPerSecound, bitFireEngine->Engine.FrameTime);
 
     PXWindowTitleSet(&bitFireEngine->Engine.Window, &pxText);
-
 }
-void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input)
+
+void OnRenderUpdateEvent(BFEngine* const bitFireEngine, BFInputContainer* input)
 {
-#if 1
-    PXWindow* pxWindow = &bitFireEngine->WindowMain;
-    PXKeyBoard* keyboard = &bitFireEngine->WindowMain.KeyBoardCurrentInput;
-    PXMouse* mouse = &bitFireEngine->WindowMain.MouseCurrentInput;
-    PXCamera* camera = bitFireEngine->CameraCurrent;
-    PXVector3F movement = {0,0,0};
 
-    if (keyboard->Commands & KeyBoardIDShiftLeft)
+    PXOpenGLSkyboxDraw(&bitFireEngine->Engine.Graphic.OpenGLInstance, bitFireEngine->DefaultSkyBox, bitFireEngine->Engine.CameraCurrent);
+
+
+    PXDictionary* const spirteList = &bitFireEngine->Engine.Graphic.SpritelLookUp;
+
+    for (PXSize i = 0; i < spirteList->EntryAmountCurrent; ++i)
     {
-        PXVector3FAddXYZ(&movement, 0, -1, 0, &movement); 
-    }
-    if (keyboard->Letters & KeyBoardIDLetterW)
-    {
-        PXVector3FAddXYZ(&movement, 0, 0, 1, &movement); 
-    }
-    if (keyboard->Letters & KeyBoardIDLetterA) { PXVector3FAddXYZ(&movement, -1, 0, 0, &movement); }
-    if (keyboard->Letters & KeyBoardIDLetterS) { PXVector3FAddXYZ(&movement, 0, 0, -1, &movement); }
-    if (keyboard->Letters & KeyBoardIDLetterD) { PXVector3FAddXYZ(&movement, 1, 0, 0, &movement); }
-    if (keyboard->Letters & KeyBoardIDSpace)
-    {
+        PXDictionaryEntry pxDictionaryEntry;
+        PXSprite* pxSprite = PXNull;
 
+        PXDictionaryIndex(spirteList, i, &pxDictionaryEntry);
 
-      //  PXCamera.Velocity.Set(0.0f, 6.0f, .0f);
+        pxSprite = *(PXSprite**)pxDictionaryEntry.Value;
 
-        PXVector3FAddXYZ(&movement, 0, 1, 0, &movement);
-
-    }
-#if 0
-    if (keyboard.F.IsShortPressed())
-    {
-        keyboard.F.Value = 0xFF;
-
-        if (_sign.Interactable)
-        {
-            printf("[Event] Clicked Sign\n");
-        }
-    }
-#endif
-
-    PXControllerDataGet(&bitFireEngine->Controller);
-
-    //printf("%6i, %6i\n", bitFireEngine->Controller.Axis[0], bitFireEngine->Controller.Axis[1]);
-
-    //_playerCharacterLuna.MatrixModel.Move(movement);
-
-    if(PXWindowInteractable(pxWindow) || 1)
-    {
-        PXCameraMove(camera, &movement);
-
-        PXVector3F mouseMovement = 
-        //{ mouse->Delta[0] * 2, mouse->Delta[1] * 2, 0};
-        {
-            bitFireEngine->Controller.AxisNormalised[PXControllerAxisX] + -mouse->Delta[0],
-            bitFireEngine->Controller.AxisNormalised[PXControllerAxisY] + mouse->Delta[1],
-            0
-        };     
-
-       // printf("[#][OnMouseMove] X:%5.2f Y:%5.2f\n", mouseMovement.X, mouseMovement.Y);
-
-        PXCameraRotate(camera, &mouseMovement);
-    }
-
-    //printf("[#][OnMouseMove] X:%5.2f Y:%5.2f\n", mouse.Position[0], mouse.Position[1]);
-
-    PXCameraUpdate(camera, _deltaTime);    
-   // PXKeyboardIncrementButtonTick(keyboard);
-    PXMouseInputReset(mouse);
-#else
-    KeyBoard& keyboard = input.KeyBoardInput;
-    Mouse& mouse = input.MouseInput;
-    Camera& camera = *_camera;
-    Vector3<float> movementCamera;
-    Vector3<float> movementCharacter;
-
-    if(keyboard.Eight.IsPressed()) { movementCamera.Add(0, 1, 0); }
-    if(keyboard.Four.IsPressed()) { movementCamera.Add(-1, 0, 0); }
-    if(keyboard.Two.IsPressed()) { movementCamera.Add(0, -1, 0); }
-    if(keyboard.Six.IsPressed()) { movementCamera.Add(1, 0, 0); }
-
-
-    if(keyboard.W.IsPressed()) { movementCharacter.Add(0, 1, 0); }
-    if(keyboard.A.IsPressed()) { movementCharacter.Add(-1, 0, 0); }
-    if(keyboard.S.IsPressed()) { movementCharacter.Add(0, -1, 0); }
-    if(keyboard.D.IsPressed()) { movementCharacter.Add(1, 0, 0); }
-    if(keyboard.SpaceBar.IsPressed())
-    {
-        _playerCharacterLuna.Velocity.Add(0.0f, 6.0f, .0f);
-
-        movementCharacter.Add(0, 1, 0);
-    }
-
-    if(keyboard.F.IsLongPressed())
-    {
-        switch(camera.Perspective)
-        {
-            case CameraPerspective::Orthographic:
-                camera.PerspectiveChange(CameraPerspective::Perspective);
-                break;
-
-            case CameraPerspective::Perspective:
-                camera.PerspectiveChange(CameraPerspective::Orthographic);
-                break;
-        }
-
-        keyboard.F.Value = 0;
-    }
-
-    movementCharacter.X *= -1;  // Flip X-Axis
-
-    //_camera->MatrixModel.Move(movementCharacter);
-    _playerCharacterLuna.MatrixModel.Move(movementCharacter);
-    //_camera->MatrixModel.Move(movementCamera);
-#endif // 1
+        PXGraphicSpriteDraw(&bitFireEngine->Engine.Graphic, pxSprite, bitFireEngine->Engine.CameraCurrent);
+    }  
 }

@@ -1263,7 +1263,6 @@ void BFEngineConstruct(BFEngine* const bfEngine)
 {
     PXMemoryClear(bfEngine, sizeof(BFEngine));
 
-    PXCameraConstruct(&bfEngine->CameraFree);
     PXCameraConstruct(&bfEngine->CameraPlayer);
 
     bfEngine->Engine.Window.EventReceiver = bfEngine;
@@ -1413,9 +1412,9 @@ void BFEngineOnWindowSizeChanged(const BFEngine* const receiver, const PXWindow*
 
     if (receiver )
     {
-        if (receiver->CameraCurrent)
+        if (receiver->Engine.CameraCurrent)
         {
-            PXCameraAspectRatioChange(receiver->CameraCurrent, sender->Width, sender->Height);
+            PXCameraAspectRatioChange(receiver->Engine.CameraCurrent, sender->Width, sender->Height);
         }  
     }
 
@@ -1438,18 +1437,14 @@ void BFEngineOnWindowsMouseCaptureChanged(const BFEngine* const receiver, const 
 }
 
 void BFEngineStart(BFEngine* const bfEngine, PXEngine* const pxEngine)
-{
- 
+{ 
     PXLogPrint
     (
         PXLoggingInfo,
         "BFEngine",
+        "Start",
         "Loading start..."
     );
-
-
-    bfEngine->CameraCurrent = &bfEngine->CameraFree;
-
 
     PXMemorySet(&bfEngine->pxModelTEST, 0, sizeof(PXModel));    
 
@@ -1519,26 +1514,17 @@ void BFEngineStart(BFEngine* const bfEngine, PXEngine* const pxEngine)
     PXStopWatchTrigger(&stopwatch, &timeBefore);
 
 
-    
-    PXFunctionInvoke(bfEngine->Engine.Graphic.Select, bfEngine->Engine.Graphic.EventOwner);
-
    // PXFunctionInvoke(pxBitFireEngine->StartUpCallBack, pxBitFireEngine);
 
 
-    PXTime timeAfter;
-
-    PXStopWatchTrigger(&stopwatch, &timeAfter);
-
-    size_t time = 0;// PXTimeMillisecondsDelta(&timeBefore, &timeAfter);
-    float timeInS = time / 1000.0f;
-
-    PXCameraViewChangeToPerspective(bfEngine->CameraCurrent, 75, PXCameraAspectRatio(bfEngine->CameraCurrent), 0, 1);
+    PXCameraViewChangeToPerspective(bfEngine->Engine.CameraCurrent, 75, PXCameraAspectRatio(bfEngine->Engine.CameraCurrent), 0, 1);
 
     PXLogPrint
     (
         PXLoggingInfo,
         "BFEngine",
-        "Loading Done."
+        "Load",
+        "Done."
     ); 
 
     PXFunctionInvoke(bfEngine->OnStartUp, bfEngine, pxEngine);
@@ -1551,30 +1537,10 @@ void BFEngineUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine)
 
     //PXWindowUpdate(&pxBitFireEngine->WindowMain);
 
-    //---[Variable Reset]--------------------------------------------------
-
-    PXTime current;
-
-    PXTimeNow(&current);
-    size_t deltaInt = PXTimeMillisecondsDelta(&bfEngine->_lastUpdate, &current);
-
-    bfEngine->_lastUpdate = current;
-
-    float deltaTime = deltaInt / 1000.0;
-    bfEngine->_deltaTime = deltaTime;
-
-    _lastUIUpdate += deltaTime;
-
-    if (_lastUIUpdate >= .20f)
-    {
-        _lastUIUpdate = 0;
-        //_callbackListener->OnUpdateUI();
-    }
-    //---------------------------------------------------------------------
 
     {
-        const PXColorRGBAF pxColorRGBAF = { 0, 0, 0, 1 }; // 0.315, 0.15, 0.15
-        pxGraphic->Clear(pxGraphic->EventOwner, &pxColorRGBAF);
+        //const PXColorRGBAF pxColorRGBAF = { 0, 0, 0, 1 }; // 0.315, 0.15, 0.15
+        //pxGraphic->Clear(pxGraphic->EventOwner, &pxColorRGBAF);
     }
 
     //---<Fetch UI-Input>----------------------------------------------------------
@@ -1808,7 +1774,7 @@ void BFEngineSceneRender(BFEngine* const bfEngine, PXEngine* const pxEngine)
 
         PXSprite* const pxSprite = *(PXSprite**)pxDictionaryEntry.Value;
 
-        PXGraphicSpriteDraw(pxGraphic, pxSprite, bfEngine->CameraCurrent);
+        PXGraphicSpriteDraw(pxGraphic, pxSprite, bfEngine->Engine.CameraCurrent);
     }
     //-------------------------------------------------------------------------
 
@@ -1851,6 +1817,7 @@ void BFEngineRenderScene(BFEngine* const bfEngine)
             }
         }
 
+#if 0
         // Shader
         {
             if (pxRenderable->MeshSegmentList)
@@ -1871,6 +1838,7 @@ void BFEngineRenderScene(BFEngine* const bfEngine)
                 
             }
         }
+#endif
   
 
        // PXGraphicVertexStructureDraw(&pxBitFireEngine->WindowMain.GraphicInstance, &pxBitFireEngine->pxModelTEST, &pxBitFireEngine->MainCamera);
@@ -2503,7 +2471,7 @@ void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIEl
             PXOpenGLRectangleDraw(&pxGraphic->OpenGLInstance, -1, -1, 1, 1, 0x01);
      
 
-            PXOpenGLSkyboxDraw(&pxGraphic->OpenGLInstance, bfEngine->DefaultSkyBox, bfEngine->CameraCurrent);
+            PXOpenGLSkyboxDraw(&pxGraphic->OpenGLInstance, bfEngine->DefaultSkyBox, bfEngine->Engine.CameraCurrent);
 
 #if 1
 

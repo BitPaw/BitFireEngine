@@ -54,10 +54,19 @@ void main()
 {
     vec4 texturedColor = texture(MaterialTexture, vertex.TexturePosition);
     vec4 positionColor = vec4(vertex.TexturePosition, 1.0f, 1.0f);
+     
+    if(texturedColor.a == 0.0f)
+    {
+        //fragcolor = vec4(1,0,0,1);
 
-    vec4 lightColor = PXLightCalculate(vec3(0,500,0), vertex.Position, vertex.Normal);
+        discard;
+    }
+    else    
+    {
+        fragcolor = vec4(texturedColor.rgb * vertex.Color.rgb, texturedColor.a);
 
-    fragcolor = texturedColor * lightColor;
+        //fragcolor = vertex.Color;
+    }
 
-    //fragcolor = vertex.Color;
+
 }

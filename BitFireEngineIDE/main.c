@@ -6,7 +6,7 @@
 
 void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine);
 void PXAPI OnShutDownEvent(BFEngine* const bfEngine, PXEngine* const pxEngine);
-void PXAPI OnUserUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine);
+void PXAPI OnUserInputUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine, PXPlayerMoveInfo* const pxPlayerMoveInfo);
 void PXAPI OnNetworkUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine);
 void PXAPI OnGameUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine);
 void PXAPI OnRenderUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine);
@@ -23,14 +23,15 @@ int main(int amountOFParameters, char** parameter)
 
     bfEngine.OnStartUp = OnStartUpEvent;
     bfEngine.OnShutDown = OnShutDownEvent;
-    bfEngine.OnUserUpdate = OnUserUpdateEvent;
+    bfEngine.Engine.OnUserUpdate = OnUserInputUpdate;
     bfEngine.OnNetworkUpdate = OnNetworkUpdate;
     bfEngine.OnGameUpdate = OnGameUpdateEvent;
     bfEngine.OnRenderUpdate = OnRenderUpdateEvent;
 
     PXEngineStart(&bfEngine.Engine);
 
-    while (PXEngineIsRunning(&bfEngine.Engine)) PXEngineUpdate(&bfEngine.Engine);
+    while (PXEngineIsRunning(&bfEngine.Engine))
+        PXEngineUpdate(&bfEngine.Engine);
 
     PXEngineStop(&bfEngine.Engine);
 
@@ -93,6 +94,7 @@ PXShaderProgram _pxObjectShader;
 PXCamera _worldCamera;
 PXModel _worldGrid;
 PXModel _vehicle;
+PXModel _test;
 
 PXSkyBox _sceneSkyBox;
 
@@ -382,6 +384,8 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
             "Shader/Object_Fragment.glsl"
         );
 
+
+#if 1
         PXModelConstruct(&_vehicle);
 
         PXResourceLoadA(&_vehicle, "Model/Dust_II/DustII.obj"); // "Model/Tiger.obj" "Model/Dust_II/DustII.obj", "Model/Tiger.obj", "H:/Daten/Objects/Moze/Moze.obj"
@@ -391,6 +395,25 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         pxGraphic->ModelRegister(pxGraphic->EventOwner, &_vehicle);
 
         _vehicle.ShaderProgramReference = &_pxObjectShader;
+#endif
+
+
+
+#if 0
+
+        PXModelConstruct(&_test);
+
+        PXResourceLoadA(&_test, "Model/dontut.obj");
+
+        PXMatrix4x4FScaleBy(&_test.ModelMatrix, 1);
+
+        pxGraphic->ModelRegister(pxGraphic->EventOwner, &_test);
+
+        _test.ShaderProgramReference = &_pxObjectShader;
+#endif
+        
+       
+
     }
 
     PXGraphicUIElementPrint(pxGraphic);
@@ -490,44 +513,12 @@ void PXAPI OnShutDownEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 
 }
 
-void PXAPI OnUserUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
-{
-
-}
-
-void PXAPI OnNetworkUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine)
-{
-
-}
-
-void PXAPI OnGameUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
+void PXAPI OnUserInputUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine, PXPlayerMoveInfo* const pxPlayerMoveInfo)
 {
     PXWindow* pxWindow = &pxEngine->Window;
     PXKeyBoard* keyboard = &pxWindow->KeyBoardCurrentInput;
     PXMouse* mouse = &pxWindow->MouseCurrentInput;
-    PXCamera* camera = bfEngine->CameraCurrent;
-    PXVector3F movement = { 0,0,0 };
 
-    if (keyboard->Commands & KeyBoardIDShiftLeft)
-    {
-        PXVector3FAddXYZ(&movement, 0, -1, 0, &movement);
-    }
-    if (keyboard->Letters & KeyBoardIDLetterW)
-    {
-        PXVector3FAddXYZ(&movement, 0, 0, 1, &movement);
-    }
-    if (keyboard->Letters & KeyBoardIDLetterA) { PXVector3FAddXYZ(&movement, -1, 0, 0, &movement); }
-    if (keyboard->Letters & KeyBoardIDLetterS) { PXVector3FAddXYZ(&movement, 0, 0, -1, &movement); }
-    if (keyboard->Letters & KeyBoardIDLetterD) { PXVector3FAddXYZ(&movement, 1, 0, 0, &movement); }
-    if (keyboard->Letters & KeyBoardIDSpace)
-    {
-
-
-        //  PXCamera.Velocity.Set(0.0f, 6.0f, .0f);
-
-        PXVector3FAddXYZ(&movement, 0, 1, 0, &movement);
-
-    }
 #if 0
     if (keyboard.F.IsShortPressed())
     {
@@ -546,9 +537,8 @@ void PXAPI OnGameUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 
     //_playerCharacterLuna.MatrixModel.Move(movement);
 
-    const PXBool isInteractable = PXWindowInteractable(pxWindow);
 
-    if (isInteractable || (IsPressedButtonLeft(mouse->Buttons) && IsPressedButtonLeft(mouse->ButtonsDelta)))
+    if (pxPlayerMoveInfo->IsWindowInFocus && (IsPressedButtonLeft(mouse->Buttons) && IsPressedButtonLeft(mouse->ButtonsDelta)))
     {
         if (bfEngine->CollisionCheckInfo.CurrentElement)
         {
@@ -556,31 +546,19 @@ void PXAPI OnGameUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         }
     }
 
+    const PXBool isMouseInputWanted = pxPlayerMoveInfo->IsWindowInFocus && IsPressedButtonRight(mouse->Buttons);
 
-    if (isInteractable || IsPressedButtonRight(mouse->Buttons))
-    {
-        PXCameraMove(camera, &movement);
+    pxPlayerMoveInfo->ActionCommit = isMouseInputWanted;
+}
 
-        PXVector3F mouseMovement =
-            //{ mouse->Delta[0] * 2, mouse->Delta[1] * 2, 0};
-        {
-            bfEngine->Controller.AxisNormalised[PXControllerAxisX] + -mouse->Delta[0],
-            bfEngine->Controller.AxisNormalised[PXControllerAxisY] + mouse->Delta[1],
-            0
-        };
+void PXAPI OnNetworkUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine)
+{
 
+}
 
+void PXAPI OnGameUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
+{
 
-        // printf("[#][OnMouseMove] X:%5.2f Y:%5.2f\n", mouseMovement.X, mouseMovement.Y);
-
-        PXCameraRotate(camera, &mouseMovement);
-    }
-
-    //printf("[#][OnMouseMove] X:%5.2f Y:%5.2f\n", mouse.Position[0], mouse.Position[1]);
-
-    PXCameraUpdate(camera, pxEngine->CounterTimeDelta);
-    // PXKeyboardIncrementButtonTick(keyboard);
-    PXMouseInputReset(mouse);
 
 
 
@@ -601,8 +579,8 @@ void PXAPI OnGameUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 
     // PXGraphicPXUIElementTextSetAV(&_positionText, "Position : %3.2f", pxEngine->FramesPerSecound);
 
-    float x = mouse->Delta[0];
-    float y = mouse->Delta[1];
+   // float x = mouse->Delta[0];
+   // float y = mouse->Delta[1];
 
     // sprintf_s(_infoPanelText.Name, 32, "Mouse Pos x:%6.3f y:%6.3f", x, y);
 
@@ -630,11 +608,11 @@ void PXAPI OnGameUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 
 void PXAPI OnRenderUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 {
-    PXCameraFollow(bfEngine->CameraCurrent, 0.05);
+    PXCameraFollow(pxEngine->CameraCurrent, 0.05);
 
     // Grid
-    pxEngine->Graphic.ModelDraw(pxEngine->Graphic.EventOwner, &_worldGrid, bfEngine->CameraCurrent);
+    pxEngine->Graphic.ModelDraw(pxEngine->Graphic.EventOwner, &_worldGrid, pxEngine->CameraCurrent);
 
     // Tank
-    pxEngine->Graphic.ModelDraw(pxEngine->Graphic.EventOwner, &_vehicle, bfEngine->CameraCurrent);
+    pxEngine->Graphic.ModelDraw(pxEngine->Graphic.EventOwner, &_vehicle, pxEngine->CameraCurrent);
 }

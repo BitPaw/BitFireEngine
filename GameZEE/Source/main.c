@@ -31,11 +31,11 @@ int main(int amountOFParameters, char** parameter)
     BFEngine bitFireEngine;
     BFEngineConstruct(&bitFireEngine);
 
-    bitFireEngine.UpdateUICallBack = OnUpdateUI;
-    bitFireEngine.StartUpCallBack = OnStartUp; // StartDoc
-    bitFireEngine.ShutDownCallBack = OnShutDown;
-    bitFireEngine.UpdateGameLogicCallBack = OnUpdateGameLogic;
-    bitFireEngine.UpdateInputCallBack = OnUpdateInput;
+    bitFireEngine.UpdateUICallBack = OnNetworkUpdate;
+    bitFireEngine.StartUpCallBack = OnStartUpEvent; // StartDoc
+    bitFireEngine.ShutDownCallBack = OnShutDownEvent;
+    bitFireEngine.UpdateGameLogicCallBack = OnGameUpdateEvent;
+    bitFireEngine.UpdateInputCallBack = OnRenderUpdateEvent;
 
     BFEngineStart(&bitFireEngine);
 
@@ -83,7 +83,7 @@ void OnUIOnMouseLeave(PXUIElement* const pxUIElement)
 }
 
 
-void OnStartUp(BFEngine* const bitFireEngine)
+void OnStartUpEvent(BFEngine* const bitFireEngine)
 {    
     PXGraphic* const pxGraphic = &bitFireEngine->WindowMain.GraphicInstance;
 
@@ -179,14 +179,14 @@ void OnStartUp(BFEngine* const bitFireEngine)
    // bitFireEngine->PrintContent(true);
 }
 
-void OnShutDown(const BFEngine* bitFireEngine)
+void OnShutDownEvent(const BFEngine* bitFireEngine)
 {
 
 }
 
 //BF::Vector3<float> rot(0.0349066, 0, 0);
 
-void OnUpdateGameLogic(const BFEngine* bitFireEngine, const float deltaTime)
+void OnGameUpdateEvent(const BFEngine* bitFireEngine, const float deltaTime)
 {
     /*
     if (cube.MatrixModel.CurrentPosition().Y <= 0)
@@ -198,7 +198,7 @@ void OnUpdateGameLogic(const BFEngine* bitFireEngine, const float deltaTime)
     _deltaTime = deltaTime;
 }
 
-void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input)
+void OnRenderUpdateEvent(BFEngine* const bitFireEngine, BFInputContainer* input)
 {
 #if EnableMusic
     PXBool changed = PXFalse;
@@ -269,7 +269,7 @@ void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input)
     PXCameraRotateXYZ(bitFireEngine->CameraCurrent, mouse->Delta[0], mouse->Delta[1], 0);
 }
 
-void OnUpdateUI(const BFEngine* bitFireEngine)
+void OnNetworkUpdate(const BFEngine* bitFireEngine)
 {
     //sprintf_s(text->TextContent, "FPS: %4i", (BF::MathCeiling(1 / _deltaTime)));
     //text->SetText(text->TextContent);

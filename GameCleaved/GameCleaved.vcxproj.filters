@@ -22,16 +22,16 @@
   <ItemGroup>
     <None Include="Shader\WorldSpace.vert" />
     <None Include="Shader\WorldSpace.frag" />
-    <None Include="Shader\WS.vert" />
-    <None Include="Shader\WS.frag" />
     <None Include="Shader\HUD.vert" />
     <None Include="Shader\HUD.frag" />
     <None Include="Shader\HitBox.vert" />
     <None Include="Shader\HitBox.frag" />
     <None Include="Shader\Simplex.vert" />
     <None Include="Shader\Simplex.frag" />
-    <None Include="Shader\SkyBox.vert" />
-    <None Include="Shader\SkyBox.frag" />
+    <None Include="Shader\SkyBox_Vertex.glsl" />
+    <None Include="Shader\SkyBox_Fragment.glsl" />
+    <None Include="Shader\Object_Vertex.glsl" />
+    <None Include="Shader\Object_Fragment.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\main.h">

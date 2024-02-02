@@ -48,10 +48,6 @@ extern "C"
 
 
         //---[Private}---------------------------------
-        PXTime _lastUpdate;
-
-        float _deltaTime;
-
 
         BFInputContainer InputContainer;
         //----------------------------------------------
@@ -67,10 +63,7 @@ extern "C"
 
         PXController Controller;
 
-        PXCamera CameraFree;
         PXCamera CameraPlayer;
-
-        PXCamera* CameraCurrent;
 
         PXFont* DefaultFont;
         PXSkyBox* DefaultSkyBox;

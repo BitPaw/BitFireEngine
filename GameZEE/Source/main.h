@@ -25,8 +25,8 @@ PXModel textureBix;
 
 
 
-void OnUpdateUI(const BFEngine* bitFireEngine);
-void OnStartUp(BFEngine* const bitFireEngine);
-void OnShutDown(const BFEngine* bitFireEngine);
-void OnUpdateGameLogic(const BFEngine* bitFireEngine, const float deltaTime);
-void OnUpdateInput(BFEngine* const bitFireEngine, BFInputContainer* input);
+void OnNetworkUpdate(const BFEngine* bitFireEngine);
+void OnStartUpEvent(BFEngine* const bitFireEngine);
+void OnShutDownEvent(const BFEngine* bitFireEngine);
+void OnGameUpdateEvent(const BFEngine* bitFireEngine, const float deltaTime);
+void OnRenderUpdateEvent(BFEngine* const bitFireEngine, BFInputContainer* input);
