@@ -27,14 +27,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Dialog\BFDialogSystem.c" />
-    <ClCompile Include="Source\Entity\BFSign.c" />
     <ClCompile Include="Source\BFEngine.c" />
     <ClCompile Include="Source\System\Device\KeyBoard\KeyBoardCache.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Dialog\BFDialogSystem.h" />
-    <ClInclude Include="Source\Entity\BFSign.h" />
     <ClInclude Include="Source\System\Device\KeyBoard\KeyBoardCache.h" />
     <ClInclude Include="Source\BFEngine.h" />
   </ItemGroup>

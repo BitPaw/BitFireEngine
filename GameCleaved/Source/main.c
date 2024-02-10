@@ -1,5 +1,11 @@
 ﻿#include "main.h"
 
+#include <OS/Console/PXConsole.h>
+
+
+PXSprite pxChracterImageA;
+PXSprite pxChracterImageB;
+
 #if !defined(_DEBUG) && defined(OSWindowsE)
 #include <windows.h>
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int nShowCmd)
@@ -68,105 +74,105 @@ void OnStartUpEvent(BFEngine* const bitFireEngine)
        
 
 
-
-
     //-----------------------------------------------------
     // SkyBox
     //-----------------------------------------------------
     {
-        PXSkyBoxCreateEventData pxSkyBoxCreateEventData;
-        PXClear(PXSkyBoxCreateEventData, &pxSkyBoxCreateEventData);
-        pxSkyBoxCreateEventData.SkyboxReference = &_skybox;
-        pxSkyBoxCreateEventData.SkyBoxShaderVertex = "Shader/SkyBox_Vertex.glsl";
-        pxSkyBoxCreateEventData.SkyBoxShaderPixel = "Shader/SkyBox_Fragment.glsl";
-        pxSkyBoxCreateEventData.SkyBoxTextureA = "Texture/MissingTexture.bmp";
-        pxSkyBoxCreateEventData.SkyBoxTextureB = "Texture/MissingTexture.bmp";
-        pxSkyBoxCreateEventData.SkyBoxTextureC = "Texture/MissingTexture.bmp";
-        pxSkyBoxCreateEventData.SkyBoxTextureD = "Texture/MissingTexture.bmp";
-        pxSkyBoxCreateEventData.SkyBoxTextureE = "Texture/MissingTexture.bmp";
-        pxSkyBoxCreateEventData.SkyBoxTextureF = "Texture/MissingTexture.bmp";
+        PXEngineResourceCreateInfo pxSkyBoxCreateEventData;
+        PXClear(PXEngineResourceCreateInfo, &pxSkyBoxCreateEventData);
+        pxSkyBoxCreateEventData.CreateType = PXEngineCreateTypeSkybox;
+        pxSkyBoxCreateEventData.SkyBox.SkyboxReference = &_skybox;
+        pxSkyBoxCreateEventData.SkyBox.SkyBoxShaderVertex = "Shader/SkyBox_Vertex.glsl";
+        pxSkyBoxCreateEventData.SkyBox.SkyBoxShaderPixel = "Shader/SkyBox_Fragment.glsl";
+        pxSkyBoxCreateEventData.SkyBox.SkyBoxTextureA = "Texture/MissingTexture.bmp";
+        pxSkyBoxCreateEventData.SkyBox.SkyBoxTextureB = "Texture/MissingTexture.bmp";
+        pxSkyBoxCreateEventData.SkyBox.SkyBoxTextureC = "Texture/MissingTexture.bmp";
+        pxSkyBoxCreateEventData.SkyBox.SkyBoxTextureD = "Texture/MissingTexture.bmp";
+        pxSkyBoxCreateEventData.SkyBox.SkyBoxTextureE = "Texture/MissingTexture.bmp";
+        pxSkyBoxCreateEventData.SkyBox.SkyBoxTextureF = "Texture/MissingTexture.bmp";
 
-        PXSkyBoxCreate(&bitFireEngine->Engine, &pxSkyBoxCreateEventData);
+        PXEngineResourceCreate(&bitFireEngine->Engine, &pxSkyBoxCreateEventData);
     }
+
+
 
     //-----------------------------------------------------
     // Background
     //-----------------------------------------------------
     {
-        PXSpriteCreateEventData pxSpriteCreateEventData;
-        PXClear(PXSpriteCreateEventData, &pxSpriteCreateEventData);
-        pxSpriteCreateEventData.SpriteReference = &_backGround;
-        pxSpriteCreateEventData.TextureName = "Texture/BackGround.png";
-        pxSpriteCreateEventData.ShaderProgramCurrent = &_worldShader;
-        pxSpriteCreateEventData.Scaling.X = 2;
-        pxSpriteCreateEventData.Scaling.Y = 2;
+        PXEngineResourceCreateInfo pxSpriteCreateEventData;
+        PXClear(PXEngineResourceCreateInfo, &pxSpriteCreateEventData);
+        pxSpriteCreateEventData.CreateType = PXEngineCreateTypeSprite;
+        pxSpriteCreateEventData.Sprite.SpriteReference = &_backGround;
+        pxSpriteCreateEventData.Sprite.TextureName = "Texture/BackGround.png";
+        pxSpriteCreateEventData.Sprite.ShaderProgramCurrent = &_worldShader;
+        pxSpriteCreateEventData.Sprite.Position.Z = -0.5;
+        pxSpriteCreateEventData.Sprite.Scaling.X = 2;
+        pxSpriteCreateEventData.Sprite.Scaling.Y = 2;
 
-        PXSpriteCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
+        PXEngineResourceCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
     }
+
 
 
     //-----------------------------------------------------
     // Nyte
     //-----------------------------------------------------
     {
-        PXSpriteCreateEventData pxSpriteCreateEventData;
-        PXClear(PXSpriteCreateEventData, &pxSpriteCreateEventData);
-        pxSpriteCreateEventData.SpriteReference = &_playerCharacterNyte;
-        pxSpriteCreateEventData.TextureName = "Texture/Nyte.png";
-        pxSpriteCreateEventData.ShaderProgramCurrent = &_worldShader;
-        pxSpriteCreateEventData.Position.X = 0;
-        pxSpriteCreateEventData.Position.Y = -0.8;
-        pxSpriteCreateEventData.Position.Z = 0.01;
-        pxSpriteCreateEventData.Scaling.X = 0.5;
-        pxSpriteCreateEventData.Scaling.Y = 0.5;
+        PXEngineResourceCreateInfo pxSpriteCreateEventData;
+        PXClear(PXEngineResourceCreateInfo, &pxSpriteCreateEventData);
+        pxSpriteCreateEventData.CreateType = PXEngineCreateTypeSprite;
+        pxSpriteCreateEventData.Sprite.SpriteReference = &_playerCharacterNyte;
+        pxSpriteCreateEventData.Sprite.TextureName = "Texture/Nyte.png";
+        pxSpriteCreateEventData.Sprite.ShaderProgramCurrent = &_worldShader;
+        pxSpriteCreateEventData.Sprite.Position.X = 0.0f;
+        pxSpriteCreateEventData.Sprite.Position.Y = -0.8;
+        pxSpriteCreateEventData.Sprite.Position.Z = 0.01;
+        pxSpriteCreateEventData.Sprite.Scaling.X = 0.5;
+        pxSpriteCreateEventData.Sprite.Scaling.Y = 0.5;
 
-        PXSpriteCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
+        PXEngineResourceCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
     }
-    
+
+
 
     //-----------------------------------------------------
-    // Dialog
+    // Theia
     //-----------------------------------------------------
     {
-        PXSpriteCreateEventData pxSpriteCreateEventData;
-        PXClear(PXSpriteCreateEventData, &pxSpriteCreateEventData);
-        pxSpriteCreateEventData.SpriteReference = &_dialogBox;
-        pxSpriteCreateEventData.TextureName = "Texture/Dialog.png";
-        pxSpriteCreateEventData.ShaderProgramCurrent = &_worldShader;
-        pxSpriteCreateEventData.ViewPositionIgnore = 1;
-        pxSpriteCreateEventData.ViewRotationIgnore = 1;
-        //pxSpriteCreateEventData.Position.X = 0;
-        pxSpriteCreateEventData.Position.Y = -0.65;
-        //pxSpriteCreateEventData.Position.Z = 0.02;
-        pxSpriteCreateEventData.Scaling.X = 1.6f;
-        pxSpriteCreateEventData.Scaling.Y = 0.4f;
-        pxSpriteCreateEventData.TextureScalingPoints[0].X = 0.2 / pxSpriteCreateEventData.Scaling.X;
-        pxSpriteCreateEventData.TextureScalingPoints[0].Y = 0.2 / pxSpriteCreateEventData.Scaling.Y;
-        pxSpriteCreateEventData.TextureScalingPoints[1].X = 0.3;
-        pxSpriteCreateEventData.TextureScalingPoints[1].Y = 0.3;
+        PXEngineResourceCreateInfo pxSpriteCreateEventData;
+        PXClear(PXEngineResourceCreateInfo, &pxSpriteCreateEventData);
+        pxSpriteCreateEventData.CreateType = PXEngineCreateTypeSprite;
+        pxSpriteCreateEventData.Sprite.SpriteReference = &_playerCharacterLuna;
+        pxSpriteCreateEventData.Sprite.TextureName = "Texture/Theia.png";
+        pxSpriteCreateEventData.Sprite.ShaderProgramCurrent = &_worldShader;
+        pxSpriteCreateEventData.Sprite.Position.X = 1.80f;
+        pxSpriteCreateEventData.Sprite.Position.Y = -0.80f;
+        pxSpriteCreateEventData.Sprite.Position.Z = 0.01;
+        pxSpriteCreateEventData.Sprite.Scaling.X = 0.5f;
+        pxSpriteCreateEventData.Sprite.Scaling.Y = 0.5f;
 
-        PXSpriteCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
+        PXEngineResourceCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
     }
-
-   
-
-
+    
 
     //-----------------------------------------------------
     // Sign
     //-----------------------------------------------------
     {
-        PXSpriteCreateEventData pxSpriteCreateEventData;
-        PXClear(PXSpriteCreateEventData, &pxSpriteCreateEventData);
-        pxSpriteCreateEventData.SpriteReference = &_sign;
-        pxSpriteCreateEventData.TextureName = "Texture/Sign.png";
-        pxSpriteCreateEventData.ShaderProgramCurrent = &_worldShader;
-        pxSpriteCreateEventData.Position.X = -1.40f;
-        pxSpriteCreateEventData.Position.Y = -0.80f;
-        pxSpriteCreateEventData.Scaling.X = 0.6f;
-        pxSpriteCreateEventData.Scaling.Y = 0.6f;
+        PXEngineResourceCreateInfo pxSpriteCreateEventData;
+        PXClear(PXEngineResourceCreateInfo, &pxSpriteCreateEventData);
+        pxSpriteCreateEventData.CreateType = PXEngineCreateTypeSprite;
+        pxSpriteCreateEventData.Sprite.SpriteReference = &_sign;
+        pxSpriteCreateEventData.Sprite.TextureName = "Texture/Sign.png";
+        pxSpriteCreateEventData.Sprite.ShaderProgramCurrent = &_worldShader;
+        pxSpriteCreateEventData.Sprite.Position.X = -1.40f;
+        pxSpriteCreateEventData.Sprite.Position.Y = -0.80f;
+        pxSpriteCreateEventData.Sprite.Position.Z = 0.3;
+        pxSpriteCreateEventData.Sprite.Scaling.X = 0.6f;
+        pxSpriteCreateEventData.Sprite.Scaling.Y = 0.6f;
 
-        PXSpriteCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
+        PXEngineResourceCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
     }
 
 
@@ -174,20 +180,165 @@ void OnStartUpEvent(BFEngine* const bitFireEngine)
     // Lamp
     //-----------------------------------------------------
     {
-        PXSpriteCreateEventData pxSpriteCreateEventData;
-        PXClear(PXSpriteCreateEventData, &pxSpriteCreateEventData);
-        pxSpriteCreateEventData.SpriteReference = &_lamp;
-        pxSpriteCreateEventData.TextureName = "Texture/LampB.png";
-        pxSpriteCreateEventData.ShaderProgramCurrent = &_worldShader;
-        pxSpriteCreateEventData.Position.X = -1.80f;
-        pxSpriteCreateEventData.Position.Y = -0.80f;
-        pxSpriteCreateEventData.Scaling.X = 1;
-        pxSpriteCreateEventData.Scaling.Y = 1;
+        PXEngineResourceCreateInfo pxSpriteCreateEventData;
+        PXClear(PXEngineResourceCreateInfo, &pxSpriteCreateEventData);
+        pxSpriteCreateEventData.CreateType = PXEngineCreateTypeSprite;
+        pxSpriteCreateEventData.Sprite.SpriteReference = &_lamp;
+        pxSpriteCreateEventData.Sprite.TextureName = "Texture/LampB.png";
+        pxSpriteCreateEventData.Sprite.ShaderProgramCurrent = &_worldShader;
+        pxSpriteCreateEventData.Sprite.Position.X = 1.20f;
+        pxSpriteCreateEventData.Sprite.Position.Y = -0.80f;
+        pxSpriteCreateEventData.Sprite.Position.Z = 0.3;
+        pxSpriteCreateEventData.Sprite.Scaling.X = 0.6f;
+        pxSpriteCreateEventData.Sprite.Scaling.Y = 0.6f;
 
-        PXSpriteCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
+        PXEngineResourceCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
     }
 
 
+
+    //-----------------------------------------------------
+    // Dialog
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxSpriteCreateEventData;
+        PXClear(PXEngineResourceCreateInfo, &pxSpriteCreateEventData);
+        pxSpriteCreateEventData.CreateType = PXEngineCreateTypeSprite;
+        pxSpriteCreateEventData.Sprite.SpriteReference = &pxDialogBox.DialogBoxSprite;
+        pxSpriteCreateEventData.Sprite.TextureName = "Texture/Dialog.png";
+        pxSpriteCreateEventData.Sprite.ShaderProgramCurrent = &_worldShader;
+        pxSpriteCreateEventData.Sprite.ViewPositionIgnore = 1;
+        pxSpriteCreateEventData.Sprite.ViewRotationIgnore = 1;
+        //pxSpriteCreateEventData.Position.X = 0;
+        pxSpriteCreateEventData.Sprite.Position.Y = -0.65;
+        //pxSpriteCreateEventData.Position.Z = 0.02;
+        pxSpriteCreateEventData.Sprite.Scaling.X = 1.6f;
+        pxSpriteCreateEventData.Sprite.Scaling.Y = 0.4f;
+        pxSpriteCreateEventData.Sprite.TextureScalingPoints[0].X = 0.2 / pxSpriteCreateEventData.Sprite.Scaling.X;
+        pxSpriteCreateEventData.Sprite.TextureScalingPoints[0].Y = 0.2 / pxSpriteCreateEventData.Sprite.Scaling.Y;
+        pxSpriteCreateEventData.Sprite.TextureScalingPoints[1].X = 0.3;
+        pxSpriteCreateEventData.Sprite.TextureScalingPoints[1].Y = 0.3;
+
+        PXEngineResourceCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
+    }
+
+
+    //-----------------------------------------------------
+    // Font
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxSkyBoxCreateEventData;
+        PXClear(PXEngineResourceCreateInfo, &pxSkyBoxCreateEventData);
+        pxSkyBoxCreateEventData.CreateType = PXEngineCreateTypeFont;
+        pxSkyBoxCreateEventData.Font.FontReference = &_font;
+        pxSkyBoxCreateEventData.Font.FontFilePath = "Font/segoe.fnt";
+        pxSkyBoxCreateEventData.Font.ShaderProgramCurrent = &_worldShader;
+
+        PXEngineResourceCreate(&bitFireEngine->Engine, &pxSkyBoxCreateEventData);
+    }
+
+
+    //-----------------------------------------------------
+    // Dialog-Sprite
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxSpriteCreateEventData;
+        PXClear(PXEngineResourceCreateInfo, &pxSpriteCreateEventData);
+        pxSpriteCreateEventData.CreateType = PXEngineCreateTypeSprite;
+        pxSpriteCreateEventData.Sprite.SpriteReference = &pxChracterImageA;
+        pxSpriteCreateEventData.Sprite.TextureName = "Texture/en_upset.png";
+        pxSpriteCreateEventData.Sprite.ShaderProgramCurrent = &_worldShader;
+        pxSpriteCreateEventData.Sprite.ViewRotationIgnore = 1;
+        pxSpriteCreateEventData.Sprite.ViewPositionIgnore = 1;
+        pxSpriteCreateEventData.Sprite.Position.X = -1.20f;
+        pxSpriteCreateEventData.Sprite.Position.Y = -0.65;
+        pxSpriteCreateEventData.Sprite.Scaling.X = 0.25f;
+        pxSpriteCreateEventData.Sprite.Scaling.Y = 0.25f;
+
+        PXEngineResourceCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
+
+        pxDialogBox.DialogBoxCharacterImage = &pxChracterImageA;
+    }
+    {
+        PXEngineResourceCreateInfo pxSpriteCreateEventData;
+        PXClear(PXEngineResourceCreateInfo, &pxSpriteCreateEventData);
+        pxSpriteCreateEventData.CreateType = PXEngineCreateTypeSprite;
+        pxSpriteCreateEventData.Sprite.SpriteReference = &pxChracterImageB;
+        pxSpriteCreateEventData.Sprite.TextureName = "Texture/en_upset2.png";
+        pxSpriteCreateEventData.Sprite.ShaderProgramCurrent = &_worldShader;
+        pxSpriteCreateEventData.Sprite.ViewRotationIgnore = 1;
+        pxSpriteCreateEventData.Sprite.ViewPositionIgnore = 1;
+        pxSpriteCreateEventData.Sprite.Position.X = -1.20f;
+        pxSpriteCreateEventData.Sprite.Position.Y = -0.65;
+        pxSpriteCreateEventData.Sprite.Scaling.X = 0.25f;
+        pxSpriteCreateEventData.Sprite.Scaling.Y = 0.25f;
+
+        PXEngineResourceCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
+    }
+
+
+    //-----------------------------------------------------
+    // Dialog-Text
+    //-----------------------------------------------------
+    {
+        PXTextMakeFixedGlobalA(&pxDialogBox.DialogBoxText.Text, "The world machine will be done soon.\nI hope it will be as good as i plan to.\n\nIt really is difficult.");
+        pxDialogBox.DialogBoxText.Font = &_font;
+
+        PXEngineResourceCreateInfo pxSpriteCreateEventData;
+        PXClear(PXEngineResourceCreateInfo, &pxSpriteCreateEventData);
+        pxSpriteCreateEventData.CreateType = PXEngineCreateTypeText;
+        pxSpriteCreateEventData.Text.EngineTextReference = &pxDialogBox.DialogBoxText;
+        pxDialogBox.DialogBoxText.Position.X = 0.57f;
+        pxDialogBox.DialogBoxText.Position.Y = 0.60f;
+        pxDialogBox.DialogBoxText.Scaling.X = 0.40f;
+        pxDialogBox.DialogBoxText.Scaling.Y = 0.55f;
+        pxDialogBox.DialogBoxText.DoubleRenderForShadow = PXTrue;
+
+        PXEngineResourceCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
+    }
+
+
+
+    //-----------------------------------------------------
+    // Dialog-Text-Timer
+    //-----------------------------------------------------
+    {       
+        PXEngineResourceCreateInfo pxSpriteCreateEventData;
+        PXClear(PXEngineResourceCreateInfo, &pxSpriteCreateEventData);
+        pxSpriteCreateEventData.CreateType = PXEngineCreateTypeTimer;
+        pxSpriteCreateEventData.Timer.TimerReference = &pxDialogBox.DialogBoxTextTimer;
+       
+        pxDialogBox.DialogBoxTextTimer.Owner = &pxDialogBox;
+        pxDialogBox.DialogBoxTextTimer.CallBack = PXEngineDialogBoxTimerTrigger;
+        pxDialogBox.DialogBoxTextTimer.TimeDeltaTarget = 1000000/2;
+
+        PXEngineResourceCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
+    }
+
+
+
+    //-----------------------------------------------------
+    // Dialog-Text-Timer
+    //-----------------------------------------------------00
+    {
+        PXEngineResourceCreateInfo pxSpriteCreateEventData;
+        PXClear(PXEngineResourceCreateInfo, &pxSpriteCreateEventData);
+        pxSpriteCreateEventData.CreateType = PXEngineCreateTypeSound;
+        pxSpriteCreateEventData.Sound.EngineSoundReference = &_dialogLetterPopSFX;
+        pxSpriteCreateEventData.Sound.FilePath = "Audio/SFX/text.wav";
+
+        PXEngineResourceCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
+    }
+
+
+#if 0
+    bitFireEngine->Engine.Audio.DevicePitchSet
+    (
+        &bitFireEngine->Engine.Audio,
+        &bitFireEngine->Engine.AudioStandardOutDevice,
+    1000
+        );
+#endif
 
 
 
@@ -385,25 +536,78 @@ void OnGameUpdateEvent(const BFEngine* bitFireEngine, const float deltaTime)
     PXTextPrint(&pxText, L"[Cleaved] FPS:%5.2f, ms:%4.2f", bitFireEngine->Engine.FramesPerSecound, bitFireEngine->Engine.FrameTime);
 
     PXWindowTitleSet(&bitFireEngine->Engine.Window, &pxText);
+
+
+    if (bitFireEngine->Engine.Window.KeyBoardCurrentInput.Letters & KeyBoardIDLetterF && !pxDialogBox.IsLocked)
+    {
+        pxDialogBox.IsLocked = PXTrue;
+
+        if (pxDialogBox.DialogBoxText.TextRenderAmount < pxDialogBox.DialogBoxText.Text.SizeUsed)
+        {
+            ++pxDialogBox.DialogBoxText.TextRenderAmount;
+        }
+    } 
+    if (!(bitFireEngine->Engine.Window.KeyBoardCurrentInput.Letters & KeyBoardIDLetterF))
+    {
+        pxDialogBox.IsLocked = PXFalse;
+    }
+
 }
 
 void OnRenderUpdateEvent(BFEngine* const bitFireEngine, BFInputContainer* input)
 {
-
-    PXOpenGLSkyboxDraw(&bitFireEngine->Engine.Graphic.OpenGLInstance, bitFireEngine->DefaultSkyBox, bitFireEngine->Engine.CameraCurrent);
-
-
-    PXDictionary* const spirteList = &bitFireEngine->Engine.Graphic.SpritelLookUp;
-
-    for (PXSize i = 0; i < spirteList->EntryAmountCurrent; ++i)
     {
-        PXDictionaryEntry pxDictionaryEntry;
-        PXSprite* pxSprite = PXNull;
+        PXEngineResourceRenderInfo pxEngineResourceRenderInfo;
+        pxEngineResourceRenderInfo.Type = PXEngineCreateTypeSkybox;
+        pxEngineResourceRenderInfo.CameraReference = bitFireEngine->Engine.CameraCurrent;
+        pxEngineResourceRenderInfo.SkyBoxRender.SkyBoxReference = &_skybox;
 
-        PXDictionaryIndex(spirteList, i, &pxDictionaryEntry);
+        PXEngineResourceRender(&bitFireEngine->Engine, &pxEngineResourceRenderInfo);
+    }
 
-        pxSprite = *(PXSprite**)pxDictionaryEntry.Value;
 
-        PXGraphicSpriteDraw(&bitFireEngine->Engine.Graphic, pxSprite, bitFireEngine->Engine.CameraCurrent);
-    }  
+    // Sprite
+    {
+        PXDictionary* const spirteList = &bitFireEngine->Engine.SpritelLookUp;
+
+        for (PXSize i = 0; i < spirteList->EntryAmountCurrent; ++i)
+        {
+            PXDictionaryEntry pxDictionaryEntry;
+            PXSprite* pxSprite = PXNull;
+
+            PXDictionaryIndex(spirteList, i, &pxDictionaryEntry);
+
+            pxSprite = *(PXSprite**)pxDictionaryEntry.Value;
+
+
+            PXEngineResourceRenderInfo pxEngineResourceRenderInfo;
+            pxEngineResourceRenderInfo.Type = PXEngineCreateTypeSprite;
+            pxEngineResourceRenderInfo.CameraReference = bitFireEngine->Engine.CameraCurrent;
+            pxEngineResourceRenderInfo.SpriteRender.SpriteReference = pxSprite;
+
+            PXEngineResourceRender(&bitFireEngine->Engine, &pxEngineResourceRenderInfo);
+        }
+    }
+
+    // Text
+    {
+        PXDictionary* const textList = &bitFireEngine->Engine.TextLookUp;
+
+        for (PXSize i = 0; i < textList->EntryAmountCurrent; ++i)
+        {
+            PXDictionaryEntry pxDictionaryEntry;
+            PXEngineText* pxEngineText = PXNull;
+
+            PXDictionaryIndex(textList, i, &pxDictionaryEntry);
+
+            pxEngineText = *(PXEngineText**)pxDictionaryEntry.Value;
+
+            PXEngineResourceRenderInfo pxEngineResourceRenderInfo;
+            pxEngineResourceRenderInfo.Type = PXEngineCreateTypeText;
+            pxEngineResourceRenderInfo.CameraReference = bitFireEngine->Engine.CameraCurrent;
+            pxEngineResourceRenderInfo.TextRender.TextReference = pxEngineText;
+
+            PXEngineResourceRender(&bitFireEngine->Engine, &pxEngineResourceRenderInfo);
+        }
+    }   
 }

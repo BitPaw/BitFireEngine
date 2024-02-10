@@ -1760,7 +1760,7 @@ void BFEngineSceneRender(BFEngine* const bfEngine, PXEngine* const pxEngine)
     //-------------------------------------------------------------------------
 #endif
 
-
+#if 0
     //-------------------------------------------------------------------------
     // 2D-Scene Rendering (Sprites)
     //-------------------------------------------------------------------------
@@ -1777,7 +1777,7 @@ void BFEngineSceneRender(BFEngine* const bfEngine, PXEngine* const pxEngine)
         PXGraphicSpriteDraw(pxGraphic, pxSprite, bfEngine->Engine.CameraCurrent);
     }
     //-------------------------------------------------------------------------
-
+#endif
    // PXFunctionInvoke(bfEngine->OnRenderUpdate, bfEngine, pxEngine);
 }
 

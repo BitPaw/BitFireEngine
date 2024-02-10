@@ -3,10 +3,10 @@
 
 // Engine
 #include <BFEngine.h>
-#include <Entity/BFSign.h>
 
 // PXUltima
 #include <OS/Time/PXStopWatch.h>
+#include <Engine/Dialog/PXDialogBox.h>
 
 PXRenderable _rectangleMesh;
 
@@ -23,9 +23,7 @@ PXShaderProgram _hudShaderID;
 // Sprites - Imgame
 PXSprite _backGround;
 
-// Sprites - menu
-PXSprite _dialogBox;
-PXSprite _dialogBoxCharacterImage;
+
 
 
 PXSprite _playerCharacterLuna;
@@ -34,6 +32,11 @@ PXSprite _lamp;
 PXSprite _fireplace;
 PXSprite _sign;
 PXSprite _floor;
+
+PXEngineSound _dialogLetterPopSFX;
+
+PXEngineDialogBox pxDialogBox;
+
 
 //BFUIDialogBox _dialogBox;
 

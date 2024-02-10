@@ -57,15 +57,16 @@ void main()
      
     if(texturedColor.a == 0.0f)
     {
-        //fragcolor = vec4(1,0,0,1);
+        // fragcolor = vec4(1,0,0,0.5f);
 
         discard;
     }
     else    
     {
+        //fragcolor = vec4(texturedColor.rgb * vertex.Color.rgb, 1.0f);
         fragcolor = vec4(texturedColor.rgb * vertex.Color.rgb, texturedColor.a);
 
-        //fragcolor = vertex.Color;
+       // fragcolor = texturedColor * vec4(1.0f, 0.8f, 0.8f, 1.0f) + vec4(0.5f, 0.0f, 0.0f, 0.0f);
     }
 
 
