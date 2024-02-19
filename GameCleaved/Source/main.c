@@ -26,7 +26,7 @@ int main(int amountOFParameters, char** parameter)
 {
     BFEngine bfEngine;
     BFEngineConstruct(&bfEngine);
- 
+
     bfEngine.OnStartUp = OnStartUpEvent;
     bfEngine.OnShutDown = OnShutDownEvent;
     bfEngine.Engine.OnUserUpdate = OnNetworkUpdate;
@@ -60,7 +60,7 @@ void PXAPI OnIntereact(void* const owner, PXEngine* const pxEngine)
         PXEngineDialogBoxPageNext(pxEngine, &pxDialogBox);
     }
 
-    Sleep(1);
+    //Sleep(1);
 }
 
 void PXAPI OnNetworkUpdate(const BFEngine* bitFireEngine)
@@ -185,7 +185,7 @@ void PXAPI OnStartUpEvent(BFEngine* const bitFireEngine)
 
         PXEngineResourceCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
     }
-    
+
 
 
     //-----------------------------------------------------
@@ -293,7 +293,7 @@ void PXAPI OnStartUpEvent(BFEngine* const bitFireEngine)
         pxSpriteCreateEventData.Sprite.Position.X = -1.20f;
         pxSpriteCreateEventData.Sprite.Position.Y = -0.65;
         pxSpriteCreateEventData.Sprite.Scaling.X = 0.25f;
-        pxSpriteCreateEventData.Sprite.Scaling.Y = 0.25f;      
+        pxSpriteCreateEventData.Sprite.Scaling.Y = 0.25f;
 
         PXEngineResourceCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
 
@@ -310,7 +310,7 @@ void PXAPI OnStartUpEvent(BFEngine* const bitFireEngine)
         PXClear(PXEngineResourceCreateInfo, &pxSpriteCreateEventData);
         pxSpriteCreateEventData.CreateType = PXEngineCreateTypeText;
         pxSpriteCreateEventData.SpawnEnabled = PXFalse;
-        pxSpriteCreateEventData.ObjectReference = &pxDialogBox.DialogBoxText;   
+        pxSpriteCreateEventData.ObjectReference = &pxDialogBox.DialogBoxText;
 
         PXEngineResourceCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
 
@@ -327,12 +327,12 @@ void PXAPI OnStartUpEvent(BFEngine* const bitFireEngine)
     //-----------------------------------------------------
     // Dialog-Text-Timer
     //-----------------------------------------------------
-    {       
+    {
         PXEngineResourceCreateInfo pxTimerCreateEventData;
         PXClear(PXEngineResourceCreateInfo, &pxTimerCreateEventData);
         pxTimerCreateEventData.CreateType = PXEngineCreateTypeTimer;
         pxTimerCreateEventData.ObjectReference = &pxDialogBox.DialogBoxTextTimer;
-        pxTimerCreateEventData.SpawnEnabled = PXFalse;      
+        pxTimerCreateEventData.SpawnEnabled = PXFalse;
 
         PXEngineResourceCreate(&bitFireEngine->Engine, &pxTimerCreateEventData);
 
@@ -528,5 +528,5 @@ void PXAPI OnRenderUpdateEvent(BFEngine* const bitFireEngine, BFInputContainer* 
 
             PXEngineResourceRender(&bitFireEngine->Engine, &pxEngineResourceRenderInfo);
         }
-    }   
+    }
 }

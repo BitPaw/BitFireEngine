@@ -16,15 +16,13 @@
 					<Add option="-g" />
 					<Add directory="../SystemResource/Source" />
 					<Add directory="../BitFireEngine/Source" />
-					<Add directory="../PXUltima/Source" />
+					<Add directory="../../PXUltima/Code/PXUltimaC" />
 				</Compiler>
 				<Linker>
 					<Add library="../__Export__/X64B-Debug - Linux/BitFireEngine_DEBUG.lib" />
-					<Add library="../__Export__/X64B-Debug - Linux/SystemResource_DEBUG.lib" />
-					<Add library="../__Export__/X64B-Debug - Linux/PXUltima_DEBUG.lib" />
+					<Add library="../../PXUltima/Code/[Export]/PXUltimaC_Linux/Debug/PXUltimaC.so" />
 					<Add library="X11" />
 					<Add library="GL" />
-					<Add library="GLEW" />
 					<Add library="pthread" />
 					<Add library="Xext" />
 					<Add library="Xi" />
@@ -58,7 +56,9 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="Source/Main.cpp" />
+		<Unit filename="Source/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="Source/main.h" />
 		<Extensions />
 	</Project>

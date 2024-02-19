@@ -15,7 +15,7 @@
 				<Compiler>
 					<Add option="-g" />
 					<Add directory="../SystemResource/Source" />
-					<Add directory="../PXUltima/Source" />
+					<Add directory="../../PXUltima/Code/PXUltimaC" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -37,53 +37,14 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="Source/Animation/AnimatorSprite.cpp" />
-		<Unit filename="Source/Animation/AnimatorSprite.h" />
-		<Unit filename="Source/Collision/SystemPhysics.cpp" />
-		<Unit filename="Source/Collision/SystemPhysics.h" />
-		<Unit filename="Source/Dialog/Dialog.cpp" />
-		<Unit filename="Source/Dialog/Dialog.h" />
-		<Unit filename="Source/Dialog/DialogBox.cpp" />
-		<Unit filename="Source/Dialog/DialogBox.h" />
-		<Unit filename="Source/Entity/Entity.cpp" />
-		<Unit filename="Source/Entity/Entity.h" />
-		<Unit filename="Source/Entity/Sign.cpp" />
-		<Unit filename="Source/Entity/Sign.h" />
-		<Unit filename="Source/Level/Level.cpp" />
-		<Unit filename="Source/Level/Level.h" />
-		<Unit filename="Source/Physic/Collider.cpp" />
-		<Unit filename="Source/Physic/Collider.h" />
-		<Unit filename="Source/Physic/ColliderType.h" />
-		<Unit filename="Source/Physic/CollisionListener.cpp" />
-		<Unit filename="Source/Physic/CollisionListener.h" />
-		<Unit filename="Source/Physic/GravityCube.cpp" />
-		<Unit filename="Source/Physic/GravityCube.h" />
-		<Unit filename="Source/Physic/GravityField.cpp" />
-		<Unit filename="Source/Physic/GravityField.h" />
-		<Unit filename="Source/Physic/GravitySphere.cpp" />
-		<Unit filename="Source/Physic/GravitySphere.h" />
-		<Unit filename="Source/Player/Player.cpp" />
-		<Unit filename="Source/Player/Player.h" />
-		<Unit filename="Source/System/BitFireEngine.cpp" />
-		<Unit filename="Source/System/BitFireEngine.h" />
-		<Unit filename="Source/System/Device/KeyBoard/KeyBoardCache.cpp" />
+		<Unit filename="Source/BFEngine.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Source/BFEngine.h" />
+		<Unit filename="Source/System/Device/KeyBoard/KeyBoardCache.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="Source/System/Device/KeyBoard/KeyBoardCache.h" />
-		<Unit filename="Source/System/Device/Mouse/MouseCache.cpp" />
-		<Unit filename="Source/System/Device/Mouse/MouseCache.h" />
-		<Unit filename="Source/System/InputContainer.cpp" />
-		<Unit filename="Source/System/InputContainer.h" />
-		<Unit filename="Source/System/VideoConfig.cpp" />
-		<Unit filename="Source/System/VideoConfig.h" />
-		<Unit filename="Source/UI/DialogBox/UIDialogBox.cpp" />
-		<Unit filename="Source/UI/DialogBox/UIDialogBox.h" />
-		<Unit filename="Source/UI/UIButton.cpp" />
-		<Unit filename="Source/UI/UIButton.h" />
-		<Unit filename="Source/UI/UIElement.cpp" />
-		<Unit filename="Source/UI/UIElement.h" />
-		<Unit filename="Source/UI/UIImage.cpp" />
-		<Unit filename="Source/UI/UIImage.h" />
-		<Unit filename="Source/UI/UIText.cpp" />
-		<Unit filename="Source/UI/UIText.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

@@ -1774,3 +1774,80 @@
 
 1660430819 /home/bitpaw/Desktop/BFE/BitFireEngine/BitFireEngine/Source/System/Device/KeyBoard/KeyBoardCache.h
 
+1708376851 source:/home/bitpaw/Desktop/BitFireEngine/GameCleaved/Source/main.c
+	<OS/Console/PXConsole.h>
+	<windows.h>
+
+1708376333 /home/bitpaw/Desktop/PXUltima/Code/PXUltimaC/OS/Console/PXConsole.h
+	<Media/PXResource.h>
+
+1708376333 /home/bitpaw/Desktop/PXUltima/Code/PXUltimaC/Media/PXResource.h
+	<OS/File/PXFile.h>
+	<Math/PXVector.h>
+	<Math/PXMatrix.h>
+	<Media/PXDocument.h>
+	"PXImage.h"
+	"PXColor.h"
+
+1708376333 /home/bitpaw/Desktop/PXUltima/Code/PXUltimaC/OS/File/PXFile.h
+	<stdlib.h>
+	<stdio.h>
+	<wchar.h>
+	<Media/PXType.h>
+	<Media/PXText.h>
+	<OS/Memory/PXMemory.h>
+	<OS/Error/PXActionResult.h>
+	<OS/Time/PXTime.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<sys/mman.h>
+	<dirent.h>
+	<unistd.h>
+	<libgen.h>
+	<windows.h>
+	<direct.h>
+
+1708376333 /home/bitpaw/Desktop/PXUltima/Code/PXUltimaC/Media/PXType.h
+	<stddef.h>
+	<OS/System/PXOSVersion.h>
+
+1699813206 /home/bitpaw/Desktop/PXUltima/Code/PXUltimaC/OS/System/PXOSVersion.h
+	<Windows.h>
+	<SdkDdkVer.h>
+
+1708376333 /home/bitpaw/Desktop/PXUltima/Code/PXUltimaC/Media/PXText.h
+	<Media/PXType.h>
+	<stdarg.h>
+
+1708376333 /home/bitpaw/Desktop/PXUltima/Code/PXUltimaC/OS/Memory/PXMemory.h
+	<Media/PXType.h>
+	<Compiler/PXCompilerSettings.h>
+
+1694012652 /home/bitpaw/Desktop/PXUltima/Code/PXUltimaC/Compiler/PXCompilerSettings.h
+	<OS/System/PXOSVersion.h>
+
+1708376333 /home/bitpaw/Desktop/PXUltima/Code/PXUltimaC/OS/Error/PXActionResult.h
+	<Media/PXType.h>
+
+1708376333 /home/bitpaw/Desktop/PXUltima/Code/PXUltimaC/OS/Time/PXTime.h
+	<Media/PXType.h>
+	<time.h>
+
+1708376333 /home/bitpaw/Desktop/PXUltima/Code/PXUltimaC/Math/PXVector.h
+	<Media/PXType.h>
+
+1708376333 /home/bitpaw/Desktop/PXUltima/Code/PXUltimaC/Math/PXMatrix.h
+	<Media/PXType.h>
+	<Math/PXVector.h>
+
+1708376333 /home/bitpaw/Desktop/PXUltima/Code/PXUltimaC/Media/PXDocument.h
+	<OS/File/PXFile.h>
+	<Media/PXColor.h>
+
+1708376333 /home/bitpaw/Desktop/PXUltima/Code/PXUltimaC/Media/PXColor.h
+	<Media/PXType.h>
+
+1708376333 /home/bitpaw/Desktop/PXUltima/Code/PXUltimaC/Media/PXImage.h
+	<OS/File/PXFile.h>
+	<Media/PXColor.h>
+
