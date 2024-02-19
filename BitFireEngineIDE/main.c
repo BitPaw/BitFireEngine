@@ -38,65 +38,65 @@ int main(int amountOFParameters, char** parameter)
     return 0;
 }
 
-PXTexture2D _dialogBoxTexture;
+PXTexture2D* _dialogBoxTexture = 0;
 
 
 
 // Frame A
-PXUIElement* _panelMenuMainContainer;
-PXUIElement* _panelMenuButtonFile;
-PXUIElement* _panelMenuButtonFileText;
-PXUIElement* _panelMenuButtonFileDropDownOpen;
-PXUIElement* _panelMenuButtonFileDropDownSave;
-PXUIElement* _panelMenuButtonEdit;
-PXUIElement* _panelMenuButtonEditText;
-PXUIElement* _panelMenuButtonView;
-PXUIElement* _panelMenuButtonViewText;
+PXUIElement* _panelMenuMainContainer = 0;
+PXUIElement* _panelMenuButtonFile = 0;
+PXUIElement* _panelMenuButtonFileText = 0;
+PXUIElement* _panelMenuButtonFileDropDownOpen = 0;
+PXUIElement* _panelMenuButtonFileDropDownSave = 0;
+PXUIElement* _panelMenuButtonEdit = 0;
+PXUIElement* _panelMenuButtonEditText = 0;
+PXUIElement* _panelMenuButtonView = 0;
+PXUIElement* _panelMenuButtonViewText = 0;
 
 
 
-PXUIElement* _panelMainContent;
+PXUIElement* _panelMainContent = 0;
 
 
-PXUIElement* _uiSceneElements;
-PXUIElement* _uiSceneElementsTitleBar;
-PXUIElement* _uiSceneElementsTitleBarText;
-PXUIElement* _uiPanelScene;
-PXUIElement* _uiSceneTexturePanel;
-PXTexture2D _uiSceneTexture;
+PXUIElement* _uiSceneElements = 0;
+PXUIElement* _uiSceneElementsTitleBar = 0;
+PXUIElement* _uiSceneElementsTitleBarText = 0;
+PXUIElement* _uiPanelScene = 0;
+PXUIElement* _uiSceneTexturePanel = 0;
+PXTexture2D* _uiSceneTexture = 0;
 
-PXUIElement* _uiInfoPanel;
-PXUIElement* _uiInfoPanelTitleBar;
-PXUIElement* _uiInfoPanelTitleBarText;
-PXUIElement* _uiInfoPositionText;
+PXUIElement* _uiInfoPanel = 0;
+PXUIElement* _uiInfoPanelTitleBar = 0;
+PXUIElement* _uiInfoPanelTitleBarText = 0;
+PXUIElement* _uiInfoPositionText = 0;
 
-PXUIElement* _infoPanelImage;
-PXUIElement* _infoPanelTextSpawn;
-PXUIElement* _infoPanelButtonText;
-PXUIElement* _infoPanelText;
-PXUIElement* _positionText;
-PXFont DefaultFont;
+PXUIElement* _infoPanelImage = 0;
+PXUIElement* _infoPanelTextSpawn = 0;
+PXUIElement* _infoPanelButtonText = 0;
+PXUIElement* _infoPanelText = 0;
+PXUIElement* _positionText = 0;
+PXFont* DefaultFont;
 
-PXUIElement* _textureTestA;
-PXTexture2D _testImage;
+PXUIElement* _textureTestA = 0;
+PXTexture2D* _testImage = 0;
 PXRenderable _pxRenderableModel;
 
 // Frame Scene
-PXInt32U _matrixModelID;
-PXInt32U _matrixViewID;
-PXInt32U _matrixProjectionID;
-PXInt32U _materialTextureID;
+PXInt32U _matrixModelID = 0;
+PXInt32U _matrixViewID = 0;
+PXInt32U _matrixProjectionID = 0;
+PXInt32U _materialTextureID = 0;
 
-PXShaderProgram _pxWorldGridShader;
-
-PXShaderProgram _pxObjectShader;
+PXShaderProgram* _pxWorldGridShader = 0;
+PXShaderProgram* _pxObjectShader = 0;
 
 PXCamera _worldCamera;
-PXModel _worldGrid;
-PXModel _vehicle;
-PXModel _test;
+PXModel _pxModelMapWorldGridTrue;
 
-PXSkyBox _sceneSkyBox;
+PXModel* _pxModelMapWorldGrid = &_pxModelMapWorldGridTrue;
+PXModel* _pxModelMap = 0;
+
+PXSkyBox* _sceneSkyBox = 0;
 
 const PXColorRGBAF titleMenuButtonTextColorReference = { 0.9, 0.9, 0.9, 1 };
 const PXColorRGBAF titleMenuButtonReference = { 0.10, 0.10, 0.10, 1 };
@@ -139,57 +139,76 @@ void PXAPI ButtonThingOnClick(PXUIElement* pxUIElement)
 
 void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 {
-    PXGraphic* const pxGraphic = &pxEngine->Graphic;
-
-#if 1
-
+    //-----------------------------------------------------
+    // Main Font
+    //-----------------------------------------------------
     {
-        PXText pxText;
+        PXEngineResourceCreateInfo pxSkyBoxCreateEventData;
+        PXClear(PXEngineResourceCreateInfo, &pxSkyBoxCreateEventData);
+        pxSkyBoxCreateEventData.CreateType = PXEngineCreateTypeFont;
+        pxSkyBoxCreateEventData.ObjectReference = &DefaultFont;
+        pxSkyBoxCreateEventData.FilePath = "Font/A.fnt";
+        //pxSkyBoxCreateEventData.Font.ShaderProgramCurrent = _worldShader;
 
-        //
-
-      //  PXTextMakeFixedA(&pxText, "C:\\Users\\BitPaw\\Downloads\\2023-05-02 01_32_39-Window.png");
-
-      //  PXTextMakeFixedA(&pxText, "Texture/Scene.png");
-
-        // PXGraphicTexture2DLoad(pxGraphic, &_testImage, &pxText);
+        PXEngineResourceCreate(pxEngine, &pxSkyBoxCreateEventData);
     }
-
-
-
-    PXText pxText;
-    PXTextMakeFixedA(&pxText, "Font/A.fnt");
-    PXGraphicFontLoad(pxGraphic, &DefaultFont, &pxText);
 
 
     //-----------------------------------------------------
     // Panel:Menu
     //-----------------------------------------------------
-    PXGraphicUIElementCreate(pxGraphic, &_panelMenuMainContainer, 1, PXNull);
-    PXGraphicUIElementTypeSet(pxGraphic, _panelMenuMainContainer, PXUIElementTypePanel);
-    PXGraphicUIElementFlagSet(_panelMenuMainContainer, PXUIElementDecorative);
-    _panelMenuMainContainer->ColorTintReference = &titleColor;
-    PXUIElementSizeSet(_panelMenuMainContainer, 0.00, 1.95, 0.0, 0.00, PXUIElementPositionRelative);
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_panelMenuMainContainer;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.Y = 1.95f;
+        pxUIElementCreateData.UIElement.PositionMode = PXUIElementPositionRelative;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
 
 
     //-----------------------------------------------------
     // Panel:MainContent
     //-----------------------------------------------------
-    PXGraphicUIElementCreate(pxGraphic, &_panelMenuButtonFile, 1, _panelMenuMainContainer);
-    PXGraphicUIElementTypeSet(pxGraphic, _panelMenuButtonFile, PXUIElementTypeButton);
-    PXGraphicUIElementFlagSet(_panelMenuButtonFile, PXUIElementNormal);
-    _panelMenuButtonFile->ColorTintReference = &titleMenuButtonReference;
-    PXUIElementSizeSet(_panelMenuButtonFile, 0.00, 0.00, 1.85, 0.00, PXUIElementPositionRelative);
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_panelMenuButtonFile;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
+        pxUIElementCreateData.UIElement.Paranet = _panelMenuMainContainer;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonReference;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementNormal;
+        pxUIElementCreateData.UIElement.Width = 1.85f;
+        pxUIElementCreateData.UIElement.PositionMode = PXUIElementPositionRelative;
 
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
 
-    PXGraphicUIElementCreate(pxGraphic, &_panelMenuButtonFileText, 1, _panelMenuButtonFile);
-    PXGraphicUIElementTypeSet(pxGraphic, _panelMenuButtonFileText, PXUIElementTypeText);
-    PXGraphicUIElementFlagSet(_panelMenuButtonFileText, PXUIElementText);
-    _panelMenuButtonFileText->ColorTintReference = &titleMenuButtonTextColorReference;
-    PXGraphicPXUIElementTextSetA(_panelMenuButtonFileText, "File");
-    PXUIElementSizeSet(_panelMenuButtonFileText, 0.00, 0.00, 0.00, 0.00, PXUIElementPositionRelative);
-    _panelMenuButtonFileText->TextInfo.FontID = &DefaultFont;
+    //-----------------------------------------------------
+    // Panel:MainContent
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_panelMenuButtonFileText;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.Paranet = _panelMenuButtonFile;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
+        pxUIElementCreateData.UIElement.PositionMode = PXUIElementPositionRelative;
+        pxUIElementCreateData.UIElement.Text = "File";
+        pxUIElementCreateData.UIElement.FontReference = DefaultFont;
 
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
 
 #if 0
     PXGraphicUIElementCreate(pxGraphic, &_panelMenuButtonFileDropDownOpen, 1, _panelMenuButtonFileText);
@@ -210,37 +229,85 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 
 
 
+    //-----------------------------------------------------
+    // ???
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_panelMenuButtonEdit;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
+        pxUIElementCreateData.UIElement.Paranet = _panelMenuMainContainer;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonReference;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementNormal;
+        pxUIElementCreateData.UIElement.X = 0.15f;
+        pxUIElementCreateData.UIElement.Width = 1.65f;
+        pxUIElementCreateData.UIElement.PositionMode = PXUIElementPositionRelative;
 
-    PXGraphicUIElementCreate(pxGraphic, &_panelMenuButtonEdit, 1, _panelMenuMainContainer);
-    PXGraphicUIElementTypeSet(pxGraphic, _panelMenuButtonEdit, PXUIElementTypeButton);
-    PXGraphicUIElementFlagSet(_panelMenuButtonEdit, PXUIElementNormal);
-    _panelMenuButtonEdit->ColorTintReference = &titleMenuButtonReference;
-    PXUIElementSizeSet(_panelMenuButtonEdit, 0.15, 0.00, 1.65, 0.00, PXUIElementPositionRelative);
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
 
-    PXGraphicUIElementCreate(pxGraphic, &_panelMenuButtonEditText, 1, _panelMenuButtonEdit);
-    PXGraphicUIElementTypeSet(pxGraphic, _panelMenuButtonEditText, PXUIElementTypeText);
-    PXGraphicUIElementFlagSet(_panelMenuButtonEditText, PXUIElementText);
-    _panelMenuButtonEditText->ColorTintReference = &titleMenuButtonTextColorReference;
-    PXGraphicPXUIElementTextSetA(_panelMenuButtonEditText, "Edit");
-    PXUIElementSizeSet(_panelMenuButtonEditText, 0.00, 0.00, 0.00, 0.00, PXUIElementPositionRelative);
-    _panelMenuButtonEditText->TextInfo.FontID = &DefaultFont;
+    //-----------------------------------------------------
+    // ???
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_panelMenuButtonEditText;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.Paranet = _panelMenuButtonEdit;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
+        pxUIElementCreateData.UIElement.PositionMode = PXUIElementPositionRelative;
+        pxUIElementCreateData.UIElement.Text = "Edit";
+        pxUIElementCreateData.UIElement.FontReference = DefaultFont;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
 
 
 
-    PXGraphicUIElementCreate(pxGraphic, &_panelMenuButtonView, 1, _panelMenuMainContainer);
-    PXGraphicUIElementTypeSet(pxGraphic, _panelMenuButtonView, PXUIElementTypeButton);
-    PXGraphicUIElementFlagSet(_panelMenuButtonView, PXUIElementNormal);
-    _panelMenuButtonView->ColorTintReference = &titleMenuButtonReference;
-    PXUIElementSizeSet(_panelMenuButtonView, 0.35, 0.00, 1.45, 0.00, PXUIElementPositionRelative);
+    //-----------------------------------------------------
+    // ???
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_panelMenuButtonView;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
+        pxUIElementCreateData.UIElement.Paranet = _panelMenuMainContainer;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonReference;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementNormal;
+        pxUIElementCreateData.UIElement.X = 0.35f;
+        pxUIElementCreateData.UIElement.Width = 1.45f;
+        pxUIElementCreateData.UIElement.PositionMode = PXUIElementPositionRelative;
 
-    PXGraphicUIElementCreate(pxGraphic, &_panelMenuButtonViewText, 1, _panelMenuButtonView);
-    PXGraphicUIElementTypeSet(pxGraphic, _panelMenuButtonViewText, PXUIElementTypeText);
-    PXGraphicUIElementFlagSet(_panelMenuButtonViewText, PXUIElementText);
-    _panelMenuButtonViewText->ColorTintReference = &titleMenuButtonTextColorReference;
-    PXGraphicPXUIElementTextSetA(_panelMenuButtonViewText, "View");
-    PXUIElementSizeSet(_panelMenuButtonViewText, 0, 0, 0, 0, PXUIElementPositionRelative);
-    _panelMenuButtonViewText->TextInfo.FontID = &DefaultFont;
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
 
+
+
+    //-----------------------------------------------------
+    // ???
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_panelMenuButtonViewText;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.Paranet = _panelMenuButtonView;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
+        pxUIElementCreateData.UIElement.PositionMode = PXUIElementPositionRelative;
+        pxUIElementCreateData.UIElement.Text = "View";
+        pxUIElementCreateData.UIElement.FontReference = DefaultFont;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
 
 
 
@@ -248,155 +315,316 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
     //-----------------------------------------------------
     // Panel:MainContent
     //-----------------------------------------------------
-    PXGraphicUIElementCreate(pxGraphic, &_panelMainContent, 1, PXNull);
-    PXGraphicUIElementTypeSet(pxGraphic, _panelMainContent, PXUIElementTypePanel);
-    PXGraphicUIElementFlagSet(_panelMainContent, PXUIElementDecorative);
-    _panelMainContent->ColorTintReference = &panelReference;
-    PXUIElementSizeSet(_panelMainContent, 0.00, 0, 0.0, 0.05, PXUIElementPositionRelative);
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_panelMainContent;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
+        pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.Height = 0.05f;
+        pxUIElementCreateData.UIElement.PositionMode = PXUIElementPositionRelative;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
 
     //-----------------------------------------------------
     // Panel:Assets
     //-----------------------------------------------------
-    PXGraphicUIElementCreate(pxGraphic, &_uiSceneElements, 1, _panelMainContent);
-    PXGraphicUIElementTypeSet(pxGraphic, _uiSceneElements, PXUIElementTypePanel);
-    PXGraphicUIElementFlagSet(_uiSceneElements, PXUIElementDecorative);
-    _uiSceneElements->ColorTintReference = &panelReference;
-    PXUIElementSizeSet(_uiSceneElements, 0.02, 0.02, 1.65, 0.02, PXUIElementPositionRelative);
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_uiSceneElements;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
+        pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
+        pxUIElementCreateData.UIElement.Paranet = _panelMainContent;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.X = 0.02f;
+        pxUIElementCreateData.UIElement.Y = 0.02f;
+        pxUIElementCreateData.UIElement.Width = 1.65f;
+        pxUIElementCreateData.UIElement.Height = 0.02f;
+        pxUIElementCreateData.UIElement.PositionMode = PXUIElementPositionRelative;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
+
+
     //-----------------------------------------------------
     // Panel:Assets:TitleBar
     //-----------------------------------------------------
-    PXGraphicUIElementCreate(pxGraphic, &_uiSceneElementsTitleBar, 1, _uiSceneElements);
-    PXGraphicUIElementTypeSet(pxGraphic, _uiSceneElementsTitleBar, PXUIElementTypePanel);
-    PXGraphicUIElementFlagSet(_uiSceneElementsTitleBar, PXUIElementNormal);
-    _uiSceneElementsTitleBar->ColorTintReference = &titleColor;
-    PXUIElementSizeSet(_uiSceneElementsTitleBar, 0.00, 1.85, 0.0, 0.00, PXUIElementPositionRelative);
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_uiSceneElementsTitleBar;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
+        pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
+        pxUIElementCreateData.UIElement.Paranet = _uiSceneElements;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementNormal;
+        pxUIElementCreateData.UIElement.Y = 1.85f;
+        pxUIElementCreateData.UIElement.PositionMode = PXUIElementPositionRelative;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
+
+
     //-----------------------------------------------------
     // Panel:Assets:TitleBar:Text
-    //-----------------------------------------------------    
-    PXGraphicUIElementCreate(pxGraphic, &_uiSceneElementsTitleBarText, 1, _uiSceneElementsTitleBar);
-    PXGraphicUIElementTypeSet(pxGraphic, _uiSceneElementsTitleBarText, PXUIElementTypeText);
-    PXGraphicUIElementFlagSet(_uiSceneElementsTitleBarText, PXUIElementText);
-    _uiSceneElementsTitleBarText->ColorTintReference = &textColor;
-    PXUIElementSizeSet(_uiSceneElementsTitleBarText, 0.005, 0.005, 0.005, 0.005, PXUIElementPositionRelative);
-    PXGraphicPXUIElementTextSetA(_uiSceneElementsTitleBarText, "Scene");
-    _uiSceneElementsTitleBarText->TextInfo.FontID = &DefaultFont;
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_uiSceneElementsTitleBarText;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
+        pxUIElementCreateData.UIElement.Paranet = _uiSceneElementsTitleBar;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
+        pxUIElementCreateData.UIElement.X = 0.005f;
+        pxUIElementCreateData.UIElement.Y = 0.005f;
+        pxUIElementCreateData.UIElement.Width = 0.005f;
+        pxUIElementCreateData.UIElement.Height = 0.005f;
+        pxUIElementCreateData.UIElement.PositionMode = PXUIElementPositionRelative;
+        pxUIElementCreateData.UIElement.Text = "Scene";
+        pxUIElementCreateData.UIElement.FontReference = DefaultFont;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
 
 
 
     //-----------------------------------------------------
     // Button
     //-----------------------------------------------------
-    PXGraphicUIElementCreate(pxGraphic, &_infoPanelTextSpawn, 1, _uiSceneElements);
-    PXGraphicUIElementTypeSet(pxGraphic, _infoPanelTextSpawn, PXUIElementTypeButton);
-    PXGraphicUIElementFlagSet(_infoPanelTextSpawn, PXUIElementNormal);
-    PXUIElementColorSet4F(&_infoPanelTextSpawn, 0.40f, 0.15f, 0.15f, 1);
-    PXUIElementSizeSet(_infoPanelTextSpawn, 0.025, 0.05, 0.025, 1.8, PXUIElementPositionRelative);
-    _infoPanelTextSpawn->ColorTintReference = &buttonColor;
-    _infoPanelTextSpawn->OnClickCallback = ButtonThingOnClick;
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_infoPanelTextSpawn;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
+        pxUIElementCreateData.UIElement.ColorTintReference = &buttonColor;
+        pxUIElementCreateData.UIElement.Paranet = _uiSceneElements;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementNormal;
+        pxUIElementCreateData.UIElement.Color.Red = 0.40f;
+        pxUIElementCreateData.UIElement.Color.Green = 0.15f;
+        pxUIElementCreateData.UIElement.Color.Blue = 0.15f;
+        pxUIElementCreateData.UIElement.Color.Alpha = 1.0f;
+        pxUIElementCreateData.UIElement.X = 0.025f;
+        pxUIElementCreateData.UIElement.Y = 0.05f;
+        pxUIElementCreateData.UIElement.Width = 0.025f;
+        pxUIElementCreateData.UIElement.Height = 1.8f;
+        pxUIElementCreateData.UIElement.PositionMode = PXUIElementPositionRelative;
+        pxUIElementCreateData.UIElement.OnClickCallback = ButtonThingOnClick;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
+
 
     //-----------------------------------------------------
     // Button:Text
     //-----------------------------------------------------
-    PXGraphicUIElementCreate(pxGraphic, &_infoPanelButtonText, 1, _infoPanelTextSpawn);
-    PXGraphicUIElementTypeSet(pxGraphic, _infoPanelButtonText, PXUIElementTypeText);
-    PXGraphicUIElementFlagSet(_infoPanelButtonText, PXUIElementText);
-    PXUIElementSizeSet(_infoPanelButtonText, 0.005, 0.005, 0.005, 0.005, PXUIElementPositionRelative);
-    PXGraphicPXUIElementTextSetA(_infoPanelButtonText, "Button");
-    _infoPanelButtonText->TextInfo.FontID = &DefaultFont;
-    _infoPanelButtonText->ColorTintReference = &textColor;
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_infoPanelButtonText;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
+        pxUIElementCreateData.UIElement.Paranet = _infoPanelTextSpawn;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
+        pxUIElementCreateData.UIElement.X = 0.005f;
+        pxUIElementCreateData.UIElement.Y = 0.005f;
+        pxUIElementCreateData.UIElement.Width = 0.005f;
+        pxUIElementCreateData.UIElement.Height = 0.005f;
+        pxUIElementCreateData.UIElement.PositionMode = PXUIElementPositionRelative;
+        pxUIElementCreateData.UIElement.Text = "Button";
+        pxUIElementCreateData.UIElement.FontReference = DefaultFont;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
 
 
-#if 1
-    PXGraphicUIElementCreate(pxGraphic, &_infoPanelText, 1, _infoPanelTextSpawn);
-    PXGraphicUIElementTypeSet(pxGraphic, _infoPanelText, PXUIElementTypeText);
-    PXGraphicUIElementFlagSet(_infoPanelText, PXUIElementText);
-    // PXUIElementFontSet(&_infoPanelText, &DefaultFont);
-    PXUIElementColorSet4F(_infoPanelText, 0.5, 0.5, 0.5, 1);
-    PXUIElementSizeSet(_infoPanelText, 0.02, 0.02, 0.02, 0.02, PXUIElementPositionRelative);
-    //PXUIElementTextSetA(&_infoPanelText, "Button");
-  //  PXGraphicUIElementRegister(pxGraphic, &_infoPanelText);
+
+    //-----------------------------------------------------
+    // ???
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_infoPanelText;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.Paranet = _infoPanelTextSpawn;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
+        pxUIElementCreateData.UIElement.Color.Red = 0.5f;
+        pxUIElementCreateData.UIElement.Color.Green = 0.5f;
+        pxUIElementCreateData.UIElement.Color.Blue = 0.5f;
+        pxUIElementCreateData.UIElement.Color.Alpha = 1.0f;
+        pxUIElementCreateData.UIElement.X = 0.02f;
+        pxUIElementCreateData.UIElement.Y = 0.02f;
+        pxUIElementCreateData.UIElement.Width = 0.02f;
+        pxUIElementCreateData.UIElement.Height = 0.02f;
+        pxUIElementCreateData.UIElement.PositionMode = PXUIElementPositionRelative;
+        pxUIElementCreateData.UIElement.Text = "Button";
+        pxUIElementCreateData.UIElement.FontReference = DefaultFont;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
 
 
+
+    //-----------------------------------------------------
     // Panel: Scene
-    PXGraphicUIElementCreate(pxGraphic, &_uiPanelScene, 1, _panelMainContent);
-    PXGraphicUIElementTypeSet(pxGraphic, _uiPanelScene, PXUIElementTypePanel);
-    _uiPanelScene->ColorTintReference = &panelReference;
-    PXUIElementSizeSet(_uiPanelScene, 0.36, 0.02, 0.36, 0.02, PXUIElementPositionRelative);
-    //  PXUIElementTextSetA(&_uiPanelScene, "Scene");
-    // PXUIElementFontSet(&_uiPanelScene, &DefaultFont);
-   // PXGraphicUIElementRegister(pxGraphic, &_uiPanelScene);
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_uiPanelScene;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
+        pxUIElementCreateData.UIElement.Paranet = _panelMainContent;
+        pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
+        pxUIElementCreateData.UIElement.X = 0.36f;
+        pxUIElementCreateData.UIElement.Y = 0.02f;
+        pxUIElementCreateData.UIElement.Width = 0.36f;
+        pxUIElementCreateData.UIElement.Height = 0.02f;
+        pxUIElementCreateData.UIElement.PositionMode = PXUIElementPositionRelative;
 
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
+
+
+    //-----------------------------------------------------
     // RenderFrame: Scene
-    PXGraphicUIElementCreate(pxGraphic, &_uiSceneTexturePanel, 1, _uiPanelScene);
-    PXGraphicUIElementTypeSet(pxGraphic, _uiSceneTexturePanel, PXUIElementTypeRenderFrame);
-    PXGraphicUIElementFlagSet(_uiSceneTexturePanel, PXUIElementDecorative);
-    PXUIElementSizeSet(_uiSceneTexturePanel, 0.05, 0.05, 0.05, 0.05, PXUIElementPositionRelative);
-    //  PXUIElementFontSet(&_uiSceneTexturePanel, &DefaultFont);
-   // _uiSceneTexturePanel.TextureReference = &_testImage;
-   // _uiSceneTexturePanel.FrameRenderTextureReference = &_uiSceneTexture;
-   // PXGraphicUIElementRegister(pxGraphic, &_uiSceneTexturePanel);
-    //_textureTestA.TextureID = _testImage.ID;
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_uiSceneTexturePanel;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeRenderFrame;
+        pxUIElementCreateData.UIElement.Paranet = _uiPanelScene;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.X = 0.05f;
+        pxUIElementCreateData.UIElement.Y = 0.05f;
+        pxUIElementCreateData.UIElement.Width = 0.05f;
+        pxUIElementCreateData.UIElement.Height = 0.05f;
+        pxUIElementCreateData.UIElement.PositionMode = PXUIElementPositionRelative;
 
-
-     // Panel:Info
-    PXGraphicUIElementCreate(pxGraphic, &_uiInfoPanel, 1, _panelMainContent);
-    PXGraphicUIElementTypeSet(pxGraphic, _uiInfoPanel, PXUIElementTypePanel);
-    PXGraphicUIElementFlagSet(_uiInfoPanel, PXUIElementDecorative);
-    _uiInfoPanel->ColorTintReference = &panelReference;
-    PXUIElementSizeSet(_uiInfoPanel, 1.65, 0.02, 0.02, 0.02, PXUIElementPositionRelative);
-    //  PXUIElementTextSetA(&_uiInfoPanel, "Info");
-    //  PXUIElementFontSet(&_uiInfoPanel, &DefaultFont);
- //   PXGraphicUIElementRegister(pxGraphic, &_uiInfoPanel);
-
-         // TitleBar:Infol
-    PXGraphicUIElementCreate(pxGraphic, &_uiInfoPanelTitleBar, 1, _uiInfoPanel);
-    PXGraphicUIElementTypeSet(pxGraphic, _uiInfoPanelTitleBar, PXUIElementTypePanel);
-    PXGraphicUIElementFlagSet(_uiInfoPanelTitleBar, PXUIElementNormal);
-    _uiInfoPanelTitleBar->ColorTintReference = &titleColor;
-    PXUIElementSizeSet(_uiInfoPanelTitleBar, 0.00, 1.85, 0.0, 0.00, PXUIElementPositionRelative);
-
-    PXGraphicUIElementCreate(pxGraphic, &_uiInfoPanelTitleBarText, 1, _uiInfoPanelTitleBar);
-    PXGraphicUIElementTypeSet(pxGraphic, _uiInfoPanelTitleBarText, PXUIElementTypeText);
-    PXGraphicUIElementFlagSet(_uiInfoPanelTitleBarText, PXUIElementText);
-    PXUIElementColorSet4F(_uiInfoPanelTitleBarText, 1, 1, 1, 1);
-    PXUIElementSizeSet(_uiInfoPanelTitleBarText, 0.005, 0.005, 0.005, 0.005, PXUIElementPositionRelative);
-    PXGraphicPXUIElementTextSetA(_uiInfoPanelTitleBarText, "Info");
-    _uiInfoPanelTitleBarText->TextInfo.FontID = &DefaultFont;
-    _uiInfoPanelTitleBarText->ColorTintReference = &textColor;
-#endif
-
-    //  PXUIElementTextSetA(&_uiInfoPositionText, "Position");
-    //  PXUIElementFontSet(&_uiInfoPositionText, &DefaultFont);
-   // PXGraphicUIElementRegister(pxGraphic, &_uiInfoPositionText);
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
 
 
 
+    //-----------------------------------------------------
+    // Panel:Info
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_uiInfoPanel;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
+        pxUIElementCreateData.UIElement.Paranet = _panelMainContent;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
+        pxUIElementCreateData.UIElement.X = 1.65f;
+        pxUIElementCreateData.UIElement.Y = 0.02f;
+        pxUIElementCreateData.UIElement.Width = 0.02f;
+        pxUIElementCreateData.UIElement.Height = 0.02f;
+        pxUIElementCreateData.UIElement.PositionMode = PXUIElementPositionRelative;
 
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
+
+
+    //-----------------------------------------------------
+    // TitleBar:Infol
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_uiInfoPanelTitleBar;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
+        pxUIElementCreateData.UIElement.Paranet = _uiInfoPanel;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementNormal;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.X = 0.00f;
+        pxUIElementCreateData.UIElement.Y = 1.85f;
+        pxUIElementCreateData.UIElement.Width = 0.0f;
+        pxUIElementCreateData.UIElement.Height = 0.0f;
+        pxUIElementCreateData.UIElement.PositionMode = PXUIElementPositionRelative;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
+
+
+    //-----------------------------------------------------
+    // _uiInfoPanelTitleBarText
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_uiInfoPanelTitleBarText;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.Paranet = _uiInfoPanelTitleBar;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
+        pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
+        pxUIElementCreateData.UIElement.X = 0.005f;
+        pxUIElementCreateData.UIElement.Y = 0.005f;
+        pxUIElementCreateData.UIElement.Width = 0.005f;
+        pxUIElementCreateData.UIElement.Height = 0.005f;
+        pxUIElementCreateData.UIElement.PositionMode = PXUIElementPositionRelative;
+        pxUIElementCreateData.UIElement.Text = "Info";
+        pxUIElementCreateData.UIElement.FontReference = DefaultFont;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
+
+
+    //-----------------------------------------------------
+    // Shader-Object
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeShaderProgram;
+        pxUIElementCreateData.ObjectReference = &_pxObjectShader;
+        pxUIElementCreateData.ShaderProgram.VertexShaderFilePath = "Shader/Object_Vertex.glsl";
+        pxUIElementCreateData.ShaderProgram.PixelShaderFilePath = "Shader/Object_Fragment.glsl";
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
 
 
     // Load model
     {
-        pxEngine->Graphic.ShaderProgramCreateFromFileVPA
-        (
-            pxEngine->Graphic.EventOwner,
-            &_pxObjectShader,
-            "Shader/Object_Vertex.glsl",
-            "Shader/Object_Fragment.glsl"
-        );
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeModel;
+        pxUIElementCreateData.ObjectReference = &_pxModelMap;
+        pxUIElementCreateData.FilePath = "Model/Dust_II/DustII.obj";
+        // "Model/Tiger.obj" 
+        // "Model/Dust_II/DustII.obj"
+        // "Model/Tiger.obj"
+        // "Model/Moze.obj"
+        pxUIElementCreateData.Model.ShaderProgramReference = _pxObjectShader;
+        pxUIElementCreateData.Model.Scale = 2.0f;
 
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
 
-#if 1
-        PXModelConstruct(&_vehicle);
-
-        PXResourceLoadA(&_vehicle, "Model/Dust_II/DustII.obj"); // "Model/Tiger.obj" "Model/Dust_II/DustII.obj", "Model/Tiger.obj", "H:/Daten/Objects/Moze/Moze.obj"
-
-        PXMatrix4x4FScaleBy(&_vehicle.ModelMatrix, 2);
-
-        pxGraphic->ModelRegister(pxGraphic->EventOwner, &_vehicle);
-
-        _vehicle.ShaderProgramReference = &_pxObjectShader;
-#endif
-
+      
 
 
 #if 0
@@ -416,8 +644,7 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 
     }
 
-    PXGraphicUIElementPrint(pxGraphic);
-#endif
+   
 
 
 #if 0
@@ -454,58 +681,70 @@ PXGraphicUIElementRegister(pxGraphic, &_positionText);*/
 
 //PXGraphicTextureLoadA(pxGraphic, &_dialogBoxTexture, (char*)"C:\\Users\\BitPaw\\Videos\\SquareBlue.png");
 
-    PXGraphicSkyboxRegisterA
-    (
-        pxGraphic,
-        &_sceneSkyBox,
-        "Shader/SkyBox_Vertex.glsl",
-        "Shader/SkyBox_Fragment.glsl",
-        "Texture/SkyBox_Side.png",
-        "Texture/SkyBox_Side.png",
-        "Texture/SkyBox_Top.png",
-        "Texture/SkyBox_Bottom.png",
-        "Texture/SkyBox_Side.png",
-        "Texture/SkyBox_Side.png"
-    );
+    //-----------------------------------------------------
+    // Skybox
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxSkyBoxCreateEventData;
+        PXClear(PXEngineResourceCreateInfo, &pxSkyBoxCreateEventData);
+        pxSkyBoxCreateEventData.CreateType = PXEngineCreateTypeSkybox;
+        pxSkyBoxCreateEventData.SpawnEnabled = PXTrue;
+        pxSkyBoxCreateEventData.ObjectReference = &_sceneSkyBox;
+        pxSkyBoxCreateEventData.SkyBox.SkyBoxShaderVertex = "Shader/SkyBox_Vertex.glsl";
+        pxSkyBoxCreateEventData.SkyBox.SkyBoxShaderPixel = "Shader/SkyBox_Fragment.glsl";
+        pxSkyBoxCreateEventData.SkyBox.SkyBoxTextureA = "Texture/SkyBox_Side.png";
+        pxSkyBoxCreateEventData.SkyBox.SkyBoxTextureB = "Texture/SkyBox_Side.png";
+        pxSkyBoxCreateEventData.SkyBox.SkyBoxTextureC = "Texture/SkyBox_Top.png";
+        pxSkyBoxCreateEventData.SkyBox.SkyBoxTextureD = "Texture/SkyBox_Bottom.png";
+        pxSkyBoxCreateEventData.SkyBox.SkyBoxTextureE = "Texture/SkyBox_Side.png";
+        pxSkyBoxCreateEventData.SkyBox.SkyBoxTextureF = "Texture/SkyBox_Side.png";
 
-    bfEngine->DefaultSkyBox = &_sceneSkyBox;
+        PXEngineResourceCreate(&bfEngine->Engine, &pxSkyBoxCreateEventData);
+        bfEngine->DefaultSkyBox = _sceneSkyBox;
+    }
 
+    //-----------------------------------------------------
+    // Worldgrid-Model
+    //-----------------------------------------------------
+    {
+        PXModelConstruct(_pxModelMapWorldGrid);
+        _pxModelMapWorldGrid->VertexBuffer.VertexDataSize = sizeof(vertexData);
+        _pxModelMapWorldGrid->VertexBuffer.VertexData = vertexData;
+        _pxModelMapWorldGrid->VertexBuffer.Format = PXVertexBufferFormatXYZ;
+        _pxModelMapWorldGrid->VertexBuffer.VertexDataRowSize = 3 * sizeof(float);
 
+        _pxModelMapWorldGrid->IndexBuffer.IndexTypeSize = 1;
+        _pxModelMapWorldGrid->IndexBuffer.IndexData = indexDATA;
+        _pxModelMapWorldGrid->IndexBuffer.IndexDataSize = sizeof(indexDATA);
+        _pxModelMapWorldGrid->IndexBuffer.IndexDataAmount = sizeof(indexDATA) / sizeof(PXInt8U);
+        _pxModelMapWorldGrid->IndexBuffer.DataType = PXDataTypeInt08U;
+        _pxModelMapWorldGrid->IndexBuffer.DrawModeID = PXDrawModeIDTriangle; // PXDrawModeIDPoint | PXDrawModeIDLine;
 
+        pxEngine->Graphic.ModelRegister(pxEngine->Graphic.EventOwner, _pxModelMapWorldGrid);
+    }
 
+    //-----------------------------------------------------
+    // Worldgrid-Shader
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxSkyBoxCreateEventData;
+        PXClear(PXEngineResourceCreateInfo, &pxSkyBoxCreateEventData);
+        pxSkyBoxCreateEventData.CreateType = PXEngineCreateTypeShaderProgram;
+        pxSkyBoxCreateEventData.ObjectReference = &_pxWorldGridShader;
+        pxSkyBoxCreateEventData.ShaderProgram.VertexShaderFilePath = "Shader/WorldGrid_Vertex.glsl";
+        pxSkyBoxCreateEventData.ShaderProgram.PixelShaderFilePath = "Shader/WorldGrid_Fragment.glsl";
 
+        PXEngineResourceCreate(pxEngine, &pxSkyBoxCreateEventData);
 
-    PXModelConstruct(&_worldGrid);
-    _worldGrid.VertexBuffer.VertexDataSize = sizeof(vertexData);
-    _worldGrid.VertexBuffer.VertexData = vertexData;
-    _worldGrid.VertexBuffer.Format = PXVertexBufferFormatXYZ;
-    _worldGrid.VertexBuffer.VertexDataRowSize = 3 * sizeof(float);
+        _pxModelMapWorldGrid->ShaderProgramReference = _pxWorldGridShader;
+        _pxModelMapWorldGrid->RenderBothSides = PXTrue;
 
-    _worldGrid.IndexBuffer.IndexTypeSize = 1;
-    _worldGrid.IndexBuffer.IndexData = indexDATA;
-    _worldGrid.IndexBuffer.IndexDataSize = sizeof(indexDATA);
-    _worldGrid.IndexBuffer.IndexDataAmount = sizeof(indexDATA) / sizeof(PXInt8U);
-    _worldGrid.IndexBuffer.DataType = PXDataTypeInt08U;
-    _worldGrid.IndexBuffer.DrawModeID = PXDrawModeIDTriangle; // PXDrawModeIDPoint | PXDrawModeIDLine;
-
-
-    pxEngine->Graphic.ModelRegister(pxEngine->Graphic.EventOwner, &_worldGrid);
-
-
-    pxEngine->Graphic.ShaderProgramCreateFromFileVPA
-    (
-        pxEngine->Graphic.EventOwner,
-        &_pxWorldGridShader,
-        "Shader/WorldGrid_Vertex.glsl",
-        "Shader/WorldGrid_Fragment.glsl"
-    );
-    _worldGrid.ShaderProgramReference = &_pxWorldGridShader;
-    _worldGrid.RenderBothSides = PXTrue;
-
-    PXMatrix4x4FScaleBy(&_worldGrid.ModelMatrix, 1000);
+        PXMatrix4x4FScaleBy(&_pxModelMapWorldGrid->ModelMatrix, 1000);
+    }
 
     PXCameraConstruct(&_worldCamera);
 
+    PXGraphicUIElementPrint(&pxEngine->Graphic);
 }
 
 void PXAPI OnShutDownEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
@@ -611,8 +850,8 @@ void PXAPI OnRenderUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngin
     PXCameraFollow(pxEngine->CameraCurrent, 0.05);
 
     // Grid
-    pxEngine->Graphic.ModelDraw(pxEngine->Graphic.EventOwner, &_worldGrid, pxEngine->CameraCurrent);
+    pxEngine->Graphic.ModelDraw(pxEngine->Graphic.EventOwner, _pxModelMapWorldGrid, pxEngine->CameraCurrent);
 
     // Tank
-    pxEngine->Graphic.ModelDraw(pxEngine->Graphic.EventOwner, &_vehicle, pxEngine->CameraCurrent);
+    pxEngine->Graphic.ModelDraw(pxEngine->Graphic.EventOwner, _pxModelMap, pxEngine->CameraCurrent);
 }

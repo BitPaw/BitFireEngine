@@ -20,14 +20,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader\WorldSpace.vert" />
-    <None Include="Shader\WorldSpace.frag" />
-    <None Include="Shader\HUD.vert" />
-    <None Include="Shader\HUD.frag" />
-    <None Include="Shader\HitBox.vert" />
-    <None Include="Shader\HitBox.frag" />
-    <None Include="Shader\Simplex.vert" />
-    <None Include="Shader\Simplex.frag" />
     <None Include="Shader\SkyBox_Vertex.glsl" />
     <None Include="Shader\SkyBox_Fragment.glsl" />
     <None Include="Shader\Object_Vertex.glsl" />
@@ -37,8 +29,5 @@
     <ClInclude Include="Source\main.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <CopyFileToFolders Include="..\..\PXUltima\Code\[Export]\PXUltimaC\64B-Windows-Debug\PXUltima.dll" />
   </ItemGroup>
 </Project>

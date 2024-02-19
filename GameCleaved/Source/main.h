@@ -10,47 +10,38 @@
 
 PXRenderable _rectangleMesh;
 
-PXFont _font;
+PXFont* _font;
 
-PXTexture2D testTextue;
 
-PXSkyBox _skybox;
-PXShaderProgram _worldShader;
-PXShaderProgram _hudShaderID;
+PXSkyBox* _skybox;
+PXShaderProgram* _worldShader = 0;
 
 //PXGravityCube _gravityField;
 
 // Sprites - Imgame
-PXSprite _backGround;
+PXSprite* _backGround = 0;
 
+PXSprite* _playerCharacterLuna = 0;
+PXSprite* _playerCharacterNyte = 0;
+PXSprite* _lamp = 0;
+PXSprite* _fireplace = 0;
+PXSprite* _sign = 0;
+PXSprite* _floor = 0;
 
-
-
-PXSprite _playerCharacterLuna;
-PXSprite _playerCharacterNyte;
-PXSprite _lamp;
-PXSprite _fireplace;
-PXSprite _sign;
-PXSprite _floor;
-
-PXEngineSound _dialogLetterPopSFX;
+PXEngineSound* _dialogLetterPopSFX;
 
 PXEngineDialogBox pxDialogBox;
 
 
-//BFUIDialogBox _dialogBox;
-
-PXShaderProgram _simplex;
-
 // UI
-PXSprite _menuFrame;
-PXSprite _menuButtonA;
+PXSprite* _menuFrame = 0;
+PXSprite* _menuButtonA = 0;
 //BFUIText _buttonTextA;
-PXSprite _menuButtonB;
-PXSprite _menuButtonC;
+PXSprite* _menuButtonB = 0;
+PXSprite* _menuButtonC = 0;
 
-void OnNetworkUpdate(const BFEngine* bitFireEngine);
-void OnStartUpEvent(BFEngine* const bitFireEngine);
-void OnShutDownEvent(const BFEngine* bitFireEngine);
-void OnGameUpdateEvent(const BFEngine* bitFireEngine, const float deltaTime);
-void OnRenderUpdateEvent(BFEngine* const bitFireEngine, BFInputContainer* input);
+void PXAPI OnNetworkUpdate(const BFEngine* bitFireEngine);
+void PXAPI OnStartUpEvent(BFEngine* const bitFireEngine);
+void PXAPI OnShutDownEvent(const BFEngine* bitFireEngine);
+void PXAPI OnGameUpdateEvent(const BFEngine* bitFireEngine, const float deltaTime);
+void PXAPI OnRenderUpdateEvent(BFEngine* const bitFireEngine, BFInputContainer* input);

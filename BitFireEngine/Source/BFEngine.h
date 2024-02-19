@@ -72,33 +72,33 @@ extern "C"
     }
     BFEngine;
 
-    PXPublic void BFEngineConstruct(BFEngine* const pxBitFireEngine);
+    PXPublic void PXAPI BFEngineConstruct(BFEngine* const pxBitFireEngine);
 
-    PXPrivate void BFEngineOnMouseButton(const BFEngine* const receiver, const PXWindow* sender, const PXMouseButton mouseButton, const PXKeyPressState buttonState);
-    PXPrivate void BFEngineOnMouseMove(const BFEngine* const receiver, const PXWindow* sender, const PXMouse* mouse);
-    PXPrivate void BFEngineOnKeyBoardKey(const BFEngine* const receiver, const PXWindow* sender, const PXKeyBoardKeyInfo keyBoardKeyInfo);
-    PXPrivate void BFEngineOnWindowCreated(const BFEngine* const receiver, const PXWindow* sender);
-    PXPrivate void BFEngineOnWindowSizeChanged(const BFEngine* const receiver, const PXWindow* sender);
-    PXPrivate void BFEngineOnWindowsMouseCaptureChanged(const BFEngine* const receiver, const PXWindow* sender);
+    PXPrivate void PXAPI BFEngineOnMouseButton(const BFEngine* const receiver, const PXWindow* sender, const PXMouseButton mouseButton, const PXKeyPressState buttonState);
+    PXPrivate void PXAPI BFEngineOnMouseMove(const BFEngine* const receiver, const PXWindow* sender, const PXMouse* mouse);
+    PXPrivate void PXAPI BFEngineOnKeyBoardKey(const BFEngine* const receiver, const PXWindow* sender, const PXKeyBoardKeyInfo keyBoardKeyInfo);
+    PXPrivate void PXAPI BFEngineOnWindowCreated(const BFEngine* const receiver, const PXWindow* sender);
+    PXPrivate void PXAPI BFEngineOnWindowSizeChanged(const BFEngine* const receiver, const PXWindow* sender);
+    PXPrivate void PXAPI BFEngineOnWindowsMouseCaptureChanged(const BFEngine* const receiver, const PXWindow* sender);
 
-    PXPublic void BFEngineStart(BFEngine* const bfEngine, PXEngine* const pxEngine);
-        PXPublic void BFEngineUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine);
-        PXPublic void BFEngineStop(BFEngine* const bfEngine, PXEngine* const pxEngine);
+    PXPublic void PXAPI BFEngineStart(BFEngine* const bfEngine, PXEngine* const pxEngine);
+        PXPublic void PXAPI BFEngineUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine);
+        PXPublic void PXAPI BFEngineStop(BFEngine* const bfEngine, PXEngine* const pxEngine);
 
-    PXPrivate void BFEngineSceneRender(BFEngine* const bfEngine, PXEngine* const pxEngine);
-
-
-    PXPrivate void PXCalculateUIOffset(PX);
-
-    PXPrivate void BFEngineRenderScene(BFEngine* const bfEngine);
+    PXPrivate void PXAPI BFEngineSceneRender(BFEngine* const bfEngine, PXEngine* const pxEngine);
 
 
+    PXPrivate void PXAPI PXCalculateUIOffset(PX);
+
+    PXPrivate void PXAPI BFEngineRenderScene(BFEngine* const bfEngine);
 
 
 
-    PXPrivate void BFEngineUIElementCollision(BFEngine* const bfEngine, PXUIElement* const pxUIElement);
 
-    PXPrivate void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIElement);
+
+    PXPrivate void PXAPI BFEngineUIElementCollision(BFEngine* const bfEngine, PXUIElement* const pxUIElement);
+
+    PXPrivate void PXAPI BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIElement);
 
 
 

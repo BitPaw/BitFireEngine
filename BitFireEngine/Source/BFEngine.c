@@ -1259,7 +1259,7 @@ void ByteToString(char* string, size_t value)
 }
 */
 
-void BFEngineConstruct(BFEngine* const bfEngine)
+void PXAPI BFEngineConstruct(BFEngine* const bfEngine)
 {
     PXMemoryClear(bfEngine, sizeof(BFEngine));
 
@@ -1285,7 +1285,7 @@ void BFEngineConstruct(BFEngine* const bfEngine)
     bfEngine->Engine.Window.WindowSizeChangedCallBack = BFEngineOnWindowSizeChanged;
 }
 
-void BFEngineOnMouseButton(const BFEngine* const receiver, const PXWindow* sender, const PXMouseButton mouseButton, const PXKeyPressState buttonState)
+void PXAPI BFEngineOnMouseButton(const BFEngine* const receiver, const PXWindow* sender, const PXMouseButton mouseButton, const PXKeyPressState buttonState)
 {
 
   
@@ -1293,7 +1293,7 @@ void BFEngineOnMouseButton(const BFEngine* const receiver, const PXWindow* sende
     //printf("[#][OnMouseButton]\n");
 }
 
-void BFEngineOnMouseMove(const BFEngine* const engine, const PXWindow* sender, const PXMouse* mouse)
+void PXAPI BFEngineOnMouseMove(const BFEngine* const engine, const PXWindow* sender, const PXMouse* mouse)
 {
 
 #if UseRawMouseData
@@ -1313,7 +1313,7 @@ void BFEngineOnMouseMove(const BFEngine* const engine, const PXWindow* sender, c
     //printf("[#]------------- X:%5i Y:%5i\n", mouse->InputAxis[0], mouse->InputAxis[1]);
 }
 
-void BFEngineOnKeyBoardKey(const BFEngine* const engine, const PXWindow* sender, const PXKeyBoardKeyInfo keyBoardKeyInfo)
+void PXAPI BFEngineOnKeyBoardKey(const BFEngine* const engine, const PXWindow* sender, const PXKeyBoardKeyInfo keyBoardKeyInfo)
 {
     BFInputContainer* input = &engine->InputContainer;
     KeyBoardCache* keyBoard = &input->KeyBoardInput;
@@ -1401,12 +1401,12 @@ void BFEngineOnKeyBoardKey(const BFEngine* const engine, const PXWindow* sender,
     }
 }
 
-void BFEngineOnWindowCreated(const BFEngine* const receiver, const PXWindow* sender)
+void PXAPI BFEngineOnWindowCreated(const BFEngine* const receiver, const PXWindow* sender)
 {
     
 }
 
-void BFEngineOnWindowSizeChanged(const BFEngine* const receiver, const PXWindow* sender)
+void PXAPI BFEngineOnWindowSizeChanged(const BFEngine* const receiver, const PXWindow* sender)
 {
     return;
 
@@ -1431,12 +1431,12 @@ void BFEngineOnWindowSizeChanged(const BFEngine* const receiver, const PXWindow*
     PXFunctionInvoke(receiver->Engine.Graphic.ViewPortSet, receiver->Engine.Graphic.EventOwner, &pxViewPort);
 }
 
-void BFEngineOnWindowsMouseCaptureChanged(const BFEngine* const receiver, const PXWindow* sender)
+void PXAPI BFEngineOnWindowsMouseCaptureChanged(const BFEngine* const receiver, const PXWindow* sender)
 {
 
 }
 
-void BFEngineStart(BFEngine* const bfEngine, PXEngine* const pxEngine)
+void PXAPI BFEngineStart(BFEngine* const bfEngine, PXEngine* const pxEngine)
 { 
     PXLogPrint
     (
@@ -1446,12 +1446,7 @@ void BFEngineStart(BFEngine* const bfEngine, PXEngine* const pxEngine)
         "Loading start..."
     );
 
-    PXMemorySet(&bfEngine->pxModelTEST, 0, sizeof(PXModel));    
-
-    PXStopWatch stopwatch;
-
-    PXStopWatchConstruct(&stopwatch);
-
+#if PXLogEnable
     // Create Banner
     {
         char stampBuffer[256];
@@ -1501,23 +1496,9 @@ void BFEngineStart(BFEngine* const bfEngine, PXEngine* const pxEngine)
             processor.Model
         );
     }
+#endif
 
-
-    //SYSTEM_INFO systemInfo; // Windows SystemInfo
-    //GetSystemInfo(&systemInfo);
-
-   
-
-
-    PXTime timeBefore;
-
-    PXStopWatchTrigger(&stopwatch, &timeBefore);
-
-
-   // PXFunctionInvoke(pxBitFireEngine->StartUpCallBack, pxBitFireEngine);
-
-
-    PXCameraViewChangeToPerspective(bfEngine->Engine.CameraCurrent, 75, PXCameraAspectRatio(bfEngine->Engine.CameraCurrent), 0, 1);
+   // PXCameraViewChangeToPerspective(bfEngine->Engine.CameraCurrent, 75, PXCameraAspectRatio(bfEngine->Engine.CameraCurrent), 0, 1);
 
     PXLogPrint
     (
@@ -1530,7 +1511,7 @@ void BFEngineStart(BFEngine* const bfEngine, PXEngine* const pxEngine)
     PXFunctionInvoke(bfEngine->OnStartUp, bfEngine, pxEngine);
 }
 
-void BFEngineUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine)
+void PXAPI BFEngineUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine)
 {
     PXGraphic* const pxGraphic = &bfEngine->Engine.Graphic;
     // Pre-input
@@ -1696,12 +1677,12 @@ void BFEngineUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine)
     PXFunctionInvoke(bfEngine->OnGameUpdate, bfEngine, pxEngine);
 }
 
-void BFEngineStop(BFEngine* const bfEngine, PXEngine* const pxEngine)
+void PXAPI BFEngineStop(BFEngine* const bfEngine, PXEngine* const pxEngine)
 {
     PXFunctionInvoke(bfEngine->OnShutDown, bfEngine, pxEngine);
 }
 
-void BFEngineSceneRender(BFEngine* const bfEngine, PXEngine* const pxEngine)
+void PXAPI BFEngineSceneRender(BFEngine* const bfEngine, PXEngine* const pxEngine)
 {
     PXGraphic* const pxGraphic = &bfEngine->Engine.Graphic;
     PXOpenGL* const openGLContext = &pxGraphic->OpenGLInstance;
@@ -1781,7 +1762,7 @@ void BFEngineSceneRender(BFEngine* const bfEngine, PXEngine* const pxEngine)
    // PXFunctionInvoke(bfEngine->OnRenderUpdate, bfEngine, pxEngine);
 }
 
-void BFEngineRenderScene(BFEngine* const bfEngine)
+void PXAPI BFEngineRenderScene(BFEngine* const bfEngine)
 {
     PXGraphic* const pxGraphicContext = &bfEngine->Engine.Graphic;
 
@@ -2047,7 +2028,7 @@ void BFEngineRenderScene(BFEngine* const bfEngine)
      */
 }
 
-void PXPositionTranslate(PXRectangleOffset* const pxRectangleOffset)
+void PXAPI PXPositionTranslate(PXRectangleOffset* const pxRectangleOffset)
 {
     pxRectangleOffset->Left = -1 + pxRectangleOffset->Left;
     pxRectangleOffset->Top = -1 + pxRectangleOffset->Top; 
@@ -2055,7 +2036,7 @@ void PXPositionTranslate(PXRectangleOffset* const pxRectangleOffset)
     pxRectangleOffset->Bottom = 1- pxRectangleOffset->Bottom;
 }
 
-void BFEngineUIElementCollision
+void PXAPI BFEngineUIElementCollision
 (
     BFEngine* const bfEngine,
     PXUIElement* const pxUIElement
@@ -2141,7 +2122,7 @@ void BFEngineUIElementCollision
     bfEngine->CollisionCheckInfo.CurrentElement->Hover = PXUIHoverStateHovered;
 }
 
-void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIElement)
+void PXAPI BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIElement)
 {
     bfEngine->Engine.Graphic.ShaderProgramSelect(bfEngine->Engine.Graphic.EventOwner, 0);
 
@@ -2257,8 +2238,8 @@ void BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIEl
 
                 if (pxFontPageCharacter)
                 {
-                    textureWidth = font->MainPage.Texture.Image.Width;
-                    textureHeight = font->MainPage.Texture.Image.Height;
+                    textureWidth = font->MainPage.Texture->Image->Width;
+                    textureHeight = font->MainPage.Texture->Image->Height;
 
                     charWidth = pxFontPageCharacter->Size[0];
                     charHeight = pxFontPageCharacter->Size[1];
