@@ -1526,7 +1526,7 @@ void PXAPI BFEngineUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine)
 
     //---<Fetch UI-Input>----------------------------------------------------------
     {
-        const PXSize uiElementAmount = pxGraphic->UIElementLookUp.EntryAmountCurrent;
+        const PXSize uiElementAmount = pxEngine->UIElementLookUp.EntryAmountCurrent;
 
         PXUIHoverState* lastEntry = 0;
         int lastTargetID = -1;
@@ -1554,7 +1554,7 @@ void PXAPI BFEngineUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine)
         {
             PXDictionaryEntry pxDictionaryEntry;
 
-            PXDictionaryIndex(&pxGraphic->UIElementLookUp, lastTargetID, &pxDictionaryEntry);
+            PXDictionaryIndex(&pxEngine->UIElementLookUp, lastTargetID, &pxDictionaryEntry);
 
             PXUIElement* const pxUIElement = *(PXUIElement**)pxDictionaryEntry.Value;
             PXKeyBoard* const keyBoard = &bfEngine->Engine.Window.KeyBoardCurrentInput;
