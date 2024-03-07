@@ -89,8 +89,6 @@ extern "C"
     PXPrivate void PXAPI BFEngineSceneRender(BFEngine* const bfEngine, PXEngine* const pxEngine);
 
 
-    PXPrivate void PXAPI PXCalculateUIOffset(PX);
-
     PXPrivate void PXAPI BFEngineRenderScene(BFEngine* const bfEngine);
 
 

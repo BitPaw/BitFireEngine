@@ -12,12 +12,6 @@
 #include <OS/Time/PXTime.h>
 #include <Math/PXMath.h>
 
-#include <stdlib.h>
-#include <signal.h>
-
-
-
-
 
 PXInt32U _matrixModelID;
 PXInt32U _matrixViewID;
@@ -1451,9 +1445,9 @@ void PXAPI BFEngineStart(BFEngine* const bfEngine, PXEngine* const pxEngine)
     {
         char stampBuffer[256];
 
-        sprintf(stampBuffer, "%s - %s", __DATE__, __TIME__);
+        PXTextPrintA(stampBuffer, 256, "%s - %s", __DATE__, __TIME__);
 
-        printf
+        PXConsoleWriteA
         (
            // LoggingInfo,
             "\n"
@@ -1477,7 +1471,7 @@ void PXAPI BFEngineStart(BFEngine* const bfEngine, PXEngine* const pxEngine)
 
         PXProcessorFetchInfo(&processor);
 
-        printf
+        PXConsoleWriteA
         (
             //LoggingInfo,
             "+---------------------------------------------------------+\n"
@@ -1573,10 +1567,10 @@ void PXAPI BFEngineUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine)
 
                 float scale = 0.005f;
 
-                pxUIElement->Margin.Left += mouse->Delta[0] * scale;
-                pxUIElement->Margin.Top -= mouse->Delta[1] * scale;
-                pxUIElement->Margin.Right += mouse->Delta[0] * scale;
-                pxUIElement->Margin.Bottom -= mouse->Delta[1] * scale;
+               // pxUIElement->Margin.Left += mouse->Delta[0] * scale;
+              //  pxUIElement->Margin.Top -= mouse->Delta[1] * scale;
+              //  pxUIElement->Margin.Right += mouse->Delta[0] * scale;
+               // pxUIElement->Margin.Bottom -= mouse->Delta[1] * scale;
 
             }
         }  
@@ -2051,15 +2045,15 @@ void PXAPI BFEngineUIElementCollision
 
     PXRectangleOffset currentOffset;
 
-    PXCopy(PXRectangleOffset, &pxUIElement->Margin, &currentOffset);
+  //  PXCopy(PXRectangleOffset, &pxUIElement->Margin, &currentOffset);
 
     // Calculate accululated offset
     for (PXUIElement* pxUIElementParent = pxUIElement->Parent; pxUIElementParent; pxUIElementParent = pxUIElementParent->Parent)
     {
-        currentOffset.Left += pxUIElementParent->Margin.Left;
-        currentOffset.Top += pxUIElementParent->Margin.Top;
-        currentOffset.Right += pxUIElementParent->Margin.Right;
-        currentOffset.Bottom += pxUIElementParent->Margin.Bottom;
+      //  currentOffset.Left += pxUIElementParent->Margin.Left;
+       // currentOffset.Top += pxUIElementParent->Margin.Top;
+      //  currentOffset.Right += pxUIElementParent->Margin.Right;
+       // currentOffset.Bottom += pxUIElementParent->Margin.Bottom;
     }
 
 
@@ -2124,6 +2118,7 @@ void PXAPI BFEngineUIElementCollision
 
 void PXAPI BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const pxUIElement)
 {
+#if 0
     bfEngine->Engine.Graphic.ShaderProgramSelect(bfEngine->Engine.Graphic.EventOwner, 0);
 
     const PXBool isEnabled = pxUIElement->FlagsList & PXUIElementDoRendering;
@@ -2501,4 +2496,5 @@ void PXAPI BFEngineUIElementRender(BFEngine* const bfEngine, PXUIElement* const 
         pxGraphic->DrawColorRGBAF(pxGraphic->EventOwner, 0.2f, 0.2f, 0.2f, 1.0f);
         pxGraphic->RectangleDraw(pxGraphic->EventOwner, currentOffset.Left, currentOffset.Top, currentOffset.Right, currentOffset.Bottom, 0x02);
     }   
+#endif
 }

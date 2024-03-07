@@ -1,6 +1,11 @@
-﻿#include "main.h"
+﻿#pragma check_stack(off)
+
+int _fltused = 0;
+
+#include "main.h"
 
 #include <OS/Console/PXConsole.h>
+#include <OS/Memory/PXMemory.h>
 
 
 PXSprite* pxChracterFace = 0;
@@ -31,11 +36,21 @@ int main(int amountOFParameters, char** parameter)
     bfEngine.OnShutDown = OnShutDownEvent;
     bfEngine.Engine.OnUserUpdate = OnNetworkUpdate;
     bfEngine.OnNetworkUpdate = OnNetworkUpdate;
-    bfEngine.OnGameUpdate = OnGameUpdateEvent;
+    bfEngine.Engine.OnGameUpdate = OnGameUpdateEvent;
     bfEngine.Engine.OnRenderUpdate = OnRenderUpdateEvent;
     bfEngine.Engine.OnInteract = OnIntereact;
 
-    PXEngineStart(&bfEngine.Engine);
+    // Start
+    {
+        PXTextCopyA("Cleaved", 7, &bfEngine.Engine.ApplicationName, 64);
+
+        const PXActionResult startResult = PXEngineStart(&bfEngine.Engine);
+
+        if(PXActionSuccessful != startResult)
+        {
+            return EXIT_FAILURE;
+        }
+    }   
 
     while (PXEngineIsRunning(&bfEngine.Engine))
     {
@@ -160,6 +175,7 @@ void PXAPI OnStartUpEvent(BFEngine* const bitFireEngine)
         pxSpriteCreateEventData.Sprite.Position.Z = 0.01;
         pxSpriteCreateEventData.Sprite.Scaling.X = 0.5;
         pxSpriteCreateEventData.Sprite.Scaling.Y = 0.5;
+        //pxSpriteCreateEventData.Sprite.HitBoxCreate = PXTrue;
 
         PXEngineResourceCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
     }
@@ -182,6 +198,7 @@ void PXAPI OnStartUpEvent(BFEngine* const bitFireEngine)
         pxSpriteCreateEventData.Sprite.Position.Z = 0.01;
         pxSpriteCreateEventData.Sprite.Scaling.X = 0.5f;
         pxSpriteCreateEventData.Sprite.Scaling.Y = 0.5f;
+        //pxSpriteCreateEventData.Sprite.HitBoxCreate = PXTrue;
 
         PXEngineResourceCreate(&bitFireEngine->Engine, &pxSpriteCreateEventData);
     }
@@ -443,25 +460,17 @@ void PXAPI OnStartUpEvent(BFEngine* const bitFireEngine)
     PXTextMakeFixedGlobalA(&_pxDialogMessagePage[3].Text, "It really is difficult.");
 
 }
+
 void PXAPI OnShutDownEvent(const BFEngine* bitFireEngine)
 {
 
 }
+
 void PXAPI OnGameUpdateEvent(const BFEngine* bitFireEngine, const float deltaTime)
 {
     //PXCameraFollow(bitFireEngine->Engine.CameraCurrent, deltaTime);
 
-    PXText pxText;
-    PXTextConstructBufferW(&pxText, 64);
-
-    PXTextClear(&pxText);
-
-    PXTextPrint(&pxText, L"[Cleaved] FPS:%5.2f, ms:%4.2f", bitFireEngine->Engine.FramesPerSecound, bitFireEngine->Engine.FrameTime);
-
-    PXWindowTitleSet(&bitFireEngine->Engine.Window, &pxText);
-
-
-
+   
 }
 
 void PXAPI OnRenderUpdateEvent(BFEngine* const bitFireEngine, BFInputContainer* input)
@@ -470,7 +479,7 @@ void PXAPI OnRenderUpdateEvent(BFEngine* const bitFireEngine, BFInputContainer* 
         PXEngineResourceRenderInfo pxEngineResourceRenderInfo;
         pxEngineResourceRenderInfo.Type = PXEngineCreateTypeSkybox;
         pxEngineResourceRenderInfo.CameraReference = bitFireEngine->Engine.CameraCurrent;
-        pxEngineResourceRenderInfo.SkyBoxRender.SkyBoxReference = _skybox;
+        pxEngineResourceRenderInfo.ObjectReference = _skybox;
 
         PXEngineResourceRender(&bitFireEngine->Engine, &pxEngineResourceRenderInfo);
     }
@@ -497,7 +506,7 @@ void PXAPI OnRenderUpdateEvent(BFEngine* const bitFireEngine, BFInputContainer* 
             PXEngineResourceRenderInfo pxEngineResourceRenderInfo;
             pxEngineResourceRenderInfo.Type = PXEngineCreateTypeSprite;
             pxEngineResourceRenderInfo.CameraReference = bitFireEngine->Engine.CameraCurrent;
-            pxEngineResourceRenderInfo.SpriteRender.SpriteReference = pxSprite;
+            pxEngineResourceRenderInfo.ObjectReference = pxSprite;
 
             PXEngineResourceRender(&bitFireEngine->Engine, &pxEngineResourceRenderInfo);
         }
@@ -524,7 +533,34 @@ void PXAPI OnRenderUpdateEvent(BFEngine* const bitFireEngine, BFInputContainer* 
             PXEngineResourceRenderInfo pxEngineResourceRenderInfo;
             pxEngineResourceRenderInfo.Type = PXEngineCreateTypeText;
             pxEngineResourceRenderInfo.CameraReference = bitFireEngine->Engine.CameraCurrent;
-            pxEngineResourceRenderInfo.TextRender.TextReference = pxEngineText;
+            pxEngineResourceRenderInfo.ObjectReference = pxEngineText;
+
+            PXEngineResourceRender(&bitFireEngine->Engine, &pxEngineResourceRenderInfo);
+        }
+    }
+
+    // HitBoxes
+    {
+        PXDictionary* const hitBoxList = &bitFireEngine->Engine.HitBoxLookUp;
+
+        for (PXSize i = 0; i < hitBoxList->EntryAmountCurrent; ++i)
+        {
+            PXDictionaryEntry pxDictionaryEntry;
+            PXHitBox* pxHitBox = PXNull;
+
+            PXDictionaryIndex(hitBoxList, i, &pxDictionaryEntry);
+
+            pxHitBox = *(PXHitBox**)pxDictionaryEntry.Value;
+
+            if (!pxHitBox->Enabled)
+            {
+                continue;
+            }
+
+            PXEngineResourceRenderInfo pxEngineResourceRenderInfo;
+            pxEngineResourceRenderInfo.Type = PXEngineCreateTypeHitBox;
+            pxEngineResourceRenderInfo.CameraReference = bitFireEngine->Engine.CameraCurrent;
+            pxEngineResourceRenderInfo.ObjectReference = pxHitBox;
 
             PXEngineResourceRender(&bitFireEngine->Engine, &pxEngineResourceRenderInfo);
         }
