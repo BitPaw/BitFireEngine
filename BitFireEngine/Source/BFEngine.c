@@ -1309,6 +1309,7 @@ void PXAPI BFEngineOnMouseMove(const BFEngine* const engine, const PXWindow* sen
 
 void PXAPI BFEngineOnKeyBoardKey(const BFEngine* const engine, const PXWindow* sender, const PXKeyBoardKeyInfo keyBoardKeyInfo)
 {
+#if 0
     BFInputContainer* input = &engine->InputContainer;
     KeyBoardCache* keyBoard = &input->KeyBoardInput;
 
@@ -1393,6 +1394,7 @@ void PXAPI BFEngineOnKeyBoardKey(const BFEngine* const engine, const PXWindow* s
             break;
         }
     }
+#endif
 }
 
 void PXAPI BFEngineOnWindowCreated(const BFEngine* const receiver, const PXWindow* sender)

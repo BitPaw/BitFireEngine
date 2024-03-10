@@ -4,6 +4,9 @@
 #include <OS/Dialog/PXDialog.h>
 #include <OS/Hardware/PXProcessor.h>
 #include <OS/Memory/PXMemory.h>
+#include <OS/Console/PXConsole.h>
+#include <OS/UI/PXUI.h>
+#include <OS/Graphic/PXGraphic.h>
 
 #if 1
 #if defined _M_IX86
@@ -22,12 +25,16 @@
 
 int _fltused = 0;
 
+
+PXEngine pxEngineScene;
+
 void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine);
 void PXAPI OnShutDownEvent(BFEngine* const bfEngine, PXEngine* const pxEngine);
 void PXAPI OnUserInputUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine, PXPlayerMoveInfo* const pxPlayerMoveInfo);
 void PXAPI OnNetworkUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine);
 void PXAPI OnGameUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine);
 void PXAPI OnRenderUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine);
+void PXAPI PXOnEngineResourceAdded(void* const owner, PXEngine* const pxEngine, PXEngineResourceCreateInfo* const pxEngineResourceCreateInfo);
 
 #if OSWindows
 
@@ -52,12 +59,28 @@ int main(int amountOFParameters, char** parameter)
     bfEngine.OnGameUpdate = OnGameUpdateEvent;
     bfEngine.OnRenderUpdate = OnRenderUpdateEvent;
 
-    PXTextCopyA("BitFireEngine", 7, &bfEngine.Engine.ApplicationName, 64);
 
-    PXEngineStart(&bfEngine.Engine);
 
-    while (PXEngineIsRunning(&bfEngine.Engine))
+
+    PXTextCopyA("BitFireEngine", 14, &bfEngine.Engine.ApplicationName, 64);
+
+    bfEngine.Engine.ResourceAdded = PXOnEngineResourceAdded;
+
+    // Start
+    {
+        PXEngineStartInfo pxEngineStartInfo;
+        PXClear(PXEngineStartInfo, &pxEngineStartInfo);
+        pxEngineStartInfo.Mode = PXGraphicInitializeModeOSGUI;
+        pxEngineStartInfo.System = PXGraphicSystemOpenGL;
+
+        PXEngineStart(&bfEngine.Engine, &pxEngineStartInfo);
+    }
+
+    while(PXEngineIsRunning(&bfEngine.Engine))
+    {
         PXEngineUpdate(&bfEngine.Engine);
+        PXEngineUpdate(&pxEngineScene);
+    }      
 
     PXEngineStop(&bfEngine.Engine);
 
@@ -67,11 +90,14 @@ int main(int amountOFParameters, char** parameter)
 PXTexture2D* _dialogBoxTexture = 0;
 
 
+// Scene
+PXUIElement* _panelSceneViewRender = 0;
 
 // Frame A
 PXUIElement* _panelMenuMainContainer = 0;
 PXUIElement* _panelMenuButtonFile = 0;
 PXUIElement* _panelMenuButtonFileText = 0;
+PXUIElement* _panelMenuTreeView = 0;
 PXUIElement* _panelMenuButtonFileDropDownOpen = 0;
 PXUIElement* _panelMenuButtonFileDropDownSave = 0;
 PXUIElement* _panelMenuButtonEdit = 0;
@@ -152,16 +178,56 @@ const PXInt8U indexDATA[] =
     0,1,2,3,4,5
 };
 
-void PXAPI ButtonThingOnClick(PXUIElement* pxUIElement)
+void PXAPI ButtonThingOnClick(PXUIElementOnClickInfo* const pxUIElementOnClickInfo)
 {
     PXText pxText;
     PXTextConstructBufferA(&pxText, 260);
     PXTextClear(&pxText);
 
-  //  PXActionResult pxActionResult = PXDialogFileOpen(&pxText);
+    PXDialogSystem pxDialogSystem;
 
-    PXTextPrint(&pxText, "Path Selected: %s\n");
+    PXDialogSystemInitialize(&pxDialogSystem);
+
+    PXActionResult pxActionResult = PXDialogFileOpen(&pxDialogSystem, &pxText);
+
+    PXLogPrint
+    (
+        PXLoggingInfo,
+        "BF",
+        "Event",
+        "Click: Path select:%s",
+        pxText.TextA
+    );
+
+    PXDialogSystemRelease(&pxDialogSystem);
+
 }
+
+ void PXAPI PXOnEngineResourceAdded(void* const owner, PXEngine* const pxEngine, PXEngineResourceCreateInfo* const pxEngineResourceCreateInfo)
+{
+#if 0
+     if(!_panelMenuTreeView)
+     {
+         return;
+     }
+
+     PXUIElementUpdateInfo pxUIElementUpdateInfo;
+     pxUIElementUpdateInfo.UIElementReference = _panelMenuTreeView;
+     pxUIElementUpdateInfo.WindowReference = &pxEngine->Window;
+     pxUIElementUpdateInfo.Property = PXUIElementPropertyItemAdd;
+
+     PXUIElementUpdateOSStyle(&pxUIElementUpdateInfo);
+
+     PXLogPrint
+     (
+         PXLoggingInfo,
+         "BF",
+         "ADD",
+         "XXXXXXXXXXXXX"
+     );
+#endif
+}
+
 
 void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 {
@@ -185,9 +251,10 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
     //-----------------------------------------------------
     {
         PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);       
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
         pxUIElementCreateData.ObjectReference = &_panelMenuMainContainer;
+        pxUIElementCreateData.Name = "Menu";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
@@ -209,6 +276,7 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         PXEngineResourceCreateInfo pxUIElementCreateData;
         PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.Name = "Menu";
         pxUIElementCreateData.ObjectReference = &_panelMenuButtonFile;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
         pxUIElementCreateData.UIElement.Paranet = _panelMenuMainContainer;
@@ -226,12 +294,13 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 
 
     //-----------------------------------------------------
-    // Panel:MainContent
+    // Panel::Scene::Text
     //-----------------------------------------------------
     {
         PXEngineResourceCreateInfo pxUIElementCreateData;
         PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.Name = "Titel";
         pxUIElementCreateData.ObjectReference = &_panelMenuButtonFileText;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.Paranet = _panelMenuButtonFile;
@@ -244,7 +313,36 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
 
+    //-----------------------------------------------------
+    // Panel::Scene::Render
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.Name = "SceneRender";
+        pxUIElementCreateData.ObjectReference = &_dialogBoxTexture;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeRenderFrame;
+        pxUIElementCreateData.UIElement.Paranet = _panelMenuMainContainer;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.005;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.105;
+        pxUIElementCreateData.UIElement.Position.MarginRight = 0.005;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.005;
+        pxUIElementCreateData.UIElement.SceneRender.Engine = &pxEngineScene;
 
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+
+        pxEngineScene.OnRenderUpdate = OnRenderUpdateEvent;
+       // pxEngineScene.OnStartUp = OnStartUpEvent;
+       // pxEngineScene.OnShutDown = OnShutDownEvent;
+        //pxEngineScene.OnUserUpdate = OnUserInputUpdate;
+        pxEngineScene.OnNetworkUpdate = OnNetworkUpdate;
+        pxEngineScene.OnGameUpdate = OnGameUpdateEvent;
+        pxEngineScene.OnRenderUpdate = OnRenderUpdateEvent;
+    }
 
     //-----------------------------------------------------
     // ???
@@ -253,6 +351,7 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         PXEngineResourceCreateInfo pxUIElementCreateData;
         PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.Name = "Button A";
         pxUIElementCreateData.ObjectReference = &_panelMenuButtonEdit;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
         pxUIElementCreateData.UIElement.Paranet = _panelMenuMainContainer;
@@ -272,6 +371,7 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         PXEngineResourceCreateInfo pxUIElementCreateData;
         PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.Name = "Edit";
         pxUIElementCreateData.ObjectReference = &_panelMenuButtonEditText;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.Paranet = _panelMenuButtonEdit;
@@ -400,6 +500,7 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         PXEngineResourceCreateInfo pxUIElementCreateData;
         PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.Name = "Info";
         pxUIElementCreateData.ObjectReference = &_uiSceneElementsTitleBarText;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
@@ -410,13 +511,33 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         pxUIElementCreateData.UIElement.Position.MarginTop = 0.005f;
         pxUIElementCreateData.UIElement.Position.MarginRight = 0.005f;
         pxUIElementCreateData.UIElement.Position.MarginBottom = 0.005f;
-        pxUIElementCreateData.UIElement.TextInfo.Content = "Scene";
+        pxUIElementCreateData.UIElement.TextInfo.Content = "Objects";
         pxUIElementCreateData.UIElement.TextInfo.FontID = DefaultFont;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
 
+    //-----------------------------------------------------
+    // Panel::Scene::Render
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.Name = "Loaded Objects";
+        pxUIElementCreateData.ObjectReference = &_panelMenuTreeView;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeView;
+        pxUIElementCreateData.UIElement.Paranet = _uiSceneElements;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.005;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.1;
+        pxUIElementCreateData.UIElement.Position.MarginRight = 0.005;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.305;
 
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
 
     //-----------------------------------------------------
     // Button
@@ -435,12 +556,12 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         pxUIElementCreateData.UIElement.Color.Blue = 0.15f;
         pxUIElementCreateData.UIElement.Color.Alpha = 1.0f;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft | PXUIElementKeepHeight;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.025f;    
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.02f;    
         pxUIElementCreateData.UIElement.Position.MarginTop = 1.8f;
-        pxUIElementCreateData.UIElement.Position.MarginRight = 0.025f;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.05f;
+        pxUIElementCreateData.UIElement.Position.MarginRight = 0.02f;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.02f;
         pxUIElementCreateData.UIElement.Position.Height = 35;
-        pxUIElementCreateData.UIElement.OnClickCallback = ButtonThingOnClick;
+        pxUIElementCreateData.UIElement.ButtonInfo.OnClickCallback = ButtonThingOnClick;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
@@ -464,10 +585,10 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         pxUIElementCreateData.UIElement.Position.MarginTop = 0.005f;
         pxUIElementCreateData.UIElement.Position.MarginRight = 0.005f;
         pxUIElementCreateData.UIElement.Position.MarginBottom = 0.005f;
-        pxUIElementCreateData.UIElement.TextInfo.Content = "Button";
+        pxUIElementCreateData.UIElement.TextInfo.Content = "Load";
         pxUIElementCreateData.UIElement.TextInfo.FontID = DefaultFont;
 
-        //PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
 
 
@@ -613,6 +734,75 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 
 
 
+
+    // DOne UI Stuff
+
+    // Load data for UI
+    {
+        PXDictionary* const uiElementLookup = &pxEngine->UIElementLookUp;
+
+        void* previousItem = 0;
+
+        PXSize sixed = uiElementLookup->EntryAmountCurrent;
+
+        PXUIElement* uiElementLast = PXNull;
+        PXUIElement* uiElementItemLast = PXNull;
+        PXBool isChild = PXFalse;
+
+        for(PXSize i = 0; i < sixed; ++i)
+        {
+            PXDictionaryEntry pxDictionaryEntry;
+            PXUIElement* uiElement = PXNull;
+
+            PXDictionaryIndex(uiElementLookup, i, &pxDictionaryEntry);
+
+            uiElement = *(PXUIElement**)pxDictionaryEntry.Value;
+
+
+            // Check
+            if(uiElementLast)
+            {
+                isChild = uiElement->Parent == uiElementLast;
+            }
+            uiElementLast = uiElement;
+            
+
+            PXUIElement* uiElementItem = PXNull;
+    
+
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &uiElementItem;
+            pxUIElementCreateData.Name = uiElement->NameData;
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
+            pxUIElementCreateData.UIElement.TreeViewItem.TreeView = _panelMenuTreeView;
+            pxUIElementCreateData.UIElement.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+
+            if(isChild)
+            {
+                pxUIElementCreateData.UIElement.TreeViewItem.ItemParent = uiElementItemLast;
+            }    
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+
+            uiElementItemLast = uiElementItem;
+
+            
+          //  PXUIElementUpdateInfo pxUIElementUpdateInfo;
+           // pxUIElementUpdateInfo.UIElementReference = _panelMenuTreeView;
+           // pxUIElementUpdateInfo.WindowReference = &pxEngine->Window;
+           // pxUIElementUpdateInfo.Property = PXUIElementPropertyItemAdd;
+
+           // PXUIElementUpdateOSStyle(&pxUIElementUpdateInfo);
+
+          
+        }
+    }
+
+
+
+
     //-----------------------------------------------------
     // Shader-Object
     //-----------------------------------------------------
@@ -624,7 +814,7 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         pxUIElementCreateData.ShaderProgram.VertexShaderFilePath = "Shader/Object_Vertex.glsl";
         pxUIElementCreateData.ShaderProgram.PixelShaderFilePath = "Shader/Object_Fragment.glsl";
 
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        PXEngineResourceCreate(&pxEngineScene, &pxUIElementCreateData);
     }
 
 
@@ -719,8 +909,8 @@ PXGraphicUIElementRegister(pxGraphic, &_positionText);*/
         pxSkyBoxCreateEventData.SkyBox.SkyBoxTextureE = "Texture/SkyBox_Side.png";
         pxSkyBoxCreateEventData.SkyBox.SkyBoxTextureF = "Texture/SkyBox_Side.png";
 
-        PXEngineResourceCreate(&bfEngine->Engine, &pxSkyBoxCreateEventData);
-        bfEngine->DefaultSkyBox = _sceneSkyBox;
+        PXEngineResourceCreate(&pxEngineScene, &pxSkyBoxCreateEventData);
+        //bfEngine->DefaultSkyBox = _sceneSkyBox;
     }
 
     //-----------------------------------------------------
@@ -739,8 +929,10 @@ PXGraphicUIElementRegister(pxGraphic, &_positionText);*/
         _pxModelMapWorldGrid->IndexBuffer.IndexDataAmount = sizeof(indexDATA) / sizeof(PXInt8U);
         _pxModelMapWorldGrid->IndexBuffer.DataType = PXDataTypeInt08U;
         _pxModelMapWorldGrid->IndexBuffer.DrawModeID = PXDrawModeIDTriangle; // PXDrawModeIDPoint | PXDrawModeIDLine;
+                
+        PXFunctionInvoke(pxEngineScene.Graphic.ModelRegister, pxEngineScene.Graphic.EventOwner, _pxModelMapWorldGrid);
 
-        pxEngine->Graphic.ModelRegister(pxEngine->Graphic.EventOwner, _pxModelMapWorldGrid);
+        _pxModelMapWorldGrid->Enabled = PXTrue;
     }
 
     //-----------------------------------------------------
@@ -754,7 +946,7 @@ PXGraphicUIElementRegister(pxGraphic, &_positionText);*/
         pxSkyBoxCreateEventData.ShaderProgram.VertexShaderFilePath = "Shader/WorldGrid_Vertex.glsl";
         pxSkyBoxCreateEventData.ShaderProgram.PixelShaderFilePath = "Shader/WorldGrid_Fragment.glsl";
 
-        PXEngineResourceCreate(pxEngine, &pxSkyBoxCreateEventData);
+        PXEngineResourceCreate(&pxEngineScene, &pxSkyBoxCreateEventData);
 
         _pxModelMapWorldGrid->ShaderProgramReference = _pxWorldGridShader;
         _pxModelMapWorldGrid->RenderBothSides = PXTrue;
@@ -763,8 +955,6 @@ PXGraphicUIElementRegister(pxGraphic, &_positionText);*/
     }
 
     PXCameraConstruct(&_worldCamera);
-
-    PXGraphicUIElementPrint(&pxEngine->Graphic);
 }
 
 void PXAPI OnShutDownEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
@@ -824,15 +1014,50 @@ void PXAPI OnGameUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
     titleColor.Blue = (xx);
 
     animation += 0.01;
+
+    PXCameraRotateXYZ(pxEngine->CameraCurrent, 1.0f, 0.3, 0.83);
 }
 
 void PXAPI OnRenderUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 {
     PXCameraFollow(pxEngine->CameraCurrent, 0.05);
 
+
+    {
+        PXEngineResourceRenderInfo pxEngineResourceRenderInfo;
+        pxEngineResourceRenderInfo.Type = PXEngineCreateTypeSkybox;
+        pxEngineResourceRenderInfo.CameraReference = pxEngine->CameraCurrent;
+        pxEngineResourceRenderInfo.ObjectReference = _sceneSkyBox;
+
+        PXEngineResourceRender(pxEngine, &pxEngineResourceRenderInfo);
+    }
+
+
+
+    {
+        PXEngineResourceRenderInfo pxEngineResourceRenderInfo;
+        pxEngineResourceRenderInfo.Type = PXEngineCreateTypeModel;
+        pxEngineResourceRenderInfo.CameraReference = pxEngine->CameraCurrent;
+        pxEngineResourceRenderInfo.ObjectReference = _pxModelMapWorldGrid;
+
+        PXEngineResourceRender(pxEngine, &pxEngineResourceRenderInfo);
+    }
+
+
+
+#if 0
+    glBegin(GL_TRIANGLES);
+    glColor3f(1.0f, 0.0f, 0.0f); glVertex2f(-1.0f, -1.0f);
+    glColor3f(0.0f, 1.0f, 0.0f); glVertex2f( 1.0f, -1.0f);
+    glColor3f(0.0f, 0.0f, 1.0f); glVertex2f( 0.0f,  1.0f);
+    glEnd();
+#endif
+
+
+
     // Grid
-    pxEngine->Graphic.ModelDraw(pxEngine->Graphic.EventOwner, _pxModelMapWorldGrid, pxEngine->CameraCurrent);
+    //pxEngine->Graphic.ModelDraw(pxEngine->Graphic.EventOwner, _pxModelMapWorldGrid, pxEngine->CameraCurrent);
 
     // Tank
-    pxEngine->Graphic.ModelDraw(pxEngine->Graphic.EventOwner, _pxModelMap, pxEngine->CameraCurrent);
+    //pxEngine->Graphic.ModelDraw(pxEngine->Graphic.EventOwner, _pxModelMap, pxEngine->CameraCurrent);
 }

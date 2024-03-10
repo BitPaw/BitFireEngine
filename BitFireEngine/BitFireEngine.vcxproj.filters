@@ -18,15 +18,9 @@
     <ClCompile Include="Source\BFEngine.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Source\System\Device\KeyBoard\KeyBoardCache.c">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\BFEngine.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Device\KeyBoard\KeyBoardCache.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

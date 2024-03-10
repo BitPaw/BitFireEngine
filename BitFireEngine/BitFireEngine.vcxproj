@@ -28,10 +28,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\BFEngine.c" />
-    <ClCompile Include="Source\System\Device\KeyBoard\KeyBoardCache.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\System\Device\KeyBoard\KeyBoardCache.h" />
     <ClInclude Include="Source\BFEngine.h" />
   </ItemGroup>
   <ItemGroup>

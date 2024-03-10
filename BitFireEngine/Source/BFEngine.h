@@ -11,19 +11,10 @@
 #include <OS/Hardware/PXController.h>
 #include <Engine/PXEngine.h>
 
-#include "System/Device/KeyBoard/KeyBoardCache.h"
-
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-
-    typedef struct BFInputContainer_
-    {
-        KeyBoardCache KeyBoardInput;
-    }
-    BFInputContainer;
-
 
     typedef struct BFEngineUIElementCollisionCheckInfo_
     {
@@ -48,10 +39,6 @@ extern "C"
 
 
 
-        //---[Private}---------------------------------
-
-        BFInputContainer InputContainer;
-        //----------------------------------------------
 
         BFEngineUIElementCollisionCheckInfo CollisionCheckInfo;
 
