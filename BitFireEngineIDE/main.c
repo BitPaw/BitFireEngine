@@ -25,6 +25,8 @@
 
 int _fltused = 0;
 
+#define PXDefaultOffset 0.005f
+#define PXDefaultTitleBar 28.0f
 
 PXEngine pxEngineScene;
 
@@ -92,6 +94,12 @@ PXTexture2D* _dialogBoxTexture = 0;
 
 // Scene
 PXUIElement* _panelSceneViewRender = 0;
+
+// Frame console
+PXUIElement* _panelConsoleMain = 0;
+PXUIElement* _panelConsoleTextFrame = 0;
+PXUIElement* _panelConsoleTextContent = 0;
+PXUIElement* _panelConsoleData = 0;
 
 // Frame A
 PXUIElement* _panelMenuMainContainer = 0;
@@ -178,29 +186,49 @@ const PXInt8U indexDATA[] =
     0,1,2,3,4,5
 };
 
-void PXAPI ButtonThingOnClick(PXUIElementOnClickInfo* const pxUIElementOnClickInfo)
+void PXAPI PXOnUIElementInteract(PXUIElementInteractInfo* const pxUIElementInteractInfo)
 {
-    PXText pxText;
-    PXTextConstructBufferA(&pxText, 260);
-    PXTextClear(&pxText);
+    switch(pxUIElementInteractInfo->Type)
+    {
+        case PXUIElementInteractTypeSelect:
+        {
+            PXLogPrint
+            (
+                PXLoggingInfo,
+                "BF",
+                "Event",
+                "Select: <%s>",
+                pxUIElementInteractInfo->UIElementSelected->NameData
+            );
+            
+            break;
+        }
+        case PXUIElementInteractTypeClick:
+        {
+            PXText pxText;
+            PXTextConstructBufferA(&pxText, 260);
+            PXTextClear(&pxText);
 
-    PXDialogSystem pxDialogSystem;
+            PXDialogSystem pxDialogSystem;
 
-    PXDialogSystemInitialize(&pxDialogSystem);
+            PXDialogSystemInitialize(&pxDialogSystem);
 
-    PXActionResult pxActionResult = PXDialogFileOpen(&pxDialogSystem, &pxText);
+            PXActionResult pxActionResult = PXDialogFileOpen(&pxDialogSystem, &pxText);
 
-    PXLogPrint
-    (
-        PXLoggingInfo,
-        "BF",
-        "Event",
-        "Click: Path select:%s",
-        pxText.TextA
-    );
+            PXLogPrint
+            (
+                PXLoggingInfo,
+                "BF",
+                "Event",
+                "Click: Path select:%s",
+                pxText.TextA
+            );
 
-    PXDialogSystemRelease(&pxDialogSystem);
+            PXDialogSystemRelease(&pxDialogSystem);
 
+            break;
+        }
+    }
 }
 
  void PXAPI PXOnEngineResourceAdded(void* const owner, PXEngine* const pxEngine, PXEngineResourceCreateInfo* const pxEngineResourceCreateInfo)
@@ -254,20 +282,95 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);       
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
         pxUIElementCreateData.ObjectReference = &_panelMenuMainContainer;
-        pxUIElementCreateData.Name = "Menu";
+        pxUIElementCreateData.Name = "SceneA";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 0.41f;
-        pxUIElementCreateData.UIElement.Position.MarginTop = 0.02f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginRight = 0.41f;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.02f;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.54f;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
 
 
+    //-----------------------------------------------------
+    // Panel:Menu
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_panelConsoleMain;
+        pxUIElementCreateData.Name = "ConsoleA";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.41f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 1.48f;
+        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_panelConsoleTextFrame;
+        pxUIElementCreateData.Name = "ConsoleB";
+        pxUIElementCreateData.UIElement.Paranet = _panelConsoleMain;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_panelConsoleTextContent;
+        pxUIElementCreateData.Name = "Text";
+        pxUIElementCreateData.UIElement.Paranet = _panelConsoleTextFrame;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
+        pxUIElementCreateData.UIElement.TextInfo.Content = "Console";
+        pxUIElementCreateData.UIElement.TextInfo.FontID = DefaultFont;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_panelConsoleData;
+        pxUIElementCreateData.Name = "Console Data";
+        pxUIElementCreateData.UIElement.Paranet = _panelConsoleTextFrame;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTextEdit;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop;
+        pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.1f;
+        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
 
     //-----------------------------------------------------
     // Panel:MainContent
@@ -276,18 +379,18 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         PXEngineResourceCreateInfo pxUIElementCreateData;
         PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-        pxUIElementCreateData.Name = "Menu";
+        pxUIElementCreateData.Name = "SceneB";
         pxUIElementCreateData.ObjectReference = &_panelMenuButtonFile;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
         pxUIElementCreateData.UIElement.Paranet = _panelMenuMainContainer;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonReference;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementNormal;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft | PXUIElementKeepHeight;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.005;
-        pxUIElementCreateData.UIElement.Position.MarginTop = 0.005;
-        pxUIElementCreateData.UIElement.Position.MarginRight = 0.005;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = 1.90;
-        pxUIElementCreateData.UIElement.Position.Height = 35;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
@@ -300,13 +403,14 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         PXEngineResourceCreateInfo pxUIElementCreateData;
         PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-        pxUIElementCreateData.Name = "Titel";
+        pxUIElementCreateData.Name = "SceneC";
         pxUIElementCreateData.ObjectReference = &_panelMenuButtonFileText;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.Paranet = _panelMenuButtonFile;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
-        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
         pxUIElementCreateData.UIElement.TextInfo.Content = "Scene";
         pxUIElementCreateData.UIElement.TextInfo.FontID = DefaultFont;
 
@@ -327,11 +431,12 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.005;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginTop = 0.105;
-        pxUIElementCreateData.UIElement.Position.MarginRight = 0.005;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.005;
+        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
         pxUIElementCreateData.UIElement.SceneRender.Engine = &pxEngineScene;
+
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
 
@@ -388,68 +493,6 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 
 
     //-----------------------------------------------------
-    // ???
-    //-----------------------------------------------------
-    {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-        pxUIElementCreateData.ObjectReference = &_panelMenuButtonView;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
-        pxUIElementCreateData.UIElement.Paranet = _panelMenuMainContainer;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonReference;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementNormal;
-        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft | PXUIElementKeepHeight;
-        pxUIElementCreateData.UIElement.Position.Height = 35;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.35f;
-        pxUIElementCreateData.UIElement.Position.MarginRight = 1.45f;
-
-       // PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-
-
-    //-----------------------------------------------------
-    // ???
-    //-----------------------------------------------------
-    {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-        pxUIElementCreateData.ObjectReference = &_panelMenuButtonViewText;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
-        pxUIElementCreateData.UIElement.Paranet = _panelMenuButtonView;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
-        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft | PXUIElementKeepHeight;
-        pxUIElementCreateData.UIElement.Position.Height = 35;
-        pxUIElementCreateData.UIElement.TextInfo.Content = "View";
-        pxUIElementCreateData.UIElement.TextInfo.FontID = DefaultFont;
-
-      //  PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-
-
-
-    //-----------------------------------------------------
-    // Panel:MainContent
-    //-----------------------------------------------------
-    {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-        pxUIElementCreateData.ObjectReference = &_panelMainContent;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
-        pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.05f;
-
-       // PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-    //-----------------------------------------------------
     // Panel:Assets (Left one)
     //-----------------------------------------------------
     {
@@ -462,10 +505,10 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         pxUIElementCreateData.UIElement.Paranet = _panelMainContent;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.02f;
-        pxUIElementCreateData.UIElement.Position.MarginTop = 0.02f;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginRight = 1.60f;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.02f;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
@@ -485,7 +528,7 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         pxUIElementCreateData.UIElement.Paranet = _uiSceneElements;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementNormal;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepHeight;
-        pxUIElementCreateData.UIElement.Position.Height = 35;
+        pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
         pxUIElementCreateData.UIElement.Position.MarginBottom = 1.90f;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
@@ -506,11 +549,12 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
         pxUIElementCreateData.UIElement.Paranet = _uiSceneElementsTitleBar;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
-        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.005f;
-        pxUIElementCreateData.UIElement.Position.MarginTop = 0.005f;
-        pxUIElementCreateData.UIElement.Position.MarginRight = 0.005f;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.005f;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
         pxUIElementCreateData.UIElement.TextInfo.Content = "Objects";
         pxUIElementCreateData.UIElement.TextInfo.FontID = DefaultFont;
 
@@ -531,10 +575,11 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.005;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginTop = 0.1;
-        pxUIElementCreateData.UIElement.Position.MarginRight = 0.005;
+        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginBottom = 0.305;
+        pxUIElementCreateData.UIElement.InteractCallBack = PXOnUIElementInteract;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
@@ -556,12 +601,12 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         pxUIElementCreateData.UIElement.Color.Blue = 0.15f;
         pxUIElementCreateData.UIElement.Color.Alpha = 1.0f;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft | PXUIElementKeepHeight;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.02f;    
+        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginTop = 1.8f;
-        pxUIElementCreateData.UIElement.Position.MarginRight = 0.02f;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.02f;
+        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.Height = 35;
-        pxUIElementCreateData.UIElement.ButtonInfo.OnClickCallback = ButtonThingOnClick;
+        pxUIElementCreateData.UIElement.InteractCallBack = PXOnUIElementInteract;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
@@ -581,87 +626,16 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         pxUIElementCreateData.UIElement.Paranet = _infoPanelTextSpawn;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.005f;
-        pxUIElementCreateData.UIElement.Position.MarginTop = 0.005f;
-        pxUIElementCreateData.UIElement.Position.MarginRight = 0.005f;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.005f;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
         pxUIElementCreateData.UIElement.TextInfo.Content = "Load";
         pxUIElementCreateData.UIElement.TextInfo.FontID = DefaultFont;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
 
-
-
-    //-----------------------------------------------------
-    // ???
-    //-----------------------------------------------------
-    {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-        pxUIElementCreateData.ObjectReference = &_infoPanelText;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
-        pxUIElementCreateData.UIElement.Paranet = _infoPanelTextSpawn;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
-        pxUIElementCreateData.UIElement.Color.Red = 0.5f;
-        pxUIElementCreateData.UIElement.Color.Green = 0.5f;
-        pxUIElementCreateData.UIElement.Color.Blue = 0.5f;
-        pxUIElementCreateData.UIElement.Color.Alpha = 1.0f;
-        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.02f;
-        pxUIElementCreateData.UIElement.Position.MarginTop = 0.02f;
-        pxUIElementCreateData.UIElement.Position.MarginRight = 0.02f;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.02f;
-        pxUIElementCreateData.UIElement.TextInfo.Content = "Button";
-        pxUIElementCreateData.UIElement.TextInfo.FontID = DefaultFont;
-
-       // PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-
-
-    //-----------------------------------------------------
-    // Panel: Scene
-    //-----------------------------------------------------
-    {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-        pxUIElementCreateData.ObjectReference = &_uiPanelScene;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
-        pxUIElementCreateData.UIElement.Paranet = _panelMainContent;
-        pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
-        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.36f;
-        pxUIElementCreateData.UIElement.Position.MarginTop = 0.02f;
-        pxUIElementCreateData.UIElement.Position.MarginRight = 0.36f;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.02f;
-
-      //  PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-
-
-    //-----------------------------------------------------
-    // RenderFrame: Scene
-    //-----------------------------------------------------
-    {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-        pxUIElementCreateData.ObjectReference = &_uiSceneTexturePanel;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeRenderFrame;
-        pxUIElementCreateData.UIElement.Paranet = _uiPanelScene;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.05f;
-        pxUIElementCreateData.UIElement.Position.MarginTop = 0.05f;
-        pxUIElementCreateData.UIElement.Position.MarginRight = 0.05f;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.05f;
-
-       // PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
 
 
 
@@ -679,9 +653,9 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignRight;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 1.6f;
-        pxUIElementCreateData.UIElement.Position.MarginTop = 0.02f;
-        pxUIElementCreateData.UIElement.Position.MarginRight = 0.02f;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.02f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.54f;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
@@ -701,8 +675,11 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementNormal;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepHeight;
-        pxUIElementCreateData.UIElement.Position.Height = 35;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = 1.90f;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
@@ -721,11 +698,12 @@ void PXAPI OnStartUpEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.Paranet = _uiInfoPanelTitleBar;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
-        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.005f;
-        pxUIElementCreateData.UIElement.Position.MarginTop = 0.005f;
-        pxUIElementCreateData.UIElement.Position.MarginRight = 0.005f;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.005f;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
         pxUIElementCreateData.UIElement.TextInfo.Content = "Info";
         pxUIElementCreateData.UIElement.TextInfo.FontID = DefaultFont;
 
@@ -991,7 +969,12 @@ void PXAPI OnUserInputUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine,
     {
         if (bfEngine->CollisionCheckInfo.CurrentElement)
         {
-            PXFunctionInvoke(bfEngine->CollisionCheckInfo.CurrentElement->OnClickCallback, bfEngine->CollisionCheckInfo.CurrentElement);
+            PXUIElementInteractInfo pxUIElementInteractInfo;
+            PXClear(PXUIElementInteractInfo, &pxUIElementInteractInfo);
+            pxUIElementInteractInfo.UIElementSender = bfEngine->CollisionCheckInfo.CurrentElement;
+            pxUIElementInteractInfo.Type = PXUIElementInteractTypeSelect;
+
+            PXFunctionInvoke(bfEngine->CollisionCheckInfo.CurrentElement->InteractCallBack, &pxUIElementInteractInfo);
         }
     }
 
