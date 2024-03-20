@@ -1259,14 +1259,7 @@ void PXAPI BFEngineConstruct(BFEngine* const bfEngine)
 
     PXCameraConstruct(&bfEngine->CameraPlayer);
 
-    bfEngine->Engine.Window.EventReceiver = bfEngine;
-    bfEngine->Engine.Window.MouseScrollCallBack = PXNull;
-    bfEngine->Engine.Window.MouseClickCallBack = PXNull;
-    bfEngine->Engine.Window.MouseClickDoubleCallBack = PXNull;
-    bfEngine->Engine.Window.MouseEnterCallBack = PXNull;
-    bfEngine->Engine.Window.MouseLeaveCallBack = PXNull;
-    bfEngine->Engine.Window.MouseMoveCallBack = BFEngineOnMouseMove;
-    bfEngine->Engine.Window.KeyBoardKeyCallBack = BFEngineOnKeyBoardKey;
+   // bfEngine->Engine.Window.EventReceiver = bfEngine;
 
     bfEngine->Engine.Owner = bfEngine;
     bfEngine->Engine.OnStartUp = BFEngineStart;
@@ -1275,156 +1268,6 @@ void PXAPI BFEngineConstruct(BFEngine* const bfEngine)
     //bfEngine->Engine.OnNetworkUpdate = xxxxxxxx;
     bfEngine->Engine.OnGameUpdate = BFEngineUpdate;
     bfEngine->Engine.OnRenderUpdate = BFEngineSceneRender;
-
-    bfEngine->Engine.Window.WindowSizeChangedCallBack = BFEngineOnWindowSizeChanged;
-}
-
-void PXAPI BFEngineOnMouseButton(const BFEngine* const receiver, const PXWindow* sender, const PXMouseButton mouseButton, const PXKeyPressState buttonState)
-{
-
-  
-
-    //printf("[#][OnMouseButton]\n");
-}
-
-void PXAPI BFEngineOnMouseMove(const BFEngine* const engine, const PXWindow* sender, const PXMouse* mouse)
-{
-
-#if UseRawMouseData
-
-#else
-    // Calculate relative input
-    mouse.InputAxis[0] = mouse.Position[0] - deltaX;
-    mouse.InputAxis[1] = mouse.Position[1] - deltaY;
-
-    // Update position
-    mouse.Position[0] = x;
-    mouse.Position[1] = y;
-#endif
-
-
-    //printf("[#][OnMouseMove] X:%5i Y:%5i\n", mouse->Position[0], mouse->Position[1]);
-    //printf("[#]------------- X:%5i Y:%5i\n", mouse->InputAxis[0], mouse->InputAxis[1]);
-}
-
-void PXAPI BFEngineOnKeyBoardKey(const BFEngine* const engine, const PXWindow* sender, const PXKeyBoardKeyInfo keyBoardKeyInfo)
-{
-#if 0
-    BFInputContainer* input = &engine->InputContainer;
-    KeyBoardCache* keyBoard = &input->KeyBoardInput;
-
-    unsigned char* inputButton = 0;
-
-
-    switch (keyBoardKeyInfo.Key)
-    {
-        case KeySpace: inputButton = &keyBoard->SpaceBar; break;
-        case KeyShiftLeft: inputButton = &keyBoard->ShitftLeft; break;
-
-        case KeyA:
-        case KeyASmal: inputButton = &keyBoard->A; break;
-        case KeyB:
-        case KeyBSmal: inputButton = &keyBoard->B; break;
-        case KeyC:
-        case KeyCSmal: inputButton = &keyBoard->C; break;
-        case KeyD:
-        case KeyDSmal: inputButton = &keyBoard->D; break;
-        case KeyE:
-        case KeyESmal: inputButton = &keyBoard->E; break;
-        case KeyF:
-        case KeyFSmal: inputButton = &keyBoard->F; break;
-        case KeyG:
-        case KeyGSmal: inputButton = &keyBoard->G; break;
-        case KeyH:
-        case KeyHSmal: inputButton = &keyBoard->H; break;
-        case KeyI:
-        case KeyISmal: inputButton = &keyBoard->I; break;
-        case KeyJ:
-        case KeyJSmal: inputButton = &keyBoard->J; break;
-        case KeyK:
-        case KeyKSmal: inputButton = &keyBoard->K; break;
-
-        case KeyL:
-        case KeyLSmal: inputButton = &keyBoard->L; break;
-        case KeyM:
-        case KeyMSmal: inputButton = &keyBoard->M; break;
-        case KeyN:
-        case KeyNSmal: inputButton = &keyBoard->N; break;
-        case KeyO:
-        case KeyOSmal: inputButton = &keyBoard->O; break;
-        case KeyP:
-        case KeyPSmal: inputButton = &keyBoard->P; break;
-        case KeyQ:
-        case KeyQSmal: inputButton = &keyBoard->Q; break;
-        case KeyR:
-        case KeyRSmal: inputButton = &keyBoard->R; break;
-        case KeyS:
-        case KeySSmal: inputButton = &keyBoard->S; break;
-        case KeyT:
-        case KeyTSmal: inputButton = &keyBoard->T; break;
-        case KeyU:
-        case KeyUSmal: inputButton = &keyBoard->U; break;
-        case KeyV:
-        case KeyVSmal: inputButton = &keyBoard->V; break;
-        case KeyW:
-        case KeyWSmal:inputButton = &keyBoard->W; break;
-        case KeyX:
-        case KeyXSmal: inputButton = &keyBoard->X; break;
-        case KeyY:
-        case KeyYSmal: inputButton = &keyBoard->Y; break;
-        case KeyZ:
-        case KeyZSmal: inputButton = &keyBoard->Z; break;
-    }
-
-    if (!inputButton)
-    {
-        return;
-    }
-
-    switch (keyBoardKeyInfo.Mode)
-    {
-        case PXKeyPressStateDown:
-        {
-            PXInputButtonIncrement(inputButton);
-            break;
-        }
-        case PXKeyPressStateUp:
-        {
-            PXInputButtonReset(inputButton);
-            break;
-        }
-    }
-#endif
-}
-
-void PXAPI BFEngineOnWindowCreated(const BFEngine* const receiver, const PXWindow* sender)
-{
-    
-}
-
-void PXAPI BFEngineOnWindowSizeChanged(const BFEngine* const receiver, const PXWindow* sender)
-{
-    return;
-
-    if (receiver )
-    {
-        if (receiver->Engine.CameraCurrent)
-        {
-            PXCameraAspectRatioChange(receiver->Engine.CameraCurrent, sender->Width, sender->Height);
-        }  
-    }
-
-    //printf("[Camera] Is now %i x %i\n", sender->Width, sender->Height);
-
-    PXViewPort pxViewPort;
-    pxViewPort.X = 0;
-    pxViewPort.Y = 0;
-    pxViewPort.Width = sender->Width;
-    pxViewPort.Height = sender->Height;
-    pxViewPort.ClippingMinimum = 0;
-    pxViewPort.ClippingMaximum = 1;
-
-    PXFunctionInvoke(receiver->Engine.Graphic.ViewPortSet, receiver->Engine.Graphic.EventOwner, &pxViewPort);
 }
 
 void PXAPI BFEngineOnWindowsMouseCaptureChanged(const BFEngine* const receiver, const PXWindow* sender)
@@ -1509,6 +1352,7 @@ void PXAPI BFEngineStart(BFEngine* const bfEngine, PXEngine* const pxEngine)
 
 void PXAPI BFEngineUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine)
 {
+#if 0
     PXGraphic* const pxGraphic = &bfEngine->Engine.Graphic;
     // Pre-input
 
@@ -1527,20 +1371,6 @@ void PXAPI BFEngineUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine)
         PXUIHoverState* lastEntry = 0;
         int lastTargetID = -1;
 
-        PXMouse* const mouse = &bfEngine->Engine.Window.MouseCurrentInput;
-
-        float mouseHitBoxOffset = 0.01f;
-        float scale = PXWindowScreenRatio(&bfEngine->Engine.Window);
-        float mouseAX = mouse->PositionNormalisized[0] + mouseHitBoxOffset * scale;
-        float mouseAY = mouse->PositionNormalisized[1] - mouseHitBoxOffset * scale;
-        float mouseBX = mouse->PositionNormalisized[0] - mouseHitBoxOffset * scale;
-        float mouseBY = mouse->PositionNormalisized[1] + mouseHitBoxOffset * scale;
-
-
-        bfEngine->CollisionCheckInfo.MousePosition[0] = mouseAX;
-        bfEngine->CollisionCheckInfo.MousePosition[1] = mouseAY;
-        bfEngine->CollisionCheckInfo.MousePosition[2] = mouseBX;
-        bfEngine->CollisionCheckInfo.MousePosition[3] = mouseBY;
 
 
 
@@ -1669,6 +1499,7 @@ void PXAPI BFEngineUpdate(BFEngine* const bfEngine, PXEngine* const pxEngine)
     //--------------------------------------------------------------------------
 
     //PXThreadSleep(0, 12);
+#endif
 
     PXFunctionInvoke(bfEngine->OnGameUpdate, bfEngine, pxEngine);
 }
@@ -1682,7 +1513,7 @@ void PXAPI BFEngineSceneRender(BFEngine* const bfEngine, PXEngine* const pxEngin
 {
     PXGraphic* const pxGraphic = &bfEngine->Engine.Graphic;
     PXOpenGL* const openGLContext = &pxGraphic->OpenGLInstance;
-    PXWindow* const window = (PXWindow*)pxGraphic->AttachedWindow;
+    PXWindow* const window = (PXWindow*)pxGraphic->WindowReference;
     
     //-------------------------------------------------------------------------
     // UI-Rendering
@@ -1690,9 +1521,9 @@ void PXAPI BFEngineSceneRender(BFEngine* const bfEngine, PXEngine* const pxEngin
 #if 1
 
   
-    PXGraphicUIElementIterator(pxGraphic, bfEngine, BFEngineUIElementRender, PXNull);
+   // PXGraphicUIElementIterator(pxGraphic, bfEngine, BFEngineUIElementRender, PXNull);
 
-    PXGraphicUIElementIterator(pxGraphic, bfEngine, BFEngineUIElementCollision, PXNull);
+    //PXGraphicUIElementIterator(pxGraphic, bfEngine, BFEngineUIElementCollision, PXNull);
 #else
     PXFunctionInvoke(bfEngine->OnRenderUpdate, bfEngine, pxEngine);
 #endif // 1

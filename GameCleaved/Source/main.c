@@ -473,6 +473,7 @@ void PXAPI OnGameUpdateEvent(const BFEngine* bitFireEngine, const float deltaTim
    
 }
 
+/*
 void PXAPI OnRenderUpdateEvent(BFEngine* const bitFireEngine, BFInputContainer* input)
 {
     {
@@ -566,3 +567,4 @@ void PXAPI OnRenderUpdateEvent(BFEngine* const bitFireEngine, BFInputContainer* 
         }
     }
 }
+*/
