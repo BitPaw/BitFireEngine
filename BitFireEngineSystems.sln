@@ -3,17 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BitFireEngine", "BitFireEngine\BitFireEngine.vcxproj", "{1420D6D2-264B-4789-9ADF-2FD0093760AD}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameCleaved", "GameCleaved\GameCleaved.vcxproj", "{B062EB4C-95E1-42F8-890C-F6A03E67397D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD} = {1420D6D2-264B-4789-9ADF-2FD0093760AD}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameZEE", "GameZEE\GameZEE.vcxproj", "{B3A452FE-C7BD-430A-8E6B-B3E33E2E79AA}"
-	ProjectSection(ProjectDependencies) = postProject
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD} = {1420D6D2-264B-4789-9ADF-2FD0093760AD}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BitFireEngineIDE", "BitFireEngineIDE\BitFireEngineIDE.vcxproj", "{4D3B3EC5-81F4-48A0-BCD2-B462D7229A92}"
 EndProject
@@ -43,31 +35,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Debug|Windows 10 - 32Bit.ActiveCfg = Debug|Win32
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Debug|Windows 10 - 32Bit.Build.0 = Debug|Win32
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Debug|Windows 10 - 64Bit.ActiveCfg = Debug|Win32
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Debug|Windows 10 - 64Bit.Build.0 = Debug|Win32
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Debug|Windows 7 - 64Bit.ActiveCfg = Debug|Win32
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Debug|Windows 7 - 64Bit.Build.0 = Debug|Win32
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Debug|Windows XP.ActiveCfg = Debug|Win32
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Debug|x64.ActiveCfg = Debug|x64
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Debug|x64.Build.0 = Debug|x64
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Debug|x86.ActiveCfg = Debug|Win32
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Debug|x86.Build.0 = Debug|Win32
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Release|Any CPU.ActiveCfg = Debug|Win32
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Release|Windows 10 - 32Bit.ActiveCfg = Debug|Win32
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Release|Windows 10 - 32Bit.Build.0 = Debug|Win32
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Release|Windows 10 - 64Bit.ActiveCfg = Debug|Win32
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Release|Windows 10 - 64Bit.Build.0 = Debug|Win32
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Release|Windows 7 - 64Bit.ActiveCfg = Debug|Win32
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Release|Windows 7 - 64Bit.Build.0 = Debug|Win32
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Release|Windows XP.ActiveCfg = Debug|Win32
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Release|Windows XP.Build.0 = Debug|Win32
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Release|x64.ActiveCfg = Release|x64
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Release|x64.Build.0 = Release|x64
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Release|x86.ActiveCfg = Release|Win32
-		{1420D6D2-264B-4789-9ADF-2FD0093760AD}.Release|x86.Build.0 = Release|Win32
 		{B062EB4C-95E1-42F8-890C-F6A03E67397D}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{B062EB4C-95E1-42F8-890C-F6A03E67397D}.Debug|Windows 10 - 32Bit.ActiveCfg = Debug|Win32
 		{B062EB4C-95E1-42F8-890C-F6A03E67397D}.Debug|Windows 10 - 32Bit.Build.0 = Debug|Win32

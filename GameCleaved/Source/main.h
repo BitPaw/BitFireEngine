@@ -44,4 +44,4 @@ void PXAPI OnNetworkUpdate(const BFEngine* bitFireEngine);
 void PXAPI OnStartUpEvent(BFEngine* const bitFireEngine);
 void PXAPI OnShutDownEvent(const BFEngine* bitFireEngine);
 void PXAPI OnGameUpdateEvent(const BFEngine* bitFireEngine, const float deltaTime);
-//void PXAPI OnRenderUpdateEvent(BFEngine* const bitFireEngine, BFInputContainer* input);
+void PXAPI OnRenderUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine);

@@ -44,7 +44,12 @@ int main(int amountOFParameters, char** parameter)
     {
         PXTextCopyA("Cleaved", 7, &bfEngine.Engine.ApplicationName, 64);
 
-        const PXActionResult startResult = PXEngineStart(&bfEngine.Engine);
+        PXEngineStartInfo pxEngineStartInfo;
+        PXClear(PXEngineStartInfo, &pxEngineStartInfo);
+        pxEngineStartInfo.Mode = PXGraphicInitializeModeWindowfull;
+        pxEngineStartInfo.System = PXGraphicSystemOpenGL;
+
+        const PXActionResult startResult = PXEngineStart(&bfEngine.Engine, &pxEngineStartInfo);
 
         if(PXActionSuccessful != startResult)
         {
@@ -473,22 +478,21 @@ void PXAPI OnGameUpdateEvent(const BFEngine* bitFireEngine, const float deltaTim
    
 }
 
-/*
-void PXAPI OnRenderUpdateEvent(BFEngine* const bitFireEngine, BFInputContainer* input)
+void PXAPI OnRenderUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine)
 {
     {
         PXEngineResourceRenderInfo pxEngineResourceRenderInfo;
         pxEngineResourceRenderInfo.Type = PXEngineCreateTypeSkybox;
-        pxEngineResourceRenderInfo.CameraReference = bitFireEngine->Engine.CameraCurrent;
+        pxEngineResourceRenderInfo.CameraReference = pxEngine->CameraCurrent;
         pxEngineResourceRenderInfo.ObjectReference = _skybox;
 
-        PXEngineResourceRender(&bitFireEngine->Engine, &pxEngineResourceRenderInfo);
+        PXEngineResourceRender(pxEngine, &pxEngineResourceRenderInfo);
     }
 
 
     // Sprite
     {
-        PXDictionary* const spirteList = &bitFireEngine->Engine.SpritelLookUp;
+        PXDictionary* const spirteList = &pxEngine->SpritelLookUp;
 
         for (PXSize i = 0; i < spirteList->EntryAmountCurrent; ++i)
         {
@@ -506,16 +510,16 @@ void PXAPI OnRenderUpdateEvent(BFEngine* const bitFireEngine, BFInputContainer* 
 
             PXEngineResourceRenderInfo pxEngineResourceRenderInfo;
             pxEngineResourceRenderInfo.Type = PXEngineCreateTypeSprite;
-            pxEngineResourceRenderInfo.CameraReference = bitFireEngine->Engine.CameraCurrent;
+            pxEngineResourceRenderInfo.CameraReference = pxEngine->CameraCurrent;
             pxEngineResourceRenderInfo.ObjectReference = pxSprite;
 
-            PXEngineResourceRender(&bitFireEngine->Engine, &pxEngineResourceRenderInfo);
+            PXEngineResourceRender(pxEngine, &pxEngineResourceRenderInfo);
         }
     }
 
     // Text
     {
-        PXDictionary* const textList = &bitFireEngine->Engine.TextLookUp;
+        PXDictionary* const textList = &pxEngine->TextLookUp;
 
         for (PXSize i = 0; i < textList->EntryAmountCurrent; ++i)
         {
@@ -533,16 +537,16 @@ void PXAPI OnRenderUpdateEvent(BFEngine* const bitFireEngine, BFInputContainer* 
 
             PXEngineResourceRenderInfo pxEngineResourceRenderInfo;
             pxEngineResourceRenderInfo.Type = PXEngineCreateTypeText;
-            pxEngineResourceRenderInfo.CameraReference = bitFireEngine->Engine.CameraCurrent;
+            pxEngineResourceRenderInfo.CameraReference = pxEngine->CameraCurrent;
             pxEngineResourceRenderInfo.ObjectReference = pxEngineText;
 
-            PXEngineResourceRender(&bitFireEngine->Engine, &pxEngineResourceRenderInfo);
+            PXEngineResourceRender(pxEngine, &pxEngineResourceRenderInfo);
         }
     }
 
     // HitBoxes
     {
-        PXDictionary* const hitBoxList = &bitFireEngine->Engine.HitBoxLookUp;
+        PXDictionary* const hitBoxList = &pxEngine->HitBoxLookUp;
 
         for (PXSize i = 0; i < hitBoxList->EntryAmountCurrent; ++i)
         {
@@ -560,11 +564,10 @@ void PXAPI OnRenderUpdateEvent(BFEngine* const bitFireEngine, BFInputContainer* 
 
             PXEngineResourceRenderInfo pxEngineResourceRenderInfo;
             pxEngineResourceRenderInfo.Type = PXEngineCreateTypeHitBox;
-            pxEngineResourceRenderInfo.CameraReference = bitFireEngine->Engine.CameraCurrent;
+            pxEngineResourceRenderInfo.CameraReference = pxEngine->CameraCurrent;
             pxEngineResourceRenderInfo.ObjectReference = pxHitBox;
 
-            PXEngineResourceRender(&bitFireEngine->Engine, &pxEngineResourceRenderInfo);
+            PXEngineResourceRender(pxEngine, &pxEngineResourceRenderInfo);
         }
     }
 }
-*/

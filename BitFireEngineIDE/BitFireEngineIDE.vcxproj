@@ -276,9 +276,6 @@
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BitFireEngine\BitFireEngine.vcxproj">
-      <Project>{1420d6d2-264b-4789-9adf-2fd0093760ad}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\PXUltima\PXUltima.vcxproj">
       <Project>{7d027ed8-ed69-414c-a832-40cd80be72d7}</Project>
     </ProjectReference>
@@ -287,7 +284,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="..\..\PXUltima\Code\[Export]\PXUltimaC\32B-Windows-Debug\PXUltima.dll">
+    <CopyFileToFolders Include="..\..\PXUltima\Code\[Export]\PXUltimaC\64B-Windows-Debug\PXUltima.dll">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <FileType>Document</FileType>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
@@ -296,6 +293,8 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Windows XP|x64'">true</DeploymentContent>
     </CopyFileToFolders>
+    <None Include="Shader\Gismo_Fragment.glsl" />
+    <None Include="Shader\Gismo_Vertex.glsl" />
     <None Include="Shader\Object_Fragment.frag" />
     <None Include="Shader\Object_Fragment.glsl" />
     <None Include="Shader\Object_Vertex.glsl" />
