@@ -1,4 +1,3 @@
-
 #include <Engine/PXEngine.h>
 #include <Math/PXMath.h>
 #include <OS/Dialog/PXDialog.h>
@@ -34,6 +33,11 @@ BFBitFireIDE;
 
 #define PXDefaultOffset 0.005f
 #define PXDefaultTitleBar 28.0f
+
+
+void PXAPI BFObjectTreeViewEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent);
+void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE);
+void PXAPI BFInfoSelectUpdate(BFBitFireIDE* const bfBitFireIDE);
 
 
 void PXAPI BFSceneOnStartup(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine);
@@ -192,75 +196,6 @@ const PXInt8U indexDATA[] =
     0,1,2,3,4,5
 };
 
-#if 0
-void PXAPI PXOnUIElementInteract(PXUIElementInteractInfo* const pxUIElementInteractInfo)
-{
-    switch(pxUIElementInteractInfo->Type)
-    {
-        case PXUIElementInteractTypeSelect:
-        {
-            PXUIElement* const uiElementSelected = pxUIElementInteractInfo->UIElementSelected;
-
-            PXLogPrint
-            (
-                PXLoggingInfo,
-                "BF",
-                "Event",
-                "Select: <%s>",
-                pxUIElementInteractInfo->UIElementSelected->NameData
-            );
-            
-
-            _uiInfoPanelObjectNameContent->TextInfo.Content = pxUIElementInteractInfo->UIElementSelected->NameData;
-
-            const char* typeName = PXUIElementTypeToString(uiElementSelected->Type);
-
-            _uiInfoPanelObjectTypeContent->TextInfo.Content = typeName;
-
-            PXGUIElementUpdateInfo pxUIElementUpdateInfo[2];
-            PXClearList(PXGUIElementUpdateInfo, pxUIElementUpdateInfo, 2);
-
-            pxUIElementUpdateInfo[0].UIElement = _uiInfoPanelObjectNameContent;
-            pxUIElementUpdateInfo[0].WindowReference = &pxEngineBF->Window;
-            pxUIElementUpdateInfo[0].Property = PXUIElementPropertyTextContent;
-
-            pxUIElementUpdateInfo[1].UIElement = _uiInfoPanelObjectTypeContent;
-            pxUIElementUpdateInfo[1].WindowReference = &pxEngineBF->Window;
-            pxUIElementUpdateInfo[1].Property = PXUIElementPropertyTextContent;
-
-           // PXGUIElementUpdate(PXNull, pxUIElementUpdateInfo, 2);
-
-            break;
-        }
-        case PXUIElementInteractTypeClick:
-        {
-            PXText pxText;
-            PXTextConstructBufferA(&pxText, 260);
-            PXTextClear(&pxText);
-
-            PXDialogSystem pxDialogSystem;
-
-            PXDialogSystemInitialize(&pxDialogSystem);
-
-            PXActionResult pxActionResult = PXDialogFileOpen(&pxDialogSystem, &pxText);
-
-            PXLogPrint
-            (
-                PXLoggingInfo,
-                "BF",
-                "Event",
-                "Click: Path select:%s",
-                pxText.TextA
-            );
-
-            PXDialogSystemRelease(&pxDialogSystem);
-
-            break;
-        }
-    }
-}
-#endif
-
 void PXAPI PXOnUserInputUpdateScene(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine, PXPlayerMoveInfo* const pxPlayerMoveInfo)
 {
     PXLogPrint
@@ -318,6 +253,360 @@ void PXAPI PXOnEngineResourceAdded(BFBitFireIDE* const bfBitFireIDE, PXEngine* c
 
    
 #endif
+}
+
+/*
+  switch(pxUIElementInteractInfo->Type)
+            {
+                case PXUIElementInteractTypeSelect:
+                {
+
+
+                    break;
+                }
+                case PXUIElementInteractTypeClick:
+                {
+                    PXText pxText;
+                    PXTextConstructBufferA(&pxText, 260);
+                    PXTextClear(&pxText);
+
+                    PXDialogSystem pxDialogSystem;
+
+                    PXDialogSystemInitialize(&pxDialogSystem);
+
+                    PXActionResult pxActionResult = PXDialogFileOpen(&pxDialogSystem, &pxText);
+
+                    PXLogPrint
+                    (
+                        PXLoggingInfo,
+                        "BF",
+                        "Event",
+                        "Click: Path select:%s",
+                        pxText.TextA
+                    );
+
+                    PXDialogSystemRelease(&pxDialogSystem);
+
+                    break;
+                }
+            }
+
+*/
+
+
+void PXAPI BFObjectTreeViewEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
+{
+    switch(pxWindowEvent->Type)
+    {
+        case PXWindowEventTypeSelect:
+        {
+            PXUIElement* const uiElementSelected = pxWindowEvent->UIElementSender;
+
+            PXLogPrint
+            (
+                PXLoggingInfo,
+                "BF",
+                "Event",
+                "Select: <%s>",
+                uiElementSelected->NameData
+            );
+
+
+           // _uiInfoPanelObjectNameContent->TextInfo.Content = pxUIElementInteractInfo->UIElementSelected->NameData;
+
+            //const char* typeName = PXUIElementTypeToString(uiElementSelected->Type);
+
+           // _uiInfoPanelObjectTypeContent->TextInfo.Content = typeName;
+
+            PXGUIElementUpdateInfo pxUIElementUpdateInfo[2];
+            PXClearList(PXGUIElementUpdateInfo, pxUIElementUpdateInfo, 2);
+
+            pxUIElementUpdateInfo[0].UIElement = _uiInfoPanelObjectNameContent;
+            pxUIElementUpdateInfo[0].WindowReference = &bfBitFireIDE->EngineEditor.Window;
+            pxUIElementUpdateInfo[0].Property = PXUIElementPropertyTextContent;
+            pxUIElementUpdateInfo[0].Data.Text.Content = _uiInfoPanelObjectNameContent->NameData;
+
+            pxUIElementUpdateInfo[1].UIElement = _uiInfoPanelObjectTypeContent;
+            pxUIElementUpdateInfo[1].WindowReference = &bfBitFireIDE->EngineEditor.Window;
+            pxUIElementUpdateInfo[1].Property = PXUIElementPropertyTextContent;
+            pxUIElementUpdateInfo[1].Data.Text.Content = _uiInfoPanelObjectTypeContent->NameData;
+
+             PXGUIElementUpdate(PXNull, pxUIElementUpdateInfo, 2);          
+
+            break;
+        }
+        default:
+            break;
+    }  
+}
+
+void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
+{
+    PXEngine* const pxEngineEditor = &bfBitFireIDE->EngineEditor;
+    PXEngine* const pxEngineScene = &bfBitFireIDE->EngineScene;
+
+    // DOne UI Stuff
+
+    {
+        // Load data for UI
+        {
+            PXDictionary parentList;
+
+            PXDictionaryConstruct(&parentList, sizeof(PXUIElement*), sizeof(PXUIElement*), PXDictionaryValueLocalityInternalEmbedded);
+
+
+            PXDictionary* const uiElementLookup = &pxEngineEditor->GUISystem.UIElementLookUp;
+
+            PXUIElement* uiAncer = 0;
+            PXUIElement* sceneAncer = 0;
+
+            //  Create UI element, a container for the full UI things
+            {
+                PXUIElement* uiElementItem = PXNull;
+
+                PXEngineResourceCreateInfo pxUIElementCreateData;
+                PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+                pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+                pxUIElementCreateData.ObjectReference = &uiElementItem;
+                pxUIElementCreateData.Name = "UI";
+                pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
+                pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
+                pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _panelMenuTreeView;
+                pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+                pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = PXNull;
+
+                PXEngineResourceCreate(pxEngineEditor, &pxUIElementCreateData);
+
+                PXDictionaryAdd(&parentList, &uiElementItem, &uiElementItem);
+
+                uiAncer = uiElementItem;
+            }
+
+            // Create scene UI container elemenents
+            {
+                PXUIElement* uiElementItem = PXNull;
+
+                PXEngineResourceCreateInfo pxUIElementCreateData;
+                PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+                pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+                pxUIElementCreateData.ObjectReference = &uiElementItem;
+                pxUIElementCreateData.Name = "Scene";
+                pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
+                pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
+                pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _panelMenuTreeView;
+                pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+                pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = PXNull;
+
+                PXEngineResourceCreate(pxEngineEditor, &pxUIElementCreateData);
+
+                PXDictionaryAdd(&parentList, &uiElementItem, &uiElementItem);
+
+                // Add multible 
+                {
+                    PXUIElement* uiTreeViewItemModel = PXNull;
+                    PXUIElement* uiTreeViewItemShader = PXNull;
+                    PXUIElement* uiTreeViewItemImage = PXNull;
+
+
+                    PXEngineResourceCreateInfo pxUIElementCreateData[8];
+                    PXClearList(PXEngineResourceCreateInfo, &pxUIElementCreateData, 8);
+                    pxUIElementCreateData[0].CreateType = PXEngineCreateTypeUIElement;
+                    pxUIElementCreateData[0].ObjectReference = &uiTreeViewItemModel;
+                    pxUIElementCreateData[0].Name = "Model";
+                    pxUIElementCreateData[0].UIElement.Type = PXUIElementTypeTreeViewItem;
+                    pxUIElementCreateData[0].UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
+                    pxUIElementCreateData[0].UIElement.Data.TreeViewItem.TreeView = _panelMenuTreeView;
+                    pxUIElementCreateData[0].UIElement.Data.TreeViewItem.ItemParent = uiElementItem;
+                    pxUIElementCreateData[0].UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+
+                    pxUIElementCreateData[1].CreateType = PXEngineCreateTypeUIElement;
+                    pxUIElementCreateData[1].ObjectReference = &uiTreeViewItemShader;
+                    pxUIElementCreateData[1].Name = "Shader";
+                    pxUIElementCreateData[1].UIElement.Type = PXUIElementTypeTreeViewItem;
+                    pxUIElementCreateData[1].UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
+                    pxUIElementCreateData[1].UIElement.Data.TreeViewItem.TreeView = _panelMenuTreeView;
+                    pxUIElementCreateData[1].UIElement.Data.TreeViewItem.ItemParent = uiElementItem;
+                    pxUIElementCreateData[1].UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+
+                    pxUIElementCreateData[2].CreateType = PXEngineCreateTypeUIElement;
+                    pxUIElementCreateData[2].ObjectReference = &uiTreeViewItemImage;
+                    pxUIElementCreateData[2].Name = "Image";
+                    pxUIElementCreateData[2].UIElement.Type = PXUIElementTypeTreeViewItem;
+                    pxUIElementCreateData[2].UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
+                    pxUIElementCreateData[2].UIElement.Data.TreeViewItem.TreeView = _panelMenuTreeView;
+                    pxUIElementCreateData[2].UIElement.Data.TreeViewItem.ItemParent = uiElementItem;
+                    pxUIElementCreateData[2].UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+
+
+                    for(size_t i = 0; i < 3; i++)
+                    {
+                        PXEngineResourceCreateInfo* pxEngineResourceCreateInfo = &pxUIElementCreateData[i];
+
+                        PXEngineResourceCreate(pxEngineEditor, pxEngineResourceCreateInfo);
+
+                        PXDictionaryAdd(&parentList, &pxEngineResourceCreateInfo->ObjectReference, &pxEngineResourceCreateInfo->ObjectReference);
+                    }
+
+
+                 
+                    for(PXSize i = 0; i < bfBitFireIDE->EngineScene.ModelLookUp.EntryAmountCurrent; i++)
+                    {
+                        PXDictionaryEntry pxDictionaryEntry;
+                        PXModel* pxModel = PXNull;
+                        PXUIElement* uiEE = PXNull;
+
+                        PXDictionaryIndex(&bfBitFireIDE->EngineScene.ModelLookUp, i, &pxDictionaryEntry);
+
+                        pxModel = *(PXModel**)pxDictionaryEntry.Value;
+
+
+
+                        PXEngineResourceCreateInfo pxUIElementCreateData;
+                        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+                        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+                        pxUIElementCreateData.ObjectReference = &uiEE;
+                        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
+                        pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObject = pxModel;
+                        pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeModel;;
+                        pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = uiTreeViewItemModel;
+                        pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _panelMenuTreeView;
+                        pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+
+                        char buffer[256];
+                        PXTextPrintA(buffer, 256, "[Model]");
+                        pxUIElementCreateData.Name = buffer;
+
+                        PXEngineResourceCreate(pxEngineEditor, &pxUIElementCreateData);
+
+                        PXDictionaryAdd(&parentList, &uiEE, &pxModel);
+                    }
+
+                    for(PXSize i = 0; i < bfBitFireIDE->EngineScene.ShaderProgramLookup.EntryAmountCurrent; i++)
+                    {
+                        PXDictionaryEntry pxDictionaryEntry;
+                        PXShaderProgram* pxShaderProgram = PXNull;
+                        PXUIElement* uiEE = PXNull;
+
+                        PXDictionaryIndex(&bfBitFireIDE->EngineScene.ShaderProgramLookup, i, &pxDictionaryEntry);
+
+                        pxShaderProgram = *(PXShaderProgram**)pxDictionaryEntry.Value;
+
+
+
+                        PXEngineResourceCreateInfo pxUIElementCreateData;
+                        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+                        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+                        pxUIElementCreateData.ObjectReference = &uiEE;
+                        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
+                        pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObject = pxShaderProgram;
+                        pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeRenderShader;
+                        pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = uiTreeViewItemShader;
+                        pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _panelMenuTreeView;
+                        pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+
+                        char buffer[256];
+                        PXTextPrintA(buffer, 256, "[ShaderProgram]");
+                        pxUIElementCreateData.Name = buffer;
+
+                        PXEngineResourceCreate(pxEngineEditor, &pxUIElementCreateData);
+
+                        PXDictionaryAdd(&parentList, &uiEE, &pxShaderProgram);
+                    }
+
+
+                    for(PXSize i = 0; i < bfBitFireIDE->EngineScene.ImageLookUp.EntryAmountCurrent; i++)
+                    {
+                        PXDictionaryEntry pxDictionaryEntry;
+                        PXImage* pxImage = PXNull;
+                        PXUIElement* uiEE = PXNull;
+
+                        PXDictionaryIndex(&bfBitFireIDE->EngineScene.ImageLookUp, i, &pxDictionaryEntry);
+
+                        pxImage = *(PXImage**)pxDictionaryEntry.Value;
+
+
+
+                        PXEngineResourceCreateInfo pxUIElementCreateData;
+                        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+                        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+                        pxUIElementCreateData.ObjectReference = &uiEE;
+                        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
+                        pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObject = pxImage;
+                        pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeImage;
+                        pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = uiTreeViewItemImage;
+                        pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _panelMenuTreeView;
+                        pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+
+                        char buffer[256];
+                        PXTextPrintA(buffer, 256, "[Image]");
+                        pxUIElementCreateData.Name = buffer;
+
+                        PXEngineResourceCreate(pxEngineEditor, &pxUIElementCreateData);
+
+                        PXDictionaryAdd(&parentList, &uiEE, &pxImage);
+                    }
+
+                }
+            }
+
+
+            PXSize sixed = uiElementLookup->EntryAmountCurrent;
+
+            for(PXSize i = 0; i < sixed; ++i)
+            {
+                PXDictionaryEntry pxDictionaryEntry;
+                PXUIElement* uiElement = PXNull;
+
+                PXDictionaryIndex(uiElementLookup, i, &pxDictionaryEntry);
+
+                uiElement = *(PXUIElement**)pxDictionaryEntry.Value;
+
+                PXUIElement* uiElementItem = PXNull;
+
+                PXEngineResourceCreateInfo pxUIElementCreateData;
+                PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+                pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+                pxUIElementCreateData.ObjectReference = &uiElementItem;
+                pxUIElementCreateData.Name = uiElement->NameData;
+                pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
+                pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObject = uiElement;
+                pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeUI;
+                pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _panelMenuTreeView;
+                pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+
+                // Fetch parrant
+                pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = uiAncer;
+
+                if(uiElement->Parent)
+                {
+                    PXUIElement* parentElement = PXNull;
+
+                    const PXBool found = PXDictionaryFindEntry(&parentList, &uiElement->Parent, &parentElement);
+
+                    if(found)
+                    {
+                        pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = parentElement;
+                    }
+                }
+
+                PXEngineResourceCreate(pxEngineEditor, &pxUIElementCreateData);
+
+                PXDictionaryAdd(&parentList, &uiElement, &uiElementItem);
+            }
+        }
+
+
+
+
+        // Add more?
+    }
+
+
+}
+
+void PXAPI BFInfoSelectUpdate(BFBitFireIDE* const bfBitFireIDE)
+{
+   
 }
 
 void PXAPI BFSceneOnStartup(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine)
@@ -754,7 +1043,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Position.MarginTop = 0.1;
         pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginBottom = 0.305;
-       // pxUIElementCreateData.UIElement.InteractCallBack = PXOnUIElementInteract;
+        pxUIElementCreateData.UIElement.InteractCallBack = BFObjectTreeViewEvent;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
@@ -784,8 +1073,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Position.Height = 35;
         pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Load";
         pxUIElementCreateData.UIElement.Data.Button.TextInfo.FontID = DefaultFont;
-
-       // pxUIElementCreateData.UIElement.InteractCallBack = PXOnUIElementInteract;
+      //  pxUIElementCreateData.UIElement.InteractCallBack = PXOnUIElementInteract;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
@@ -844,7 +1132,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     }
 
 
-#if 0
+#if 1
     //-----------------------------------------------------
     // Panel::Info::Bar
     //-----------------------------------------------------
@@ -854,7 +1142,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
         pxUIElementCreateData.ObjectReference = &_uiInfoPanelObjectText;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
-        pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;;
+        pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementNormal;
         pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
@@ -874,7 +1162,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
         pxUIElementCreateData.ObjectReference = &_uiInfoPanelObjectName;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
-        pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;
+        pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementNormal;
         pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
@@ -895,7 +1183,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
         pxUIElementCreateData.ObjectReference = &_uiInfoPanelObjectNameContent;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
-        pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;;
+        pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementNormal;
         pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
@@ -916,7 +1204,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
         pxUIElementCreateData.ObjectReference = &_uiInfoPanelObjectType;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
-        pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;;
+        pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementNormal;
         pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
@@ -937,12 +1225,12 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
         pxUIElementCreateData.ObjectReference = &_uiInfoPanelObjectTypeContent;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
-        pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;;
+        pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementNormal;
         pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepHeight;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.55f;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.15f;
         pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset + 0.3f;
         pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
@@ -958,84 +1246,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
 
 
 
-    // DOne UI Stuff
-
-    {
-        // Load data for UI
-        {
-            PXDictionary parentList;
-
-            PXDictionaryConstruct(&parentList, sizeof(PXUIElement*), sizeof(PXUIElement*), PXDictionaryValueLocalityInternalEmbedded);
-
-  
-            PXDictionary* const uiElementLookup = &pxEngine->GUISystem.UIElementLookUp;
-
-            void* previousItem = 0;
-
-            PXSize sixed = uiElementLookup->EntryAmountCurrent;
-        
-            for(PXSize i = 0; i < sixed; ++i)
-            {
-                PXDictionaryEntry pxDictionaryEntry;
-                PXUIElement* uiElement = PXNull;
-
-                PXDictionaryIndex(uiElementLookup, i, &pxDictionaryEntry);
-
-                uiElement = *(PXUIElement**)pxDictionaryEntry.Value;
 
 
-                PXUIElement* uiElementItem = PXNull;
-
-                PXEngineResourceCreateInfo pxUIElementCreateData;
-                PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-                pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-                pxUIElementCreateData.ObjectReference = &uiElementItem;
-                pxUIElementCreateData.Name = uiElement->NameData;
-                pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
-                pxUIElementCreateData.UIElement.Data.TreeViewItem.ElementSource = uiElement;
-                pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _panelMenuTreeView;
-                pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
-
-                // Fetch parrant
-                pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = PXNull;
-
-                if(uiElement->Parent)
-                {
-                    PXUIElement* parentElement = PXNull;
-
-                    const PXBool found = PXDictionaryFindEntry(&parentList, &uiElement->Parent, &parentElement);
-
-                    if(found)
-                    {
-                        pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = parentElement;
-                    }              
-                }
-
-                PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-
-                PXDictionaryAdd(&parentList, &uiElement, &uiElementItem);
-
-
-
-                //  PXUIElementUpdateInfo pxUIElementUpdateInfo;
-                 // pxUIElementUpdateInfo.UIElementReference = _panelMenuTreeView;
-                 // pxUIElementUpdateInfo.WindowReference = &pxEngine->Window;
-                 // pxUIElementUpdateInfo.Property = PXUIElementPropertyItemAdd;
-
-                 // PXUIElementUpdateOSStyle(&pxUIElementUpdateInfo);
-
-
-            }
-        }
-
-
-       
-
-        // Add more?
-    }
-
-
-  
+    BFObjectTreeViewUpdate(bfBitFireIDE);
 
 
 
