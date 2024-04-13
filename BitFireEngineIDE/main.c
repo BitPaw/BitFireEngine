@@ -66,6 +66,7 @@ int main(int amountOFParameters, char** parameter)
 #endif
 {
     BFBitFireIDE bfBitFireIDE;
+    PXClear(BFBitFireIDE, &bfBitFireIDE);
 
     // Start
     {
@@ -99,18 +100,85 @@ int main(int amountOFParameters, char** parameter)
 PXTexture2D* _dialogBoxTexture = 0;
 
 
-// Scene
-PXUIElement* _panelSceneViewRender = 0;
 
+//---------------------------------------------------------
+// Tab
+//---------------------------------------------------------
+PXUIElement* _tabControlMain = 0;
+PXUIElement* _tabPageScene = 0;
+PXUIElement* _tabPageSound = 0;
+PXUIElement* _tabPageNetwork = 0;
+PXUIElement* _tabPageVideo = 0;
+PXUIElement* _tabPageDatabase = 0;
+//---------------------------------------------------------
+
+//---------------------------------------------------------
+// Scene
+//---------------------------------------------------------
+
+//---------------------------------------------------------
+
+//---------------------------------------------------------
+// Sound
+PXUIElement* _panelSoundMain = 0;
+//---------------------------------------------------------
+
+//---------------------------------------------------------
+// Network
+//---------------------------------------------------------
+PXUIElement* _panelNetworkMain = 0;
+//---------------------------------------------------------
+
+
+//---------------------------------------------------------
+// Video
+//---------------------------------------------------------
+PXUIElement* _panelVideoMain = 0;
+//---------------------------------------------------------
+
+
+
+//---------------------------------------------------------
+// Database
+//---------------------------------------------------------
+PXUIElement* _textDatabaseTitleODBC = 0;
+
+PXUIElement* _textDatabaseDriver = 0;
+PXUIElement* _comboBoxDatabaseDriver = 0;
+
+PXUIElement* _textBoxDatabaseIP = 0;
+PXUIElement* _comboBoxDatabaseIP = 0;
+
+PXUIElement* _textBoxDatabasePort = 0;
+PXUIElement* _comboBoxDatabasePort = 0;
+
+PXUIElement* _buttonDatabaseConnect = 0;
+//---------------------------------------------------------
+
+
+
+
+//---------------------------------------------------------
 // Frame console
+//---------------------------------------------------------
 PXUIElement* _panelConsoleMain = 0;
 PXUIElement* _panelConsoleTextContent = 0;
 PXUIElement* _panelConsoleData = 0;
+//---------------------------------------------------------
+
+//---------------------------------------------------------
+// Left, Object panel
+//---------------------------------------------------------
+PXUIElement* _panelLeftSceneElements = 0;
+PXUIElement* _textSceneElemenets = 0;
+PXUIElement* _treeViewObjects = 0;
+//---------------------------------------------------------
+
 
 // Frame A
-PXUIElement* _panelMenuMainContainer = 0;
+
 PXUIElement* _panelMenuButtonFileText = 0;
-PXUIElement* _panelMenuTreeView = 0;
+
 PXUIElement* _panelMenuButtonFileDropDownOpen = 0;
 PXUIElement* _panelMenuButtonFileDropDownSave = 0;
 PXUIElement* _panelMenuButtonEdit = 0;
@@ -123,8 +191,8 @@ PXUIElement* _panelMenuButtonViewText = 0;
 PXUIElement* _panelMainContent = 0;
 
 
-PXUIElement* _uiSceneElements = 0;
-PXUIElement* _uiSceneElementsTitleBarText = 0;
+
+
 PXUIElement* _uiPanelScene = 0;
 PXUIElement* _uiSceneTexturePanel = 0;
 PXTexture2D* _uiSceneTexture = 0;
@@ -300,6 +368,16 @@ void PXAPI BFObjectTreeViewEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent
     {
         case PXWindowEventTypeSelect:
         {
+            PXGUIElementUpdateInfo pxGUIElementUpdateInfo;
+            PXClear(PXGUIElementUpdateInfo, &pxGUIElementUpdateInfo);
+            pxGUIElementUpdateInfo.Show = PXFalse;
+            pxGUIElementUpdateInfo.UIElement = _tabPageSound;
+            pxGUIElementUpdateInfo.Property = PXUIElementPropertyVisibility;
+
+            PXGUIElementUpdate(&bfBitFireIDE->EngineEditor.GUISystem, &pxGUIElementUpdateInfo, 1);
+
+  
+
             PXUIElement* const uiElementSelected = pxWindowEvent->UIElementSender;
 
             PXLogPrint
@@ -371,7 +449,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                 pxUIElementCreateData.Name = "UI";
                 pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
                 pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
-                pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _panelMenuTreeView;
+                pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
                 pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
                 pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = PXNull;
 
@@ -393,7 +471,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                 pxUIElementCreateData.Name = "Scene";
                 pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
                 pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
-                pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _panelMenuTreeView;
+                pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
                 pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
                 pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = PXNull;
 
@@ -415,7 +493,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                     pxUIElementCreateData[0].Name = "Model";
                     pxUIElementCreateData[0].UIElement.Type = PXUIElementTypeTreeViewItem;
                     pxUIElementCreateData[0].UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
-                    pxUIElementCreateData[0].UIElement.Data.TreeViewItem.TreeView = _panelMenuTreeView;
+                    pxUIElementCreateData[0].UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
                     pxUIElementCreateData[0].UIElement.Data.TreeViewItem.ItemParent = uiElementItem;
                     pxUIElementCreateData[0].UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
 
@@ -424,7 +502,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                     pxUIElementCreateData[1].Name = "Shader";
                     pxUIElementCreateData[1].UIElement.Type = PXUIElementTypeTreeViewItem;
                     pxUIElementCreateData[1].UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
-                    pxUIElementCreateData[1].UIElement.Data.TreeViewItem.TreeView = _panelMenuTreeView;
+                    pxUIElementCreateData[1].UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
                     pxUIElementCreateData[1].UIElement.Data.TreeViewItem.ItemParent = uiElementItem;
                     pxUIElementCreateData[1].UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
 
@@ -433,7 +511,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                     pxUIElementCreateData[2].Name = "Image";
                     pxUIElementCreateData[2].UIElement.Type = PXUIElementTypeTreeViewItem;
                     pxUIElementCreateData[2].UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
-                    pxUIElementCreateData[2].UIElement.Data.TreeViewItem.TreeView = _panelMenuTreeView;
+                    pxUIElementCreateData[2].UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
                     pxUIElementCreateData[2].UIElement.Data.TreeViewItem.ItemParent = uiElementItem;
                     pxUIElementCreateData[2].UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
 
@@ -448,103 +526,106 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                     }
 
 
-                 
-                    for(PXSize i = 0; i < bfBitFireIDE->EngineScene.ModelLookUp.EntryAmountCurrent; i++)
+                    if(bfBitFireIDE->EngineScene.IsRunning)
                     {
-                        PXDictionaryEntry pxDictionaryEntry;
-                        PXModel* pxModel = PXNull;
-                        PXUIElement* uiEE = PXNull;
+                        for(PXSize i = 0; i < bfBitFireIDE->EngineScene.ModelLookUp.EntryAmountCurrent; i++)
+                        {
+                            PXDictionaryEntry pxDictionaryEntry;
+                            PXModel* pxModel = PXNull;
+                            PXUIElement* uiEE = PXNull;
 
-                        PXDictionaryIndex(&bfBitFireIDE->EngineScene.ModelLookUp, i, &pxDictionaryEntry);
+                            PXDictionaryIndex(&bfBitFireIDE->EngineScene.ModelLookUp, i, &pxDictionaryEntry);
 
-                        pxModel = *(PXModel**)pxDictionaryEntry.Value;
+                            pxModel = *(PXModel**)pxDictionaryEntry.Value;
 
 
 
-                        PXEngineResourceCreateInfo pxUIElementCreateData;
-                        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-                        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-                        pxUIElementCreateData.ObjectReference = &uiEE;
-                        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
-                        pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObject = pxModel;
-                        pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeModel;;
-                        pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = uiTreeViewItemModel;
-                        pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _panelMenuTreeView;
-                        pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+                            PXEngineResourceCreateInfo pxUIElementCreateData;
+                            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+                            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+                            pxUIElementCreateData.ObjectReference = &uiEE;
+                            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
+                            pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObject = pxModel;
+                            pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeModel;;
+                            pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = uiTreeViewItemModel;
+                            pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
+                            pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
 
-                        char buffer[256];
-                        PXTextPrintA(buffer, 256, "[Model]");
-                        pxUIElementCreateData.Name = buffer;
+                            char buffer[256];
+                            PXTextPrintA(buffer, 256, "[Model]");
+                            pxUIElementCreateData.Name = buffer;
 
-                        PXEngineResourceCreate(pxEngineEditor, &pxUIElementCreateData);
+                            PXEngineResourceCreate(pxEngineEditor, &pxUIElementCreateData);
 
-                        PXDictionaryAdd(&parentList, &uiEE, &pxModel);
+                            PXDictionaryAdd(&parentList, &uiEE, &pxModel);
+                        }
+
+                        for(PXSize i = 0; i < bfBitFireIDE->EngineScene.ShaderProgramLookup.EntryAmountCurrent; i++)
+                        {
+                            PXDictionaryEntry pxDictionaryEntry;
+                            PXShaderProgram* pxShaderProgram = PXNull;
+                            PXUIElement* uiEE = PXNull;
+
+                            PXDictionaryIndex(&bfBitFireIDE->EngineScene.ShaderProgramLookup, i, &pxDictionaryEntry);
+
+                            pxShaderProgram = *(PXShaderProgram**)pxDictionaryEntry.Value;
+
+
+
+                            PXEngineResourceCreateInfo pxUIElementCreateData;
+                            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+                            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+                            pxUIElementCreateData.ObjectReference = &uiEE;
+                            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
+                            pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObject = pxShaderProgram;
+                            pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeRenderShader;
+                            pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = uiTreeViewItemShader;
+                            pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
+                            pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+
+                            char buffer[256];
+                            PXTextPrintA(buffer, 256, "[ShaderProgram]");
+                            pxUIElementCreateData.Name = buffer;
+
+                            PXEngineResourceCreate(pxEngineEditor, &pxUIElementCreateData);
+
+                            PXDictionaryAdd(&parentList, &uiEE, &pxShaderProgram);
+                        }
+
+
+                        for(PXSize i = 0; i < bfBitFireIDE->EngineScene.ImageLookUp.EntryAmountCurrent; i++)
+                        {
+                            PXDictionaryEntry pxDictionaryEntry;
+                            PXImage* pxImage = PXNull;
+                            PXUIElement* uiEE = PXNull;
+
+                            PXDictionaryIndex(&bfBitFireIDE->EngineScene.ImageLookUp, i, &pxDictionaryEntry);
+
+                            pxImage = *(PXImage**)pxDictionaryEntry.Value;
+
+
+
+                            PXEngineResourceCreateInfo pxUIElementCreateData;
+                            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+                            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+                            pxUIElementCreateData.ObjectReference = &uiEE;
+                            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
+                            pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObject = pxImage;
+                            pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeImage;
+                            pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = uiTreeViewItemImage;
+                            pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
+                            pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+
+                            char buffer[256];
+                            PXTextPrintA(buffer, 256, "[Image]");
+                            pxUIElementCreateData.Name = buffer;
+
+                            PXEngineResourceCreate(pxEngineEditor, &pxUIElementCreateData);
+
+                            PXDictionaryAdd(&parentList, &uiEE, &pxImage);
+                        }
                     }
 
-                    for(PXSize i = 0; i < bfBitFireIDE->EngineScene.ShaderProgramLookup.EntryAmountCurrent; i++)
-                    {
-                        PXDictionaryEntry pxDictionaryEntry;
-                        PXShaderProgram* pxShaderProgram = PXNull;
-                        PXUIElement* uiEE = PXNull;
-
-                        PXDictionaryIndex(&bfBitFireIDE->EngineScene.ShaderProgramLookup, i, &pxDictionaryEntry);
-
-                        pxShaderProgram = *(PXShaderProgram**)pxDictionaryEntry.Value;
-
-
-
-                        PXEngineResourceCreateInfo pxUIElementCreateData;
-                        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-                        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-                        pxUIElementCreateData.ObjectReference = &uiEE;
-                        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
-                        pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObject = pxShaderProgram;
-                        pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeRenderShader;
-                        pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = uiTreeViewItemShader;
-                        pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _panelMenuTreeView;
-                        pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
-
-                        char buffer[256];
-                        PXTextPrintA(buffer, 256, "[ShaderProgram]");
-                        pxUIElementCreateData.Name = buffer;
-
-                        PXEngineResourceCreate(pxEngineEditor, &pxUIElementCreateData);
-
-                        PXDictionaryAdd(&parentList, &uiEE, &pxShaderProgram);
-                    }
-
-
-                    for(PXSize i = 0; i < bfBitFireIDE->EngineScene.ImageLookUp.EntryAmountCurrent; i++)
-                    {
-                        PXDictionaryEntry pxDictionaryEntry;
-                        PXImage* pxImage = PXNull;
-                        PXUIElement* uiEE = PXNull;
-
-                        PXDictionaryIndex(&bfBitFireIDE->EngineScene.ImageLookUp, i, &pxDictionaryEntry);
-
-                        pxImage = *(PXImage**)pxDictionaryEntry.Value;
-
-
-
-                        PXEngineResourceCreateInfo pxUIElementCreateData;
-                        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-                        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-                        pxUIElementCreateData.ObjectReference = &uiEE;
-                        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
-                        pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObject = pxImage;
-                        pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeImage;
-                        pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = uiTreeViewItemImage;
-                        pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _panelMenuTreeView;
-                        pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
-
-                        char buffer[256];
-                        PXTextPrintA(buffer, 256, "[Image]");
-                        pxUIElementCreateData.Name = buffer;
-
-                        PXEngineResourceCreate(pxEngineEditor, &pxUIElementCreateData);
-
-                        PXDictionaryAdd(&parentList, &uiEE, &pxImage);
-                    }
 
                 }
             }
@@ -571,7 +652,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                 pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
                 pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObject = uiElement;
                 pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeUI;
-                pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _panelMenuTreeView;
+                pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
                 pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
 
                 // Fetch parrant
@@ -793,9 +874,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreateInfo pxUIElementCreateData;
         PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);       
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-        pxUIElementCreateData.ObjectReference = &_panelMenuMainContainer;
+        pxUIElementCreateData.ObjectReference = &_tabControlMain;
         pxUIElementCreateData.Name = "RenderScene";
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTabControll;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
@@ -806,8 +887,348 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Position.MarginRight = 0.41f;
         pxUIElementCreateData.UIElement.Position.MarginBottom = 0.54f;
 
+
+
+        PXUIElementTabPageSingleInfo pxUIElementTabPageSingleInfo[] = 
+        {
+            { &_tabPageScene, "Scene", -1},
+            { &_tabPageSound, "Sound", -1},
+            { &_tabPageVideo, "Video", -1},
+            { &_tabPageDatabase, "Database", -1},
+            { &_tabPageNetwork, "Network", -1}
+        };
+        const PXSize amount = sizeof(pxUIElementTabPageSingleInfo) / sizeof(PXUIElementTabPageSingleInfo);
+
+        pxUIElementCreateData.UIElement.Data.TabPage.TabPageSingleInfoAmount = amount;
+        pxUIElementCreateData.UIElement.Data.TabPage.TabPageSingleInfoList = pxUIElementTabPageSingleInfo;
+
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
+
+
+
+
+    //-----------------------------------------------------
+    // TAB::Scene
+    //-----------------------------------------------------
+    {
+        PXEngineStartInfo pxEngineStartInfo;
+        PXClear(PXEngineStartInfo, &pxEngineStartInfo);
+
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.Name = "SceneRender";
+        pxUIElementCreateData.ObjectReference = &_dialogBoxTexture;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeRenderFrame;
+        pxUIElementCreateData.UIElement.UIElementParent = _tabPageScene;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.105;
+        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Data.SceneRender.Engine = &bfBitFireIDE->EngineScene;
+        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo = &pxEngineStartInfo;
+        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->Owner = bfBitFireIDE;
+        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->System = PXGraphicSystemOpenGL;
+        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->OnStartUp = BFSceneOnStartup;
+        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->OnUserUpdate = PXOnUserInputUpdateScene;
+        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->OnRenderUpdate = OnRenderUpdateEvent;
+        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->OnGameUpdate = OnGameUpdateEvent;
+        //pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->UseMouseInput = PXTrue;
+
+        //PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+
+        // pxEngineScene.OnRenderUpdate = OnRenderUpdateEvent;
+       // pxEngineScene.OnStartUp = OnStartUpEvent;
+       // pxEngineScene.OnShutDown = OnShutDownEvent;
+        //pxEngineScene.OnUserUpdate = OnUserInputUpdate;
+       // pxEngineScene.OnNetworkUpdate = OnNetworkUpdate;
+       // pxEngineScene.OnGameUpdate = OnGameUpdateEvent;
+        // pxEngineScene.OnRenderUpdate = OnRenderUpdateEvent;
+
+    }
+
+    //-----------------------------------------------------
+    // Panel::Scene::Text
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.Name = "RenderScene-Text";
+        pxUIElementCreateData.ObjectReference = &_panelMenuButtonFileText;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.UIElementParent = _tabControlMain;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "Scene";
+        pxUIElementCreateData.UIElement.Data.Text.FontID = DefaultFont;
+
+        //PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
+
+    //-----------------------------------------------------
+    // TAB::Sound
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_panelSoundMain;
+        pxUIElementCreateData.Name = "Button_Sound";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
+        pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.2f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.6;
+        pxUIElementCreateData.UIElement.Position.MarginRight = 0.6f;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.2f;
+        pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Sound";
+
+       PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+
+    }
+
+
+    //-----------------------------------------------------
+    // TAB::Database
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_buttonDatabaseConnect;
+        pxUIElementCreateData.Name = "Button_Database";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
+        pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = 100;
+        pxUIElementCreateData.UIElement.Position.Height = 35;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.4;
+        pxUIElementCreateData.UIElement.Position.MarginRight = 0.8f;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.6f;
+        pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Connect";
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+
+    }
+
+
+#define DatabaseRowAWidth 135
+#define DatabaseRowBWidth 250
+
+    //-----------------------------------------------------
+    // TAB::Database::
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textDatabaseTitleODBC;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = DatabaseRowAWidth;
+        pxUIElementCreateData.UIElement.Position.Height = 35;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.0;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "ODBC";
+        pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignCenter;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textDatabaseDriver;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = DatabaseRowAWidth;
+        pxUIElementCreateData.UIElement.Position.Height = 35;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.1;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "Driver";
+        pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_comboBoxDatabaseDriver;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeDropDown;
+        pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = DatabaseRowBWidth;
+        pxUIElementCreateData.UIElement.Position.Height = 35;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.2f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.1;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+
+
+        PXDataBaseInitialize(&pxEngine->DataBase);
+
+        PXDataBaseScanForDrivers(&pxEngine->DataBase);
+
+        PXGUIElementUpdateInfo pxGUIElementUpdateInfo;        
+        
+        PXClear(PXGUIElementUpdateInfo, &pxGUIElementUpdateInfo);
+
+        pxGUIElementUpdateInfo.Property = PXUIElementPropertyComboBoxAdd;
+        pxGUIElementUpdateInfo.UIElement = _comboBoxDatabaseDriver;
+        pxGUIElementUpdateInfo.Data.ComboBox.DataList = pxEngine->DataBase.DriverList;
+        pxGUIElementUpdateInfo.Data.ComboBox.DataListAmount = pxEngine->DataBase.DriverListAmount;
+
+        PXGUIElementUpdate(&pxEngine->GUISystem, &pxGUIElementUpdateInfo, 1);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textBoxDatabaseIP;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = DatabaseRowAWidth;
+        pxUIElementCreateData.UIElement.Position.Height = 35;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.2;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "IP";
+        pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_comboBoxDatabaseIP;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTextEdit;
+        pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = DatabaseRowBWidth;
+        pxUIElementCreateData.UIElement.Position.Height = 35;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.2f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.2;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "127.0.0.1";
+        pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignLeft;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textBoxDatabasePort;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = DatabaseRowAWidth;
+        pxUIElementCreateData.UIElement.Position.Height = 35;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.3;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "Port";
+        pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_comboBoxDatabasePort;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTextEdit;
+        pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = DatabaseRowBWidth;
+        pxUIElementCreateData.UIElement.Position.Height = 35;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.2f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.3;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "25565";
+        pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignLeft;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
+
+
+
+
+    //-----------------------------------------------------
+    // TAB::Network
+    //-----------------------------------------------------
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_panelNetworkMain;
+        pxUIElementCreateData.Name = "Button_Network";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
+        pxUIElementCreateData.UIElement.UIElementParent = _tabPageNetwork;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.6;
+        pxUIElementCreateData.UIElement.Position.MarginRight = 0.8f;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.2f;
+        pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Network";
+
+    //    PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
     //-----------------------------------------------------
@@ -876,70 +1297,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
 #endif
 
 
-    //-----------------------------------------------------
-    // Panel::Scene::Text
-    //-----------------------------------------------------
-    {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-        pxUIElementCreateData.Name = "RenderScene-Text";
-        pxUIElementCreateData.ObjectReference = &_panelMenuButtonFileText;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
-        pxUIElementCreateData.UIElement.UIElementParent = _panelMenuMainContainer;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
-        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
-        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepHeight;
-        pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
-        pxUIElementCreateData.UIElement.Data.Text.Content = "Scene";
-        pxUIElementCreateData.UIElement.Data.Text.FontID = DefaultFont;
 
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
 
-    //-----------------------------------------------------
-    // Panel::Scene::Render
-    //-----------------------------------------------------
-    {
-        PXEngineStartInfo pxEngineStartInfo;
-        PXClear(PXEngineStartInfo, &pxEngineStartInfo);
-
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-        pxUIElementCreateData.Name = "SceneRender";
-        pxUIElementCreateData.ObjectReference = &_dialogBoxTexture;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeRenderFrame;
-        pxUIElementCreateData.UIElement.UIElementParent = _panelMenuMainContainer;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
-        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
-        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginTop = 0.105;
-        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Data.SceneRender.Engine = &bfBitFireIDE->EngineScene;
-        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo = &pxEngineStartInfo;
-        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->Owner = bfBitFireIDE;
-        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->System = PXGraphicSystemOpenGL;
-        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->OnStartUp = BFSceneOnStartup;
-        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->OnUserUpdate = PXOnUserInputUpdateScene;
-        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->OnRenderUpdate = OnRenderUpdateEvent;
-        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->OnGameUpdate = OnGameUpdateEvent;
-        //pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->UseMouseInput = PXTrue;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-
-        // pxEngineScene.OnRenderUpdate = OnRenderUpdateEvent;
-       // pxEngineScene.OnStartUp = OnStartUpEvent;
-       // pxEngineScene.OnShutDown = OnShutDownEvent;
-        //pxEngineScene.OnUserUpdate = OnUserInputUpdate;
-       // pxEngineScene.OnNetworkUpdate = OnNetworkUpdate;
-       // pxEngineScene.OnGameUpdate = OnGameUpdateEvent;
-        // pxEngineScene.OnRenderUpdate = OnRenderUpdateEvent;
-    }
 
 
 
@@ -977,7 +1336,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreateInfo pxUIElementCreateData;
         PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-        pxUIElementCreateData.ObjectReference = &_uiSceneElements;
+        pxUIElementCreateData.ObjectReference = &_panelLeftSceneElements;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
         pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
         pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;
@@ -1006,10 +1365,10 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
         pxUIElementCreateData.Name = "Objects";
-        pxUIElementCreateData.ObjectReference = &_uiSceneElementsTitleBarText;
+        pxUIElementCreateData.ObjectReference = &_textSceneElemenets;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
-        pxUIElementCreateData.UIElement.UIElementParent = _uiSceneElements;
+        pxUIElementCreateData.UIElement.UIElementParent = _panelLeftSceneElements;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
         pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepHeight;
@@ -1032,9 +1391,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
         pxUIElementCreateData.Name = "Loaded Objects";
-        pxUIElementCreateData.ObjectReference = &_panelMenuTreeView;
+        pxUIElementCreateData.ObjectReference = &_treeViewObjects;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeView;
-        pxUIElementCreateData.UIElement.UIElementParent = _uiSceneElements;
+        pxUIElementCreateData.UIElement.UIElementParent = _panelLeftSceneElements;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementText;
         pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
@@ -1058,7 +1417,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.ObjectReference = &_infoPanelTextSpawn;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
         pxUIElementCreateData.UIElement.ColorTintReference = &buttonColor;
-        pxUIElementCreateData.UIElement.UIElementParent = _uiSceneElements;
+        pxUIElementCreateData.UIElement.UIElementParent = _panelLeftSceneElements;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementNormal;
         pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
         pxUIElementCreateData.UIElement.Color.Red = 0.40f;
@@ -1242,17 +1601,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     }
 #endif
 
-
-
-
-
-
-
-    BFObjectTreeViewUpdate(bfBitFireIDE);
-
-
-
-   
+    BFObjectTreeViewUpdate(bfBitFireIDE);   
 
 #endif
 }
