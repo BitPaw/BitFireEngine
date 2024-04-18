@@ -55,6 +55,7 @@ void PXAPI PXOnUserInputUpdateScene(BFBitFireIDE* const bfBitFireIDE, PXEngine* 
 #if OSWindows
 
 #include <windows.h>
+#include <CommCtrl.h>
 
 #if _DEBUG || 1
 int main()
@@ -110,6 +111,7 @@ PXUIElement* _tabPageSound = 0;
 PXUIElement* _tabPageNetwork = 0;
 PXUIElement* _tabPageVideo = 0;
 PXUIElement* _tabPageDatabase = 0;
+PXUIElement* _tabPageInput = 0;
 //---------------------------------------------------------
 
 //---------------------------------------------------------
@@ -120,7 +122,159 @@ PXUIElement* _tabPageDatabase = 0;
 
 //---------------------------------------------------------
 // Sound
-PXUIElement* _panelSoundMain = 0;
+//---------------------------------------------------------
+PXAudioDevice _soundAudioDevice;
+PXSound* _musicTest = 0;
+
+PXUIElement* _buttonSoundPlay = 0;
+PXUIElement* _buttonSoundStop = 0;
+
+
+//---------------------------------------------------------
+PXUIElement* _textSoundChorusEffect = 0;
+
+PXUIElement* _textSoundChorusWetDryMix = 0;
+PXUIElement* _textSoundChorusDepth = 0;
+PXUIElement* _textSoundChorusFeedback = 0;
+PXUIElement* _textSoundChorusFrequency = 0;
+PXUIElement* _textSoundChorusWaveform = 0;
+PXUIElement* _textSoundChorusDelay = 0;
+PXUIElement* _textSoundChorusPhase = 0;
+
+PXUIElement* _textSoundChorusWetDryMixInput = 0;
+PXUIElement* _textSoundChorusDepthInput = 0;
+PXUIElement* _textSoundChorusFeedbackInput = 0;
+PXUIElement* _textSoundChorusFrequencyInput = 0;
+PXUIElement* _textSoundChorusWaveformInput = 0;
+PXUIElement* _textSoundChorusDelayInput = 0;
+PXUIElement* _textSoundChorusPhaseInput = 0;
+
+PXUIElement* _textSoundChorusEnable = 0;
+PXUIElement* _textSoundChorusApply = 0;
+//---------------------------------------------------------
+PXUIElement* _textSoundCompressor = 0;
+
+PXUIElement* _textSoundCompressorGain = 0;
+PXUIElement* _textSoundCompressorAttack = 0;
+PXUIElement* _textSoundCompressorRelease = 0;
+PXUIElement* _textSoundCompressorThreshold = 0;
+PXUIElement* _textSoundCompressorRatio = 0;
+PXUIElement* _textSoundCompressorPredelay = 0;
+
+PXUIElement* _textSoundCompressorGainInput = 0;
+PXUIElement* _textSoundCompressorAttackInput = 0;
+PXUIElement* _textSoundCompressorReleaseInput = 0;
+PXUIElement* _textSoundCompressorThresholdInput = 0;
+PXUIElement* _textSoundCompressorRatioInput = 0;
+PXUIElement* _textSoundCompressorPredelayInput = 0;
+
+//---------------------------------------------------------
+PXUIElement* _textSoundDistortion = 0;
+
+PXUIElement* _textSoundDistortionGain = 0;
+PXUIElement* _textSoundDistortionEdge = 0;
+PXUIElement* _textSoundDistortionPostEQCenterFrequency = 0;
+PXUIElement* _textSoundDistortionPostEQBandwidth = 0;
+PXUIElement* _textSoundDistortionPreLowpassCutoff = 0;
+
+PXUIElement* _textSoundDistortionGainInput = 0;
+PXUIElement* _textSoundDistortionEdgeInput = 0;
+PXUIElement* _textSoundDistortionPostEQCenterFrequencyInput = 0;
+PXUIElement* _textSoundDistortionPostEQBandwidthInput = 0;
+PXUIElement* _textSoundDistortionPreLowpassCutoffInput = 0;
+
+//---------------------------------------------------------
+PXUIElement* _textSoundEchoEffect = 0;
+
+
+PXUIElement* _textSoundEchoWetDryMix = 0;
+PXUIElement* _textSoundEchoFeedback = 0;
+PXUIElement* _textSoundEchoLeftDelay = 0;
+PXUIElement* _textSoundEchoRightDelay = 0;
+PXUIElement* _textSoundEchoPanDelay = 0;
+
+PXUIElement* _textSoundEchoWetDryMixInput = 0;
+PXUIElement* _textSoundEchoFeedbackInput = 0;
+PXUIElement* _textSoundEchoLeftDelayInput = 0;
+PXUIElement* _textSoundEchoRightDelayInput = 0;
+PXUIElement* _textSoundEchoPanDelayInput = 0;
+
+//---------------------------------------------------------
+PXUIElement* _textSoundFlangerEffect = 0;
+
+PXUIElement* _textSoundFlangerWetDryMix = 0;
+PXUIElement* _textSoundFlangerDepth = 0;
+PXUIElement* _textSoundFlangerFeedback = 0;
+PXUIElement* _textSoundFlangerFrequency = 0;
+PXUIElement* _textSoundFlangerWaveform = 0;
+PXUIElement* _textSoundFlangerDelay = 0;
+PXUIElement* _textSoundFlangerPhase = 0;
+
+PXUIElement* _textSoundFlangerWetDryMixInput = 0;
+PXUIElement* _textSoundFlangerDepthInput = 0;
+PXUIElement* _textSoundFlangerFeedbackInput = 0;
+PXUIElement* _textSoundFlangerFrequencyInput = 0;
+PXUIElement* _textSoundFlangerWaveformInput = 0;
+PXUIElement* _textSoundFlangerDelayInput = 0;
+PXUIElement* _textSoundFlangerPhaseInput = 0;
+//---------------------------------------------------------
+PXUIElement* _textSoundGargleEffect = 0;
+
+PXUIElement* _textSoundGargleRateHz = 0;
+PXUIElement* _textSoundGargleRateHzInput = 0;
+PXUIElement* _textSoundGargleWaveShape = 0;
+PXUIElement* _textSoundGargleWaveShapeInput = 0;
+//---------------------------------------------------------
+PXUIElement* _textSoundInteractive3DLevel2ReverbEffect = 0;
+
+PXUIElement* _textSoundInteractive3DLevel2ReverbRoom = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbRoomHF = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbRoomRolloffFactor = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbDecayTime = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbDecayHFRatio = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbReflections = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbReflectionsDelay = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbReverb = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbReverbDelay = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbDiffusion = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbDensity = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbHFReference = 0;
+
+PXUIElement* _textSoundInteractive3DLevel2ReverbRoomInput = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbRoomHFInput = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbRoomRolloffFactorInput = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbDecayTimeInput = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbDecayHFRatioInput = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbReflectionsInput = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbReflectionsDelayInput = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbReverbInput = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbReverbDelayInput = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbDiffusionInput = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbDensityInput = 0;
+PXUIElement* _textSoundInteractive3DLevel2ReverbHFReferenceInput = 0;
+//---------------------------------------------------------
+PXUIElement* _textSoundParamEqEffect = 0;
+
+PXUIElement* _textSoundParamEqCenter = 0;
+PXUIElement* _textSoundParamEqBandwidth = 0;
+PXUIElement* _textSoundParamEqGain = 0;
+PXUIElement* _textSoundParamEqCenterInput = 0;
+PXUIElement* _textSoundParamEqBandwidthInput = 0;
+PXUIElement* _textSoundParamEqGainInput = 0;
+//---------------------------------------------------------
+PXUIElement* _textSoundWavesReverbEffect = 0;
+
+PXUIElement* _textSoundWavesReverbInGain = 0;
+PXUIElement* _textSoundWavesReverbReverbMix = 0;
+PXUIElement* _textSoundWavesReverbReverbTime = 0;
+PXUIElement* _textSoundWavesReverbHighFreqRTRatio = 0;
+
+PXUIElement* _textSoundWavesReverbInGainInput = 0;
+PXUIElement* _textSoundWavesReverbReverbMixInput = 0;
+PXUIElement* _textSoundWavesReverbReverbTimeInput = 0;
+PXUIElement* _textSoundWavesReverbHighFreqRTRatioInput = 0;
+
+PXUIElement* _textSoundWavesReverbApply = 0;
 //---------------------------------------------------------
 
 //---------------------------------------------------------
@@ -367,16 +521,7 @@ void PXAPI BFObjectTreeViewEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent
     switch(pxWindowEvent->Type)
     {
         case PXWindowEventTypeSelect:
-        {
-            PXGUIElementUpdateInfo pxGUIElementUpdateInfo;
-            PXClear(PXGUIElementUpdateInfo, &pxGUIElementUpdateInfo);
-            pxGUIElementUpdateInfo.Show = PXFalse;
-            pxGUIElementUpdateInfo.UIElement = _tabPageSound;
-            pxGUIElementUpdateInfo.Property = PXUIElementPropertyVisibility;
-
-            PXGUIElementUpdate(&bfBitFireIDE->EngineEditor.GUISystem, &pxGUIElementUpdateInfo, 1);
-
-  
+        {  
 
             PXUIElement* const uiElementSelected = pxWindowEvent->UIElementSender;
 
@@ -692,6 +837,25 @@ void PXAPI BFInfoSelectUpdate(BFBitFireIDE* const bfBitFireIDE)
 
 void PXAPI BFSceneOnStartup(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine)
 {
+
+
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeSound;
+        pxUIElementCreateData.ObjectReference = &_musicTest;
+        pxUIElementCreateData.FilePath = "H:\\[Cache]\\chip.wav";
+        pxUIElementCreateData.Sound.SoundLoop = PXTrue;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+
+
+        PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
+        pxAudio->DeviceOpen(pxAudio->SystemReference, &_soundAudioDevice, PXAudioDeviceTypeOutput, 0);
+        pxAudio->DeviceLoad(pxAudio->SystemReference, &_soundAudioDevice, _musicTest);
+    }
+
+
     //-----------------------------------------------------
     // Shader-Object
     //-----------------------------------------------------
@@ -851,27 +1015,464 @@ PXGraphicUIElementRegister(pxGraphic, &_positionText);*/
     PXCameraConstruct(&_worldCamera);
 }
 
+
+void PXAPI PXOnSoundButtonPlayEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
+{
+    PXLogPrint
+    (
+        PXLoggingInfo,
+        "GUI", 
+        "Click", 
+        "Do music"
+    );
+
+    switch(pxWindowEvent->Type)
+    {
+        case PXWindowEventTypeClick:
+        {
+            PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;   
+
+            pxAudio->PlayCursorSet(pxAudio->SystemReference, &_soundAudioDevice, 0);
+            pxAudio->DeviceStart(pxAudio->SystemReference, &_soundAudioDevice);
+
+            break;
+        }
+
+        default:
+            break;
+    }
+}
+
+void PXAPI PXOnSoundButtonStopEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
+{
+    PXLogPrint
+    (
+        PXLoggingInfo,
+        "GUI",
+        "Click",
+        "Do music"
+    );
+
+    switch(pxWindowEvent->Type)
+    {
+        case PXWindowEventTypeClick:
+        {
+            PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
+
+            pxAudio->DeviceStop(pxAudio->SystemReference, &_soundAudioDevice);
+
+            break;
+        }
+
+        default:
+            break;
+    }
+}
+
+
+void PXAPI PXOnSoundButtonEEJEIEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
+{
+    PXLogPrint
+    (
+        PXLoggingInfo,
+        "GUI",
+        "Click",
+        "Do sdads"
+    );
+
+    switch(pxWindowEvent->Type)
+    {
+        case PXWindowEventTypeClick:
+        {
+            HWND aaa[4] = 
+            {
+                _textSoundWavesReverbInGainInput->ID,
+                _textSoundWavesReverbReverbMixInput->ID,
+                _textSoundWavesReverbReverbTimeInput->ID,
+                _textSoundWavesReverbHighFreqRTRatioInput->ID,
+            };
+            float ddd[4]={0,0,0,0};
+
+
+            for(size_t i = 0; i < 4; i++)
+            {
+                PXText pxText;
+                PXTextConstructBufferA(&pxText, 64);
+
+                pxText.SizeUsed += GetWindowTextA(aaa[i], pxText.TextA, pxText.SizeAllocated);
+
+          
+                PXTextToFloat(&pxText, &ddd[i]);
+
+                ddd[i] = SendMessageA(aaa[i], TBM_GETPOS, 0, 0) / 100.f;
+            }
+
+            PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
+
+            PXAudioEffect pxAudioEffectWavesReverb;
+            PXClear(PXAudioEffect, &pxAudioEffectWavesReverb);
+            pxAudioEffectWavesReverb.Type = PXAudioEffectTypeWavesReverb;
+            pxAudioEffectWavesReverb.Enable = PXTrue;
+            pxAudioEffectWavesReverb.Fetch = PXFalse;
+            pxAudioEffectWavesReverb.WavesReverb.InGain = ddd[0];
+            pxAudioEffectWavesReverb.WavesReverb.ReverbMix = ddd[1];
+            pxAudioEffectWavesReverb.WavesReverb.ReverbTime = ddd[2];
+            pxAudioEffectWavesReverb.WavesReverb.HighFreqRTRatio = ddd[3];
+
+            pxAudio->DeviceEffectUpdate(pxAudio->SystemReference, &_soundAudioDevice, &pxAudioEffectWavesReverb);
+
+            break;
+        }
+
+        default:
+            break;
+    }
+}
+
+
+void PXAPI PXOnSoundEffectUpdate_Chorus_Enable(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
+{
+    switch(pxWindowEvent->Type)
+    {
+        case PXWindowEventTypeClick:
+        {
+            PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
+
+            PXAudioEffect pxAudioEffectWavesReverb;
+            PXClear(PXAudioEffect, &pxAudioEffectWavesReverb);
+            pxAudioEffectWavesReverb.Type = PXAudioEffectTypeChorus;
+            pxAudioEffectWavesReverb.Enable != pxAudioEffectWavesReverb.Enable;
+
+            pxAudio->DeviceEffectUpdate(pxAudio->SystemReference, &_soundAudioDevice, &pxAudioEffectWavesReverb);
+
+            break;
+        }
+
+        default:
+            break;
+    }
+}
+
+
+void PXAPI PXOnSoundEffectUpdate_Chorus(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
+{
+    switch(pxWindowEvent->Type)
+    {
+        case PXWindowEventTypeClick:
+        {
+            HWND aaa[7] =
+            {
+                _textSoundChorusWetDryMixInput->ID,
+                _textSoundChorusDepthInput->ID,
+                _textSoundChorusFeedbackInput->ID,
+                _textSoundChorusFrequencyInput->ID,
+                _textSoundChorusWaveformInput->ID,
+                _textSoundChorusDelayInput->ID,
+                _textSoundChorusPhaseInput->ID
+            };
+            float ddd[7] = { 0,0,0,0,0,0,0 };
+
+            for(size_t i = 0; i < 7; i++)
+            {
+                ddd[i] = SendMessageA(aaa[i], TBM_GETPOS, 0, 0) / 100.f;
+            }
+
+            PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
+
+            PXAudioEffect pxAudioEffectWavesReverb;
+            PXClear(PXAudioEffect, &pxAudioEffectWavesReverb);
+            pxAudioEffectWavesReverb.Type = PXAudioEffectTypeChorus;
+            pxAudioEffectWavesReverb.Enable = PXTrue;
+            pxAudioEffectWavesReverb.Fetch = PXFalse;
+            pxAudioEffectWavesReverb.Chorus.WetDryMix = ddd[0];
+            pxAudioEffectWavesReverb.Chorus.Depth = ddd[1];
+            pxAudioEffectWavesReverb.Chorus.Feedback = ddd[2];
+            pxAudioEffectWavesReverb.Chorus.Frequency = ddd[3];
+            pxAudioEffectWavesReverb.Chorus.Waveform = ddd[4];
+            pxAudioEffectWavesReverb.Chorus.Delay = ddd[5];
+            pxAudioEffectWavesReverb.Chorus.Phase = ddd[6];
+
+            pxAudio->DeviceEffectUpdate(pxAudio->SystemReference, &_soundAudioDevice, &pxAudioEffectWavesReverb);
+
+            break;
+        }
+
+        default:
+            break;
+    }
+}
+
+
+void PXAPI PXOnSoundEffectUpdate_Compressor(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
+{
+    switch(pxWindowEvent->Type)
+    {
+        case PXWindowEventTypeClick:
+        {
+            HWND aaa[6] =
+            {
+                _textSoundCompressorGainInput->ID,
+                _textSoundCompressorAttackInput->ID,
+                _textSoundCompressorReleaseInput->ID,
+                _textSoundCompressorThresholdInput->ID,
+                _textSoundCompressorRatioInput->ID,
+                _textSoundCompressorPredelayInput->ID
+            };
+            float ddd[6] = { 0,0,0,0,0,0 };
+
+            for(size_t i = 0; i < 6; i++)
+            {
+                ddd[i] = SendMessageA(aaa[i], TBM_GETPOS, 0, 0) / 100.f;
+            }
+
+            PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
+
+            PXAudioEffect pxAudioEffectWavesReverb;
+            PXClear(PXAudioEffect, &pxAudioEffectWavesReverb);
+            pxAudioEffectWavesReverb.Type = PXAudioEffectTypeCompressor;
+            pxAudioEffectWavesReverb.Enable = PXTrue;
+            pxAudioEffectWavesReverb.Fetch = PXFalse;
+            pxAudioEffectWavesReverb.Compressor.Gain = ddd[0];
+            pxAudioEffectWavesReverb.Compressor.Attack = ddd[1];
+            pxAudioEffectWavesReverb.Compressor.Release = ddd[2];
+            pxAudioEffectWavesReverb.Compressor.Threshold = ddd[3];
+            pxAudioEffectWavesReverb.Compressor.Ratio = ddd[4];
+            pxAudioEffectWavesReverb.Compressor.Predelay = ddd[5];
+
+            pxAudio->DeviceEffectUpdate(pxAudio->SystemReference, &_soundAudioDevice, &pxAudioEffectWavesReverb);
+
+            break;
+        }
+
+        default:
+            break;
+    }
+}
+
+void PXAPI PXOnSoundEffectUpdate_Distortion(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
+{
+    switch(pxWindowEvent->Type)
+    {
+        case PXWindowEventTypeClick:
+        {
+            HWND aaa[5] =
+            {
+                _textSoundDistortionGainInput->ID,
+                _textSoundDistortionEdgeInput->ID,
+                _textSoundDistortionPostEQCenterFrequencyInput->ID,
+                _textSoundDistortionPostEQBandwidthInput->ID,
+                _textSoundDistortionPreLowpassCutoffInput->ID
+            };
+            float ddd[5] = { 0,0,0,0,0 };
+
+            for(size_t i = 0; i < 5; i++)
+            {
+                ddd[i] = SendMessageA(aaa[i], TBM_GETPOS, 0, 0) / 100.f;
+            }
+
+            PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
+
+            PXAudioEffect pxAudioEffectWavesReverb;
+            PXClear(PXAudioEffect, &pxAudioEffectWavesReverb);
+            pxAudioEffectWavesReverb.Type = PXAudioEffectTypeDistortion;
+            pxAudioEffectWavesReverb.Enable = PXTrue;
+            pxAudioEffectWavesReverb.Fetch = PXFalse;
+            pxAudioEffectWavesReverb.Distortion.Gain = ddd[0];
+            pxAudioEffectWavesReverb.Distortion.Edge = ddd[1];
+            pxAudioEffectWavesReverb.Distortion.PostEQCenterFrequency = ddd[2];
+            pxAudioEffectWavesReverb.Distortion.PostEQBandwidth = ddd[3];
+            pxAudioEffectWavesReverb.Distortion.PreLowpassCutoff = ddd[4];
+
+            pxAudio->DeviceEffectUpdate(pxAudio->SystemReference, &_soundAudioDevice, &pxAudioEffectWavesReverb);
+
+            break;
+        }
+
+        default:
+            break;
+    }
+}
+
+void PXAPI PXOnSoundEffectUpdate_Echo(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
+{
+    switch(pxWindowEvent->Type)
+    {
+        case PXWindowEventTypeClick:
+        {
+            HWND aaa[5] =
+            {
+                _textSoundEchoWetDryMixInput->ID,
+                _textSoundEchoFeedbackInput->ID,
+                _textSoundEchoLeftDelayInput->ID,
+                _textSoundEchoRightDelayInput->ID,
+                _textSoundEchoPanDelayInput->ID
+            };
+            float ddd[5] = { 0,0,0,0,0 };
+
+            for(size_t i = 0; i < 5; i++)
+            {
+                ddd[i] = SendMessageA(aaa[i], TBM_GETPOS, 0, 0) / 100.f;
+            }
+
+            PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
+
+            PXAudioEffect pxAudioEffectWavesReverb;
+            PXClear(PXAudioEffect, &pxAudioEffectWavesReverb);
+            pxAudioEffectWavesReverb.Type = PXAudioEffectTypeEcho;
+            pxAudioEffectWavesReverb.Enable = PXTrue;
+            pxAudioEffectWavesReverb.Fetch = PXFalse;
+            pxAudioEffectWavesReverb.Echo.WetDryMix = ddd[0];
+            pxAudioEffectWavesReverb.Echo.Feedback = ddd[1];
+            pxAudioEffectWavesReverb.Echo.LeftDelay = ddd[2];
+            pxAudioEffectWavesReverb.Echo.RightDelay = ddd[3];
+            pxAudioEffectWavesReverb.Echo.PanDelay = ddd[4];
+
+            pxAudio->DeviceEffectUpdate(pxAudio->SystemReference, &_soundAudioDevice, &pxAudioEffectWavesReverb);
+
+            break;
+        }
+
+        default:
+            break;
+    }
+}
+
+void PXAPI PXOnSoundEffectUpdate_Flanger(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
+{
+    switch(pxWindowEvent->Type)
+    {
+        case PXWindowEventTypeClick:
+        {
+            HWND aaa[7] =
+            {
+                _textSoundFlangerWetDryMixInput->ID,
+                _textSoundFlangerDepthInput->ID,
+                _textSoundFlangerFeedbackInput->ID,
+                _textSoundFlangerFrequencyInput->ID,
+                _textSoundFlangerWaveformInput->ID,
+                _textSoundFlangerDelayInput->ID,
+                _textSoundFlangerPhaseInput->ID
+            };
+            float ddd[7] = { 0,0,0,0,0,0,0 };
+
+            for(size_t i = 0; i < 7; i++)
+            {
+                ddd[i] = SendMessageA(aaa[i], TBM_GETPOS, 0, 0) / 100.f;
+            }
+
+            PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
+
+            PXAudioEffect pxAudioEffectWavesReverb;
+            PXClear(PXAudioEffect, &pxAudioEffectWavesReverb);
+            pxAudioEffectWavesReverb.Type = PXAudioEffectTypeFlanger;
+            pxAudioEffectWavesReverb.Enable = PXTrue;
+            pxAudioEffectWavesReverb.Fetch = PXFalse;
+            pxAudioEffectWavesReverb.Flanger.WetDryMix = ddd[0];
+            pxAudioEffectWavesReverb.Flanger.Depth = ddd[1];
+            pxAudioEffectWavesReverb.Flanger.Feedback = ddd[2];
+            pxAudioEffectWavesReverb.Flanger.Frequency = ddd[3];
+            pxAudioEffectWavesReverb.Flanger.Waveform = ddd[4];
+            pxAudioEffectWavesReverb.Flanger.Delay = ddd[5];
+            pxAudioEffectWavesReverb.Flanger.Phase = ddd[6];
+
+            pxAudio->DeviceEffectUpdate(pxAudio->SystemReference, &_soundAudioDevice, &pxAudioEffectWavesReverb);
+
+            break;
+        }
+
+        default:
+            break;
+    }
+}
+
+void PXAPI PXOnSoundEffectUpdate_Gargle(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
+{
+    switch(pxWindowEvent->Type)
+    {
+        case PXWindowEventTypeClick:
+        {
+            HWND aaa[6] =
+            {
+                _textSoundGargleRateHzInput->ID,
+                _textSoundGargleWaveShapeInput->ID
+            };
+            float ddd[6] = { 0,0 };
+
+            for(size_t i = 0; i < 2; i++)
+            {
+                ddd[i] = SendMessageA(aaa[i], TBM_GETPOS, 0, 0) / 100.f;
+            }
+
+            PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
+
+            PXAudioEffect pxAudioEffectWavesReverb;
+            PXClear(PXAudioEffect, &pxAudioEffectWavesReverb);
+            pxAudioEffectWavesReverb.Type = PXAudioEffectTypeGargle;
+            pxAudioEffectWavesReverb.Enable = PXTrue;
+            pxAudioEffectWavesReverb.Fetch = PXFalse;
+            pxAudioEffectWavesReverb.Gargle.dwRateHz = ddd[0];
+            pxAudioEffectWavesReverb.Gargle.dwWaveShape = ddd[1];
+
+            pxAudio->DeviceEffectUpdate(pxAudio->SystemReference, &_soundAudioDevice, &pxAudioEffectWavesReverb);
+
+            break;
+        }
+
+        default:
+            break;
+    }
+}
+
+void PXAPI PXOnSoundEffectUpdate_Interactive3DLevel2Reverb(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
+{
+
+}
+
+void PXAPI PXOnSoundEffectUpdate_ParamEq(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
+{
+
+}
+
+void PXAPI PXOnSoundEffectUpdate_WavesReverb(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
+{
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine)
 {
+    PXEngineResourceCreateInfo pxUIElementCreateData;
+
     //-----------------------------------------------------
     // Main Font
     //-----------------------------------------------------
     {
-        PXEngineResourceCreateInfo pxSkyBoxCreateEventData;
-        PXClear(PXEngineResourceCreateInfo, &pxSkyBoxCreateEventData);
-        pxSkyBoxCreateEventData.CreateType = PXEngineCreateTypeFont;
-        pxSkyBoxCreateEventData.ObjectReference = &DefaultFont;
-        pxSkyBoxCreateEventData.FilePath = "Font/A.fnt";
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeFont;
+        pxUIElementCreateData.ObjectReference = &DefaultFont;
+        pxUIElementCreateData.FilePath = "Font/A.fnt";
         //pxSkyBoxCreateEventData.Font.ShaderProgramCurrent = _worldShader;
 
-        PXEngineResourceCreate(pxEngine, &pxSkyBoxCreateEventData);
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+
     }
 
     //-----------------------------------------------------
     // Panel:Menu
     //-----------------------------------------------------
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
         PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);       
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
         pxUIElementCreateData.ObjectReference = &_tabControlMain;
@@ -895,7 +1496,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             { &_tabPageSound, "Sound", -1},
             { &_tabPageVideo, "Video", -1},
             { &_tabPageDatabase, "Database", -1},
-            { &_tabPageNetwork, "Network", -1}
+            { &_tabPageNetwork, "Network", -1},
+            { &_tabPageInput, "Input", -1 }
         };
         const PXSize amount = sizeof(pxUIElementTabPageSingleInfo) / sizeof(PXUIElementTabPageSingleInfo);
 
@@ -915,7 +1517,6 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineStartInfo pxEngineStartInfo;
         PXClear(PXEngineStartInfo, &pxEngineStartInfo);
 
-        PXEngineResourceCreateInfo pxUIElementCreateData;
         PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
         pxUIElementCreateData.Name = "SceneRender";
@@ -940,7 +1541,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->OnGameUpdate = OnGameUpdateEvent;
         //pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->UseMouseInput = PXTrue;
 
-        //PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
 
         // pxEngineScene.OnRenderUpdate = OnRenderUpdateEvent;
        // pxEngineScene.OnStartUp = OnStartUpEvent;
@@ -956,7 +1557,6 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Panel::Scene::Text
     //-----------------------------------------------------
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
         PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
         pxUIElementCreateData.Name = "RenderScene-Text";
@@ -974,31 +1574,2422 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         //PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
 
+#define SoundHeight 20
+#define SoundWidth 400
+
+#define SoundWidthRowA 0.375 * SoundWidth
+#define SoundWidthRowB 0.625 * SoundWidth
+
+#define SoundRowOffsetX1 0.211
+#define SoundRowOffsetY 0.05
 
     //-----------------------------------------------------
     // TAB::Sound
     //-----------------------------------------------------
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
         PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-        pxUIElementCreateData.ObjectReference = &_panelSoundMain;
-        pxUIElementCreateData.Name = "Button_Sound";
+        pxUIElementCreateData.ObjectReference = &_buttonSoundPlay;
+        pxUIElementCreateData.Name = "Sound_Play";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
         pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
-        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.2f;
-        pxUIElementCreateData.UIElement.Position.MarginTop = 0.6;
-        pxUIElementCreateData.UIElement.Position.MarginRight = 0.6f;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.2f;
-        pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Sound";
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = 35;
+        pxUIElementCreateData.UIElement.Position.Height = 35;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.95f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.0;
+        pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = ">";
+        pxUIElementCreateData.UIElement.InteractCallBack = PXOnSoundButtonPlayEvent;
+        pxUIElementCreateData.UIElement.InteractOwner = bfBitFireIDE;
 
-       PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
+    {
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_buttonSoundStop;
+        pxUIElementCreateData.Name = "Sound_Pause";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
+        pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = 35;
+        pxUIElementCreateData.UIElement.Position.Height = 35;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 1.0f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.0;
+        pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "||";
+        pxUIElementCreateData.UIElement.InteractCallBack = PXOnSoundButtonStopEvent;
+        pxUIElementCreateData.UIElement.InteractOwner = bfBitFireIDE;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
+
+    // Chorus
+    {
+
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundChorusEffect;
+            pxUIElementCreateData.Name = "Sound_ChorusEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidth-100;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 0;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Chorus";
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundChorusEnable;
+            pxUIElementCreateData.Name = "Sound_ChorusEffect_Phase";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
+            pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = 35;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.40;
+            pxUIElementCreateData.UIElement.Position.MarginTop = 0;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "[+]";
+            pxUIElementCreateData.UIElement.InteractCallBack = PXOnSoundEffectUpdate_Chorus_Enable;
+            pxUIElementCreateData.UIElement.InteractOwner = bfBitFireIDE;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundChorusApply;
+            pxUIElementCreateData.Name = "Sound_ChorusEffect_Phase";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
+            pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = 70;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.45;
+            pxUIElementCreateData.UIElement.Position.MarginTop = 0;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Apply";
+            pxUIElementCreateData.UIElement.InteractCallBack = PXOnSoundEffectUpdate_Chorus;
+            pxUIElementCreateData.UIElement.InteractOwner = bfBitFireIDE;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundChorusWetDryMix;
+            pxUIElementCreateData.Name = "Sound_ChorusEffect_WetDryMix";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 1;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "WetDryMix";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+     
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundChorusDepth;
+            pxUIElementCreateData.Name = "Sound_ChorusEffect_Depth";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 2;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Depth";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundChorusFeedback;
+            pxUIElementCreateData.Name = "Sound_ChorusEffect_Feedback";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 3;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Feedback";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundChorusFrequency;
+            pxUIElementCreateData.Name = "Sound_ChorusEffect_Frequency";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 4;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Frequency";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundChorusWaveform;
+            pxUIElementCreateData.Name = "Sound_ChorusEffect_Waveform";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 5;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Waveform";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundChorusDelay;
+            pxUIElementCreateData.Name = "Sound_ChorusEffect_Delay";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 6;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Delay";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundChorusPhase;
+            pxUIElementCreateData.Name = "Sound_ChorusEffect_Phase";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 7;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Phase";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundChorusWetDryMixInput;
+            pxUIElementCreateData.Name = "Sound_ChorusEffect_WetDryMix";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 1;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "WetDryMix";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundChorusDepthInput;
+            pxUIElementCreateData.Name = "Sound_ChorusEffect_Depth";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 2;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Depth";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundChorusFeedbackInput;
+            pxUIElementCreateData.Name = "Sound_ChorusEffect_Feedback";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 3;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Feedback";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundChorusFrequencyInput;
+            pxUIElementCreateData.Name = "Sound_ChorusEffect_Frequency";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 4;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Frequency";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundChorusWaveformInput;
+            pxUIElementCreateData.Name = "Sound_ChorusEffect_Waveform";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 5;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Waveform";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundChorusDelayInput;
+            pxUIElementCreateData.Name = "Sound_ChorusEffect_Delay";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 6;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Delay";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundChorusPhaseInput;
+            pxUIElementCreateData.Name = "Sound_ChorusEffect_Phase";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 7;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Phase";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+    }
+
+    // Compressor
+    {
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundCompressor;
+            pxUIElementCreateData.Name = "Sound_Compressor";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidth;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 8.25;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Compressor";
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }   
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundCompressorGain;
+            pxUIElementCreateData.Name = "Sound_CompressorEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 1;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Gain";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundCompressorAttack;
+            pxUIElementCreateData.Name = "Sound_CompressorEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 2;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Attack";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundCompressorRelease;
+            pxUIElementCreateData.Name = "Sound_CompressorEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 3;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Release";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundCompressorThreshold;
+            pxUIElementCreateData.Name = "Sound_CompressorEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 4;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Threshold";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundCompressorRatio;
+            pxUIElementCreateData.Name = "Sound_Compressor";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 5;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Ratio";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundCompressorPredelay;
+            pxUIElementCreateData.Name = "Sound_Compressor_Predelay";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 6;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Predelay";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundCompressorGainInput;
+            pxUIElementCreateData.Name = "Sound_CompressorEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 1;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Gain";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundCompressorAttackInput;
+            pxUIElementCreateData.Name = "Sound_CompressorEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 2;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Attack";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundCompressorReleaseInput;
+            pxUIElementCreateData.Name = "Sound_CompressorEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 3;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Release";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundCompressorThresholdInput;
+            pxUIElementCreateData.Name = "Sound_CompressorEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 4;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Threshold";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundCompressorRatioInput;
+            pxUIElementCreateData.Name = "Sound_Compressor";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 5;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Ratio";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundCompressorPredelayInput;
+            pxUIElementCreateData.Name = "Sound_Compressor_Predelay";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 6;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Predelay";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+    }
+
+    // Distortion
+    {
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundDistortion;
+            pxUIElementCreateData.Name = "Sound_Distortion";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidth;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.6f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 0;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Distortion";
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {      
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundDistortionGain;
+            pxUIElementCreateData.Name = "Sound_Distortion_Gain";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundDistortion;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 1;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Gain";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundDistortionEdge;
+            pxUIElementCreateData.Name = "Sound_Distortion_Edge";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundDistortion;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 2;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Edge";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundDistortionPostEQCenterFrequency;
+            pxUIElementCreateData.Name = "Sound_Distortion_PostEQCenterFrequency";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundDistortion;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 3;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "PostEQCenterFrequency";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundDistortionPostEQBandwidth;
+            pxUIElementCreateData.Name = "Sound_Distortion_PostEQBandwidth";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundDistortion;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 4;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "PostEQBandwidth";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundDistortionPreLowpassCutoff;
+            pxUIElementCreateData.Name = "Sound_Distortion_PreLowpassCutoff";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundDistortion;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 5;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "PreLowpassCutoff";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundDistortionGainInput;
+            pxUIElementCreateData.Name = "Sound_Distortion_Gain";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundDistortion;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 1;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundDistortionEdgeInput;
+            pxUIElementCreateData.Name = "Sound_Distortion_Edge";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundDistortion;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 2;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundDistortionPostEQCenterFrequencyInput;
+            pxUIElementCreateData.Name = "Sound_Distortion_PostEQCenterFrequency";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundDistortion;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 3;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundDistortionPostEQBandwidthInput;
+            pxUIElementCreateData.Name = "Sound_Distortion_PostEQBandwidth";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundDistortion;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 4;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundDistortionPreLowpassCutoffInput;
+            pxUIElementCreateData.Name = "Sound_Distortion_PreLowpassCutoff";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundDistortion;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 5;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+    }
+
+
+
+
+
+
+
+    // Sound_Echo
+    {
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundEchoEffect;
+            pxUIElementCreateData.Name = "Sound_Echo";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidth;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.6f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 6.5;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Echo";
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundEchoWetDryMix;
+            pxUIElementCreateData.Name = "Sound_Echo_WetDryMix";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundEchoEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 1;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "WetDryMix";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundEchoFeedback;
+            pxUIElementCreateData.Name = "Sound_Echo_Feedback";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundEchoEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 2;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Feedback";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundEchoLeftDelay;
+            pxUIElementCreateData.Name = "Sound_EchoEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundEchoEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 3;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "LeftDelay";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundEchoRightDelay;
+            pxUIElementCreateData.Name = "Sound_Echo_RightDelay";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundEchoEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 4;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "RightDelay";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundEchoPanDelay;
+            pxUIElementCreateData.Name = "Sound_Echo_PanDelay";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundEchoEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 5;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "PanDelay";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundEchoWetDryMixInput;
+            pxUIElementCreateData.Name = "Sound_Echo_WetDryMix";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundEchoEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 1;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundEchoFeedbackInput;
+            pxUIElementCreateData.Name = "Sound_Echo_Feedback";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundEchoEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 2;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundEchoLeftDelayInput;
+            pxUIElementCreateData.Name = "Sound_Echo_LeftDelay";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundEchoEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 3;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundEchoRightDelayInput;
+            pxUIElementCreateData.Name = "Sound_Echo_RightDelay";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundEchoEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 4;   
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundEchoPanDelayInput;
+            pxUIElementCreateData.Name = "Sound_Echo_PanDelay";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundEchoEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 5;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+    }
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+    // Flange
+    {
+
+
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundFlangerEffect;
+            pxUIElementCreateData.Name = "Sound_FlangerEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidth;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.6f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 13;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Flanger";
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundFlangerWetDryMix;
+            pxUIElementCreateData.Name = "Sound_Flanger_WetDryMix";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.00f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 1;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "WetDryMix";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundFlangerDepth;
+            pxUIElementCreateData.Name = "Sound_FlangerEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.00f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 2;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Depth";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundFlangerFeedback;
+            pxUIElementCreateData.Name = "Sound_FlangerEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.00f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 3;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Feedback";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundFlangerFrequency;
+            pxUIElementCreateData.Name = "Sound_FlangerEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.00f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 4;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Frequency";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundFlangerWaveform;
+            pxUIElementCreateData.Name = "Sound_FlangerEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.00f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 5;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Waveform";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundFlangerDelay;
+            pxUIElementCreateData.Name = "Sound_FlangerEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.00f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 6;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Delay";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundFlangerPhase;
+            pxUIElementCreateData.Name = "Sound_Flanger_Phase";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.00f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 7;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Phase";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundFlangerWetDryMixInput;
+            pxUIElementCreateData.Name = "Sound_Flanger_WetDryMix";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 1;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundFlangerDepthInput;
+            pxUIElementCreateData.Name = "Sound_FlangerEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 2;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundFlangerFeedbackInput;
+            pxUIElementCreateData.Name = "Sound_FlangerEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 3;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundFlangerFrequencyInput;
+            pxUIElementCreateData.Name = "Sound_FlangerEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 4;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundFlangerWaveformInput;
+            pxUIElementCreateData.Name = "Sound_FlangerEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 5;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundFlangerDelayInput;
+            pxUIElementCreateData.Name = "Sound_FlangerEffect";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 6;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundFlangerPhaseInput;
+            pxUIElementCreateData.Name = "Sound_Flanger_Phase";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 7;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+    }
+
+
+    // Gargle
+    {
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundGargleEffect;
+            pxUIElementCreateData.Name = "Sound_Gargle";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidth;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 15.5;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Gargle";
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundGargleRateHz;
+            pxUIElementCreateData.Name = "Sound_Gargle_RateHz";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundGargleEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.00f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 1;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "RateHz";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundGargleRateHzInput;
+            pxUIElementCreateData.Name = "Sound_Gargle_WaveShape";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundGargleEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.00f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 2;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "WaveShape";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundGargleWaveShape;
+            pxUIElementCreateData.Name = "Sound_Gargle_RateHz";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundGargleEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 1;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundGargleWaveShapeInput;
+            pxUIElementCreateData.Name = "Sound_Gargle_WaveShape";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundGargleEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 2;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+    }
+
+
+    // Interactive3DLevel2Reverb
+    {
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidth;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.6f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 21.5;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Interactive3DLevel2Reverb";
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbRoom;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 1;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Room";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbRoomHF;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 2;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "RoomHF";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbRoomRolloffFactor;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 3;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "RoomRolloffFactor";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbDecayTime;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 4;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "DecayTime";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbDecayHFRatio;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 5;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "DecayHFRatio";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbReflections;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 6;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Reflections";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbReflectionsDelay;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 7;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "ReflectionsDelay";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbReverb;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 8;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Reverb";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbReverbDelay;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 9;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "ReverbDelay";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbDiffusion;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 10;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Diffusion";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbDensity;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 11;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "Density";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbHFReference;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 12;
+            pxUIElementCreateData.UIElement.Data.Text.Content = "HFReference";
+            pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbRoomInput;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 1;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbRoomHFInput;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 2;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbRoomRolloffFactorInput;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 3;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbDecayTimeInput;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 4;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbDecayHFRatioInput;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 5;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbReflectionsInput;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 6;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbReflectionsDelayInput;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 7;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbReverbInput;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 8;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbReverbDelayInput;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 9;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbDiffusionInput;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 10;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbDensityInput;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 11;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXEngineResourceCreateInfo pxUIElementCreateData;
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbHFReferenceInput;
+            pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+            pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 12;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+    }
+
+
+
+
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textSoundParamEqEffect;
+        pxUIElementCreateData.Name = "Sound_ParamEq";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = SoundWidth;
+        pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 18.75;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "ParamEq";
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textSoundParamEqCenter;
+        pxUIElementCreateData.Name = "Sound_ParamEq_Center";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.UIElementParent = _textSoundParamEqEffect;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+        pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 1;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "Center";
+        pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textSoundParamEqBandwidth;
+        pxUIElementCreateData.Name = "Sound_ParamEq_Bandwidth";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.UIElementParent = _textSoundParamEqEffect;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+        pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 2;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "Bandwidth";
+        pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textSoundParamEqGain;
+        pxUIElementCreateData.Name = "Sound_ParamEq_Gain";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.UIElementParent = _textSoundParamEqEffect;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+        pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 3;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "Gain";
+        pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textSoundParamEqCenterInput;
+        pxUIElementCreateData.Name = "Sound_ParamEqEffect";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+        pxUIElementCreateData.UIElement.UIElementParent = _textSoundParamEqEffect;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+        pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+        pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 1;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textSoundParamEqBandwidthInput;
+        pxUIElementCreateData.Name = "Sound_ParamEqEffect";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+        pxUIElementCreateData.UIElement.UIElementParent = _textSoundParamEqEffect;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+        pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+        pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 2;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textSoundParamEqGainInput;
+        pxUIElementCreateData.Name = "Sound_ParamEqEffect";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+        pxUIElementCreateData.UIElement.UIElementParent = _textSoundParamEqEffect;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+        pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+        pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 3;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbEffect;
+        pxUIElementCreateData.Name = "Sound_WavesReverb";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = SoundWidth;
+        pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 23;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "WavesReverb";
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbInGain;
+        pxUIElementCreateData.Name = "Sound_WavesReverbEffect_InGain";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.UIElementParent = _textSoundWavesReverbEffect;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+        pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 1;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "InGain";
+        pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbReverbMix;
+        pxUIElementCreateData.Name = "Sound_WavesReverbEffect_ReverbMix";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.UIElementParent = _textSoundWavesReverbEffect;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+        pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 2;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "ReverbMix";
+        pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbReverbTime;
+        pxUIElementCreateData.Name = "Sound_WavesReverbEffect_ReverbTime";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.UIElementParent = _textSoundWavesReverbEffect;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+        pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 3;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "ReverbTime";
+        pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbHighFreqRTRatio;
+        pxUIElementCreateData.Name = "Sound_WavesReverbEffect_HighFreqRTRatio";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.UIElementParent = _textSoundWavesReverbEffect;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
+        pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 4;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "HighFreqRTRatio";
+        pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbInGainInput;
+        pxUIElementCreateData.Name = "Sound_WavesReverbEffect_InGain";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+        pxUIElementCreateData.UIElement.UIElementParent = _textSoundWavesReverbEffect;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+        pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+        pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 1;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "0";
+        pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbReverbMixInput;
+        pxUIElementCreateData.Name = "Sound_WavesReverbEffect_ReverbMix";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+        pxUIElementCreateData.UIElement.UIElementParent = _textSoundWavesReverbEffect;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+        pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+        pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 2;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "0";
+        pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbReverbTimeInput;
+        pxUIElementCreateData.Name = "Sound_WavesReverbEffect_ReverbTime";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+        pxUIElementCreateData.UIElement.UIElementParent = _textSoundWavesReverbEffect;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+        pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+        pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 3;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "1000";
+        pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbHighFreqRTRatioInput;
+        pxUIElementCreateData.Name = "Sound_WavesReverbEffect_HighFreqRTRatio";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
+        pxUIElementCreateData.UIElement.UIElementParent = _textSoundWavesReverbEffect;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
+        pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
+        pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 4;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "0.1";
+        pxUIElementCreateData.UIElement.Data.Text.Allign = PXUIElementTextAllignRight;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXEngineResourceCreateInfo pxUIElementCreateData;
+        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbApply;
+        pxUIElementCreateData.Name = "Sound_WavesReverbEffect_OK";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
+        pxUIElementCreateData.UIElement.UIElementParent = _textSoundWavesReverbEffect;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = 55;
+        pxUIElementCreateData.UIElement.Position.Height = 35;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.60f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 5;
+        pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Apply";
+        pxUIElementCreateData.UIElement.InteractCallBack = PXOnSoundButtonEEJEIEvent;
+        pxUIElementCreateData.UIElement.InteractOwner = bfBitFireIDE;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
+
+
+    //FLOAT   fInGain;                // [-96.0,0.0]            default: 0.0 dB
+    //FLOAT   fReverbMix;             // [-96.0,0.0]            default: 0.0 db
+    //FLOAT   fReverbTime;            // [0.001,3000.0]         default: 1000.0 ms
+    //FLOAT   fHighFreqRTRatio;       // [0.001,0.999]          default: 0.001
+
 
 
     //-----------------------------------------------------
@@ -1008,7 +3999,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreateInfo pxUIElementCreateData;
         PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-        pxUIElementCreateData.ObjectReference = &_buttonDatabaseConnect;
+        pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbEffect;
         pxUIElementCreateData.Name = "Button_Database";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
@@ -1024,7 +4015,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Position.MarginBottom = 0.6f;
         pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Connect";
 
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+       // PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
 
     }
 
