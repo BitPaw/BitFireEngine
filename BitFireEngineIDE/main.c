@@ -168,6 +168,9 @@ PXUIElement* _textSoundCompressorThresholdInput = 0;
 PXUIElement* _textSoundCompressorRatioInput = 0;
 PXUIElement* _textSoundCompressorPredelayInput = 0;
 
+
+PXUIElement* _textSoundCompressorEnable = 0;
+PXUIElement* _textSoundCompressorApply = 0;
 //---------------------------------------------------------
 PXUIElement* _textSoundDistortion = 0;
 
@@ -182,6 +185,9 @@ PXUIElement* _textSoundDistortionEdgeInput = 0;
 PXUIElement* _textSoundDistortionPostEQCenterFrequencyInput = 0;
 PXUIElement* _textSoundDistortionPostEQBandwidthInput = 0;
 PXUIElement* _textSoundDistortionPreLowpassCutoffInput = 0;
+
+PXUIElement* _textSoundDistortionEnable = 0;
+PXUIElement* _textSoundDistortionApply = 0;
 
 //---------------------------------------------------------
 PXUIElement* _textSoundEchoEffect = 0;
@@ -198,6 +204,9 @@ PXUIElement* _textSoundEchoFeedbackInput = 0;
 PXUIElement* _textSoundEchoLeftDelayInput = 0;
 PXUIElement* _textSoundEchoRightDelayInput = 0;
 PXUIElement* _textSoundEchoPanDelayInput = 0;
+
+PXUIElement* _textSoundEchoEnable = 0;
+PXUIElement* _textSoundEchoApply = 0;
 
 //---------------------------------------------------------
 PXUIElement* _textSoundFlangerEffect = 0;
@@ -889,8 +898,8 @@ void PXAPI BFSceneOnStartup(BFBitFireIDE* const bfBitFireIDE, PXEngine* const px
         PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.CreateType = PXEngineCreateTypeModel;
         pxUIElementCreateData.ObjectReference = &_pxModelMap;
-       // pxUIElementCreateData.FilePath = "Model/Dust_II/DustII.obj";
-       pxUIElementCreateData.FilePath = "Model/Dust_II/DustII.obj";
+        pxUIElementCreateData.FilePath = "Model/Dust_II/DustII.obj";
+        //pxUIElementCreateData.FilePath = "P:\\_Cache\\N64\\PennyRacer\\Apline\\OBJ\\untitled.obj";// "Model/Dust_II/DustII.obj";
         // "Model/Tiger.obj" 
         // "Model/Dust_II/DustII.obj"
         // "Model/Tiger.obj"
@@ -1069,57 +1078,50 @@ void PXAPI PXOnSoundButtonStopEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEv
     }
 }
 
-
-void PXAPI PXOnSoundButtonEEJEIEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
+void PXMakeUIEnable(PXGUISystem* const pxGgui, PXAudio* pxAudio, PXAudioEffectType effect, int flag, PXUIElement* button)
 {
-    PXLogPrint
-    (
-        PXLoggingInfo,
-        "GUI",
-        "Click",
-        "Do sdads"
-    );
+    PXAudioEffect pxAudioEffect;
+    PXClear(PXAudioEffect, &pxAudioEffect);
+    pxAudioEffect.Type = effect;
+    pxAudioEffect.Enable = !(_soundAudioDevice.FXSettingFlagList & flag);
 
+    pxAudio->DeviceEffectUpdate(pxAudio->SystemReference, &_soundAudioDevice, &pxAudioEffect);
+
+    PXGUIElementUpdateInfo pxGUIElementUpdateInfo[3];
+    PXClearList(PXGUIElementUpdateInfo, pxGUIElementUpdateInfo, 3);
+
+    pxGUIElementUpdateInfo[0].Property = PXUIElementPropertyTextContent;
+    pxGUIElementUpdateInfo[0].UIElement = button;
+
+    pxGUIElementUpdateInfo[1].Property = PXUIElementPropertyBackGroundColor;
+    pxGUIElementUpdateInfo[1].UIElement = button;
+
+    if(pxAudioEffect.Enable)
+    {
+        pxGUIElementUpdateInfo[0].Data.Text.Content = "ON";  
+    }
+    else
+    {
+        pxGUIElementUpdateInfo[0].Data.Text.Content = "OFF";
+    }
+
+    PXGUIElementUpdate(pxGgui, pxGUIElementUpdateInfo, 2);
+}
+
+void PXAPI PXOnSoundEffectUpdate_Chorus_Toggle(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
+{
     switch(pxWindowEvent->Type)
     {
         case PXWindowEventTypeClick:
         {
-            HWND aaa[4] = 
-            {
-                _textSoundWavesReverbInGainInput->ID,
-                _textSoundWavesReverbReverbMixInput->ID,
-                _textSoundWavesReverbReverbTimeInput->ID,
-                _textSoundWavesReverbHighFreqRTRatioInput->ID,
-            };
-            float ddd[4]={0,0,0,0};
-
-
-            for(size_t i = 0; i < 4; i++)
-            {
-                PXText pxText;
-                PXTextConstructBufferA(&pxText, 64);
-
-                pxText.SizeUsed += GetWindowTextA(aaa[i], pxText.TextA, pxText.SizeAllocated);
-
-          
-                PXTextToFloat(&pxText, &ddd[i]);
-
-                ddd[i] = SendMessageA(aaa[i], TBM_GETPOS, 0, 0) / 100.f;
-            }
-
-            PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
-
-            PXAudioEffect pxAudioEffectWavesReverb;
-            PXClear(PXAudioEffect, &pxAudioEffectWavesReverb);
-            pxAudioEffectWavesReverb.Type = PXAudioEffectTypeWavesReverb;
-            pxAudioEffectWavesReverb.Enable = PXTrue;
-            pxAudioEffectWavesReverb.Fetch = PXFalse;
-            pxAudioEffectWavesReverb.WavesReverb.InGain = ddd[0];
-            pxAudioEffectWavesReverb.WavesReverb.ReverbMix = ddd[1];
-            pxAudioEffectWavesReverb.WavesReverb.ReverbTime = ddd[2];
-            pxAudioEffectWavesReverb.WavesReverb.HighFreqRTRatio = ddd[3];
-
-            pxAudio->DeviceEffectUpdate(pxAudio->SystemReference, &_soundAudioDevice, &pxAudioEffectWavesReverb);
+            PXMakeUIEnable
+            (
+                &bfBitFireIDE->EngineEditor.GUISystem,
+                &bfBitFireIDE->EngineEditor.Audio, 
+                PXAudioEffectTypeChorus,
+                PXAudioFXChorus,
+                _textSoundChorusEnable
+            );
 
             break;
         }
@@ -1128,31 +1130,6 @@ void PXAPI PXOnSoundButtonEEJEIEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowE
             break;
     }
 }
-
-
-void PXAPI PXOnSoundEffectUpdate_Chorus_Enable(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
-{
-    switch(pxWindowEvent->Type)
-    {
-        case PXWindowEventTypeClick:
-        {
-            PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
-
-            PXAudioEffect pxAudioEffectWavesReverb;
-            PXClear(PXAudioEffect, &pxAudioEffectWavesReverb);
-            pxAudioEffectWavesReverb.Type = PXAudioEffectTypeChorus;
-            pxAudioEffectWavesReverb.Enable != pxAudioEffectWavesReverb.Enable;
-
-            pxAudio->DeviceEffectUpdate(pxAudio->SystemReference, &_soundAudioDevice, &pxAudioEffectWavesReverb);
-
-            break;
-        }
-
-        default:
-            break;
-    }
-}
-
 
 void PXAPI PXOnSoundEffectUpdate_Chorus(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
 {
@@ -1202,6 +1179,28 @@ void PXAPI PXOnSoundEffectUpdate_Chorus(BFBitFireIDE* const bfBitFireIDE, PXWind
     }
 }
 
+void PXAPI PXOnSoundEffectUpdate_Compressor_Toggle(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
+{
+    switch(pxWindowEvent->Type)
+    {
+        case PXWindowEventTypeClick:
+        {
+            PXMakeUIEnable
+            (
+                &bfBitFireIDE->EngineEditor.GUISystem,
+                &bfBitFireIDE->EngineEditor.Audio,
+                PXAudioEffectTypeCompressor,
+                PXAudioFXCompressor,
+                _textSoundCompressorEnable
+            );
+
+            break;
+        }
+
+        default:
+            break;
+    }
+}
 
 void PXAPI PXOnSoundEffectUpdate_Compressor(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
 {
@@ -1249,6 +1248,29 @@ void PXAPI PXOnSoundEffectUpdate_Compressor(BFBitFireIDE* const bfBitFireIDE, PX
     }
 }
 
+void PXAPI PXOnSoundEffectUpdate_Distortion_Toggle(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
+{
+    switch(pxWindowEvent->Type)
+    {
+        case PXWindowEventTypeClick:
+        {
+            PXMakeUIEnable
+            (
+                &bfBitFireIDE->EngineEditor.GUISystem,
+                &bfBitFireIDE->EngineEditor.Audio,
+                PXAudioEffectTypeDistortion,
+                PXAudioFXDistortion,
+                _textSoundDistortionEnable
+            );
+
+            break;
+        }
+
+        default:
+            break;
+    }
+}
+
 void PXAPI PXOnSoundEffectUpdate_Distortion(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
 {
     switch(pxWindowEvent->Type)
@@ -1284,6 +1306,29 @@ void PXAPI PXOnSoundEffectUpdate_Distortion(BFBitFireIDE* const bfBitFireIDE, PX
             pxAudioEffectWavesReverb.Distortion.PreLowpassCutoff = ddd[4];
 
             pxAudio->DeviceEffectUpdate(pxAudio->SystemReference, &_soundAudioDevice, &pxAudioEffectWavesReverb);
+
+            break;
+        }
+
+        default:
+            break;
+    }
+}
+
+void PXAPI PXOnSoundEffectUpdate_Echo_Toggle(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
+{
+    switch(pxWindowEvent->Type)
+    {
+        case PXWindowEventTypeClick:
+        {
+            PXMakeUIEnable
+            (
+                &bfBitFireIDE->EngineEditor.GUISystem,
+                &bfBitFireIDE->EngineEditor.Audio,
+                PXAudioEffectTypeEcho,
+                PXAudioFXEcho,
+                _textSoundEchoEnable
+            );
 
             break;
         }
@@ -1435,7 +1480,61 @@ void PXAPI PXOnSoundEffectUpdate_ParamEq(BFBitFireIDE* const bfBitFireIDE, PXWin
 
 void PXAPI PXOnSoundEffectUpdate_WavesReverb(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
 {
+    PXLogPrint
+    (
+        PXLoggingInfo,
+        "GUI",
+        "Click",
+        "Do sdads"
+    );
 
+    switch(pxWindowEvent->Type)
+    {
+        case PXWindowEventTypeClick:
+        {
+            HWND aaa[4] =
+            {
+                _textSoundWavesReverbInGainInput->ID,
+                _textSoundWavesReverbReverbMixInput->ID,
+                _textSoundWavesReverbReverbTimeInput->ID,
+                _textSoundWavesReverbHighFreqRTRatioInput->ID,
+            };
+            float ddd[4] = { 0,0,0,0 };
+
+
+            for(size_t i = 0; i < 4; i++)
+            {
+                PXText pxText;
+                PXTextConstructBufferA(&pxText, 64);
+
+                pxText.SizeUsed += GetWindowTextA(aaa[i], pxText.TextA, pxText.SizeAllocated);
+
+
+                PXTextToFloat(&pxText, &ddd[i]);
+
+                ddd[i] = SendMessageA(aaa[i], TBM_GETPOS, 0, 0) / 100.f;
+            }
+
+            PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
+
+            PXAudioEffect pxAudioEffectWavesReverb;
+            PXClear(PXAudioEffect, &pxAudioEffectWavesReverb);
+            pxAudioEffectWavesReverb.Type = PXAudioEffectTypeWavesReverb;
+            pxAudioEffectWavesReverb.Enable = PXTrue;
+            pxAudioEffectWavesReverb.Fetch = PXFalse;
+            pxAudioEffectWavesReverb.WavesReverb.InGain = ddd[0];
+            pxAudioEffectWavesReverb.WavesReverb.ReverbMix = ddd[1];
+            pxAudioEffectWavesReverb.WavesReverb.ReverbTime = ddd[2];
+            pxAudioEffectWavesReverb.WavesReverb.HighFreqRTRatio = ddd[3];
+
+            pxAudio->DeviceEffectUpdate(pxAudio->SystemReference, &_soundAudioDevice, &pxAudioEffectWavesReverb);
+
+            break;
+        }
+
+        default:
+            break;
+    }
 }
 
 
@@ -1668,7 +1767,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.40;
             pxUIElementCreateData.UIElement.Position.MarginTop = 0;
             pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "[+]";
-            pxUIElementCreateData.UIElement.InteractCallBack = PXOnSoundEffectUpdate_Chorus_Enable;
+            pxUIElementCreateData.UIElement.InteractCallBack = PXOnSoundEffectUpdate_Chorus_Toggle;
             pxUIElementCreateData.UIElement.InteractOwner = bfBitFireIDE;
 
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
@@ -2001,6 +2100,48 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         {
             PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
             pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundCompressorEnable;
+            pxUIElementCreateData.Name = "Compressor_Toggle";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
+            pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = 35;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.40;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 8.25;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "[+]";
+            pxUIElementCreateData.UIElement.InteractCallBack = PXOnSoundEffectUpdate_Compressor_Toggle;
+            pxUIElementCreateData.UIElement.InteractOwner = bfBitFireIDE;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundCompressorApply;
+            pxUIElementCreateData.Name = "Compressor_Apply";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
+            pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = 70;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.45;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 8.25;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Apply";
+            pxUIElementCreateData.UIElement.InteractCallBack = PXOnSoundEffectUpdate_Compressor;
+            pxUIElementCreateData.UIElement.InteractOwner = bfBitFireIDE;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundCompressorGain;
             pxUIElementCreateData.Name = "Sound_CompressorEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2261,6 +2402,48 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
 
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundDistortionEnable;
+            pxUIElementCreateData.Name = "Compressor_Toggle";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
+            pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = 35;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.6 + 0.40;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 0;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "[+]";
+            pxUIElementCreateData.UIElement.InteractCallBack = PXOnSoundEffectUpdate_Distortion_Toggle;
+            pxUIElementCreateData.UIElement.InteractOwner = bfBitFireIDE;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundDistortionApply;
+            pxUIElementCreateData.Name = "Compressor_Apply";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
+            pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = 70;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.6 + 0.45;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 0;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Apply";
+            pxUIElementCreateData.UIElement.InteractCallBack = PXOnSoundEffectUpdate_Distortion;
+            pxUIElementCreateData.UIElement.InteractOwner = bfBitFireIDE;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
         {      
             PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
             pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
@@ -2477,6 +2660,48 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.6f;
             pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 6.5;
             pxUIElementCreateData.UIElement.Data.Text.Content = "Echo";
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundEchoEnable;
+            pxUIElementCreateData.Name = "Echo_Toggle";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
+            pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = 35;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.6 + 0.40;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 6.5;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "[+]";
+            pxUIElementCreateData.UIElement.InteractCallBack = PXOnSoundEffectUpdate_Echo_Toggle;
+            pxUIElementCreateData.UIElement.InteractOwner = bfBitFireIDE;
+
+            PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        }
+        {
+            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            pxUIElementCreateData.ObjectReference = &_textSoundEchoApply;
+            pxUIElementCreateData.Name = "Echo_Apply";
+            pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
+            pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
+            pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+            pxUIElementCreateData.UIElement.Position.Width = 70;
+            pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+            pxUIElementCreateData.UIElement.Position.MarginLeft = 0.6 + 0.45;
+            pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 6.5;
+            pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Apply";
+            pxUIElementCreateData.UIElement.InteractCallBack = PXOnSoundEffectUpdate_Echo;
+            pxUIElementCreateData.UIElement.InteractOwner = bfBitFireIDE;
 
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
@@ -3977,7 +4202,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Position.MarginLeft = 0.60f;
         pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 5;
         pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Apply";
-        pxUIElementCreateData.UIElement.InteractCallBack = PXOnSoundButtonEEJEIEvent;
+        pxUIElementCreateData.UIElement.InteractCallBack = PXOnSoundEffectUpdate_Chorus;
         pxUIElementCreateData.UIElement.InteractOwner = bfBitFireIDE;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);

@@ -34,6 +34,6 @@
     <Text Include="Shader\Object.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="..\..\PXUltima\Code\[Export]\PXUltimaC\32B-Windows-Debug\PXUltima.dll" />
+    <CopyFileToFolders Include="..\..\PXUltima\Code\[Export]\PXUltimaC\64B-Windows-Debug\PXUltima.dll" />
   </ItemGroup>
 </Project>
