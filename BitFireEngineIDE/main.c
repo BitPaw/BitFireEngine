@@ -49,7 +49,7 @@ void PXAPI OnUserInputUpdate(BFBitFireIDE* const bfBitFireIDE, PXEngine* const p
 void PXAPI OnNetworkUpdate(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine);
 void PXAPI OnGameUpdateEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine);
 void PXAPI OnRenderUpdateEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine);
-void PXAPI PXOnEngineResourceAdded(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine, PXEngineResourceCreateInfo* const pxEngineResourceCreateInfo);
+void PXAPI PXOnEngineResourceAdded(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine, void* const pxEngineResourceCreateInfo);
 void PXAPI PXOnUserInputUpdateScene(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine, PXPlayerMoveInfo* const pxPlayerMoveInfo);
 
 #if OSWindows
@@ -459,7 +459,7 @@ void PXAPI PXOnUserInputUpdateScene(BFBitFireIDE* const bfBitFireIDE, PXEngine* 
   //  PXCameraMove(pxEngine->CameraCurrent, &pxPlayerMoveInfo->MovementWalk);
 }
 
-void PXAPI PXOnEngineResourceAdded(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine, PXEngineResourceCreateInfo* const pxEngineResourceCreateInfo)
+void PXAPI PXOnEngineResourceAdded(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine, void* const pxEngineResourceCreateInfo)
 {
     PXLogPrint
     (
@@ -540,7 +540,7 @@ void PXAPI BFObjectTreeViewEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent
                 "BF",
                 "Event",
                 "Select: <%s>",
-                uiElementSelected->NameData
+                ""// uiElementSelected->NameData
             );
 
 
@@ -556,12 +556,12 @@ void PXAPI BFObjectTreeViewEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent
             pxUIElementUpdateInfo[0].UIElement = _uiInfoPanelObjectNameContent;
             pxUIElementUpdateInfo[0].WindowReference = &bfBitFireIDE->EngineEditor.Window;
             pxUIElementUpdateInfo[0].Property = PXUIElementPropertyTextContent;
-            pxUIElementUpdateInfo[0].Data.Text.Content = _uiInfoPanelObjectNameContent->NameData;
+          //  pxUIElementUpdateInfo[0].Data.Text.Content = _uiInfoPanelObjectNameContent->NameData;
 
             pxUIElementUpdateInfo[1].UIElement = _uiInfoPanelObjectTypeContent;
             pxUIElementUpdateInfo[1].WindowReference = &bfBitFireIDE->EngineEditor.Window;
             pxUIElementUpdateInfo[1].Property = PXUIElementPropertyTextContent;
-            pxUIElementUpdateInfo[1].Data.Text.Content = _uiInfoPanelObjectTypeContent->NameData;
+         //   pxUIElementUpdateInfo[1].Data.Text.Content = _uiInfoPanelObjectTypeContent->NameData;
 
              PXGUIElementUpdate(PXNull, pxUIElementUpdateInfo, 2);          
 
@@ -577,6 +577,9 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
     PXEngine* const pxEngineEditor = &bfBitFireIDE->EngineEditor;
     PXEngine* const pxEngineScene = &bfBitFireIDE->EngineScene;
 
+
+    PXResourceCreateInfo pxResourceCreateInfo;
+
     // DOne UI Stuff
 
     {
@@ -587,7 +590,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
             PXDictionaryConstruct(&parentList, sizeof(PXUIElement*), sizeof(PXUIElement*), PXDictionaryValueLocalityInternalEmbedded);
 
 
-            PXDictionary* const uiElementLookup = &pxEngineEditor->GUISystem.UIElementLookUp;
+            PXDictionary* const uiElementLookup = &pxEngineEditor->ResourceManager.GUIElementLookup;
 
             PXUIElement* uiAncer = 0;
             PXUIElement* sceneAncer = 0;
@@ -595,19 +598,18 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
             //  Create UI element, a container for the full UI things
             {
                 PXUIElement* uiElementItem = PXNull;
+                       
+                PXClear(PXResourceCreateInfo, &pxResourceCreateInfo);
+                pxResourceCreateInfo.Type = PXResourceTypeGUIElement;
+                pxResourceCreateInfo.ObjectReference = &uiElementItem;
+                pxResourceCreateInfo.Name = "UI";
+                pxResourceCreateInfo.UIElement.Type = PXUIElementTypeTreeViewItem;
+                pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
+                pxResourceCreateInfo.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
+                pxResourceCreateInfo.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+                pxResourceCreateInfo.UIElement.Data.TreeViewItem.ItemParent = PXNull;
 
-                PXEngineResourceCreateInfo pxUIElementCreateData;
-                PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-                pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-                pxUIElementCreateData.ObjectReference = &uiElementItem;
-                pxUIElementCreateData.Name = "UI";
-                pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
-                pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
-                pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
-                pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
-                pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = PXNull;
-
-                PXEngineResourceCreate(pxEngineEditor, &pxUIElementCreateData);
+                PXEngineResourceCreate(pxEngineEditor, &pxResourceCreateInfo);
 
                 PXDictionaryAdd(&parentList, &uiElementItem, &uiElementItem);
 
@@ -618,18 +620,17 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
             {
                 PXUIElement* uiElementItem = PXNull;
 
-                PXEngineResourceCreateInfo pxUIElementCreateData;
-                PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-                pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-                pxUIElementCreateData.ObjectReference = &uiElementItem;
-                pxUIElementCreateData.Name = "Scene";
-                pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
-                pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
-                pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
-                pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
-                pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = PXNull;
+                PXClear(PXResourceCreateInfo, &pxResourceCreateInfo);
+                pxResourceCreateInfo.Type = PXResourceTypeGUIElement;
+                pxResourceCreateInfo.ObjectReference = &uiElementItem;
+                pxResourceCreateInfo.Name = "Scene";
+                pxResourceCreateInfo.UIElement.Type = PXUIElementTypeTreeViewItem;
+                pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
+                pxResourceCreateInfo.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
+                pxResourceCreateInfo.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+                pxResourceCreateInfo.UIElement.Data.TreeViewItem.ItemParent = PXNull;
 
-                PXEngineResourceCreate(pxEngineEditor, &pxUIElementCreateData);
+                PXEngineResourceCreate(pxEngineEditor, &pxResourceCreateInfo);
 
                 PXDictionaryAdd(&parentList, &uiElementItem, &uiElementItem);
 
@@ -640,39 +641,39 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                     PXUIElement* uiTreeViewItemImage = PXNull;
 
 
-                    PXEngineResourceCreateInfo pxUIElementCreateData[8];
-                    PXClearList(PXEngineResourceCreateInfo, &pxUIElementCreateData, 8);
-                    pxUIElementCreateData[0].CreateType = PXEngineCreateTypeUIElement;
-                    pxUIElementCreateData[0].ObjectReference = &uiTreeViewItemModel;
-                    pxUIElementCreateData[0].Name = "Model";
-                    pxUIElementCreateData[0].UIElement.Type = PXUIElementTypeTreeViewItem;
-                    pxUIElementCreateData[0].UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
-                    pxUIElementCreateData[0].UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
-                    pxUIElementCreateData[0].UIElement.Data.TreeViewItem.ItemParent = uiElementItem;
-                    pxUIElementCreateData[0].UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+                    PXResourceCreateInfo pxUIElementCreateDataList[8];
+                    PXClearList(PXResourceCreateInfo, pxUIElementCreateDataList, 8);
+                    pxUIElementCreateDataList[0].Type = PXResourceTypeGUIElement;
+                    pxUIElementCreateDataList[0].ObjectReference = &uiTreeViewItemModel;
+                    pxUIElementCreateDataList[0].Name = "Model";
+                    pxUIElementCreateDataList[0].UIElement.Type = PXUIElementTypeTreeViewItem;
+                    pxUIElementCreateDataList[0].UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
+                    pxUIElementCreateDataList[0].UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
+                    pxUIElementCreateDataList[0].UIElement.Data.TreeViewItem.ItemParent = uiElementItem;
+                    pxUIElementCreateDataList[0].UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
 
-                    pxUIElementCreateData[1].CreateType = PXEngineCreateTypeUIElement;
-                    pxUIElementCreateData[1].ObjectReference = &uiTreeViewItemShader;
-                    pxUIElementCreateData[1].Name = "Shader";
-                    pxUIElementCreateData[1].UIElement.Type = PXUIElementTypeTreeViewItem;
-                    pxUIElementCreateData[1].UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
-                    pxUIElementCreateData[1].UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
-                    pxUIElementCreateData[1].UIElement.Data.TreeViewItem.ItemParent = uiElementItem;
-                    pxUIElementCreateData[1].UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+                    pxUIElementCreateDataList[1].Type = PXResourceTypeGUIElement;
+                    pxUIElementCreateDataList[1].ObjectReference = &uiTreeViewItemShader;
+                    pxUIElementCreateDataList[1].Name = "Shader";
+                    pxUIElementCreateDataList[1].UIElement.Type = PXUIElementTypeTreeViewItem;
+                    pxUIElementCreateDataList[1].UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
+                    pxUIElementCreateDataList[1].UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
+                    pxUIElementCreateDataList[1].UIElement.Data.TreeViewItem.ItemParent = uiElementItem;
+                    pxUIElementCreateDataList[1].UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
 
-                    pxUIElementCreateData[2].CreateType = PXEngineCreateTypeUIElement;
-                    pxUIElementCreateData[2].ObjectReference = &uiTreeViewItemImage;
-                    pxUIElementCreateData[2].Name = "Image";
-                    pxUIElementCreateData[2].UIElement.Type = PXUIElementTypeTreeViewItem;
-                    pxUIElementCreateData[2].UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
-                    pxUIElementCreateData[2].UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
-                    pxUIElementCreateData[2].UIElement.Data.TreeViewItem.ItemParent = uiElementItem;
-                    pxUIElementCreateData[2].UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+                    pxUIElementCreateDataList[2].Type = PXResourceTypeGUIElement;
+                    pxUIElementCreateDataList[2].ObjectReference = &uiTreeViewItemImage;
+                    pxUIElementCreateDataList[2].Name = "Image";
+                    pxUIElementCreateDataList[2].UIElement.Type = PXUIElementTypeTreeViewItem;
+                    pxUIElementCreateDataList[2].UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
+                    pxUIElementCreateDataList[2].UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
+                    pxUIElementCreateDataList[2].UIElement.Data.TreeViewItem.ItemParent = uiElementItem;
+                    pxUIElementCreateDataList[2].UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
 
 
                     for(size_t i = 0; i < 3; i++)
                     {
-                        PXEngineResourceCreateInfo* pxEngineResourceCreateInfo = &pxUIElementCreateData[i];
+                        PXResourceCreateInfo* pxEngineResourceCreateInfo = &pxUIElementCreateDataList[i];
 
                         PXEngineResourceCreate(pxEngineEditor, pxEngineResourceCreateInfo);
 
@@ -682,99 +683,92 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
 
                     if(bfBitFireIDE->EngineScene.IsRunning)
                     {
-                        for(PXSize i = 0; i < bfBitFireIDE->EngineScene.ModelLookUp.EntryAmountCurrent; i++)
+                        for(PXSize i = 0; i < bfBitFireIDE->EngineScene.ResourceManager.ModelLookUp.EntryAmountCurrent; i++)
                         {
                             PXDictionaryEntry pxDictionaryEntry;
                             PXModel* pxModel = PXNull;
                             PXUIElement* uiEE = PXNull;
 
-                            PXDictionaryIndex(&bfBitFireIDE->EngineScene.ModelLookUp, i, &pxDictionaryEntry);
+                            PXDictionaryIndex(&bfBitFireIDE->EngineScene.ResourceManager.ModelLookUp, i, &pxDictionaryEntry);
 
                             pxModel = *(PXModel**)pxDictionaryEntry.Value;
 
 
-
-                            PXEngineResourceCreateInfo pxUIElementCreateData;
-                            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-                            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-                            pxUIElementCreateData.ObjectReference = &uiEE;
-                            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
-                            pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObject = pxModel;
-                            pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeModel;;
-                            pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = uiTreeViewItemModel;
-                            pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
-                            pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+                            PXClear(PXResourceCreateInfo, &pxResourceCreateInfo);
+                            pxResourceCreateInfo.Type = PXResourceTypeGUIElement;
+                            pxResourceCreateInfo.ObjectReference = &uiEE;
+                            pxResourceCreateInfo.UIElement.Type = PXUIElementTypeTreeViewItem;
+                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObject = pxModel;
+                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeModel;;
+                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.ItemParent = uiTreeViewItemModel;
+                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
+                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
 
                             char buffer[256];
                             PXTextPrintA(buffer, 256, "[Model]");
-                            pxUIElementCreateData.Name = buffer;
+                            pxResourceCreateInfo.Name = buffer;
 
-                            PXEngineResourceCreate(pxEngineEditor, &pxUIElementCreateData);
+                            PXEngineResourceCreate(pxEngineEditor, &pxResourceCreateInfo);
 
                             PXDictionaryAdd(&parentList, &uiEE, &pxModel);
                         }
 
-                        for(PXSize i = 0; i < bfBitFireIDE->EngineScene.ShaderProgramLookup.EntryAmountCurrent; i++)
+                        for(PXSize i = 0; i < bfBitFireIDE->EngineScene.ResourceManager.SpritelLookUp.EntryAmountCurrent; i++)
                         {
                             PXDictionaryEntry pxDictionaryEntry;
                             PXShaderProgram* pxShaderProgram = PXNull;
                             PXUIElement* uiEE = PXNull;
 
-                            PXDictionaryIndex(&bfBitFireIDE->EngineScene.ShaderProgramLookup, i, &pxDictionaryEntry);
+                            PXDictionaryIndex(&bfBitFireIDE->EngineScene.ResourceManager.ShaderProgramLookup, i, &pxDictionaryEntry);
 
                             pxShaderProgram = *(PXShaderProgram**)pxDictionaryEntry.Value;
 
-
-
-                            PXEngineResourceCreateInfo pxUIElementCreateData;
-                            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-                            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-                            pxUIElementCreateData.ObjectReference = &uiEE;
-                            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
-                            pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObject = pxShaderProgram;
-                            pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeRenderShader;
-                            pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = uiTreeViewItemShader;
-                            pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
-                            pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+                            PXClear(PXResourceCreateInfo, &pxResourceCreateInfo);
+                            pxResourceCreateInfo.Type = PXResourceTypeGUIElement;
+                            pxResourceCreateInfo.ObjectReference = &uiEE;
+                            pxResourceCreateInfo.UIElement.Type = PXUIElementTypeTreeViewItem;
+                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObject = pxShaderProgram;
+                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeRenderShader;
+                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.ItemParent = uiTreeViewItemShader;
+                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
+                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
 
                             char buffer[256];
                             PXTextPrintA(buffer, 256, "[ShaderProgram]");
-                            pxUIElementCreateData.Name = buffer;
+                            pxResourceCreateInfo.Name = buffer;
 
-                            PXEngineResourceCreate(pxEngineEditor, &pxUIElementCreateData);
+                            PXEngineResourceCreate(pxEngineEditor, &pxResourceCreateInfo);
 
                             PXDictionaryAdd(&parentList, &uiEE, &pxShaderProgram);
                         }
 
 
-                        for(PXSize i = 0; i < bfBitFireIDE->EngineScene.ImageLookUp.EntryAmountCurrent; i++)
+                        for(PXSize i = 0; i < bfBitFireIDE->EngineScene.ResourceManager.ImageLookUp.EntryAmountCurrent; i++)
                         {
                             PXDictionaryEntry pxDictionaryEntry;
                             PXImage* pxImage = PXNull;
                             PXUIElement* uiEE = PXNull;
 
-                            PXDictionaryIndex(&bfBitFireIDE->EngineScene.ImageLookUp, i, &pxDictionaryEntry);
+                            PXDictionaryIndex(&bfBitFireIDE->EngineScene.ResourceManager.ImageLookUp, i, &pxDictionaryEntry);
 
                             pxImage = *(PXImage**)pxDictionaryEntry.Value;
 
 
-
-                            PXEngineResourceCreateInfo pxUIElementCreateData;
-                            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-                            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-                            pxUIElementCreateData.ObjectReference = &uiEE;
-                            pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
-                            pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObject = pxImage;
-                            pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeImage;
-                            pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = uiTreeViewItemImage;
-                            pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
-                            pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+                            PXClear(PXResourceCreateInfo, &pxResourceCreateInfo);
+                            pxResourceCreateInfo.Type = PXResourceTypeGUIElement;
+                            pxResourceCreateInfo.ObjectReference = &uiEE;
+                            pxResourceCreateInfo.UIElement.Type = PXUIElementTypeTreeViewItem;
+                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObject = pxImage;
+                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeImage;
+                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.ItemParent = uiTreeViewItemImage;
+                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
+                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
 
                             char buffer[256];
                             PXTextPrintA(buffer, 256, "[Image]");
-                            pxUIElementCreateData.Name = buffer;
+                            pxResourceCreateInfo.Name = buffer;
 
-                            PXEngineResourceCreate(pxEngineEditor, &pxUIElementCreateData);
+                            PXEngineResourceCreate(pxEngineEditor, &pxResourceCreateInfo);
 
                             PXDictionaryAdd(&parentList, &uiEE, &pxImage);
                         }
@@ -798,19 +792,18 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
 
                 PXUIElement* uiElementItem = PXNull;
 
-                PXEngineResourceCreateInfo pxUIElementCreateData;
-                PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-                pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
-                pxUIElementCreateData.ObjectReference = &uiElementItem;
-                pxUIElementCreateData.Name = uiElement->NameData;
-                pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeViewItem;
-                pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObject = uiElement;
-                pxUIElementCreateData.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeUI;
-                pxUIElementCreateData.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
-                pxUIElementCreateData.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
+                PXClear(PXResourceCreateInfo, &pxResourceCreateInfo);
+                pxResourceCreateInfo.Type = PXResourceTypeGUIElement;
+                pxResourceCreateInfo.ObjectReference = &uiElementItem;
+                //pxResourceCreateInfo.Name = uiElement->NameData;
+                pxResourceCreateInfo.UIElement.Type = PXUIElementTypeTreeViewItem;
+                pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObject = uiElement;
+                pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeUI;
+                pxResourceCreateInfo.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
+                pxResourceCreateInfo.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
 
                 // Fetch parrant
-                pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = uiAncer;
+                pxResourceCreateInfo.UIElement.Data.TreeViewItem.ItemParent = uiAncer;
 
                 if(uiElement->Parent)
                 {
@@ -820,11 +813,11 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
 
                     if(found)
                     {
-                        pxUIElementCreateData.UIElement.Data.TreeViewItem.ItemParent = parentElement;
+                        pxResourceCreateInfo.UIElement.Data.TreeViewItem.ItemParent = parentElement;
                     }
                 }
 
-                PXEngineResourceCreate(pxEngineEditor, &pxUIElementCreateData);
+                PXEngineResourceCreate(pxEngineEditor, &pxResourceCreateInfo);
 
                 PXDictionaryAdd(&parentList, &uiElement, &uiElementItem);
             }
@@ -846,12 +839,12 @@ void PXAPI BFInfoSelectUpdate(BFBitFireIDE* const bfBitFireIDE)
 
 void PXAPI BFSceneOnStartup(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine)
 {
-
+    PXResourceCreateInfo pxUIElementCreateData;
 
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeSound;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeSound;
         pxUIElementCreateData.ObjectReference = &_musicTest;
         pxUIElementCreateData.FilePath = "H:\\[Cache]\\chip.wav";
         pxUIElementCreateData.Sound.SoundLoop = PXTrue;
@@ -869,22 +862,22 @@ void PXAPI BFSceneOnStartup(BFBitFireIDE* const bfBitFireIDE, PXEngine* const px
     // Shader-Object
     //-----------------------------------------------------
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeShaderProgram;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeShaderProgram;
         pxUIElementCreateData.ObjectReference = &_pxObjectShader;
-        pxUIElementCreateData.ShaderProgram.VertexShaderFilePath = "Shader/Object_Vertex.glsl";
-        pxUIElementCreateData.ShaderProgram.PixelShaderFilePath = "Shader/Object_Fragment.glsl";
+        pxUIElementCreateData.ShaderProgram.ShaderVertexFilePath = "Shader/Object_Vertex.glsl";
+        pxUIElementCreateData.ShaderProgram.ShaderPixelFilePath = "Shader/Object_Fragment.glsl";
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeShaderProgram;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeShaderProgram;
         pxUIElementCreateData.ObjectReference = &_pxGismoShader;
-        pxUIElementCreateData.ShaderProgram.VertexShaderFilePath = "Shader/Gismo_Vertex.glsl";
-        pxUIElementCreateData.ShaderProgram.PixelShaderFilePath = "Shader/Gismo_Fragment.glsl";
+        pxUIElementCreateData.ShaderProgram.ShaderVertexFilePath = "Shader/Gismo_Vertex.glsl";
+        pxUIElementCreateData.ShaderProgram.ShaderPixelFilePath = "Shader/Gismo_Fragment.glsl";
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
@@ -894,9 +887,9 @@ void PXAPI BFSceneOnStartup(BFBitFireIDE* const bfBitFireIDE, PXEngine* const px
 
     // Load model
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeModel;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeModel;
         pxUIElementCreateData.ObjectReference = &_pxModelMap;
         pxUIElementCreateData.FilePath = "Model/Dust_II/DustII.obj";
         //pxUIElementCreateData.FilePath = "P:\\_Cache\\N64\\PennyRacer\\Apline\\OBJ\\untitled.obj";// "Model/Dust_II/DustII.obj";
@@ -911,9 +904,9 @@ void PXAPI BFSceneOnStartup(BFBitFireIDE* const bfBitFireIDE, PXEngine* const px
     }
 
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeModel;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeModel;
         pxUIElementCreateData.ObjectReference = &_pxGismo;
         pxUIElementCreateData.FilePath = "Model/GismoTreeD.obj";
         pxUIElementCreateData.Model.ShaderProgramReference = _pxGismoShader;
@@ -962,13 +955,13 @@ PXGraphicUIElementRegister(pxGraphic, &_positionText);*/
     // Skybox
     //-----------------------------------------------------
     {
-        PXEngineResourceCreateInfo pxSkyBoxCreateEventData;
-        PXClear(PXEngineResourceCreateInfo, &pxSkyBoxCreateEventData);
-        pxSkyBoxCreateEventData.CreateType = PXEngineCreateTypeSkybox;
+        PXResourceCreateInfo pxSkyBoxCreateEventData;
+        PXClear(PXResourceCreateInfo, &pxSkyBoxCreateEventData);
+        pxSkyBoxCreateEventData.Type = PXResourceTypeSkybox;
         pxSkyBoxCreateEventData.SpawnEnabled = PXTrue;
         pxSkyBoxCreateEventData.ObjectReference = &_sceneSkyBox;
-        pxSkyBoxCreateEventData.SkyBox.SkyBoxShaderVertex = "Shader/SkyBox_Vertex.glsl";
-        pxSkyBoxCreateEventData.SkyBox.SkyBoxShaderPixel = "Shader/SkyBox_Fragment.glsl";
+        pxSkyBoxCreateEventData.SkyBox.ShaderProgramCreateInfo.ShaderVertexFilePath = "Shader/SkyBox_Vertex.glsl";
+        pxSkyBoxCreateEventData.SkyBox.ShaderProgramCreateInfo.ShaderPixelFilePath = "Shader/SkyBox_Fragment.glsl";
         pxSkyBoxCreateEventData.SkyBox.SkyBoxTextureA = "Texture/SkyBox_Side.png";
         pxSkyBoxCreateEventData.SkyBox.SkyBoxTextureB = "Texture/SkyBox_Side.png";
         pxSkyBoxCreateEventData.SkyBox.SkyBoxTextureC = "Texture/SkyBox_Top.png";
@@ -987,31 +980,31 @@ PXGraphicUIElementRegister(pxGraphic, &_positionText);*/
         PXModelConstruct(_pxModelMapWorldGrid);
         _pxModelMapWorldGrid->VertexBuffer.VertexDataSize = sizeof(vertexData);
         _pxModelMapWorldGrid->VertexBuffer.VertexData = vertexData;
-        _pxModelMapWorldGrid->VertexBuffer.Format = PXVertexBufferFormatXYZ;
-        _pxModelMapWorldGrid->VertexBuffer.VertexDataRowSize = 3 * sizeof(float);
+        _pxModelMapWorldGrid->VertexBuffer.Format = PXVertexBufferFormatXYZFloat;
+       // _pxModelMapWorldGrid->VertexBuffer.VertexDataRowSize = 3 * sizeof(float);
 
-        _pxModelMapWorldGrid->IndexBuffer.IndexTypeSize = 1;
+       // _pxModelMapWorldGrid->IndexBuffer.IndexTypeSize = 1;
         _pxModelMapWorldGrid->IndexBuffer.IndexData = indexDATA;
         _pxModelMapWorldGrid->IndexBuffer.IndexDataSize = sizeof(indexDATA);
-        _pxModelMapWorldGrid->IndexBuffer.IndexDataAmount = sizeof(indexDATA) / sizeof(PXInt8U);
-        _pxModelMapWorldGrid->IndexBuffer.DataType = PXDataTypeInt08U;
+       // _pxModelMapWorldGrid->IndexBuffer.IndexDataAmount = sizeof(indexDATA) / sizeof(PXInt8U);
+        _pxModelMapWorldGrid->IndexBuffer.IndexDataType = PXDataTypeInt08U;
         _pxModelMapWorldGrid->IndexBuffer.DrawModeID = PXDrawModeIDTriangle; // PXDrawModeIDPoint | PXDrawModeIDLine;
 
         PXFunctionInvoke(pxEngine->Graphic.ModelRegister, pxEngine->Graphic.EventOwner, _pxModelMapWorldGrid);
 
-        _pxModelMapWorldGrid->Enabled = PXTrue;
+       // _pxModelMapWorldGrid->Enabled = PXTrue;
     }
 
     //-----------------------------------------------------
     // Worldgrid-Shader
     //-----------------------------------------------------
     {
-        PXEngineResourceCreateInfo pxSkyBoxCreateEventData;
-        PXClear(PXEngineResourceCreateInfo, &pxSkyBoxCreateEventData);
-        pxSkyBoxCreateEventData.CreateType = PXEngineCreateTypeShaderProgram;
+        PXResourceCreateInfo pxSkyBoxCreateEventData;
+        PXClear(PXResourceCreateInfo, &pxSkyBoxCreateEventData);
+        pxSkyBoxCreateEventData.Type = PXResourceTypeShaderProgram;
         pxSkyBoxCreateEventData.ObjectReference = &_pxWorldGridShader;
-        pxSkyBoxCreateEventData.ShaderProgram.VertexShaderFilePath = "Shader/WorldGrid_Vertex.glsl";
-        pxSkyBoxCreateEventData.ShaderProgram.PixelShaderFilePath = "Shader/WorldGrid_Fragment.glsl";
+        pxSkyBoxCreateEventData.ShaderProgram.ShaderVertexFilePath = "Shader/WorldGrid_Vertex.glsl";
+        pxSkyBoxCreateEventData.ShaderProgram.ShaderPixelFilePath = "Shader/WorldGrid_Fragment.glsl";
 
         PXEngineResourceCreate(pxEngine, &pxSkyBoxCreateEventData);
 
@@ -1139,13 +1132,13 @@ void PXAPI PXOnSoundEffectUpdate_Chorus(BFBitFireIDE* const bfBitFireIDE, PXWind
         {
             HWND aaa[7] =
             {
-                _textSoundChorusWetDryMixInput->ID,
-                _textSoundChorusDepthInput->ID,
-                _textSoundChorusFeedbackInput->ID,
-                _textSoundChorusFrequencyInput->ID,
-                _textSoundChorusWaveformInput->ID,
-                _textSoundChorusDelayInput->ID,
-                _textSoundChorusPhaseInput->ID
+                _textSoundChorusWetDryMixInput->Info.WindowID,
+                _textSoundChorusDepthInput->Info.WindowID,
+                _textSoundChorusFeedbackInput->Info.WindowID,
+                _textSoundChorusFrequencyInput->Info.WindowID,
+                _textSoundChorusWaveformInput->Info.WindowID,
+                _textSoundChorusDelayInput->Info.WindowID,
+                _textSoundChorusPhaseInput->Info.WindowID
             };
             float ddd[7] = { 0,0,0,0,0,0,0 };
 
@@ -1210,12 +1203,12 @@ void PXAPI PXOnSoundEffectUpdate_Compressor(BFBitFireIDE* const bfBitFireIDE, PX
         {
             HWND aaa[6] =
             {
-                _textSoundCompressorGainInput->ID,
-                _textSoundCompressorAttackInput->ID,
-                _textSoundCompressorReleaseInput->ID,
-                _textSoundCompressorThresholdInput->ID,
-                _textSoundCompressorRatioInput->ID,
-                _textSoundCompressorPredelayInput->ID
+                _textSoundCompressorGainInput->Info.WindowID,
+                _textSoundCompressorAttackInput->Info.WindowID,
+                _textSoundCompressorReleaseInput->Info.WindowID,
+                _textSoundCompressorThresholdInput->Info.WindowID,
+                _textSoundCompressorRatioInput->Info.WindowID,
+                _textSoundCompressorPredelayInput->Info.WindowID
             };
             float ddd[6] = { 0,0,0,0,0,0 };
 
@@ -1279,11 +1272,11 @@ void PXAPI PXOnSoundEffectUpdate_Distortion(BFBitFireIDE* const bfBitFireIDE, PX
         {
             HWND aaa[5] =
             {
-                _textSoundDistortionGainInput->ID,
-                _textSoundDistortionEdgeInput->ID,
-                _textSoundDistortionPostEQCenterFrequencyInput->ID,
-                _textSoundDistortionPostEQBandwidthInput->ID,
-                _textSoundDistortionPreLowpassCutoffInput->ID
+                _textSoundDistortionGainInput->Info.WindowID,
+                _textSoundDistortionEdgeInput->Info.WindowID,
+                _textSoundDistortionPostEQCenterFrequencyInput->Info.WindowID,
+                _textSoundDistortionPostEQBandwidthInput->Info.WindowID,
+                _textSoundDistortionPreLowpassCutoffInput->Info.WindowID
             };
             float ddd[5] = { 0,0,0,0,0 };
 
@@ -1346,11 +1339,11 @@ void PXAPI PXOnSoundEffectUpdate_Echo(BFBitFireIDE* const bfBitFireIDE, PXWindow
         {
             HWND aaa[5] =
             {
-                _textSoundEchoWetDryMixInput->ID,
-                _textSoundEchoFeedbackInput->ID,
-                _textSoundEchoLeftDelayInput->ID,
-                _textSoundEchoRightDelayInput->ID,
-                _textSoundEchoPanDelayInput->ID
+                _textSoundEchoWetDryMixInput->Info.WindowID,
+                _textSoundEchoFeedbackInput->Info.WindowID,
+                _textSoundEchoLeftDelayInput->Info.WindowID,
+                _textSoundEchoRightDelayInput->Info.WindowID,
+                _textSoundEchoPanDelayInput->Info.WindowID
             };
             float ddd[5] = { 0,0,0,0,0 };
 
@@ -1390,13 +1383,13 @@ void PXAPI PXOnSoundEffectUpdate_Flanger(BFBitFireIDE* const bfBitFireIDE, PXWin
         {
             HWND aaa[7] =
             {
-                _textSoundFlangerWetDryMixInput->ID,
-                _textSoundFlangerDepthInput->ID,
-                _textSoundFlangerFeedbackInput->ID,
-                _textSoundFlangerFrequencyInput->ID,
-                _textSoundFlangerWaveformInput->ID,
-                _textSoundFlangerDelayInput->ID,
-                _textSoundFlangerPhaseInput->ID
+                _textSoundFlangerWetDryMixInput->Info.WindowID,
+                _textSoundFlangerDepthInput->Info.WindowID,
+                _textSoundFlangerFeedbackInput->Info.WindowID,
+                _textSoundFlangerFrequencyInput->Info.WindowID,
+                _textSoundFlangerWaveformInput->Info.WindowID,
+                _textSoundFlangerDelayInput->Info.WindowID,
+                _textSoundFlangerPhaseInput->Info.WindowID
             };
             float ddd[7] = { 0,0,0,0,0,0,0 };
 
@@ -1438,8 +1431,8 @@ void PXAPI PXOnSoundEffectUpdate_Gargle(BFBitFireIDE* const bfBitFireIDE, PXWind
         {
             HWND aaa[6] =
             {
-                _textSoundGargleRateHzInput->ID,
-                _textSoundGargleWaveShapeInput->ID
+                _textSoundGargleRateHzInput->Info.WindowID,
+                _textSoundGargleWaveShapeInput->Info.WindowID
             };
             float ddd[6] = { 0,0 };
 
@@ -1494,10 +1487,10 @@ void PXAPI PXOnSoundEffectUpdate_WavesReverb(BFBitFireIDE* const bfBitFireIDE, P
         {
             HWND aaa[4] =
             {
-                _textSoundWavesReverbInGainInput->ID,
-                _textSoundWavesReverbReverbMixInput->ID,
-                _textSoundWavesReverbReverbTimeInput->ID,
-                _textSoundWavesReverbHighFreqRTRatioInput->ID,
+                _textSoundWavesReverbInGainInput->Info.WindowID,
+                _textSoundWavesReverbReverbMixInput->Info.WindowID,
+                _textSoundWavesReverbReverbTimeInput->Info.WindowID,
+                _textSoundWavesReverbHighFreqRTRatioInput->Info.WindowID,
             };
             float ddd[4] = { 0,0,0,0 };
 
@@ -1552,14 +1545,14 @@ void PXAPI PXOnSoundEffectUpdate_WavesReverb(BFBitFireIDE* const bfBitFireIDE, P
 
 void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine)
 {
-    PXEngineResourceCreateInfo pxUIElementCreateData;
+    PXResourceCreateInfo pxUIElementCreateData;
 
     //-----------------------------------------------------
     // Main Font
     //-----------------------------------------------------
     {
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeFont;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeFont;
         pxUIElementCreateData.ObjectReference = &DefaultFont;
         pxUIElementCreateData.FilePath = "Font/A.fnt";
         //pxSkyBoxCreateEventData.Font.ShaderProgramCurrent = _worldShader;
@@ -1572,8 +1565,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Panel:Menu
     //-----------------------------------------------------
     {
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);       
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);       
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_tabControlMain;
         pxUIElementCreateData.Name = "RenderScene";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeTabControll;
@@ -1616,8 +1609,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineStartInfo pxEngineStartInfo;
         PXClear(PXEngineStartInfo, &pxEngineStartInfo);
 
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.Name = "SceneRender";
         pxUIElementCreateData.ObjectReference = &_dialogBoxTexture;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeRenderFrame;
@@ -1656,8 +1649,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Panel::Scene::Text
     //-----------------------------------------------------
     {
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.Name = "RenderScene-Text";
         pxUIElementCreateData.ObjectReference = &_panelMenuButtonFileText;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -1686,8 +1679,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // TAB::Sound
     //-----------------------------------------------------
     {
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_buttonSoundPlay;
         pxUIElementCreateData.Name = "Sound_Play";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
@@ -1707,8 +1700,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_buttonSoundStop;
         pxUIElementCreateData.Name = "Sound_Pause";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
@@ -1733,8 +1726,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     {
 
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundChorusEffect;
             pxUIElementCreateData.Name = "Sound_ChorusEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -1752,8 +1745,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundChorusEnable;
             pxUIElementCreateData.Name = "Sound_ChorusEffect_Phase";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
@@ -1773,8 +1766,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundChorusApply;
             pxUIElementCreateData.Name = "Sound_ChorusEffect_Phase";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
@@ -1794,8 +1787,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundChorusWetDryMix;
             pxUIElementCreateData.Name = "Sound_ChorusEffect_WetDryMix";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -1815,8 +1808,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         }
         {
      
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundChorusDepth;
             pxUIElementCreateData.Name = "Sound_ChorusEffect_Depth";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -1835,8 +1828,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundChorusFeedback;
             pxUIElementCreateData.Name = "Sound_ChorusEffect_Feedback";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -1855,8 +1848,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundChorusFrequency;
             pxUIElementCreateData.Name = "Sound_ChorusEffect_Frequency";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -1875,8 +1868,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundChorusWaveform;
             pxUIElementCreateData.Name = "Sound_ChorusEffect_Waveform";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -1895,8 +1888,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundChorusDelay;
             pxUIElementCreateData.Name = "Sound_ChorusEffect_Delay";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -1915,8 +1908,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundChorusPhase;
             pxUIElementCreateData.Name = "Sound_ChorusEffect_Phase";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -1935,8 +1928,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundChorusWetDryMixInput;
             pxUIElementCreateData.Name = "Sound_ChorusEffect_WetDryMix";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -1955,8 +1948,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundChorusDepthInput;
             pxUIElementCreateData.Name = "Sound_ChorusEffect_Depth";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -1975,8 +1968,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundChorusFeedbackInput;
             pxUIElementCreateData.Name = "Sound_ChorusEffect_Feedback";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -1995,8 +1988,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundChorusFrequencyInput;
             pxUIElementCreateData.Name = "Sound_ChorusEffect_Frequency";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -2015,8 +2008,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundChorusWaveformInput;
             pxUIElementCreateData.Name = "Sound_ChorusEffect_Waveform";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -2035,8 +2028,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundChorusDelayInput;
             pxUIElementCreateData.Name = "Sound_ChorusEffect_Delay";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -2055,8 +2048,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundChorusPhaseInput;
             pxUIElementCreateData.Name = "Sound_ChorusEffect_Phase";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -2079,8 +2072,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Compressor
     {
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundCompressor;
             pxUIElementCreateData.Name = "Sound_Compressor";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2098,8 +2091,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }   
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundCompressorEnable;
             pxUIElementCreateData.Name = "Compressor_Toggle";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
@@ -2119,8 +2112,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundCompressorApply;
             pxUIElementCreateData.Name = "Compressor_Apply";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
@@ -2140,8 +2133,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundCompressorGain;
             pxUIElementCreateData.Name = "Sound_CompressorEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2160,8 +2153,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundCompressorAttack;
             pxUIElementCreateData.Name = "Sound_CompressorEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2180,8 +2173,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundCompressorRelease;
             pxUIElementCreateData.Name = "Sound_CompressorEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2200,8 +2193,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundCompressorThreshold;
             pxUIElementCreateData.Name = "Sound_CompressorEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2220,8 +2213,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundCompressorRatio;
             pxUIElementCreateData.Name = "Sound_Compressor";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2240,8 +2233,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundCompressorPredelay;
             pxUIElementCreateData.Name = "Sound_Compressor_Predelay";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2260,8 +2253,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundCompressorGainInput;
             pxUIElementCreateData.Name = "Sound_CompressorEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -2280,8 +2273,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundCompressorAttackInput;
             pxUIElementCreateData.Name = "Sound_CompressorEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -2300,8 +2293,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundCompressorReleaseInput;
             pxUIElementCreateData.Name = "Sound_CompressorEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -2320,8 +2313,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundCompressorThresholdInput;
             pxUIElementCreateData.Name = "Sound_CompressorEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -2340,8 +2333,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundCompressorRatioInput;
             pxUIElementCreateData.Name = "Sound_Compressor";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -2360,8 +2353,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundCompressorPredelayInput;
             pxUIElementCreateData.Name = "Sound_Compressor_Predelay";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -2384,8 +2377,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Distortion
     {
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundDistortion;
             pxUIElementCreateData.Name = "Sound_Distortion";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2403,8 +2396,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundDistortionEnable;
             pxUIElementCreateData.Name = "Compressor_Toggle";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
@@ -2424,8 +2417,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundDistortionApply;
             pxUIElementCreateData.Name = "Compressor_Apply";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
@@ -2445,8 +2438,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {      
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundDistortionGain;
             pxUIElementCreateData.Name = "Sound_Distortion_Gain";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2465,8 +2458,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundDistortionEdge;
             pxUIElementCreateData.Name = "Sound_Distortion_Edge";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2485,8 +2478,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundDistortionPostEQCenterFrequency;
             pxUIElementCreateData.Name = "Sound_Distortion_PostEQCenterFrequency";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2505,8 +2498,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundDistortionPostEQBandwidth;
             pxUIElementCreateData.Name = "Sound_Distortion_PostEQBandwidth";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2525,8 +2518,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundDistortionPreLowpassCutoff;
             pxUIElementCreateData.Name = "Sound_Distortion_PreLowpassCutoff";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2545,8 +2538,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundDistortionGainInput;
             pxUIElementCreateData.Name = "Sound_Distortion_Gain";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -2563,8 +2556,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundDistortionEdgeInput;
             pxUIElementCreateData.Name = "Sound_Distortion_Edge";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -2581,8 +2574,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundDistortionPostEQCenterFrequencyInput;
             pxUIElementCreateData.Name = "Sound_Distortion_PostEQCenterFrequency";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -2599,8 +2592,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundDistortionPostEQBandwidthInput;
             pxUIElementCreateData.Name = "Sound_Distortion_PostEQBandwidth";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -2617,8 +2610,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundDistortionPreLowpassCutoffInput;
             pxUIElementCreateData.Name = "Sound_Distortion_PreLowpassCutoff";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -2645,8 +2638,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Sound_Echo
     {
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundEchoEffect;
             pxUIElementCreateData.Name = "Sound_Echo";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2664,8 +2657,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundEchoEnable;
             pxUIElementCreateData.Name = "Echo_Toggle";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
@@ -2685,8 +2678,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundEchoApply;
             pxUIElementCreateData.Name = "Echo_Apply";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
@@ -2706,8 +2699,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundEchoWetDryMix;
             pxUIElementCreateData.Name = "Sound_Echo_WetDryMix";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2726,9 +2719,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundEchoFeedback;
             pxUIElementCreateData.Name = "Sound_Echo_Feedback";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2747,9 +2740,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundEchoLeftDelay;
             pxUIElementCreateData.Name = "Sound_EchoEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2768,9 +2761,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundEchoRightDelay;
             pxUIElementCreateData.Name = "Sound_Echo_RightDelay";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2789,9 +2782,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundEchoPanDelay;
             pxUIElementCreateData.Name = "Sound_Echo_PanDelay";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2810,9 +2803,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundEchoWetDryMixInput;
             pxUIElementCreateData.Name = "Sound_Echo_WetDryMix";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -2829,9 +2822,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundEchoFeedbackInput;
             pxUIElementCreateData.Name = "Sound_Echo_Feedback";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -2848,9 +2841,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundEchoLeftDelayInput;
             pxUIElementCreateData.Name = "Sound_Echo_LeftDelay";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -2867,9 +2860,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundEchoRightDelayInput;
             pxUIElementCreateData.Name = "Sound_Echo_RightDelay";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -2886,9 +2879,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundEchoPanDelayInput;
             pxUIElementCreateData.Name = "Sound_Echo_PanDelay";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -2925,9 +2918,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
 
 
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundFlangerEffect;
             pxUIElementCreateData.Name = "Sound_FlangerEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2945,9 +2938,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundFlangerWetDryMix;
             pxUIElementCreateData.Name = "Sound_Flanger_WetDryMix";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2966,9 +2959,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundFlangerDepth;
             pxUIElementCreateData.Name = "Sound_FlangerEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -2987,9 +2980,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundFlangerFeedback;
             pxUIElementCreateData.Name = "Sound_FlangerEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3008,9 +3001,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundFlangerFrequency;
             pxUIElementCreateData.Name = "Sound_FlangerEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3029,9 +3022,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundFlangerWaveform;
             pxUIElementCreateData.Name = "Sound_FlangerEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3050,9 +3043,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundFlangerDelay;
             pxUIElementCreateData.Name = "Sound_FlangerEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3071,9 +3064,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundFlangerPhase;
             pxUIElementCreateData.Name = "Sound_Flanger_Phase";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3092,9 +3085,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundFlangerWetDryMixInput;
             pxUIElementCreateData.Name = "Sound_Flanger_WetDryMix";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3111,9 +3104,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundFlangerDepthInput;
             pxUIElementCreateData.Name = "Sound_FlangerEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3130,9 +3123,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundFlangerFeedbackInput;
             pxUIElementCreateData.Name = "Sound_FlangerEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3149,9 +3142,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundFlangerFrequencyInput;
             pxUIElementCreateData.Name = "Sound_FlangerEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3168,9 +3161,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundFlangerWaveformInput;
             pxUIElementCreateData.Name = "Sound_FlangerEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3187,9 +3180,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundFlangerDelayInput;
             pxUIElementCreateData.Name = "Sound_FlangerEffect";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3206,9 +3199,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundFlangerPhaseInput;
             pxUIElementCreateData.Name = "Sound_Flanger_Phase";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3230,9 +3223,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Gargle
     {
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundGargleEffect;
             pxUIElementCreateData.Name = "Sound_Gargle";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3250,9 +3243,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundGargleRateHz;
             pxUIElementCreateData.Name = "Sound_Gargle_RateHz";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3271,9 +3264,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundGargleRateHzInput;
             pxUIElementCreateData.Name = "Sound_Gargle_WaveShape";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3292,9 +3285,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundGargleWaveShape;
             pxUIElementCreateData.Name = "Sound_Gargle_RateHz";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3311,9 +3304,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundGargleWaveShapeInput;
             pxUIElementCreateData.Name = "Sound_Gargle_WaveShape";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3335,9 +3328,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Interactive3DLevel2Reverb
     {
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3355,9 +3348,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbRoom;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3376,9 +3369,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbRoomHF;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3397,9 +3390,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+           
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbRoomRolloffFactor;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3418,9 +3411,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbDecayTime;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3439,9 +3431,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbDecayHFRatio;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3460,9 +3451,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbReflections;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3481,9 +3471,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbReflectionsDelay;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3502,9 +3491,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbReverb;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3523,9 +3511,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbReverbDelay;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3544,9 +3531,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbDiffusion;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3565,9 +3551,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbDensity;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3586,9 +3571,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbHFReference;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3607,9 +3591,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbRoomInput;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3626,9 +3609,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbRoomHFInput;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3645,9 +3627,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbRoomRolloffFactorInput;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3664,9 +3645,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbDecayTimeInput;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3683,9 +3663,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbDecayHFRatioInput;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3702,9 +3681,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbReflectionsInput;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3721,9 +3699,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbReflectionsDelayInput;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3740,9 +3717,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbReverbInput;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3759,9 +3735,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbReverbDelayInput;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3778,9 +3753,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbDiffusionInput;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3797,9 +3771,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbDensityInput;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3816,9 +3789,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
         }
         {
-            PXEngineResourceCreateInfo pxUIElementCreateData;
-            PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-            pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+            PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+            pxUIElementCreateData.Type = PXResourceTypeGUIElement;
             pxUIElementCreateData.ObjectReference = &_textSoundInteractive3DLevel2ReverbHFReferenceInput;
             pxUIElementCreateData.Name = "Sound_Interactive3DLevel2Reverb";
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3840,9 +3812,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
 
 
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textSoundParamEqEffect;
         pxUIElementCreateData.Name = "Sound_ParamEq";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3860,9 +3831,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textSoundParamEqCenter;
         pxUIElementCreateData.Name = "Sound_ParamEq_Center";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3881,9 +3851,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textSoundParamEqBandwidth;
         pxUIElementCreateData.Name = "Sound_ParamEq_Bandwidth";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3902,9 +3871,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textSoundParamEqGain;
         pxUIElementCreateData.Name = "Sound_ParamEq_Gain";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -3923,9 +3891,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textSoundParamEqCenterInput;
         pxUIElementCreateData.Name = "Sound_ParamEqEffect";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3942,9 +3909,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textSoundParamEqBandwidthInput;
         pxUIElementCreateData.Name = "Sound_ParamEqEffect";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3961,9 +3927,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textSoundParamEqGainInput;
         pxUIElementCreateData.Name = "Sound_ParamEqEffect";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -3998,9 +3963,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
 
 
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbEffect;
         pxUIElementCreateData.Name = "Sound_WavesReverb";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -4018,9 +3982,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbInGain;
         pxUIElementCreateData.Name = "Sound_WavesReverbEffect_InGain";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -4039,9 +4002,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbReverbMix;
         pxUIElementCreateData.Name = "Sound_WavesReverbEffect_ReverbMix";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -4060,9 +4022,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbReverbTime;
         pxUIElementCreateData.Name = "Sound_WavesReverbEffect_ReverbTime";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -4081,9 +4042,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbHighFreqRTRatio;
         pxUIElementCreateData.Name = "Sound_WavesReverbEffect_HighFreqRTRatio";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -4102,9 +4062,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbInGainInput;
         pxUIElementCreateData.Name = "Sound_WavesReverbEffect_InGain";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -4123,9 +4082,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbReverbMixInput;
         pxUIElementCreateData.Name = "Sound_WavesReverbEffect_ReverbMix";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -4143,10 +4101,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
-    {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+    {    
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbReverbTimeInput;
         pxUIElementCreateData.Name = "Sound_WavesReverbEffect_ReverbTime";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -4165,9 +4122,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbHighFreqRTRatioInput;
         pxUIElementCreateData.Name = "Sound_WavesReverbEffect_HighFreqRTRatio";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
@@ -4186,9 +4142,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbApply;
         pxUIElementCreateData.Name = "Sound_WavesReverbEffect_OK";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
@@ -4221,9 +4177,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // TAB::Database
     //-----------------------------------------------------
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textSoundWavesReverbEffect;
         pxUIElementCreateData.Name = "Button_Database";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
@@ -4252,9 +4208,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // TAB::Database::
     //-----------------------------------------------------
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textDatabaseTitleODBC;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
@@ -4272,9 +4228,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textDatabaseDriver;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
@@ -4292,9 +4248,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_comboBoxDatabaseDriver;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeDropDown;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
@@ -4326,9 +4282,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXGUIElementUpdate(&pxEngine->GUISystem, &pxGUIElementUpdateInfo, 1);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textBoxDatabaseIP;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
@@ -4346,9 +4302,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_comboBoxDatabaseIP;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeTextEdit;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
@@ -4366,9 +4322,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_textBoxDatabasePort;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
@@ -4386,9 +4342,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_comboBoxDatabasePort;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeTextEdit;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
@@ -4414,9 +4370,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // TAB::Network
     //-----------------------------------------------------
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_panelNetworkMain;
         pxUIElementCreateData.Name = "Button_Network";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
@@ -4451,9 +4407,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Panel:Console
     //-----------------------------------------------------
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_panelConsoleMain;
         pxUIElementCreateData.Name = "ConsoleLog";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
@@ -4470,9 +4426,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_panelConsoleTextContent;
         pxUIElementCreateData.Name = "Console-Text";
         pxUIElementCreateData.UIElement.UIElementParent = _panelConsoleMain;
@@ -4491,9 +4447,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
 
 #if 1
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_panelConsoleData;
         pxUIElementCreateData.Name = "Console Data";
         pxUIElementCreateData.UIElement.UIElementParent = _panelConsoleMain;
@@ -4523,9 +4479,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // ???
     //-----------------------------------------------------
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.Name = "Button A";
         pxUIElementCreateData.ObjectReference = &_panelMenuButtonEdit;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
@@ -4549,9 +4505,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Panel:Objects (Left one)
     //-----------------------------------------------------
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_panelLeftSceneElements;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
         pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
@@ -4577,9 +4533,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Panel:Objects:TitleBar:Text
     //-----------------------------------------------------
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.Name = "Objects";
         pxUIElementCreateData.ObjectReference = &_textSceneElemenets;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -4603,9 +4559,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Panel::Scene::Render
     //-----------------------------------------------------
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.Name = "Loaded Objects";
         pxUIElementCreateData.ObjectReference = &_treeViewObjects;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeView;
@@ -4627,9 +4583,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Button
     //-----------------------------------------------------
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_infoPanelTextSpawn;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
         pxUIElementCreateData.UIElement.ColorTintReference = &buttonColor;
@@ -4660,9 +4616,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Panel::Info::Bar
     //-----------------------------------------------------
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_uiInfoPanelTitleBar;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
         pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;
@@ -4685,9 +4641,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Panel::Info::Bar::Text
     //-----------------------------------------------------
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_uiInfoPanelTitleBarText;
         pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
@@ -4712,9 +4668,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Panel::Info::Bar
     //-----------------------------------------------------
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_uiInfoPanelObjectText;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
@@ -4732,9 +4688,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_uiInfoPanelObjectName;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
@@ -4753,9 +4709,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_uiInfoPanelObjectNameContent;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
@@ -4774,9 +4730,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_uiInfoPanelObjectType;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
@@ -4795,9 +4751,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
     {
-        PXEngineResourceCreateInfo pxUIElementCreateData;
-        PXClear(PXEngineResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.CreateType = PXEngineCreateTypeUIElement;
+       
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_uiInfoPanelObjectTypeContent;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;

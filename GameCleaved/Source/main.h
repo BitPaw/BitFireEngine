@@ -2,7 +2,7 @@
 //#include <stdlib.h>
 
 // Engine
-#include <BFEngine.h>
+#include <Engine/PXEngine.h>
 
 // PXUltima
 #include <OS/Time/PXStopWatch.h>
@@ -40,8 +40,7 @@ PXSprite* _menuButtonA = 0;
 PXSprite* _menuButtonB = 0;
 PXSprite* _menuButtonC = 0;
 
-void PXAPI OnNetworkUpdate(const BFEngine* bitFireEngine);
-void PXAPI OnStartUpEvent(BFEngine* const bitFireEngine);
-void PXAPI OnShutDownEvent(const BFEngine* bitFireEngine);
-void PXAPI OnGameUpdateEvent(const BFEngine* bitFireEngine, const float deltaTime);
-void PXAPI OnRenderUpdateEvent(BFEngine* const bfEngine, PXEngine* const pxEngine);
+PXPrivate void PXAPI OnStartUpEvent(void* const owner, PXEngine* const pxEngine);
+PXPrivate void PXAPI OnShutDownEvent(void* const owner, PXEngine* const pxEngine);
+PXPrivate void PXAPI OnGameUpdateEvent(void* const owner, PXEngine* const pxEngine);
+PXPrivate void PXAPI OnRenderUpdateEvent(void* const owner, PXEngine* const pxEngine);
