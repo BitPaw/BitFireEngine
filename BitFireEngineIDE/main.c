@@ -604,7 +604,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                 pxResourceCreateInfo.ObjectReference = &uiElementItem;
                 pxResourceCreateInfo.Name = "UI";
                 pxResourceCreateInfo.UIElement.Type = PXUIElementTypeTreeViewItem;
-                pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
+                pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObjectType = PXResourceTypeCustom;
                 pxResourceCreateInfo.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
                 pxResourceCreateInfo.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
                 pxResourceCreateInfo.UIElement.Data.TreeViewItem.ItemParent = PXNull;
@@ -625,7 +625,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                 pxResourceCreateInfo.ObjectReference = &uiElementItem;
                 pxResourceCreateInfo.Name = "Scene";
                 pxResourceCreateInfo.UIElement.Type = PXUIElementTypeTreeViewItem;
-                pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
+                pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObjectType = PXResourceTypeCustom;
                 pxResourceCreateInfo.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
                 pxResourceCreateInfo.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
                 pxResourceCreateInfo.UIElement.Data.TreeViewItem.ItemParent = PXNull;
@@ -647,7 +647,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                     pxUIElementCreateDataList[0].ObjectReference = &uiTreeViewItemModel;
                     pxUIElementCreateDataList[0].Name = "Model";
                     pxUIElementCreateDataList[0].UIElement.Type = PXUIElementTypeTreeViewItem;
-                    pxUIElementCreateDataList[0].UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
+                    pxUIElementCreateDataList[0].UIElement.Data.TreeViewItem.OwningObjectType = PXResourceTypeCustom;
                     pxUIElementCreateDataList[0].UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
                     pxUIElementCreateDataList[0].UIElement.Data.TreeViewItem.ItemParent = uiElementItem;
                     pxUIElementCreateDataList[0].UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
@@ -656,7 +656,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                     pxUIElementCreateDataList[1].ObjectReference = &uiTreeViewItemShader;
                     pxUIElementCreateDataList[1].Name = "Shader";
                     pxUIElementCreateDataList[1].UIElement.Type = PXUIElementTypeTreeViewItem;
-                    pxUIElementCreateDataList[1].UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
+                    pxUIElementCreateDataList[1].UIElement.Data.TreeViewItem.OwningObjectType = PXResourceTypeCustom;
                     pxUIElementCreateDataList[1].UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
                     pxUIElementCreateDataList[1].UIElement.Data.TreeViewItem.ItemParent = uiElementItem;
                     pxUIElementCreateDataList[1].UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
@@ -665,7 +665,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                     pxUIElementCreateDataList[2].ObjectReference = &uiTreeViewItemImage;
                     pxUIElementCreateDataList[2].Name = "Image";
                     pxUIElementCreateDataList[2].UIElement.Type = PXUIElementTypeTreeViewItem;
-                    pxUIElementCreateDataList[2].UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeEmpty;
+                    pxUIElementCreateDataList[2].UIElement.Data.TreeViewItem.OwningObjectType = PXResourceTypeCustom;
                     pxUIElementCreateDataList[2].UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
                     pxUIElementCreateDataList[2].UIElement.Data.TreeViewItem.ItemParent = uiElementItem;
                     pxUIElementCreateDataList[2].UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
@@ -699,7 +699,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                             pxResourceCreateInfo.ObjectReference = &uiEE;
                             pxResourceCreateInfo.UIElement.Type = PXUIElementTypeTreeViewItem;
                             pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObject = pxModel;
-                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeModel;;
+                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObjectType = PXResourceTypeModel;
                             pxResourceCreateInfo.UIElement.Data.TreeViewItem.ItemParent = uiTreeViewItemModel;
                             pxResourceCreateInfo.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
                             pxResourceCreateInfo.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
@@ -728,7 +728,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                             pxResourceCreateInfo.ObjectReference = &uiEE;
                             pxResourceCreateInfo.UIElement.Type = PXUIElementTypeTreeViewItem;
                             pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObject = pxShaderProgram;
-                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeRenderShader;
+                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObjectType = PXResourceTypeShaderProgram;
                             pxResourceCreateInfo.UIElement.Data.TreeViewItem.ItemParent = uiTreeViewItemShader;
                             pxResourceCreateInfo.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
                             pxResourceCreateInfo.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
@@ -759,7 +759,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                             pxResourceCreateInfo.ObjectReference = &uiEE;
                             pxResourceCreateInfo.UIElement.Type = PXUIElementTypeTreeViewItem;
                             pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObject = pxImage;
-                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeImage;
+                            pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObjectType = PXResourceTypeImage;
                             pxResourceCreateInfo.UIElement.Data.TreeViewItem.ItemParent = uiTreeViewItemImage;
                             pxResourceCreateInfo.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
                             pxResourceCreateInfo.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
@@ -798,7 +798,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                 //pxResourceCreateInfo.Name = uiElement->NameData;
                 pxResourceCreateInfo.UIElement.Type = PXUIElementTypeTreeViewItem;
                 pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObject = uiElement;
-                pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObjectType = PXFileResourceTypeUI;
+                pxResourceCreateInfo.UIElement.Data.TreeViewItem.OwningObjectType = PXResourceTypeGUIElement;
                 pxResourceCreateInfo.UIElement.Data.TreeViewItem.TreeView = _treeViewObjects;
                 pxResourceCreateInfo.UIElement.Data.TreeViewItem.InsertMode = PXUIElementTreeViewItemInsertModeLAST;
 
@@ -1130,22 +1130,19 @@ void PXAPI PXOnSoundEffectUpdate_Chorus(BFBitFireIDE* const bfBitFireIDE, PXWind
     {
         case PXWindowEventTypeClick:
         {
-            HWND aaa[7] =
+            PXUIElement* aaa[7] =
             {
-                _textSoundChorusWetDryMixInput->Info.WindowID,
-                _textSoundChorusDepthInput->Info.WindowID,
-                _textSoundChorusFeedbackInput->Info.WindowID,
-                _textSoundChorusFrequencyInput->Info.WindowID,
-                _textSoundChorusWaveformInput->Info.WindowID,
-                _textSoundChorusDelayInput->Info.WindowID,
-                _textSoundChorusPhaseInput->Info.WindowID
+                _textSoundChorusWetDryMixInput,
+                _textSoundChorusDepthInput,
+                _textSoundChorusFeedbackInput,
+                _textSoundChorusFrequencyInput,
+                _textSoundChorusWaveformInput,
+                _textSoundChorusDelayInput,
+                _textSoundChorusPhaseInput
             };
             float ddd[7] = { 0,0,0,0,0,0,0 };
 
-            for(size_t i = 0; i < 7; i++)
-            {
-                ddd[i] = SendMessageA(aaa[i], TBM_GETPOS, 0, 0) / 100.f;
-            }
+            PXGUIElementValueFetch(aaa, 7, PXUIElementPropertySliderPercentage, ddd);
 
             PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
 
@@ -1201,21 +1198,18 @@ void PXAPI PXOnSoundEffectUpdate_Compressor(BFBitFireIDE* const bfBitFireIDE, PX
     {
         case PXWindowEventTypeClick:
         {
-            HWND aaa[6] =
+            PXUIElement* aaa[6] =
             {
-                _textSoundCompressorGainInput->Info.WindowID,
-                _textSoundCompressorAttackInput->Info.WindowID,
-                _textSoundCompressorReleaseInput->Info.WindowID,
-                _textSoundCompressorThresholdInput->Info.WindowID,
-                _textSoundCompressorRatioInput->Info.WindowID,
-                _textSoundCompressorPredelayInput->Info.WindowID
+                _textSoundCompressorGainInput,
+                _textSoundCompressorAttackInput,
+                _textSoundCompressorReleaseInput,
+                _textSoundCompressorThresholdInput,
+                _textSoundCompressorRatioInput,
+                _textSoundCompressorPredelayInput
             };
             float ddd[6] = { 0,0,0,0,0,0 };
 
-            for(size_t i = 0; i < 6; i++)
-            {
-                ddd[i] = SendMessageA(aaa[i], TBM_GETPOS, 0, 0) / 100.f;
-            }
+            PXGUIElementValueFetch(aaa, 6, PXUIElementPropertySliderPercentage, ddd);
 
             PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
 
@@ -1270,20 +1264,17 @@ void PXAPI PXOnSoundEffectUpdate_Distortion(BFBitFireIDE* const bfBitFireIDE, PX
     {
         case PXWindowEventTypeClick:
         {
-            HWND aaa[5] =
+            PXUIElement* aaa[5] =
             {
-                _textSoundDistortionGainInput->Info.WindowID,
-                _textSoundDistortionEdgeInput->Info.WindowID,
-                _textSoundDistortionPostEQCenterFrequencyInput->Info.WindowID,
-                _textSoundDistortionPostEQBandwidthInput->Info.WindowID,
-                _textSoundDistortionPreLowpassCutoffInput->Info.WindowID
+                _textSoundDistortionGainInput,
+                _textSoundDistortionEdgeInput,
+                _textSoundDistortionPostEQCenterFrequencyInput,
+                _textSoundDistortionPostEQBandwidthInput,
+                _textSoundDistortionPreLowpassCutoffInput
             };
             float ddd[5] = { 0,0,0,0,0 };
 
-            for(size_t i = 0; i < 5; i++)
-            {
-                ddd[i] = SendMessageA(aaa[i], TBM_GETPOS, 0, 0) / 100.f;
-            }
+            PXGUIElementValueFetch(aaa, 5, PXUIElementPropertySliderPercentage, ddd);
 
             PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
 
@@ -1337,20 +1328,17 @@ void PXAPI PXOnSoundEffectUpdate_Echo(BFBitFireIDE* const bfBitFireIDE, PXWindow
     {
         case PXWindowEventTypeClick:
         {
-            HWND aaa[5] =
+            PXUIElement* aaa[5] =
             {
-                _textSoundEchoWetDryMixInput->Info.WindowID,
-                _textSoundEchoFeedbackInput->Info.WindowID,
-                _textSoundEchoLeftDelayInput->Info.WindowID,
-                _textSoundEchoRightDelayInput->Info.WindowID,
-                _textSoundEchoPanDelayInput->Info.WindowID
+                _textSoundEchoWetDryMixInput,
+                _textSoundEchoFeedbackInput,
+                _textSoundEchoLeftDelayInput,
+                _textSoundEchoRightDelayInput,
+                _textSoundEchoPanDelayInput
             };
             float ddd[5] = { 0,0,0,0,0 };
 
-            for(size_t i = 0; i < 5; i++)
-            {
-                ddd[i] = SendMessageA(aaa[i], TBM_GETPOS, 0, 0) / 100.f;
-            }
+            PXGUIElementValueFetch(aaa, 5, PXUIElementPropertySliderPercentage, ddd);
 
             PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
 
@@ -1381,22 +1369,19 @@ void PXAPI PXOnSoundEffectUpdate_Flanger(BFBitFireIDE* const bfBitFireIDE, PXWin
     {
         case PXWindowEventTypeClick:
         {
-            HWND aaa[7] =
+            PXUIElement* aaa[7] =
             {
-                _textSoundFlangerWetDryMixInput->Info.WindowID,
-                _textSoundFlangerDepthInput->Info.WindowID,
-                _textSoundFlangerFeedbackInput->Info.WindowID,
-                _textSoundFlangerFrequencyInput->Info.WindowID,
-                _textSoundFlangerWaveformInput->Info.WindowID,
-                _textSoundFlangerDelayInput->Info.WindowID,
-                _textSoundFlangerPhaseInput->Info.WindowID
+                _textSoundFlangerWetDryMixInput,
+                _textSoundFlangerDepthInput,
+                _textSoundFlangerFeedbackInput,
+                _textSoundFlangerFrequencyInput,
+                _textSoundFlangerWaveformInput,
+                _textSoundFlangerDelayInput,
+                _textSoundFlangerPhaseInput
             };
             float ddd[7] = { 0,0,0,0,0,0,0 };
 
-            for(size_t i = 0; i < 7; i++)
-            {
-                ddd[i] = SendMessageA(aaa[i], TBM_GETPOS, 0, 0) / 100.f;
-            }
+            PXGUIElementValueFetch(aaa, 7, PXUIElementPropertySliderPercentage, ddd);
 
             PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
 
@@ -1429,17 +1414,14 @@ void PXAPI PXOnSoundEffectUpdate_Gargle(BFBitFireIDE* const bfBitFireIDE, PXWind
     {
         case PXWindowEventTypeClick:
         {
-            HWND aaa[6] =
+            PXUIElement* aaa[2] =
             {
-                _textSoundGargleRateHzInput->Info.WindowID,
-                _textSoundGargleWaveShapeInput->Info.WindowID
+                _textSoundGargleRateHzInput,
+                _textSoundGargleWaveShapeInput
             };
-            float ddd[6] = { 0,0 };
+            float ddd[2] = { 0,0 };
 
-            for(size_t i = 0; i < 2; i++)
-            {
-                ddd[i] = SendMessageA(aaa[i], TBM_GETPOS, 0, 0) / 100.f;
-            }
+            PXGUIElementValueFetch(aaa, 2, PXUIElementPropertySliderPercentage, ddd);
 
             PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
 
@@ -1485,28 +1467,16 @@ void PXAPI PXOnSoundEffectUpdate_WavesReverb(BFBitFireIDE* const bfBitFireIDE, P
     {
         case PXWindowEventTypeClick:
         {
-            HWND aaa[4] =
+            PXUIElement* aaa[4] =
             {
-                _textSoundWavesReverbInGainInput->Info.WindowID,
-                _textSoundWavesReverbReverbMixInput->Info.WindowID,
-                _textSoundWavesReverbReverbTimeInput->Info.WindowID,
-                _textSoundWavesReverbHighFreqRTRatioInput->Info.WindowID,
+                _textSoundWavesReverbInGainInput,
+                _textSoundWavesReverbReverbMixInput,
+                _textSoundWavesReverbReverbTimeInput,
+                _textSoundWavesReverbHighFreqRTRatioInput,
             };
             float ddd[4] = { 0,0,0,0 };
 
-
-            for(size_t i = 0; i < 4; i++)
-            {
-                PXText pxText;
-                PXTextConstructBufferA(&pxText, 64);
-
-                pxText.SizeUsed += GetWindowTextA(aaa[i], pxText.TextA, pxText.SizeAllocated);
-
-
-                PXTextToFloat(&pxText, &ddd[i]);
-
-                ddd[i] = SendMessageA(aaa[i], TBM_GETPOS, 0, 0) / 100.f;
-            }
+            PXGUIElementValueFetch(aaa, 4, PXUIElementPropertySliderPercentage, ddd);
 
             PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
 
