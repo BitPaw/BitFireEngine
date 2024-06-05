@@ -65,17 +65,17 @@ PXFont _textFont;
 //PXUIText pxUITextPosition;
 
 
-void OnUIOnClick(PXUIElement* const pxUIElement)
+void OnUIOnClick(PXGUIElement* const pxGUIElement)
 {
     printf("[#][Event] Mouse button clicked\n");
 }
-void OnUIOnMouseEnter(PXUIElement* const pxUIElement)
+void OnUIOnMouseEnter(PXGUIElement* const pxGUIElement)
 {
     printf("[#][Event] Mouse button enter\n");
 
    // pxUIPanelMain.UIElement.Renderable.MeshSegmentList[0].TextureID = _dialogBoxTextureSelected.ID;
 }
-void OnUIOnMouseLeave(PXUIElement* const pxUIElement)
+void OnUIOnMouseLeave(PXGUIElement* const pxGUIElement)
 {
     printf("[#][Event] Mouse button leave\n");
 

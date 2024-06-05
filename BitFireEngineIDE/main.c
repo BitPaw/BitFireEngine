@@ -105,13 +105,13 @@ PXTexture2D* _dialogBoxTexture = 0;
 //---------------------------------------------------------
 // Tab
 //---------------------------------------------------------
-PXUIElement* _tabControlMain = 0;
-PXUIElement* _tabPageScene = 0;
-PXUIElement* _tabPageSound = 0;
-PXUIElement* _tabPageNetwork = 0;
-PXUIElement* _tabPageVideo = 0;
-PXUIElement* _tabPageDatabase = 0;
-PXUIElement* _tabPageInput = 0;
+PXGUIElement* _tabControlMain = 0;
+PXGUIElement* _tabPageScene = 0;
+PXGUIElement* _tabPageSound = 0;
+PXGUIElement* _tabPageNetwork = 0;
+PXGUIElement* _tabPageVideo = 0;
+PXGUIElement* _tabPageDatabase = 0;
+PXGUIElement* _tabPageInput = 0;
 //---------------------------------------------------------
 
 //---------------------------------------------------------
@@ -126,177 +126,177 @@ PXUIElement* _tabPageInput = 0;
 PXAudioDevice _soundAudioDevice;
 PXSound* _musicTest = 0;
 
-PXUIElement* _buttonSoundPlay = 0;
-PXUIElement* _buttonSoundStop = 0;
+PXGUIElement* _buttonSoundPlay = 0;
+PXGUIElement* _buttonSoundStop = 0;
 
 
 //---------------------------------------------------------
-PXUIElement* _textSoundChorusEffect = 0;
+PXGUIElement* _textSoundChorusEffect = 0;
 
-PXUIElement* _textSoundChorusWetDryMix = 0;
-PXUIElement* _textSoundChorusDepth = 0;
-PXUIElement* _textSoundChorusFeedback = 0;
-PXUIElement* _textSoundChorusFrequency = 0;
-PXUIElement* _textSoundChorusWaveform = 0;
-PXUIElement* _textSoundChorusDelay = 0;
-PXUIElement* _textSoundChorusPhase = 0;
+PXGUIElement* _textSoundChorusWetDryMix = 0;
+PXGUIElement* _textSoundChorusDepth = 0;
+PXGUIElement* _textSoundChorusFeedback = 0;
+PXGUIElement* _textSoundChorusFrequency = 0;
+PXGUIElement* _textSoundChorusWaveform = 0;
+PXGUIElement* _textSoundChorusDelay = 0;
+PXGUIElement* _textSoundChorusPhase = 0;
 
-PXUIElement* _textSoundChorusWetDryMixInput = 0;
-PXUIElement* _textSoundChorusDepthInput = 0;
-PXUIElement* _textSoundChorusFeedbackInput = 0;
-PXUIElement* _textSoundChorusFrequencyInput = 0;
-PXUIElement* _textSoundChorusWaveformInput = 0;
-PXUIElement* _textSoundChorusDelayInput = 0;
-PXUIElement* _textSoundChorusPhaseInput = 0;
+PXGUIElement* _textSoundChorusWetDryMixInput = 0;
+PXGUIElement* _textSoundChorusDepthInput = 0;
+PXGUIElement* _textSoundChorusFeedbackInput = 0;
+PXGUIElement* _textSoundChorusFrequencyInput = 0;
+PXGUIElement* _textSoundChorusWaveformInput = 0;
+PXGUIElement* _textSoundChorusDelayInput = 0;
+PXGUIElement* _textSoundChorusPhaseInput = 0;
 
-PXUIElement* _textSoundChorusEnable = 0;
-PXUIElement* _textSoundChorusApply = 0;
+PXGUIElement* _textSoundChorusEnable = 0;
+PXGUIElement* _textSoundChorusApply = 0;
 //---------------------------------------------------------
-PXUIElement* _textSoundCompressor = 0;
+PXGUIElement* _textSoundCompressor = 0;
 
-PXUIElement* _textSoundCompressorGain = 0;
-PXUIElement* _textSoundCompressorAttack = 0;
-PXUIElement* _textSoundCompressorRelease = 0;
-PXUIElement* _textSoundCompressorThreshold = 0;
-PXUIElement* _textSoundCompressorRatio = 0;
-PXUIElement* _textSoundCompressorPredelay = 0;
+PXGUIElement* _textSoundCompressorGain = 0;
+PXGUIElement* _textSoundCompressorAttack = 0;
+PXGUIElement* _textSoundCompressorRelease = 0;
+PXGUIElement* _textSoundCompressorThreshold = 0;
+PXGUIElement* _textSoundCompressorRatio = 0;
+PXGUIElement* _textSoundCompressorPredelay = 0;
 
-PXUIElement* _textSoundCompressorGainInput = 0;
-PXUIElement* _textSoundCompressorAttackInput = 0;
-PXUIElement* _textSoundCompressorReleaseInput = 0;
-PXUIElement* _textSoundCompressorThresholdInput = 0;
-PXUIElement* _textSoundCompressorRatioInput = 0;
-PXUIElement* _textSoundCompressorPredelayInput = 0;
+PXGUIElement* _textSoundCompressorGainInput = 0;
+PXGUIElement* _textSoundCompressorAttackInput = 0;
+PXGUIElement* _textSoundCompressorReleaseInput = 0;
+PXGUIElement* _textSoundCompressorThresholdInput = 0;
+PXGUIElement* _textSoundCompressorRatioInput = 0;
+PXGUIElement* _textSoundCompressorPredelayInput = 0;
 
 
-PXUIElement* _textSoundCompressorEnable = 0;
-PXUIElement* _textSoundCompressorApply = 0;
+PXGUIElement* _textSoundCompressorEnable = 0;
+PXGUIElement* _textSoundCompressorApply = 0;
 //---------------------------------------------------------
-PXUIElement* _textSoundDistortion = 0;
+PXGUIElement* _textSoundDistortion = 0;
 
-PXUIElement* _textSoundDistortionGain = 0;
-PXUIElement* _textSoundDistortionEdge = 0;
-PXUIElement* _textSoundDistortionPostEQCenterFrequency = 0;
-PXUIElement* _textSoundDistortionPostEQBandwidth = 0;
-PXUIElement* _textSoundDistortionPreLowpassCutoff = 0;
+PXGUIElement* _textSoundDistortionGain = 0;
+PXGUIElement* _textSoundDistortionEdge = 0;
+PXGUIElement* _textSoundDistortionPostEQCenterFrequency = 0;
+PXGUIElement* _textSoundDistortionPostEQBandwidth = 0;
+PXGUIElement* _textSoundDistortionPreLowpassCutoff = 0;
 
-PXUIElement* _textSoundDistortionGainInput = 0;
-PXUIElement* _textSoundDistortionEdgeInput = 0;
-PXUIElement* _textSoundDistortionPostEQCenterFrequencyInput = 0;
-PXUIElement* _textSoundDistortionPostEQBandwidthInput = 0;
-PXUIElement* _textSoundDistortionPreLowpassCutoffInput = 0;
+PXGUIElement* _textSoundDistortionGainInput = 0;
+PXGUIElement* _textSoundDistortionEdgeInput = 0;
+PXGUIElement* _textSoundDistortionPostEQCenterFrequencyInput = 0;
+PXGUIElement* _textSoundDistortionPostEQBandwidthInput = 0;
+PXGUIElement* _textSoundDistortionPreLowpassCutoffInput = 0;
 
-PXUIElement* _textSoundDistortionEnable = 0;
-PXUIElement* _textSoundDistortionApply = 0;
-
-//---------------------------------------------------------
-PXUIElement* _textSoundEchoEffect = 0;
-
-
-PXUIElement* _textSoundEchoWetDryMix = 0;
-PXUIElement* _textSoundEchoFeedback = 0;
-PXUIElement* _textSoundEchoLeftDelay = 0;
-PXUIElement* _textSoundEchoRightDelay = 0;
-PXUIElement* _textSoundEchoPanDelay = 0;
-
-PXUIElement* _textSoundEchoWetDryMixInput = 0;
-PXUIElement* _textSoundEchoFeedbackInput = 0;
-PXUIElement* _textSoundEchoLeftDelayInput = 0;
-PXUIElement* _textSoundEchoRightDelayInput = 0;
-PXUIElement* _textSoundEchoPanDelayInput = 0;
-
-PXUIElement* _textSoundEchoEnable = 0;
-PXUIElement* _textSoundEchoApply = 0;
+PXGUIElement* _textSoundDistortionEnable = 0;
+PXGUIElement* _textSoundDistortionApply = 0;
 
 //---------------------------------------------------------
-PXUIElement* _textSoundFlangerEffect = 0;
+PXGUIElement* _textSoundEchoEffect = 0;
 
-PXUIElement* _textSoundFlangerWetDryMix = 0;
-PXUIElement* _textSoundFlangerDepth = 0;
-PXUIElement* _textSoundFlangerFeedback = 0;
-PXUIElement* _textSoundFlangerFrequency = 0;
-PXUIElement* _textSoundFlangerWaveform = 0;
-PXUIElement* _textSoundFlangerDelay = 0;
-PXUIElement* _textSoundFlangerPhase = 0;
 
-PXUIElement* _textSoundFlangerWetDryMixInput = 0;
-PXUIElement* _textSoundFlangerDepthInput = 0;
-PXUIElement* _textSoundFlangerFeedbackInput = 0;
-PXUIElement* _textSoundFlangerFrequencyInput = 0;
-PXUIElement* _textSoundFlangerWaveformInput = 0;
-PXUIElement* _textSoundFlangerDelayInput = 0;
-PXUIElement* _textSoundFlangerPhaseInput = 0;
+PXGUIElement* _textSoundEchoWetDryMix = 0;
+PXGUIElement* _textSoundEchoFeedback = 0;
+PXGUIElement* _textSoundEchoLeftDelay = 0;
+PXGUIElement* _textSoundEchoRightDelay = 0;
+PXGUIElement* _textSoundEchoPanDelay = 0;
+
+PXGUIElement* _textSoundEchoWetDryMixInput = 0;
+PXGUIElement* _textSoundEchoFeedbackInput = 0;
+PXGUIElement* _textSoundEchoLeftDelayInput = 0;
+PXGUIElement* _textSoundEchoRightDelayInput = 0;
+PXGUIElement* _textSoundEchoPanDelayInput = 0;
+
+PXGUIElement* _textSoundEchoEnable = 0;
+PXGUIElement* _textSoundEchoApply = 0;
+
 //---------------------------------------------------------
-PXUIElement* _textSoundGargleEffect = 0;
+PXGUIElement* _textSoundFlangerEffect = 0;
 
-PXUIElement* _textSoundGargleRateHz = 0;
-PXUIElement* _textSoundGargleRateHzInput = 0;
-PXUIElement* _textSoundGargleWaveShape = 0;
-PXUIElement* _textSoundGargleWaveShapeInput = 0;
+PXGUIElement* _textSoundFlangerWetDryMix = 0;
+PXGUIElement* _textSoundFlangerDepth = 0;
+PXGUIElement* _textSoundFlangerFeedback = 0;
+PXGUIElement* _textSoundFlangerFrequency = 0;
+PXGUIElement* _textSoundFlangerWaveform = 0;
+PXGUIElement* _textSoundFlangerDelay = 0;
+PXGUIElement* _textSoundFlangerPhase = 0;
+
+PXGUIElement* _textSoundFlangerWetDryMixInput = 0;
+PXGUIElement* _textSoundFlangerDepthInput = 0;
+PXGUIElement* _textSoundFlangerFeedbackInput = 0;
+PXGUIElement* _textSoundFlangerFrequencyInput = 0;
+PXGUIElement* _textSoundFlangerWaveformInput = 0;
+PXGUIElement* _textSoundFlangerDelayInput = 0;
+PXGUIElement* _textSoundFlangerPhaseInput = 0;
 //---------------------------------------------------------
-PXUIElement* _textSoundInteractive3DLevel2ReverbEffect = 0;
+PXGUIElement* _textSoundGargleEffect = 0;
 
-PXUIElement* _textSoundInteractive3DLevel2ReverbRoom = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbRoomHF = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbRoomRolloffFactor = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbDecayTime = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbDecayHFRatio = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbReflections = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbReflectionsDelay = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbReverb = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbReverbDelay = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbDiffusion = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbDensity = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbHFReference = 0;
-
-PXUIElement* _textSoundInteractive3DLevel2ReverbRoomInput = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbRoomHFInput = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbRoomRolloffFactorInput = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbDecayTimeInput = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbDecayHFRatioInput = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbReflectionsInput = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbReflectionsDelayInput = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbReverbInput = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbReverbDelayInput = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbDiffusionInput = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbDensityInput = 0;
-PXUIElement* _textSoundInteractive3DLevel2ReverbHFReferenceInput = 0;
+PXGUIElement* _textSoundGargleRateHz = 0;
+PXGUIElement* _textSoundGargleRateHzInput = 0;
+PXGUIElement* _textSoundGargleWaveShape = 0;
+PXGUIElement* _textSoundGargleWaveShapeInput = 0;
 //---------------------------------------------------------
-PXUIElement* _textSoundParamEqEffect = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbEffect = 0;
 
-PXUIElement* _textSoundParamEqCenter = 0;
-PXUIElement* _textSoundParamEqBandwidth = 0;
-PXUIElement* _textSoundParamEqGain = 0;
-PXUIElement* _textSoundParamEqCenterInput = 0;
-PXUIElement* _textSoundParamEqBandwidthInput = 0;
-PXUIElement* _textSoundParamEqGainInput = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbRoom = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbRoomHF = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbRoomRolloffFactor = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbDecayTime = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbDecayHFRatio = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbReflections = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbReflectionsDelay = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbReverb = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbReverbDelay = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbDiffusion = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbDensity = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbHFReference = 0;
+
+PXGUIElement* _textSoundInteractive3DLevel2ReverbRoomInput = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbRoomHFInput = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbRoomRolloffFactorInput = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbDecayTimeInput = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbDecayHFRatioInput = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbReflectionsInput = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbReflectionsDelayInput = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbReverbInput = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbReverbDelayInput = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbDiffusionInput = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbDensityInput = 0;
+PXGUIElement* _textSoundInteractive3DLevel2ReverbHFReferenceInput = 0;
 //---------------------------------------------------------
-PXUIElement* _textSoundWavesReverbEffect = 0;
+PXGUIElement* _textSoundParamEqEffect = 0;
 
-PXUIElement* _textSoundWavesReverbInGain = 0;
-PXUIElement* _textSoundWavesReverbReverbMix = 0;
-PXUIElement* _textSoundWavesReverbReverbTime = 0;
-PXUIElement* _textSoundWavesReverbHighFreqRTRatio = 0;
+PXGUIElement* _textSoundParamEqCenter = 0;
+PXGUIElement* _textSoundParamEqBandwidth = 0;
+PXGUIElement* _textSoundParamEqGain = 0;
+PXGUIElement* _textSoundParamEqCenterInput = 0;
+PXGUIElement* _textSoundParamEqBandwidthInput = 0;
+PXGUIElement* _textSoundParamEqGainInput = 0;
+//---------------------------------------------------------
+PXGUIElement* _textSoundWavesReverbEffect = 0;
 
-PXUIElement* _textSoundWavesReverbInGainInput = 0;
-PXUIElement* _textSoundWavesReverbReverbMixInput = 0;
-PXUIElement* _textSoundWavesReverbReverbTimeInput = 0;
-PXUIElement* _textSoundWavesReverbHighFreqRTRatioInput = 0;
+PXGUIElement* _textSoundWavesReverbInGain = 0;
+PXGUIElement* _textSoundWavesReverbReverbMix = 0;
+PXGUIElement* _textSoundWavesReverbReverbTime = 0;
+PXGUIElement* _textSoundWavesReverbHighFreqRTRatio = 0;
 
-PXUIElement* _textSoundWavesReverbApply = 0;
+PXGUIElement* _textSoundWavesReverbInGainInput = 0;
+PXGUIElement* _textSoundWavesReverbReverbMixInput = 0;
+PXGUIElement* _textSoundWavesReverbReverbTimeInput = 0;
+PXGUIElement* _textSoundWavesReverbHighFreqRTRatioInput = 0;
+
+PXGUIElement* _textSoundWavesReverbApply = 0;
 //---------------------------------------------------------
 
 //---------------------------------------------------------
 // Network
 //---------------------------------------------------------
-PXUIElement* _panelNetworkMain = 0;
+PXGUIElement* _panelNetworkMain = 0;
 //---------------------------------------------------------
 
 
 //---------------------------------------------------------
 // Video
 //---------------------------------------------------------
-PXUIElement* _panelVideoMain = 0;
+PXGUIElement* _panelVideoMain = 0;
 //---------------------------------------------------------
 
 
@@ -304,18 +304,18 @@ PXUIElement* _panelVideoMain = 0;
 //---------------------------------------------------------
 // Database
 //---------------------------------------------------------
-PXUIElement* _textDatabaseTitleODBC = 0;
+PXGUIElement* _textDatabaseTitleODBC = 0;
 
-PXUIElement* _textDatabaseDriver = 0;
-PXUIElement* _comboBoxDatabaseDriver = 0;
+PXGUIElement* _textDatabaseDriver = 0;
+PXGUIElement* _comboBoxDatabaseDriver = 0;
 
-PXUIElement* _textBoxDatabaseIP = 0;
-PXUIElement* _comboBoxDatabaseIP = 0;
+PXGUIElement* _textBoxDatabaseIP = 0;
+PXGUIElement* _comboBoxDatabaseIP = 0;
 
-PXUIElement* _textBoxDatabasePort = 0;
-PXUIElement* _comboBoxDatabasePort = 0;
+PXGUIElement* _textBoxDatabasePort = 0;
+PXGUIElement* _comboBoxDatabasePort = 0;
 
-PXUIElement* _buttonDatabaseConnect = 0;
+PXGUIElement* _buttonDatabaseConnect = 0;
 //---------------------------------------------------------
 
 
@@ -324,59 +324,59 @@ PXUIElement* _buttonDatabaseConnect = 0;
 //---------------------------------------------------------
 // Frame console
 //---------------------------------------------------------
-PXUIElement* _panelConsoleMain = 0;
-PXUIElement* _panelConsoleTextContent = 0;
-PXUIElement* _panelConsoleData = 0;
+PXGUIElement* _panelConsoleMain = 0;
+PXGUIElement* _panelConsoleTextContent = 0;
+PXGUIElement* _panelConsoleData = 0;
 //---------------------------------------------------------
 
 //---------------------------------------------------------
 // Left, Object panel
 //---------------------------------------------------------
-PXUIElement* _panelLeftSceneElements = 0;
-PXUIElement* _textSceneElemenets = 0;
-PXUIElement* _treeViewObjects = 0;
+PXGUIElement* _panelLeftSceneElements = 0;
+PXGUIElement* _textSceneElemenets = 0;
+PXGUIElement* _treeViewObjects = 0;
 //---------------------------------------------------------
 
 
 // Frame A
 
-PXUIElement* _panelMenuButtonFileText = 0;
+PXGUIElement* _panelMenuButtonFileText = 0;
 
-PXUIElement* _panelMenuButtonFileDropDownOpen = 0;
-PXUIElement* _panelMenuButtonFileDropDownSave = 0;
-PXUIElement* _panelMenuButtonEdit = 0;
-PXUIElement* _panelMenuButtonEditText = 0;
-PXUIElement* _panelMenuButtonView = 0;
-PXUIElement* _panelMenuButtonViewText = 0;
-
-
-
-PXUIElement* _panelMainContent = 0;
+PXGUIElement* _panelMenuButtonFileDropDownOpen = 0;
+PXGUIElement* _panelMenuButtonFileDropDownSave = 0;
+PXGUIElement* _panelMenuButtonEdit = 0;
+PXGUIElement* _panelMenuButtonEditText = 0;
+PXGUIElement* _panelMenuButtonView = 0;
+PXGUIElement* _panelMenuButtonViewText = 0;
 
 
 
+PXGUIElement* _panelMainContent = 0;
 
-PXUIElement* _uiPanelScene = 0;
-PXUIElement* _uiSceneTexturePanel = 0;
+
+
+
+PXGUIElement* _uiPanelScene = 0;
+PXGUIElement* _uiSceneTexturePanel = 0;
 PXTexture2D* _uiSceneTexture = 0;
 
-PXUIElement* _uiInfoPanelTitleBar = 0;
-PXUIElement* _uiInfoPanelTitleBarText = 0;
-PXUIElement* _uiInfoPositionText = 0;
+PXGUIElement* _uiInfoPanelTitleBar = 0;
+PXGUIElement* _uiInfoPanelTitleBarText = 0;
+PXGUIElement* _uiInfoPositionText = 0;
 
-PXUIElement* _uiInfoPanelObjectText = 0;
-PXUIElement* _uiInfoPanelObjectName = 0;
-PXUIElement* _uiInfoPanelObjectNameContent = 0;
-PXUIElement* _uiInfoPanelObjectType = 0;
-PXUIElement* _uiInfoPanelObjectTypeContent = 0;
+PXGUIElement* _uiInfoPanelObjectText = 0;
+PXGUIElement* _uiInfoPanelObjectName = 0;
+PXGUIElement* _uiInfoPanelObjectNameContent = 0;
+PXGUIElement* _uiInfoPanelObjectType = 0;
+PXGUIElement* _uiInfoPanelObjectTypeContent = 0;
 
-PXUIElement* _infoPanelImage = 0;
-PXUIElement* _infoPanelTextSpawn = 0;
-PXUIElement* _infoPanelText = 0;
-PXUIElement* _positionText = 0;
+PXGUIElement* _infoPanelImage = 0;
+PXGUIElement* _infoPanelTextSpawn = 0;
+PXGUIElement* _infoPanelText = 0;
+PXGUIElement* _positionText = 0;
 PXFont* DefaultFont;
 
-PXUIElement* _textureTestA = 0;
+PXGUIElement* _textureTestA = 0;
 PXTexture2D* _testImage = 0;
 PXRenderable _pxRenderableModel;
 
@@ -532,7 +532,7 @@ void PXAPI BFObjectTreeViewEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent
         case PXWindowEventTypeSelect:
         {  
 
-            PXUIElement* const uiElementSelected = pxWindowEvent->UIElementSender;
+            PXGUIElement* const uiElementSelected = pxWindowEvent->UIElementSender;
 
             PXLogPrint
             (
@@ -587,17 +587,17 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
         {
             PXDictionary parentList;
 
-            PXDictionaryConstruct(&parentList, sizeof(PXUIElement*), sizeof(PXUIElement*), PXDictionaryValueLocalityInternalEmbedded);
+            PXDictionaryConstruct(&parentList, sizeof(PXGUIElement*), sizeof(PXGUIElement*), PXDictionaryValueLocalityInternalEmbedded);
 
 
             PXDictionary* const uiElementLookup = &pxEngineEditor->ResourceManager.GUIElementLookup;
 
-            PXUIElement* uiAncer = 0;
-            PXUIElement* sceneAncer = 0;
+            PXGUIElement* uiAncer = 0;
+            PXGUIElement* sceneAncer = 0;
 
             //  Create UI element, a container for the full UI things
             {
-                PXUIElement* uiElementItem = PXNull;
+                PXGUIElement* uiElementItem = PXNull;
                        
                 PXClear(PXResourceCreateInfo, &pxResourceCreateInfo);
                 pxResourceCreateInfo.Type = PXResourceTypeGUIElement;
@@ -618,7 +618,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
 
             // Create scene UI container elemenents
             {
-                PXUIElement* uiElementItem = PXNull;
+                PXGUIElement* uiElementItem = PXNull;
 
                 PXClear(PXResourceCreateInfo, &pxResourceCreateInfo);
                 pxResourceCreateInfo.Type = PXResourceTypeGUIElement;
@@ -636,9 +636,9 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
 
                 // Add multible 
                 {
-                    PXUIElement* uiTreeViewItemModel = PXNull;
-                    PXUIElement* uiTreeViewItemShader = PXNull;
-                    PXUIElement* uiTreeViewItemImage = PXNull;
+                    PXGUIElement* uiTreeViewItemModel = PXNull;
+                    PXGUIElement* uiTreeViewItemShader = PXNull;
+                    PXGUIElement* uiTreeViewItemImage = PXNull;
 
 
                     PXResourceCreateInfo pxUIElementCreateDataList[8];
@@ -687,7 +687,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                         {
                             PXDictionaryEntry pxDictionaryEntry;
                             PXModel* pxModel = PXNull;
-                            PXUIElement* uiEE = PXNull;
+                            PXGUIElement* uiEE = PXNull;
 
                             PXDictionaryIndex(&bfBitFireIDE->EngineScene.ResourceManager.ModelLookUp, i, &pxDictionaryEntry);
 
@@ -717,7 +717,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                         {
                             PXDictionaryEntry pxDictionaryEntry;
                             PXShaderProgram* pxShaderProgram = PXNull;
-                            PXUIElement* uiEE = PXNull;
+                            PXGUIElement* uiEE = PXNull;
 
                             PXDictionaryIndex(&bfBitFireIDE->EngineScene.ResourceManager.ShaderProgramLookup, i, &pxDictionaryEntry);
 
@@ -747,7 +747,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                         {
                             PXDictionaryEntry pxDictionaryEntry;
                             PXImage* pxImage = PXNull;
-                            PXUIElement* uiEE = PXNull;
+                            PXGUIElement* uiEE = PXNull;
 
                             PXDictionaryIndex(&bfBitFireIDE->EngineScene.ResourceManager.ImageLookUp, i, &pxDictionaryEntry);
 
@@ -784,13 +784,13 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
             for(PXSize i = 0; i < sixed; ++i)
             {
                 PXDictionaryEntry pxDictionaryEntry;
-                PXUIElement* uiElement = PXNull;
+                PXGUIElement* uiElement = PXNull;
 
                 PXDictionaryIndex(uiElementLookup, i, &pxDictionaryEntry);
 
-                uiElement = *(PXUIElement**)pxDictionaryEntry.Value;
+                uiElement = *(PXGUIElement**)pxDictionaryEntry.Value;
 
-                PXUIElement* uiElementItem = PXNull;
+                PXGUIElement* uiElementItem = PXNull;
 
                 PXClear(PXResourceCreateInfo, &pxResourceCreateInfo);
                 pxResourceCreateInfo.Type = PXResourceTypeGUIElement;
@@ -807,7 +807,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
 
                 if(uiElement->Parent)
                 {
-                    PXUIElement* parentElement = PXNull;
+                    PXGUIElement* parentElement = PXNull;
 
                     const PXBool found = PXDictionaryFindEntry(&parentList, &uiElement->Parent, &parentElement);
 
@@ -1071,7 +1071,7 @@ void PXAPI PXOnSoundButtonStopEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEv
     }
 }
 
-void PXMakeUIEnable(PXGUISystem* const pxGgui, PXAudio* pxAudio, PXAudioEffectType effect, int flag, PXUIElement* button)
+void PXMakeUIEnable(PXGUISystem* const pxGgui, PXAudio* pxAudio, PXAudioEffectType effect, int flag, PXGUIElement* button)
 {
     PXAudioEffect pxAudioEffect;
     PXClear(PXAudioEffect, &pxAudioEffect);
@@ -1130,7 +1130,7 @@ void PXAPI PXOnSoundEffectUpdate_Chorus(BFBitFireIDE* const bfBitFireIDE, PXWind
     {
         case PXWindowEventTypeClick:
         {
-            PXUIElement* aaa[7] =
+            PXGUIElement* aaa[7] =
             {
                 _textSoundChorusWetDryMixInput,
                 _textSoundChorusDepthInput,
@@ -1198,7 +1198,7 @@ void PXAPI PXOnSoundEffectUpdate_Compressor(BFBitFireIDE* const bfBitFireIDE, PX
     {
         case PXWindowEventTypeClick:
         {
-            PXUIElement* aaa[6] =
+            PXGUIElement* aaa[6] =
             {
                 _textSoundCompressorGainInput,
                 _textSoundCompressorAttackInput,
@@ -1264,7 +1264,7 @@ void PXAPI PXOnSoundEffectUpdate_Distortion(BFBitFireIDE* const bfBitFireIDE, PX
     {
         case PXWindowEventTypeClick:
         {
-            PXUIElement* aaa[5] =
+            PXGUIElement* aaa[5] =
             {
                 _textSoundDistortionGainInput,
                 _textSoundDistortionEdgeInput,
@@ -1328,7 +1328,7 @@ void PXAPI PXOnSoundEffectUpdate_Echo(BFBitFireIDE* const bfBitFireIDE, PXWindow
     {
         case PXWindowEventTypeClick:
         {
-            PXUIElement* aaa[5] =
+            PXGUIElement* aaa[5] =
             {
                 _textSoundEchoWetDryMixInput,
                 _textSoundEchoFeedbackInput,
@@ -1369,7 +1369,7 @@ void PXAPI PXOnSoundEffectUpdate_Flanger(BFBitFireIDE* const bfBitFireIDE, PXWin
     {
         case PXWindowEventTypeClick:
         {
-            PXUIElement* aaa[7] =
+            PXGUIElement* aaa[7] =
             {
                 _textSoundFlangerWetDryMixInput,
                 _textSoundFlangerDepthInput,
@@ -1414,7 +1414,7 @@ void PXAPI PXOnSoundEffectUpdate_Gargle(BFBitFireIDE* const bfBitFireIDE, PXWind
     {
         case PXWindowEventTypeClick:
         {
-            PXUIElement* aaa[2] =
+            PXGUIElement* aaa[2] =
             {
                 _textSoundGargleRateHzInput,
                 _textSoundGargleWaveShapeInput
@@ -1467,7 +1467,7 @@ void PXAPI PXOnSoundEffectUpdate_WavesReverb(BFBitFireIDE* const bfBitFireIDE, P
     {
         case PXWindowEventTypeClick:
         {
-            PXUIElement* aaa[4] =
+            PXGUIElement* aaa[4] =
             {
                 _textSoundWavesReverbInGainInput,
                 _textSoundWavesReverbReverbMixInput,
