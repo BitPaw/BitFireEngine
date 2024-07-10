@@ -112,6 +112,7 @@ PXGUIElement* _tabPageNetwork = 0;
 PXGUIElement* _tabPageVideo = 0;
 PXGUIElement* _tabPageDatabase = 0;
 PXGUIElement* _tabPageInput = 0;
+PXGUIElement* _tabPageHardware = 0;
 //---------------------------------------------------------
 
 //---------------------------------------------------------
@@ -978,17 +979,17 @@ PXGraphicUIElementRegister(pxGraphic, &_positionText);*/
     //-----------------------------------------------------
     {
         PXModelConstruct(_pxModelMapWorldGrid);
-        _pxModelMapWorldGrid->VertexBuffer.VertexDataSize = sizeof(vertexData);
-        _pxModelMapWorldGrid->VertexBuffer.VertexData = vertexData;
-        _pxModelMapWorldGrid->VertexBuffer.Format = PXVertexBufferFormatXYZFloat;
+        _pxModelMapWorldGrid->Mesh.VertexBuffer.VertexDataSize = sizeof(vertexData);
+        _pxModelMapWorldGrid->Mesh.VertexBuffer.VertexData = vertexData;
+        _pxModelMapWorldGrid->Mesh.VertexBuffer.Format = PXVertexBufferFormatXYZFloat;
        // _pxModelMapWorldGrid->VertexBuffer.VertexDataRowSize = 3 * sizeof(float);
 
        // _pxModelMapWorldGrid->IndexBuffer.IndexTypeSize = 1;
-        _pxModelMapWorldGrid->IndexBuffer.IndexData = indexDATA;
-        _pxModelMapWorldGrid->IndexBuffer.IndexDataSize = sizeof(indexDATA);
+        _pxModelMapWorldGrid->Mesh.IndexBuffer.IndexData = indexDATA;
+        _pxModelMapWorldGrid->Mesh.IndexBuffer.IndexDataSize = sizeof(indexDATA);
        // _pxModelMapWorldGrid->IndexBuffer.IndexDataAmount = sizeof(indexDATA) / sizeof(PXInt8U);
-        _pxModelMapWorldGrid->IndexBuffer.IndexDataType = PXDataTypeInt08U;
-        _pxModelMapWorldGrid->IndexBuffer.DrawModeID = PXDrawModeIDTriangle; // PXDrawModeIDPoint | PXDrawModeIDLine;
+        _pxModelMapWorldGrid->Mesh.IndexBuffer.IndexDataType = PXDataTypeInt08U;
+        _pxModelMapWorldGrid->Mesh.IndexBuffer.DrawModeID = PXDrawModeIDTriangle; // PXDrawModeIDPoint | PXDrawModeIDLine;
 
         PXFunctionInvoke(pxEngine->Graphic.ModelRegister, pxEngine->Graphic.EventOwner, _pxModelMapWorldGrid);
 
@@ -1559,7 +1560,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             { &_tabPageVideo, "Video", -1},
             { &_tabPageDatabase, "Database", -1},
             { &_tabPageNetwork, "Network", -1},
-            { &_tabPageInput, "Input", -1 }
+            { &_tabPageInput, "Input", -1 },
+            { &_tabPageHardware, "Hardware", -1 }
         };
         const PXSize amount = sizeof(pxUIElementTabPageSingleInfo) / sizeof(PXUIElementTabPageSingleInfo);
 
@@ -4519,7 +4521,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Data.Text.Content = "Objects";
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignCenter| PXUIElementAllignRight;
+        pxUIElementCreateData.UIElement.Data.Text.Content = "ObjectsEEEE";
         pxUIElementCreateData.UIElement.Data.Text.FontID = DefaultFont;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
@@ -4741,6 +4744,32 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
+
+
+
+
+    {
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
+        pxUIElementCreateData.ObjectReference = &_textSoundCompressor;
+        pxUIElementCreateData.Name = "Sound_Compressor";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.Width = SoundWidth;
+        pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 8.25;
+        pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Compressor";
+
+       // PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
+
+
 #endif
 
     BFObjectTreeViewUpdate(bfBitFireIDE);   

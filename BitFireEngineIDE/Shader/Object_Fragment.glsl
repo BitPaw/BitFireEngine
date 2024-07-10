@@ -52,15 +52,15 @@ vec4 PXLightCalculate(vec3 lightPosition, vec3 vertexPositon, vec3 normalPositio
 
 void main()
 {
-    vec3 normalColor = vec3(0,0,0);//vec3(-vertex.Normal);
-    vec3 positionColor = vec3(0,0,0);//vec3(vertex.Position);
-    vec3 texturePositionColor = vec3(1.0f-vertex.Normal.x, 1.0f, 1.0f-vertex.Normal.y);
+    //vec3 normalColor = vec3(0,0,0);//vec3(-vertex.Normal);
+   // vec3 positionColor = vec3(0,0,0);//vec3(vertex.Position);
+   // vec3 texturePositionColor = vec3(1.0f-vertex.Normal.x, 1.0f, 1.0f-vertex.Normal.y);
 
-    vec4 dataColor = vec4((normalColor + texturePositionColor + positionColor) * 0.35f, 1.0f);
+ //   vec4 dataColor = vec4((normalColor + texturePositionColor + positionColor) * 0.35f, 1.0f);
 
     vec4 texturedColor = texture(MaterialTexture, vertex.TexturePosition);
 
     vec4 lightColor = PXLightCalculate(vec3(0,500,0), vertex.Position, vertex.Normal);
 
-    fragcolor = normalize(normalize(vec4(1.0f,1.0f,1.0f,1.0f) + (texturedColor + dataColor)) * lightColor);
+    fragcolor = texturedColor * lightColor;
 }

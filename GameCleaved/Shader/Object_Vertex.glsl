@@ -25,7 +25,7 @@ void main()
     //vertex.Position = vec3(MatrixModel * vec4(normal, 1.0f));
     vertex.Position = vec3(MatrixModel * position4x);
     vertex.Normal = vec3(0,0,0);//InputVertexNormal;
-    vertex.TexturePosition = InputVertexTexturePosition; //* tcMultiplier
+    vertex.TexturePosition = vec2(-InputVertexTexturePosition.x, InputVertexTexturePosition.y); //* tcMultiplier
     //vertex.Color = position4x;
 
     vertex.Color = vec4(vertex.TexturePosition, 1.0f, 1.0f);

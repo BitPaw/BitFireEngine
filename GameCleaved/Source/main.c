@@ -112,12 +112,12 @@ void PXAPI OnStartUpEvent(void* const owner, PXEngine* const pxEngine)
         pxResourceCreateInfo.ObjectReference = &_skybox;
         pxResourceCreateInfo.SkyBox.ShaderProgramCreateInfo.ShaderVertexFilePath = "Shader/SkyBox_Vertex.glsl";
         pxResourceCreateInfo.SkyBox.ShaderProgramCreateInfo.ShaderPixelFilePath = "Shader/SkyBox_Fragment.glsl";
-        pxResourceCreateInfo.SkyBox.SkyBoxTextureA = "Texture/MissingTexture.bmp";
-        pxResourceCreateInfo.SkyBox.SkyBoxTextureB = "Texture/MissingTexture.bmp";
-        pxResourceCreateInfo.SkyBox.SkyBoxTextureC = "Texture/MissingTexture.bmp";
-        pxResourceCreateInfo.SkyBox.SkyBoxTextureD = "Texture/MissingTexture.bmp";
-        pxResourceCreateInfo.SkyBox.SkyBoxTextureE = "Texture/MissingTexture.bmp";
-        pxResourceCreateInfo.SkyBox.SkyBoxTextureF = "Texture/MissingTexture.bmp";
+        pxResourceCreateInfo.SkyBox.SkyBoxTextureA = "Texture/SkyBox_Back.bmp";
+        pxResourceCreateInfo.SkyBox.SkyBoxTextureB = "Texture/SkyBox_Bottom.bmp";
+        pxResourceCreateInfo.SkyBox.SkyBoxTextureC = "Texture/SkyBox_Font.bmp";
+        pxResourceCreateInfo.SkyBox.SkyBoxTextureD = "Texture/SkyBox_Left.bmp";
+        pxResourceCreateInfo.SkyBox.SkyBoxTextureE = "Texture/SkyBox_Right.bmp";
+        pxResourceCreateInfo.SkyBox.SkyBoxTextureF = "Texture/SkyBox_Top.bmp";
 
         PXEngineResourceCreate(pxEngine, &pxResourceCreateInfo);
     }
@@ -135,8 +135,8 @@ void PXAPI OnStartUpEvent(void* const owner, PXEngine* const pxEngine)
         pxResourceCreateInfo.FilePath = "Texture/BackGround.png";
         pxResourceCreateInfo.Sprite.ShaderProgramCurrent = _worldShader;
         pxResourceCreateInfo.Sprite.Position.Z = -0.5;
-        pxResourceCreateInfo.Sprite.Scaling.X = 20;
-        pxResourceCreateInfo.Sprite.Scaling.Y = 20;
+        pxResourceCreateInfo.Sprite.Scaling.X = 15;
+        pxResourceCreateInfo.Sprite.Scaling.Y = 15;
 
         PXEngineResourceCreate(pxEngine, &pxResourceCreateInfo);
     }
@@ -177,8 +177,8 @@ void PXAPI OnStartUpEvent(void* const owner, PXEngine* const pxEngine)
         pxResourceCreateInfo.Sprite.Position.X = 0.0f;
         pxResourceCreateInfo.Sprite.Position.Y = -0.8;
         pxResourceCreateInfo.Sprite.Position.Z = 0.01;
-        pxResourceCreateInfo.Sprite.Scaling.X = 5.5;
-        pxResourceCreateInfo.Sprite.Scaling.Y = 5.5;
+        pxResourceCreateInfo.Sprite.Scaling.X = 1;
+        pxResourceCreateInfo.Sprite.Scaling.Y = 1;
         pxResourceCreateInfo.Sprite.HitBoxCreate = PXTrue;
 
         PXEngineResourceCreate(pxEngine, &pxResourceCreateInfo);
@@ -206,13 +206,13 @@ void PXAPI OnStartUpEvent(void* const owner, PXEngine* const pxEngine)
         pxResourceCreateInfo.Sprite.Position.X = 5.80f;
         pxResourceCreateInfo.Sprite.Position.Y = -5.80f;
         pxResourceCreateInfo.Sprite.Position.Z = 5.01;
-        pxResourceCreateInfo.Sprite.Scaling.X = 5.5f;
-        pxResourceCreateInfo.Sprite.Scaling.Y = 5.5f;
+        pxResourceCreateInfo.Sprite.Scaling.X = 1;
+        pxResourceCreateInfo.Sprite.Scaling.Y = 1;
         pxResourceCreateInfo.Sprite.HitBoxCreate = PXTrue;
 
         PXEngineResourceCreate(pxEngine, &pxResourceCreateInfo);
 
-        _playerCharacterLuna->HitBox->Info.Behaviour = PXHitBoxBehaviourDetect;
+       // _playerCharacterLuna->HitBox->Info.Behaviour = PXHitBoxBehaviourDetect;
     }
 
 
@@ -230,14 +230,14 @@ void PXAPI OnStartUpEvent(void* const owner, PXEngine* const pxEngine)
         pxResourceCreateInfo.Sprite.Position.X = -6.40f;
         pxResourceCreateInfo.Sprite.Position.Y = -5.80f;
         pxResourceCreateInfo.Sprite.Position.Z = 5.3;
-        pxResourceCreateInfo.Sprite.Scaling.X = 5.6f;
-        pxResourceCreateInfo.Sprite.Scaling.Y = 5.6f;
+        pxResourceCreateInfo.Sprite.Scaling.X = 1;
+        pxResourceCreateInfo.Sprite.Scaling.Y = 1;
         pxResourceCreateInfo.Sprite.HitBoxCreate = PXTrue;
       //  pxEngineResourceCreateInfo.Sprite.HitboxData.Flags = ;
 
         PXEngineResourceCreate(pxEngine, &pxResourceCreateInfo);
 
-        _sign->HitBox->Info.Behaviour = PXHitBoxBehaviourKeepOut;
+       // _sign->HitBox->Info.Behaviour = PXHitBoxBehaviourKeepOut;
     }
 
 
@@ -255,8 +255,8 @@ void PXAPI OnStartUpEvent(void* const owner, PXEngine* const pxEngine)
         pxResourceCreateInfo.Sprite.Position.X = -12.20f;
         pxResourceCreateInfo.Sprite.Position.Y = -5.80f;
         pxResourceCreateInfo.Sprite.Position.Z = 5.3;
-        pxResourceCreateInfo.Sprite.Scaling.X = 5.6f;
-        pxResourceCreateInfo.Sprite.Scaling.Y = 5.6f;
+        pxResourceCreateInfo.Sprite.Scaling.X = 1;
+        pxResourceCreateInfo.Sprite.Scaling.Y = 1;
 
         PXEngineResourceCreate(pxEngine, &pxResourceCreateInfo);
     }
