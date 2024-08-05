@@ -530,7 +530,7 @@ void PXAPI BFObjectTreeViewEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent
 {
     switch(pxWindowEvent->Type)
     {
-        case PXWindowEventTypeSelect:
+        case PXWindowEventTypeElementSelect:
         {  
 
             PXGUIElement* const uiElementSelected = pxWindowEvent->UIElementSender;
@@ -1031,7 +1031,7 @@ void PXAPI PXOnSoundButtonPlayEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEv
 
     switch(pxWindowEvent->Type)
     {
-        case PXWindowEventTypeClick:
+        case PXWindowEventTypeElementClick:
         {
             PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;   
 
@@ -1058,7 +1058,7 @@ void PXAPI PXOnSoundButtonStopEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEv
 
     switch(pxWindowEvent->Type)
     {
-        case PXWindowEventTypeClick:
+        case PXWindowEventTypeElementClick:
         {
             PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
 
@@ -1106,7 +1106,7 @@ void PXAPI PXOnSoundEffectUpdate_Chorus_Toggle(BFBitFireIDE* const bfBitFireIDE,
 {
     switch(pxWindowEvent->Type)
     {
-        case PXWindowEventTypeClick:
+        case PXWindowEventTypeElementClick:
         {
             PXMakeUIEnable
             (
@@ -1129,7 +1129,7 @@ void PXAPI PXOnSoundEffectUpdate_Chorus(BFBitFireIDE* const bfBitFireIDE, PXWind
 {
     switch(pxWindowEvent->Type)
     {
-        case PXWindowEventTypeClick:
+        case PXWindowEventTypeElementClick:
         {
             PXGUIElement* aaa[7] =
             {
@@ -1174,7 +1174,7 @@ void PXAPI PXOnSoundEffectUpdate_Compressor_Toggle(BFBitFireIDE* const bfBitFire
 {
     switch(pxWindowEvent->Type)
     {
-        case PXWindowEventTypeClick:
+        case PXWindowEventTypeElementClick:
         {
             PXMakeUIEnable
             (
@@ -1197,7 +1197,7 @@ void PXAPI PXOnSoundEffectUpdate_Compressor(BFBitFireIDE* const bfBitFireIDE, PX
 {
     switch(pxWindowEvent->Type)
     {
-        case PXWindowEventTypeClick:
+        case PXWindowEventTypeElementClick:
         {
             PXGUIElement* aaa[6] =
             {
@@ -1240,7 +1240,7 @@ void PXAPI PXOnSoundEffectUpdate_Distortion_Toggle(BFBitFireIDE* const bfBitFire
 {
     switch(pxWindowEvent->Type)
     {
-        case PXWindowEventTypeClick:
+        case PXWindowEventTypeElementClick:
         {
             PXMakeUIEnable
             (
@@ -1263,7 +1263,7 @@ void PXAPI PXOnSoundEffectUpdate_Distortion(BFBitFireIDE* const bfBitFireIDE, PX
 {
     switch(pxWindowEvent->Type)
     {
-        case PXWindowEventTypeClick:
+        case PXWindowEventTypeElementClick:
         {
             PXGUIElement* aaa[5] =
             {
@@ -1304,7 +1304,7 @@ void PXAPI PXOnSoundEffectUpdate_Echo_Toggle(BFBitFireIDE* const bfBitFireIDE, P
 {
     switch(pxWindowEvent->Type)
     {
-        case PXWindowEventTypeClick:
+        case PXWindowEventTypeElementClick:
         {
             PXMakeUIEnable
             (
@@ -1327,7 +1327,7 @@ void PXAPI PXOnSoundEffectUpdate_Echo(BFBitFireIDE* const bfBitFireIDE, PXWindow
 {
     switch(pxWindowEvent->Type)
     {
-        case PXWindowEventTypeClick:
+        case PXWindowEventTypeElementClick:
         {
             PXGUIElement* aaa[5] =
             {
@@ -1368,7 +1368,7 @@ void PXAPI PXOnSoundEffectUpdate_Flanger(BFBitFireIDE* const bfBitFireIDE, PXWin
 {
     switch(pxWindowEvent->Type)
     {
-        case PXWindowEventTypeClick:
+        case PXWindowEventTypeElementClick:
         {
             PXGUIElement* aaa[7] =
             {
@@ -1413,7 +1413,7 @@ void PXAPI PXOnSoundEffectUpdate_Gargle(BFBitFireIDE* const bfBitFireIDE, PXWind
 {
     switch(pxWindowEvent->Type)
     {
-        case PXWindowEventTypeClick:
+        case PXWindowEventTypeElementClick:
         {
             PXGUIElement* aaa[2] =
             {
@@ -1466,7 +1466,7 @@ void PXAPI PXOnSoundEffectUpdate_WavesReverb(BFBitFireIDE* const bfBitFireIDE, P
 
     switch(pxWindowEvent->Type)
     {
-        case PXWindowEventTypeClick:
+        case PXWindowEventTypeElementClick:
         {
             PXGUIElement* aaa[4] =
             {

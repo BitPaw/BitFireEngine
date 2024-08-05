@@ -4,12 +4,13 @@ precision mediump float;
 
 layout(location = 0) out vec4 fragcolor;
 
-struct PXMaterial
+struct Material
 {
     vec4 Ambient;
     vec4 Diffuse;
     vec4 Specular;
-};
+}
+material;
 
 in struct Vertex 
 {
@@ -21,7 +22,6 @@ in struct Vertex
 vertex;
 
 uniform sampler2D MaterialTexture;
-uniform PXMaterial Material;
 
 vec4 PXLightCalculate(vec3 lightPosition, vec3 vertexPositon, vec3 normalPosition)
 {
@@ -52,39 +52,15 @@ vec4 PXLightCalculate(vec3 lightPosition, vec3 vertexPositon, vec3 normalPositio
 
 void main()
 {
+    //vec3 normalColor = vec3(0,0,0);//vec3(-vertex.Normal);
+   // vec3 positionColor = vec3(0,0,0);//vec3(vertex.Position);
+   // vec3 texturePositionColor = vec3(1.0f-vertex.Normal.x, 1.0f, 1.0f-vertex.Normal.y);
+
+ //   vec4 dataColor = vec4((normalColor + texturePositionColor + positionColor) * 0.35f, 1.0f);
+
     vec4 texturedColor = texture(MaterialTexture, vertex.TexturePosition);
-    vec4 positionColor = Material.Diffuse;
-     
-    if(texturedColor.a == 0.0f)
-    {
-        fragcolor = vec4(1.0f,0.2f,0,0.25f);
 
-      //  discard;
-    }
-    else    
-    {
-        if(Material.Diffuse.a == 0.0f)
-        {
-            fragcolor = texturedColor;
-        }
-        else
-        {
-            //vec3 mixedColor = mix(texturedColor.rgb, Material.Diffuse.rgb, Material.Diffuse.a);
-            vec3 mixedColor = mix(texturedColor.rgb, Material.Diffuse.rgb, Material.Diffuse.a);
+    vec4 lightColor = PXLightCalculate(vec3(0,500,0), vertex.Position, vertex.Normal);
 
-
-            fragcolor = vec4(mixedColor, texturedColor.a);
-
-            //fragcolor = texturedColor;
-        }
-
-        //fragcolor = vec4(texturedColor.rgb * vertex.Color.rgb, 1.0f);
-     
-        //  fragcolor = vec4(texturedColor.rgb * vertex.Color.rgb, texturedColor.a);
-       //  fragcolor =  texturedColor;
-
-       // fragcolor = texturedColor * vec4(1.0f, 0.8f, 0.8f, 1.0f) + vec4(0.5f, 0.0f, 0.0f, 0.0f);
-    }
-
-
+    fragcolor = texturedColor * lightColor;
 }

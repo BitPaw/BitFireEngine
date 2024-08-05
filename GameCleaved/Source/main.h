@@ -28,6 +28,11 @@ PXSprite* _fireplace = 0;
 PXSprite* _sign = 0;
 PXSprite* _floor = 0;
 
+
+PXSprite* _flameAnimated = 0;
+PXSpriteAnimator* _flameAnimator = 0;
+
+
 PXEngineSound* _dialogLetterPopSFX;
 
 PXEngineDialogBox pxDialogBox;
