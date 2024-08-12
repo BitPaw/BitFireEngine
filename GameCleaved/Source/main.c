@@ -85,7 +85,7 @@ void PXAPI OnIntereact(void* const owner, PXEngine* const pxEngine)
 PXInt32U index;
 PXModel* _pxModelMap;
 
-void PXAPI OnStartUpEventAA(void* const owner, PXEngine* const pxEngine)
+void PXAPI OnStartUpEvent(void* const owner, PXEngine* const pxEngine)
 {
     PXResourceCreateInfo pxResourceCreateInfo;
 
@@ -129,23 +129,23 @@ void PXAPI OnStartUpEventAA(void* const owner, PXEngine* const pxEngine)
     PXClear(PXResourceCreateInfo, &pxResourceCreateInfo);
     pxResourceCreateInfo.Type = PXResourceTypeModel;
     pxResourceCreateInfo.ObjectReference = &_pxModelMap;
-    pxResourceCreateInfo.FilePath = "Model/Milenia.obj";
+    pxResourceCreateInfo.FilePath = "Model/T/Tiger_I.obj";
     //pxUIElementCreateData.FilePath = "P:\\_Cache\\N64\\PennyRacer\\Apline\\OBJ\\untitled.obj";// "Model/Dust_II/DustII.obj";
     // "Model/Tiger.obj" 
     // "Model/Dust_II/DustII.obj"
     // "Model/Tiger.obj"
     // "Model/Moze.obj"
     pxResourceCreateInfo.Model.ShaderProgramReference = _worldShader;
-    pxResourceCreateInfo.Model.Scale = 50.0f;
+    pxResourceCreateInfo.Model.Scale = 30.0f;
 
-  //  PXEngineResourceCreate(pxEngine, &pxResourceCreateInfo);
+    PXEngineResourceCreate(pxEngine, &pxResourceCreateInfo);
 
 
 
 }
 
 
-void PXAPI OnStartUpEvent(void* const owner, PXEngine* const pxEngine)
+void PXAPI OnStartUpEventAA(void* const owner, PXEngine* const pxEngine)
 {
     PXResourceCreateInfo pxResourceCreateInfo;
 
