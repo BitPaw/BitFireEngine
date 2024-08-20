@@ -101,6 +101,9 @@ int main(int amountOFParameters, char** parameter)
 PXTexture2D* _dialogBoxTexture = 0;
 
 
+PXGUIElement* _statusbarMain = 0;
+PXGUIElement* _menuMain = 0;
+
 
 //---------------------------------------------------------
 // Tab
@@ -403,7 +406,7 @@ PXSkyBox* _sceneSkyBox = 0;
 const PXColorRGBAF titleMenuButtonTextColorReference = { 0.9, 0.9, 0.9, 1 };
 const PXColorRGBAF titleMenuButtonReference = { 0.10, 0.10, 0.10, 1 };
 
-const PXColorRGBAF buttonColor = { 0.1, 0.3, 0.5, 1 }; //  0.40f, 0.15f, 0.15f, 1
+const PXColorRGBAF buttonColor = { 0.1, 0.1, 0.1, 1 }; //  0.40f, 0.15f, 0.15f, 1
 const PXColorRGBAF panelReference = { 0.0, 0.1, 0.2, 1 };
 PXColorRGBAF titleColor = { 0.2, 0.2, 0.2, 1 };
 const PXColorRGBAF textColor = { 0.8, 0.8, 0.8, 1 };
@@ -850,7 +853,7 @@ void PXAPI BFSceneOnStartup(BFBitFireIDE* const bfBitFireIDE, PXEngine* const px
         pxUIElementCreateData.FilePath = "H:\\[Cache]\\chip.wav";
         pxUIElementCreateData.Sound.SoundLoop = PXTrue;
 
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        //PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
 
 
         PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
@@ -901,7 +904,7 @@ void PXAPI BFSceneOnStartup(BFBitFireIDE* const bfBitFireIDE, PXEngine* const px
         pxUIElementCreateData.Model.ShaderProgramReference = _pxObjectShader;
         pxUIElementCreateData.Model.Scale = 50.0f;
 
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+       // PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
 
     {
@@ -1531,6 +1534,68 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
 
     }
+
+
+    //-----------------------------------------------------
+    // Menu::
+    //-----------------------------------------------------
+    {
+        PXEngineStartInfo pxEngineStartInfo;
+        PXClear(PXEngineStartInfo, &pxEngineStartInfo);
+
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
+        pxUIElementCreateData.Name = "StatusBar";
+        pxUIElementCreateData.ObjectReference = &_statusbarMain;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeStatusBar;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+       // pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+
+
+        //PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
+    //-----------------------------------------------------
+    // Menu::
+    //-----------------------------------------------------
+    {
+        PXGUIElementMenuItemInfo pxGUIElementMenuItemListProject[4];
+        PXClearList(PXGUIElementMenuItemInfo, &pxGUIElementMenuItemListProject, 4);
+        pxGUIElementMenuItemListProject[0].TextData = "Open";
+        pxGUIElementMenuItemListProject[0].TextSize = 4;
+        pxGUIElementMenuItemListProject[1].TextData = "Close";
+        pxGUIElementMenuItemListProject[1].TextSize = 5;
+        pxGUIElementMenuItemListProject[2].TextData = "Exit";
+        pxGUIElementMenuItemListProject[2].TextSize = 4;
+
+        PXGUIElementMenuItemList addas;
+        addas.MenuItemInfoListAmount = 3;
+        addas.MenuItemInfoListData = pxGUIElementMenuItemListProject;
+
+        PXGUIElementMenuItemInfo pxGUIElementMenuItemList[4];
+        PXClearList(PXGUIElementMenuItemInfo, &pxGUIElementMenuItemList, 4);
+        pxGUIElementMenuItemList[0].TextData = "Project";
+        pxGUIElementMenuItemList[0].TextSize = 7;
+        pxGUIElementMenuItemList[0].ChildList = &addas;
+        pxGUIElementMenuItemList[1].TextData = "Edit";
+        pxGUIElementMenuItemList[1].TextSize = 4;
+        pxGUIElementMenuItemList[2].TextData = "Help";
+        pxGUIElementMenuItemList[2].TextSize = 4;
+
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
+        pxUIElementCreateData.Name = "MenuStrip";
+        pxUIElementCreateData.ObjectReference = &_menuMain;
+        pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeMenuStrip;
+        pxUIElementCreateData.UIElement.Data.MenuItem.MenuItemInfoListData = &pxGUIElementMenuItemList;
+        pxUIElementCreateData.UIElement.Data.MenuItem.MenuItemInfoListAmount = 3;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
 
     //-----------------------------------------------------
     // Panel:Menu
@@ -4359,7 +4424,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Position.MarginBottom = 0.2f;
         pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Network";
 
-    //    PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
 
     }
 
@@ -4489,7 +4554,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft;
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset+0.15;
         pxUIElementCreateData.UIElement.Position.MarginRight = 1.60f;
         pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
 
@@ -4526,6 +4591,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Data.Text.FontID = DefaultFont;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+
+        _textSceneElemenets->NameContent = "Objects";
+        _textSceneElemenets->NameContentSize = 7;
     }
 
     //-----------------------------------------------------
@@ -4580,6 +4648,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
       //  pxUIElementCreateData.UIElement.InteractCallBack = PXOnUIElementInteract;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+
+        _infoPanelTextSpawn->NameContent = "Resource Load";
+        _infoPanelTextSpawn->NameContentSize = 13;
     }
 
 
@@ -4765,7 +4836,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Position.MarginTop = SoundRowOffsetY * 8.25;
         pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Compressor";
 
-       // PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
 
 
