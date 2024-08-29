@@ -1561,17 +1561,35 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Menu::
     //-----------------------------------------------------
     {
-        PXGUIElementMenuItemInfo pxGUIElementMenuItemListProject[4];
-        PXClearList(PXGUIElementMenuItemInfo, &pxGUIElementMenuItemListProject, 4);
-        pxGUIElementMenuItemListProject[0].TextData = "Open";
+        PXGUIElementMenuItemInfo pxGUIElementMenuItemListProject[9];
+        PXClearList(PXGUIElementMenuItemInfo, &pxGUIElementMenuItemListProject, 9);
+        pxGUIElementMenuItemListProject[0].TextData = "New";
         pxGUIElementMenuItemListProject[0].TextSize = 4;
-        pxGUIElementMenuItemListProject[1].TextData = "Close";
-        pxGUIElementMenuItemListProject[1].TextSize = 5;
-        pxGUIElementMenuItemListProject[2].TextData = "Exit";
-        pxGUIElementMenuItemListProject[2].TextSize = 4;
+
+        pxGUIElementMenuItemListProject[1].TextData = "Open";
+        pxGUIElementMenuItemListProject[1].TextSize = 4;
+
+        pxGUIElementMenuItemListProject[2].Flags = PXGUIMenuItemTypeMFT_MENUBARBREAK;
+
+        pxGUIElementMenuItemListProject[3].TextData = "Save";
+        pxGUIElementMenuItemListProject[3].TextSize = 4;
+
+        pxGUIElementMenuItemListProject[4].Flags = PXGUIMenuItemTypeCheckmark;
+        pxGUIElementMenuItemListProject[4].TextData = "AutoSave";
+        pxGUIElementMenuItemListProject[4].TextSize = 8;
+
+        pxGUIElementMenuItemListProject[5].Flags = PXGUIMenuItemTypeMFT_MENUBARBREAK;
+
+        pxGUIElementMenuItemListProject[6].TextData = "Close";
+        pxGUIElementMenuItemListProject[6].TextSize = 5;
+
+        pxGUIElementMenuItemListProject[7].Flags = PXGUIMenuItemTypeMFT_MENUBARBREAK;
+
+        pxGUIElementMenuItemListProject[8].TextData = "Exit";
+        pxGUIElementMenuItemListProject[8].TextSize = 4;
 
         PXGUIElementMenuItemList addas;
-        addas.MenuItemInfoListAmount = 3;
+        addas.MenuItemInfoListAmount = 9;
         addas.MenuItemInfoListData = pxGUIElementMenuItemListProject;
 
         PXGUIElementMenuItemInfo pxGUIElementMenuItemList[4];
@@ -1581,8 +1599,10 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxGUIElementMenuItemList[0].ChildList = &addas;
         pxGUIElementMenuItemList[1].TextData = "Edit";
         pxGUIElementMenuItemList[1].TextSize = 4;
-        pxGUIElementMenuItemList[2].TextData = "Help";
-        pxGUIElementMenuItemList[2].TextSize = 4;
+        pxGUIElementMenuItemList[2].TextData = "Window";
+        pxGUIElementMenuItemList[2].TextSize = 6;
+        pxGUIElementMenuItemList[3].TextData = "Help";
+        pxGUIElementMenuItemList[3].TextSize = 4;
 
         PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.Type = PXResourceTypeGUIElement;
