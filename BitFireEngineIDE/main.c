@@ -1549,12 +1549,12 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.ObjectReference = &_statusbarMain;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeStatusBar;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-       // pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;
+        pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
         pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
 
 
-        //PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
 
     //-----------------------------------------------------
@@ -1592,17 +1592,18 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         addas.MenuItemInfoListAmount = 9;
         addas.MenuItemInfoListData = pxGUIElementMenuItemListProject;
 
-        PXGUIElementMenuItemInfo pxGUIElementMenuItemList[4];
-        PXClearList(PXGUIElementMenuItemInfo, &pxGUIElementMenuItemList, 4);
-        pxGUIElementMenuItemList[0].TextData = "Project";
-        pxGUIElementMenuItemList[0].TextSize = 7;
-        pxGUIElementMenuItemList[0].ChildList = &addas;
-        pxGUIElementMenuItemList[1].TextData = "Edit";
-        pxGUIElementMenuItemList[1].TextSize = 4;
-        pxGUIElementMenuItemList[2].TextData = "Window";
-        pxGUIElementMenuItemList[2].TextSize = 6;
-        pxGUIElementMenuItemList[3].TextData = "Help";
-        pxGUIElementMenuItemList[3].TextSize = 4;
+        PXGUIElementMenuItemInfo pxGUIElementMenuItemList[5];
+        PXClearList(PXGUIElementMenuItemInfo, &pxGUIElementMenuItemList, 5);
+        pxGUIElementMenuItemList[0].Flags = PXGUIMenuItemTypeImage;
+        pxGUIElementMenuItemList[1].TextData = "Project";
+        pxGUIElementMenuItemList[1].TextSize = 7;
+        pxGUIElementMenuItemList[1].ChildList = &addas;
+        pxGUIElementMenuItemList[2].TextData = "Edit";
+        pxGUIElementMenuItemList[2].TextSize = 4;
+        pxGUIElementMenuItemList[3].TextData = "Window";
+        pxGUIElementMenuItemList[3].TextSize = 6;
+        pxGUIElementMenuItemList[4].TextData = "Help";
+        pxGUIElementMenuItemList[4].TextSize = 4;
 
         PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.Type = PXResourceTypeGUIElement;
@@ -1611,7 +1612,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeMenuStrip;
         pxUIElementCreateData.UIElement.Data.MenuItem.MenuItemInfoListData = &pxGUIElementMenuItemList;
-        pxUIElementCreateData.UIElement.Data.MenuItem.MenuItemInfoListAmount = 3;
+        pxUIElementCreateData.UIElement.Data.MenuItem.MenuItemInfoListAmount = 5;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
@@ -4574,7 +4575,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft;
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset+0.15;
+        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset+0.02;
         pxUIElementCreateData.UIElement.Position.MarginRight = 1.60f;
         pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
 

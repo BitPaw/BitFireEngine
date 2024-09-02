@@ -85,7 +85,7 @@ void PXAPI OnIntereact(void* const owner, PXEngine* const pxEngine)
 PXInt32U index;
 PXModel* _pxModelMap;
 
-void PXAPI OnStartUpEvent(void* const owner, PXEngine* const pxEngine)
+void PXAPI OnStartUpEventAA(void* const owner, PXEngine* const pxEngine)
 {
     PXResourceCreateInfo pxResourceCreateInfo;
 
@@ -145,7 +145,7 @@ void PXAPI OnStartUpEvent(void* const owner, PXEngine* const pxEngine)
 }
 
 
-void PXAPI OnStartUpEventAA(void* const owner, PXEngine* const pxEngine)
+void PXAPI OnStartUpEvent(void* const owner, PXEngine* const pxEngine)
 {
     PXResourceCreateInfo pxResourceCreateInfo;
 
@@ -200,8 +200,8 @@ void PXAPI OnStartUpEventAA(void* const owner, PXEngine* const pxEngine)
         pxResourceCreateInfo.FilePath = "Texture/BackGround.png";
         pxResourceCreateInfo.Sprite.ShaderProgramCurrent = _worldShader;
         pxResourceCreateInfo.Sprite.Position.Z = -0.5;
-        pxResourceCreateInfo.Sprite.Scaling.X = 15;
-        pxResourceCreateInfo.Sprite.Scaling.Y = 15;
+        pxResourceCreateInfo.Sprite.Scaling.X = 20;
+        pxResourceCreateInfo.Sprite.Scaling.Y = 20;
 
         PXEngineResourceCreate(pxEngine, &pxResourceCreateInfo);
     }
