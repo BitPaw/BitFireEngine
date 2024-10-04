@@ -324,6 +324,11 @@ PXGUIElement* _buttonDatabaseConnect = 0;
 
 
 
+//---------------------------------------------------------
+// Color picker
+//---------------------------------------------------------
+PXGUIElement* _colorPickerTest = 0;
+
 
 //---------------------------------------------------------
 // Frame console
@@ -4441,12 +4446,29 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
         pxUIElementCreateData.UIElement.Position.MarginTop = 0.6;
-        pxUIElementCreateData.UIElement.Position.MarginRight = 0.8f;
+        pxUIElementCreateData.UIElement.Position.MarginRight = 0.2f;
         pxUIElementCreateData.UIElement.Position.MarginBottom = 0.2f;
         pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Network";
 
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+       // PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
 
+    }
+    {
+
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
+        pxUIElementCreateData.ObjectReference = &_colorPickerTest;
+        pxUIElementCreateData.Name = "Color picker";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeColorPicker;
+        pxUIElementCreateData.UIElement.UIElementParent = _tabPageNetwork;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.0;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
 
 
