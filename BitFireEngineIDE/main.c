@@ -5,6 +5,7 @@
 #include <OS/Memory/PXMemory.h>
 #include <OS/Console/PXConsole.h>
 #include <OS/Graphic/PXGraphic.h>
+#include <OS/File/PXDirectory.h>
 
 #if 1
 #if defined _M_IX86
@@ -344,6 +345,7 @@ PXGUIElement* _panelConsoleData = 0;
 //---------------------------------------------------------
 PXGUIElement* _panelLeftPanel = 0;
 
+PXGUIElement* _treeViewButtonSelect = 0;
 PXGUIElement* _treeViewFileManager = 0;
 
 PXGUIElement* _textFileData = 0;
@@ -580,7 +582,7 @@ void PXAPI BFObjectTreeViewEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent
             pxUIElementUpdateInfo[1].Property = PXUIElementPropertyTextContent;
          //   pxUIElementUpdateInfo[1].Data.Text.Content = _uiInfoPanelObjectTypeContent->NameData;
 
-             PXGUIElementUpdate(PXNull, pxUIElementUpdateInfo, 2);          
+             PXGUIElementUpdate(PXNull, pxUIElementUpdateInfo, 1);          
 
             break;
         }
@@ -588,6 +590,12 @@ void PXAPI BFObjectTreeViewEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent
             break;
     }  
 }
+
+void PXAPI FileTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
+{
+
+}
+
 
 void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
 {
@@ -4587,9 +4595,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative;
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginTop = 0.1;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.08;
         pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.03;
         pxUIElementCreateData.UIElement.InteractCallBack = BFObjectTreeViewEvent;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
@@ -4601,7 +4609,24 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Panel(Left)::FileStuff::TreeView
     //-----------------------------------------------------
     {
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
+        pxUIElementCreateData.Name = "Button Select";
+        pxUIElementCreateData.ObjectReference = &_treeViewButtonSelect;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeView;
+        pxUIElementCreateData.UIElement.UIElementParent = _panelFilemenu;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.08;
+        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.03;
 
+       // PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
+
+    {
         PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.Name = "TreeView_File";
@@ -4611,10 +4636,10 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative;
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginTop = 0.1;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.08;
         pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.InteractCallBack = BFObjectTreeViewEvent;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.03;
+       // pxUIElementCreateData.UIElement.InteractCallBack = BFObjectTreeViewEvent;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
@@ -4628,7 +4653,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Panel::Info::Bar
     //-----------------------------------------------------
     {
-       
+
         PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_uiInfoPanelTitleBar;
