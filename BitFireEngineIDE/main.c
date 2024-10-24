@@ -4631,10 +4631,10 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.Name = "TreeView_File";
         pxUIElementCreateData.ObjectReference = &_treeViewFileManager;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeView;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeFileDirectyView;
         pxUIElementCreateData.UIElement.UIElementParent = _panelFilemenu;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXResourceInfoUseByEngine;
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginTop = 0.08;
         pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
