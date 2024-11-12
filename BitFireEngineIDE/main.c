@@ -33,6 +33,7 @@ BFBitFireIDE;
 
 
 #define PXDefaultOffset 0.005f
+#define PXDefaultTopOffset PXDefaultOffset + 0.02
 #define PXDefaultTitleBar 20.0f
 
 #define PXDefaultTextHeight 20
@@ -108,21 +109,21 @@ int main(int amountOFParameters, char** parameter)
 PXTexture2D* _dialogBoxTexture = 0;
 
 
-PXGUIElement* _statusbarMain = 0;
-PXGUIElement* _menuMain = 0;
+PXWindow* _statusbarMain = 0;
+PXWindow* _menuMain = 0;
 
 
 //---------------------------------------------------------
 // Tab
 //---------------------------------------------------------
-PXGUIElement* _tabControlMain = 0;
-PXGUIElement* _tabPageScene = 0;
-PXGUIElement* _tabPageSound = 0;
-PXGUIElement* _tabPageNetwork = 0;
-PXGUIElement* _tabPageVideo = 0;
-PXGUIElement* _tabPageDatabase = 0;
-PXGUIElement* _tabPageInput = 0;
-PXGUIElement* _tabPageHardware = 0;
+PXWindow* _tabControlMain = 0;
+PXWindow* _tabPageScene = 0;
+PXWindow* _tabPageSound = 0;
+PXWindow* _tabPageNetwork = 0;
+PXWindow* _tabPageVideo = 0;
+PXWindow* _tabPageDatabase = 0;
+PXWindow* _tabPageInput = 0;
+PXWindow* _tabPageHardware = 0;
 //---------------------------------------------------------
 
 //---------------------------------------------------------
@@ -137,177 +138,177 @@ PXGUIElement* _tabPageHardware = 0;
 PXAudioDevice _soundAudioDevice;
 PXSound* _musicTest = 0;
 
-PXGUIElement* _buttonSoundPlay = 0;
-PXGUIElement* _buttonSoundStop = 0;
+PXWindow* _buttonSoundPlay = 0;
+PXWindow* _buttonSoundStop = 0;
 
 
 //---------------------------------------------------------
-PXGUIElement* _textSoundChorusEffect = 0;
+PXWindow* _textSoundChorusEffect = 0;
 
-PXGUIElement* _textSoundChorusWetDryMix = 0;
-PXGUIElement* _textSoundChorusDepth = 0;
-PXGUIElement* _textSoundChorusFeedback = 0;
-PXGUIElement* _textSoundChorusFrequency = 0;
-PXGUIElement* _textSoundChorusWaveform = 0;
-PXGUIElement* _textSoundChorusDelay = 0;
-PXGUIElement* _textSoundChorusPhase = 0;
+PXWindow* _textSoundChorusWetDryMix = 0;
+PXWindow* _textSoundChorusDepth = 0;
+PXWindow* _textSoundChorusFeedback = 0;
+PXWindow* _textSoundChorusFrequency = 0;
+PXWindow* _textSoundChorusWaveform = 0;
+PXWindow* _textSoundChorusDelay = 0;
+PXWindow* _textSoundChorusPhase = 0;
 
-PXGUIElement* _textSoundChorusWetDryMixInput = 0;
-PXGUIElement* _textSoundChorusDepthInput = 0;
-PXGUIElement* _textSoundChorusFeedbackInput = 0;
-PXGUIElement* _textSoundChorusFrequencyInput = 0;
-PXGUIElement* _textSoundChorusWaveformInput = 0;
-PXGUIElement* _textSoundChorusDelayInput = 0;
-PXGUIElement* _textSoundChorusPhaseInput = 0;
+PXWindow* _textSoundChorusWetDryMixInput = 0;
+PXWindow* _textSoundChorusDepthInput = 0;
+PXWindow* _textSoundChorusFeedbackInput = 0;
+PXWindow* _textSoundChorusFrequencyInput = 0;
+PXWindow* _textSoundChorusWaveformInput = 0;
+PXWindow* _textSoundChorusDelayInput = 0;
+PXWindow* _textSoundChorusPhaseInput = 0;
 
-PXGUIElement* _textSoundChorusEnable = 0;
-PXGUIElement* _textSoundChorusApply = 0;
+PXWindow* _textSoundChorusEnable = 0;
+PXWindow* _textSoundChorusApply = 0;
 //---------------------------------------------------------
-PXGUIElement* _textSoundCompressor = 0;
+PXWindow* _textSoundCompressor = 0;
 
-PXGUIElement* _textSoundCompressorGain = 0;
-PXGUIElement* _textSoundCompressorAttack = 0;
-PXGUIElement* _textSoundCompressorRelease = 0;
-PXGUIElement* _textSoundCompressorThreshold = 0;
-PXGUIElement* _textSoundCompressorRatio = 0;
-PXGUIElement* _textSoundCompressorPredelay = 0;
+PXWindow* _textSoundCompressorGain = 0;
+PXWindow* _textSoundCompressorAttack = 0;
+PXWindow* _textSoundCompressorRelease = 0;
+PXWindow* _textSoundCompressorThreshold = 0;
+PXWindow* _textSoundCompressorRatio = 0;
+PXWindow* _textSoundCompressorPredelay = 0;
 
-PXGUIElement* _textSoundCompressorGainInput = 0;
-PXGUIElement* _textSoundCompressorAttackInput = 0;
-PXGUIElement* _textSoundCompressorReleaseInput = 0;
-PXGUIElement* _textSoundCompressorThresholdInput = 0;
-PXGUIElement* _textSoundCompressorRatioInput = 0;
-PXGUIElement* _textSoundCompressorPredelayInput = 0;
+PXWindow* _textSoundCompressorGainInput = 0;
+PXWindow* _textSoundCompressorAttackInput = 0;
+PXWindow* _textSoundCompressorReleaseInput = 0;
+PXWindow* _textSoundCompressorThresholdInput = 0;
+PXWindow* _textSoundCompressorRatioInput = 0;
+PXWindow* _textSoundCompressorPredelayInput = 0;
 
 
-PXGUIElement* _textSoundCompressorEnable = 0;
-PXGUIElement* _textSoundCompressorApply = 0;
+PXWindow* _textSoundCompressorEnable = 0;
+PXWindow* _textSoundCompressorApply = 0;
 //---------------------------------------------------------
-PXGUIElement* _textSoundDistortion = 0;
+PXWindow* _textSoundDistortion = 0;
 
-PXGUIElement* _textSoundDistortionGain = 0;
-PXGUIElement* _textSoundDistortionEdge = 0;
-PXGUIElement* _textSoundDistortionPostEQCenterFrequency = 0;
-PXGUIElement* _textSoundDistortionPostEQBandwidth = 0;
-PXGUIElement* _textSoundDistortionPreLowpassCutoff = 0;
+PXWindow* _textSoundDistortionGain = 0;
+PXWindow* _textSoundDistortionEdge = 0;
+PXWindow* _textSoundDistortionPostEQCenterFrequency = 0;
+PXWindow* _textSoundDistortionPostEQBandwidth = 0;
+PXWindow* _textSoundDistortionPreLowpassCutoff = 0;
 
-PXGUIElement* _textSoundDistortionGainInput = 0;
-PXGUIElement* _textSoundDistortionEdgeInput = 0;
-PXGUIElement* _textSoundDistortionPostEQCenterFrequencyInput = 0;
-PXGUIElement* _textSoundDistortionPostEQBandwidthInput = 0;
-PXGUIElement* _textSoundDistortionPreLowpassCutoffInput = 0;
+PXWindow* _textSoundDistortionGainInput = 0;
+PXWindow* _textSoundDistortionEdgeInput = 0;
+PXWindow* _textSoundDistortionPostEQCenterFrequencyInput = 0;
+PXWindow* _textSoundDistortionPostEQBandwidthInput = 0;
+PXWindow* _textSoundDistortionPreLowpassCutoffInput = 0;
 
-PXGUIElement* _textSoundDistortionEnable = 0;
-PXGUIElement* _textSoundDistortionApply = 0;
-
-//---------------------------------------------------------
-PXGUIElement* _textSoundEchoEffect = 0;
-
-
-PXGUIElement* _textSoundEchoWetDryMix = 0;
-PXGUIElement* _textSoundEchoFeedback = 0;
-PXGUIElement* _textSoundEchoLeftDelay = 0;
-PXGUIElement* _textSoundEchoRightDelay = 0;
-PXGUIElement* _textSoundEchoPanDelay = 0;
-
-PXGUIElement* _textSoundEchoWetDryMixInput = 0;
-PXGUIElement* _textSoundEchoFeedbackInput = 0;
-PXGUIElement* _textSoundEchoLeftDelayInput = 0;
-PXGUIElement* _textSoundEchoRightDelayInput = 0;
-PXGUIElement* _textSoundEchoPanDelayInput = 0;
-
-PXGUIElement* _textSoundEchoEnable = 0;
-PXGUIElement* _textSoundEchoApply = 0;
+PXWindow* _textSoundDistortionEnable = 0;
+PXWindow* _textSoundDistortionApply = 0;
 
 //---------------------------------------------------------
-PXGUIElement* _textSoundFlangerEffect = 0;
+PXWindow* _textSoundEchoEffect = 0;
 
-PXGUIElement* _textSoundFlangerWetDryMix = 0;
-PXGUIElement* _textSoundFlangerDepth = 0;
-PXGUIElement* _textSoundFlangerFeedback = 0;
-PXGUIElement* _textSoundFlangerFrequency = 0;
-PXGUIElement* _textSoundFlangerWaveform = 0;
-PXGUIElement* _textSoundFlangerDelay = 0;
-PXGUIElement* _textSoundFlangerPhase = 0;
 
-PXGUIElement* _textSoundFlangerWetDryMixInput = 0;
-PXGUIElement* _textSoundFlangerDepthInput = 0;
-PXGUIElement* _textSoundFlangerFeedbackInput = 0;
-PXGUIElement* _textSoundFlangerFrequencyInput = 0;
-PXGUIElement* _textSoundFlangerWaveformInput = 0;
-PXGUIElement* _textSoundFlangerDelayInput = 0;
-PXGUIElement* _textSoundFlangerPhaseInput = 0;
+PXWindow* _textSoundEchoWetDryMix = 0;
+PXWindow* _textSoundEchoFeedback = 0;
+PXWindow* _textSoundEchoLeftDelay = 0;
+PXWindow* _textSoundEchoRightDelay = 0;
+PXWindow* _textSoundEchoPanDelay = 0;
+
+PXWindow* _textSoundEchoWetDryMixInput = 0;
+PXWindow* _textSoundEchoFeedbackInput = 0;
+PXWindow* _textSoundEchoLeftDelayInput = 0;
+PXWindow* _textSoundEchoRightDelayInput = 0;
+PXWindow* _textSoundEchoPanDelayInput = 0;
+
+PXWindow* _textSoundEchoEnable = 0;
+PXWindow* _textSoundEchoApply = 0;
+
 //---------------------------------------------------------
-PXGUIElement* _textSoundGargleEffect = 0;
+PXWindow* _textSoundFlangerEffect = 0;
 
-PXGUIElement* _textSoundGargleRateHz = 0;
-PXGUIElement* _textSoundGargleRateHzInput = 0;
-PXGUIElement* _textSoundGargleWaveShape = 0;
-PXGUIElement* _textSoundGargleWaveShapeInput = 0;
+PXWindow* _textSoundFlangerWetDryMix = 0;
+PXWindow* _textSoundFlangerDepth = 0;
+PXWindow* _textSoundFlangerFeedback = 0;
+PXWindow* _textSoundFlangerFrequency = 0;
+PXWindow* _textSoundFlangerWaveform = 0;
+PXWindow* _textSoundFlangerDelay = 0;
+PXWindow* _textSoundFlangerPhase = 0;
+
+PXWindow* _textSoundFlangerWetDryMixInput = 0;
+PXWindow* _textSoundFlangerDepthInput = 0;
+PXWindow* _textSoundFlangerFeedbackInput = 0;
+PXWindow* _textSoundFlangerFrequencyInput = 0;
+PXWindow* _textSoundFlangerWaveformInput = 0;
+PXWindow* _textSoundFlangerDelayInput = 0;
+PXWindow* _textSoundFlangerPhaseInput = 0;
 //---------------------------------------------------------
-PXGUIElement* _textSoundInteractive3DLevel2ReverbEffect = 0;
+PXWindow* _textSoundGargleEffect = 0;
 
-PXGUIElement* _textSoundInteractive3DLevel2ReverbRoom = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbRoomHF = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbRoomRolloffFactor = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbDecayTime = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbDecayHFRatio = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbReflections = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbReflectionsDelay = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbReverb = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbReverbDelay = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbDiffusion = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbDensity = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbHFReference = 0;
-
-PXGUIElement* _textSoundInteractive3DLevel2ReverbRoomInput = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbRoomHFInput = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbRoomRolloffFactorInput = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbDecayTimeInput = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbDecayHFRatioInput = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbReflectionsInput = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbReflectionsDelayInput = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbReverbInput = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbReverbDelayInput = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbDiffusionInput = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbDensityInput = 0;
-PXGUIElement* _textSoundInteractive3DLevel2ReverbHFReferenceInput = 0;
+PXWindow* _textSoundGargleRateHz = 0;
+PXWindow* _textSoundGargleRateHzInput = 0;
+PXWindow* _textSoundGargleWaveShape = 0;
+PXWindow* _textSoundGargleWaveShapeInput = 0;
 //---------------------------------------------------------
-PXGUIElement* _textSoundParamEqEffect = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbEffect = 0;
 
-PXGUIElement* _textSoundParamEqCenter = 0;
-PXGUIElement* _textSoundParamEqBandwidth = 0;
-PXGUIElement* _textSoundParamEqGain = 0;
-PXGUIElement* _textSoundParamEqCenterInput = 0;
-PXGUIElement* _textSoundParamEqBandwidthInput = 0;
-PXGUIElement* _textSoundParamEqGainInput = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbRoom = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbRoomHF = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbRoomRolloffFactor = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbDecayTime = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbDecayHFRatio = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbReflections = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbReflectionsDelay = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbReverb = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbReverbDelay = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbDiffusion = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbDensity = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbHFReference = 0;
+
+PXWindow* _textSoundInteractive3DLevel2ReverbRoomInput = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbRoomHFInput = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbRoomRolloffFactorInput = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbDecayTimeInput = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbDecayHFRatioInput = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbReflectionsInput = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbReflectionsDelayInput = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbReverbInput = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbReverbDelayInput = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbDiffusionInput = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbDensityInput = 0;
+PXWindow* _textSoundInteractive3DLevel2ReverbHFReferenceInput = 0;
 //---------------------------------------------------------
-PXGUIElement* _textSoundWavesReverbEffect = 0;
+PXWindow* _textSoundParamEqEffect = 0;
 
-PXGUIElement* _textSoundWavesReverbInGain = 0;
-PXGUIElement* _textSoundWavesReverbReverbMix = 0;
-PXGUIElement* _textSoundWavesReverbReverbTime = 0;
-PXGUIElement* _textSoundWavesReverbHighFreqRTRatio = 0;
+PXWindow* _textSoundParamEqCenter = 0;
+PXWindow* _textSoundParamEqBandwidth = 0;
+PXWindow* _textSoundParamEqGain = 0;
+PXWindow* _textSoundParamEqCenterInput = 0;
+PXWindow* _textSoundParamEqBandwidthInput = 0;
+PXWindow* _textSoundParamEqGainInput = 0;
+//---------------------------------------------------------
+PXWindow* _textSoundWavesReverbEffect = 0;
 
-PXGUIElement* _textSoundWavesReverbInGainInput = 0;
-PXGUIElement* _textSoundWavesReverbReverbMixInput = 0;
-PXGUIElement* _textSoundWavesReverbReverbTimeInput = 0;
-PXGUIElement* _textSoundWavesReverbHighFreqRTRatioInput = 0;
+PXWindow* _textSoundWavesReverbInGain = 0;
+PXWindow* _textSoundWavesReverbReverbMix = 0;
+PXWindow* _textSoundWavesReverbReverbTime = 0;
+PXWindow* _textSoundWavesReverbHighFreqRTRatio = 0;
 
-PXGUIElement* _textSoundWavesReverbApply = 0;
+PXWindow* _textSoundWavesReverbInGainInput = 0;
+PXWindow* _textSoundWavesReverbReverbMixInput = 0;
+PXWindow* _textSoundWavesReverbReverbTimeInput = 0;
+PXWindow* _textSoundWavesReverbHighFreqRTRatioInput = 0;
+
+PXWindow* _textSoundWavesReverbApply = 0;
 //---------------------------------------------------------
 
 //---------------------------------------------------------
 // Network
 //---------------------------------------------------------
-PXGUIElement* _panelNetworkMain = 0;
+PXWindow* _panelNetworkMain = 0;
 //---------------------------------------------------------
 
 
 //---------------------------------------------------------
 // Video
 //---------------------------------------------------------
-PXGUIElement* _panelVideoMain = 0;
+PXWindow* _panelVideoMain = 0;
 //---------------------------------------------------------
 
 
@@ -315,18 +316,18 @@ PXGUIElement* _panelVideoMain = 0;
 //---------------------------------------------------------
 // Database
 //---------------------------------------------------------
-PXGUIElement* _textDatabaseTitleODBC = 0;
+PXWindow* _textDatabaseTitleODBC = 0;
 
-PXGUIElement* _textDatabaseDriver = 0;
-PXGUIElement* _comboBoxDatabaseDriver = 0;
+PXWindow* _textDatabaseDriver = 0;
+PXWindow* _comboBoxDatabaseDriver = 0;
 
-PXGUIElement* _textBoxDatabaseIP = 0;
-PXGUIElement* _comboBoxDatabaseIP = 0;
+PXWindow* _textBoxDatabaseIP = 0;
+PXWindow* _comboBoxDatabaseIP = 0;
 
-PXGUIElement* _textBoxDatabasePort = 0;
-PXGUIElement* _comboBoxDatabasePort = 0;
+PXWindow* _textBoxDatabasePort = 0;
+PXWindow* _comboBoxDatabasePort = 0;
 
-PXGUIElement* _buttonDatabaseConnect = 0;
+PXWindow* _buttonDatabaseConnect = 0;
 //---------------------------------------------------------
 
 
@@ -334,73 +335,75 @@ PXGUIElement* _buttonDatabaseConnect = 0;
 //---------------------------------------------------------
 // Color picker
 //---------------------------------------------------------
-PXGUIElement* _colorPickerTest = 0;
+PXWindow* _colorPickerTest = 0;
 
 
 //---------------------------------------------------------
 // Frame console
 //---------------------------------------------------------
-PXGUIElement* _panelConsoleMain = 0;
-PXGUIElement* _panelConsoleTextContent = 0;
-PXGUIElement* _panelConsoleData = 0;
+PXWindow* _panelConsoleMain = 0;
+PXWindow* _panelConsoleTextContent = 0;
+PXWindow* _panelConsoleData = 0;
 //---------------------------------------------------------
 
 //---------------------------------------------------------
 // Left, Object panel
 //---------------------------------------------------------
-PXGUIElement* _panelLeftPanel = 0;
+PXWindow* _panelLeftPanel = 0;
 
-PXGUIElement* _treeViewButtonSelect = 0;
-PXGUIElement* _treeViewFileManager = 0;
+PXWindow* _treeViewButtonSelect = 0;
+PXWindow* _treeViewFileManager = 0;
 
-PXGUIElement* _textFileData = 0;
-PXGUIElement* _panelFilemenu = 0;
+PXWindow* _textFileData = 0;
+PXWindow* _panelFilemenu = 0;
 
-PXGUIElement* _panelLeftSceneElements = 0;
-PXGUIElement* _textSceneElemenets = 0;
-PXGUIElement* _treeViewObjects = 0;
+PXWindow* _panelLeftSceneElements = 0;
+PXWindow* _textSceneElemenets = 0;
+PXWindow* _treeViewObjects = 0;
 //---------------------------------------------------------
 
 
 // Frame A
 
-PXGUIElement* _panelMenuButtonFileText = 0;
+PXWindow* _panelMenuButtonFileText = 0;
 
-PXGUIElement* _panelMenuButtonFileDropDownOpen = 0;
-PXGUIElement* _panelMenuButtonFileDropDownSave = 0;
-PXGUIElement* _panelMenuButtonEdit = 0;
-PXGUIElement* _panelMenuButtonEditText = 0;
-PXGUIElement* _panelMenuButtonView = 0;
-PXGUIElement* _panelMenuButtonViewText = 0;
-
-
-
-PXGUIElement* _panelMainContent = 0;
+PXWindow* _panelMenuButtonFileDropDownOpen = 0;
+PXWindow* _panelMenuButtonFileDropDownSave = 0;
+PXWindow* _panelMenuButtonEdit = 0;
+PXWindow* _panelMenuButtonEditText = 0;
+PXWindow* _panelMenuButtonView = 0;
+PXWindow* _panelMenuButtonViewText = 0;
 
 
 
+PXWindow* _panelMainContent = 0;
 
-PXGUIElement* _uiPanelScene = 0;
-PXGUIElement* _uiSceneTexturePanel = 0;
+
+
+
+PXWindow* _uiPanelScene = 0;
+PXWindow* _uiSceneTexturePanel = 0;
 PXTexture2D* _uiSceneTexture = 0;
 
-PXGUIElement* _uiInfoPanelTitleBar = 0;
-PXGUIElement* _uiInfoPanelTitleBarText = 0;
-PXGUIElement* _uiInfoPositionText = 0;
+PXWindow* _uiInfoPanelTitleBar = 0;
+PXWindow* _uiInfoPanelTitleBarText = 0;
+PXWindow* _uiInfoPositionText = 0;
 
-PXGUIElement* _uiInfoPanelObjectText = 0;
-PXGUIElement* _uiInfoPanelObjectName = 0;
-PXGUIElement* _uiInfoPanelObjectNameContent = 0;
-PXGUIElement* _uiInfoPanelObjectType = 0;
-PXGUIElement* _uiInfoPanelObjectTypeContent = 0;
+PXWindow* _uiInfoPanelObjectText = 0;
+PXWindow* _uiInfoPanelObjectName = 0;
+PXWindow* _uiInfoPanelObjectNameContent = 0;
+PXWindow* _uiInfoPanelObjectType = 0;
+PXWindow* _uiInfoPanelObjectTypeContent = 0;
 
-PXGUIElement* _infoPanelImage = 0;
-PXGUIElement* _infoPanelTextSpawn = 0;
-PXGUIElement* _infoPanelText = 0;
-PXGUIElement* _positionText = 0;
+PXWindow* _infoPanelImage = 0;
+PXWindow* _infoPanelTextSpawn = 0;
+PXWindow* _infoPanelText = 0;
+PXWindow* _positionText = 0;
 PXFont* DefaultFont;
 
-PXGUIElement* _textureTestA = 0;
+
+
+PXWindow* _textureTestA = 0;
 PXTexture2D* _testImage = 0;
 PXRenderable _pxRenderableModel;
 
@@ -556,7 +559,7 @@ void PXAPI BFObjectTreeViewEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent
         case PXWindowEventTypeElementSelect:
         {
 
-            PXGUIElement* const uiElementSelected = pxWindowEvent->UIElementSender;
+            PXWindow* const uiElementSelected = pxWindowEvent->UIElementSender;
 
             PXLogPrint
             (
@@ -574,8 +577,8 @@ void PXAPI BFObjectTreeViewEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent
 
            // _uiInfoPanelObjectTypeContent->TextInfo.Content = typeName;
 
-            PXGUIElementUpdateInfo pxUIElementUpdateInfo[2];
-            PXClearList(PXGUIElementUpdateInfo, pxUIElementUpdateInfo, 2);
+            PXWindowUpdateInfo pxUIElementUpdateInfo[2];
+            PXClearList(PXWindowUpdateInfo, pxUIElementUpdateInfo, 2);
 
             pxUIElementUpdateInfo[0].UIElement = _uiInfoPanelObjectNameContent;
             pxUIElementUpdateInfo[0].WindowReference = &bfBitFireIDE->EngineEditor.Window;
@@ -587,7 +590,7 @@ void PXAPI BFObjectTreeViewEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent
             pxUIElementUpdateInfo[1].Property = PXUIElementPropertyTextContent;
          //   pxUIElementUpdateInfo[1].Data.Text.Content = _uiInfoPanelObjectTypeContent->NameData;
 
-             PXGUIElementUpdate(PXNull, pxUIElementUpdateInfo, 1);
+             PXWindowUpdate(PXNull, pxUIElementUpdateInfo, 1);
 
             break;
         }
@@ -617,17 +620,17 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
         {
             PXDictionary parentList;
 
-            PXDictionaryConstruct(&parentList, sizeof(PXGUIElement*), sizeof(PXGUIElement*), PXDictionaryValueLocalityInternalEmbedded);
+            PXDictionaryConstruct(&parentList, sizeof(PXWindow*), sizeof(PXWindow*), PXDictionaryValueLocalityInternalEmbedded);
 
 
             PXDictionary* const uiElementLookup = &pxEngineEditor->ResourceManager.GUIElementLookup;
 
-            PXGUIElement* uiAncer = 0;
-            PXGUIElement* sceneAncer = 0;
+            PXWindow* uiAncer = 0;
+            PXWindow* sceneAncer = 0;
 
             //  Create UI element, a container for the full UI things
             {
-                PXGUIElement* uiElementItem = PXNull;
+                PXWindow* uiElementItem = PXNull;
 
                 PXClear(PXResourceCreateInfo, &pxResourceCreateInfo);
                 pxResourceCreateInfo.Type = PXResourceTypeGUIElement;
@@ -648,7 +651,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
 
             // Create scene UI container elemenents
             {
-                PXGUIElement* uiElementItem = PXNull;
+                PXWindow* uiElementItem = PXNull;
 
                 PXClear(PXResourceCreateInfo, &pxResourceCreateInfo);
                 pxResourceCreateInfo.Type = PXResourceTypeGUIElement;
@@ -666,9 +669,9 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
 
                 // Add multible
                 {
-                    PXGUIElement* uiTreeViewItemModel = PXNull;
-                    PXGUIElement* uiTreeViewItemShader = PXNull;
-                    PXGUIElement* uiTreeViewItemImage = PXNull;
+                    PXWindow* uiTreeViewItemModel = PXNull;
+                    PXWindow* uiTreeViewItemShader = PXNull;
+                    PXWindow* uiTreeViewItemImage = PXNull;
 
 
                     PXResourceCreateInfo pxUIElementCreateDataList[8];
@@ -717,7 +720,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                         {
                             PXDictionaryEntry pxDictionaryEntry;
                             PXModel* pxModel = PXNull;
-                            PXGUIElement* uiEE = PXNull;
+                            PXWindow* uiEE = PXNull;
 
                             PXDictionaryIndex(&bfBitFireIDE->EngineScene.ResourceManager.ModelLookUp, i, &pxDictionaryEntry);
 
@@ -747,7 +750,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                         {
                             PXDictionaryEntry pxDictionaryEntry;
                             PXShaderProgram* pxShaderProgram = PXNull;
-                            PXGUIElement* uiEE = PXNull;
+                            PXWindow* uiEE = PXNull;
 
                             PXDictionaryIndex(&bfBitFireIDE->EngineScene.ResourceManager.ShaderProgramLookup, i, &pxDictionaryEntry);
 
@@ -777,7 +780,7 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
                         {
                             PXDictionaryEntry pxDictionaryEntry;
                             PXImage* pxImage = PXNull;
-                            PXGUIElement* uiEE = PXNull;
+                            PXWindow* uiEE = PXNull;
 
                             PXDictionaryIndex(&bfBitFireIDE->EngineScene.ResourceManager.ImageLookUp, i, &pxDictionaryEntry);
 
@@ -814,13 +817,13 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
             for(PXSize i = 0; i < sixed; ++i)
             {
                 PXDictionaryEntry pxDictionaryEntry;
-                PXGUIElement* uiElement = PXNull;
+                PXWindow* uiElement = PXNull;
 
                 PXDictionaryIndex(uiElementLookup, i, &pxDictionaryEntry);
 
-                uiElement = *(PXGUIElement**)pxDictionaryEntry.Value;
+                uiElement = *(PXWindow**)pxDictionaryEntry.Value;
 
-                PXGUIElement* uiElementItem = PXNull;
+                PXWindow* uiElementItem = PXNull;
 
                 PXClear(PXResourceCreateInfo, &pxResourceCreateInfo);
                 pxResourceCreateInfo.Type = PXResourceTypeGUIElement;
@@ -837,8 +840,8 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
 
                 if(uiElement->Info.Hierarchy.Parrent)
                 {
-                    PXGUIElement* aaaparentElement = (PXGUIElement*)uiElement->Info.Hierarchy.Parrent;
-                    PXGUIElement* grandParentElement = PXNull;
+                    PXWindow* aaaparentElement = (PXWindow*)uiElement->Info.Hierarchy.Parrent;
+                    PXWindow* grandParentElement = PXNull;
 
                     const PXBool found = PXDictionaryFindEntry(&parentList, &aaaparentElement->Info.ID, &grandParentElement);
 
@@ -1112,7 +1115,7 @@ void PXAPI PXOnSoundButtonStopEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEv
     }
 }
 
-void PXMakeUIEnable(PXGUISystem* const pxGgui, PXAudio* pxAudio, PXAudioEffectType effect, int flag, PXGUIElement* button)
+void PXMakeUIEnable(PXGUISystem* const pxGgui, PXAudio* pxAudio, PXAudioEffectType effect, int flag, PXWindow* button)
 {
     PXAudioEffect pxAudioEffect;
     PXClear(PXAudioEffect, &pxAudioEffect);
@@ -1121,8 +1124,8 @@ void PXMakeUIEnable(PXGUISystem* const pxGgui, PXAudio* pxAudio, PXAudioEffectTy
 
     pxAudio->DeviceEffectUpdate(pxAudio->SystemReference, &_soundAudioDevice, &pxAudioEffect);
 
-    PXGUIElementUpdateInfo pxGUIElementUpdateInfo[3];
-    PXClearList(PXGUIElementUpdateInfo, pxGUIElementUpdateInfo, 3);
+    PXWindowUpdateInfo pxGUIElementUpdateInfo[3];
+    PXClearList(PXWindowUpdateInfo, pxGUIElementUpdateInfo, 3);
 
     pxGUIElementUpdateInfo[0].Property = PXUIElementPropertyTextContent;
     pxGUIElementUpdateInfo[0].UIElement = button;
@@ -1139,7 +1142,7 @@ void PXMakeUIEnable(PXGUISystem* const pxGgui, PXAudio* pxAudio, PXAudioEffectTy
        // pxGUIElementUpdateInfo[0].Data.Text.Content = "OFF";
     }
 
-    PXGUIElementUpdate(pxGgui, pxGUIElementUpdateInfo, 2);
+    PXWindowUpdate(pxGgui, pxGUIElementUpdateInfo, 2);
 }
 
 void PXAPI PXOnSoundEffectUpdate_Chorus_Toggle(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
@@ -1171,7 +1174,7 @@ void PXAPI PXOnSoundEffectUpdate_Chorus(BFBitFireIDE* const bfBitFireIDE, PXWind
     {
         case PXWindowEventTypeElementClick:
         {
-            PXGUIElement* aaa[7] =
+            PXWindow* aaa[7] =
             {
                 _textSoundChorusWetDryMixInput,
                 _textSoundChorusDepthInput,
@@ -1183,7 +1186,7 @@ void PXAPI PXOnSoundEffectUpdate_Chorus(BFBitFireIDE* const bfBitFireIDE, PXWind
             };
             float ddd[7] = { 0,0,0,0,0,0,0 };
 
-            PXGUIElementValueFetch(aaa, 7, PXUIElementPropertySliderPercentage, ddd);
+            PXWindowValueFetch(aaa, 7, PXUIElementPropertySliderPercentage, ddd);
 
             PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
 
@@ -1239,7 +1242,7 @@ void PXAPI PXOnSoundEffectUpdate_Compressor(BFBitFireIDE* const bfBitFireIDE, PX
     {
         case PXWindowEventTypeElementClick:
         {
-            PXGUIElement* aaa[6] =
+            PXWindow* aaa[6] =
             {
                 _textSoundCompressorGainInput,
                 _textSoundCompressorAttackInput,
@@ -1250,7 +1253,7 @@ void PXAPI PXOnSoundEffectUpdate_Compressor(BFBitFireIDE* const bfBitFireIDE, PX
             };
             float ddd[6] = { 0,0,0,0,0,0 };
 
-            PXGUIElementValueFetch(aaa, 6, PXUIElementPropertySliderPercentage, ddd);
+            PXWindowValueFetch(aaa, 6, PXUIElementPropertySliderPercentage, ddd);
 
             PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
 
@@ -1305,7 +1308,7 @@ void PXAPI PXOnSoundEffectUpdate_Distortion(BFBitFireIDE* const bfBitFireIDE, PX
     {
         case PXWindowEventTypeElementClick:
         {
-            PXGUIElement* aaa[5] =
+            PXWindow* aaa[5] =
             {
                 _textSoundDistortionGainInput,
                 _textSoundDistortionEdgeInput,
@@ -1315,7 +1318,7 @@ void PXAPI PXOnSoundEffectUpdate_Distortion(BFBitFireIDE* const bfBitFireIDE, PX
             };
             float ddd[5] = { 0,0,0,0,0 };
 
-            PXGUIElementValueFetch(aaa, 5, PXUIElementPropertySliderPercentage, ddd);
+            PXWindowValueFetch(aaa, 5, PXUIElementPropertySliderPercentage, ddd);
 
             PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
 
@@ -1369,7 +1372,7 @@ void PXAPI PXOnSoundEffectUpdate_Echo(BFBitFireIDE* const bfBitFireIDE, PXWindow
     {
         case PXWindowEventTypeElementClick:
         {
-            PXGUIElement* aaa[5] =
+            PXWindow* aaa[5] =
             {
                 _textSoundEchoWetDryMixInput,
                 _textSoundEchoFeedbackInput,
@@ -1379,7 +1382,7 @@ void PXAPI PXOnSoundEffectUpdate_Echo(BFBitFireIDE* const bfBitFireIDE, PXWindow
             };
             float ddd[5] = { 0,0,0,0,0 };
 
-            PXGUIElementValueFetch(aaa, 5, PXUIElementPropertySliderPercentage, ddd);
+            PXWindowValueFetch(aaa, 5, PXUIElementPropertySliderPercentage, ddd);
 
             PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
 
@@ -1410,7 +1413,7 @@ void PXAPI PXOnSoundEffectUpdate_Flanger(BFBitFireIDE* const bfBitFireIDE, PXWin
     {
         case PXWindowEventTypeElementClick:
         {
-            PXGUIElement* aaa[7] =
+            PXWindow* aaa[7] =
             {
                 _textSoundFlangerWetDryMixInput,
                 _textSoundFlangerDepthInput,
@@ -1422,7 +1425,7 @@ void PXAPI PXOnSoundEffectUpdate_Flanger(BFBitFireIDE* const bfBitFireIDE, PXWin
             };
             float ddd[7] = { 0,0,0,0,0,0,0 };
 
-            PXGUIElementValueFetch(aaa, 7, PXUIElementPropertySliderPercentage, ddd);
+            PXWindowValueFetch(aaa, 7, PXUIElementPropertySliderPercentage, ddd);
 
             PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
 
@@ -1455,14 +1458,14 @@ void PXAPI PXOnSoundEffectUpdate_Gargle(BFBitFireIDE* const bfBitFireIDE, PXWind
     {
         case PXWindowEventTypeElementClick:
         {
-            PXGUIElement* aaa[2] =
+            PXWindow* aaa[2] =
             {
                 _textSoundGargleRateHzInput,
                 _textSoundGargleWaveShapeInput
             };
             float ddd[2] = { 0,0 };
 
-            PXGUIElementValueFetch(aaa, 2, PXUIElementPropertySliderPercentage, ddd);
+            PXWindowValueFetch(aaa, 2, PXUIElementPropertySliderPercentage, ddd);
 
             PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
 
@@ -1508,7 +1511,7 @@ void PXAPI PXOnSoundEffectUpdate_WavesReverb(BFBitFireIDE* const bfBitFireIDE, P
     {
         case PXWindowEventTypeElementClick:
         {
-            PXGUIElement* aaa[4] =
+            PXWindow* aaa[4] =
             {
                 _textSoundWavesReverbInGainInput,
                 _textSoundWavesReverbReverbMixInput,
@@ -1517,7 +1520,7 @@ void PXAPI PXOnSoundEffectUpdate_WavesReverb(BFBitFireIDE* const bfBitFireIDE, P
             };
             float ddd[4] = { 0,0,0,0 };
 
-            PXGUIElementValueFetch(aaa, 4, PXUIElementPropertySliderPercentage, ddd);
+            PXWindowValueFetch(aaa, 4, PXUIElementPropertySliderPercentage, ddd);
 
             PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
 
@@ -1572,6 +1575,23 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
 
     }
 
+    // Load icon atlas
+    {
+
+
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeSprite;
+        pxUIElementCreateData.ObjectReference = &DefaultFont;
+        pxUIElementCreateData.FilePath = "Font/A.fnt";
+        //pxSkyBoxCreateEventData.Font.ShaderProgramCurrent = _worldShader;
+
+      //  PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
+
+
+
+
 
     //-----------------------------------------------------
     // Menu::
@@ -1587,7 +1607,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeStatusBar;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative;
 
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
@@ -1597,8 +1617,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Menu::
     //-----------------------------------------------------
     {
-        PXGUIElementMenuItemInfo pxGUIElementMenuItemListProject[9];
-        PXClearList(PXGUIElementMenuItemInfo, &pxGUIElementMenuItemListProject, 9);
+        PXWindowMenuItemInfo pxGUIElementMenuItemListProject[9];
+        PXClearList(PXWindowMenuItemInfo, &pxGUIElementMenuItemListProject, 9);
         pxGUIElementMenuItemListProject[0].TextData = "New";
         pxGUIElementMenuItemListProject[0].TextSize = 4;
 
@@ -1624,12 +1644,12 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxGUIElementMenuItemListProject[8].TextData = "Exit";
         pxGUIElementMenuItemListProject[8].TextSize = 4;
 
-        PXGUIElementMenuItemList addas;
+        PXWindowMenuItemList addas;
         addas.MenuItemInfoListAmount = 9;
         addas.MenuItemInfoListData = pxGUIElementMenuItemListProject;
 
-        PXGUIElementMenuItemInfo pxGUIElementMenuItemList[5];
-        PXClearList(PXGUIElementMenuItemInfo, &pxGUIElementMenuItemList, 5);
+        PXWindowMenuItemInfo pxGUIElementMenuItemList[5];
+        PXClearList(PXWindowMenuItemInfo, &pxGUIElementMenuItemList, 5);
         pxGUIElementMenuItemList[0].Flags = PXGUIMenuItemTypeImage;
         pxGUIElementMenuItemList[1].TextData = "Project";
         pxGUIElementMenuItemList[1].TextSize = 7;
@@ -1658,21 +1678,6 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Panel:Menu
     //-----------------------------------------------------
     {
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.ObjectReference = &_tabControlMain;
-        pxUIElementCreateData.Name = "RenderScene";
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTabControll;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementAllignTop;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.41f;
-        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginRight = 0.41f;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.54f;
-
-
-
         PXUIElementTabPageSingleInfo pxUIElementTabPageSingleInfo[] =
         {
             { &_tabPageScene, "Scene", -1},
@@ -1685,6 +1690,17 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         };
         const PXSize amount = sizeof(pxUIElementTabPageSingleInfo) / sizeof(PXUIElementTabPageSingleInfo);
 
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
+        pxUIElementCreateData.ObjectReference = &_tabControlMain;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTabControll;
+        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
+        pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowAllignTop;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.41f;
+        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultTopOffset;
+        pxUIElementCreateData.UIElement.Position.MarginRight = 0.41f;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.54f;   
         pxUIElementCreateData.UIElement.Data.TabPage.TabPageSingleInfoAmount = amount;
         pxUIElementCreateData.UIElement.Data.TabPage.TabPageSingleInfoList = pxUIElementTabPageSingleInfo;
 
@@ -1708,7 +1724,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeRenderFrame;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageScene;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative;
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
@@ -1746,7 +1762,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _tabControlMain;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultText | PXGUIElementKeepHeight | PXGUIElementAllignTop;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText | PXWindowKeepHeight | PXWindowAllignTop;
         pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
 
         //PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
@@ -1773,7 +1789,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;
         pxUIElementCreateData.UIElement.Position.Width = 35;
         pxUIElementCreateData.UIElement.Position.Height = 35;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 0.95f;
@@ -1792,7 +1808,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
         pxUIElementCreateData.UIElement.Position.Width = 35;
         pxUIElementCreateData.UIElement.Position.Height = 35;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 1.0f;
@@ -1816,7 +1832,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidth-100;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -1832,7 +1848,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
             pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = 35;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.40;
@@ -1851,7 +1867,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
             pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = 70;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.45;
@@ -1870,7 +1886,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -1887,7 +1903,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -1903,7 +1919,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -1919,7 +1935,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -1935,7 +1951,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -1951,7 +1967,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -1967,7 +1983,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -1983,7 +1999,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -1999,7 +2015,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2015,7 +2031,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2031,7 +2047,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2047,7 +2063,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2063,7 +2079,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2079,7 +2095,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundChorusEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2099,7 +2115,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidth;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -2115,7 +2131,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
             pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = 35;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.40;
@@ -2134,7 +2150,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
             pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = 70;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.45;
@@ -2153,7 +2169,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -2169,7 +2185,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -2185,7 +2201,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -2201,7 +2217,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -2217,7 +2233,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -2233,7 +2249,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -2249,7 +2265,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2265,7 +2281,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2281,7 +2297,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2297,7 +2313,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2313,7 +2329,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2329,7 +2345,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundCompressor;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2349,7 +2365,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidth;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.6f;
@@ -2365,7 +2381,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
             pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = 35;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.6 + 0.40;
@@ -2384,7 +2400,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
             pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = 70;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.6 + 0.45;
@@ -2403,7 +2419,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundDistortion;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -2419,7 +2435,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundDistortion;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -2435,7 +2451,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundDistortion;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -2451,7 +2467,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundDistortion;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -2467,7 +2483,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundDistortion;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -2483,7 +2499,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundDistortion;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2499,7 +2515,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundDistortion;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2515,7 +2531,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundDistortion;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2531,7 +2547,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundDistortion;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2547,7 +2563,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundDistortion;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2573,7 +2589,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidth;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.6f;
@@ -2589,7 +2605,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
             pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = 35;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.6 + 0.40;
@@ -2608,7 +2624,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
             pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = 70;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.6 + 0.45;
@@ -2627,7 +2643,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundEchoEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -2644,7 +2660,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundEchoEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -2661,7 +2677,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundEchoEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -2678,7 +2694,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundEchoEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -2695,7 +2711,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundEchoEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -2712,7 +2728,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundEchoEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2729,7 +2745,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundEchoEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2746,7 +2762,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundEchoEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2763,7 +2779,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundEchoEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2780,7 +2796,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.Type = PXUIElementTypeTrackBar;
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundEchoEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-            pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+            pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
             pxUIElementCreateData.UIElement.Position.MarginLeft = SoundRowOffsetX1;
@@ -2818,7 +2834,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidth;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -2838,7 +2854,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -2859,7 +2875,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -2880,7 +2896,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -2901,7 +2917,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -2922,7 +2938,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -2943,7 +2959,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -2964,7 +2980,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -2985,7 +3001,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3004,7 +3020,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3023,7 +3039,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3042,7 +3058,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3061,7 +3077,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3080,7 +3096,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3099,7 +3115,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundFlangerEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3123,7 +3139,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidth;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3143,7 +3159,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundGargleEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3164,7 +3180,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundGargleEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3185,7 +3201,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundGargleEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3204,7 +3220,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundGargleEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3228,7 +3244,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidth;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3248,7 +3264,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3269,7 +3285,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3290,7 +3306,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3310,7 +3326,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3330,7 +3346,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3350,7 +3366,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3370,7 +3386,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3390,7 +3406,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3410,7 +3426,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3430,7 +3446,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3450,7 +3466,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3470,7 +3486,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3490,7 +3506,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3508,7 +3524,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3526,7 +3542,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3544,7 +3560,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3562,7 +3578,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3580,7 +3596,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3598,7 +3614,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3616,7 +3632,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3634,7 +3650,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3652,7 +3668,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3670,7 +3686,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3688,7 +3704,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
             pxUIElementCreateData.UIElement.UIElementParent = _textSoundInteractive3DLevel2ReverbEffect;
             pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
             pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-            pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+            pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
             pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
             pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
             pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3711,7 +3727,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
         pxUIElementCreateData.UIElement.Position.Width = SoundWidth;
         pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3730,7 +3746,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = _textSoundParamEqEffect;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
         pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
         pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3750,7 +3766,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = _textSoundParamEqEffect;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
         pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
         pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3770,7 +3786,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = _textSoundParamEqEffect;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
         pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
         pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3790,7 +3806,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = _textSoundParamEqEffect;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
         pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
         pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3808,7 +3824,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = _textSoundParamEqEffect;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
         pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
         pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3826,7 +3842,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = _textSoundParamEqEffect;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
         pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
         pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3862,7 +3878,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
         pxUIElementCreateData.UIElement.Position.Width = SoundWidth;
         pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3881,7 +3897,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = _textSoundWavesReverbEffect;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
         pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
         pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3901,7 +3917,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = _textSoundWavesReverbEffect;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
         pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
         pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3921,7 +3937,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = _textSoundWavesReverbEffect;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
         pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
         pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3941,7 +3957,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = _textSoundWavesReverbEffect;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
         pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowA;
         pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3961,7 +3977,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = _textSoundWavesReverbEffect;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
         pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
         pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -3981,7 +3997,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = _textSoundWavesReverbEffect;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
         pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
         pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -4001,7 +4017,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = _textSoundWavesReverbEffect;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
         pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
         pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -4021,7 +4037,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = _textSoundWavesReverbEffect;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
         pxUIElementCreateData.UIElement.Position.Width = SoundWidthRowB;
         pxUIElementCreateData.UIElement.Position.Height = SoundHeight;
@@ -4042,7 +4058,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = _textSoundWavesReverbEffect;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementDecorative;
-        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignTop | PXUIElementKeepWidth | PXUIElementKeepHeight;
         pxUIElementCreateData.UIElement.Position.Width = 55;
         pxUIElementCreateData.UIElement.Position.Height = 35;
@@ -4078,7 +4094,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementBehaviourDefaultKeepAspect;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowBehaviourDefaultKeepAspect;
         pxUIElementCreateData.UIElement.Position.Width = 100;
         pxUIElementCreateData.UIElement.Position.Height = 35;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -4107,7 +4123,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementBehaviourDefaultKeepAspect;;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowBehaviourDefaultKeepAspect;;
         pxUIElementCreateData.UIElement.Position.Width = DatabaseRowAWidth;
         pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -4124,7 +4140,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementBehaviourDefaultKeepAspect;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowBehaviourDefaultKeepAspect;
         pxUIElementCreateData.UIElement.Position.Width = DatabaseRowAWidth;
         pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -4140,7 +4156,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeDropDown;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementBehaviourDefaultKeepAspect;;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowBehaviourDefaultKeepAspect;;
         pxUIElementCreateData.UIElement.Position.Width = DatabaseRowBWidth;
         pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 0.2f;
@@ -4153,16 +4169,16 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
 
         PXDataBaseScanForDrivers(&pxEngine->DataBase);
 
-        PXGUIElementUpdateInfo pxGUIElementUpdateInfo;
+        PXWindowUpdateInfo pxGUIElementUpdateInfo;
 
-        PXClear(PXGUIElementUpdateInfo, &pxGUIElementUpdateInfo);
+        PXClear(PXWindowUpdateInfo, &pxGUIElementUpdateInfo);
 
         pxGUIElementUpdateInfo.Property = PXUIElementPropertyComboBoxAdd;
         pxGUIElementUpdateInfo.UIElement = _comboBoxDatabaseDriver;
         pxGUIElementUpdateInfo.Data.ComboBox.DataList = pxEngine->DataBase.DriverList;
         pxGUIElementUpdateInfo.Data.ComboBox.DataListAmount = pxEngine->DataBase.DriverListAmount;
 
-        PXGUIElementUpdate(&pxEngine->GUISystem, &pxGUIElementUpdateInfo, 1);
+        PXWindowUpdate(&pxEngine->GUISystem, &pxGUIElementUpdateInfo, 1);
     }
     {
 
@@ -4173,7 +4189,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementBehaviourDefaultKeepAspect;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowBehaviourDefaultKeepAspect;
         pxUIElementCreateData.UIElement.Position.Width = DatabaseRowAWidth;
         pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -4190,7 +4206,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeTextEdit;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementBehaviourDefaultKeepAspect;;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowBehaviourDefaultKeepAspect;;
         pxUIElementCreateData.UIElement.Position.Width = DatabaseRowBWidth;
         pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 0.2f;
@@ -4207,7 +4223,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementBehaviourDefaultKeepAspect;;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowBehaviourDefaultKeepAspect;;
         pxUIElementCreateData.UIElement.Position.Width = DatabaseRowAWidth;
         pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
@@ -4224,7 +4240,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeTextEdit;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageDatabase;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementBehaviourDefaultKeepAspect;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowBehaviourDefaultKeepAspect;
         pxUIElementCreateData.UIElement.Position.Width = DatabaseRowBWidth;
         pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 0.2f;
@@ -4249,7 +4265,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageNetwork;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepWidth | PXGUIElementKeepHeight | PXGUIElementAllignTop;;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepWidth | PXWindowKeepHeight | PXWindowAllignTop;;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
         pxUIElementCreateData.UIElement.Position.MarginTop = 0.6;
         pxUIElementCreateData.UIElement.Position.MarginRight = 0.2f;
@@ -4268,7 +4284,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeColorPicker;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageNetwork;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementAllignTop | PXResourceInfoUseByEngine;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowAllignTop | PXResourceInfoUseByEngine;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
         pxUIElementCreateData.UIElement.Position.MarginTop = 0.0;
 
@@ -4299,10 +4315,10 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
         pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementAllignTop;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowAllignTop;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 0.41f;
         pxUIElementCreateData.UIElement.Position.MarginTop = 1.48f;
-        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginRight = 0.41f;
         pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
@@ -4316,7 +4332,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = _panelConsoleMain;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementAllignTop | PXGUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowAllignTop | PXWindowKeepHeight;
         pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
@@ -4333,7 +4349,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = _panelConsoleMain;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeTextEdit;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementAllignTop;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowAllignTop;
         pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginTop = 0.1f;
@@ -4364,7 +4380,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonReference;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXUIElementNormal;
-        pxUIElementCreateData.UIElement.StyleFlagList = PXGUIElementStyleDefault;
+        pxUIElementCreateData.UIElement.StyleFlagList = PXWindowStyleDefault;
         pxUIElementCreateData.UIElement.Position.FlagListKeep = PXUIElementAllignLeft | PXUIElementKeepHeight;
         pxUIElementCreateData.UIElement.Position.Height = 35;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 0.5f;
@@ -4390,11 +4406,11 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
         pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
         pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultBuffer | PXGUIElementAllignLeft;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultBuffer | PXWindowAllignLeft;
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset + 0.02;
+        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultTopOffset;
         pxUIElementCreateData.UIElement.Position.MarginRight = 1.60f;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset + 0.0;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
@@ -4403,7 +4419,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
 
 
     //-----------------------------------------------------
-    // Panel:Objects (Left one)
+    // SceneElements - Base
     //-----------------------------------------------------
     {
 
@@ -4413,7 +4429,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
         pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
         pxUIElementCreateData.UIElement.UIElementParent = _panelLeftPanel;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementAllignLeft;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowAllignLeft;
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
@@ -4423,7 +4439,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     }
 
     //-----------------------------------------------------
-    // Panel:Objects:TitleBar:Text
+    // SceneElements - Title
     //-----------------------------------------------------
     {
 
@@ -4434,11 +4450,11 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
         pxUIElementCreateData.UIElement.UIElementParent = _panelLeftSceneElements;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultText;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText | PXWindowBehaviourBorder;
         pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0;
+        pxUIElementCreateData.UIElement.Position.MarginRight = 0;
         pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
@@ -4446,63 +4462,6 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         _textSceneElemenets->NameContent = "Objects";
         _textSceneElemenets->NameContentSize = 7;
     }
-
-
-    //-----------------------------------------------------
-    //
-    //-----------------------------------------------------
-    {
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.ObjectReference = &_panelFilemenu;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
-        pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
-        pxUIElementCreateData.UIElement.UIElementParent = _panelLeftPanel;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementAllignLeft;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginTop = 0.95;
-        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-
-    //-----------------------------------------------------
-    //
-    //-----------------------------------------------------
-    {
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.Name = "Objects";
-        pxUIElementCreateData.ObjectReference = &_textFileData;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
-        pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
-        pxUIElementCreateData.UIElement.UIElementParent = _panelFilemenu;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultText;
-        pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-
-        _textFileData->NameContent = "File'n'Data";
-        _textFileData->NameContentSize = 11;
-    }
-
-
-
-
-
-
-
-
-
-
 
 
     //-----------------------------------------------------
@@ -4517,7 +4476,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeView;
         pxUIElementCreateData.UIElement.UIElementParent = _panelLeftSceneElements;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative;
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginTop = 0.08;
         pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
@@ -4526,6 +4485,55 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
+
+
+
+    //-----------------------------------------------------
+    // FileTreeView - Base
+    //-----------------------------------------------------
+    {
+
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
+        pxUIElementCreateData.ObjectReference = &_panelFilemenu;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
+        pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
+        pxUIElementCreateData.UIElement.UIElementParent = _panelLeftPanel;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowAllignLeft;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.95;
+        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
+
+    //-----------------------------------------------------
+    // FileTreeView - Title
+    //-----------------------------------------------------
+    {
+
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
+        pxUIElementCreateData.Name = "Objects";
+        pxUIElementCreateData.ObjectReference = &_textFileData;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
+        pxUIElementCreateData.UIElement.UIElementParent = _panelFilemenu;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText | PXWindowBehaviourBorder;
+        pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
+        pxUIElementCreateData.UIElement.Position.MarginLeft = 0;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0;
+        pxUIElementCreateData.UIElement.Position.MarginRight = 0;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+
+        _textFileData->NameContent = "File'n'Data";
+        _textFileData->NameContentSize = 11;
+    }
+
 
 
 
@@ -4540,7 +4548,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeView;
         pxUIElementCreateData.UIElement.UIElementParent = _panelFilemenu;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXGUIElementKeepHeight;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepHeight;
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginTop = 0.08;
         pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
@@ -4558,7 +4566,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeFileDirectyView;
         pxUIElementCreateData.UIElement.UIElementParent = _panelFilemenu;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative | PXResourceInfoUseByEngine;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXResourceInfoUseByEngine;
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginTop = 0.08;
         pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
@@ -4586,10 +4594,10 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.ObjectReference = &_uiInfoPanelTitleBar;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
         pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultDecorative;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 1.6f;
-        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultTopOffset;
         pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginBottom = 0.54f;
         pxUIElementCreateData.UIElement.Position.Height = 30.0f;
@@ -4608,7 +4616,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
         pxUIElementCreateData.UIElement.ColorTintReference = &buttonColor;
         pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultText;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText;
         pxUIElementCreateData.UIElement.Color.Red = 0.40f;
         pxUIElementCreateData.UIElement.Color.Green = 0.15f;
         pxUIElementCreateData.UIElement.Color.Blue = 0.15f;
@@ -4642,7 +4650,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultText;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText;
         pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset;
@@ -4665,7 +4673,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.Name = "Selected:";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultText;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset + 0.1f;
@@ -4683,7 +4691,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.Name = "Name:";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultText;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset + 0.2f;
@@ -4701,7 +4709,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.Name = "XXXXX";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultText;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 0.15f;
         pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset + 0.2f;
@@ -4719,7 +4727,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.Name = "Type:";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultText;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset + 0.3f;
@@ -4737,7 +4745,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.Name = "XXXXX";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultText;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 0.15f;
         pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset + 0.3f;
@@ -4759,7 +4767,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _tabPageSound;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXGUIElementBehaviourDefaultText;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText;
         pxUIElementCreateData.UIElement.Position.Width = SoundWidth;
         pxUIElementCreateData.UIElement.Position.Height = PXDefaultTextHeight;
         pxUIElementCreateData.UIElement.Position.MarginLeft = 0.0f;
