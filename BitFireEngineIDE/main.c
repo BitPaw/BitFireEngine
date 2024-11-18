@@ -33,7 +33,9 @@ BFBitFireIDE;
 
 
 #define PXDefaultOffset 0.005f
-#define PXDefaultTopOffset PXDefaultOffset + 0.02
+#define PXDefaultTopOffset PXDefaultOffset + 0.08
+#define PXDefaultBotStaleSize 0.005
+#define PXDefaultBotOffset PXDefaultOffset + PXDefaultBotStaleSize + 0.08
 #define PXDefaultTitleBar 20.0f
 
 #define PXDefaultTextHeight 20
@@ -400,8 +402,9 @@ PXWindow* _infoPanelTextSpawn = 0;
 PXWindow* _infoPanelText = 0;
 PXWindow* _positionText = 0;
 PXFont* DefaultFont;
+PXIconAtlas* pxIconAtlasMenu;
 
-
+PXIcon* _testIcon = 0;
 
 PXWindow* _textureTestA = 0;
 PXTexture2D* _testImage = 0;
@@ -1036,7 +1039,7 @@ PXGraphicUIElementRegister(pxGraphic, &_positionText);*/
         pxUIElementCreateData.Model.ShaderProgramReference = _pxObjectShader;
         pxUIElementCreateData.Model.Scale = 50.0f;
 
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        //PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
 
 
@@ -1575,17 +1578,34 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
 
     }
 
+
+
     // Load icon atlas
     {
-
-
         PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeSprite;
-        pxUIElementCreateData.ObjectReference = &DefaultFont;
-        pxUIElementCreateData.FilePath = "Font/A.fnt";
-        //pxSkyBoxCreateEventData.Font.ShaderProgramCurrent = _worldShader;
+        pxUIElementCreateData.Type = PXResourceTypeIcon;
+        pxUIElementCreateData.ObjectReference = &_testIcon;
+        pxUIElementCreateData.FilePath = "Texture/Folder.bmp";
+        pxUIElementCreateData.Icon.OffsetX = 0;
+        pxUIElementCreateData.Icon.OffsetY = 0;
+        pxUIElementCreateData.Icon.Width = 16;
+        pxUIElementCreateData.Icon.Height = 16;
+        pxUIElementCreateData.Icon.RowSize = 16;
+        pxUIElementCreateData.Icon.BitPerPixel = 24;
 
       //  PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
+
+    // Load icon atlas
+    {
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeIconAtlas;
+        pxUIElementCreateData.ObjectReference = &pxIconAtlasMenu;
+        pxUIElementCreateData.FilePath = "Texture/IconAtlas.png";
+        pxUIElementCreateData.IconAtlas.CellSize = 16;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
 
 
@@ -1607,8 +1627,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeStatusBar;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative;
-
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepHeight | PXWindowAllignBottom;
+        pxUIElementCreateData.UIElement.Position.Height = 25;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultBotStaleSize;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
@@ -1667,7 +1688,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.ObjectReference = &_menuMain;
         pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeMenuStrip;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepHeight | PXWindowAllignTop;
         pxUIElementCreateData.UIElement.Data.MenuItem.MenuItemInfoListData = &pxGUIElementMenuItemList;
+        pxUIElementCreateData.UIElement.Position.Height = 25;
         pxUIElementCreateData.UIElement.Data.MenuItem.MenuItemInfoListAmount = 5;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
@@ -1680,13 +1703,13 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     {
         PXUIElementTabPageSingleInfo pxUIElementTabPageSingleInfo[] =
         {
-            { &_tabPageScene, "Scene", -1},
-            { &_tabPageSound, "Sound", -1},
-            { &_tabPageVideo, "Video", -1},
-            { &_tabPageDatabase, "Database", -1},
-            { &_tabPageNetwork, "Network", -1},
-            { &_tabPageInput, "Input", -1 },
-            { &_tabPageHardware, "Hardware", -1 }
+            { &_tabPageScene,       "Scene",    &pxIconAtlasMenu->IconList[7] },
+            { &_tabPageSound,       "Sound",    &pxIconAtlasMenu->IconList[8] },
+            { &_tabPageVideo,       "Video",    &pxIconAtlasMenu->IconList[2] },
+            { &_tabPageDatabase,    "Database", &pxIconAtlasMenu->IconList[3] },
+            { &_tabPageNetwork,     "Network",  &pxIconAtlasMenu->IconList[11] },
+            { &_tabPageInput,       "Input",    &pxIconAtlasMenu->IconList[12] },
+            { &_tabPageHardware,    "Hardware", &pxIconAtlasMenu->IconList[0] }
         };
         const PXSize amount = sizeof(pxUIElementTabPageSingleInfo) / sizeof(PXUIElementTabPageSingleInfo);
 
@@ -4319,7 +4342,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Position.MarginLeft = 0.41f;
         pxUIElementCreateData.UIElement.Position.MarginTop = 1.48f;
         pxUIElementCreateData.UIElement.Position.MarginRight = 0.41f;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultBotOffset;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
@@ -4410,7 +4433,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultTopOffset;
         pxUIElementCreateData.UIElement.Position.MarginRight = 1.60f;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset + 0.0;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultBotOffset;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
@@ -4433,7 +4456,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = 1.05;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = 1.00;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
@@ -4478,9 +4501,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative;
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginTop = 0.08;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.07;
         pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = 0.03;
+        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
         pxUIElementCreateData.UIElement.InteractCallBack = BFObjectTreeViewEvent;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
@@ -4501,7 +4524,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = _panelLeftPanel;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowAllignLeft;
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginTop = 0.95;
+        pxUIElementCreateData.UIElement.Position.MarginTop = 0.85;
         pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
 
