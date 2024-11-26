@@ -37,6 +37,7 @@ BFBitFireIDE;
 #define PXDefaultBotStaleSize 0.005
 #define PXDefaultBotOffset PXDefaultOffset + PXDefaultBotStaleSize + 0.08
 #define PXDefaultTitleBar 20.0f
+#define PXDefaultContentOffset 0.06f
 
 #define PXDefaultTextHeight 20
 
@@ -389,13 +390,8 @@ PXTexture2D* _uiSceneTexture = 0;
 
 PXWindow* _uiInfoPanelTitleBar = 0;
 PXWindow* _uiInfoPanelTitleBarText = 0;
+PXWindow* _uiInfoPanelInfo = 0;
 PXWindow* _uiInfoPositionText = 0;
-
-PXWindow* _uiInfoPanelObjectText = 0;
-PXWindow* _uiInfoPanelObjectName = 0;
-PXWindow* _uiInfoPanelObjectNameContent = 0;
-PXWindow* _uiInfoPanelObjectType = 0;
-PXWindow* _uiInfoPanelObjectTypeContent = 0;
 
 PXWindow* _infoPanelImage = 0;
 PXWindow* _infoPanelTextSpawn = 0;
@@ -404,7 +400,6 @@ PXWindow* _positionText = 0;
 PXFont* DefaultFont;
 PXIconAtlas* pxIconAtlasMenu;
 
-PXIcon* _testIcon = 0;
 
 PXWindow* _textureTestA = 0;
 PXTexture2D* _testImage = 0;
@@ -583,6 +578,8 @@ void PXAPI BFObjectTreeViewEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent
             PXWindowUpdateInfo pxUIElementUpdateInfo[2];
             PXClearList(PXWindowUpdateInfo, pxUIElementUpdateInfo, 2);
 
+            /*
+
             pxUIElementUpdateInfo[0].UIElement = _uiInfoPanelObjectNameContent;
             pxUIElementUpdateInfo[0].WindowReference = &bfBitFireIDE->EngineEditor.Window;
             pxUIElementUpdateInfo[0].Property = PXUIElementPropertyTextContent;
@@ -594,6 +591,7 @@ void PXAPI BFObjectTreeViewEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent
          //   pxUIElementUpdateInfo[1].Data.Text.Content = _uiInfoPanelObjectTypeContent->NameData;
 
              PXWindowUpdate(PXNull, pxUIElementUpdateInfo, 1);
+             */
 
             break;
         }
@@ -1578,25 +1576,6 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
 
     }
 
-
-
-    // Load icon atlas
-    {
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeIcon;
-        pxUIElementCreateData.ObjectReference = &_testIcon;
-        pxUIElementCreateData.FilePath = "Texture/Folder.bmp";
-        pxUIElementCreateData.Icon.OffsetX = 0;
-        pxUIElementCreateData.Icon.OffsetY = 0;
-        pxUIElementCreateData.Icon.Width = 16;
-        pxUIElementCreateData.Icon.Height = 16;
-        pxUIElementCreateData.Icon.RowSize = 16;
-        pxUIElementCreateData.Icon.BitPerPixel = 24;
-
-      //  PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-
     // Load icon atlas
     {
         PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
@@ -1668,7 +1647,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXWindowMenuItemList addas;
         addas.MenuItemInfoListAmount = 9;
         addas.MenuItemInfoListData = pxGUIElementMenuItemListProject;
-
+        
         PXWindowMenuItemInfo pxGUIElementMenuItemList[5];
         PXClearList(PXWindowMenuItemInfo, &pxGUIElementMenuItemList, 5);
         pxGUIElementMenuItemList[0].Flags = PXGUIMenuItemTypeImage;
@@ -4496,12 +4475,12 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.Name = "Loaded Objects";
         pxUIElementCreateData.ObjectReference = &_treeViewObjects;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeView;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeResourceManger;
         pxUIElementCreateData.UIElement.UIElementParent = _panelLeftSceneElements;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative;
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginTop = 0.07;
+        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultContentOffset;
         pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
         pxUIElementCreateData.UIElement.InteractCallBack = BFObjectTreeViewEvent;
@@ -4611,7 +4590,6 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Panel::Info::Bar
     //-----------------------------------------------------
     {
-
         PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_uiInfoPanelTitleBar;
@@ -4653,10 +4631,10 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Data.Button.TextInfo.FontID = DefaultFont;
         //  pxUIElementCreateData.UIElement.InteractCallBack = PXOnUIElementInteract;
 
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        //PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
 
-        _infoPanelTextSpawn->NameContent = "Resource Load";
-        _infoPanelTextSpawn->NameContentSize = 13;
+       // _infoPanelTextSpawn->NameContent = "Resource Load";
+      //  _infoPanelTextSpawn->NameContentSize = 13;
     }
 
 
@@ -4665,7 +4643,6 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     // Panel::Info::Bar::Text
     //-----------------------------------------------------
     {
-
         PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.Type = PXResourceTypeGUIElement;
         pxUIElementCreateData.ObjectReference = &_uiInfoPanelTitleBarText;
@@ -4673,114 +4650,35 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText | PXWindowBehaviourBorder;
         pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+    {
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
+        pxUIElementCreateData.ObjectReference = &_uiInfoPanelInfo;
+        pxUIElementCreateData.Name = "Info";
+        pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypeResourceInfo;
+        pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative;
         pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultContentOffset;
         pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
+
+
+
+
 
 
 #if 1
-    //-----------------------------------------------------
-    // Panel::Info::Bar
-    //-----------------------------------------------------
-    {
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.ObjectReference = &_uiInfoPanelObjectText;
-        pxUIElementCreateData.Name = "Selected:";
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
-        pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset + 0.1f;
-        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-    {
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.ObjectReference = &_uiInfoPanelObjectName;
-        pxUIElementCreateData.Name = "Name:";
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
-        pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset + 0.2f;
-        pxUIElementCreateData.UIElement.Position.MarginRight = 0.25f;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-    {
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.ObjectReference = &_uiInfoPanelObjectNameContent;
-        pxUIElementCreateData.Name = "XXXXX";
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
-        pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.15f;
-        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset + 0.2f;
-        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-    {
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.ObjectReference = &_uiInfoPanelObjectType;
-        pxUIElementCreateData.Name = "Type:";
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
-        pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset + 0.3f;
-        pxUIElementCreateData.UIElement.Position.MarginRight = 0.25f;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-    {
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.ObjectReference = &_uiInfoPanelObjectTypeContent;
-        pxUIElementCreateData.Name = "XXXXX";
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
-        pxUIElementCreateData.UIElement.UIElementParent = _uiInfoPanelTitleBar;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.Position.MarginLeft = 0.15f;
-        pxUIElementCreateData.UIElement.Position.MarginTop = PXDefaultOffset + 0.3f;
-        pxUIElementCreateData.UIElement.Position.MarginRight = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.MarginBottom = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Height = PXDefaultTitleBar;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-
-
+   
 
     {
         PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
