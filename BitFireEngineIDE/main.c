@@ -121,6 +121,8 @@ PXWindow* _menuMain = 0;
 //---------------------------------------------------------
 PXWindow* _tabControlMain = 0;
 PXWindow* _tabPageScene = 0;
+PXWindow* _tabPageBehaviour = 0;
+PXWindow* _tabPageTime = 0;
 PXWindow* _tabPageSound = 0;
 PXWindow* _tabPageNetwork = 0;
 PXWindow* _tabPageVideo = 0;
@@ -575,8 +577,8 @@ void PXAPI BFObjectTreeViewEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent
 
            // _uiInfoPanelObjectTypeContent->TextInfo.Content = typeName;
 
-            PXWindowUpdateInfo pxUIElementUpdateInfo[2];
-            PXClearList(PXWindowUpdateInfo, pxUIElementUpdateInfo, 2);
+          //  PXWindowUpdateInfo pxUIElementUpdateInfo[2];
+           // PXClearList(PXWindowUpdateInfo, pxUIElementUpdateInfo, 2);
 
             /*
 
@@ -1125,14 +1127,14 @@ void PXMakeUIEnable(PXGUISystem* const pxGgui, PXAudio* pxAudio, PXAudioEffectTy
 
     pxAudio->DeviceEffectUpdate(pxAudio->SystemReference, &_soundAudioDevice, &pxAudioEffect);
 
-    PXWindowUpdateInfo pxGUIElementUpdateInfo[3];
-    PXClearList(PXWindowUpdateInfo, pxGUIElementUpdateInfo, 3);
+  //  PXWindowUpdateInfo pxGUIElementUpdateInfo[3];
+  //  PXClearList(PXWindowUpdateInfo, pxGUIElementUpdateInfo, 3);
 
-    pxGUIElementUpdateInfo[0].Property = PXUIElementPropertyTextContent;
-    pxGUIElementUpdateInfo[0].UIElement = button;
+  //  pxGUIElementUpdateInfo[0].Property = PXUIElementPropertyTextContent;
+  //  pxGUIElementUpdateInfo[0].UIElement = button;
 
-    pxGUIElementUpdateInfo[1].Property = PXUIElementPropertyBackGroundColor;
-    pxGUIElementUpdateInfo[1].UIElement = button;
+   // pxGUIElementUpdateInfo[1].Property = PXUIElementPropertyBackGroundColor;
+  //  pxGUIElementUpdateInfo[1].UIElement = button;
 
     if(pxAudioEffect.Enable)
     {
@@ -1143,7 +1145,7 @@ void PXMakeUIEnable(PXGUISystem* const pxGgui, PXAudio* pxAudio, PXAudioEffectTy
        // pxGUIElementUpdateInfo[0].Data.Text.Content = "OFF";
     }
 
-    PXWindowUpdate(pxGgui, pxGUIElementUpdateInfo, 2);
+  //  PXWindowUpdate(pxGgui, pxGUIElementUpdateInfo, 2);
 }
 
 void PXAPI PXOnSoundEffectUpdate_Chorus_Toggle(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
@@ -1618,7 +1620,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     //-----------------------------------------------------
     {
         PXWindowMenuItemInfo pxGUIElementMenuItemListProject[9];
-        PXClearList(PXWindowMenuItemInfo, &pxGUIElementMenuItemListProject, 9);
+        PXClearList(PXWindowMenuItemInfo, pxGUIElementMenuItemListProject, 9);
         pxGUIElementMenuItemListProject[0].TextData = "New";
         pxGUIElementMenuItemListProject[0].TextSize = 4;
 
@@ -1649,7 +1651,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         addas.MenuItemInfoListData = pxGUIElementMenuItemListProject;
         
         PXWindowMenuItemInfo pxGUIElementMenuItemList[5];
-        PXClearList(PXWindowMenuItemInfo, &pxGUIElementMenuItemList, 5);
+        PXClearList(PXWindowMenuItemInfo, pxGUIElementMenuItemList, 5);
         pxGUIElementMenuItemList[0].Flags = PXGUIMenuItemTypeImage;
         pxGUIElementMenuItemList[1].TextData = "Project";
         pxGUIElementMenuItemList[1].TextSize = 7;
@@ -1668,7 +1670,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.UIElementParent = pxEngine->Window;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeMenuStrip;
         pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepHeight | PXWindowAllignTop;
-        pxUIElementCreateData.UIElement.Data.MenuItem.MenuItemInfoListData = &pxGUIElementMenuItemList;
+        pxUIElementCreateData.UIElement.Data.MenuItem.MenuItemInfoListData = pxGUIElementMenuItemList;
         pxUIElementCreateData.UIElement.Position.Height = 25;
         pxUIElementCreateData.UIElement.Data.MenuItem.MenuItemInfoListAmount = 5;
 
@@ -1683,6 +1685,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         PXUIElementTabPageSingleInfo pxUIElementTabPageSingleInfo[] =
         {
             { &_tabPageScene,       "Scene",    &pxIconAtlasMenu->IconList[7] },
+            { &_tabPageBehaviour,   "Behaviour",&pxIconAtlasMenu->IconList[7] },
+            { &_tabPageTime,        "Time",     &pxIconAtlasMenu->IconList[7] },
             { &_tabPageSound,       "Sound",    &pxIconAtlasMenu->IconList[8] },
             { &_tabPageVideo,       "Video",    &pxIconAtlasMenu->IconList[2] },
             { &_tabPageDatabase,    "Database", &pxIconAtlasMenu->IconList[3] },
@@ -4171,6 +4175,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
 
         PXDataBaseScanForDrivers(&pxEngine->DataBase);
 
+#if 0
         PXWindowUpdateInfo pxGUIElementUpdateInfo;
 
         PXClear(PXWindowUpdateInfo, &pxGUIElementUpdateInfo);
@@ -4181,6 +4186,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxGUIElementUpdateInfo.Data.ComboBox.DataListAmount = pxEngine->DataBase.DriverListAmount;
 
         PXWindowUpdate(&pxEngine->GUISystem, &pxGUIElementUpdateInfo, 1);
+#endif
     }
     {
 
