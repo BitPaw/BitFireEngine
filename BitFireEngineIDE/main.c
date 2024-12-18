@@ -89,7 +89,7 @@ int main(int amountOFParameters, char** parameter)
         pxEngineStartInfo.OnGameUpdate = OnGameUpdateEvent;
         pxEngineStartInfo.Name = "BitFireEngine";
         pxEngineStartInfo.Owner = &bfBitFireIDE;
-        pxEngineStartInfo.UseMouseInput = PXTrue;
+        pxEngineStartInfo.UseMouseInput = 0;
 
         PXEngineStart(&bfBitFireIDE.EngineEditor, &pxEngineStartInfo);
     }
@@ -1745,7 +1745,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->OnGameUpdate = OnGameUpdateEvent;
         //pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->UseMouseInput = PXTrue;
 
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+       // PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
 
         // pxEngineScene.OnRenderUpdate = OnRenderUpdateEvent;
        // pxEngineScene.OnStartUp = OnStartUpEvent;
