@@ -1022,7 +1022,7 @@ PXGraphicUIElementRegister(pxGraphic, &_positionText);*/
     //-----------------------------------------------------
     {
         PXModelConstruct(_pxModelMapWorldGrid);
-        _pxModelMapWorldGrid->Mesh.VertexBuffer.Info.Flags |= PXResourceInfoConstData;
+        _pxModelMapWorldGrid->Mesh.VertexBuffer.Info.Behaviour |= PXResourceInfoConstData;
         _pxModelMapWorldGrid->Mesh.VertexBuffer.VertexDataSize = sizeof(vertexData);
         _pxModelMapWorldGrid->Mesh.VertexBuffer.VertexData = vertexData;
         _pxModelMapWorldGrid->Mesh.VertexBuffer.Format = PXVertexBufferFormatXYZFloat;
@@ -1619,7 +1619,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeStatusBar;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.WindowParent = pxEngine->Window;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepHeight | PXWindowAllignBottom;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXWindowKeepHeight | PXWindowAllignBottom;
         pxUIElementCreateData.UIElement.Position.Form.Height = 25;
         pxUIElementCreateData.UIElement.Position.Margin.Bottom = PXDefaultBotStaleSize;
 
@@ -1680,7 +1680,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.ObjectReference = &_menuMain;
         pxUIElementCreateData.UIElement.WindowParent= pxEngine->Window;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeMenuStrip;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepHeight | PXWindowAllignTop;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXWindowKeepHeight | PXWindowAllignTop;
         pxUIElementCreateData.UIElement.Data.MenuItem.MenuItemInfoListData = pxGUIElementMenuItemList;
         pxUIElementCreateData.UIElement.Position.Form.Height = 25;
         pxUIElementCreateData.UIElement.Data.MenuItem.MenuItemInfoListAmount = 5;
@@ -1716,11 +1716,12 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
 
         PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.Type = PXResourceTypeGUIElement;
+        pxUIElementCreateData.Name = "TAB-Controller";
         pxUIElementCreateData.ObjectReference = &_tabControlMain;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeTabControll;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.WindowParent= pxEngine->Window;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowAllignTop;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXWindowAllignTop;
         pxUIElementCreateData.UIElement.Position.Margin.Left = 0.41f;
         pxUIElementCreateData.UIElement.Position.Margin.Top = PXDefaultTopOffset;
         pxUIElementCreateData.UIElement.Position.Margin.Right = 0.41f;
@@ -1748,9 +1749,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeRenderFrame;
         pxUIElementCreateData.UIElement.WindowParent = _tabPageScene;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder;
         pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Top = PXDefaultOffset + 0.4;
+        pxUIElementCreateData.UIElement.Position.Margin.Top = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.Margin.Right = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.Margin.Bottom = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Data.SceneRender.Engine = &bfBitFireIDE->EngineScene;
@@ -1786,7 +1787,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.WindowParent = _tabControlMain;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText | PXWindowKeepHeight | PXWindowAllignTop;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourDefaultText;
         pxUIElementCreateData.UIElement.Position.Form.Height = PXDefaultTitleBar;
 
         //PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
@@ -4365,7 +4366,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
         pxUIElementCreateData.UIElement.WindowParent= pxEngine->Window;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowAllignTop;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXWindowAllignTop;
         pxUIElementCreateData.UIElement.Position.Margin.Left = 0.41f;
         pxUIElementCreateData.UIElement.Position.Margin.Top = 1.48f;
         pxUIElementCreateData.UIElement.Position.Margin.Right = 0.41f;
@@ -4382,7 +4383,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.WindowParent= _panelConsoleMain;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowAllignTop | PXWindowKeepHeight;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXWindowAllignTop | PXWindowKeepHeight;
         pxUIElementCreateData.UIElement.Position.Form.Height = PXDefaultTitleBar;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
@@ -4399,7 +4400,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.WindowParent= _panelConsoleMain;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeTextEdit;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowAllignTop;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXWindowAllignTop;
         pxUIElementCreateData.UIElement.Position.Form.Height = PXDefaultTitleBar;
         pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.Margin.Top = 0.1f;
@@ -4456,7 +4457,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
         pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
         pxUIElementCreateData.UIElement.WindowParent = pxEngine->Window; // _tabControlMain        
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXResourceInfoNoRender | PXWindowAllignLeft;
+        pxUIElementCreateData.UIElement.Setting = PXResourceInfoNoRender | PXWindowAllignLeft;
         pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.Margin.Top = PXDefaultTopOffset;
         pxUIElementCreateData.UIElement.Position.Margin.Right = 1.60f;
@@ -4480,7 +4481,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
         pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
         pxUIElementCreateData.UIElement.WindowParent= _panelLeftPanel;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowAllignLeft;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXWindowAllignLeft;
         pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.Margin.Top = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.Margin.Right = PXDefaultOffset;
@@ -4501,7 +4502,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
         pxUIElementCreateData.UIElement.WindowParent= _panelLeftSceneElements;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText | PXWindowBehaviourBorder;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourDefaultText | PXWindowBehaviourBorder;
         pxUIElementCreateData.UIElement.Position.Form.Height = PXDefaultTitleBar;
         //pxUIElementCreateData.UIElement.Position.Margin.Bottom = PXDefaultOffset;
 
@@ -4524,7 +4525,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeResourceManger;
         pxUIElementCreateData.UIElement.WindowParent= _panelLeftSceneElements;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder;
         pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.Margin.Top = PXDefaultContentOffset;
         pxUIElementCreateData.UIElement.Position.Margin.Right = PXDefaultOffset;
@@ -4548,7 +4549,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
         pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
         pxUIElementCreateData.UIElement.WindowParent= _panelLeftPanel;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowAllignLeft;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXWindowAllignLeft;
         pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.Margin.Top = 0.85;
         pxUIElementCreateData.UIElement.Position.Margin.Right = PXDefaultOffset;
@@ -4569,7 +4570,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
         pxUIElementCreateData.UIElement.WindowParent= _panelFilemenu;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText | PXWindowBehaviourBorder;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourDefaultText | PXWindowBehaviourBorder;
         pxUIElementCreateData.UIElement.Position.Form.Height = PXDefaultTitleBar;
        // pxUIElementCreateData.UIElement.Position.Margin.Left = 1;
        // pxUIElementCreateData.UIElement.Position.Margin.Top = 0;
@@ -4596,7 +4597,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeView;
         pxUIElementCreateData.UIElement.WindowParent= _panelFilemenu;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXWindowKeepHeight;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXWindowKeepHeight;
         pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.Margin.Top = 0.08;
         pxUIElementCreateData.UIElement.Position.Margin.Right = PXDefaultOffset;
@@ -4614,7 +4615,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeFileDirectyView;
         pxUIElementCreateData.UIElement.WindowParent= _panelFilemenu;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative | PXResourceInfoUseByEngine;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXResourceInfoUseByEngine;
         pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.Margin.Top = 0.08;
         pxUIElementCreateData.UIElement.Position.Margin.Right = PXDefaultOffset;
@@ -4641,7 +4642,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.ObjectReference = &_uiInfoPanelTitleBar;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
         pxUIElementCreateData.UIElement.WindowParent= pxEngine->Window;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
         pxUIElementCreateData.UIElement.Position.Margin.Left = 1.6f;
         pxUIElementCreateData.UIElement.Position.Margin.Top = PXDefaultTopOffset;
@@ -4663,7 +4664,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
         pxUIElementCreateData.UIElement.ColorTintReference = &buttonColor;
         pxUIElementCreateData.UIElement.WindowParent= _uiInfoPanelTitleBar;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourDefaultText;
         pxUIElementCreateData.UIElement.Color.Red = 0.40f;
         pxUIElementCreateData.UIElement.Color.Green = 0.15f;
         pxUIElementCreateData.UIElement.Color.Blue = 0.15f;
@@ -4696,7 +4697,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
         pxUIElementCreateData.UIElement.WindowParent= _uiInfoPanelTitleBar;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText | PXWindowBehaviourBorder;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourDefaultText | PXWindowBehaviourBorder;
         pxUIElementCreateData.UIElement.Position.Form.Height = PXDefaultTitleBar;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
@@ -4709,7 +4710,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeResourceInfo;
         pxUIElementCreateData.UIElement.WindowParent= _uiInfoPanelTitleBar;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultDecorative;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder;
         pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.Margin.Top = PXDefaultContentOffset;
         pxUIElementCreateData.UIElement.Position.Margin.Right = PXDefaultOffset;
@@ -4770,7 +4771,7 @@ void PXAPI OnUserInputUpdate(BFBitFireIDE* const bfBitFireIDE, PXEngine* const p
         // how to fix?
         PXWindowTabListSwapPage(_tabControlMain);
 
-        bfBitFireIDE->EngineScene.DoRendering =  (_tabPageScene->Info.Flags & PXResourceInfoSelected)>0;
+        bfBitFireIDE->EngineScene.DoRendering =  (_tabPageScene->Info.Behaviour & PXResourceInfoSelected)>0;
 
         Sleep(1);
     }
