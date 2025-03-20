@@ -1022,13 +1022,14 @@ PXGraphicUIElementRegister(pxGraphic, &_positionText);*/
     //-----------------------------------------------------
     {
         PXModelConstruct(_pxModelMapWorldGrid);
-        _pxModelMapWorldGrid->Mesh.VertexBuffer.Info.Behaviour |= PXResourceInfoConstData;
-        _pxModelMapWorldGrid->Mesh.VertexBuffer.VertexDataSize = sizeof(vertexData);
-        _pxModelMapWorldGrid->Mesh.VertexBuffer.VertexData = vertexData;
-        _pxModelMapWorldGrid->Mesh.VertexBuffer.Format = PXVertexBufferFormatXYZFloat;
+        _pxModelMapWorldGrid->Mesh.VertexBufferListAmount = 1;
+        _pxModelMapWorldGrid->Mesh.VertexBufferPrime.Info.Behaviour |= PXResourceInfoConstData;
+        _pxModelMapWorldGrid->Mesh.VertexBufferPrime.VertexDataSize = sizeof(vertexData);
+        _pxModelMapWorldGrid->Mesh.VertexBufferPrime.VertexData = vertexData;
+        _pxModelMapWorldGrid->Mesh.VertexBufferPrime.Format = PXVertexBufferFormatP3F;
 
-        _pxModelMapWorldGrid->Mesh.IndexBuffer.IndexData = indexDATA;
-        _pxModelMapWorldGrid->Mesh.IndexBuffer.IndexDataSize = sizeof(indexDATA);
+        _pxModelMapWorldGrid->Mesh.IndexBuffer.DataIndexPosition = indexDATA;
+        _pxModelMapWorldGrid->Mesh.IndexBuffer.DataIndexSizeSegment = sizeof(indexDATA);
         _pxModelMapWorldGrid->Mesh.IndexBuffer.IndexDataType = PXTypeInt08U;
         _pxModelMapWorldGrid->Mesh.IndexBuffer.DrawModeID = PXDrawModeIDTriangle; // PXDrawModeIDPoint | PXDrawModeIDLine;
 
@@ -1057,9 +1058,9 @@ PXGraphicUIElementRegister(pxGraphic, &_positionText);*/
         // "Model/Tiger.obj"
         // "Model/Moze.obj"
         pxUIElementCreateData.Model.ShaderProgramReference = _pxObjectShader;
-        pxUIElementCreateData.Model.Scale = 5.0f;
+        pxUIElementCreateData.Model.Scale = 10.0f;
 
-       // PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
 
 
@@ -1576,6 +1577,7 @@ void PXAPI PXOnSoundEffectUpdate_WavesReverb(BFBitFireIDE* const bfBitFireIDE, P
 
 void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine)
 {
+
     PXResourceCreateInfo pxUIElementCreateData;
 
     //-----------------------------------------------------
@@ -1775,6 +1777,9 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
         // pxEngineScene.OnRenderUpdate = OnRenderUpdateEvent;
 
     }
+
+
+#if 1
 
     //-----------------------------------------------------
     // Panel::Scene::Text
@@ -4743,6 +4748,8 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
+
+#endif
 
 #endif
 
