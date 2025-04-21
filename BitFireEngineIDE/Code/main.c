@@ -1,12 +1,32 @@
-#include <Engine/PXEngine.h>
-#include <Math/PXMath.h>
-#include <OS/Dialog/PXDialog.h>
-#include <OS/Hardware/PXProcessor.h>
-#include <OS/Memory/PXMemory.h>
-#include <OS/Console/PXConsole.h>
-#include <OS/Graphic/PXGraphic.h>
-#include <OS/File/PXDirectory.h>
-#include <OS/GUI/PXGUI.h>
+#include <PX/Engine/PXEngine.h>
+#include <PX/Math/PXMath.h>
+#include <PX/OS/Dialog/PXDialog.h>
+#include <PX/OS/Hardware/PXProcessor.h>
+#include <PX/OS/Memory/PXMemory.h>
+#include <PX/OS/Console/PXConsole.h>
+#include <PX/OS/Graphic/PXGraphic.h>
+#include <PX/OS/File/PXDirectory.h>
+#include <PX/OS/GUI/PXGUI.h>
+
+#include "UI/BFEUIBehaviourTree.h"
+#include "UI/BFEUIConsole.h"
+#include "UI/BFEUIDataBase.h"
+#include "UI/BFEUIFileView.h"
+#include "UI/BFEUIFooter.h"
+#include "UI/BFEUIHardware.h"
+#include "UI/BFEUIHeader.h"
+#include "UI/BFEUIInput.h"
+#include "UI/BFEUINetwork.h"
+#include "UI/BFEUIResourceInfo.h"
+#include "UI/BFEUIResourceList.h"
+#include "UI/BFEUIScene.h"
+#include "UI/BFEUISound.h"
+#include "UI/BFEUITab.h"
+#include "UI/BFEUITimeline.h"
+#include "UI/BFEUIVideo.h"
+
+
+
 
 #if 1
 #if defined _M_IX86
@@ -25,45 +45,29 @@ int _fltused = 0;
 
 
 
-typedef struct BFBitFireIDE_
-{
-    PXEngine EngineScene;
-    PXEngine EngineEditor;
-}
-BFBitFireIDE;
 
 
-#define PXDefaultOffset 0.005f
-#define PXDefaultTopOffset PXDefaultOffset + 0.08
-#define PXDefaultBotStaleSize 0.005
-#define PXDefaultBotOffset PXDefaultOffset + PXDefaultBotStaleSize + 0.08
-#define PXDefaultTitleBar 20.0f
-#define PXDefaultContentOffset 0.06f
-
-#define PXDefaultTextHeight 20
 
 
-void PXAPI BFObjectTreeViewEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent);
+
 void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE);
 void PXAPI BFInfoSelectUpdate(BFBitFireIDE* const bfBitFireIDE);
 
 
-void PXAPI BFSceneOnStartup(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine);
 
 
 void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine);
 void PXAPI OnShutDownEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine);
-void PXAPI OnUserInputUpdate(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine, PXPlayerMoveInfo* const pxPlayerMoveInfo);
-void PXAPI OnNetworkUpdate(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine);
-void PXAPI OnGameUpdateEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine);
-void PXAPI OnRenderUpdateEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine);
+
+
 void PXAPI PXOnEngineResourceAdded(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine, void* const pxEngineResourceCreateInfo);
-void PXAPI PXOnUserInputUpdateScene(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine, PXPlayerMoveInfo* const pxPlayerMoveInfo);
 
 #if OSWindows
 
 #include <windows.h>
 #include <CommCtrl.h>
+
+
 
 #if _DEBUG || 1
 int main()
@@ -85,9 +89,9 @@ int main(int amountOFParameters, char** parameter)
         pxEngineStartInfo.System = PXGraphicSystemOpenGL;
         pxEngineStartInfo.OnStartUp = OnStartUpEvent;
         pxEngineStartInfo.OnShutDown = OnShutDownEvent;
-        pxEngineStartInfo.OnUserUpdate = OnUserInputUpdate; // PXOnUserInputUpdateScene
-        pxEngineStartInfo.OnNetworkUpdate = OnNetworkUpdate;
-        pxEngineStartInfo.OnGameUpdate = OnGameUpdateEvent;
+        //pxEngineStartInfo.OnUserUpdate = OnUserInputUpdate; // PXOnUserInputUpdateScene
+        //pxEngineStartInfo.OnNetworkUpdate = OnNetworkUpdate;
+        //pxEngineStartInfo.OnGameUpdate = OnGameUpdateEvent;
         pxEngineStartInfo.Name = "BitFireEngine";
         pxEngineStartInfo.Owner = &bfBitFireIDE;
         pxEngineStartInfo.UseMouseInput = 0;
@@ -100,8 +104,8 @@ int main(int amountOFParameters, char** parameter)
         PXEngineUpdate(&bfBitFireIDE.EngineEditor);
         PXEngineUpdate(&bfBitFireIDE.EngineScene);
 
-#if OSWindows && 0
-        Sleep(1); // Temp solution
+#if OSWindows
+        Sleep(10); // Temp solution
 #endif
     }
 
@@ -109,6 +113,9 @@ int main(int amountOFParameters, char** parameter)
 
     return 0;
 }
+
+
+/*
 
 PXWindow* _windowScene = 0;
 
@@ -120,16 +127,7 @@ PXWindow* _menuMain = 0;
 //---------------------------------------------------------
 // Tab
 //---------------------------------------------------------
-PXWindow* _tabControlMain = 0;
-PXWindow* _tabPageScene = 0;
-PXWindow* _tabPageBehaviour = 0;
-PXWindow* _tabPageTime = 0;
-PXWindow* _tabPageSound = 0;
-PXWindow* _tabPageNetwork = 0;
-PXWindow* _tabPageVideo = 0;
-PXWindow* _tabPageDatabase = 0;
-PXWindow* _tabPageInput = 0;
-PXWindow* _tabPageHardware = 0;
+
 //---------------------------------------------------------
 
 //---------------------------------------------------------
@@ -355,15 +353,15 @@ PXWindow* _panelConsoleData = 0;
 //---------------------------------------------------------
 // Left, Object panel
 //---------------------------------------------------------
-PXWindow* _panelLeftPanel = 0;
+
 
 PXWindow* _treeViewButtonSelect = 0;
 PXWindow* _treeViewFileManager = 0;
 
 PXWindow* _textFileData = 0;
-PXWindow* _panelFilemenu = 0;
 
-PXWindow* _panelLeftSceneElements = 0;
+
+
 PXWindow* _textSceneElemenets = 0;
 PXWindow* _treeViewObjects = 0;
 //---------------------------------------------------------
@@ -400,8 +398,13 @@ PXWindow* _infoPanelImage = 0;
 PXWindow* _infoPanelTextSpawn = 0;
 PXWindow* _infoPanelText = 0;
 PXWindow* _positionText = 0;
+
+
+*/
+
+
 PXFont* DefaultFont;
-PXIconAtlas* pxIconAtlasMenu;
+
 
 
 PXWindow* _textureTestA = 0;
@@ -414,18 +417,12 @@ PXInt32U _matrixViewID = 0;
 PXInt32U _matrixProjectionID = 0;
 PXInt32U _materialTextureID = 0;
 
-PXShaderProgram* _pxWorldGridShader = 0;
-PXShaderProgram* _pxObjectShader = 0;
-PXShaderProgram* _pxGismoShader = 0;
 
-PXCamera _worldCamera;
-PXModel _pxModelMapWorldGridTrue;
 
-PXModel* _pxModelMapWorldGrid = &_pxModelMapWorldGridTrue;
-PXModel* _pxModelMap = 0;
-PXModel* _pxGismo = 0;
 
-PXSkyBox* _sceneSkyBox = 0;
+
+
+
 
 const PXColorRGBAF titleMenuButtonTextColorReference = { 0.9, 0.9, 0.9, 1 };
 const PXColorRGBAF titleMenuButtonReference = { 0.10, 0.10, 0.10, 1 };
@@ -436,24 +433,6 @@ PXColorRGBAF titleColor = { 0.6, 0.6, 0.2, 1 };
 const PXColorRGBAF textColor = { 0.8, 0.8, 0.8, 1 };
 float animation = 0;
 
-// Register world grid
-const float vertexData[] =
-{
-    -1, 0,-1,
-        1, 0,1,
-    1, 0,-1,
-
-
-     1, 0,1,
-       -1, 0,-1,
-    -1, 0,1,
-
-};
-
-const PXInt8U indexDATA[] =
-{
-    0,1,2,3,4,5
-};
 
 void PXAPI PXOnUserInputUpdateScene(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine, PXPlayerMoveInfo* const pxPlayerMoveInfo)
 {
@@ -559,55 +538,6 @@ void PXAPI PXOnEngineResourceAdded(BFBitFireIDE* const bfBitFireIDE, PXEngine* c
 */
 
 
-void PXAPI BFObjectTreeViewEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
-{
-    switch(pxWindowEvent->Type)
-    {
-        case PXWindowEventTypeElementSelect:
-        {
-
-            PXWindow* const uiElementSelected = pxWindowEvent->UIElementSender;
-
-            PXLogPrint
-            (
-                PXLoggingInfo,
-                "BF",
-                "Event",
-                "Select: <%s>",
-                ""// uiElementSelected->NameData
-            );
-
-
-           // _uiInfoPanelObjectNameContent->TextInfo.Content = pxUIElementInteractInfo->UIElementSelected->NameData;
-
-            //const char* typeName = PXUIElementTypeToString(uiElementSelected->Type);
-
-           // _uiInfoPanelObjectTypeContent->TextInfo.Content = typeName;
-
-          //  PXWindowUpdateInfo pxUIElementUpdateInfo[2];
-           // PXClearList(PXWindowUpdateInfo, pxUIElementUpdateInfo, 2);
-
-            /*
-
-            pxUIElementUpdateInfo[0].UIElement = _uiInfoPanelObjectNameContent;
-            pxUIElementUpdateInfo[0].WindowReference = &bfBitFireIDE->EngineEditor.Window;
-            pxUIElementUpdateInfo[0].Property = PXUIElementPropertyTextContent;
-          //  pxUIElementUpdateInfo[0].Data.Text.Content = _uiInfoPanelObjectNameContent->NameData;
-
-            pxUIElementUpdateInfo[1].UIElement = _uiInfoPanelObjectTypeContent;
-            pxUIElementUpdateInfo[1].WindowReference = &bfBitFireIDE->EngineEditor.Window;
-            pxUIElementUpdateInfo[1].Property = PXUIElementPropertyTextContent;
-         //   pxUIElementUpdateInfo[1].Data.Text.Content = _uiInfoPanelObjectTypeContent->NameData;
-
-             PXWindowUpdate(PXNull, pxUIElementUpdateInfo, 1);
-             */
-
-            break;
-        }
-        default:
-            break;
-    }
-}
 
 void PXAPI FileTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
 {
@@ -617,12 +547,10 @@ void PXAPI FileTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
 
 void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
 {
-    return;
-
     PXEngine* const pxEngineEditor = &bfBitFireIDE->EngineEditor;
     PXEngine* const pxEngineScene = &bfBitFireIDE->EngineScene;
 
-
+#if 0
     PXResourceCreateInfo pxResourceCreateInfo;
 
     // DOne UI Stuff
@@ -875,6 +803,8 @@ void PXAPI BFObjectTreeViewUpdate(BFBitFireIDE* const bfBitFireIDE)
         // Add more?
     }
 
+#endif
+
 
 }
 
@@ -883,202 +813,10 @@ void PXAPI BFInfoSelectUpdate(BFBitFireIDE* const bfBitFireIDE)
 
 }
 
-void PXAPI BFSceneOnStartup(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine)
-{
-    PXResourceCreateInfo pxUIElementCreateData;
-
-    {
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeSound;
-        pxUIElementCreateData.ObjectReference = &_musicTest;
-        pxUIElementCreateData.FilePath = "H:\\[Cache]\\chip.wav";
-        pxUIElementCreateData.Sound.SoundLoop = PXTrue;
-
-        //PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-
-
-        PXAudio* const pxAudio = &bfBitFireIDE->EngineEditor.Audio;
-        // TODO: Silly
-        if(pxAudio)
-        {
-            if(pxAudio->DeviceOpen)
-            {
-                pxAudio->DeviceOpen(pxAudio->SystemReference, &_soundAudioDevice, PXAudioDeviceTypeOutput, 0);
-            }
-
-            if(pxAudio->DeviceLoad)
-            {
-                pxAudio->DeviceLoad(pxAudio->SystemReference, &_soundAudioDevice, _musicTest);
-            }        
-        }
-    }
-
-
-    //-----------------------------------------------------
-    // Shader-Object
-    //-----------------------------------------------------
-    {
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeShaderProgram;
-        pxUIElementCreateData.ObjectReference = &_pxObjectShader;
-        pxUIElementCreateData.ShaderProgram.ShaderVertexFilePath = "Shader/Object_Vertex.glsl";
-        pxUIElementCreateData.ShaderProgram.ShaderPixelFilePath = "Shader/Object_Fragment.glsl";
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-    {
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeShaderProgram;
-        pxUIElementCreateData.ObjectReference = &_pxGismoShader;
-        pxUIElementCreateData.ShaderProgram.ShaderVertexFilePath = "Shader/Gismo_Vertex.glsl";
-        pxUIElementCreateData.ShaderProgram.ShaderPixelFilePath = "Shader/Gismo_Fragment.glsl";
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-
-
-
-
-
-
-
-
-
-#if 0
-
-    PXUIElementConstruct(&_textureTestA, PXUIElementTypeImage);
-    _textureTestA.IsHoverable = PXTrue;
-    PXUIElementColorSet4F(&_textureTestA, 0.5, 0.5, 0.5, 0.5);
-    PXUIElementPositionSetXYWH(&_textureTestA, 0.55f, -0.52f, 0.88f, 0.67f, PXUIElementPositionRelative);
-    _textureTestA.TextureID = _testImage.ID;
-
-    PXGraphicUIElementRegister(pxGraphic, &_textureTestA);
-#endif
-
-
-    // TEXT
-
-
-
 
 
 
 /*
-PXUIElementConstruct(&_positionText, PXUIElementTypeText);
-_positionText.FontID = &DefaultFont;
-PXUIElementColorSet4F(&_positionText, 1, 1, 1, 1);
-PXUIElementPositionSetXYWH(&_positionText, -0.9, 0.75, -0.8, 0.9);
-//PXUIElementPositionSetXYWH(&_positionText, -0.82f, -0.52f, 0.38f, -0.67f);
-
-PXUIElementTextSetA(&_positionText, "Assets");
-
-PXGraphicUIElementRegister(pxGraphic, &_positionText);*/
-
-
-
-//PXGraphicTextureLoadA(pxGraphic, &_dialogBoxTexture, (char*)"C:\\Users\\BitPaw\\Videos\\SquareBlue.png");
-
-    //-----------------------------------------------------
-    // Skybox
-    //-----------------------------------------------------
-    {
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeSkybox;
-        pxUIElementCreateData.Flags = PXResourceCreateBehaviourSpawnInScene | PXResourceCreateBehaviourLoadASYNC;
-        pxUIElementCreateData.ObjectReference = &_sceneSkyBox;
-        pxUIElementCreateData.SkyBox.ShaderProgramCreateInfo.ShaderVertexFilePath = "Shader/SkyBox_Vertex.glsl";
-        pxUIElementCreateData.SkyBox.ShaderProgramCreateInfo.ShaderPixelFilePath = "Shader/SkyBox_Fragment.glsl";
-        pxUIElementCreateData.SkyBox.SkyBoxTextureA = "Texture/SkyBox_Side.png";
-        pxUIElementCreateData.SkyBox.SkyBoxTextureB = "Texture/SkyBox_Side.png";
-        pxUIElementCreateData.SkyBox.SkyBoxTextureC = "Texture/SkyBox_Top.png";
-        pxUIElementCreateData.SkyBox.SkyBoxTextureD = "Texture/SkyBox_Bottom.png";
-        pxUIElementCreateData.SkyBox.SkyBoxTextureE = "Texture/SkyBox_Side.png";
-        pxUIElementCreateData.SkyBox.SkyBoxTextureF = "Texture/SkyBox_Side.png";
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-
-    //-----------------------------------------------------
-    // Worldgrid-Shader
-    //-----------------------------------------------------
-    {
-        PXResourceCreateInfo pxSkyBoxCreateEventData;
-        PXClear(PXResourceCreateInfo, &pxSkyBoxCreateEventData);
-        pxSkyBoxCreateEventData.Type = PXResourceTypeShaderProgram;
-        pxSkyBoxCreateEventData.ObjectReference = &_pxWorldGridShader;
-        pxSkyBoxCreateEventData.ShaderProgram.ShaderVertexFilePath = "Shader/WorldGrid_Vertex.glsl";
-        pxSkyBoxCreateEventData.ShaderProgram.ShaderPixelFilePath = "Shader/WorldGrid_Fragment.glsl";
-
-        PXEngineResourceCreate(pxEngine, &pxSkyBoxCreateEventData);
-    }
-
-    //-----------------------------------------------------
-    // Worldgrid-Model
-    //-----------------------------------------------------
-    {
-        PXModelConstruct(_pxModelMapWorldGrid);
-        _pxModelMapWorldGrid->Mesh.VertexBufferListAmount = 1;
-        _pxModelMapWorldGrid->Mesh.VertexBufferPrime.Info.Behaviour |= PXResourceInfoConstData;
-        _pxModelMapWorldGrid->Mesh.VertexBufferPrime.VertexDataSize = sizeof(vertexData);
-        _pxModelMapWorldGrid->Mesh.VertexBufferPrime.VertexData = vertexData;
-        _pxModelMapWorldGrid->Mesh.VertexBufferPrime.Format = PXVertexBufferFormatP3F;
-
-        _pxModelMapWorldGrid->Mesh.IndexBuffer.DataIndexPosition = indexDATA;
-        _pxModelMapWorldGrid->Mesh.IndexBuffer.DataIndexSizeSegment = sizeof(indexDATA);
-        _pxModelMapWorldGrid->Mesh.IndexBuffer.IndexDataType = PXTypeInt08U;
-        _pxModelMapWorldGrid->Mesh.IndexBuffer.DrawModeID = PXDrawModeIDTriangle; // PXDrawModeIDPoint | PXDrawModeIDLine;
-
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeModel;
-        pxUIElementCreateData.ObjectReference = &_pxModelMapWorldGrid;
-        pxUIElementCreateData.Model.ShaderProgramReference = _pxWorldGridShader;
-        pxUIElementCreateData.Model.Scale = 1000;
-
-       // PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-
-       // _pxModelMapWorldGrid->RenderBothSides = PXTrue;
-    }
-
-    // Load model
-    {
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeModel;
-        pxUIElementCreateData.ObjectReference = &_pxModelMap;
-        pxUIElementCreateData.FilePath = "Model/Dust_II/DustII.obj";
-        //pxUIElementCreateData.FilePath = "P:\\_Cache\\N64\\PennyRacer\\Apline\\OBJ\\untitled.obj";// "Model/Dust_II/DustII.obj";
-        // "Model/Tiger.obj"
-        // "Model/Dust_II/DustII.obj"
-        // "Model/Tiger.obj"
-        // "Model/Moze.obj"
-        pxUIElementCreateData.Model.ShaderProgramReference = _pxObjectShader;
-        pxUIElementCreateData.Model.Scale = 10.0f;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-
-    {
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeModel;
-        pxUIElementCreateData.ObjectReference = &_pxGismo;
-        pxUIElementCreateData.FilePath = "Model/GismoTreeD.obj";
-        pxUIElementCreateData.Model.ShaderProgramReference = _pxGismoShader;
-        pxUIElementCreateData.Model.Scale = 1.0f;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-    PXCameraConstruct(&_worldCamera);
-}
-
 
 void PXAPI PXOnSoundButtonPlayEvent(BFBitFireIDE* const bfBitFireIDE, PXWindowEvent* const pxWindowEvent)
 {
@@ -1562,22 +1300,30 @@ void PXAPI PXOnSoundEffectUpdate_WavesReverb(BFBitFireIDE* const bfBitFireIDE, P
     }
 }
 
+*/
 
 
 
 
 
+BFEUISound _bfeUISound;
+BFEUIConsole _bfeUIConsole;
+BFEUIFooter _bfeUIFooter;
+BFEUIHeader _bfeUIHeader;
+BFEUITab _bfeUITab;
+BFEUIScene _bfeUISceneCreate;
+BFEUIFileView _bfeUIFileView;
+BFEUIResourceInfo _bfeUIResourceInfo;
+BFEUIResourceList _bfeUIResourceList;
 
 
-
-
-
-
+PXWindow* _panelLeftPanel = 0;
+PXWindow* _panelLeftSceneElements = 0;
+PXWindow* _panelFilemenu = 0;
 
 
 void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine)
 {
-
     PXResourceCreateInfo pxUIElementCreateData;
 
     //-----------------------------------------------------
@@ -1594,209 +1340,95 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
 
     }
 
-    // Load icon atlas
-    {
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeIconAtlas;
-        pxUIElementCreateData.ObjectReference = &pxIconAtlasMenu;
-        pxUIElementCreateData.FilePath = "Texture/IconAtlas.png";
-        pxUIElementCreateData.IconAtlas.CellSize = 16;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-
-
-
-
 
     //-----------------------------------------------------
-    // Menu::
-    //-----------------------------------------------------
+   // Panel:Left (Left one)
+   //-----------------------------------------------------
     {
         PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.Name = "StatusBar";
-        pxUIElementCreateData.ObjectReference = &_statusbarMain;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeStatusBar;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.WindowParent = pxEngine->Window;
-        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXWindowKeepHeight | PXWindowAllignBottom;
-        pxUIElementCreateData.UIElement.Position.Form.Height = 25;
-        pxUIElementCreateData.UIElement.Position.Margin.Bottom = PXDefaultBotStaleSize;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-    //-----------------------------------------------------
-    // Menu::
-    //-----------------------------------------------------
-    {
-        PXWindowMenuItemInfo pxGUIElementMenuItemListProject[9];
-        PXClearList(PXWindowMenuItemInfo, pxGUIElementMenuItemListProject, 9);
-        pxGUIElementMenuItemListProject[0].TextData = "New";
-        pxGUIElementMenuItemListProject[0].TextSize = 4;
-
-        pxGUIElementMenuItemListProject[1].TextData = "Open";
-        pxGUIElementMenuItemListProject[1].TextSize = 4;
-
-        pxGUIElementMenuItemListProject[2].Flags = PXGUIMenuItemTypeMFT_MENUBARBREAK;
-
-        pxGUIElementMenuItemListProject[3].TextData = "Save";
-        pxGUIElementMenuItemListProject[3].TextSize = 4;
-
-        pxGUIElementMenuItemListProject[4].Flags = PXGUIMenuItemTypeCheckmark;
-        pxGUIElementMenuItemListProject[4].TextData = "AutoSave";
-        pxGUIElementMenuItemListProject[4].TextSize = 8;
-
-        pxGUIElementMenuItemListProject[5].Flags = PXGUIMenuItemTypeMFT_MENUBARBREAK;
-
-        pxGUIElementMenuItemListProject[6].TextData = "Close";
-        pxGUIElementMenuItemListProject[6].TextSize = 5;
-
-        pxGUIElementMenuItemListProject[7].Flags = PXGUIMenuItemTypeMFT_MENUBARBREAK;
-
-        pxGUIElementMenuItemListProject[8].TextData = "Exit";
-        pxGUIElementMenuItemListProject[8].TextSize = 4;
-
-        PXWindowMenuItemList addas;
-        addas.MenuItemInfoListAmount = 9;
-        addas.MenuItemInfoListData = pxGUIElementMenuItemListProject;
-        
-        PXWindowMenuItemInfo pxGUIElementMenuItemList[5];
-        PXClearList(PXWindowMenuItemInfo, pxGUIElementMenuItemList, 5);
-        pxGUIElementMenuItemList[0].Flags = PXGUIMenuItemTypeImage;
-        pxGUIElementMenuItemList[1].TextData = "Project";
-        pxGUIElementMenuItemList[1].TextSize = 7;
-        pxGUIElementMenuItemList[1].ChildList = &addas;
-        pxGUIElementMenuItemList[2].TextData = "Edit";
-        pxGUIElementMenuItemList[2].TextSize = 4;
-        pxGUIElementMenuItemList[3].TextData = "Window";
-        pxGUIElementMenuItemList[3].TextSize = 6;
-        pxGUIElementMenuItemList[4].TextData = "Help";
-        pxGUIElementMenuItemList[4].TextSize = 4;
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.Name = "MenuStrip";
-        pxUIElementCreateData.ObjectReference = &_menuMain;
-        pxUIElementCreateData.UIElement.WindowParent= pxEngine->Window;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeMenuStrip;
-        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXWindowKeepHeight | PXWindowAllignTop;
-        pxUIElementCreateData.UIElement.Data.MenuItem.MenuItemInfoListData = pxGUIElementMenuItemList;
-        pxUIElementCreateData.UIElement.Position.Form.Height = 25;
-        pxUIElementCreateData.UIElement.Data.MenuItem.MenuItemInfoListAmount = 5;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-
-
-
-
-
-
-
-
-    //-----------------------------------------------------
-    // Panel:Menu
-    //-----------------------------------------------------
-    {
-        PXUIElementTabPageSingleInfo pxUIElementTabPageSingleInfo[] =
-        {
-            { &_tabPageScene,       "Scene",    &pxIconAtlasMenu->IconList[7], PXUIElementTypeScene },
-            { &_tabPageBehaviour,   "Behaviour",&pxIconAtlasMenu->IconList[7] , PXUIElementTypeGraphBehaviour},
-            { &_tabPageTime,        "Time",     &pxIconAtlasMenu->IconList[7], PXUIElementTypeGraphTime },
-            { &_tabPageSound,       "Sound",    &pxIconAtlasMenu->IconList[8] , PXUIElementTypeSoundPlayerMixer},
-            { &_tabPageVideo,       "Video",    &pxIconAtlasMenu->IconList[2], PXUIElementTypeVideoCutter },
-            { &_tabPageDatabase,    "Database", &pxIconAtlasMenu->IconList[3] , PXUIElementTypeDataBaseManager},
-            { &_tabPageNetwork,     "Network",  &pxIconAtlasMenu->IconList[11], PXUIElementTypeNetworkTester },
-            { &_tabPageInput,       "Input",    &pxIconAtlasMenu->IconList[12], PXUIElementTypeInputView },
-            { &_tabPageHardware,    "Hardware", &pxIconAtlasMenu->IconList[0] , PXUIElementTypeHardwareInfo}
-        };
-        const PXSize amount = sizeof(pxUIElementTabPageSingleInfo) / sizeof(PXUIElementTabPageSingleInfo);
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.Name = "TAB-Controller";
-        pxUIElementCreateData.ObjectReference = &_tabControlMain;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTabControll;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.WindowParent= pxEngine->Window;
-        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXWindowAllignTop;
-        pxUIElementCreateData.UIElement.Position.Margin.Left = 0.41f;
+        pxUIElementCreateData.ObjectReference = &_panelLeftPanel;
+        pxUIElementCreateData.Name = "Panel-Left";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
+        pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
+        pxUIElementCreateData.UIElement.WindowParent = pxEngine->Window; // _tabControlMain
+        pxUIElementCreateData.UIElement.Setting = PXResourceInfoNoRender | PXWindowAllignLeft | PXWindowBehaviourBorder;
+        pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.Margin.Top = PXDefaultTopOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Right = 0.41f;
-        pxUIElementCreateData.UIElement.Position.Margin.Bottom = 0.54f;   
-        pxUIElementCreateData.UIElement.Data.TabPage.TabPageSingleInfoAmount = amount;
-        pxUIElementCreateData.UIElement.Data.TabPage.TabPageSingleInfoList = pxUIElementTabPageSingleInfo;
+        pxUIElementCreateData.UIElement.Position.Margin.Right = 1.60f;
+        pxUIElementCreateData.UIElement.Position.Margin.Bottom = PXDefaultBotOffset;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
 
 
-
-
     //-----------------------------------------------------
-    // TAB::Scene
+    // SceneElements - Base
     //-----------------------------------------------------
     {
-        PXEngineStartInfo pxEngineStartInfo;
-        PXClear(PXEngineStartInfo, &pxEngineStartInfo);
-
         PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.Name = "SceneRender";
-        pxUIElementCreateData.ObjectReference = &_windowScene;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeRenderFrame;
-        pxUIElementCreateData.UIElement.WindowParent = _tabPageScene;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
-        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder;
+        pxUIElementCreateData.ObjectReference = &_panelLeftSceneElements;
+        pxUIElementCreateData.Name = "Container-Left.Upper";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
+        pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
+        pxUIElementCreateData.UIElement.WindowParent = _panelLeftPanel;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXWindowAllignLeft;
         pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.Margin.Top = PXDefaultOffset;
         pxUIElementCreateData.UIElement.Position.Margin.Right = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Bottom = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Data.SceneRender.Engine = &bfBitFireIDE->EngineScene;
-        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo = &pxEngineStartInfo;
-        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->Owner = bfBitFireIDE;
-        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->System = PXGraphicSystemOpenGL;
-        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->OnStartUp = BFSceneOnStartup;
-        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->OnUserUpdate = PXOnUserInputUpdateScene;
-        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->OnRenderUpdate = OnRenderUpdateEvent;
-        pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->OnGameUpdate = OnGameUpdateEvent;
-        //pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->UseMouseInput = PXTrue;
+        pxUIElementCreateData.UIElement.Position.Margin.Bottom = 0.85;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-
-        // pxEngineScene.OnRenderUpdate = OnRenderUpdateEvent;
-       // pxEngineScene.OnStartUp = OnStartUpEvent;
-       // pxEngineScene.OnShutDown = OnShutDownEvent;
-        //pxEngineScene.OnUserUpdate = OnUserInputUpdate;
-       // pxEngineScene.OnNetworkUpdate = OnNetworkUpdate;
-        //pxEngineScene.OnGameUpdate = OnGameUpdateEvent;
-        // pxEngineScene.OnRenderUpdate = OnRenderUpdateEvent;
-
     }
+
+
+    //-----------------------------------------------------
+    // FileTreeView - Base
+    //-----------------------------------------------------
+    {
+
+        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
+        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
+        pxUIElementCreateData.ObjectReference = &_panelFilemenu;
+        pxUIElementCreateData.Name = "Container-Left.Lower";
+        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
+        pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
+        pxUIElementCreateData.UIElement.WindowParent = _panelLeftPanel;
+        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXWindowAllignLeft;
+        pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.Margin.Top = 0.85;
+        pxUIElementCreateData.UIElement.Position.Margin.Right = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.Position.Margin.Bottom = PXDefaultOffset;
+
+        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
+    }
+
+
+
+    BFEUIFooterCreate(&_bfeUIFooter, pxEngine, PXNull);
+    BFEUIHeaderCreate(&_bfeUIHeader, pxEngine, PXNull);
+    BFEUIConsoleCreate(&_bfeUIConsole, pxEngine); 
+
+    BFEUIFileViewCreate(&_bfeUIFileView, pxEngine, _panelFilemenu);
+
+    BFEUIResourceInfoCreate(&_bfeUIResourceInfo, pxEngine);
+    BFEUIResourceListCreate(&_bfeUIResourceList, pxEngine, _panelLeftSceneElements);
+
+    BFEUITabCreate(&_bfeUITab, pxEngine);
+
+
+    BFEUISceneCreate(&_bfeUISceneCreate, pxEngine, _bfeUITab.PageScene);
+
+
+
+
+
 
 
 #if 1
 
-    //-----------------------------------------------------
-    // Panel::Scene::Text
-    //-----------------------------------------------------
-    {
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.Name = "Scene";
-        pxUIElementCreateData.ObjectReference = &_panelMenuButtonFileText;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
-        pxUIElementCreateData.UIElement.WindowParent = _tabControlMain;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
-        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourDefaultText;
-        pxUIElementCreateData.UIElement.Position.Form.Height = PXDefaultTitleBar;
-
-        //PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
+ 
 
 
 
@@ -4347,74 +3979,34 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     }
 #endif
 
-
-
-
-
-
-
-
-
-
-
-
-
-    //-----------------------------------------------------
-    // Panel:Console
-    //-----------------------------------------------------
+#if 0
     {
-
         PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
         pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.ObjectReference = &_panelConsoleMain;
-        pxUIElementCreateData.Name = "ConsoleLog";
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
-        pxUIElementCreateData.UIElement.WindowParent= pxEngine->Window;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXWindowAllignTop;
-        pxUIElementCreateData.UIElement.Position.Margin.Left = 0.41f;
-        pxUIElementCreateData.UIElement.Position.Margin.Top = 1.48f;
-        pxUIElementCreateData.UIElement.Position.Margin.Right = 0.41f;
-        pxUIElementCreateData.UIElement.Position.Margin.Bottom = PXDefaultBotOffset;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-    {
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.ObjectReference = &_panelConsoleTextContent;
-        pxUIElementCreateData.Name = "Console";
-        pxUIElementCreateData.UIElement.WindowParent= _panelConsoleMain;
+        pxUIElementCreateData.ObjectReference = &_textSoundCompressor;
+        pxUIElementCreateData.Name = "Compressor";
         pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
+        pxUIElementCreateData.UIElement.WindowParent = _tabPageSound;
         pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXWindowAllignTop | PXWindowKeepHeight;
-        pxUIElementCreateData.UIElement.Position.Form.Height = PXDefaultTitleBar;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-#if 1
-
-#if 1
-    {
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.ObjectReference = &_panelConsoleData;
-        pxUIElementCreateData.Name = "Console Data";
-        pxUIElementCreateData.UIElement.WindowParent= _panelConsoleMain;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTextEdit;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXWindowAllignTop;
-        pxUIElementCreateData.UIElement.Position.Form.Height = PXDefaultTitleBar;
-        pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Top = 0.1f;
-        pxUIElementCreateData.UIElement.Position.Margin.Right = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Bottom = PXDefaultOffset;
+        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText;
+        pxUIElementCreateData.UIElement.Position.Width = SoundWidth;
+        pxUIElementCreateData.UIElement.Position.Form.Height = PXDefaultTextHeight;
+        pxUIElementCreateData.UIElement.Position.Margin.Left = 0.0f;
+        pxUIElementCreateData.UIElement.Position.Margin.Top = SoundRowOffsetY * 8.25;
 
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
     }
 #endif
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4451,309 +4043,15 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
 
 
 
-    //-----------------------------------------------------
-    // Panel:Left (Left one)
-    //-----------------------------------------------------
-    {
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.ObjectReference = &_panelLeftPanel;
-        pxUIElementCreateData.Name = "Panel-Left";
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
-        pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
-        pxUIElementCreateData.UIElement.WindowParent = pxEngine->Window; // _tabControlMain        
-        pxUIElementCreateData.UIElement.Setting = PXResourceInfoNoRender | PXWindowAllignLeft;
-        pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Top = PXDefaultTopOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Right = 1.60f;
-        pxUIElementCreateData.UIElement.Position.Margin.Bottom = PXDefaultBotOffset;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-
-
-
-    //-----------------------------------------------------
-    // SceneElements - Base
-    //-----------------------------------------------------
-    {
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.ObjectReference = &_panelLeftSceneElements;
-        pxUIElementCreateData.Name = "Container-Left.Upper";
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
-        pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
-        pxUIElementCreateData.UIElement.WindowParent= _panelLeftPanel;
-        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXWindowAllignLeft;
-        pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Top = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Right = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Bottom = 1.00;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-    //-----------------------------------------------------
-    // SceneElements - Title
-    //-----------------------------------------------------
-    {
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.Name = "Objects";
-        pxUIElementCreateData.ObjectReference = &_textSceneElemenets;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
-        pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
-        pxUIElementCreateData.UIElement.WindowParent= _panelLeftSceneElements;
-        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourDefaultText | PXWindowBehaviourBorder;
-        pxUIElementCreateData.UIElement.Position.Form.Height = PXDefaultTitleBar;
-        //pxUIElementCreateData.UIElement.Position.Margin.Bottom = PXDefaultOffset;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-
-        _textSceneElemenets->NameContent = "Objects";
-        _textSceneElemenets->NameContentSize = 7;
-    }
-
-
-    //-----------------------------------------------------
-    // Panel::Scene::Render
-    //-----------------------------------------------------
-    {
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.Name = "Loaded Objects";
-        pxUIElementCreateData.ObjectReference = &_treeViewObjects;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeResourceManger;
-        pxUIElementCreateData.UIElement.WindowParent= _panelLeftSceneElements;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
-        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder;
-        pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Top = PXDefaultContentOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Right = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Bottom = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.InteractCallBack = BFObjectTreeViewEvent;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-
-
-    //-----------------------------------------------------
-    // FileTreeView - Base
-    //-----------------------------------------------------
-    {
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.ObjectReference = &_panelFilemenu;
-        pxUIElementCreateData.Name = "Container-Left.Lower";
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
-        pxUIElementCreateData.UIElement.ColorTintReference = &panelReference;
-        pxUIElementCreateData.UIElement.WindowParent= _panelLeftPanel;
-        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXWindowAllignLeft;
-        pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Top = 0.85;
-        pxUIElementCreateData.UIElement.Position.Margin.Right = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Bottom = PXDefaultOffset;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-
-    //-----------------------------------------------------
-    // FileTreeView - Title
-    //-----------------------------------------------------
-    {
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.Name = "File'n'Data";
-        pxUIElementCreateData.ObjectReference = &_textFileData;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
-        pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
-        pxUIElementCreateData.UIElement.WindowParent= _panelFilemenu;
-        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourDefaultText | PXWindowBehaviourBorder;
-        pxUIElementCreateData.UIElement.Position.Form.Height = PXDefaultTitleBar;
-       // pxUIElementCreateData.UIElement.Position.Margin.Left = 1;
-       // pxUIElementCreateData.UIElement.Position.Margin.Top = 0;
-       // pxUIElementCreateData.UIElement.Position.Margin.Right = 0;
-        //pxUIElementCreateData.UIElement.Position.Margin.Bottom = PXDefaultOffset;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-
-        _textFileData->NameContent = "File'n'Data";
-        _textFileData->NameContentSize = 11;
-    }
-
-
-
-
-    //-----------------------------------------------------
-    // Panel(Left)::FileStuff::TreeView
-    //-----------------------------------------------------
-    {
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.Name = "Button Select";
-        pxUIElementCreateData.ObjectReference = &_treeViewButtonSelect;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeTreeView;
-        pxUIElementCreateData.UIElement.WindowParent= _panelFilemenu;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
-        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXWindowKeepHeight;
-        pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Top = 0.08;
-        pxUIElementCreateData.UIElement.Position.Margin.Right = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Bottom = 0.03;
-
-      //  PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-
-    {
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.Name = "TreeView_File";
-        pxUIElementCreateData.ObjectReference = &_treeViewFileManager;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeFileDirectyView;
-        pxUIElementCreateData.UIElement.WindowParent= _panelFilemenu;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
-        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder | PXResourceInfoUseByEngine;
-        pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Top = 0.08;
-        pxUIElementCreateData.UIElement.Position.Margin.Right = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Bottom = 0.03;
-        pxUIElementCreateData.UIElement.InteractCallBack = BFObjectTreeViewEvent;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-
-
-
-
-
-
-
-
-    //-----------------------------------------------------
-    // Panel::Info::Bar
-    //-----------------------------------------------------
-    {
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.ObjectReference = &_uiInfoPanelTitleBar;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypePanel;
-        pxUIElementCreateData.UIElement.WindowParent= pxEngine->Window;
-        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.Position.Margin.Left = 1.6f;
-        pxUIElementCreateData.UIElement.Position.Margin.Top = PXDefaultTopOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Right = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Bottom = 0.54f;
-        pxUIElementCreateData.UIElement.Position.Form.Height = 30.0f;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-    //-----------------------------------------------------
-// Button
-//-----------------------------------------------------
-    {
-
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.ObjectReference = &_infoPanelTextSpawn;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeButton;
-        pxUIElementCreateData.UIElement.ColorTintReference = &buttonColor;
-        pxUIElementCreateData.UIElement.WindowParent= _uiInfoPanelTitleBar;
-        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourDefaultText;
-        pxUIElementCreateData.UIElement.Color.Red = 0.40f;
-        pxUIElementCreateData.UIElement.Color.Green = 0.15f;
-        pxUIElementCreateData.UIElement.Color.Blue = 0.15f;
-        pxUIElementCreateData.UIElement.Color.Alpha = 1.0f;
-        pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Top = 0.8f;
-        pxUIElementCreateData.UIElement.Position.Margin.Right = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Bottom = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Form.Height = 35;
-        pxUIElementCreateData.UIElement.Data.Button.TextInfo.Content = "Load";
-        pxUIElementCreateData.UIElement.Data.Button.TextInfo.FontID = DefaultFont;
-        //  pxUIElementCreateData.UIElement.InteractCallBack = PXOnUIElementInteract;
-
-       // PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-
-       // _infoPanelTextSpawn->NameContent = "Resource Load";
-       // _infoPanelTextSpawn->NameContentSize = 13;
-    }
-
-
-
-    //-----------------------------------------------------
-    // Panel::Info::Bar::Text
-    //-----------------------------------------------------
-    {
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.ObjectReference = &_uiInfoPanelTitleBarText;
-        pxUIElementCreateData.Name = "Info";
-        pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
-        pxUIElementCreateData.UIElement.WindowParent= _uiInfoPanelTitleBar;
-        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourDefaultText | PXWindowBehaviourBorder;
-        pxUIElementCreateData.UIElement.Position.Form.Height = PXDefaultTitleBar;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-    {
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.ObjectReference = &_uiInfoPanelInfo;
-        pxUIElementCreateData.Name = "Info";
-        pxUIElementCreateData.UIElement.ColorTintReference = &textColor;
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeResourceInfo;
-        pxUIElementCreateData.UIElement.WindowParent= _uiInfoPanelTitleBar;
-        pxUIElementCreateData.UIElement.Setting = PXWindowBehaviourBorder;
-        pxUIElementCreateData.UIElement.Position.Margin.Left = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Top = PXDefaultContentOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Right = PXDefaultOffset;
-        pxUIElementCreateData.UIElement.Position.Margin.Bottom = PXDefaultOffset;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
-
-
-
-
-
-#if 0
    
 
-    {
-        PXClear(PXResourceCreateInfo, &pxUIElementCreateData);
-        pxUIElementCreateData.Type = PXResourceTypeGUIElement;
-        pxUIElementCreateData.ObjectReference = &_textSoundCompressor;
-        pxUIElementCreateData.Name = "Compressor";
-        pxUIElementCreateData.UIElement.Type = PXUIElementTypeText;
-        pxUIElementCreateData.UIElement.WindowParent= _tabPageSound;
-        pxUIElementCreateData.UIElement.ColorTintReference = &titleColor;
-        pxUIElementCreateData.UIElement.BehaviourFlags = PXWindowBehaviourDefaultText;
-        pxUIElementCreateData.UIElement.Position.Width = SoundWidth;
-        pxUIElementCreateData.UIElement.Position.Form.Height = PXDefaultTextHeight;
-        pxUIElementCreateData.UIElement.Position.Margin.Left = 0.0f;
-        pxUIElementCreateData.UIElement.Position.Margin.Top = SoundRowOffsetY * 8.25;
-
-        PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
-    }
-
 #endif
 
-#endif
 
-#endif
+
+
+
+
 
     BFObjectTreeViewUpdate(bfBitFireIDE);
 }
@@ -4763,97 +4061,3 @@ void PXAPI OnShutDownEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxE
 
 }
 
-void PXAPI OnUserInputUpdate(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine, PXPlayerMoveInfo* const pxPlayerMoveInfo)
-{
-    if(KeyBoardIDF01 & pxEngine->KeyBoardCurrentInput.Actions)
-    {
-        PXLogPrint
-        (
-            PXLoggingInfo,
-            "BFE",
-            "Input",
-            "Swap-Page"
-        );
-
-        // how to fix?
-        PXWindowTabListSwapPage(_tabControlMain);
-
-        bfBitFireIDE->EngineScene.DoRendering =  (_tabPageScene->Info.Behaviour & PXResourceInfoSelected)>0;
-
-        Sleep(1);
-    }
-
-#if 0
-    PXWindow* pxWindow = &pxEngine->Window;
-    PXKeyBoard* keyboard = &pxEngine->KeyBoardCurrentInput;
-    PXMouse* mouse = &pxEngine->MouseCurrentInput;
-
-#if 0
-    if (keyboard.F.IsShortPressed())
-    {
-        keyboard.F.Value = 0xFF;
-
-        if (_sign.Interactable)
-        {
-            printf("[Event] Clicked Sign\n");
-        }
-    }
-#endif
-
-    // PXControllerDataGet(&bfEngine->Controller);
-
-    //printf("%6i, %6i\n", bitFireEngine->Controller.Axis[0], bitFireEngine->Controller.Axis[1]);
-
-    //_playerCharacterLuna.MatrixModel.Move(movement);
-
-
-    if (pxPlayerMoveInfo->IsWindowInFocus && (IsPressedButtonLeft(mouse->Buttons) && IsPressedButtonLeft(mouse->ButtonsDelta)))
-    {
-        if (bfEngine->CollisionCheckInfo.CurrentElement)
-        {
-#if 0
-            PXUIElementInteractInfo pxUIElementInteractInfo;
-            PXClear(PXUIElementInteractInfo, &pxUIElementInteractInfo);
-            pxUIElementInteractInfo.UIElementSender = bfEngine->CollisionCheckInfo.CurrentElement;
-            pxUIElementInteractInfo.Type = PXUIElementInteractTypeSelect;
-
-            PXFunctionInvoke(bfEngine->CollisionCheckInfo.CurrentElement->InteractCallBack, &pxUIElementInteractInfo);
-#endif
-        }
-    }
-
-    const PXBool isMouseInputWanted = pxPlayerMoveInfo->IsWindowInFocus && IsPressedButtonRight(mouse->Buttons);
-
-    pxPlayerMoveInfo->ActionCommit = isMouseInputWanted;
-#endif
-}
-
-void PXAPI OnNetworkUpdate(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine)
-{
-
-}
-
-void PXAPI OnGameUpdateEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine)
-{
-    float xx = PXMathSinusF(animation);
-
-    titleColor.Red = (0.2);
-    titleColor.Green = (-xx) * 0.4;
-    titleColor.Blue = (xx);
-
-    animation += 0.01;
-
-   // PXCameraRotateXYZ(bfBitFireIDE->EngineScene.CameraCurrent, 0.01, 0.5, 0.2);
-  //  PXCameraUpdate(bfBitFireIDE->EngineScene.CameraCurrent, 1);
-}
-
-void PXAPI OnRenderUpdateEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEngine)
-{
-#if 0
-    glBegin(GL_TRIANGLES);
-    glColor3f(1.0f, 0.0f, 0.0f); glVertex2f(-1.0f, -1.0f);
-    glColor3f(0.0f, 1.0f, 0.0f); glVertex2f( 1.0f, -1.0f);
-    glColor3f(0.0f, 0.0f, 1.0f); glVertex2f( 0.0f,  1.0f);
-    glEnd();
-#endif
-}
