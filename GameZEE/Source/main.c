@@ -49,7 +49,7 @@ int main(int amountOFParameters, char** parameter)
     return EXIT_SUCCESS;
 }
 
-PXTexture2D _dialogBoxTexture;
+PXTexture2D _windowScene;
 PXTexture2D _dialogBoxTextureSelected;
 
 PXModel _cubeThing;
@@ -65,17 +65,17 @@ PXFont _textFont;
 //PXUIText pxUITextPosition;
 
 
-void OnUIOnClick(PXGUIElement* const pxGUIElement)
+void OnUIOnClick(PXWindow* const pxGUIElement)
 {
     printf("[#][Event] Mouse button clicked\n");
 }
-void OnUIOnMouseEnter(PXGUIElement* const pxGUIElement)
+void OnUIOnMouseEnter(PXWindow* const pxGUIElement)
 {
     printf("[#][Event] Mouse button enter\n");
 
    // pxUIPanelMain.UIElement.Renderable.MeshSegmentList[0].TextureID = _dialogBoxTextureSelected.ID;
 }
-void OnUIOnMouseLeave(PXGUIElement* const pxGUIElement)
+void OnUIOnMouseLeave(PXWindow* const pxGUIElement)
 {
     printf("[#][Event] Mouse button leave\n");
 
@@ -110,7 +110,7 @@ void OnStartUpEvent(BFEngine* const bitFireEngine)
         "Texture/SkyBox/Front.png"
     );   
 
-    PXGraphicTexture2DLoadA(pxGraphic, &_dialogBoxTexture, "Texture/DialogueBox.bmp");
+    PXGraphicTexture2DLoadA(pxGraphic, &_windowScene, "Texture/DialogueBox.bmp");
 
     PXGraphicTexture2DLoadA(pxGraphic, &_dialogBoxTextureSelected, "Texture/DialogueBoxB.bmp");
    
