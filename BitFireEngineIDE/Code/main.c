@@ -1418,7 +1418,7 @@ void PXAPI OnStartUpEvent(BFBitFireIDE* const bfBitFireIDE, PXEngine* const pxEn
     BFEUITabCreate(&_bfeUITab, pxEngine);
 
 
-    BFEUISceneCreate(&_bfeUISceneCreate, pxEngine, _bfeUITab.PageScene);
+    BFEUISceneCreate(&_bfeUISceneCreate, &bfBitFireIDE->EngineScene, _bfeUITab.PageScene); // 
 
 
 
