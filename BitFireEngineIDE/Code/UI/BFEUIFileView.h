@@ -3,7 +3,20 @@
 typedef struct BFEUIFileView_
 {
     PXWindow* Main;
-    PXWindow* Select;
+
+    // Top menü
+    PXWindow* ButtonFolderPrevious;
+    PXWindow* ButtonFolderForward;
+    PXWindow* ButtonFolderUp;
+    PXWindow* ButtonRefresh;
+    PXWindow* ButtonExplorerOpen;
+    PXWindow* ButtonExplorerSelect;
+
+    PXWindow* InputSearch;
+
+    PXWindow* InputPathCurrent;
+
+    // List
     PXWindow* Data;
 }
 BFEUIFileView;
