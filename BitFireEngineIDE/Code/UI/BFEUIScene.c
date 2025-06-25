@@ -18,38 +18,42 @@ void PXAPI BFEUISceneCreate(BFEUIScene* const bfeUIScene, PXEngine* const pxEngi
     {
         PXEngineStartInfo pxEngineStartInfo;
         PXClear(PXEngineStartInfo, &pxEngineStartInfo);
+        pxEngineStartInfo.Owner = pxEngine;
+        //pxEngineStartInfo.WindowRenderTarget = parent;
+        pxEngineStartInfo.System = PXGraphicSystemOpenGL;
+        pxEngineStartInfo.OnStartUp = BFSceneOnStartup;
+        pxEngineStartInfo.OnUserUpdate = PXOnUserInputUpdateScene;
+        pxEngineStartInfo.OnRenderUpdate = OnRenderUpdateEvent;
+        pxEngineStartInfo.OnGameUpdate = OnGameUpdateEvent;
+        //pxEngineStartInfo.UseMouseInput = PXTrue;
 
         PXClear(PXResourceCreateInfo, &pxResourceCreateInfo);
         pxResourceCreateInfo.Type = PXResourceTypeGUIElement;
         pxResourceCreateInfo.Name = "SceneRender";
         pxResourceCreateInfo.ObjectReference = &bfeUIScene->Main;
         pxResourceCreateInfo.UIElement.Type = PXUIElementTypeRenderFrame;
+        pxResourceCreateInfo.UIElement.WindowCurrent = parent;
         pxResourceCreateInfo.UIElement.WindowParent = parent;
-       // pxResourceCreateInfo.UIElement.ColorTintReference = &titleMenuButtonTextColorReference;
-        pxResourceCreateInfo.UIElement.Setting = PXWindowBehaviourBorder;
+        pxResourceCreateInfo.UIElement.Setting = PXWindowBehaviourBorder| PXWindowAllignCenter;
         pxResourceCreateInfo.UIElement.Position.Margin.Left = PXDefaultOffset;
         pxResourceCreateInfo.UIElement.Position.Margin.Top = PXDefaultOffset;
         pxResourceCreateInfo.UIElement.Position.Margin.Right = PXDefaultOffset;
         pxResourceCreateInfo.UIElement.Position.Margin.Bottom = PXDefaultOffset;
-        //pxResourceCreateInfo.UIElement.Data.SceneRender.Engine = &bfBitFireIDE->EngineScene;
+        pxResourceCreateInfo.UIElement.Data.SceneRender.Engine = pxEngine;
         pxResourceCreateInfo.UIElement.Data.SceneRender.StartInfo = &pxEngineStartInfo;
-        //pxResourceCreateInfo.UIElement.Data.SceneRender.StartInfo->Owner = bfBitFireIDE;
-        pxResourceCreateInfo.UIElement.Data.SceneRender.StartInfo->System = PXGraphicSystemOpenGL;
-        pxResourceCreateInfo.UIElement.Data.SceneRender.StartInfo->OnStartUp = BFSceneOnStartup;
-        pxResourceCreateInfo.UIElement.Data.SceneRender.StartInfo->OnUserUpdate = PXOnUserInputUpdateScene;
-        pxResourceCreateInfo.UIElement.Data.SceneRender.StartInfo->OnRenderUpdate = OnRenderUpdateEvent;
-        pxResourceCreateInfo.UIElement.Data.SceneRender.StartInfo->OnGameUpdate = OnGameUpdateEvent;
-        //pxUIElementCreateData.UIElement.Data.SceneRender.StartInfo->UseMouseInput = PXTrue;
 
-        // PXEngineResourceCreate(pxEngine, &pxResourceCreateInfo);
 
-        // pxEngineScene.OnRenderUpdate = OnRenderUpdateEvent;
-       // pxEngineScene.OnStartUp = OnStartUpEvent;
-       // pxEngineScene.OnShutDown = OnShutDownEvent;
-        //pxEngineScene.OnUserUpdate = OnUserInputUpdate;
-       // pxEngineScene.OnNetworkUpdate = OnNetworkUpdate;
-        //pxEngineScene.OnGameUpdate = OnGameUpdateEvent;
-        // pxEngineScene.OnRenderUpdate = OnRenderUpdateEvent;
+        PXEngineResourceCreate(pxEngine, &pxResourceCreateInfo);
+
+#if 0
+        pxEngineScene.OnRenderUpdate = OnRenderUpdateEvent;
+        pxEngineScene.OnStartUp = OnStartUpEvent;
+        pxEngineScene.OnShutDown = OnShutDownEvent;
+        pxEngineScene.OnUserUpdate = OnUserInputUpdate;
+        pxEngineScene.OnNetworkUpdate = OnNetworkUpdate;
+        pxEngineScene.OnGameUpdate = OnGameUpdateEvent;
+        pxEngineScene.OnRenderUpdate = OnRenderUpdateEvent;
+#endif
 
     }
 
@@ -275,9 +279,11 @@ PXGraphicUIElementRegister(pxGraphic, &_positionText);*/
         pxUIElementCreateData.Model.ShaderProgramReference = _pxWorldGridShader;
         pxUIElementCreateData.Model.Scale = 1000;
 
+#if 0
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
 
         _pxModelMapWorldGrid->RenderBothSides = PXTrue;
+#endif
     }
 
     // Load model
@@ -286,11 +292,12 @@ PXGraphicUIElementRegister(pxGraphic, &_positionText);*/
         pxUIElementCreateData.Type = PXResourceTypeModel;
         pxUIElementCreateData.ObjectReference = &_pxModelMap;
         pxUIElementCreateData.FilePath = "Model/Dust_II/DustII.obj";
+        // pxUIElementCreateData.FilePath = "C:/Data/WorkSpace/[GIT]/PXUltima/Code/PXUltimaCTest/_TEST_DATA_OUTPUT_/WAD_TEMP_3/0000000027681530.R3D2.obj";
         pxUIElementCreateData.Model.ShaderProgramReference = _pxObjectShader;
         pxUIElementCreateData.Model.Scale = 1;// 5.0f;
         pxUIElementCreateData.Model.HitBoxBehaviour = PXHitBoxBehaviourWallStatic;
 
-#if 0
+#if 1
         PXEngineResourceCreate(pxEngine, &pxUIElementCreateData);
 #endif
 
